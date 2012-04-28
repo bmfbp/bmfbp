@@ -1,0 +1,36 @@
+This is the first release, 0.1, of vsh (visual shell) and grash (graph
+shell).
+
+Presently, the code is in "alpha" / toy state, but is intended to
+inspire and demonstrate some simple concepts for building FBP-like
+(flow-based programming) visual tools using components implemented in
+various languages.
+
+This examplar implementation runs on linux and implements a (very)
+simple replacement for "sh" that uses diagrams to represent
+combinations of commands and pipes, based on the notions of FBP.
+These ideas should be easily transcribeable onto other operating
+systems. 
+
+Concepts that may be of interest:
+
+- implement FBP on top of linux, in place of bash and friends
+
+- a multi-lingual FBP
+
+- a trivial (250 lines of C) "graph" shell that could be used with
+  other implementations of FBP to spawn concurrent components and
+  plumb them together
+
+- a simple technique for compiling diagrams to code
+
+- use of an off-the-shelf diagram tool to produce compilable code
+
+- the concept of factbases
+
+- obvious future extensions to add sockets, named pipes, etc., as flow
+  carriers 
+
+
+
+See the docs directory for instructions and internal documentation.
