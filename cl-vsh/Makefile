@@ -6,7 +6,7 @@ execs =  $(bindir)/scan $(bindir)/check-input $(bindir)/calc-bounds $(bindir)/ma
 
 all : $(execs) io.lisp
 
-$(bindir)/% : %.lisp
+$(bindir)/% : %.lisp io.lisp
 	rm -f $@
 	buildapp --output $@  --load $< --entry main
 

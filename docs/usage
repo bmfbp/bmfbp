@@ -31,6 +31,7 @@ The grash interpreter was built with gcc.
 
 
 VSH Notation
+------------
 
 All figures in a vsh script are represented by "out of the box" shapes
 supplied with yEd.  Diagrams must be saved in graphml format (the
@@ -50,6 +51,7 @@ and terminating on another.
 
 
 GRASH Notation
+--------------
 
 Grash is a simple interpreter of fork/exec "assembly" code.  At it's
 simplest, it is the same as a pipe in "sh".  Grash can interpret more
@@ -78,6 +80,19 @@ fork : forks a new process
 krof : signifies end of forked child section
        parent resumes processing commands
        child (if not exec'ed) terminates
+
+
+
+
+TESTING Self Compilation
+------------------------
+$ rm self.*
+$ cp vsh.graphml self.graphml
+$ grash vsg.gsh self.graphml
+$ diff vsg.gsh self.gsh
+
+Only the #name lines should differ.
+
 
 
 [1] Future versions of vsh will provide named pipes, sockets, etc.
