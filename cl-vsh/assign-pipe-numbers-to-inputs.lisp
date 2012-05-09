@@ -51,7 +51,7 @@
 		 (assign-pipe-number k v))
 	     facts)
     (setf (gethash 'n-pipes component-info)
-	  (list 'n-pipes component-id *npipes*))))
+	  (triple 'n-pipes component-id *npipes*))))
 
 (defun assign-pipe-number (id info)
   (when-match (p 'type info)

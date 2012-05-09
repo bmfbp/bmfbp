@@ -60,9 +60,9 @@
 
 (defun assign-fd (id info n facts)
   (setf (gethash 'fd-num info)
-        (list 'fd-num id n))
+        (triple 'fd-num id n))
   (let-obj-match (parent 'parent info)
-    (let-obj-match (source 'source info)
+    (let-match (source 'source info)
       (let-obj-match (pipe 'pipe-num info)
         (let ((pinfo (gethash parent facts)))
 	  (append-fd source pipe n parent pinfo))))))
@@ -70,7 +70,7 @@
 (defun append-fd (source-p pipe fd id info)
   (let ((dir (if source-p 'source-fds 'sink-fds)))
     (let-obj-match (fd-list dir info)
-      (setf (gethash dir info) (list dir id (cons (cons pipe fd) fd-list))))))
+      (setf (gethash dir info) (triple dir id (cons (cons pipe fd) fd-list))))))
 
 (defun next-fd (port-info facts)
   (let-obj-match (parent-id 'parent port-info)
@@ -81,7 +81,7 @@
 				  (obj nextf)
 				  3)))
 		    (setf (gethash 'next-fd parent-info)
-			  (list 'next-fd parent-id (1+ next)))
+			  (triple 'next-fd parent-id (1+ next)))
 		    next)))))
 
 ;(main)

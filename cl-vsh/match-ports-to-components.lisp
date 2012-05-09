@@ -42,7 +42,7 @@
                                       (let* ((parent (first matches))
                                              (parent-info (gethash parent facts))
                                              (kind (if input 'input 'output)))
-                                        (setf (gethash 'parent info) (list 'parent id parent))
+                                        (setf (gethash 'parent info) (triple 'parent id parent))
                                         (push-obj kind parent id parent-info))))
                                  ((< (length matches) 1)
                                   (vsherror "port ~A (~a) does not intersect with any component"
@@ -67,14 +67,16 @@
   (and (<= x rb) (>= x lb) (<= y bb) (>= y tb)))
 
 (defun intersects (port-bounds box-bounds)
-  (destructuring-bind (ty box-id lb tb rb bb) box-bounds
+  (destructuring-bind (ty box-id bounds) box-bounds
     (declare (ignorable ty box-id))
-    (destructuring-bind (typ port-id left top right bottom) port-bounds
-      (declare (ignorable typ port-id))
-      (or (inside left top lb tb rb bb)
-          (inside right top lb tb rb bb)
-          (inside left bottom lb tb rb bb)
-          (inside right bottom lb tb rb bb)))))
+    (destructuring-bind (lb tb rb bb) bounds
+      (destructuring-bind (typ port-id ltrb) port-bounds
+	(declare (ignorable typ port-id))
+	(destructuring-bind (left top right bottom) ltrb
+	  (or (inside left top lb tb rb bb)
+	      (inside right top lb tb rb bb)
+	      (inside left bottom lb tb rb bb)
+	      (inside right bottom lb tb rb bb)))))))
 
 (defun main (argv)
   (declare (ignorable argv))

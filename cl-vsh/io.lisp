@@ -64,7 +64,7 @@
                
 (defun rel (f) (first f)) ;; relation is always first
 (defun id (f) (second f)) ;; the id is always the second item in a fact - pair or triple - subject
-(defun obj (f) (if (<= (length f) 3) (first (last f)) (rest (rest f))))  ;; object
+(defun obj (f) (third f))  ;; object
 
 (defun add-fact (facts fact legal-fact)
   (unless (funcall legal-fact fact)
@@ -88,7 +88,7 @@
                   (funcall func facts)
                   (when write-p
 		    (write-facts facts outstrm)
-		    (format outstrm "(quit)~%"))
+		    (format outstrm "(quit nil nil)~%"))
                   #-lispworks (quit)
                   #+lispworks (return-from read-write-facts))
              do (add-fact facts fact legal-fact)  ;; facts can arrive in random order, cache them until ready
@@ -135,3 +135,8 @@
       (setf (gethash rel facts) f))
     (push new-obj (third f))))
   
+
+(defun triple (rel subj obj)
+  ;; let the lisp compiler type-check that every triple is indeed a triple
+  (list rel subj obj))
+(declaim (inline triple))

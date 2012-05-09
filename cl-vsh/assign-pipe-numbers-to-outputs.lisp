@@ -57,7 +57,7 @@
 			      (let ((sink-info (find-sink edge-info facts)))
 				(let ((pipe (get-pipe sink-info)))
 				  (setf (gethash 'pipe-num info)
-					(list 'pipe-num id pipe)))))))))
+					(triple 'pipe-num id pipe)))))))))
 
 (defun find-edge-for-source (port facts)
   (maphash #'(lambda (id info)

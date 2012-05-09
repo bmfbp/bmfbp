@@ -36,7 +36,7 @@
         (vsherror "port ~A cannot simultaneously be a source and sink" port-id))
       (when-match (s 'source port-info)
         (return-from mark-source)) ;; already marked
-      (setf (gethash 'source port-info) (list 'source port-id)))))
+      (setf (gethash 'source port-info) (triple 'source port-id nil)))))
 
 (defun mark-sink (fact facts)
   (let ((port-id (obj fact)))
@@ -45,7 +45,7 @@
         (vsherror "port ~A cannot simultaneously be a sink and sink" port-id))
       (when-match (s 'sink port-info)
         (return-from mark-sink)) ;; already marked
-      (setf (gethash 'sink port-info) (list 'sink port-id)))))
+      (setf (gethash 'sink port-info) (triple 'sink port-id nil)))))
 
 (defun mark-direction (id info facts)
   ;; create a new "direction" fact for every port

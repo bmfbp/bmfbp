@@ -33,10 +33,11 @@
   ;; create a new "bounds" fact for every node that has geometry
   (declare (ignorable id))
   (when-match (g 'geometry info)
-              (destructuring-bind (rrel rid x y w h) g
-		(declare (ignore rrel rid))
-                (setf (gethash 'bounds info)
-                      (list 'bounds id x y (+ x w) (+ y h))))))
+              (destructuring-bind (rrel rid geom) g
+		(destructuring-bind (x y w h) geom
+		  (declare (ignore rrel rid))
+		  (setf (gethash 'bounds info)
+			(triple 'bounds id (list x y (+ x w) (+ y h))))))))
 
 (defun calc-bounds (facts)
   (maphash #'calc-bound facts))
