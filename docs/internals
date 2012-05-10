@@ -27,9 +27,8 @@ where <pred> is typically a symbol[1] or a double-quoted string,
 
 where <subject> is typically an integer (in this version of vsh), and
 
-where <object> is typically a number, string or symbol, or multiple
-such items (internally, a multiple-item <object> is turned into a
-list). 
+where <object> is typically a number, string or symbol, or a list of
+such items (enclosed in parentheses).
 
 In this implementation, I chose to convert a flat factbase file into
 an internal data structure consisting of a hash table of hash tables,
@@ -51,7 +50,7 @@ The current implementation emits the following facts:
 
 (type <id> {"box"|"port"})  declares that id is a box (component) or port
 
-(geometry <id> x y width height)  declares the geometry for id
+(geometry <id> (x y width height))  declares the geometry for id
 
 (kind <id> "string")  declares the command-line command name for id
     (i.e. the program or script file name in "sh")
@@ -84,7 +83,7 @@ the scan component.
 Calculates the bounding box for all nodes (components and ports) and
 augments the factbase with facts in the form:
 
-(bounds <id> left top right bottom)
+(bounds <id> (left top right bottom))
 
 
 4. mark-directions
@@ -142,8 +141,11 @@ generated starting at 3 (untested at this time).
 
 Augments factbase with:
 
-(source-fds <id> (<int> ...))
-(sink-fds <id> (<int> ...))
+(source-fds <id> ((pipe . fd) (pipe . fd) ...))
+(sink-fds <id> ((pipe . fd) (pipe . fd) ...))
+
+where "pipe" and "fd" are integers.  The (x . y) notation represents a
+pair (2-tuple).
 
 
 9. emit-grash
@@ -326,19 +328,19 @@ Scan pares the graphml file down to:
 (component "t1")
 (node n0)
 (type n0 box)
-(geometry n0 250.5 104.0 131.0 76.0)
+(geometry n0 (250.5 104.0 131.0 76.0))
 (kind n0 "echo hello")
 (node n1)
 (type n1 box)
-(geometry n1 250.5 269.0 131.0 76.0)
+(geometry n1 (250.5 269.0 131.0 76.0))
 (kind n1 "cat -")
 (node n2)
 (type n2 port)
-(geometry n2 301.0 166.0 30.0 30.0)
+(geometry n2 (301.0 166.0 30.0 30.0))
 (portName n2 "out")
 (node n3)
 (type n3 port)
-(geometry n3 301.0 256.0 30.0 30.0)
+(geometry n3 (301.0 256.0 30.0 30.0))
 (portName n3 "in")
 (edge e0)
 (source e0 n2)
@@ -353,32 +355,32 @@ semi-colons represent to-end-of-line comments):
 (N-PIPES "t1" 1)
 (NODE N0)
 (TYPE N0 BOX)
-(GEOMETRY N0 250.5 104.0 131.0 76.0)
+(GEOMETRY N0 (250.5 104.0 131.0 76.0))
 (KIND N0 "echo hello")
-(BOUNDS N0 250.5 104.0 381.5 180.0)
+(BOUNDS N0 (250.5 104.0 381.5 180.0))
 (OUTPUT N0 (N2))
 (SOURCE-FDS N0 ((0 . 1)))
 (NODE N1)
 (TYPE N1 BOX)
-(GEOMETRY N1 250.5 269.0 131.0 76.0)
+(GEOMETRY N1 (250.5 269.0 131.0 76.0))
 (KIND N1 "cat -")
-(BOUNDS N1 250.5 269.0 381.5 345.0)
+(BOUNDS N1 (250.5 269.0 381.5 345.0))
 (INPUT N1 (N3))
 (SINK-FDS N1 ((0 . 0)))
 (NODE N2)
 (TYPE N2 PORT)
-(GEOMETRY N2 301.0 166.0 30.0 30.0)
+(GEOMETRY N2 (301.0 166.0 30.0 30.0))
 (PORTNAME N2 "out")
-(BOUNDS N2 301.0 166.0 331.0 196.0)
+(BOUNDS N2 (301.0 166.0 331.0 196.0))
 (SOURCE N2)
 (PARENT N2 N0)
 (PIPE-NUM N2 0)
 (FD-NUM N2 1)
 (NODE N3)
 (TYPE N3 PORT)
-(GEOMETRY N3 301.0 256.0 30.0 30.0)
+(GEOMETRY N3 (301.0 256.0 30.0 30.0))
 (PORTNAME N3 "in")
-(BOUNDS N3 301.0 256.0 331.0 286.0)
+(BOUNDS N3 (301.0 256.0 331.0 286.0))
 (SINK N3)
 (PARENT N3 N1)
 (PIPE-NUM N3 0)
