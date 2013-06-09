@@ -91,7 +91,7 @@
                      (shape (child-tags "ShapeNode" node))
                      (info (car (or generic shape))))
                 (format t "(node ~A nil)~%" cid)
-                (format t "(type ~A ~A)~%" cid (if generic "box" "port"))
+L                (format t "(type ~A ~A)~%" cid (if generic "box" "port"))
                 (let ((g (car (child-tags "Geometry" info))))
                   (format t "(geometry ~A (~A ~A ~A ~A))~%" cid
                           (attrib "x" g) (attrib "y" g) (attrib "width" g) (attrib "height" g)))
