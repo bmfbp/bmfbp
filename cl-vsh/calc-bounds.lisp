@@ -34,8 +34,8 @@
   (declare (ignorable id))
   (when-match (g 'geometry info)
               (destructuring-bind (rrel rid geom) g
+		(declare (ignore rrel rid))
 		(destructuring-bind (x y w h) geom
-		  (declare (ignore rrel rid))
 		  (setf (gethash 'bounds info)
 			(triple 'bounds id (list x y (+ x w) (+ y h))))))))
 
