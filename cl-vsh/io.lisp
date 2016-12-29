@@ -89,7 +89,7 @@
                   (when write-p
 		    (write-facts facts outstrm)
 		    (format outstrm "(quit nil nil)~%"))
-                  #-lispworks (quit)
+                  #+sbcl (sb-ext:exit)
                   #+lispworks (return-from read-write-facts))
              do (add-fact facts fact legal-fact)  ;; facts can arrive in random order, cache them until ready
              do (setf fact (read instrm nil 'EOF)))
@@ -139,4 +139,4 @@
 (defun triple (rel subj obj)
   ;; let the lisp compiler type-check that every triple is indeed a triple
   (list rel subj obj))
-(declaim (inline triple))
+;(declaim (inline triple))

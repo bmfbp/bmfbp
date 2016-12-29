@@ -37,6 +37,10 @@
 /*
   GRAph SHell - a Flow-Based Programming shell
 
+  (See https://www.cs.rutgers.edu/~pxk/416/notes/c-tutorials/pipe.html 
+  section "Creating a pipe between two child processes" for a explanation
+  of how to use dup2, etc.).
+
   A *nix shell that reads scripts of simple commands that plumb
   commands together with a graph of pipes / sockets / etc.
 
@@ -47,9 +51,10 @@
   Commands to the interpreter
 
   comments: # as very first character in the line
+
   empty line
 
-  pipe N : creates N pipes starting at index 0
+  pipes N : creates N pipes starting at index 0
   push N : push N as an arg to the next command (dup)
   dup N : dup2(pipes[TOS][TOS-1],N), pop TOS, pop TOS
   exec <args> : splits the args and calls execvp, after closing all pipes
@@ -62,7 +67,7 @@
 
 */
 
-#define SOCKMAX 100
+#define PIPEMAX 100
 #define LINEMAX 1024
 #define ARGVMAX 128
 #define STACKMAX 2
@@ -86,7 +91,7 @@ char *parse (char *cmd, char *line) {
   return line;
 }
 
-int sockets[SOCKMAX-1][2];
+int pipes[PIPEMAX-1][2];
 int child;
 #define MAIN 1
 #define PARENT 2
@@ -114,27 +119,29 @@ void gdup (char *p) {
   int fd = atoi(p);
   int i = pop();
   int dir = pop();
-  dup2 (sockets[i][dir], fd);
+  int oppositeDir = dir == 0 ? 1 : 0;
+  dup2 (pipes[i][dir], fd);
+  //close(pipes[i][oppositeDir]));  // flows are one-way only
 }
 
 int highPipe = -1;
 
 void mkPipes (char *p) {
   int i = atoi(p);
-  if (i <= 0 || i > SOCKMAX)
+  if (i <= 0 || i > PIPEMAX)
     quit("socket index");
   highPipe = i - 1;
   i = 0;
   while (i <= highPipe)
-    if (pipe (sockets[i++]) < 0)
-      quit ("error opening stream socket pair");
+    if (pipe (pipes[i++]) < 0)
+      quit ("error opening pipe pair");
 }
 
 void closeAllPipes () {
   int i;
   for (i = 0 ; i <= highPipe ; i++) {
-    close (sockets[i][PREAD]);
-    close (sockets[i][PWRITE]);
+    close (pipes[i][PREAD]);
+    close (pipes[i][PWRITE]);
   }
 }
 	   
@@ -266,9 +273,9 @@ int main (int argc, char **argv) {
   if (f == NULL)
     quit ("usage: grash {filename|-} [args]");
 
-  for (r = 0; r < SOCKMAX; r++) {
-    sockets[r][0] = -1;
-    sockets[r][1] = -1;
+  for (r = 0; r < PIPEMAX; r++) {
+    pipes[r][0] = -1;
+    pipes[r][1] = -1;
   }
   
   p = fgets (line, sizeof(line), f);

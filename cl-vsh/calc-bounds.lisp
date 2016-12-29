@@ -47,5 +47,5 @@
   (read-write-facts #'calc-bounds *standard-input* *standard-output*)
   0)
 
-#-lispworks
+;#-lispworks
 ;(main)

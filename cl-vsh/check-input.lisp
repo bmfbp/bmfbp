@@ -48,6 +48,6 @@
    :legal-fact #'(lambda (f) (member (rel f) '(type node geometry kind portName edge source sink component))))
   0)
 
-#-lispworks
+;#-lispworks
 ;(main)
 
