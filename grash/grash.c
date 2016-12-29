@@ -57,6 +57,8 @@
   pipes N : creates N pipes starting at index 0
   push N : push N as an arg to the next command (dup)
   dup N : dup2(pipes[TOS][TOS-1],N), pop TOS, pop TOS
+          pipes[x][y] : x is old pipe #, y is 0 for read-end, 1 for write-end, etc.
+          N is the new (child's) FD to be overwritten with the dup'ed pipe (0 for stdin, 1 for stdout, etc).
   exec <args> : splits the args and calls execvp, after closing all pipes
   exec1st <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
   fork : forks a new process
@@ -72,10 +74,8 @@
 #define ARGVMAX 128
 #define STACKMAX 2
 
-#define PREAD 0
-#define PWRITE 1
-#define STDIN 0
-#define STDOUT 1
+#define READ_END 0
+#define WRITE_END 1
 
 int comment (char *line) {
   /* return 1 if line begins with # or is empty, otherwise 0 */
@@ -119,7 +119,7 @@ void gdup (char *p) {
   int fd = atoi(p);
   int i = pop();
   int dir = pop();
-  int oppositeDir = dir == 0 ? 1 : 0;
+  int oppositeDir = dir == READ_END ? WRITE_END : READ_END;
   dup2 (pipes[i][dir], fd);
   close(pipes[i][oppositeDir]);  // flows are one-way only
 }
@@ -138,10 +138,11 @@ void mkPipes (char *p) {
 }
 
 void closeAllPipes () {
+  // close all pipes in pipe array owned by the parent, before exec'ing child
   int i;
   for (i = 0 ; i <= highPipe ; i++) {
-    close (pipes[i][PREAD]);
-    close (pipes[i][PWRITE]);
+    close (pipes[i][READ_END]);
+    close (pipes[i][WRITE_END]);
   }
 }
 	   
@@ -274,8 +275,8 @@ int main (int argc, char **argv) {
     quit ("usage: grash {filename|-} [args]");
 
   for (r = 0; r < PIPEMAX; r++) {
-    pipes[r][0] = -1;
-    pipes[r][1] = -1;
+    pipes[r][READ_END] = -1;
+    pipes[r][WRITE_END] = -1;
   }
   
   p = fgets (line, sizeof(line), f);
