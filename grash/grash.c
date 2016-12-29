@@ -121,7 +121,7 @@ void gdup (char *p) {
   int dir = pop();
   int oppositeDir = dir == 0 ? 1 : 0;
   dup2 (pipes[i][dir], fd);
-  //close(pipes[i][oppositeDir]));  // flows are one-way only
+  close(pipes[i][oppositeDir]);  // flows are one-way only
 }
 
 int highPipe = -1;

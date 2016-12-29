@@ -89,7 +89,7 @@ TESTING Self Compilation
 $ cd cl-vsh
 $ rm self.*
 $ cp vsh.graphml self.graphml
-$ grash vsg.gsh self.graphml
+$ grash vsh.gsh self.graphml
 $ diff vsh.gsh self.gsh
 
 Only the #name lines should differ.
