@@ -153,7 +153,6 @@ void doFork () {
   if ((child = fork()) == -1)
     quit ("fork");
   state = child ? PARENT : CHILD;
-  fprintf (stderr, "fork >> %d\n", child);
 }
 
 void doKrof () {
@@ -168,7 +167,6 @@ void  parseArgs(char *line, int *argc, char **argv) {
     if (*line == '\0')
       break;
     *argv++ = line;
-    fprintf(stderr, "arg = /%s/\n", line);
     *argc += 1;
     while (*line != '\0' && *line != ' ' && 
 	   *line != '\t' && *line != '\n') 
@@ -293,7 +291,7 @@ int main (int argc, char **argv) {
 
   closeAllPipes();
   while ((pid = wait(&status)) != -1) {
-    fprintf(stderr, "%d exits %d\n", pid, WEXITSTATUS(status));
+    //fprintf(stderr, "%d exits %d\n", pid, WEXITSTATUS(status));
   }
   exit(0);
 }
