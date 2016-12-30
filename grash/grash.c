@@ -33,6 +33,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
+#include <wait.h>
+
 
 /*
   GRAph SHell - a Flow-Based Programming shell
@@ -119,7 +121,7 @@ void gdup (char *p) {
   int fd = atoi(p);
   int i = pop();
   int dir = pop();
-  int oppositeDir = dir == READ_END ? WRITE_END : READ_END;
+  int oppositeDir = ((dir == READ_END) ? WRITE_END : READ_END);
   dup2 (pipes[i][dir], fd);
   close(pipes[i][oppositeDir]);  // flows are one-way only
 }
@@ -151,6 +153,7 @@ void doFork () {
   if ((child = fork()) == -1)
     quit ("fork");
   state = child ? PARENT : CHILD;
+  fprintf (stderr, "fork >> %d\n", child);
 }
 
 void doKrof () {
@@ -165,6 +168,7 @@ void  parseArgs(char *line, int *argc, char **argv) {
     if (*line == '\0')
       break;
     *argv++ = line;
+    fprintf(stderr, "arg = /%s/\n", line);
     *argc += 1;
     while (*line != '\0' && *line != ' ' && 
 	   *line != '\t' && *line != '\n') 
@@ -189,14 +193,14 @@ void appendArgs (int argc, char **argv, int oargc, char **oargv) {
 void doExec (char *p, int oargc, char **oargv, int first) {
   char *argv[ARGVMAX];
   int argc;
-  closeAllPipes();
   parseArgs (p, &argc, argv);
   if (first) {
     appendArgs (argc, argv, oargc, oargv);
   }
   argc = 0;
   if (execvp (argv[0], argv) < 0)
-    quit ("exec failed");
+    fprintf (stderr, "exec: %s\n", argv[0]);
+    quit ("exec failed!");
 }
 
 void interpret (char *line, int argc, char **argv) {
@@ -265,6 +269,8 @@ int main (int argc, char **argv) {
   char line[LINEMAX-1];
   char *p;
   FILE *f;
+  pid_t pid;
+  int status;
 
   if (argc < 2 || argv[1][0] == '-') {
     f = stdin;
@@ -284,4 +290,10 @@ int main (int argc, char **argv) {
     interpret (line, argc, argv);
     p = fgets (line, sizeof(line), f);
   }
+
+  closeAllPipes();
+  while ((pid = wait(&status)) != -1) {
+    fprintf(stderr, "%d exits %d\n", pid, WEXITSTATUS(status));
+  }
+  exit(0);
 }
