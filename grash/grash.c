@@ -117,6 +117,12 @@ int pop () {
   return stack[--sp];
 }
 
+void gclose (char *p) {
+  int i = atoi(p);
+  close(pipes[i][0]);
+  close(pipes[i][1]);
+}
+
 void gdup (char *p) {
   int fd = atoi(p);
   int i = pop();
@@ -152,7 +158,7 @@ void closeAllPipes () {
 void doFork () {
   if ((child = fork()) == -1)
     quit ("fork");
-  state = child ? PARENT : CHILD;
+  state = (child == 0) ? PARENT : CHILD;
 }
 
 void doKrof () {
@@ -191,14 +197,17 @@ void appendArgs (int argc, char **argv, int oargc, char **oargv) {
 void doExec (char *p, int oargc, char **oargv, int first) {
   char *argv[ARGVMAX];
   int argc;
+  pid_t pid;
   parseArgs (p, &argc, argv);
   if (first) {
     appendArgs (argc, argv, oargc, oargv);
   }
   argc = 0;
-  if (execvp (argv[0], argv) < 0)
+  pid = execvp (argv[0], argv);
+  if (pid < 0) {
     fprintf (stderr, "exec: %s\n", argv[0]);
     quit ("exec failed!");
+  }
 }
 
 void interpret (char *line, int argc, char **argv) {
@@ -212,12 +221,9 @@ void interpret (char *line, int argc, char **argv) {
     p = parse ("krof", line);
     if (p)
       exit(0);
-    /* fall through */
-
-  case MAIN:
-    p = parse ("pipes", line);
+    p = parse ("close", line);
     if (p) {
-      mkPipes (p);
+      gclose (p);
       return;
     }
     p = parse ("dup", line);
@@ -230,11 +236,6 @@ void interpret (char *line, int argc, char **argv) {
       push (p);
       return;
     }
-    p = parse ("fork", line);
-    if (p) {
-      doFork ();
-      return;
-    }
     p = parse ("exec1st", line);
     if (p) {
       doExec (p, argc, argv, 1);
@@ -243,6 +244,20 @@ void interpret (char *line, int argc, char **argv) {
     p = parse ("exec", line);
     if (p) {
       doExec (p, argc, argv, 0);
+      return;
+    }
+    quit("can't happen");
+    break;
+
+  case MAIN:
+    p = parse ("pipes", line);
+    if (p) {
+      mkPipes (p);
+      return;
+    }
+    p = parse ("fork", line);
+    if (p) {
+      doFork ();
       return;
     }
     p = parse ("krof", line);
@@ -288,10 +303,9 @@ int main (int argc, char **argv) {
     interpret (line, argc, argv);
     p = fgets (line, sizeof(line), f);
   }
-
   closeAllPipes();
   while ((pid = wait(&status)) != -1) {
-    //fprintf(stderr, "%d exits %d\n", pid, WEXITSTATUS(status));
+    fprintf(stderr, "%d exits %d\n", pid, WEXITSTATUS(status));
   }
   exit(0);
 }
