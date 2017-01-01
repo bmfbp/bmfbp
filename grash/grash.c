@@ -94,6 +94,7 @@ char *parse (char *cmd, char *line) {
 }
 
 int pipes[PIPEMAX-1][2];
+int usedPipes[PIPEMAX-1];
 int child;
 #define MAIN 1
 #define PARENT 2
@@ -130,6 +131,7 @@ void gdup (char *p) {
   int oppositeDir = ((dir == READ_END) ? WRITE_END : READ_END);
   dup2 (pipes[i][dir], fd);
   close(pipes[i][oppositeDir]);  // flows are one-way only
+  usedPipes[i] = 1;
 }
 
 int highPipe = -1;
@@ -146,11 +148,21 @@ void mkPipes (char *p) {
 }
 
 void closeAllPipes () {
-  // close all pipes in pipe array owned by the parent, before exec'ing child
+  // close all pipes in pipe array owned by the parent
   int i;
   for (i = 0 ; i <= highPipe ; i++) {
     close (pipes[i][READ_END]);
     close (pipes[i][WRITE_END]);
+  }
+}
+	   
+void closeUnusedPipes () {
+  int i;
+  for (i = 0 ; i <= highPipe ; i++) {
+    if (usedPipes[i] == 0) {
+      close (pipes[i][READ_END]);
+      close (pipes[i][WRITE_END]);
+    }
   }
 }
 	   
@@ -203,6 +215,7 @@ void doExec (char *p, int oargc, char **oargv, int first) {
     appendArgs (argc, argv, oargc, oargv);
   }
   argc = 0;
+  closeUnusedPipes();
   pid = execvp (argv[0], argv);
   if (pid < 0) {
     fprintf (stderr, "exec: %s\n", argv[0]);
@@ -221,11 +234,6 @@ void interpret (char *line, int argc, char **argv) {
     p = parse ("krof", line);
     if (p)
       exit(0);
-    p = parse ("close", line);
-    if (p) {
-      gclose (p);
-      return;
-    }
     p = parse ("dup", line);
     if (p) {
       gdup (p);
@@ -296,6 +304,7 @@ int main (int argc, char **argv) {
   for (r = 0; r < PIPEMAX; r++) {
     pipes[r][READ_END] = -1;
     pipes[r][WRITE_END] = -1;
+    usedPipes[r] = 0;
   }
   
   p = fgets (line, sizeof(line), f);
