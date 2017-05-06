@@ -11,9 +11,21 @@ assign-fds and emit-grash.
 
 The vsh compiler emits a ".gsh" file, which can be executed by grash.
 
-For example, to recompile vsh itself:
+To run a .gsh vile, use
 
-$ grash self.gsh 
+$ grash <.vsh file> <.graphml file to be compiled>
+
+For example, to self-compile vsh and check that the result is essentially the same:
+
+$ rm self.*
+$ cp vsh.graphml self.graphml
+$ grash vsh.gsh self.graphml
+$ diff vsh.gsh self.gsh
+1c1
+< #name vsh.gsh
+---
+> #name self.gsh
+(i.e. only the originating filenames differ).
 
 The nine components listed above were created using SBCL and
 "buildapp" and quicklisp:

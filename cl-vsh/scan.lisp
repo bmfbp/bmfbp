@@ -55,7 +55,7 @@
 (defun find-graph-name-id (graph)
   (attrib "id"
           (find-with-attr-vals
-           '(("id" "d7")
+           '(("id" "d0")
              ("for" "graph")
              ("attr.type" "string")
              ("attr.name" "Description"))

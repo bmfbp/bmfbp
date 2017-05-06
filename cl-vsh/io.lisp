@@ -90,7 +90,7 @@
 		    (write-facts facts outstrm)
 		    (format outstrm "(quit nil nil)~%"))
                   #+sbcl (sb-ext:exit)
-                  #+lispworks (return-from read-write-facts))
+                  #+lispworks (return-from read-write-if-facts))
              do (add-fact facts fact legal-fact)  ;; facts can arrive in random order, cache them until ready
              do (setf fact (read instrm nil 'EOF)))
        (funcall func facts)
