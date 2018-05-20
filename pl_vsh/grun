@@ -19,3 +19,6 @@ gplc pl_assign_pipe_numbers_to_outputs.pl --no-top-level
 # assign_fds still not working for non-std fd's
 gplc pl_assign_fds.pl --no-top-level
 ./pl_assign_fds <fb7.pro >fb8.pro
+
+gplc pl_emit.pl --no-top-level
+./pl_emit <fb8.pro
