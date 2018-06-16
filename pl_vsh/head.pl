@@ -1,5 +1,6 @@
 
 :- dynamic(eltype/2) .
+:- dynamic(kind/2) .
 :- dynamic(portName/2) .
 :- dynamic(geometry_x/2) .
 :- dynamic(geometry_y/2) .

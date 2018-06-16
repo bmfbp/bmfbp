@@ -96,7 +96,14 @@
                   (format t "geometry_x(~A,~A).~%" cid (attrib "x" g))
                   (format t "geometry_y(~A,~A).~%" cid (attrib "y" g))
                   (format t "geometry_w(~A,~A).~%" cid (attrib "width" g))
-                  (format t "geometry_h(~A,~A).~%" cid (attrib "height" g)))))
+                  (format t "geometry_h(~A,~A).~%" cid (attrib "height" g)))
+                (let ((lab (car (children (car (child-tags "NodeLabel" info))))))
+                  (format t "~A(~a,~a).~%"
+                          (if generic
+                              "kind"
+                            "portName")
+                          cid
+                          lab))))
           (child-tags "node" graph)))
 
 (defun print-edges (id graph)
