@@ -19,9 +19,9 @@
 main :-
     g_assign(fdnum,3),  % non-special case fd's start at 3 and up to maximum
     readFB(user_input),
-    forall(portName(P,in),assign_source_fd(P,0)), % stdin == 0
-    forall(portName(P,out),assign_sink_fd(P,1)), % stdout == 1
-    forall(portName(P,err),assign_sink_fd(P,2)), % stderr == 2
+    forall(portName(P,in),assign_sink_fd(P,0)), % stdin == 0
+    forall(portName(P,out),assign_source_fd(P,1)), % stdout == 1
+    forall(portName(P,err),assign_source_fd(P,2)), % stderr == 2
 
     %-- still thinking about this one - what about non-std fd's?
     %-- are the ports per-component?  Are they named at the architectural level?

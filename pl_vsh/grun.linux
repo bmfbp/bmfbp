@@ -1,8 +1,7 @@
 #!/bin/bash -v
 # script that runs the components manually w/o grash and leaves intermediate files, for debug purposes
-PATH=/usr/local/bin/:~/bin/:$PATH
-BIN=~/bin
-$BIN/plscan pl_vsh.graphml >1.txt
+
+pl_scan pl_vsh.graphml >1.txt
 sort 1.txt >fb1.pro
 gplc pl_check_input.pl --no-top-level 
 ./pl_check_input <fb1.pro >fb2.pro
