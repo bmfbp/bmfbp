@@ -12,7 +12,7 @@ main :-
     write('pipes '),
     write(Npipes),
     nl,
-    forall(kind(ID,_),emitComponent(ID)),
+    forall(eltype(ID,_),emitComponent(ID)),
     halt.
 
 emitComponent(ID) :-
@@ -21,7 +21,7 @@ emitComponent(ID) :-
     writeSpaces,
     writeExec(ID),
     write(' '),
-    kind(ID,Name),
+    eltype(ID,Name),
     write(Name),
     nl,
     write('krof'),

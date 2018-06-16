@@ -10,7 +10,6 @@ writeFB :-
     forall(component(X), writeterm(component(X))),
     forall(edge(X), writeterm(edge(X))),
     forall(eltype(X,Y), writeterm(eltype(X,Y))),
-    forall(kind(X,Y), writeterm(kind(X,Y))),
     forall(geometry_h(X,Y), writeterm(geometry_h(X,Y))),
     forall(geometry_w(X,Y), writeterm(geometry_w(X,Y))),
     forall(geometry_x(X,Y), writeterm(geometry_x(X,Y))),
@@ -32,9 +31,6 @@ readFB(Str) :-
 element(end_of_file, _) :- !.
 element(eltype(X,Y), Str) :- !,
 			   asserta(eltype(X,Y)),
-		       readFB(Str).
-element(kind(X,Y), Str) :- !,
-			   asserta(kind(X,Y)),
 		       readFB(Str).
 element(portName(X,Y), Str) :- !,
 			   asserta(portName(X,Y)),
