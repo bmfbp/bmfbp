@@ -15,9 +15,39 @@ main :-
     forall(kind(ID,_),emitComponent(ID)),
     halt.
 
+writeIn(In) :-
+    writeSpaces,
+    portName(In,in),
+    pipeNum(In,Pipe),
+    write('stdinPipe'),
+    write(' '),
+    write(Pipe),
+    nl.
+
+writeOut(Out) :-
+    writeSpaces,
+    portName(Out,out),
+    pipeNum(Out,Pipe),
+    write('stdoutPipe'),
+    write(' '),
+    write(Pipe),
+    nl.
+
+writeErr(Out) :-
+    writeSpaces,
+    portName(Out,out),
+    pipeNum(Out,Pipe),
+    write('stderrPipe'),
+    write(' '),
+    write(Pipe),
+    nl.
+
 emitComponent(ID) :-
     write('fork'),
     nl,
+    forall(inputOfParent(ID,In),writeIn(In)),
+    forall(outputOfParent(ID,O),writeOut(O)),
+    forall(erroutputOfParent(ID,Out),writeErr(Out)),
     writeSpaces,
     writeExec(ID),
     write(' '),
@@ -29,6 +59,15 @@ emitComponent(ID) :-
 
 writeSpaces :- char_code(C,32), write(C), write(C).
 
+inputOfParent(P,In) :-
+    parent(In,P),portName(In,in).
+    
+outputOfParent(P,Out) :-
+    parent(Out,P),portName(Out,out).
+    
+erroutputOfParent(P,Out) :-
+    parent(Out,P),portName(Out,err).
+    
 writeExec(ID) :-
     hasInput(ID),write(exec),!.
 writeExec(_) :-
