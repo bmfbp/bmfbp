@@ -75,8 +75,9 @@ writeExec(_) :-
 
 hasInput(ID) :-
     eltype(ID,box),
-    parent(ID2,ID),
-    eltype(ID2,port).
-    
+    parent(Port,ID),
+    eltype(Port,port),
+    sink(_,Port).
+
 :- include(tail).
 
