@@ -12,6 +12,10 @@ First, we make a pipe and put two FDs into it, e.g. FD0 <= a unique file descrip
 Next, we map stdout and stdin appropriately, FD0 is put into fd[1] of cmd1 and FD1 is put into fd[0] of cmd1.
 To do this mapping, DUP2() is used, e.g. dup2(pipe[FD1],fd[1]) is done in cmd1 and dup2(pipd[FD0],fd[0]) is done in cmd2.
 
-In reality, the shell creates an array of pipes, one row (of pairs) for every "|" in a shell pipeline.
+In reality, the shell creates an array of pipes, one row (of pairs) for every "|" in a shell pipeline.  The shell forks commands, making a clone of itsef and all of its data structure, esp. the array of pipes.  The child, when forekd, uses dup2() to copy any FD's then closes all other FD's (that it doesn't need), then "escapes" from the parent (e.g. the shell) by using the exec() command.  The child continues running, using the cloned FD's (e.g for stdin, stdout and stderr).
+
+
+
+
 
   
