@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
-#include <wait.h>
+#include <sys/wait.h>
 
 
 /*
@@ -61,6 +61,9 @@
   dup N : dup2(pipes[TOS][TOS-1],N), pop TOS, pop TOS
           pipes[x][y] : x is old pipe #, y is 0 for read-end, 1 for write-end, etc.
           N is the new (child's) FD to be overwritten with the dup'ed pipe (0 for stdin, 1 for stdout, etc).
+  stdinPipe N - shorthand for above ; dup2(pipes[N][0],0)
+  stdoutPipe N - shorthand for above ; dup2(pipes[N][1],1)
+  stderrPipe N - shorthand for above ; dup2(pipes[N][2],2)
   exec <args> : splits the args and calls execvp, after closing all pipes
   exec1st <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
   fork : forks a new process
@@ -134,6 +137,27 @@ void gdup (char *p) {
   usedPipes[i] = 1;
 }
 
+void gdup_std (char *p, int fd, int dir) {
+  int i = atoi(p);
+  int oppositeDir = ((dir == READ_END) ? WRITE_END : READ_END);
+  dup2 (pipes[i][dir], fd);
+  close(pipes[i][oppositeDir]);  // flows are one-way only
+  usedPipes[i] = 1;
+}
+
+void gdup_stdin (char *p) {
+  gdup_std (p, 0, READ_END);
+}
+
+void gdup_stdout (char *p) {
+  gdup_std (p, 1, WRITE_END);
+}
+
+void gdup_stderr(char *p) {
+  gdup_std (p, 2, WRITE_END);
+}
+
+
 int highPipe = -1;
 
 void mkPipes (char *p) {
@@ -178,31 +202,36 @@ void doKrof () {
 }
 
 void  parseArgs(char *line, int *argc, char **argv) {
+  /* convert the char line into argc/argv */
   *argc = 0;
   while (*line != '\0') {
-    while (*line == ' ' || *line == '\t' || *line == '\n')
+    while (*line == ' ' || *line == '\t' || *line == '\n') {
       *line++ = '\0';
-    if (*line == '\0')
+    }
+    if (*line == '\0') {
       break;
+    }
     *argv++ = line;
     *argc += 1;
     while (*line != '\0' && *line != ' ' && 
 	   *line != '\t' && *line != '\n') 
       line++;
   }
-  *argv = '\0';
+  *argv = NULL;
 }
   
-void appendArgs (int argc, char **argv, int oargc, char **oargv) {
-  /* tack extra command-line args onto tail of argv */
+void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
+  /* tack extra command-line args onto tail of argv, using pointer copies */
+  fprintf (stderr, "oargc=%d\n", oargc);
+  fflush (stderr);
   if (oargc > 2) {
     int i = 2;
     while (i < oargc) {
-      argv[argc] = oargv[i];
-      argc += 1;
+      argv[*argc] = oargv[i];
+      *argc += 1;
       i += 1;
     }
-    argv[i] = '\0';
+    argv[i] = NULL;
   }
 }
 
@@ -210,12 +239,22 @@ void doExec (char *p, int oargc, char **oargv, int first) {
   char *argv[ARGVMAX];
   int argc;
   pid_t pid;
+  int i;
   parseArgs (p, &argc, argv);
   if (first) {
-    appendArgs (argc, argv, oargc, oargv);
+    appendArgs (&argc, argv, oargc, oargv);
   }
-  argc = 0;
   closeUnusedPipes();
+
+  fprintf (stderr, "execing[%d]:", argc);
+  fflush (stderr);
+  for(i=0; i < argc; i+=1) {
+    fprintf (stderr, " %s", argv[i]);
+    fflush (stderr);
+  }
+  fprintf (stderr, "\n");
+  fflush (stderr);
+
   pid = execvp (argv[0], argv);
   if (pid < 0) {
     fprintf (stderr, "exec: %s\n", argv[0]);
@@ -237,6 +276,21 @@ void interpret (char *line, int argc, char **argv) {
     p = parse ("dup", line);
     if (p) {
       gdup (p);
+      return;
+    }
+    p = parse ("stdinPipe", line);
+    if (p) {
+      gdup_stdin (p);
+      return;
+    }
+    p = parse ("stdoutPipe", line);
+    if (p) {
+      gdup_stdout (p);
+      return;
+    } 
+    p = parse ("stderrPipe", line);
+    if (p) {
+      gdup_stderr (p);
       return;
     }
     p = parse ("push", line);

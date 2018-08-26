@@ -19,7 +19,7 @@ writeIn(In) :-
     writeSpaces,
     portName(In,in),
     pipeNum(In,Pipe),
-    write('# stdinPipe'),
+    write('stdinPipe'),
     write(' '),
     write(Pipe),
     nl.
@@ -28,7 +28,7 @@ writeOut(Out) :-
     writeSpaces,
     portName(Out,out),
     pipeNum(Out,Pipe),
-    write('# stdoutPipe'),
+    write('stdoutPipe'),
     write(' '),
     write(Pipe),
     nl.
@@ -37,7 +37,7 @@ writeErr(Out) :-
     writeSpaces,
     portName(Out,out),
     pipeNum(Out,Pipe),
-    write('# stderrPipe'),
+    write('stderrPipe'),
     write(' '),
     write(Pipe),
     nl.

@@ -2,3 +2,5 @@
 *fsl
 *fasl
 .AppleDouble
+*.pro
+[0-9]*

@@ -1,3 +1,5 @@
+#  build the components and mv them to ~/bin
+
 bindir = ~/bin
 
 execs =  $(bindir)/scan $(bindir)/check-input $(bindir)/calc-bounds $(bindir)/mark-directions \

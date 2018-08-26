@@ -61,9 +61,14 @@
 
 (defun emit-pipes (f dir fds)
   (mapc #'(lambda (p-fd)
-	    (vshemit f "push ~a" dir)
-	    (vshemit f "push ~a" (car p-fd))
-	    (vshemit f "dup ~a" (cdr p-fd)))
+	    (case dir
+	      (0 (vshemit f "stdinPipe ~A" (car p-fd)))
+	      (1 (vshemit f "stdoutPipe ~A" (car p-fd)))
+	      (2 (vshemit f "stderrPipe ~A" (car p-fd)))
+	      (otherwise
+	       (vshemit f "push ~a" dir)
+	       (vshemit f "push ~a" (car p-fd))
+	       (vshemit f "dup ~a" (cdr p-fd)))))
 	(remove-duplicates fds :test 'equal)))
 
 (defun emit-components (f facts)
