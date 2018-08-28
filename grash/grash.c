@@ -201,13 +201,18 @@ void doKrof () {
   state = MAIN;
 }
 
+char *trim_white_space(char *p) {
+  while (*p == ' ' || *p == '\t' || *p == '\n') {
+    *p++ = '\0';
+  }
+  return p;
+}
+
 void  parseArgs(char *line, int *argc, char **argv) {
   /* convert the char line into argc/argv */
   *argc = 0;
   while (*line != '\0') {
-    while (*line == ' ' || *line == '\t' || *line == '\n') {
-      *line++ = '\0';
-    }
+    line = trim_white_space(line);
     if (*line == '\0') {
       break;
     }
@@ -264,6 +269,9 @@ void doExec (char *p, int oargc, char **oargv, int first) {
 
 void interpret (char *line, int argc, char **argv) {
   char *p;
+
+  line = trim_white_space(line);
+
   if (comment (line))
     return;
 
