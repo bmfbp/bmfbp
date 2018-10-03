@@ -1,13 +1,3 @@
-(defun tofb (f list)
-  (let ((n (1- (length list))))
-    (dotimes (id n)
-      (to-fb-1 f (nth id list) id)))
-  (values))
-
-(defun xy (f lis id)
-  (format f "~a_x(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (second lis))
-  (format f "~a_y(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (third lis)))
-
 (defun dash-to-u (str)
   (flet ((dtu (x) (substitute #\_ #\- x)))
     (if (stringp str)
@@ -17,6 +7,10 @@
             (intern (dtu s)))
         (error "not string or symbol")))))
         
+
+(defun xy (f lis id)
+  (format f "~a_x(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (second lis))
+  (format f "~a_y(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (third lis)))
 
 (defun to-fb-1 (f item id)
   (assert (listp item))
@@ -45,3 +39,9 @@
 
     (otherwise
      (error "bad item /~a/~%" item))))
+
+(defun tofb (f list)
+  (let ((n (1- (length list))))
+    (dotimes (id n)
+      (to-fb-1 f (nth id list) id)))
+  (values))
