@@ -6,14 +6,9 @@ export PATH=~/bin:$PATH
 svg-to-fb <sample.lisp >fb3.pro
 
 
-# pl_scan pl_vsh.graphml >1.txt
-# sort 1.txt >fb1.pro
-# gplc pl_check_input.pl --no-top-level 
-# ./pl_check_input <fb1.pro >fb2.pro
-# gplc pl_calc_bounds.pl --no-top-level
-# ./pl_calc_bounds <fb2.pro >fb3.pro
-# gplc pl_mark_directions.pl --no-top-level
-# ./pl_mark_directions <fb3.pro >fb4.pro
+gplc pl_mark_directions.pl --no-top-level
+pl_mark_directions <fb3.pro >fb4.pro
+
 # gplc pl_match_ports_to_components.pl --no-top-level
 # ./pl_match_ports_to_components <fb4.pro >fb5.pro
 # gplc pl_assign_pipe_numbers_to_inputs.pl --no-top-level
