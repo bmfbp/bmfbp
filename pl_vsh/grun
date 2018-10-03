@@ -21,4 +21,5 @@ gplc pl_assign_fds.pl --no-top-level
 ./pl_assign_fds <fb7.pro >fb8.pro
 
 gplc pl_emit.pl --no-top-level
-./pl_emit <fb8.pro
+./pl_emit <fb8.pro >fb9.gsh
+

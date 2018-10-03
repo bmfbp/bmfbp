@@ -14,7 +14,7 @@
 	(assert (numberp (second pair)))
 	(convert-arrows (translate (first pair) (second pair) (third list)))))))
 
-(defun run (&optional (in-name "./sample") (out-name "./fb.pl"))
+(defun run (&optional (in-name "./sample") (out-name "./fb.pro"))
   (with-open-file (f out-name :direction :output :if-does-not-exist :create :if-exists :supersede)
       (tofb f (main in-name))))
 

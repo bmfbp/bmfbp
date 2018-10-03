@@ -5,3 +5,6 @@
 .AppleDouble
 *.pro
 [0-9]*
+junk*
+temp*
+#*

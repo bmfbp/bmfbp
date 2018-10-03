@@ -103,8 +103,16 @@ element(parent(X,Y), Str) :- !,
 			     asserta(parent(X,Y)),
 			     readFB(Str).
 
+element(line(X,Y), Str) :- !,
+			     asserta(line(X,Y)),
+			     readFB(Str).
+
 element(pipeNum(X,Y), Str) :- !,
 			     asserta(pipeNum(X,Y)),
+			     readFB(Str).
+
+element(arrow(X,Y), Str) :- !,
+			     asserta(arrow(X,Y)),
 			     readFB(Str).
 
 element(sinkfd(P,F), Str) :- !,
@@ -115,10 +123,61 @@ element(sourcefd(P,F), Str) :- !,
 			     asserta(sourcefd(P,F)),
 			     readFB(Str).
 
+element(source(P,F), Str) :- !,
+			     asserta(source(P,F)),
+			     readFB(Str).
+
 element(npipes(X), Str) :- !,
 			     asserta(npipes(X)),
 			     readFB(Str).
 
+element(move_absolute_x(X,Y), Str) :- !,
+			     asserta(move_absolute_x(X,Y)),
+			     readFB(Str).
+
+
+element(move_absolute_y(X,Y), Str) :- !,
+			     asserta(move_absolute_y(X,Y)),
+			     readFB(Str).
+
+
+element(move_relative_x(X,Y), Str) :- !,
+			     asserta(move_relative_x(X,Y)),
+			     readFB(Str).
+
+element(move_relative_y(X,Y), Str) :- !,
+			     asserta(move_relative_y(X,Y)),
+			     readFB(Str).
+
+
+element(rect(X,Y), Str) :- !,
+			     asserta(rect(X,Y)),
+			     readFB(Str).
+
+element(stroke_relative_x(X,Y), Str) :- !,
+			     asserta(stroke_relative_x(X,Y)),
+			     readFB(Str).
+
+element(stroke_relative_y(X,Y), Str) :- !,
+			     asserta(stroke_relative_y(X,Y)),
+			     readFB(Str).
+
+
+element(stroke_absolute_x(X,Y), Str) :- !,
+			     asserta(stroke_absolute_x(X,Y)),
+			     readFB(Str).
+
+element(stroke_absolute_y(X,Y), Str) :- !,
+			     asserta(stroke_absolute_y(X,Y)),
+			     readFB(Str).
+
+element(text(X,Y), Str) :- !,
+			     asserta(text(X,Y)),
+			     readFB(Str).
+
+
+
+    
 %element(Term, _) :-
 %     type_error(element, Term).
 
