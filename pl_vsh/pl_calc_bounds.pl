@@ -25,4 +25,5 @@ createBoundingBox(ID, X) :-
     asserta(bounding_box_right(ID,Right)),
     asserta(bounding_box_bottom(ID,Bottom)).
 
+
 :- include(tail).

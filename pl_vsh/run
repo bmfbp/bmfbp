@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 # use build to create a pipeline in fb9.gsh (using prolog programs to do the build)
 # 
 # run the resulting grash (.gsh) script, first scanning the graphml then sorting into fb1.pro

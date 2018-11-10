@@ -1,9 +1,11 @@
-#! /bin/bash -x
+#! /bin/bash
 # uses gprolog version - make sure to build pl_vsh first
 
 LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
 export LIBRARY_PATH
 export PATH=~/bin:$PATH
 
-svg-to-fb <sample.lisp >fb.pro
-grash vsh.gsh <fb.pro >self.gsh
+echo "component(top)." >fb.pro
+svg-to-fb <sample.lisp >>fb.pro
+sort fb.pro >fb1.pro
+grash pl_vsh.gsh <fb1.pro >self.gsh

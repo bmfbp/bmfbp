@@ -12,6 +12,9 @@
   (format f "~a_x(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (second lis))
   (format f "~a_y(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (third lis)))
 
+(defparameter *default-font-width* 12)
+(defparameter *default-font-height* 12)
+
 (defun to-fb-1 (f item id)
   (assert (listp item))
   (case (car item)
@@ -26,9 +29,12 @@
            (subseq item 1 (1- (length item)))))
 
     (text
-     (format f "text(~a, '~a').~%" id (string-downcase (fourth item)))
-     (format f "geometry_x(~a, ~a).~%" id (second item))
-     (format f "geometry_y(~a, ~a).~%" id (third item)))
+     (let ((txt (string-downcase (fourth item))))
+       (format f "text(~a, '~a').~%" id txt)
+       (format f "geometry_x(~a, ~a).~%" id (second item))
+       (format f "geometry_y(~a, ~a).~%" id (third item))
+       (format f "geometry_w(~a, ~a).~%" id (* *default-font-width* (length txt)))
+       (format f "geometry_h(~a, ~a).~%" id *default-font-height*)))
 
     (rect
      (format f "rect(~a, '').~%" id)
