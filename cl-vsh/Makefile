@@ -1,14 +1,14 @@
 #  build the components and mv them to ~/bin
 
-bindir = ~/bin
+BINDIR = ~/bin
 
-execs =  $(bindir)/scan $(bindir)/check-input $(bindir)/calc-bounds $(bindir)/mark-directions \
-	$(bindir)/match-ports-to-components $(bindir)/assign-pipe-numbers-to-inputs \
-	$(bindir)/assign-pipe-numbers-to-outputs $(bindir)/assign-fds $(bindir)/emit-grash 
+execs =  $(BINDIR)/scan $(BINDIR)/check-input $(BINDIR)/calc-bounds $(BINDIR)/mark-directions \
+	$(BINDIR)/match-ports-to-components $(BINDIR)/assign-pipe-numbers-to-inputs \
+	$(BINDIR)/assign-pipe-numbers-to-outputs $(BINDIR)/assign-fds $(BINDIR)/emit-grash 
 
 all : $(execs) io.lisp
 
-$(bindir)/% : %.lisp io.lisp
+$(BINDIR)/% : %.lisp io.lisp
 	rm -f $@
 	buildapp --output $@  --load $< --entry main
 

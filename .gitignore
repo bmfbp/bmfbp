@@ -9,3 +9,5 @@ junk*
 temp*
 #*
 *.gsh
+.DS_Store
+
