@@ -227,8 +227,8 @@ void  parseArgs(char *line, int *argc, char **argv) {
   
 void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
   /* tack extra command-line args onto tail of argv, using pointer copies */
-  fprintf (stderr, "oargc=%d\n", oargc);
-  fflush (stderr);
+  /* fprintf (stderr, "oargc=%d\n", oargc); */
+  /* fflush (stderr); */
   if (oargc > 2) {
     int i = 2;
     while (i < oargc) {
@@ -251,14 +251,14 @@ void doExec (char *p, int oargc, char **oargv, int first) {
   }
   closeUnusedPipes();
 
-  fprintf (stderr, "execing[%d]:", argc);
-  fflush (stderr);
-  for(i=0; i < argc; i+=1) {
-    fprintf (stderr, " %s", argv[i]);
-    fflush (stderr);
-  }
-  fprintf (stderr, "\n");
-  fflush (stderr);
+  /* fprintf (stderr, "execing[%d]:", argc); */
+  /* fflush (stderr); */
+  /* for(i=0; i < argc; i+=1) { */
+  /*   fprintf (stderr, " %s", argv[i]); */
+  /*   fflush (stderr); */
+  /* } */
+  /* fprintf (stderr, "\n"); */
+  /* fflush (stderr); */
 
   pid = execvp (argv[0], argv);
   if (pid < 0) {

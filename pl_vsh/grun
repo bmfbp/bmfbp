@@ -1,9 +1,9 @@
-#!/bin/bash -v
+#!/bin/bash
 # script that runs the components manually w/o grash and leaves intermediate files, for debug purposes
 export PATH=/usr/local/bin/:~/bin/:$PATH
-BIN=~/bin
+BINDIR=~/bin
 
-$BIN/plscan pl_vsh.graphml >1.txt
+${BINDIR}/plscan pl_vsh.graphml >1.txt
 sort 1.txt >fb1.pro
 
 gplc pl_check_input.pl --no-top-level 
@@ -16,14 +16,14 @@ gplc pl_assign_pipe_numbers_to_outputs.pl --no-top-level
 gplc pl_assign_fds.pl --no-top-level
 gplc pl_emit.pl --no-top-level
 
-mv ./pl_check_input ~/bin
-mv ./pl_calc_bounds ~/bin
-mv ./pl_mark_directions ~/bin
-mv ./pl_match_ports_to_components ~/bin
-mv ./pl_assign_pipe_numbers_to_inputs ~/bin
-mv ./pl_assign_pipe_numbers_to_outputs ~/bin
-mv ./pl_assign_fds ~/bin
-mv ./pl_emit ~/bin
+mv ./pl_check_input ${BINDIR}
+mv ./pl_calc_bounds ${BINDIR}
+mv ./pl_mark_directions ${BINDIR}
+mv ./pl_match_ports_to_components ${BINDIR}
+mv ./pl_assign_pipe_numbers_to_inputs ${BINDIR}
+mv ./pl_assign_pipe_numbers_to_outputs ${BINDIR}
+mv ./pl_assign_fds ${BINDIR}
+mv ./pl_emit ${BINDIR}
 
 pl_check_input <fb1.pro >fb2.pro
 pl_calc_bounds <fb2.pro >fb3.pro
