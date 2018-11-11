@@ -1,11 +1,24 @@
-#! /bin/bash
-# uses gprolog version - make sure to build pl_vsh first
+#!/bin/bash
+# script that runs the components manually w/o grash and leaves intermediate files, for debug purposes export
+export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
+PATH=/usr/local/bin/:~/bin/:$PATH BINDIR=~/bin
 
-LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
-export LIBRARY_PATH
-export PATH=~/bin:$PATH
+# pl_match_ports_to_components.pl --no-top-level gplc
 
-echo "component(top)." >fb.pro
-svg-to-fb <sample.lisp >>fb.pro
-sort fb.pro >fb1.pro
-grash pl_vsh.gsh <fb1.pro >self.gsh
+# mv ./pl_check_input ${BINDIR} mv ./pl_calc_bounds ${BINDIR}
+
+# build compiler from svg-to-fb to sample.gsh
+pl_check_input <fb1.pro >fb2.pro
+pl_calc_bounds <fb2.pro >fb3.pro
+pl_mark_directions <fb3.pro >fb4.pro
+pl_match_ports_to_components <fb4.pro >fb5.pro
+pl_assign_pipe_numbers_to_inputs <fb5.pro >fb6.pro
+pl_assign_pipe_numbers_to_outputs <fb6.pro >fb7.pro
+pl_assign_fds <fb7.pro >fb8.pro
+pl_emit <fb8.pro >svg_vsh.gsh
+
+echo "component(top)." >sample.pro
+svg-to-fb <sample.lisp >>sample.pro
+sort sample.pro >sample1.pro
+
+grash svg_vsh.gsh <sample1.pro >sample.gsh
