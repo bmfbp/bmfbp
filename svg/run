@@ -25,4 +25,15 @@ echo "component(top)." >sample.pro
 svg-to-fb <sample.lisp >>sample.pro
 sort sample.pro >sample1.pro
 
-grash svg_vsh.gsh <sample1.pro >sample.gsh
+# grash svg_vsh.gsh <sample1.pro >sample.gsh
+
+# construct manually during debug
+pl_check_input <sample1.pro >sample2.pro
+pl_calc_bounds <sample2.pro >sample3.pro
+pl_mark_directions <sample3.pro >sample4.pro
+pl_match_ports_to_components <sample4.pro >sample5.pro
+pl_assign_pipe_numbers_to_inputs <sample5.pro >sample6.pro
+pl_assign_pipe_numbers_to_outputs <sample6.pro >sample7.pro
+pl_assign_fds <sample7.pro >sample8.pro
+pl_emit <sample8.pro >sample.gsh
+
