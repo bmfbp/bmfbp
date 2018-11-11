@@ -3,11 +3,8 @@
 export PATH=/usr/local/bin/:~/bin/:$PATH
 BINDIR=~/bin
 
-${BINDIR}/plscan pl_vsh.graphml >1.txt
-sort 1.txt >fb1.pro
-
-cp ../common/{head,tail}.pl .
-
+${BINDIR}/plscan pl_vsh.graphml >fb0.pro
+sort fb0.pro >fb1.pro
 gplc pl_check_input.pl --no-top-level 
 gplc pl_calc_bounds.pl --no-top-level
 gplc pl_mark_directions.pl --no-top-level

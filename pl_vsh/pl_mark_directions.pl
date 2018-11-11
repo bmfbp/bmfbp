@@ -1,5 +1,5 @@
 
-% Ye creates "nodes" and "edges"
+% yEd creates "nodes" and "edges"
 % by convention, "GenericNodes" represent boxes and other kinds of nodes are pins.
 % in this pass, create a bounding box (left,top,right,bottom) for each "node" with geometry
 
@@ -14,11 +14,11 @@
 
 
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 main :-
     readFB(user_input),
     writeFB,
     halt.
 
-:- include(tail).
+:- include('../common/tail').

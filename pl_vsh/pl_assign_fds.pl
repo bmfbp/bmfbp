@@ -1,5 +1,5 @@
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 % 8. assign-fds
 % 
@@ -40,4 +40,4 @@ assign_sink_fd(P,N) :-
 %has_fd(P) :-
 %    ( sourcefd(P,_) ; (sinkfd(P,_) ).
     
-:- include(tail).
+:- include('../common/tail').

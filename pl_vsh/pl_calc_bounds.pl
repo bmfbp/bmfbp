@@ -1,5 +1,5 @@
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 % yEd creates "nodes" and "edges
 % by convention, "GenericNodes" represent boxes and other kinds of nodes are pins.
@@ -26,4 +26,4 @@ createBoundingBox(ID, X) :-
     asserta(bounding_box_bottom(ID,Bottom)).
 
 
-:- include(tail).
+:- include('../common/tail').

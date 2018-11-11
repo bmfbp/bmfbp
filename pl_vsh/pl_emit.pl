@@ -1,5 +1,5 @@
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 main :-
     readFB(user_input),
@@ -80,5 +80,5 @@ hasInput(ID) :-
     sink(_,Port).
 
 
-:- include(tail).
+:- include('../common/tail').
 

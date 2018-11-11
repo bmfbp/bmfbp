@@ -1,5 +1,5 @@
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 main :-
     g_assign(counter,0),
@@ -24,5 +24,5 @@ assign_pipe_number(Pin) :-
     % X is Old+1,
     % g_assign(counter,X).
 
-:- include(tail).
+:- include('../common/tail').
 

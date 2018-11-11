@@ -1,5 +1,5 @@
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 
 main :-
@@ -20,4 +20,4 @@ aopn(P) :-
     
 writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.'), nl.
 
-:- include(tail).
+:- include('../common/tail').

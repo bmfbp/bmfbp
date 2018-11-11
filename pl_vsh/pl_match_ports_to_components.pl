@@ -1,5 +1,5 @@
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 main :-
 %    open('fb4',read,Str),
@@ -37,5 +37,5 @@ intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, Pare
     PortTop =< ParentBottom,
     PortBottom >= ParentTop.
 
-:- include(tail).
+:- include('../common/tail').
 

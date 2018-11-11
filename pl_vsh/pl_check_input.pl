@@ -1,10 +1,10 @@
 :- initialization(main).
-:- include(head).
+:- include('../common/head').
 
 main :-
     readFB(user_input),
     writeFB,
     halt.
 
-:- include(tail).
+:- include('../common/tail').
 
