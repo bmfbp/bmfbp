@@ -9,8 +9,9 @@ PATH=/usr/local/bin/:~/bin/:$PATH BINDIR=~/bin
 
 # build compiler from svg-to-fb to sample.gsh
 # depends on some of pl_* files built in ../pl_vsh and placed in BINDIR
-${BINDIR}/plscan svg_compiler.graphml >svg_compiler.txt
-sort svg_compiler.txt >fb1.pro
+${BINDIR}/plscan svg_compiler.graphml >svg_compiler.pro
+cp ../common/{head,tail}.pl .
+sort svg_compiler.pro >fb1.pro
 pl_check_input <fb1.pro >fb2.pro
 pl_calc_bounds <fb2.pro >fb3.pro
 pl_mark_directions <fb3.pro >fb4.pro
