@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 # script that runs the components manually w/o grash and leaves intermediate files, for debug purposes export
 export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
 PATH=/usr/local/bin/:~/bin/:$PATH BINDIR=~/bin
@@ -8,6 +8,9 @@ PATH=/usr/local/bin/:~/bin/:$PATH BINDIR=~/bin
 # mv ./pl_check_input ${BINDIR} mv ./pl_calc_bounds ${BINDIR}
 
 # build compiler from svg-to-fb to sample.gsh
+# depends on some of pl_* files built in ../pl_vsh and placed in BINDIR
+${BINDIR}/plscan svg_compiler.graphml >svg_compiler.txt
+sort svg_compiler.txt >fb1.pro
 pl_check_input <fb1.pro >fb2.pro
 pl_calc_bounds <fb2.pro >fb3.pro
 pl_mark_directions <fb3.pro >fb4.pro
