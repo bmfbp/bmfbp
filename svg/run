@@ -7,10 +7,9 @@ PATH=/usr/local/bin/:~/bin/:$PATH BINDIR=~/bin
 
 # mv ./pl_check_input ${BINDIR} mv ./pl_calc_bounds ${BINDIR}
 
-# build compiler from svg-to-fb to sample.gsh
+# build the svg_compiler using a yEd diagram
 # depends on some of pl_* files built in ../pl_vsh and placed in BINDIR
-${BINDIR}/plscan svg_compiler.graphml >svg_compiler.pro
-cp ../common/{head,tail}.pl .
+plscan svg_compiler.graphml >svg_compiler.pro
 sort svg_compiler.pro >fb1.pro
 pl_check_input <fb1.pro >fb2.pro
 pl_calc_bounds <fb2.pro >fb3.pro
@@ -21,6 +20,7 @@ pl_assign_pipe_numbers_to_outputs <fb6.pro >fb7.pro
 pl_assign_fds <fb7.pro >fb8.pro
 pl_emit <fb8.pro >svg_vsh.gsh
 
+# now build the svg sample into sample.gsh
 echo "component(top)." >sample.pro
 svg-to-fb <sample.lisp >>sample.pro
 sort sample.pro >sample1.pro
