@@ -39,10 +39,13 @@
 		  (assert (= 2 (length pair)))
 		  (assert (numberp (first pair)))
 		  (assert (numberp (second pair)))
-		  (if (stringp (third list))
+		  (if (and
+		       (listp (third list)) ;; text item is (translate (x y) ("str"))
+		       (= 1 (length (third list)))
+		       (stringp (first (third list))))
 		      (let ((name (third list)))
 			`(text ,(+ x (first pair)) ,(+ y (second pair)) ,name))
-		      (car (translate (+ x (first pair)) (+ y (second pair)) (third list))))))
+		      (car (translate (+ x (first pair)) (+ y (second pair)) (first (third list)))))))
 
 	       (line (cons 'line (mapcar 
 				  #'(lambda (move) 

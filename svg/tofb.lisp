@@ -1,4 +1,4 @@
-(defun dash-to-u (str)
+(defun dash-to-underscore (str)
   (flet ((dtu (x) (substitute #\_ #\- x)))
     (if (stringp str)
         (dtu str)
@@ -9,8 +9,8 @@
         
 
 (defun xy (f lis id)
-  (format f "~a_x(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (second lis))
-  (format f "~a_y(~a,~a).~%" (string-downcase (dash-to-u (first lis))) id (third lis)))
+  (format f "~a_x(~a,~a).~%" (string-downcase (dash-to-underscore (first lis))) id (second lis))
+  (format f "~a_y(~a,~a).~%" (string-downcase (dash-to-underscore (first lis))) id (third lis)))
 
 (defparameter *default-font-width* 12)
 (defparameter *default-font-height* 12)
@@ -29,19 +29,22 @@
            (subseq item 1 (1- (length item)))))
 
     (text
-     (let ((txt (string-downcase (fourth item))))
+     (multiple-value-bind (dont-care x y txt) (parse-text-item item)
+       (declare (ignore dont-care))
        (format f "text(~a, '~a').~%" id txt)
-       (format f "geometry_x(~a, ~a).~%" id (second item))
-       (format f "geometry_y(~a, ~a).~%" id (third item))
+       (format f "geometry_x(~a, ~a).~%" id x)
+       (format f "geometry_y(~a, ~a).~%" id y)
        (format f "geometry_w(~a, ~a).~%" id (* *default-font-width* (length txt)))
        (format f "geometry_h(~a, ~a).~%" id *default-font-height*)))
 
     (rect
      (format f "rect(~a, '').~%" id)
-     (format f "geometry_x(~a, ~a).~%" id (second item))
-     (format f "geometry_y(~a, ~a).~%" id (third item))
-     (format f "geometry_w(~a, ~a).~%" id (fourth item))
-     (format f "geometry_h(~a, ~a).~%" id (fifth item)))
+     (multiple-value-bind (cmd x y w h) item
+       (declare (ignore cmd))
+       (format f "geometry_x(~a, ~a).~%" id x)
+       (format f "geometry_y(~a, ~a).~%" id y)
+       (format f "geometry_w(~a, ~a).~%" id w)
+       (format f "geometry_h(~a, ~a).~%" id h)))
 
     (otherwise
      (error "bad item /~a/~%" item))))

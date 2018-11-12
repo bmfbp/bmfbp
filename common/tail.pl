@@ -3,6 +3,13 @@ writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.
 
 
 writeFB :-
+    forall(rect(X,_), writeterm(rect(X,'nil'))),
+    forall(line(X,_), writeterm(line(X,'nil'))), 
+    forall(stroke_absolute_x(X,Y), writeterm(stroke_absolute_x(X,Y))), 
+    forall(stroke_absolute_y(X,Y), writeterm(stroke_absolute_y(X,Y))),
+    forall(stroke_relative_x(X,Y), writeterm(stroke_relative_x(X,Y))),
+    forall(stroke_relative_y(X,Y), writeterm(stroke_relative_y(X,Y))),
+    forall(text(X,Y), writeterm(text(X,Y))),
     forall(bounding_box_left(X,Y), writeterm(bounding_box_left(X,Y))),
     forall(bounding_box_top(X,Y), writeterm(bounding_box_top(X,Y))),
     forall(bounding_box_right(X,Y), writeterm(bounding_box_right(X,Y))),
@@ -26,7 +33,9 @@ writeFB :-
     forall(parent(X,Y), writeterm(parent(X,Y))).
 
 readFB(Str) :-
+    % write(user_error,'readFB '),
     read_term(Str,T0,[]),
+    % write(user_error,T0),nl(user_error),flush_output(user_error),
     element(T0,Str).
 
 element(end_of_file, _) :- !.
@@ -103,8 +112,8 @@ element(parent(X,Y), Str) :- !,
 			     asserta(parent(X,Y)),
 			     readFB(Str).
 
-element(line(X,Y), Str) :- !,
-			     asserta(line(X,Y)),
+element(line(X,_), Str) :- !,
+			     asserta(line(X,'nil')),
 			     readFB(Str).
 
 element(pipeNum(X,Y), Str) :- !,
@@ -150,8 +159,8 @@ element(move_relative_y(X,Y), Str) :- !,
 			     readFB(Str).
 
 
-element(rect(X,Y), Str) :- !,
-			     asserta(rect(X,Y)),
+element(rect(X,_), Str) :- !,
+			     asserta(rect(X,'nil')),
 			     readFB(Str).
 
 element(stroke_relative_x(X,Y), Str) :- !,
@@ -178,8 +187,11 @@ element(text(X,Y), Str) :- !,
 
 
     
-%element(Term, _) :-
-%     type_error(element, Term).
+element(Term, _) :-
+    write(user_error,'failed read '),
+    write(user_error,Term),
+    nl(user_error).
+    % type_error(element, Term).
 
 inc(Var, Value) :-
     g_read(Var, Value),

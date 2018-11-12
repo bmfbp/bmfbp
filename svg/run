@@ -1,11 +1,14 @@
 #!/bin/bash -x
 # script that runs the components manually w/o grash and leaves intermediate files, for debug purposes export
-export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
-PATH=/usr/local/bin/:~/bin/:$PATH BINDIR=~/bin
+# export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
+PATH=/usr/local/bin/:~/bin/:$PATH
+BINDIR=~/bin
 
-# pl_match_ports_to_components.pl --no-top-level gplc
+# gplc pl_match_ports_to_components.pl --no-top-level
+# mv ./pl_check_input ${BINDIR}
 
-# mv ./pl_check_input ${BINDIR} mv ./pl_calc_bounds ${BINDIR}
+gplc pl_kinds.pl --no-top-level
+mv ./pl_kinds ${BINDIR}
 
 # build the svg_compiler using a yEd diagram
 # depends on some of pl_* files built in ../pl_vsh and placed in BINDIR
@@ -22,7 +25,7 @@ pl_emit <fb8.pro >svg_vsh.gsh
 
 # now build the svg sample into sample.gsh
 echo "component(top)." >sample.pro
-svg-to-fb <sample.lisp >>sample.pro
+parsed-svg-to-fb <sample.lisp >>sample.pro
 sort sample.pro >sample1.pro
 
 # grash svg_vsh.gsh <sample1.pro >sample.gsh
@@ -30,7 +33,8 @@ sort sample.pro >sample1.pro
 # construct manually during debug
 pl_check_input <sample1.pro >sample2.pro
 pl_calc_bounds <sample2.pro >sample3.pro
-pl_mark_directions <sample3.pro >sample4.pro
+pl_kinds <sample3.pro >sample3a.pro
+pl_mark_directions <sample3a.pro >sample4.pro
 pl_match_ports_to_components <sample4.pro >sample5.pro
 pl_assign_pipe_numbers_to_inputs <sample5.pro >sample6.pro
 pl_assign_pipe_numbers_to_outputs <sample6.pro >sample7.pro
