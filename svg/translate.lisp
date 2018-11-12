@@ -3,11 +3,11 @@
 (defun translate-rect (x y list)
   `(,(+ x (second list)) ,(+ y (third list)) ,(third list) ,(fourth list)))
 
-(defun translate-one-move (x y move)
+(defun translate-one-move (xypair movelist)
   ;; for lines
-  (assert (listp move))
-  (assert (symbolp (first move)))
-  (when (second move) 
+  (assert (listp movelist))
+  (assert (symbolp (first movelist)))
+  (when (second movelist) 
     (assert (numberp (second move)))
     (when (third move) 
       (assert (numberp (third move)))))
@@ -26,10 +26,12 @@
      (error "one-move not handled"))))
 
 
-(defun translate (x y list)
-  (labels ((translate-one (x y list)
+(defun translate (pair list)
+  (labels ((translate-one (pair list)
+	     (format *error-output* "translate x=~a y=~a list=~a~%"
+		     x y list)
 	     (unless (and list (listp list))
-	       (format t "~a~%" list)
+	       (format *error-output* "wrong format: ~a~%" list)
 	       (error "wrong format"))
 	     (case (car list)
 	       (translate 
@@ -39,13 +41,19 @@
 		  (assert (= 2 (length pair)))
 		  (assert (numberp (first pair)))
 		  (assert (numberp (second pair)))
-		  (if (and
-		       (listp (third list)) ;; text item is (translate (x y) ("str"))
-		       (= 1 (length (third list)))
-		       (stringp (first (third list))))
-		      (let ((name (third list)))
-			`(text ,(+ x (first pair)) ,(+ y (second pair)) ,name))
-		      (car (translate (+ x (first pair)) (+ y (second pair)) (first (third list)))))))
+		  (if (text-p list)
+		      (multiple-value-bind (x y txt) 
+			  (parse-text-item list)
+			`(text 
+			  ,(+ x (first pair)) 
+			  ,(+ y (second pair)) 
+			  ,txt))
+		      (car 
+		       (translate 
+			(list
+			 (+ x (first pair)) 
+			 (+ y (second pair)))
+			list)))))
 
 	       (line (cons 'line (mapcar 
 				  #'(lambda (move) 
