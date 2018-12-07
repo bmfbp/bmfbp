@@ -15,7 +15,7 @@ BOOTSTRAP=$(BINDIR)/bootstrap.gsh
 DIA-COMPILER=$(BINDIR)/vsh.gsh
 REGRESS-COMPILER=dia-regression-compiler.gsh
 
-all : misc $(EXECS) $(BOOTSTRAP)
+all : misc $(BINDIR)/grash $(EXECS) $(BOOTSTRAP)
 
 regression : all $(BOOTSTRAP)
 	$(BINDIR)/grash $(DIA-COMPILER) vsh.graphml >$(REGRESS-COMPILER)
@@ -49,4 +49,4 @@ $(BOOTSTRAP) : $(EXECS)
 	$(BINDIR)/assign-fds <7.lispfb >8.lispfb
 	$(BINDIR)/emit-grash <8.lispfb >$(BOOTSTRAP)
 	cp $(BOOTSTRAP) $(DIA-COMPILER)
-
+	ls -l ~/bin/*.gsh

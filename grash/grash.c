@@ -105,7 +105,9 @@ int state = MAIN;
 int stack[STACKMAX];
 int sp = 0;
 
-void quit (char *m) {
+void quit (char *line, char *m) {
+  fprintf(stderr, "line = /%s/", line); 
+  fflush(stderr);
   perror (m);
   exit (1);
 }
@@ -157,12 +159,12 @@ int highPipe = -1;
 void mkPipes (char *p) {
   int i = atoi(p);
   if (i <= 0 || i > PIPEMAX)
-    quit("socket index");
+    quit("", "socket index");
   highPipe = i - 1;
   i = 0;
   while (i <= highPipe)
     if (pipe (pipes[i++]) < 0)
-      quit ("error opening pipe pair");
+      quit ("", "error opening pipe pair");
 }
 
 void closeAllPipes () {
@@ -187,7 +189,7 @@ void closeUnusedPipes () {
 
 void doFork () {
   if ((child = fork()) == -1)
-    quit ("fork");
+    quit ("", "fork");
   state = (child == 0) ? PARENT : CHILD;
 }
 
@@ -287,7 +289,7 @@ void doExecFirst (char *p, int oargc, char **oargv) {
   pid = execvp (argv[0], argv);
   if (pid < 0) {
     fprintf (stderr, "exec failed: %s\n", argv[0]);
-    quit ("exec failed!");
+    quit ("", "exec failed!");
   }
 }
 
@@ -304,7 +306,7 @@ void doExec (char *p, int oargc, char **oargv) {
   pid = execvp (argv[0], argv);
   if (pid < 0) {
     fprintf (stderr, "exec failed: %s\n", argv[0]);
-    quit ("exec failed!");
+    quit ("", "exec failed!");
   }
 }
 
@@ -352,7 +354,7 @@ void interpret (char *line, int argc, char **argv) {
       doExec (p, argc, argv);
       return;
     }
-    quit("can't happen");
+    quit(line, "grash: can't happen");
     break;
 
   case MAIN:
@@ -368,7 +370,7 @@ void interpret (char *line, int argc, char **argv) {
     }
     p = parse ("krof", line);
     if (p)
-      quit ("krof seen in MAIN state (can't happen)");
+      quit (line, "krof seen in MAIN state (can't happen)");
     break;
 
   case PARENT:
@@ -379,7 +381,7 @@ void interpret (char *line, int argc, char **argv) {
     }
     return;
   }
-  quit ("command");
+  quit ("", "command");
 }
   
 
@@ -397,7 +399,7 @@ int main (int argc, char **argv) {
     f = fopen (argv[1], "r");
   }
   if (f == NULL)
-    quit ("usage: grash {filename|-} [args]");
+    quit ("", "usage: grash {filename|-} [args]");
 
   for (r = 0; r < PIPEMAX; r++) {
     pipes[r][READ_END] = -1;

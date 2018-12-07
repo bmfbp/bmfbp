@@ -37,10 +37,8 @@
   0)
 
 (defun emit (facts)
-  (let ((fname (get-filename facts)))
-    (with-open-file (f fname :direction :output :if-exists :supersede)
-      (emit-name-and-pipes f facts)
-      (emit-components f facts))))
+  (emit-name-and-pipes *standard-output* facts)
+  (emit-components *standard-output* facts))
 
 (defun get-filename (facts)
   (maphash #'(lambda (id info)
@@ -62,9 +60,9 @@
 (defun emit-pipes (f dir fds)
   (mapc #'(lambda (p-fd)
 	    (case dir
-	      (0 (vshemit f "stdinPipe ~A" (car p-fd)))
-	      (1 (vshemit f "stdoutPipe ~A" (car p-fd)))
-	      (2 (vshemit f "stderrPipe ~A" (car p-fd)))
+	      (0 (vshemit f "inPipe ~A" (car p-fd)))
+	      (1 (vshemit f "outPipe ~A" (car p-fd)))
+	      (2 (vshemit f "outPipe ~A" (car p-fd)))
 	      (otherwise
 	       (vshemit f "push ~a" dir)
 	       (vshemit f "push ~a" (car p-fd))

@@ -76,7 +76,7 @@
     (setf (gethash (rel fact) info) fact)))
 
 
-(defun read-write-if-facts (write-p func instrm outstrm legal-fact)
+(defun read-write-if-facts (write-p func instrm outstrm legal-fact &key (debug nil))
   ; main loop - read the factbase from stdin, then process the factbase by calling func, then do it again
   ; until QUIT is read
   (setf *errors* nil)
@@ -84,23 +84,24 @@
     (loop
      (let ((facts (make-hash-table :test 'equal)))
        (loop while (not (eq 'EOF fact))
-             do (when (eq 'QUIT (first fact))
-                  (funcall func facts)
-                  (when write-p
-		    (write-facts facts outstrm)
-		    (format outstrm "(quit nil nil)~%"))
-                  #+sbcl (sb-ext:exit)
-                  #+lispworks (return-from read-write-if-facts))
-             do (add-fact facts fact legal-fact)  ;; facts can arrive in random order, cache them until ready
-             do (setf fact (read instrm nil 'EOF)))
+	  do (when debug (format *error-output* "fact: ~A~%" fact))
+          do (when (eq 'QUIT (first fact))
+               (funcall func facts)
+               (when write-p
+		 (write-facts facts outstrm)
+		 (format outstrm "(quit nil nil)~%"))
+               #+sbcl (sb-ext:exit)
+               #+lispworks (return-from read-write-if-facts))
+          do (add-fact facts fact legal-fact)  ;; facts can arrive in random order, cache them until ready
+          do (setf fact (read instrm nil 'EOF)))
        (funcall func facts)
        (when write-p (write-facts facts outstrm))))))
 
-(defun read-write-facts (func instrm outstrm &key (legal-fact 'identity))
-  (read-write-if-facts t func instrm outstrm legal-fact))
+(defun read-write-facts (func instrm outstrm &key (legal-fact 'identity) (debug nil))
+  (read-write-if-facts t func instrm outstrm legal-fact :debug debug))
 
-(defun read-facts (func instrm outstrm &key (legal-fact 'identity))
-  (read-write-if-facts nil func instrm outstrm legal-fact))
+(defun read-facts (func instrm outstrm &key (legal-fact 'identity) (debug nil))
+  (read-write-if-facts nil func instrm outstrm legal-fact :debug debug))
 
 
 
