@@ -61,9 +61,8 @@
   dup N : dup2(pipes[TOS][TOS-1],N), pop TOS, pop TOS
           pipes[x][y] : x is old pipe #, y is 0 for read-end, 1 for write-end, etc.
           N is the new (child's) FD to be overwritten with the dup'ed pipe (0 for stdin, 1 for stdout, etc).
-  stdinPipe N - shorthand for above ; dup2(pipes[N][0],0)
-  stdoutPipe N - shorthand for above ; dup2(pipes[N][1],1)
-  stderrPipe N - shorthand for above ; dup2(pipes[N][2],2)
+  inPipe N - shorthand for above ; dup2(pipes[N][0],0)
+  outPipe N - shorthand for above ; dup2(pipes[N][1],1)
   exec <args> : splits the args and calls execvp, after closing all pipes
   exec1st <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
   fork : forks a new process
@@ -145,18 +144,13 @@ void gdup_std (char *p, int fd, int dir) {
   usedPipes[i] = 1;
 }
 
-void gdup_stdin (char *p) {
+void gdup_in (char *p) {
   gdup_std (p, 0, READ_END);
 }
 
-void gdup_stdout (char *p) {
+void gdup_out (char *p) {
   gdup_std (p, 1, WRITE_END);
 }
-
-void gdup_stderr(char *p) {
-  gdup_std (p, 2, WRITE_END);
-}
-
 
 int highPipe = -1;
 
@@ -227,8 +221,8 @@ void  parseArgs(char *line, int *argc, char **argv) {
   
 void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
   /* tack extra command-line args onto tail of argv, using pointer copies */
-  //  fprintf (stderr, "oargc=%d\n", oargc);
-  //  fflush (stderr);
+  fprintf (stderr, "oargc=%d argc=%d\n", oargc, *argc);
+  fflush (stderr);
   if (oargc > 2) {
     int i = 2;
     while (i < oargc) {
@@ -238,20 +232,50 @@ void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
     }
     argv[i] = NULL;
   }
+  fprintf (stderr, "oargc=%d argc=%d\n", oargc, *argc);
 }
 
-void doExec (char *p, int oargc, char **oargv, int first) {
+void doExecFirst (char *p, int oargc, char **oargv) {
   char *argv[ARGVMAX];
   int argc;
   pid_t pid;
-  int i;
+  int i, j;
+
+  /* fprintf (stderr, "pre-pre-execingFirst[%d]:", oargc); */
+  /* fflush (stderr); */
+  /* for(i=0; i < oargc; i+=1) { */
+  /*   fprintf (stderr, " %s", oargv[i]); */
+  /*   fflush (stderr); */
+  /* } */
+  /* fprintf (stderr, "\n"); */
+  /* fflush (stderr); */
+
   parseArgs (p, &argc, argv);
-  if (first) {
-    appendArgs (&argc, argv, oargc, oargv);
+
+  /* fprintf (stderr, "after parseArgs pre-execingFirst[%d]:", oargc); */
+  /* fflush (stderr); */
+  /* for(i=0; i < oargc; i+=1) { */
+  /*   fprintf (stderr, " %s", oargv[i]); */
+  /*   fflush (stderr); */
+  /* } */
+  /* fprintf (stderr, "\n"); */
+  /* fflush (stderr); */
+
+  argc = oargc-1;
+  // argv[0] contains the component name to be executed, copy rest of args over into argv
+  // argv[1] contains the .gsh script being run by grash
+  // argv[2 .. (argc-1)] contains args that we want to copy into argv (shifting them over by 1)
+  for (j = 1, i = 2; j < argc ; ) {
+    assert (i <= ARGVMAX);
+    argv[j] = oargv[i];
+    i += 1;
+    j += 1;
   }
+  argv[i-1] = NULL;
+
   closeUnusedPipes();
 
-  /* fprintf (stderr, "execing[%d]:", argc); */
+  /* fprintf (stderr, "execingFirst[%d]:", argc); */
   /* fflush (stderr); */
   /* for(i=0; i < argc; i+=1) { */
   /*   fprintf (stderr, " %s", argv[i]); */
@@ -262,7 +286,24 @@ void doExec (char *p, int oargc, char **oargv, int first) {
 
   pid = execvp (argv[0], argv);
   if (pid < 0) {
-    fprintf (stderr, "exec: %s\n", argv[0]);
+    fprintf (stderr, "exec failed: %s\n", argv[0]);
+    quit ("exec failed!");
+  }
+}
+
+void doExec (char *p, int oargc, char **oargv) {
+  char *argv[ARGVMAX];
+  int argc;
+  pid_t pid;
+  int i;
+
+  parseArgs (p, &argc, argv);
+
+  closeUnusedPipes();
+
+  pid = execvp (argv[0], argv);
+  if (pid < 0) {
+    fprintf (stderr, "exec failed: %s\n", argv[0]);
     quit ("exec failed!");
   }
 }
@@ -286,21 +327,16 @@ void interpret (char *line, int argc, char **argv) {
       gdup (p);
       return;
     }
-    p = parse ("stdinPipe", line);
+    p = parse ("inPipe", line);
     if (p) {
-      gdup_stdin (p);
+      gdup_in (p);
       return;
     }
-    p = parse ("stdoutPipe", line);
+    p = parse ("outPipe", line);
     if (p) {
-      gdup_stdout (p);
+      gdup_out (p);
       return;
     } 
-    p = parse ("stderrPipe", line);
-    if (p) {
-      gdup_stderr (p);
-      return;
-    }
     p = parse ("push", line);
     if (p) {
       push (p);
@@ -308,12 +344,12 @@ void interpret (char *line, int argc, char **argv) {
     }
     p = parse ("exec1st", line);
     if (p) {
-      doExec (p, argc, argv, 1);
+      doExecFirst (p, argc, argv);
       return;
     }
     p = parse ("exec", line);
     if (p) {
-      doExec (p, argc, argv, 0);
+      doExec (p, argc, argv);
       return;
     }
     quit("can't happen");
@@ -371,8 +407,8 @@ int main (int argc, char **argv) {
   
   p = fgets (line, sizeof(line), f);
   while (p != NULL) {
-    //    fprintf(stderr,"grash: %s",line);
-    //    fflush(stderr);
+    // fprintf(stderr,"grash: %s",line);
+    // fflush(stderr);
     interpret (line, argc, argv);
     p = fgets (line, sizeof(line), f);
   }
