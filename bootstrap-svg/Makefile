@@ -24,6 +24,9 @@ SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
 BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 
+TEMP1=temp1.lisp
+TEMP2=temp2.pro
+
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler test-yed-based-compiler
 
 make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
@@ -34,6 +37,11 @@ test-yed-based-compiler : make-yed-based-compiler $(YED_DIAGRAM_AS_SVG)
 	$(grash) $(YED_BASED_COMPILER) $(YED_COMPILER_AS_SVG) >$(BOOTSTRAP_COMPILER_OUTPUT)
 
 bootstrap : dependencies
+
+temps: $(YED_COMPILER_AS_SVG)
+	# Prelude.head empty list IFF you try pass the .svg in as stdin instead of as 1st arg on command line
+	svg-to-lisp $(YED_COMPILER_AS_SVG) >$(TEMP1)
+	fb-to-prolog <$(TEMP1) >$(TEMP2)
 
 $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp
@@ -66,6 +74,7 @@ misc :
 	chmod a+x $(BINDIR)/plsort
 	# this needs to be replaced by a make of svg-to-lisp - currently this over-fills my Dropbox
 	cp ~/projects/svg-to-fb/svg-to-fb-mac ~/bin/svg-to-lisp
+	chmod a+x ~/bin/svg-to-lisp
 	touch misc
 
 dependencies :
