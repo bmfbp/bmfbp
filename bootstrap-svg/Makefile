@@ -19,16 +19,18 @@ YED_COMPILER=$(BINDIR)/pl_vsh.gsh
 # real SVG compiler written as an SVG/XML diagram
 SVG_COMPILER_DIAGRAM=svg_compiler.xml
 LISP_FROM_SVG=lisp-from-svg.lisp
+SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
-all : misc bootstrap svgtolisp fb-to-prolog 
+all : misc filtersvgtolisp
+#all : misc filtersvgtolisp makeprologfb
 
 bootstrap : $(SVG_BOOTSTRAP_COMPILER)
 
-svgtolisp:
+filtersvgtolisp:
 	$(BINDIR)/svg-to-lisp $(SVG_COMPILER_DIAGRAM) >$(LISP_FROM_SVG)
 
-fb-to-prolog : $(BINDIR)/fb-to-prolog
-	$(BINDIR)/fb-to-prolog <$(LISP_FROM_SVG) | sort >$(SVG_COMPI_FB)
+makeprologfb : $(BINDIR)/fb-to-prolog
+	$(BINDIR)/fb-to-prolog <$(LISP_FROM_SVG) | sort >$(SVG_COMPILER_PROLOGFB)
 
 $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp
@@ -44,7 +46,8 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 		--entry main
 
 clean:
-	rm -f $(SVG_BOOTSTRAP_COMPILER) misc $(TEST_LISP) $(TEST_FB)
+	rm -f $(SVG_BOOTSTRAP_COMPILER) misc $(TEST_LISP) $(TEST_FB) \
+	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB)
 	rm -f *.pro
 
 cleanfb:
