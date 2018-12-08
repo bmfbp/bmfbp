@@ -15,39 +15,48 @@ main :-
     forall(kind(ID,_),emitComponent(ID)),
     halt.
 
+inPipeP(P) :-
+    portName(P,0).
+
+inPipeP(P) :-
+    portName(P,in).
+
+outPipeP(P) :-
+    portName(P,out).
+
+outPipeP(P) :-
+    portName(P,1).
+
+errPipeP(P) :-
+    portName(P,err).
+
+errPipeP(P) :-
+    portName(P,2).
+
 writeIn(In) :-
     writeSpaces,
-    portName(In,in),
+    inPipeP(In),!,
     pipeNum(In,Pipe),
-    write('stdinPipe'),
+    write('inPipe'),
     write(' '),
     write(Pipe),
     nl.
 
 writeOut(Out) :-
     writeSpaces,
-    portName(Out,out),
+    outPipeP(Out),!,
     pipeNum(Out,Pipe),
-    write('stdoutPipe'),
+    write('outPipe'),
     write(' '),
     write(Pipe),
     nl.
 
-writeErr(Out) :-
-    writeSpaces,
-    portName(Out,out),
-    pipeNum(Out,Pipe),
-    write('stderrPipe'),
-    write(' '),
-    write(Pipe),
-    nl.
 
 emitComponent(ID) :-
     write('fork'),
     nl,
     forall(inputOfParent(ID,In),writeIn(In)),
     forall(outputOfParent(ID,O),writeOut(O)),
-    forall(erroutputOfParent(ID,Out),writeErr(Out)),
     writeSpaces,
     writeExec(ID),
     write(' '),
@@ -60,13 +69,10 @@ emitComponent(ID) :-
 writeSpaces :- char_code(C,32), write(C), write(C).
 
 inputOfParent(P,In) :-
-    parent(In,P),portName(In,in).
-    
+    parent(In,P),sink(_,In).
+
 outputOfParent(P,Out) :-
-    parent(Out,P),portName(Out,out).
-    
-erroutputOfParent(P,Out) :-
-    parent(Out,P),portName(Out,err).
+    parent(Out,P),source(_,Out).
     
 writeExec(ID) :-
     hasInput(ID),write(exec),!.

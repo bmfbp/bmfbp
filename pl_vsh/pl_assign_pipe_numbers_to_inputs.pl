@@ -15,14 +15,5 @@ assign_pipe_number(Pin) :-
     asserta(pipeNum(Pin,Old)),
     inc(counter,_).
 
-
-    % g_inc(Counter,New).
-
-    % junk (Pin, Old, X) :-
-    % g_read(counter,Old),
-    % asserta(pipeNum(Pin,Old)),
-    % X is Old+1,
-    % g_assign(counter,X).
-
 :- include('../common/tail').
 

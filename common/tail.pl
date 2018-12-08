@@ -44,9 +44,8 @@ writeFB :-
     forall(parent(X,Y), writeterm(parent(X,Y))).
 
 readFB(Str) :-
-    % write(user_error,'readFB '),
     read_term(Str,T0,[]),
-    % write(user_error,T0),nl(user_error),flush_output(user_error),
+    %write(user_error,T0),nl(user_error),flush_output(user_error),
     element(T0,Str).
 
 element(end_of_file, _) :- !.

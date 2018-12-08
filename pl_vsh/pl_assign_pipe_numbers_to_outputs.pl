@@ -8,15 +8,11 @@ main :-
     writeFB,
     halt.
 
-aopn(P) :- 
-    sink(E,P), 
-    pipeNum(P,I),
-    source(E,O),
-    %write(P), write(' '),
-    %write(E), write(' '),
-    %write(I), write(' '),
-    %write(O), nl,
-    asserta(pipeNum(O,I)).
+aopn(INPUT_PIN) :- 
+    sink(EDGE,INPUT_PIN),
+    pipeNum(INPUT_PIN,INPUT_PIPE),
+    source(EDGE,OUTPUT_PIN),
+    asserta(pipeNum(OUTPUT_PIN,INPUT_PIPE)).
     
 writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.'), nl.
 
