@@ -48,9 +48,9 @@
              list
            (declare (ignore text-sym))
 	   (if (all-digits-p str)
-               (format strm "text(~A,~A).~%text_x(~A,~A).~%text_y(~A,~A).~%text_w(~A,~A).~%text_h(~A,~A).~%"
+               (format strm "text(~A,~A).~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                        new-id str new-id x1 new-id y1 new-id w new-id h)
-             (format strm "text(~A,'~A').~%text_x(~A,~A).~%text_y(~A,~A).~%text_w(~A,~A).~%text_h(~A,~A).~%"
+             (format strm "text(~A,'~A').~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                      new-id str new-id x1 new-id y1 new-id w new-id h))))
            
         (arrow

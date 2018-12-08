@@ -24,7 +24,7 @@ SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
 BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 
-all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler
+all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler test-yed-based-compiler
 
 make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
