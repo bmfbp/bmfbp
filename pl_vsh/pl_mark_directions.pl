@@ -1,8 +1,4 @@
 
-% yEd creates "nodes" and "edges"
-% by convention, "GenericNodes" represent boxes and other kinds of nodes are pins.
-% in this pass, create a bounding box (left,top,right,bottom) for each "node" with geometry
-
 % The point of this pass is to find all sources and sinks attached to any edge
 % a "source" is a component pin that produces events (IPs) and a "sink" is the destination
 % for events.  We avoid the more obvious terms "input" and "output" because the terms are
