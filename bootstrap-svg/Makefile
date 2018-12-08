@@ -21,7 +21,9 @@ SVG_COMPILER_DIAGRAM=svg_compiler.svg
 LISP_FROM_SVG=lisp-from-svg.lisp
 SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
-all : misc filtersvgtolisp makeprologfb
+all : misc filtersvgtolisp makeprologfb make-yed-based-compiler
+
+make-yed-based-compiler: makeprologfb 
 
 bootstrap : $(SVG_BOOTSTRAP_COMPILER)
 
@@ -72,4 +74,3 @@ $(SVG_BOOTSTRAP_COMPILER) : dependencies $(YED-DIAGRAM)
 	$(BINDIR)/grash.out $(YED_COMPILER) $(YED_DIAGRAM) >$(SVG_BOOTSTRAP_COMPILER)
 	sleep 1  # need to wait for the network to die down
 
-svg_compiler : dependencies bootstrap svgtolisp fb-to-prolog $(SVG_COMPILER_DIAGRAM)

@@ -1,3 +1,14 @@
+(defun all-digits-p (str)
+  (let ((i (1- (length str))))
+    (loop
+       (case (schar str i)
+	 ((#\0 #\1 #\2 #\3 #\4 #\5 #\5 #\6 #\7 #\8 #\9)
+	  (when (< (decf i)0)
+	    (return t)))	  
+	 (otherwise
+	  (return-from all-digits-p nil)))))
+  t)
+
 (defun next-id ()
   (gensym "id"))
 
@@ -36,9 +47,12 @@
          (destructuring-bind (text-sym str x1 y1 w h)
              list
            (declare (ignore text-sym))
-           (format strm "text(~A,'~A').~%text_x(~A,~A).~%text_y(~A,~A).~%text_w(~A,~A).~%text_h(~A,~A).~%"
-                   new-id str new-id x1 new-id y1 new-id w new-id h)))
-        
+	   (if (all-digits-p str)
+               (format strm "text(~A,~A).~%text_x(~A,~A).~%text_y(~A,~A).~%text_w(~A,~A).~%text_h(~A,~A).~%"
+                       new-id str new-id x1 new-id y1 new-id w new-id h)
+             (format strm "text(~A,'~A').~%text_x(~A,~A).~%text_y(~A,~A).~%text_w(~A,~A).~%text_h(~A,~A).~%"
+                     new-id str new-id x1 new-id y1 new-id w new-id h))))
+           
         (arrow
          (destructuring-bind (arrow-sym x1 y1)
              list
@@ -50,3 +64,5 @@
          (error (format nil "bad format in toprolog /~A/" list))))))
       
   (values))
+
+    
