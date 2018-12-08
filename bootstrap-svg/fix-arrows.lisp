@@ -19,7 +19,6 @@
          ;; this is specific to draw.io - arrows in draw.io are of the form "(LINE (LINE-SEGMENT 310.0 178.88 306.5 171.88) (LINE-SEGMENT 306.5 171.88 310.0 173.63) (LINE-SEGMENT 310.0 173.63 313.5 171.88) (Z))"
          ;; "line" becomes "arrow" and we drop everything but the 2nd pair in the 3rd coord, which is the tip of the arrow
          (progn
-           (assert (= 5 (length list)))
            (let* ((tip-triple (third list))
                   (tip-x (fourth tip-triple))
                   (tip-y (fifth tip-triple)))

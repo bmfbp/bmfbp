@@ -3,10 +3,10 @@
   (let ((list (read *standard-input*)))
     (assert (listp list))
     (let ((fixed 
-           (fix-translates
-            (collapse-lines
-             (fix-arrows
-              (fix-lines
-               (mapcar #'create-text-objects list)))))))
+           (mapcar #'fix-translates
+		   (mapcar #'collapse-lines
+			   (mapcar #'fix-arrows
+				   (mapcar #'fix-lines
+					   (mapcar #'create-text-objects list)))))))
       (to-prolog fixed *standard-output*))))
 
