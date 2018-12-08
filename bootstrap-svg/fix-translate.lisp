@@ -55,7 +55,7 @@
        (mapcar #'(lambda (item) (fix-one-translate (first pair) (second pair) item)) tail)))
 
     ((rect text arrow line)
-     (assert nil))
+     list)
 
     (otherwise
      (error (format nil "bad format in fix-translates /~A/" list)))))
