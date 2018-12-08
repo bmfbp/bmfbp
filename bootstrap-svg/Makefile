@@ -17,12 +17,11 @@ YED_DIAGRAM=yed_svg_compiler.graphml
 YED_COMPILER=$(BINDIR)/pl_vsh.gsh
 
 # real SVG compiler written as an SVG/XML diagram
-SVG_COMPILER_DIAGRAM=svg_compiler.xml
+SVG_COMPILER_DIAGRAM=svg_compiler.svg
 LISP_FROM_SVG=lisp-from-svg.lisp
 SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
-all : misc filtersvgtolisp
-#all : misc filtersvgtolisp makeprologfb
+all : misc filtersvgtolisp makeprologfb
 
 bootstrap : $(SVG_BOOTSTRAP_COMPILER)
 

@@ -7,6 +7,6 @@
             (collapse-lines
              (fix-arrows
               (fix-lines
-               (create-text-objects list)))))))
+               (mapcar #'create-text-objects list)))))))
       (to-prolog fixed *standard-output*))))
 
