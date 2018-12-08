@@ -11,27 +11,29 @@
 #  build the components and mv them to ~/bin
 
 BINDIR = ~/bin
+grash=$(BINDIR)/grash
 
-SVG_BOOTSTRAP_COMPILER=$(BINDIR)/svg_bootstrap_compiler.gsh
+BOOTSTRAP_COMPILER=$(BINDIR)/pl_bootstrap.gsh
 YED_DIAGRAM=yed_svg_compiler.graphml
-YED_COMPILER=$(BINDIR)/pl_vsh.gsh
+YED_BASED_COMPILER=$(BINDIR)/pl_svg_bootstrap_vsh.gsh
 
 # real SVG compiler written as an SVG/XML diagram
-SVG_COMPILER_DIAGRAM=svg_compiler.svg
+SVG_DIAGRAM=svg_compiler.svg
 LISP_FROM_SVG=lisp-from-svg.lisp
 SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
-all : misc filtersvgtolisp makeprologfb make-yed-based-compiler
+BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 
-make-yed-based-compiler: makeprologfb 
+all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler
 
-bootstrap : $(SVG_BOOTSTRAP_COMPILER)
+make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
+	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
+	sleep 1  # need to wait for the network to die down
 
-filtersvgtolisp:
-	$(BINDIR)/svg-to-lisp $(SVG_COMPILER_DIAGRAM) >$(LISP_FROM_SVG)
+test-yed-based-compiler : make-yed-based-compiler $(SVG_DIAGRAM)
+	$(grash) $(YED_BASED_COMPILER) $(SVG_DIAGRAM) >$(BOOTSTRAP_COMPILER_OUTPUT)
 
-makeprologfb : $(BINDIR)/fb-to-prolog
-	$(BINDIR)/fb-to-prolog <$(LISP_FROM_SVG) | sort >$(SVG_COMPILER_PROLOGFB)
+bootstrap : dependencies
 
 $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp
@@ -69,8 +71,4 @@ misc :
 dependencies :
 	cd ../grash && make all
 	cd ../pl_vsh && make all
-
-$(SVG_BOOTSTRAP_COMPILER) : dependencies $(YED-DIAGRAM)
-	$(BINDIR)/grash.out $(YED_COMPILER) $(YED_DIAGRAM) >$(SVG_BOOTSTRAP_COMPILER)
-	sleep 1  # need to wait for the network to die down
 
