@@ -18,7 +18,7 @@ YED_DIAGRAM=yed_svg_compiler.graphml
 YED_BASED_COMPILER=$(BINDIR)/pl_svg_bootstrap_vsh.gsh
 
 # real SVG compiler written as an SVG/XML diagram
-SVG_DIAGRAM=svg_compiler.svg
+YED_COMPILER_AS_SVG=yed_compiler_as_svg.svg
 LISP_FROM_SVG=lisp-from-svg.lisp
 SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
@@ -30,8 +30,8 @@ make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
 	sleep 1  # need to wait for the network to die down
 
-test-yed-based-compiler : make-yed-based-compiler $(SVG_DIAGRAM)
-	$(grash) $(YED_BASED_COMPILER) $(SVG_DIAGRAM) >$(BOOTSTRAP_COMPILER_OUTPUT)
+test-yed-based-compiler : make-yed-based-compiler $(YED_DIAGRAM_AS_SVG)
+	$(grash) $(YED_BASED_COMPILER) $(YED_COMPILER_AS_SVG) >$(BOOTSTRAP_COMPILER_OUTPUT)
 
 bootstrap : dependencies
 
