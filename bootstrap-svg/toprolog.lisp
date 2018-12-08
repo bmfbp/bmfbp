@@ -40,7 +40,7 @@
          (destructuring-bind (rect-sym x1 y1 w h)
              list
            (declare (ignore rect-sym))
-           (format strm "rect(~A,'').~%rect_x(~A,~A).~%rect_y(~A,~A).~%rect_w(~A,~A).~%rect_h(~A,~A).~%"
+           (format strm "rect(~A,'').~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id x1 new-id y1 new-id w new-id h)))
         
         (text
