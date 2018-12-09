@@ -3,15 +3,15 @@ writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.
 
 
 writeFB :-
-    forall(arrow(X,Y), writeterm(arrow(X,Y))),
+    forall(arrow(X,_), writeterm(arrow(X,nil))),
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
-    forall(rect(X,Y), writeterm(rect(X,Y))),
+    forall(rect(X,_), writeterm(rect(X,nil))),
     forall(rect_x(X,Y), writeterm(rect_x(X,Y))),
     forall(rect_y(X,Y), writeterm(rect_y(X,Y))),
     forall(rect_w(X,Y), writeterm(rect_w(X,Y))),
     forall(rect_h(X,Y), writeterm(rect_h(X,Y))),
-    forall(line(X,Y), writeterm(line(X,Y))), 
+    forall(line(X,_), writeterm(line(X,nil))), 
     forall(line_begin_x(X,Y), writeterm(line_begin_x(X,Y))), 
     forall(line_begin_y(X,Y), writeterm(line_begin_y(X,Y))), 
     forall(line_end_x(X,Y), writeterm(line_end_x(X,Y))), 
@@ -20,7 +20,7 @@ writeFB :-
     forall(stroke_absolute_y(X,Y), writeterm(stroke_absolute_y(X,Y))),
     forall(stroke_relative_x(X,Y), writeterm(stroke_relative_x(X,Y))),
     forall(stroke_relative_y(X,Y), writeterm(stroke_relative_y(X,Y))),
-    forall(text(X,Y), writeterm(text(X,Y))),
+    forall(text(X,_), writeterm(text(X,nil))),
     forall(text_x(X,Y), writeterm(text_x(X,Y))),
     forall(text_y(X,Y), writeterm(text_y(X,Y))),
     forall(text_w(X,Y), writeterm(text_w(X,Y))),
