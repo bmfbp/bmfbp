@@ -27,7 +27,9 @@ BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 TEMP1=temp1.lisp
 TEMP2=temp2.pro
 
-all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler test-yed-based-compiler
+LOCAL_PL=$(BINDIR)/boot_make_ports
+
+all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 
 make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
@@ -64,7 +66,7 @@ clean:
 cleanfb:
 	rm -f *.pro
 
-$(BINDIR)/svg_% : svg_%.pl
+$(BINDIR)/boot_% : boot_%.pl
 	gplc $< --output $@ --no-top-level
 
 misc : 

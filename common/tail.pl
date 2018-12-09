@@ -20,7 +20,7 @@ writeFB :-
     forall(stroke_absolute_y(X,Y), writeterm(stroke_absolute_y(X,Y))),
     forall(stroke_relative_x(X,Y), writeterm(stroke_relative_x(X,Y))),
     forall(stroke_relative_y(X,Y), writeterm(stroke_relative_y(X,Y))),
-    forall(text(X,_), writeterm(text(X,nil))),
+    forall(text(X,Y), writeterm(text(X,Y))),
     forall(text_x(X,Y), writeterm(text_x(X,Y))),
     forall(text_y(X,Y), writeterm(text_y(X,Y))),
     forall(text_w(X,Y), writeterm(text_w(X,Y))),
