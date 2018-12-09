@@ -3,19 +3,19 @@ writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.
 
 
 writeFB :-
-    forall(arrow(X,_), writeterm(arrow(X,'nil'))),
-    forall(arrow_x(X,_), writeterm(arrow_x(X,'nil'))),
-    forall(arrow_y(X,_), writeterm(arrow_y(X,'nil'))),
-    forall(rect(X,_), writeterm(rect(X,'nil'))),
-    forall(rect_x(X,_), writeterm(rect_x(X,'nil'))),
-    forall(rect_y(X,_), writeterm(rect_y(X,'nil'))),
-    forall(rect_w(X,_), writeterm(rect_w(X,'nil'))),
-    forall(rect_h(X,_), writeterm(rect_h(X,'nil'))),
-    forall(line(X,_), writeterm(line(X,'nil'))), 
-    forall(line_begin_x(X,_), writeterm(line_begin_x(X,'nil'))), 
-    forall(line_begin_y(X,_), writeterm(line_begin_y(X,'nil'))), 
-    forall(line_end_x(X,_), writeterm(line_end_x(X,'nil'))), 
-    forall(line_end_y(X,_), writeterm(line_end_y(X,'nil'))), 
+    forall(arrow(X,Y), writeterm(arrow(X,Y))),
+    forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
+    forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
+    forall(rect(X,Y), writeterm(rect(X,Y))),
+    forall(rect_x(X,Y), writeterm(rect_x(X,Y))),
+    forall(rect_y(X,Y), writeterm(rect_y(X,Y))),
+    forall(rect_w(X,Y), writeterm(rect_w(X,Y))),
+    forall(rect_h(X,Y), writeterm(rect_h(X,Y))),
+    forall(line(X,Y), writeterm(line(X,Y))), 
+    forall(line_begin_x(X,Y), writeterm(line_begin_x(X,Y))), 
+    forall(line_begin_y(X,Y), writeterm(line_begin_y(X,Y))), 
+    forall(line_end_x(X,Y), writeterm(line_end_x(X,Y))), 
+    forall(line_end_y(X,Y), writeterm(line_end_y(X,Y))), 
     forall(stroke_absolute_x(X,Y), writeterm(stroke_absolute_x(X,Y))), 
     forall(stroke_absolute_y(X,Y), writeterm(stroke_absolute_y(X,Y))),
     forall(stroke_relative_x(X,Y), writeterm(stroke_relative_x(X,Y))),
@@ -126,24 +126,24 @@ element(parent(X,Y), Str) :- !,
 			     asserta(parent(X,Y)),
 			     readFB(Str).
 
-element(line(X,_), Str) :- !,
-			     asserta(line(X,'nil')),
+element(line(X,Y), Str) :- !,
+			     asserta(line(X,Y)),
 			     readFB(Str).
 
-element(line_begin_x(X,_), Str) :- !,
-			     asserta(line_begin_x(X,'nil')),
+element(line_begin_x(X,Y), Str) :- !,
+			     asserta(line_begin_x(X,Y)),
 			     readFB(Str).
 
-element(line_begin_y(X,_), Str) :- !,
-			     asserta(line_begin_y(X,'nil')),
+element(line_begin_y(X,Y), Str) :- !,
+			     asserta(line_begin_y(X,Y)),
 			     readFB(Str).
 
-element(line_end_x(X,_), Str) :- !,
-			     asserta(line_end_x(X,'nil')),
+element(line_end_x(X,Y), Str) :- !,
+			     asserta(line_end_x(X,Y)),
 			     readFB(Str).
 
-element(line_end_y(X,_), Str) :- !,
-			     asserta(line_end_y(X,'nil')),
+element(line_end_y(X,Y), Str) :- !,
+			     asserta(line_end_y(X,Y)),
 			     readFB(Str).
 
 element(pipeNum(X,Y), Str) :- !,
@@ -197,24 +197,24 @@ element(move_relative_y(X,Y), Str) :- !,
 			     readFB(Str).
 
 
-element(rect(X,_), Str) :- !,
-			     asserta(rect(X,'nil')),
+element(rect(X,Y), Str) :- !,
+			     asserta(rect(X,Y)),
 			     readFB(Str).
 
-element(rect_x(X,_), Str) :- !,
-			     asserta(rect_x(X,'nil')),
+element(rect_x(X,Y), Str) :- !,
+			     asserta(rect_x(X,Y)),
 			     readFB(Str).
 
-element(rect_y(X,_), Str) :- !,
-			     asserta(rect_y(X,'nil')),
+element(rect_y(X,Y), Str) :- !,
+			     asserta(rect_y(X,Y)),
 			     readFB(Str).
 
-element(rect_w(X,_), Str) :- !,
-			     asserta(rect_w(X,'nil')),
+element(rect_w(X,Y), Str) :- !,
+			     asserta(rect_w(X,Y)),
 			     readFB(Str).
 
-element(rect_h(X,_), Str) :- !,
-			     asserta(rect_h(X,'nil')),
+element(rect_h(X,Y), Str) :- !,
+			     asserta(rect_h(X,Y)),
 			     readFB(Str).
 
 element(stroke_relative_x(X,Y), Str) :- !,
