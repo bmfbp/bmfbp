@@ -27,7 +27,7 @@ BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 TEMP1=temp1.lisp
 TEMP2=temp2.pro
 
-LOCAL_PL=$(BINDIR)/boot_make_ports
+LOCAL_PL=$(BINDIR)/boot_add_kinds
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 
@@ -66,8 +66,11 @@ clean:
 cleanfb:
 	rm -f *.pro
 
-$(BINDIR)/boot_% : boot_%.pl
-	gplc $< --output $@ --no-top-level
+$(BINDIR)/boot_add_kinds : boot_add_kinds.pl
+	gplc $< --output $(BINDIR)/boot_add_kinds --no-top-level
+
+# $(BINDIR)/boot_% : boot_%.pl
+# 	gplc $< --output $@ --no-top-level
 
 misc : 
 	mkdir -p $(BINDIR)
