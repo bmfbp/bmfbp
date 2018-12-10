@@ -39,11 +39,15 @@ write(user_error,T2), write(user_error,' '),
 write(user_error,R2), write(user_error,' '),
 write(user_error,B2), write(user_error,' '),
 nl(user_error),
-
     L1 >= L2,
+write(user_error,'a'),
     T1 >= T2,
+write(user_error,'b'),
     R2 >= R1,
-    B2 >= B1.
+write(user_error,'c'),
+    B2 >= B1,
+write(user_error,'d'),
+nl(user_error).    
     
 
 :- include('../common/tail').
