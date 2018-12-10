@@ -21,7 +21,7 @@
              (let ((text (text-part tail))
                    (x (first pair))
                    (y (second pair)))
-               `(text ,text ,x ,y ,(* (length text) *default-font-width*) ,*default-font-height*))
+               `(text ,text ,x ,y ,(+ x (* (length text) *default-font-width*)) ,(+ y *default-font-height*)))
            (error "badly formed translate")))))
 
     ((line rect)
