@@ -23,7 +23,7 @@
            (tail (third list)))
        (if (list-of-lists-p tail)
            `(translate ,pair ,(mapcar #'fix-lines tail))
-         (error "badly formed translate"))))
+         (error "fix-lines: badly formed translate /~A/~%" list))))
 
     ((rect text) list)
 

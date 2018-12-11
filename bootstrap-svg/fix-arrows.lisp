@@ -10,7 +10,7 @@
            (tail (third list)))
        (if (list-of-lists-p tail)
            `(translate ,pair ,(mapcar #'fix-arrows tail))
-         (error "badly formed translate"))))
+         (error "fix-arrows: badly formed translate /~A/~%" list))))
 
     ((rect text arrow) list)
 

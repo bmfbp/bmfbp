@@ -18,11 +18,14 @@
        (if (list-of-lists-p tail)
            `(translate ,pair ,(mapcar #'create-text-objects tail))
          (if (matches-text-item-p tail)
-             (let ((text (text-part tail))
-                   (x (first pair))
-                   (y (second pair)))
-               `(text ,text ,x ,y ,(+ x (* (length text) *default-font-width*)) ,(+ y *default-font-height*)))
-           (error "badly formed translate")))))
+             (let ((text (text-part tail)))
+	       `(translate ,pair
+		 ((text ,text 
+		       0 
+		       0 
+		       ,(* (length text) *default-font-width*) 
+		       ,*default-font-height*))))
+           (error "badly formed translate /~A/~%" list)))))
 
     ((line rect)
      list)
