@@ -1,6 +1,5 @@
-(defun main (argv)
-  (declare (ignore argv))
-  (let ((list (read *standard-input*)))
+(defun run (strm)
+  (let ((list (read strm)))
     (assert (listp list))
     (let ((fixed 
            (mapcar #'fix-translates
@@ -10,3 +9,12 @@
 					   (mapcar #'create-text-objects list)))))))
       (to-prolog fixed *standard-output*))))
 
+#-lispworks
+(defun main (argv)
+  (declare (ignore argv))
+  (run *standard-input*))
+
+#+lispworks
+(defun main (fname)
+  (with-open-file (f fname :direction :input)
+    (run f)))

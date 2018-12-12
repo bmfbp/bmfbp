@@ -1,5 +1,5 @@
 (defsystem svg-to-fb (:optimize ((speed 0) (space 0) (safety 3) (debug 3) (float 1)))
-  :members ("test-data"
+  :members ("util"
             "toprolog"
             "fix-translate"
             "collapse-lines"

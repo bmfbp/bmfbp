@@ -11,21 +11,22 @@
 (defun create-text-objects (list)
   (assert (listp list))
   (case (car list)
-
+    
     (translate
      (let ((pair (second list))
            (tail (third list)))
        (if (list-of-lists-p tail)
            `(translate ,pair ,(mapcar #'create-text-objects tail))
-         (if (matches-text-item-p tail)
-             (let ((text (text-part tail)))
-	       `(translate ,pair
-		 ((text ,text 
-		       0 
-		       0 
-		       ,(* (length text) *default-font-width*) 
-		       ,*default-font-height*))))
-           (error "badly formed translate /~A/~%" list)))))
+           (if (matches-text-item-p tail)
+               (let ((text (text-part tail)))
+		 (let ((half-width (/ (* (length text) *default-font-width*) 2)))
+		   `((translate ,pair
+			       ((text ,text 
+				      0
+				      0
+				      ,half-width
+				      ,*default-font-height*))))))
+	       (error "badly formed translate /~A/~%" list)))))
 
     ((line rect)
      list)

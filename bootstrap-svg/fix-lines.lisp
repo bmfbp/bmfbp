@@ -16,23 +16,25 @@
 (defun fix-lines (list)
   (assert (listp list))
 
-  (case (car list)
-
-    (translate
-     (let ((pair (second list))
-           (tail (third list)))
-       (if (list-of-lists-p tail)
-           `(translate ,pair ,(mapcar #'fix-lines tail))
-         (error "fix-lines: badly formed translate /~A/~%" list))))
-
-    ((rect text) list)
-
-    (line
-     (let* ((absm (second list))
-            (x1 (second absm))
-            (y1 (third absm)))
-       `(line ,@(fixup-line (rest (rest list)) x1 y1))))
-
-    (otherwise
-     (error (format nil "bad format in fixup-line /~A/" list)))))
-
+  (if (listp (car list))
+      (mapcar #'fix-lines list)
+      (case (car list)
+	
+	(translate
+	 (let ((pair (second list))
+               (tail (third list)))
+	   (if (list-of-lists-p tail)
+               `(translate ,pair ,(mapcar #'fix-lines tail))
+               (error "fix-lines: badly formed translate /~A/~%" list))))
+	
+	((rect text) list)
+	
+	(line
+	 (let* ((absm (second list))
+		(x1 (second absm))
+		(y1 (third absm)))
+	   `(line ,@(fixup-line (rest (rest list)) x1 y1))))
+	
+	(otherwise
+	 (error (format nil "bad format in fixup-line /~A/" list))))))
+  
