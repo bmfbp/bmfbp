@@ -8,16 +8,16 @@ main :-
     halt.
 
 createKinds(Box) :-
-    write(user_error,'ck '),write(user_error,Box),nl(user_error),
+%    write(user_error,'ck '),write(user_error,Box),nl(user_error),
     text(Text,Str),
-    write(user_error,Text),write(user_error,' '),write(user_error,Str),write(user_error,' '),
+%    write(user_error,Text),write(user_error,' '),write(user_error,Str),write(user_error,' '),
     textCompletelyInsideBox(Text,Box),
-    write(user_error,' '),write(user_error,Text),write(user_error,' '),
+%    write(user_error,' '),write(user_error,Text),write(user_error,' '),
     asserta(kind(Box,Str)).
 
 textCompletelyInsideBox(TextID,BoxID) :-
     pointCompletelyInsideBoundingBox(TextID,BoxID).
-%boundingboxCompletelyInside(TextID,BoxID).
+%    boundingboxCompletelyInside(TextID,BoxID).
 
 boundingboxCompletelyInside(ID1,ID2) :-
     bounding_box_left(ID1,L1),
@@ -30,25 +30,25 @@ boundingboxCompletelyInside(ID1,ID2) :-
     bounding_box_right(ID2,R2),
     bounding_box_bottom(ID2,B2),
 
-write(user_error,'inside '), write(user_error,' '),
-write(user_error,L1), write(user_error,' '),
-write(user_error,T1), write(user_error,' '),
-write(user_error,R1), write(user_error,' '),
-write(user_error,B1), write(user_error,' '),
-write(user_error,L2), write(user_error,' '),
-write(user_error,T2), write(user_error,' '),
-write(user_error,R2), write(user_error,' '),
-write(user_error,B2), write(user_error,' '),
-nl(user_error),
+%write(user_error,'inside '), write(user_error,' '),
+%write(user_error,L1), write(user_error,' '),
+%write(user_error,T1), write(user_error,' '),
+%write(user_error,R1), write(user_error,' '),
+%write(user_error,B1), write(user_error,' '),
+%write(user_error,L2), write(user_error,' '),
+%write(user_error,T2), write(user_error,' '),
+%write(user_error,R2), write(user_error,' '),
+%write(user_error,B2), write(user_error,' '),
+%nl(user_error),
     L1 >= L2,
-write(user_error,'a'),
+%write(user_error,'a'),
     T1 >= T2,
-write(user_error,'b'),
+%write(user_error,'b'),
     R2 >= R1,
-write(user_error,'c'),
-    B2 >= B1,
-write(user_error,'d'),
-nl(user_error).    
+%write(user_error,'c'),
+    B2 >= B1.
+%write(user_error,'d'),
+%nl(user_error).    
 
 pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_left(ID1,L1),
@@ -59,23 +59,23 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID2,R2),
     bounding_box_bottom(ID2,B2),
 
-write(user_error,'inside '), write(user_error,' '),
-write(user_error,L1), write(user_error,' '),
-write(user_error,T1), write(user_error,' '),
-write(user_error,L2), write(user_error,' '),
-write(user_error,T2), write(user_error,' '),
-write(user_error,R2), write(user_error,' '),
-write(user_error,B2), write(user_error,' '),
-nl(user_error),
+%write(user_error,'inside '), write(user_error,' '),
+%write(user_error,L1), write(user_error,' '),
+%write(user_error,T1), write(user_error,' '),
+%write(user_error,L2), write(user_error,' '),
+%write(user_error,T2), write(user_error,' '),
+%write(user_error,R2), write(user_error,' '),
+%write(user_error,B2), write(user_error,' '),
+%nl(user_error),
     L1 >= L2,
-write(user_error,'a'),
+%write(user_error,'a'),
     T1 >= T2,
-write(user_error,'b'),
+%write(user_error,'b'),
     R2 >= L1,
-write(user_error,'c'),
-    B2 >= T1,
-write(user_error,'d'),
-nl(user_error).    
+%write(user_error,'c'),
+    B2 >= T1.
+%write(user_error,'d'),
+%nl(user_error).    
 
 
 :- include('../common/tail').
