@@ -27,7 +27,7 @@ BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 TEMP1=temp1.lisp
 TEMP2=temp2.pro
 
-LOCAL_PL=$(BINDIR)/boot_add_kinds
+LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_make_unknown_port_names
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 
@@ -59,7 +59,7 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 		--entry main
 
 clean:
-	rm -f $(SVG_BOOTSTRAP_COMPILER) misc $(TEST_LISP) $(TEST_FB) \
+	rm -f $(SVG_BOOTSTRAP_COMPILER) misc $(TEST_LISP) $(TEST_FB) $(LOCAL_PL) \
 	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB)
 	rm -f *.pro
 
@@ -68,6 +68,9 @@ cleanfb:
 
 $(BINDIR)/boot_add_kinds : boot_add_kinds.pl
 	gplc $< --output $(BINDIR)/boot_add_kinds --no-top-level
+
+$(BINDIR)/boot_make_unknown_port_names : boot_make_unknown_port_names.pl
+	gplc $< --output $(BINDIR)/boot_make_unknown_port_names --no-top-level
 
 # $(BINDIR)/boot_% : boot_%.pl
 # 	gplc $< --output $@ --no-top-level
