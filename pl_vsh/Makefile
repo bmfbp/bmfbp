@@ -34,7 +34,7 @@ clean:
 cleanfb:
 	rm -f *.pro
 
-$(BINDIR)/% : %.pl
+$(BINDIR)/% : %.pl $(PL_COMMON)
 	gplc $< --output $@ --no-top-level
 
 $(BINDIR)/plscan : plscan.lisp io.lisp

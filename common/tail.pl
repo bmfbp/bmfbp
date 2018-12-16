@@ -29,6 +29,8 @@ writeFB :-
     forall(bounding_box_top(X,Y), writeterm(bounding_box_top(X,Y))),
     forall(bounding_box_right(X,Y), writeterm(bounding_box_right(X,Y))),
     forall(bounding_box_bottom(X,Y), writeterm(bounding_box_bottom(X,Y))),
+    forall(center_x(X,Y), writeterm(center_x(X,Y))),
+    forall(center_y(X,Y), writeterm(center_y(X,Y))),
     forall(component(X), writeterm(component(X))),
     forall(edge(X), writeterm(edge(X))),
     forall(eltype(X,Y), writeterm(eltype(X,Y))),
@@ -120,6 +122,14 @@ element(bounding_box_right(X,Y), Str) :- !,
 
 element(bounding_box_bottom(X,Y), Str) :- !,
 				 asserta(bounding_box_bottom(X,Y)),
+				 readFB(Str).
+
+element(center_x(X,Y), Str) :- !,
+				 asserta(center_x(X,Y)),
+				 readFB(Str).
+
+element(center_y(X,Y), Str) :- !,
+				 asserta(center_y(X,Y)),
 				 readFB(Str).
 
 element(parent(X,Y), Str) :- !,

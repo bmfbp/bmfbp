@@ -5,6 +5,8 @@
 :- dynamic(bounding_box_left/2).
 :- dynamic(bounding_box_right/2).
 :- dynamic(bounding_box_top/2).
+:- dynamic(center_x/2).
+:- dynamic(center_y/2).
 :- dynamic(component/1) .
 :- dynamic(edge/1) .
 :- dynamic(eltype/2) .
