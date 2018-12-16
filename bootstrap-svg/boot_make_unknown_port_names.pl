@@ -3,17 +3,15 @@
 
 main :-
     readFB(user_input), 
-    forall(text(TextID,_),createPortNameIfNotAKindName(TextID)),
+    forall(unused_text(TextID),createPortNameIfNotAKindName(TextID)),
     writeFB,
     halt.
 
-createPortNameIfNotAKindName(TextID) :-
-    text(TextID,Text),
-    kind(_,Text),  % ignore if already a kind
-write(user_error,'already a kind '),write(user_error,' '),write(user_error,TextID),nl(user_error),
-    !.
+unused_text(TextID) :-
+    text(TextID,_),
+    \+ used(TextID).
 
 createPortNameIfNotAKindName(TextID) :-
-    asserta(portName('nil',TextID)),!.
+    asserta(portName('nil',TextID)).
 
 :- include('../common/tail').

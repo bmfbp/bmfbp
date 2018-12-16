@@ -9,10 +9,11 @@ main :-
 
 createKinds(Box) :-
 %    write(user_error,'ck '),write(user_error,Box),nl(user_error),
-    text(Text,Str),
-%    write(user_error,Text),write(user_error,' '),write(user_error,Str),write(user_error,' '),
-    textCompletelyInsideBox(Text,Box),
+    text(TextID,Str),
+%    write(user_error,TextID),write(user_error,' '),write(user_error,Str),write(user_error,' '),
+    textCompletelyInsideBox(TextID,Box),
 %    write(user_error,' '),write(user_error,Text),write(user_error,' '),
+    asserta(used(TextID)),
     asserta(kind(Box,Str)).
 
 textCompletelyInsideBox(TextID,BoxID) :-

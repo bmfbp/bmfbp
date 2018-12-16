@@ -49,6 +49,7 @@
 :- dynamic(stroke_absolute_y/2) .
 :- dynamic(stroke_relative_x/2) .
 :- dynamic(stroke_relative_y/2) .
+:- dynamic(used/1).
 :- dynamic(text/2).
 :- dynamic(text_x/2).
 :- dynamic(text_y/2).

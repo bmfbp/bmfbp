@@ -39,6 +39,7 @@ writeFB :-
     forall(geometry_x(X,Y), writeterm(geometry_x(X,Y))),
     forall(geometry_y(X,Y), writeterm(geometry_y(X,Y))),
     forall(node(X), writeterm(node(X))),
+    forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
     forall(portName(X,Y), writeterm(portName(X,Y))),
     forall(source(X,Y), writeterm(source(X,Y))),
@@ -75,6 +76,9 @@ element(geometry_w(X,Y), Str) :- !,
 		       readFB(Str).
 element(geometry_h(X,Y), Str) :- !,
 			   asserta(geometry_h(X,Y)),
+		       readFB(Str).
+element(used(X), Str) :- !,
+			   asserta(used(X)),
 		       readFB(Str).
 element(node(X), Str) :- !,
 			   asserta(node(X)),
