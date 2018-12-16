@@ -13,6 +13,8 @@
 BINDIR = ~/bin
 grash=$(BINDIR)/grash
 
+PL_COMMON=../common/head.pl ../common/tail.pl
+
 BOOTSTRAP_COMPILER=$(BINDIR)/pl_bootstrap.gsh
 YED_DIAGRAM=yed_svg_compiler.graphml
 YED_BASED_COMPILER=$(BINDIR)/pl_svg_bootstrap_vsh.gsh
@@ -27,7 +29,7 @@ BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 TEMP1=temp1.lisp
 TEMP2=temp2.pro
 
-LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_make_unknown_port_names
+LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_make_unknown_port_names $(BINDIR)/boot_create_centers
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 
@@ -66,13 +68,16 @@ clean:
 cleanfb:
 	rm -f *.pro
 
-$(BINDIR)/boot_add_kinds : boot_add_kinds.pl
+$(BINDIR)/boot_add_kinds : boot_add_kinds.pl $(PL_COMMON)
 	gplc $< --output $(BINDIR)/boot_add_kinds --no-top-level
 
-$(BINDIR)/boot_make_unknown_port_names : boot_make_unknown_port_names.pl
+$(BINDIR)/boot_make_unknown_port_names : boot_make_unknown_port_names.pl $(PL_COMMON)
 	gplc $< --output $(BINDIR)/boot_make_unknown_port_names --no-top-level
 
-# $(BINDIR)/boot_% : boot_%.pl
+$(BINDIR)/boot_create_centers : boot_create_centers.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/boot_create_centers --no-top-level
+
+# $(BINDIR)/boot_% : boot_%.pl $(PL_COMMON)
 # 	gplc $< --output $@ --no-top-level
 
 misc : 
