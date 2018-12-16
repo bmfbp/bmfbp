@@ -27,8 +27,9 @@ makeCenterPair(PortID,TextID) :-
     DXsq is DX * DX,
     DYsq is DY * DY,
     Dist is DXsq + DYsq,
+    DST is sqrt(Dist),
     asserta(distance(Pair,TextID)),
-    asserta(distance_xy(Pair,Dist)).
+    asserta(distance_xy(Pair,DST)).
 
 makePairID(PortID,NewID) :-
     g_read(counter,NewID),
