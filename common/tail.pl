@@ -25,6 +25,11 @@ writeFB :-
     forall(text_y(X,Y), writeterm(text_y(X,Y))),
     forall(text_w(X,Y), writeterm(text_w(X,Y))),
     forall(text_h(X,Y), writeterm(text_h(X,Y))),
+
+    forall(centerPair(X,Y), writeterm(centerPair(X,Y))),
+    forall(distance(X,Y), writeterm(distance(X,Y))),
+    forall(distance_xy(X,Y), writeterm(distance_xy(X,Y))),
+
     forall(bounding_box_left(X,Y), writeterm(bounding_box_left(X,Y))),
     forall(bounding_box_top(X,Y), writeterm(bounding_box_top(X,Y))),
     forall(bounding_box_right(X,Y), writeterm(bounding_box_right(X,Y))),
@@ -266,6 +271,30 @@ element(text_w(X,Y), Str) :- !,
 
 element(text_h(X,Y), Str) :- !,
 			     asserta(text_h(X,Y)),
+			     readFB(Str).
+
+element(centerPair(X,Y), Str) :- !,
+			     asserta(centerPair(X,Y)),
+			     readFB(Str).
+
+element(distance(X,Y), Str) :- !,
+			     asserta(distance(X,Y)),
+			     readFB(Str).
+
+element(distance_xy(X,Y), Str) :- !,
+			     asserta(distance_xy(X,Y)),
+			     readFB(Str).
+
+
+
+element(centerPair(X,Y), Str) :- !,
+			     asserta(centerPair(X,Y)),
+			     readFB(Str).
+element(distanc(X,Y), Str) :- !,
+			     asserta(distanc(X,Y)),
+			     readFB(Str).
+element(distanc_xy(X,Y), Str) :- !,
+			     asserta(distance_xy(X,Y)),
 			     readFB(Str).
 
 

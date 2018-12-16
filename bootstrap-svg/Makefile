@@ -29,7 +29,8 @@ BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 TEMP1=temp1.lisp
 TEMP2=temp2.pro
 
-LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_make_unknown_port_names $(BINDIR)/boot_create_centers
+LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_make_unknown_port_names $(BINDIR)/boot_create_centers \
+	$(BINDIR)/boot_calculate_distances
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 
@@ -76,6 +77,9 @@ $(BINDIR)/boot_make_unknown_port_names : boot_make_unknown_port_names.pl $(PL_CO
 
 $(BINDIR)/boot_create_centers : boot_create_centers.pl $(PL_COMMON)
 	gplc $< --output $(BINDIR)/boot_create_centers --no-top-level
+
+$(BINDIR)/boot_calculate_distances : boot_calculate_distances.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/boot_calculate_distances --no-top-level
 
 # $(BINDIR)/boot_% : boot_%.pl $(PL_COMMON)
 # 	gplc $< --output $@ --no-top-level
