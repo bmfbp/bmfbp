@@ -1,4 +1,5 @@
 :- include('../common/head').
+:- include('../common/tail').
 
 list_min([L|Ls], Min) :-
     list_min(Ls, L, Min).
@@ -20,7 +21,17 @@ test2(N,I) :-
 test3(N,I,Tail) :-
     flatten([[1,id1],[2,id2]],N,I,Tail).
 
+
+%% (6 ms) yes
+%% | ?- test4(N,I,T).
+
+%% I = [id1]
+%% N = [1]
+%% T = [[2,id2],[3,id3]]
+
+%% (1 ms) yes
+
 test4(N,I,Tail) :-
     flatten([[1,id1],[2,id2],[3,id3]],N,I,Tail).
 
-:- include('../common/tail').
+
