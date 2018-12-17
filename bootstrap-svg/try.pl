@@ -28,6 +28,11 @@ test3(N,I) :-
 test4(N,I) :-
     flatten([[3,id3],[4,id4],[2,id2],[1,id1]],N,I).
 
+test5(Min) :-
+    flatten([[3,id3],[4,id4],[2,id2],[1,id1]],N,_),
+    list_min(N,Min).
+
+
 
 
 
