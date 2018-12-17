@@ -25,6 +25,9 @@ test2(N,I) :-
 test3(N,I) :-
     flatten([[2,id2],[1,id1]],N,I).
 
+test4(N,I) :-
+    flatten([[3,id3],[4,id4],[2,id2],[1,id1]],N,I).
+
 
 
 
