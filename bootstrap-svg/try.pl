@@ -9,19 +9,10 @@ list_min([L|Ls], Min0, Min) :-
     list_min(Ls, Min1, Min).
 
 flatten([],[],[]).
-flatten([[N,ID]],Ns,IDs):-
-    append([N],[],Ns),
-    append([ID],[],IDs).
-
-o_flatten([[N|ID]],[N],[ID]).
-%% IS is for eval'ing math.
-o_flatten([[N1|I1],[N2|I2]],N,I) :-
-    unify(N,[N1,N2]),
-    append(I1,I2,I).
-
-o_flatten([[N1,I1],[N2,I2],[N3,I3]],N,I) :-
-    unify(N,[N1,N2,N3]),
-    unify(I,[I1,I2,I3]).
+flatten([[N1,ID1]|Tail],Ns,IDs):-
+    flatten(Tail,Nlist,IDlist),
+    append([N1],Nlist,Ns),
+    append([ID1],IDlist,IDs).
 
 unify(X,X).
 
@@ -31,14 +22,6 @@ test1(N,I) :-
 test2(N,I) :-
     flatten([[1,id1]],N,I).
 
-%% | ?- test3(N,I).
-%% I = [id1,id2]
-%% N = [1,2]
-test3(N,I) :-
-    flatten([[1,id1],[2,id2]],N,I).
-
-test4(N,I) :-
-    flatten([[1,id1],[2,id2],[3,id3]],N,I).
 
 
 
