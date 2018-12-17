@@ -11,8 +11,12 @@ list_min([L|Ls], Min0, Min) :-
 flatten([],[],[]).
 flatten([[N|ID]],[N],ID).
 %% flatten([[N1|I1]|Tail],[N1],I1,Tail).
-flatten([[N1|I1]|Tail],N,I1,Tail) :-
-    N is N1.
+%% IS is for eval'ing math.
+flatten([[N1|I1]|Tail],N,I,Tail) :-
+    N is N1,
+    unify(I,I1).
+
+unify(X,X).
 
 test1(N,I) :-
     flatten([],N,I).
