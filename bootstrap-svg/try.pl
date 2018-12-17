@@ -1,5 +1,32 @@
 :- include('../common/head').
 :- include('../common/tail').
+:- include('bootstrap-output').
+
+
+%% findAllCandidateTexts(PortID,DistanceList,TextIDList):-
+%%     recursivelyFindAllCandidateTexts(PortID,[],[],DistanceList,TextIDList).
+
+recursivelyFindAllCandidateTexts(PortID,DistancesSoFar,IDsSoFar,ResultDistanceList,ResultTextIDList):-
+    distanceToTextFromPort(PortID,TextID,DistanceFromPort),
+    append([DistanceFromPort],DistancesSoFar,ResultDistanceList),
+    append([TextID],IDsSoFar,ResultTextIDList).
+
+findAllPortsAndCandidates(PortID,Pairs) :-
+    findall(eltype(PortID,'port'),findAllCandidateTextsForGivenPort(PortID,Pairs),PortID).
+
+% findall(Pair,distanceToTextFromPort(id423,Pair),Pairs)
+findAllCandidateTextsForGivenPort(Port,Pairs) :-
+    findall(Pair,distanceToTextFromPort(Port,Pair),Pairs).
+
+distanceToTextFromPort(PortId,Pair):-
+    % reconstruct the data structure, and return one pair {TextID,distance-to-text-from-port}
+    centerPair(PortId,CenterPairID),
+    distance(CenterPairID,TextID),
+    distance_xy(CenterPairID,DistanceFromPort),
+    Pair = [DistanceFromPort,TextID].
+	    
+
+
 
 flatten([],[],[]).
 flatten([[N1,ID1]|Tail],Ns,IDs):-
@@ -42,6 +69,13 @@ test7(Min,POS,ID) :-
 test8(Min,POS,ID) :-
     findID([[3,id3],[4,id4],[55,id55],[2,id2],[666,id666],[1,id1],[777,id777]],Min,POS,ID).
 
+%% | ?- test9(M,P,I).
+%% I = id430
+%% M = 226.82894000766305
+%% P = 5 ? ;
+test9(Min,POS,ID) :-
+    findAllCandidateTextsForGivenPort(id423,Pairs),
+    findID(Pairs,Min,POS,ID).
 
 
 
