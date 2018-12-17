@@ -77,6 +77,10 @@ test9(Min,POS,ID) :-
     findAllCandidateTextsForGivenPort(id423,Pairs),
     findID(Pairs,Min,POS,ID).
 
+test10(Min,ID) :-
+    findAllCandidateTextsForGivenPort(id423,Pairs),
+    findID(Pairs,Min,_,ID).
+
 
 
 
