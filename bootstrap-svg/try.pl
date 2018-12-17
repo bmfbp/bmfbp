@@ -12,9 +12,9 @@ flatten([],[],[]).
 flatten([[N|ID]],[N],ID).
 %% flatten([[N1|I1]|Tail],[N1],I1,Tail).
 %% IS is for eval'ing math.
-flatten([[N1|I1]|Tail],N,I,Tail) :-
-    N is N1,
-    unify(I,I1).
+flatten([[N1|I1],[N2|I2]],N,I) :-
+    unify(N,[N1,N2]),
+    append(I1,I2,I).
 
 unify(X,X).
 
@@ -27,6 +27,11 @@ test2(N,I) :-
 test3(N,I,Tail) :-
     flatten([[1,id1],[2,id2]],N,I,Tail).
 
+%% | ?- test3a(N,I).
+%% I = [id1,id2]
+%% N = [1,2]
+test3a(N,I) :-
+    flatten([[1,id1],[2,id2]],N,I).
 
 %% (6 ms) yes
 %% | ?- test4(N,I,T).
@@ -39,5 +44,8 @@ test3(N,I,Tail) :-
 
 test4(N,I,Tail) :-
     flatten([[1,id1],[2,id2],[3,id3]],N,I,Tail).
+
+test5(N,I) :-
+    flatten([[1,id1],[2,id2],[3,id3]],N,I).
 
 
