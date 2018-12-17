@@ -9,12 +9,6 @@ flatten([[N1,ID1]|Tail],Ns,IDs):-
 
 unify(X,X).
 
-%% findID(List,Min,Pos,ID) :-
-%%     flatten(List,Ns,IDs),
-%%     min_list(Ns,Min).
-%%     nth(Pos,Ns,Min),
-%%     nth(Pos,IDs,ID).
-
 findID(List,Min,Pos,ID):-
     flatten(List,Ns,IDs),
     min_list(Ns,Min),
@@ -44,6 +38,9 @@ test6(Min,POS) :-
 
 test7(Min,POS,ID) :-
     findID([[3,id3],[4,id4],[2,id2],[1,id1]],Min,POS,ID).
+
+test8(Min,POS,ID) :-
+    findID([[3,id3],[4,id4],[55,id55],[2,id2],[666,id666],[1,id1],[777,id777]],Min,POS,ID).
 
 
 
