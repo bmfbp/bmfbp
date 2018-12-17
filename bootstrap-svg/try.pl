@@ -10,7 +10,9 @@ list_min([L|Ls], Min0, Min) :-
 
 flatten([],[],[]).
 flatten([[N|ID]],[N],ID).
-flatten([[N1|I1]|Tail],[N1],I1,Tail).
+%% flatten([[N1|I1]|Tail],[N1],I1,Tail).
+flatten([[N1|I1]|Tail],N,I1,Tail) :-
+    N is N1.
 
 test1(N,I) :-
     flatten([],N,I).
