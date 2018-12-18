@@ -28,7 +28,7 @@ assignTextToPort(PortID,UnassignedText) :-
     write(user_error,'portName('),write(user_error,PortID),write(user_error,','),write(user_error,UnassignedText),write(user_error,')'),nl(user_error).
 
 test :-
-    assignTextToPort(id423,_).
+    forall(eltype(PortID,'port'),assignTextToPort(PortID,_)).
 
 
 flatten([],[],[]).
