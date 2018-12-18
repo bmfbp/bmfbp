@@ -8,7 +8,8 @@ findClosestTextForPort(PortID,Pairs,Ns,I,Min,Position,UnassignedTextID) :-
     flatten(Pairs,Ns,I),
     min_list(Ns,Min),
     nth(Position,Ns,Min),
-    nth(Position,I,UnassignedTextID).
+    nth(Position,I,UnassignedTextID),
+    unassigned(UnassignedTextID).
 
 findAllCandidateTextsForGivenPort(Port,Pairs) :-
     findall(Pair,distanceToTextFromPort(Port,Pair),Pairs).
