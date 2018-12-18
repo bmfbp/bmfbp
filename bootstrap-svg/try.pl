@@ -3,18 +3,14 @@
 :- include('bootstrap-output').
 
 
-%% findAllCandidateTexts(PortID,DistanceList,TextIDList):-
-%%     recursivelyFindAllCandidateTexts(PortID,[],[],DistanceList,TextIDList).
+findClosestTextForPort(PortID,Pairs) :-	    
+    findAllCandidateTextsForGivenPort(PortID,Pairs).
+%    flatten(Pairs,Ns,I).
+%    min_list(Ns,Min).
 
-recursivelyFindAllCandidateTexts(PortID,DistancesSoFar,IDsSoFar,ResultDistanceList,ResultTextIDList):-
-    distanceToTextFromPort(PortID,TextID,DistanceFromPort),
-    append([DistanceFromPort],DistancesSoFar,ResultDistanceList),
-    append([TextID],IDsSoFar,ResultTextIDList).
+test(Pairs) :-
+    findClosestTextForPort(id423,Pairs).
 
-findAllPortsAndCandidates(PortID,Pairs) :-
-    findall(eltype(PortID,'port'),findAllCandidateTextsForGivenPort(PortID,Pairs),PortID).
-
-% findall(Pair,distanceToTextFromPort(id423,Pair),Pairs)
 findAllCandidateTextsForGivenPort(Port,Pairs) :-
     findall(Pair,distanceToTextFromPort(Port,Pair),Pairs).
 
@@ -24,7 +20,6 @@ distanceToTextFromPort(PortId,Pair):-
     distance(CenterPairID,TextID),
     distance_xy(CenterPairID,DistanceFromPort),
     Pair = [DistanceFromPort,TextID].
-	    
 
 
 
@@ -81,10 +76,5 @@ test10(Min,ID) :-
     findAllCandidateTextsForGivenPort(id423,Pairs),
     findID(Pairs,Min,_,ID).
 
-test11(PortID,Min,ID) :-
-    findAllCandidateTextsForGivenPort(PortID,Pairs),
-    findID(Pairs,Min,_,ID).
-
-
-
-
+test11(PortID,ID) :-
+    findClosestTextForPort(PortID,ID).
