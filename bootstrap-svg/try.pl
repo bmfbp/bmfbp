@@ -3,13 +3,13 @@
 :- include('bootstrap-output').
 
 
-findClosestTextForPort(PortID,Pairs) :-	    
-    findAllCandidateTextsForGivenPort(PortID,Pairs).
-%    flatten(Pairs,Ns,I).
+findClosestTextForPort(PortID,Pairs,Ns,I) :-	    
+    findAllCandidateTextsForGivenPort(PortID,Pairs),
+    flatten(Pairs,Ns,I).
 %    min_list(Ns,Min).
 
-test(Pairs) :-
-    findClosestTextForPort(id423,Pairs).
+test(Pairs,N,I) :-
+    findClosestTextForPort(id423,Pairs,N,I).
 
 findAllCandidateTextsForGivenPort(Port,Pairs) :-
     findall(Pair,distanceToTextFromPort(Port,Pair),Pairs).
