@@ -22,10 +22,13 @@ distanceToTextFromPort(PortId,Pair):-
     distance_xy(CenterPairID,DistanceFromPort),
     Pair = [DistanceFromPort,TextID].
 
-test(UnassignedText) :-
-    findClosestTextForPort(id423,UnassignedText),
-    write(user_error,'portName('),write(user_error,'id423'),write(user_error,','),write(user_error,UnassignedText),write(user_error,')'),nl(user_error).
+assignTextToPort(PortID,UnassignedText) :-
+    findClosestTextForPort(PortID,UnassignedText),
+    asserta(portName(PortID,UnassignedText)),
+    write(user_error,'portName('),write(user_error,PortID),write(user_error,','),write(user_error,UnassignedText),write(user_error,')'),nl(user_error).
 
+test :-
+    assignTextToPort(id423,_).
 
 
 flatten([],[],[]).
