@@ -11,13 +11,13 @@ main :-
 makeAllCenterPairs(PortID) :-
     % each port gets one centerPair for each unused text item
     % each center pair contains the target text id and a distance from the given port
-    % centerPair(Port,Pair)
-    % distance(Pair,Text)
+    % join_centerPair(Port,Pair)
+    % join_distance(Pair,Text)
     % distance_xy(Pair,dx^2 + dy^2)
     forall(unassigned(TextID),makeCenterPair(PortID,TextID)).
 
 makeCenterPair(PortID,TextID) :-
-    makePairID(PortID,Pair),
+    makePairID(PortID,JoinPairID),
     center_x(PortID,Px),
     center_y(PortID,Py),
     center_x(TextID,Tx),
@@ -27,13 +27,13 @@ makeCenterPair(PortID,TextID) :-
     DXsq is DX * DX,
     DYsq is DY * DY,
     Dist is DXsq + DYsq,
-    DST is sqrt(Dist),
-    asserta(distance(Pair,TextID)),
-    asserta(distance_xy(Pair,DST)).
+    DISTANCE is sqrt(Dist),
+    asserta(join_distance(JoinPairID,TextID)),
+    asserta(distance_xy(JoinPairID,DISTANCE)).
 
 makePairID(PortID,NewID) :-
     g_read(counter,NewID),
-    asserta(centerPair(PortID,NewID)),
+    asserta(join_centerPair(PortID,NewID)),
     inc(counter,_).
 
 :- include('../common/tail').

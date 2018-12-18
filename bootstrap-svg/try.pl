@@ -16,11 +16,10 @@ findAllCandidateTextsForGivenPort(Port,Pairs) :-
 
 distanceToTextFromPort(PortId,Pair):-
     % reconstruct the data structure, and return one pair {TextID,distance-to-text-from-port}
-    centerPair(PortId,CenterPairID),
-    distance(CenterPairID,TextID),
+    join_centerPair(PortId,CenterPairID),
+    join_distance(CenterPairID,TextID),
     distance_xy(CenterPairID,DistanceFromPort),
     Pair = [DistanceFromPort,TextID].
-
 
 
 flatten([],[],[]).

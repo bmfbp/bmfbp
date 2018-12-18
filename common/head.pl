@@ -56,6 +56,6 @@
 :- dynamic(text_y/2).
 :- dynamic(text_w/2).
 :- dynamic(text_h/2).
-:- dynamic(centerPair/2).
-:- dynamic(distance/2).
+:- dynamic(join_centerPair/2).
+:- dynamic(join_distance/2).
 :- dynamic(distance_xy/2).
