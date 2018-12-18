@@ -12,6 +12,6 @@ unused_text(TextID) :-
     \+ used(TextID).
 
 createPortNameIfNotAKindName(TextID) :-
-    asserta(portName('nil',TextID)).
+    asserta(unassigned(TextID)).
 
 :- include('../common/tail').
