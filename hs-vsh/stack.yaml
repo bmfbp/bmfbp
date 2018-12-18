@@ -1,0 +1,5 @@
+resolver: lts-12.12
+
+extra-deps:
+- taggy-0.2.1
+- svg-tree-0.6.2.3

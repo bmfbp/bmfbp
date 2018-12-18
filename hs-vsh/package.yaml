@@ -1,0 +1,41 @@
+name:       hs-vsh
+version:    0.1.0.0
+github:     "bmfbp/bmfbp"
+license:    Proprietary
+author:     "Ken Kan"
+maintainer: "kenhkan@gmail.com"
+copyright:  "2018 Ken Kan"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+description: Please see the README on GitHub at <https://github.com/bmfbp/bmfbp#readme>
+
+dependencies:
+- base
+- directory
+- text
+- taggy
+- regex-posix
+- unordered-containers
+- svg-tree == 0.6.2.3
+- attoparsec
+- linear
+
+library:
+  source-dirs: src
+  default-extensions:
+    - OverloadedStrings
+
+executables:
+  drawio-to-fb:
+    main:        ParseDrawIO.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is ParseDrawIO
+    dependencies:
+    - hs-vsh
