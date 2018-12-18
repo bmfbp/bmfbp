@@ -3,13 +3,14 @@
 :- include('bootstrap-output').
 
 
-findClosestTextForPort(PortID,UnassignedTextID) :-
+findClosestTextForPort(PortID,UnassignedText) :-
     findAllCandidateTextsForGivenPort(PortID,Pairs),
     flatten(Pairs,Ns,I),
     min_list(Ns,Min),
     nth(Position,Ns,Min),
     nth(Position,I,UnassignedTextID),
-    unassigned(UnassignedTextID).
+    unassigned(UnassignedTextID),
+    text(UnassignedTextID,UnassignedText).
 
 findAllCandidateTextsForGivenPort(Port,Pairs) :-
     findall(Pair,distanceToTextFromPort(Port,Pair),Pairs).
@@ -21,8 +22,9 @@ distanceToTextFromPort(PortId,Pair):-
     distance_xy(CenterPairID,DistanceFromPort),
     Pair = [DistanceFromPort,TextID].
 
-test(UnassignedTextID) :-
-    findClosestTextForPort(id423,UnassignedTextID).
+test(UnassignedText) :-
+    findClosestTextForPort(id423,UnassignedText).
+
 
 
 flatten([],[],[]).
