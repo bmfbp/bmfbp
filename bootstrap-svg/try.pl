@@ -23,7 +23,8 @@ distanceToTextFromPort(PortId,Pair):-
     Pair = [DistanceFromPort,TextID].
 
 test(UnassignedText) :-
-    findClosestTextForPort(id423,UnassignedText).
+    findClosestTextForPort(id423,UnassignedText),
+    write(user_error,'portName('),write(user_error,'id423'),write(user_error,','),write(user_error,UnassignedText),write(user_error,')'),nl(user_error).
 
 
 
