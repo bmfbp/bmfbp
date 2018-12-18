@@ -14,7 +14,7 @@ makeAllCenterPairs(PortID) :-
     % centerPair(Port,Pair)
     % distance(Pair,Text)
     % distance_xy(Pair,dx^2 + dy^2)
-    forall(portName('nil',TextID),makeCenterPair(PortID,TextID)).
+    forall(unassigned(TextID),makeCenterPair(PortID,TextID)).
 
 makeCenterPair(PortID,TextID) :-
     makePairID(PortID,Pair),

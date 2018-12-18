@@ -3,7 +3,7 @@
 
 main :-
     readFB(user_input), 
-    forall(portName('nil',TextID),createCenter(TextID)),
+    forall(unassigned(TextID),createCenter(TextID)),
     forall(eltype(PortID,'port'),createCenter(PortID)),
     writeFB,
     halt.
