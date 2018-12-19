@@ -28,11 +28,23 @@ BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 
 TEMP1=temp1.lisp
 TEMP2=temp2.pro
+TEMP3=temp3.pro
+TEMP4=temp4.pro
+TEMP5=temp5.pro
+TEMP6=temp6.pro
+TEMP7=temp7.pro
+TEMP8=temp8.pro
+TEMP9=temp9.pro
+TEMP10=temp10.pro
+TEMP11=temp11.pro
+TEMP12=temp12.pro
 
 LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_make_unknown_port_names $(BINDIR)/boot_create_centers \
-	$(BINDIR)/boot_calculate_distances $(BINDIR)/boot_assign_portnames $(BINDIR)/boot_match_ports_to_components
+	$(BINDIR)/boot_calculate_distances $(BINDIR)/boot_make_unknown_port_names \
+	$(BINDIR)/boot_assign_portnames $(BINDIR)/boot_match_ports_to_components
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
+all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL)
 
 make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
@@ -43,10 +55,20 @@ test-yed-based-compiler : make-yed-based-compiler $(YED_DIAGRAM_AS_SVG)
 
 bootstrap : dependencies
 
-temps: $(YED_COMPILER_AS_SVG)
-	# Prelude.head empty list IFF you try pass the .svg in as stdin instead of as 1st arg on command line
+# Prelude.head empty list IFF you try pass the .svg in as stdin instead of as 1st arg on command line
+temps: all-no-test
 	svg-to-lisp $(YED_COMPILER_AS_SVG) >$(TEMP1)
 	fb-to-prolog <$(TEMP1) >$(TEMP2)
+	plsort <$(TEMP2) >$(TEMP3)
+	pl_check_input <$(TEMP3) >$(TEMP4)
+	pl_calc_bounds <$(TEMP4) >$(TEMP5)
+	boot_add_kinds <$(TEMP5) >$(TEMP6)
+	boot_make_unknown_port_names <$(TEMP6) >$(TEMP7)
+	boot_create_centers <$(TEMP7) >$(TEMP8)
+	boot_calculate_distances <$(TEMP8) >$(TEMP9)
+	boot_assign_portnames <$(TEMP9) >$(TEMP10)
+	pl_mark_directions <$(TEMP10) >$(TEMP11)
+	pl_match_ports_to_components <$(TEMP11) >$(TEMP12)
 
 $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp
@@ -63,7 +85,9 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 
 clean:
 	rm -f $(SVG_BOOTSTRAP_COMPILER) misc $(TEST_LISP) $(TEST_FB) $(LOCAL_PL) \
-	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB)
+	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB) 
+	rm -f $(TEMP1) $(TEMP2) $(TEMP3) $(TEMP4) $(TEMP5) $(TEMP6) $(TEMP7) \
+	$(TEMP8) $(TEMP9) $(TEMP10) $(TEMP11) $(TEMP12) 
 	rm -f *.pro
 
 cleanfb:
