@@ -68,7 +68,7 @@ temps: all-no-test
 	boot_calculate_distances <$(TEMP8) >$(TEMP9)
 	boot_assign_portnames <$(TEMP9) >$(TEMP10)
 	pl_mark_directions <$(TEMP10) >$(TEMP11)
-	pl_match_ports_to_components <$(TEMP11) >$(TEMP12)
+	boot_match_ports_to_components <$(TEMP11) >$(TEMP12)
 
 $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp

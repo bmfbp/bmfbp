@@ -41,10 +41,11 @@
 	   `(arrow ,(+ x x1) ,(+ y y1))))
 
 	(text
+	 ;; text is in (x y w h) format
 	 (destructuring-bind (text-sym str x1 y1 w h)
              list
 	   (declare (ignore text-sym))
-	   `(text ,str ,(+ x x1) ,(+ y y1) ,(+ x w) ,(+ h y))))
+	   `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
 
 	(otherwise
 	 (error (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list))))))
