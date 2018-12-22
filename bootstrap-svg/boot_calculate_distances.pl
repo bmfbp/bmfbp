@@ -26,8 +26,8 @@ makeCenterPair(PortID,TextID) :-
     DY is Ty - Py,
     DXsq is DX * DX,
     DYsq is DY * DY,
-    Dist is DXsq + DYsq,
-    DISTANCE is sqrt(Dist),
+    Sum is DXsq + DYsq,
+    DISTANCE is sqrt(Sum),
     asserta(join_distance(JoinPairID,TextID)),
     asserta(distance_xy(JoinPairID,DISTANCE)).
 

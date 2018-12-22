@@ -13,9 +13,11 @@ createCenter(ID) :-
     bounding_box_top(ID,Top),
     bounding_box_right(ID,Right),
     bounding_box_bottom(ID,Bottom),
-    X is Left + (Right / 2),
+    W is ( Right - Left ) / 2,
+    X is Left + W,
     asserta(center_x(ID,X)),
-    Y is Top + (Bottom / 2),
+    H is ( Bottom - Top ) / 2,
+    Y is Top + H,
     asserta(center_y(ID,Y)).
 
 
