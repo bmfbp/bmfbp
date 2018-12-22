@@ -3,49 +3,54 @@
 
 main :-
     readFB(user_input), 
-    assignPortNames,
+    assignUnassignedTextToPorts,
     writeFB,
     halt.
 
-findClosestTextForPort(PortID,UnassignedText) :-
-    findAllCandidateTextsForGivenPort(PortID,Pairs),
-    flatten(Pairs,Ns,I),
-    min_list(Ns,Min),
-    nth(Position,Ns,Min),
-    nth(Position,I,UnassignedTextID),
-    unassigned(UnassignedTextID),
-    text(UnassignedTextID,UnassignedText).
+assignUnassignedTextToPorts :-
+    forall(unassigned(TextID),minimumDistanceToAPort(TextID,PortID)),
+    asserta(portNameByID(PortID,TextID)),
+    text(TextID,Str),
+    asserta(portName(portID,Str)).
 
-findAllCandidateTextsForGivenPort(Port,Pairs) :-
-    findall(Pair,distanceToTextFromPort(Port,Pair),Pairs).
+minimumDistanceToAPort(TextID,PortID) :-
+    unassigned(TextID),  %% redundant (since the caller asserts this)
+write(user_error,TextID),nl(user_error),
+    findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDList),
+    splitLists(DistancePortIDList,Distances,PortIDs),
+write(user_error,DistancePortIDList),nl(user_error),
+    findMinimumDistanceInList(Distances,Min),
+write(user_error,Min),nl(user_error),
+    findPositionOfMinimumInList(Min,Distances,Index),
+write(user_error,Index),nl(user_error),
+    findPortAtIndex(Index,PortIDs,PortID),
+write(user_error,'port id = '),write(user_error,PortID),nl(user_error).
 
-distanceToTextFromPort(PortId,Pair):-
-    % reconstruct the data structure, and return one pair {TextID,distance-to-text-from-port}
-    join_centerPair(PortId,CenterPairID),
-    join_distance(CenterPairID,TextID),
-    distance_xy(CenterPairID,DistanceFromPort),
-    Pair = [DistanceFromPort,TextID].
+findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDPairList):-
+    findall(DistancePortIDPair,findOneDistanceToAPortFromGivenUnassignedText(TextID,DistancePortIDPair),DistancePortIDPairList).
 
-assignTextToPort(PortID,UnassignedText) :-
-    findClosestTextForPort(PortID,UnassignedText),
-    asserta(portName(PortID,UnassignedText)).
-    %% write(user_error,'portName('),write(user_error,PortID),write(user_error,','),write(user_error,UnassignedText),write(user_error,')'),nl(user_error).
+findOneDistanceToAPortFromGivenUnassignedText(TextID,DistancePortIDPair):-
+    join_distance(CPID,TextID),
+    distance_xy(CPID,Distance),
+    join_centerPair(PortID,CPID),
+    DistancePortIDPair = [Distance, PortID].
 
-assignPortNames:-
-    forall(eltype(PortID,'port'),assignTextToPort(PortID,_)).
 
-flatten([],[],[]).
-flatten([[N1,ID1]|Tail],Ns,IDs):-
-    flatten(Tail,Nlist,IDlist),
+findMinimumDistanceInList(Distances,Min):-
+    min_list(Distances,Min).
+
+findPositionOfMinimumInList(Min,List,Position):-
+    nth(Position,List,Min).
+
+findPortAtIndex(Position,Ports,PortID):-
+    nth(Position,Ports,PortID).
+
+
+splitLists([],[],[]).
+splitLists([[N1,ID1]|Tail],Ns,IDs):-
+    splitLists(Tail,Nlist,IDlist),
     append([N1],Nlist,Ns),
     append([ID1],IDlist,IDs).
 
-unify(X,X).
-
-findID(List,Min,Pos,ID):-
-    flatten(List,Ns,IDs),
-    min_list(Ns,Min),
-    nth(Pos,Ns,Min),
-    nth(Pos,IDs,ID).
 
 :- include('../common/tail').
