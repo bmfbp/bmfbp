@@ -15,16 +15,11 @@ assignUnassignedTextToPorts :-
 
 minimumDistanceToAPort(TextID,PortID) :-
     unassigned(TextID),  %% redundant (since the caller asserts this)
-write(user_error,TextID),nl(user_error),
     findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDList),
     splitLists(DistancePortIDList,Distances,PortIDs),
-write(user_error,DistancePortIDList),nl(user_error),
     findMinimumDistanceInList(Distances,Min),
-write(user_error,Min),nl(user_error),
     findPositionOfMinimumInList(Min,Distances,Index),
-write(user_error,Index),nl(user_error),
-    findPortAtIndex(Index,PortIDs,PortID),
-write(user_error,'port id = '),write(user_error,PortID),nl(user_error).
+    findPortAtIndex(Index,PortIDs,PortID).
 
 findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDPairList):-
     findall(DistancePortIDPair,findOneDistanceToAPortFromGivenUnassignedText(TextID,DistancePortIDPair),DistancePortIDPairList).

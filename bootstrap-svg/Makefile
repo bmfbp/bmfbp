@@ -39,7 +39,7 @@ TEMP10=temp10.pro
 TEMP11=temp11.pro
 TEMP12=temp12.pro
 
-LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_make_unknown_port_names $(BINDIR)/boot_create_centers \
+LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_create_centers \
 	$(BINDIR)/boot_calculate_distances $(BINDIR)/boot_make_unknown_port_names \
 	$(BINDIR)/boot_assign_portnames $(BINDIR)/boot_match_ports_to_components
 
