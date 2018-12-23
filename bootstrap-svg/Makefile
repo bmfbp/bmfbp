@@ -27,6 +27,7 @@ SVG_COMPILER_PROLOGFB=svg_compiler.pro
 BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
 
 TEMP1=temp1.lisp
+TEMP1A=temp1A.pro
 TEMP2=temp2.pro
 TEMP3=temp3.pro
 TEMP4=temp4.pro
@@ -38,10 +39,14 @@ TEMP9=temp9.pro
 TEMP10=temp10.pro
 TEMP11=temp11.pro
 TEMP12=temp12.pro
+TEMP13=temp13.pro
+TEMP14=temp14.pro
+TEMP15=temp15.pro
+
 
 LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_create_centers \
 	$(BINDIR)/boot_calculate_distances $(BINDIR)/boot_make_unknown_port_names \
-	$(BINDIR)/boot_assign_portnames $(BINDIR)/boot_match_ports_to_components
+	$(BINDIR)/boot_assign_portnames $(BINDIR)/boot_emit
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL)
@@ -58,7 +63,8 @@ bootstrap : dependencies
 # Prelude.head empty list IFF you try pass the .svg in as stdin instead of as 1st arg on command line
 temps: all-no-test
 	svg-to-lisp $(YED_COMPILER_AS_SVG) >$(TEMP1)
-	fb-to-prolog <$(TEMP1) >$(TEMP2)
+	fb-to-prolog <$(TEMP1) >$(TEMP1A)
+	boot_insert <$(TEMP1A) >$(TEMP2)
 	plsort <$(TEMP2) >$(TEMP3)
 	pl_check_input <$(TEMP3) >$(TEMP4)
 	pl_calc_bounds <$(TEMP4) >$(TEMP5)
@@ -68,7 +74,13 @@ temps: all-no-test
 	boot_calculate_distances <$(TEMP8) >$(TEMP9)
 	boot_assign_portnames <$(TEMP9) >$(TEMP10)
 	pl_mark_directions <$(TEMP10) >$(TEMP11)
-	boot_match_ports_to_components <$(TEMP11) >$(TEMP12)
+	pl_match_ports_to_components <$(TEMP11) >$(TEMP12)
+	pl_assign_pipe_numbers_to_inputs <$(TEMP12) >$(TEMP13)
+	pl_assign_pipe_numbers_to_outputs <$(TEMP13) >$(TEMP14)
+	pl_assign_fds <$(TEMP14) >$(TEMP15)
+	boot_emit <$(TEMP15) >$(BOOTSTRAP_COMPILER_OUTPUT)
+
+
 
 $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp
@@ -108,17 +120,24 @@ $(BINDIR)/boot_calculate_distances : boot_calculate_distances.pl $(PL_COMMON)
 $(BINDIR)/boot_assign_portnames : boot_assign_portnames.pl $(PL_COMMON)
 	gplc $< --output $(BINDIR)/boot_assign_portnames --no-top-level
 
-$(BINDIR)/boot_match_ports_to_components : boot_match_ports_to_components.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/boot_match_ports_to_components --no-top-level
+$(BINDIR)/boot_emit : boot_emit.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/boot_emit --no-top-level
 
 # $(BINDIR)/boot_% : boot_%.pl $(PL_COMMON)
 # 	gplc $< --output $@ --no-top-level
 
 misc : 
 	mkdir -p $(BINDIR)
+
+	echo "#!/bin/sh" >$(BINDIR)/boot_insert
+	echo "echo 'component(top).'" >>$(BINDIR)/boot_insert
+	echo "cat -" >>$(BINDIR)/boot_insert
+	chmod a+x $(BINDIR)/boot_insert
+
 	echo "#!/bin/sh" >$(BINDIR)/plsort
 	echo "sort" >>$(BINDIR)/plsort
 	chmod a+x $(BINDIR)/plsort
+
 	# this needs to be replaced by a make of svg-to-lisp - currently this over-fills my Dropbox
 	cp ~/projects/svg-to-fb/svg-to-fb-mac ~/bin/svg-to-lisp
 	chmod a+x ~/bin/svg-to-lisp
