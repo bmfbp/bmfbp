@@ -46,7 +46,8 @@ TEMP15=temp15.pro
 
 LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_create_centers \
 	$(BINDIR)/boot_calculate_distances $(BINDIR)/boot_make_unknown_port_names \
-	$(BINDIR)/boot_assign_portnames
+	$(BINDIR)/boot_assign_portnames \
+#	$(BINDIR)/boot_match_ports_to_components
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL)
@@ -121,6 +122,9 @@ $(BINDIR)/boot_calculate_distances : boot_calculate_distances.pl $(PL_COMMON)
 
 $(BINDIR)/boot_assign_portnames : boot_assign_portnames.pl $(PL_COMMON)
 	gplc $< --output $(BINDIR)/boot_assign_portnames --no-top-level
+
+# $(BINDIR)/boot_match_ports_to_components : boot_match_ports_to_components.pl $(PL_COMMON)
+#	gplc $< --output $(BINDIR)/boot_match_ports_to_components --no-top-level
 
 # $(BINDIR)/boot_emit : boot_emit.pl $(PL_COMMON)
 # 	gplc $< --output $(BINDIR)/boot_emit --no-top-level

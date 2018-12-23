@@ -12,6 +12,8 @@
 (defun next-id ()
   (gensym "id"))
 
+(defparameter *p* 10)  ;; port width and height
+
 (defun to-prolog (list strm)
   (assert (listp list))
   (if (listp (car list))
@@ -42,19 +44,19 @@
 		 (format strm "node(~A).~%" begin-id)
 		 (format strm "source(~A,~A).~%" edge-id begin-id)
 		 (format strm "eltype(~A,port).~%" begin-id)
-		 (format strm "bounding_box_left(~A,~A).~%" begin-id x1)
-		 (format strm "bounding_box_top(~A,~A).~%" begin-id y1)
-		 (format strm "bounding_box_right(~A,~A).~%" begin-id x1)
-		 (format strm "bounding_box_bottom(~A,~A).~%" begin-id y1)
+		 (format strm "bounding_box_left(~A,~A).~%" begin-id (- x1 *p*))
+		 (format strm "bounding_box_top(~A,~A).~%" begin-id (- y1 *p*))
+		 (format strm "bounding_box_right(~A,~A).~%" begin-id (+ x1 *p*))
+		 (format strm "bounding_box_bottom(~A,~A).~%" begin-id (+ y1 *p*))
 		 
 		 (format strm "edge(~A).~%" edge-id)
 		 (format strm "node(~A).~%" end-id)
 		 (format strm "sink(~A,~A).~%" edge-id end-id)
 		 (format strm "eltype(~A,port).~%" end-id)
-		 (format strm "bounding_box_left(~A,~A).~%" end-id x2)
-		 (format strm "bounding_box_top(~A,~A).~%" end-id y2)
-		 (format strm "bounding_box_right(~A,~A).~%" end-id x2)
-		 (format strm "bounding_box_bottom(~A,~A).~%" end-id y2))))))
+		 (format strm "bounding_box_left(~A,~A).~%" end-id (- x2 *p*))
+		 (format strm "bounding_box_top(~A,~A).~%" end-id (- y2 *p*))
+		 (format strm "bounding_box_right(~A,~A).~%" end-id (+ x2 *p*))
+		 (format strm "bounding_box_bottom(~A,~A).~%" end-id (+ y2 *p*)))))))
         
         (rect
          (destructuring-bind (rect-sym x1 y1 w h)

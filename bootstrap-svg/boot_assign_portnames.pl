@@ -7,13 +7,6 @@ main :-
     writeFB,
     halt.
 
-wspc :-
-    write(user_error,' ').
-
-nlu :- nl(user_error).
-
-we(X) :- write(user_error,X).
-
 assignUnassignedTextToPorts :-
     forall(unassigned(TextID),assignPort(TextID)).
 
