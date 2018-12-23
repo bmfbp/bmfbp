@@ -1,31 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="141px" height="221px" viewBox="-0.5 -0.5 141 221" content="&lt;mxfile modified=&quot;2018-12-20T13:35:15.621Z&quot; host=&quot;www.draw.io&quot; agent=&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/9.3.1 Chrome/66.0.3359.181 Electron/3.0.6 Safari/537.36&quot; etag=&quot;vNnBTFcM6Z--mMPAEkUv&quot; version=&quot;10.0.4&quot; type=&quot;device&quot;&gt;&lt;diagram id=&quot;qdLRCKJvib3lB2txe_yV&quot; name=&quot;Page-1&quot;&gt;3ZbLctMwFIafxssyvsSxWSamaRkokyFTAt2p1omtQbaMrCQOT4+Epfgi90KnsGAV6T/SkfSdi+MESdFccVTlNwwDdXwXN07wzvF9z/Nc+aOUU6tEcdgKGSdYL+qEDfkJWtT7sj3BUA8WCsaoINVQTFlZQioGGuKcHYfLdowOT61QBpawSRG11S3BIm/VOHQ7/RpIlpuTPVdbCmQWa6HOEWbHnhRcOkHCGRPtqGgSoAqe4dLuWz1gPV+MQymes+HuBq1vf7AtqdL3my+Jn0R36wvt5YDoXj/4njXBPNZXFifDgbN9iUG5cp1giSjJSjmmsJNnL+2rGL/ABTQ9SV/tClgBgp/kEm31DTedJzM9PXbQPUMy7wGfaw3pOGdnzx0KOdA0/oSMjcaCAiVeqByTs5SiuiaphCEZ8NNXBepNaKbfNDdoiOiZ5ExZvMcQ1mzPU3g6hIAHiWyD7pEMJ0AajQNFghyG6T9FV5+wZkTe+ME4xt4oQO179K5+uo4dzYeOzo6NI4F4BsJy9DvY52e/PP7+zIp/xbgoUQFBZKeCTHNVCbXg7DskjDIu9ZKV0rzcEUpH0qiAVJ0Q2XQWWi4Ixsrzclh2r1FnI6xebBdaPJEe/t+qsyB8hLP3/3B2/x3nw+zTx+vberVf8c+LD+Cv325nFzZm1emj6CWd3sIwAevZnd6fIPNarV5Ouw9s2xm6vynB5S8=&lt;/diagram&gt;&lt;/mxfile&gt;">
-  <defs/>
-  <rect x="0" y="0" width="120" height="60" fill="#ffffff" stroke="#000000" pointer-events="none"/>
-  <g fill="#000000" font-family="Helvetica" font-size="12px">
-    <text x="2.5" y="33.5">
-      box368
-    </text>
-  </g>
-  <path d="M 60 60 L 60 153.63" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
-  <path d="M 60 158.88 L 56.5 151.88 L 60 153.63 L 63.5 151.88 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/>
-  <g fill="#000000" font-family="Helvetica" font-size="12px">
-    <text x="61.5" y="153.5">
-      portname372
-    </text>
-  </g>
-  <g fill="#000000" font-family="Helvetica" font-size="12px">
-    <text x="61.5" y="73.5">
-      portname371
-    </text>
-  </g>
-  <rect x="0" y="160" width="120" height="60" fill="#ffffff" stroke="#000000" pointer-events="none"/>
-  <g fill="#000000" font-family="Helvetica" font-size="12px">
-    <text x="2.5" y="193.5">
-      box377
-    </text>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="141px" height="221px" viewBox="-0.5 -0.5 141 221" content="&lt;mxfile modified=&quot;2018-12-22T21:02:26.156Z&quot; host=&quot;www.draw.io&quot; agent=&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/9.3.1 Chrome/66.0.3359.181 Electron/3.0.6 Safari/537.36&quot; etag=&quot;xv1c3RYqBPEl5pEBxLZT&quot; version=&quot;10.0.4&quot; type=&quot;device&quot;&gt;&lt;diagram id=&quot;qdLRCKJvib3lB2txe_yV&quot; name=&quot;Page-1&quot;&gt;3ZZbb9MwFMc/TR6Hkjhtw2Mb1g3BUEU1Cnsz8Wli4cTBcduUT4+92M3F3QU0QOKlsv/HPrZ/55J6KCmaK4Gr/IYTYF7ok8ZDb7wwjKJI/Wrh2AooMEImKGmloBPW9AcY0TfqjhKoBwsl50zSaiimvCwhlQMNC8EPw2VbzoanVjgDR1inmLnqhhKZt2o88Tv9GmiW25MD31gKbBcboc4x4YeehC49lAjOZTsqmgSYZme5tPuWD1hPFxNQyudsuLvBq9vvfEOr9O36UxIms7vVhfGyx2xnHvyVN2gamyvLo+Ug+K4koF35HlpgRrNSjRls1dkL9yrWLwgJTU8yV7sCXoAUR7XEWEPLzeRJZKaHDnpgSeY94FOjYRPn7OS5Q6EGhsavkHHROFCgJHOdY2qWMlzXNFUwFANx/KxBvZrY6RfDDRoqeyY105bgMYQ134kUng4hkEEiu6B7JCdnQFpNAMOS7ofpf46uOWHFqbrxg3GMg1GA2veYXf10HTuaDh2dHFtHEosMpOPoPtinZ/9+/MPIiX/FhSxxAWjmpoJKc10JtRT8GySccaH0kpfKvNhSxkbSqIB0nVDVdOZGLigh2vNiWHYvUWcjrEHsFlp8Jj3CP1VnaPII5+D/4ez/Pc776MP769t6uVuKj/N3EK5eb6ILF7Pu9LPZP+/04RkyL9Xq1bT7wLadofuXgi5/Ag==&lt;/diagram&gt;&lt;/mxfile&gt;"><defs/><rect x="0" y="0" width="120" height="60" fill="#ffffff" stroke="#000000" pointer-events="none"/><g fill="#000000" font-family="Helvetica" font-size="12px"><text x="1.9" y="33.3">box368</text></g><path d="M 60 60 L 60 153.63" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 60 158.88 L 56.5 151.88 L 60 153.63 L 63.5 151.88 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><g fill="#000000" font-family="Helvetica" font-size="12px"><text x="61.5" y="153.5">portname372</text></g><g fill="#000000" font-family="Helvetica" font-size="12px"><text x="61.5" y="73.5">portname371</text></g><rect x="0" y="160" width="120" height="60" fill="#ffffff" stroke="#000000" pointer-events="none"/><g fill="#000000" font-family="Helvetica" font-size="12px"><text x="1.9" y="193.3">box377</text></g></svg>

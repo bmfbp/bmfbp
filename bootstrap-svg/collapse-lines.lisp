@@ -2,6 +2,12 @@
 ;; but,,, we already have the lines described by sequence line-segments, we only really need to know where a line starts
 ;; and where it ends, we can do that easily in Lisp
 
+(defun grid (x grid-size)
+  (floor (* grid-size (floor (/ (+ x (1- grid-size)) grid-size)))))
+
+(defun grid10 (x)
+  (grid x 10))
+
 (defun collapse-lines (list)
   (assert (listp list))
 
@@ -23,7 +29,7 @@
 	 (let ((start (second list))
                (end (car (last list))))
 	   `(line (line-begin ,(second start) ,(third start))
-		  (line-end ,(fourth end) ,(fifth end)))))
+		  (line-end ,(grid10 (fourth end)) ,(grid10 (fifth end))))))
 	
 	(otherwise
 	 (error (format nil "bad format in collapse-lines /~A/" list))))))

@@ -36,23 +36,25 @@
                (destructuring-bind (end-sym x2 y2)
                    end
 		 (declare (ignore end-sym))
-		 #+nil(format strm "line(~A,'').~%line_begin_x(~A,~A).~%line_begin_y(~A,~A).~%line_end_x(~A,~A).~%line_end_y(~A,~A).~%"
-			 new-id new-id x1 new-id y1 new-id x2 new-id y2)
 		 (format strm "line(~A,'').~%"	new-id)
 
 		 (format strm "edge(~A).~%" edge-id)
 		 (format strm "node(~A).~%" begin-id)
 		 (format strm "source(~A,~A).~%" edge-id begin-id)
 		 (format strm "eltype(~A,port).~%" begin-id)
-		 (format strm "bounding_box_left(~A,~A).~%bounding_box_top(~A,~A).~%" begin-id x1 begin-id y1)
-		 (format strm "bounding_box_right(~A,~A).~%bounding_box_bottom(~A,~A).~%" begin-id x1 begin-id y1)
+		 (format strm "bounding_box_left(~A,~A).~%" begin-id x1)
+		 (format strm "bounding_box_top(~A,~A).~%" begin-id y1)
+		 (format strm "bounding_box_right(~A,~A).~%" begin-id x1)
+		 (format strm "bounding_box_bottom(~A,~A).~%" begin-id y1)
 		 
 		 (format strm "edge(~A).~%" edge-id)
 		 (format strm "node(~A).~%" end-id)
 		 (format strm "sink(~A,~A).~%" edge-id end-id)
 		 (format strm "eltype(~A,port).~%" end-id)
-		 (format strm "bounding_box_left(~A,~A).~%bounding_box_top(~A,~A).~%" end-id x2 end-id y2)
-		 (format strm "bounding_box_right(~A,~A).~%bounding_box_bottom(~A,~A).~%" end-id x2 end-id y2))))))
+		 (format strm "bounding_box_left(~A,~A).~%" end-id x2)
+		 (format strm "bounding_box_top(~A,~A).~%" end-id y2)
+		 (format strm "bounding_box_right(~A,~A).~%" end-id x2)
+		 (format strm "bounding_box_bottom(~A,~A).~%" end-id y2))))))
         
         (rect
          (destructuring-bind (rect-sym x1 y1 w h)
