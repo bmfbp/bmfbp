@@ -66,7 +66,7 @@ emitComponent(ID) :-
     write('krof'),
     nl.
 
-writeSpaces :- char_code(C,32), write(C), write(C).
+writeSpaces :- write('  ').
 
 inputOfParent(P,In) :-
     parent(In,P),sink(_,In).
