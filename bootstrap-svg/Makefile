@@ -46,7 +46,7 @@ TEMP15=temp15.pro
 
 LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_create_centers \
 	$(BINDIR)/boot_calculate_distances $(BINDIR)/boot_make_unknown_port_names \
-	$(BINDIR)/boot_assign_portnames $(BINDIR)/boot_emit
+	$(BINDIR)/boot_assign_portnames
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL)
@@ -78,7 +78,7 @@ temps: all-no-test
 	pl_assign_pipe_numbers_to_inputs <$(TEMP12) >$(TEMP13)
 	pl_assign_pipe_numbers_to_outputs <$(TEMP13) >$(TEMP14)
 	pl_assign_fds <$(TEMP14) >$(TEMP15)
-	boot_emit <$(TEMP15) >$(BOOTSTRAP_COMPILER_OUTPUT)
+	pl_emit <$(TEMP15) >$(BOOTSTRAP_COMPILER_OUTPUT)
 
 
 
@@ -120,8 +120,8 @@ $(BINDIR)/boot_calculate_distances : boot_calculate_distances.pl $(PL_COMMON)
 $(BINDIR)/boot_assign_portnames : boot_assign_portnames.pl $(PL_COMMON)
 	gplc $< --output $(BINDIR)/boot_assign_portnames --no-top-level
 
-$(BINDIR)/boot_emit : boot_emit.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/boot_emit --no-top-level
+# $(BINDIR)/boot_emit : boot_emit.pl $(PL_COMMON)
+# 	gplc $< --output $(BINDIR)/boot_emit --no-top-level
 
 # $(BINDIR)/boot_% : boot_%.pl $(PL_COMMON)
 # 	gplc $< --output $@ --no-top-level
