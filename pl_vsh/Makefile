@@ -15,7 +15,7 @@ EXECS = $(BINDIR)/plscan \
 
 BOOTSTRAP_GSH=$(BINDIR)/pl_bootstrap.gsh
 DIAGRAM=pl_vsh.graphml
-REGRESS-COMPILER=pl_dia-regression-compiler.gsh
+REGRESS-COMPILER=pl_dia_regression_compiler.gsh
 PL_COMMON=../common/head.pl ../common/tail.pl
 
 all : misc $(BOOTSTRAP_GSH) $(PL_COMMON)
@@ -59,5 +59,6 @@ $(BOOTSTRAP_GSH) : $(DIAGRAM) $(EXECS)
 	$(BINDIR)/pl_assign_pipe_numbers_to_inputs <5.pro >6.pro
 	$(BINDIR)/pl_assign_pipe_numbers_to_outputs <6.pro >7.pro
 	$(BINDIR)/pl_assign_fds <7.pro >8.pro
-	$(BINDIR)/pl_emit <8.pro >$(BOOTSTRAP_GSH)
+	$(BINDIR)/plsort <8.pro >9.pro
+	$(BINDIR)/pl_emit <9.pro >$(BOOTSTRAP_GSH)
 
