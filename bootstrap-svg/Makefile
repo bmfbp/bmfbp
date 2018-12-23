@@ -103,6 +103,7 @@ clean:
 	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB) 
 	rm -f $(TEMP1) $(TEMP2) $(TEMP3) $(TEMP4) $(TEMP5) $(TEMP6) $(TEMP7) \
 	$(TEMP8) $(TEMP9) $(TEMP10) $(TEMP11) $(TEMP12) 
+	rm -f $(BINDIR)/boot_emit $(BINDIR)/boot_match_ports_to_components
 	rm -f *.pro
 
 cleanfb:
