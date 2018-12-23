@@ -57,6 +57,14 @@ writeFB :-
     forall(sinkfd(X,Y), writeterm(sinkfd(X,Y))),
     forall(parent(X,Y), writeterm(parent(X,Y))).
 
+wspc :-
+    write(user_error,' ').
+
+nlu :- nl(user_error).
+
+we(X) :- write(user_error,X).
+
+
 readFB(Str) :-
     read_term(Str,T0,[]),
     %write(user_error,T0),nl(user_error),flush_output(user_error),
