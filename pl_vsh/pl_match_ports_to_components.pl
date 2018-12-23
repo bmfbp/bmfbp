@@ -2,8 +2,6 @@
 :- include('../common/head').
 
 main :-
-%    open('fb4',read,Str),
-%    readFB(Str),
     readFB(user_input),
     match_ports,
     writeFB,
