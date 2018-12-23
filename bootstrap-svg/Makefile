@@ -57,6 +57,8 @@ make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 
 test-yed-based-compiler : make-yed-based-compiler $(YED_DIAGRAM_AS_SVG)
 	$(grash) $(YED_BASED_COMPILER) $(YED_COMPILER_AS_SVG) >$(BOOTSTRAP_COMPILER_OUTPUT)
+	sleep 1  # need to wait for the network to die down
+	diff -q $(BOOTSTRAP_COMPILER_OUTPUT) $(BOOTSTRAP_COMPILER)
 
 bootstrap : dependencies
 
