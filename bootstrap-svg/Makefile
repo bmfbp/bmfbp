@@ -25,6 +25,7 @@ LISP_FROM_SVG=lisp-from-svg.lisp
 SVG_COMPILER_PROLOGFB=svg_compiler.pro
 
 BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
+BOOTSTRAP_SVG_COMPILER=$(BINDIR)/bootstrap-svg.gsh
 
 TEMP1=temp1.lisp
 TEMP1A=temp1A.pro
@@ -49,8 +50,9 @@ LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_create_centers \
 	$(BINDIR)/boot_assign_portnames \
 #	$(BINDIR)/boot_match_ports_to_components
 
-all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
-all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL)
+all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) \
+	test-yed-based-compiler \
+	bootstrap-svg-compiler
 
 make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
@@ -59,6 +61,9 @@ make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 test-yed-based-compiler : make-yed-based-compiler $(YED_DIAGRAM_AS_SVG)
 	$(grash) $(YED_BASED_COMPILER) $(YED_COMPILER_AS_SVG) >$(BOOTSTRAP_COMPILER_OUTPUT)
 	sleep 1  # need to wait for the network to die down
+
+bootstrap-svg-compiler: all
+	cp $(BOOTSTRAP_COMPILER_OUTPUT) $(BOOTSTRAP_SVG_COMPILER)
 
 bootstrap : dependencies
 
@@ -101,7 +106,7 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 		--entry main
 
 clean:
-	rm -f $(SVG_BOOTSTRAP_COMPILER) misc $(TEST_LISP) $(TEST_FB) $(LOCAL_PL) \
+	rm -f $(BOOTSTRAP_SVG_COMPILER) misc $(TEST_LISP) $(TEST_FB) $(LOCAL_PL) \
 	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB) 
 	rm -f $(TEMP1) $(TEMP2) $(TEMP3) $(TEMP4) $(TEMP5) $(TEMP6) $(TEMP7) \
 	$(TEMP8) $(TEMP9) $(TEMP10) $(TEMP11) $(TEMP12) 
