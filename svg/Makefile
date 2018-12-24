@@ -2,12 +2,6 @@
 # We need to add some prolog files for compiling SVG (produced by draw.io, along with some conventions).
 #  Those "new" prolog files are prefixed with "svg_" to distinguish them from the ../pl_vsh commands
 
-# During bootstrapping, we use the yEd editor to create a new svg_compiler.gsh.  yEd is a compatible
-#  with the programs in ../pl_vsh.  This allows us to use a diagram (yEd) to describe how the SVG
-#  compiler works.  Later, we use the SVG diagram compiler for everthing and we will regression test
-#  it against itself.
-# Eventually, after bootstrapping, yEd will completely disappear from the work flow.
-
 #  build the components and mv them to ~/bin
 
 BINDIR = ~/bin
@@ -15,9 +9,8 @@ grash=$(BINDIR)/grash
 
 PL_COMMON=../common/head.pl ../common/tail.pl
 
-BOOTSTRAP_COMPILER=$(BINDIR)/pl_bootstrap.gsh
-YED_DIAGRAM=yed_svg_compiler.graphml
-YED_BASED_COMPILER=$(BINDIR)/pl_svg_bootstrap_vsh.gsh
+SVG_DIAGRAM=svg_compiler.xml
+SVG_BASED_COMPILER=$(BINDIR)/pl_svg_bootstrap_vsh.gsh
 
 # real SVG compiler written as an SVG/XML diagram
 YED_COMPILER_AS_SVG=yed_compiler_as_svg.svg
@@ -44,10 +37,10 @@ TEMP14=temp14.pro
 TEMP15=temp15.pro
 
 
-LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_create_centers \
-	$(BINDIR)/boot_calculate_distances $(BINDIR)/boot_make_unknown_port_names \
-	$(BINDIR)/boot_assign_portnames \
-#	$(BINDIR)/boot_match_ports_to_components
+LOCAL_PL=$(BINDIR)/svg_add_kinds $(BINDIR)/svg_create_centers \
+	$(BINDIR)/svg_calculate_distances $(BINDIR)/svg_make_unknown_port_names \
+	$(BINDIR)/svg_assign_portnames \
+#	$(BINDIR)/svg_match_ports_to_components
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
 all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL)
@@ -69,15 +62,15 @@ regression : all
 temps: all-no-test
 	svg-to-lisp $(YED_COMPILER_AS_SVG) >$(TEMP1)
 	fb-to-prolog <$(TEMP1) >$(TEMP1A)
-	boot_insert <$(TEMP1A) >$(TEMP2)
+	svg_insert <$(TEMP1A) >$(TEMP2)
 	plsort <$(TEMP2) >$(TEMP3)
 	pl_check_input <$(TEMP3) >$(TEMP4)
 	pl_calc_bounds <$(TEMP4) >$(TEMP5)
-	boot_add_kinds <$(TEMP5) >$(TEMP6)
-	boot_make_unknown_port_names <$(TEMP6) >$(TEMP7)
-	boot_create_centers <$(TEMP7) >$(TEMP8)
-	boot_calculate_distances <$(TEMP8) >$(TEMP9)
-	boot_assign_portnames <$(TEMP9) >$(TEMP10)
+	svg_add_kinds <$(TEMP5) >$(TEMP6)
+	svg_make_unknown_port_names <$(TEMP6) >$(TEMP7)
+	svg_create_centers <$(TEMP7) >$(TEMP8)
+	svg_calculate_distances <$(TEMP8) >$(TEMP9)
+	svg_assign_portnames <$(TEMP9) >$(TEMP10)
 	pl_mark_directions <$(TEMP10) >$(TEMP11)
 	pl_match_ports_to_components <$(TEMP11) >$(TEMP12)
 	pl_assign_pipe_numbers_to_inputs <$(TEMP12) >$(TEMP13)
@@ -105,54 +98,56 @@ clean:
 	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB) 
 	rm -f $(TEMP1) $(TEMP2) $(TEMP3) $(TEMP4) $(TEMP5) $(TEMP6) $(TEMP7) \
 	$(TEMP8) $(TEMP9) $(TEMP10) $(TEMP11) $(TEMP12) 
-	rm -f $(BINDIR)/boot_emit $(BINDIR)/boot_match_ports_to_components
+	rm -f $(BINDIR)/svg_emit $(BINDIR)/svg_match_ports_to_components
 	rm -f *.pro
 
 cleanfb:
 	rm -f *.pro
 
-$(BINDIR)/boot_add_kinds : boot_add_kinds.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/boot_add_kinds --no-top-level
+$(BINDIR)/svg_add_kinds : svg_add_kinds.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/svg_add_kinds --no-top-level
 
-$(BINDIR)/boot_make_unknown_port_names : boot_make_unknown_port_names.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/boot_make_unknown_port_names --no-top-level
+$(BINDIR)/svg_make_unknown_port_names : svg_make_unknown_port_names.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/svg_make_unknown_port_names --no-top-level
 
-$(BINDIR)/boot_create_centers : boot_create_centers.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/boot_create_centers --no-top-level
+$(BINDIR)/svg_create_centers : svg_create_centers.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/svg_create_centers --no-top-level
 
-$(BINDIR)/boot_calculate_distances : boot_calculate_distances.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/boot_calculate_distances --no-top-level
+$(BINDIR)/svg_calculate_distances : svg_calculate_distances.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/svg_calculate_distances --no-top-level
 
-$(BINDIR)/boot_assign_portnames : boot_assign_portnames.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/boot_assign_portnames --no-top-level
+$(BINDIR)/svg_assign_portnames : svg_assign_portnames.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/svg_assign_portnames --no-top-level
 
-# $(BINDIR)/boot_match_ports_to_components : boot_match_ports_to_components.pl $(PL_COMMON)
-#	gplc $< --output $(BINDIR)/boot_match_ports_to_components --no-top-level
+# $(BINDIR)/svg_match_ports_to_components : svg_match_ports_to_components.pl $(PL_COMMON)
+#	gplc $< --output $(BINDIR)/svg_match_ports_to_components --no-top-level
 
-# $(BINDIR)/boot_emit : boot_emit.pl $(PL_COMMON)
-# 	gplc $< --output $(BINDIR)/boot_emit --no-top-level
+# $(BINDIR)/svg_emit : svg_emit.pl $(PL_COMMON)
+# 	gplc $< --output $(BINDIR)/svg_emit --no-top-level
 
-# $(BINDIR)/boot_% : boot_%.pl $(PL_COMMON)
+# $(BINDIR)/svg_% : svg_%.pl $(PL_COMMON)
 # 	gplc $< --output $@ --no-top-level
 
 misc : 
 	mkdir -p $(BINDIR)
 
-	echo "#!/bin/sh" >$(BINDIR)/boot_insert
-	echo "echo 'component(top).'" >>$(BINDIR)/boot_insert
-	echo "cat -" >>$(BINDIR)/boot_insert
-	chmod a+x $(BINDIR)/boot_insert
+	echo "#!/bin/sh" >$(BINDIR)/svg_insert
+	echo "echo 'component(top).'" >>$(BINDIR)/svg_insert
+	echo "cat -" >>$(BINDIR)/svg_insert
+	chmod a+x $(BINDIR)/svg_insert
 
 	echo "#!/bin/sh" >$(BINDIR)/plsort
 	echo "sort" >>$(BINDIR)/plsort
 	chmod a+x $(BINDIR)/plsort
 
-	# this needs to be replaced by a make of svg-to-lisp - currently this over-fills my Dropbox
+#	this needs to be replaced by a make of svg-to-lisp - currently this over-fills my Dropbox
 	cp ~/projects/svg-to-fb/svg-to-fb-mac ~/bin/svg-to-lisp
 	chmod a+x ~/bin/svg-to-lisp
+
 	touch misc
 
 dependencies :
 	cd ../grash && make all
 	cd ../pl_vsh && make all
-
+	cd ../bootstrap_svg && make all
+	cd ../svg-parser && make
