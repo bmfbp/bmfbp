@@ -52,7 +52,10 @@ LOCAL_PL=$(BINDIR)/boot_add_kinds $(BINDIR)/boot_create_centers \
 
 all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) \
 	test-yed-based-compiler \
-	bootstrap-svg-compiler
+	bootstrap-copy-svg-compiler
+
+all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) \
+	bootstrap-copy-svg-compiler
 
 make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
 	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
@@ -62,7 +65,7 @@ test-yed-based-compiler : make-yed-based-compiler $(YED_DIAGRAM_AS_SVG)
 	$(grash) $(YED_BASED_COMPILER) $(YED_COMPILER_AS_SVG) >$(BOOTSTRAP_COMPILER_OUTPUT)
 	sleep 1  # need to wait for the network to die down
 
-bootstrap-svg-compiler: $(BOOTSTRAP_SVG_COMPILER)
+bootstrap-copy-svg-compiler:
 	cp $(BOOTSTRAP_COMPILER_OUTPUT) $(BOOTSTRAP_SVG_COMPILER)
 
 bootstrap : dependencies
