@@ -60,7 +60,7 @@ writeFB :-
 wspc :-
     write(user_error,' ').
 
-nlu :- nl(user_error).
+nle :- nl(user_error).
 
 we(X) :- write(user_error,X).
 

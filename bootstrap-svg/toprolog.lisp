@@ -12,7 +12,7 @@
 (defun next-id ()
   (gensym "id"))
 
-(defparameter *p* 10)  ;; port width and height
+(defparameter *p* 15)  ;; port width and height - play with this if you get "no parent for box" errors
 
 (defun to-prolog (list strm)
   (assert (listp list))
