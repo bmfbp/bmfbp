@@ -17,7 +17,7 @@ check_that_all_components_have_at_least_one_port :-
     forall(eltype(ParentID, box), check_has_port(ParentID)).
 
 check_has_port(ParentID):-
-    parent(Port,ParentID),!.
+    parent(_,ParentID),!.
 
 check_has_port(ParentID):-
     nle,nle,we('parent '),we(ParentID),wen(' has not port'),nle,nle.
