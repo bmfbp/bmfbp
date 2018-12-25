@@ -22,11 +22,14 @@ dependencies:
 - svg-tree == 0.6.2.3
 - attoparsec
 - linear
+- extra
 
 library:
   source-dirs: src
   default-extensions:
     - OverloadedStrings
+  ghc-options:
+    - -fno-warn-overlapping-patterns
 
 executables:
   drawio-to-fb:
@@ -37,5 +40,16 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     - -main-is ParseDrawIO
+    dependencies:
+    - hs-vsh
+
+  calc-bounds:
+    main:        CalcBounds.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is CalcBounds
     dependencies:
     - hs-vsh
