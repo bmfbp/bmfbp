@@ -64,6 +64,7 @@ nle :- nl(user_error).
 
 we(X) :- write(user_error,X).
 
+wen(X):- we(X),nle.
 
 readFB(Str) :-
     read_term(Str,T0,[]),
