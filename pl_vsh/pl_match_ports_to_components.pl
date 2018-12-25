@@ -4,6 +4,7 @@
 main :-
     readFB(user_input),
     match_ports,
+    check_that_all_components_have_at_least_one_port,
     writeFB,
     halt.
 
@@ -11,6 +12,15 @@ match_ports :-
     % assign a parent component to every port, port must intersect parent's bounding-box
     % unimplemented semantic check: check that every port has exactly one parent
     forall(eltype(PortID, port),assign_parent_for_port(PortID)).
+
+check_that_all_components_have_at_least_one_port :-
+    forall(eltype(ParentID, box), check_has_port(ParentID)).
+
+check_has_port(ParentID):-
+    parent(Port,ParentID),!.
+
+check_has_port(ParentID):-
+    nle,nle,we('parent '),we(ParentID),wen(' has not port'),nle,nle.
 
 assign_parent_for_port(PortID) :-
     bounding_box_left(PortID, Left),
@@ -23,7 +33,7 @@ assign_parent_for_port(PortID) :-
     bounding_box_bottom(ParentID, PBottom),
     eltype(ParentID, box),
     intersects(Left, Top, Right, Bottom, PLeft, PTop, PRight, PBottom),
-    asserta(parent(PortID, ParentID)),!.
+    asserta(parent(PortID, ParentID)).
 
 assign_parent_for_port(PortID) :-
     portName(PortID,Text),

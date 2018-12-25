@@ -7,17 +7,31 @@
 BINDIR = ~/bin
 grash=$(BINDIR)/grash
 
-PL_COMMON=../common/head.pl ../common/tail.pl
+BOOTSTRAP_COMPILER=$(BINDIR)/bootstrap-svg.gsh
+SVG_DIAGRAM=svg_compiler.svg
+SVG_OUTPUT=svg.gsh
 
-SVG_DIAGRAM=svg_compiler.xml
-SVG_BASED_COMPILER=$(BINDIR)/pl_svg_bootstrap_vsh.gsh
+LOCAL_PL=$(BINDIR)/svg_emit $(BINDIR)/svg_match_ports_to_components
 
-# real SVG compiler written as an SVG/XML diagram
-YED_COMPILER_AS_SVG=yed_compiler_as_svg.svg
-LISP_FROM_SVG=lisp-from-svg.lisp
-SVG_COMPILER_PROLOGFB=svg_compiler.pro
+all : misc bootstrap
+	$(grash) $(BOOTSTRAP_COMPILER) $(SVG_DIAGRAM) >$(SVG_OUTPUT)
 
-BOOTSTRAP_COMPILER_OUTPUT=bootstrap-output.pro
+clean:
+	rm -f $(BOOTSTRAP_SVG_COMPILER) misc $(TEST_LISP) $(TEST_FB) $(LOCAL_PL) \
+	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB) 
+	rm -f $(TEMP1) $(TEMP2) $(TEMP3) $(TEMP4) $(TEMP5) $(TEMP6) $(TEMP7) \
+	$(TEMP8) $(TEMP9) $(TEMP10) $(TEMP11) $(TEMP12) 
+	rm -f $(BINDIR)/boot_emit $(BINDIR)/boot_match_ports_to_components
+	rm -f *.pro
+
+cleanfb:
+	rm -f *.pro
+
+misc : 
+	touch misc
+
+bootstrap: $(BOOTSTRAP_COMPILER)
+	cd ../bootstrap-svg && make all
 
 TEMP1=temp1.lisp
 TEMP1A=temp1A.pro
@@ -35,119 +49,29 @@ TEMP12=temp12.pro
 TEMP13=temp13.pro
 TEMP14=temp14.pro
 TEMP15=temp15.pro
+TEMP16=temp16.gsh
 
+$(BINDIR)/svg_match_ports_to_components : svg_match_ports_to_components.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/svg_match_ports_to_components --no-top-level
 
-LOCAL_PL=$(BINDIR)/svg_add_kinds $(BINDIR)/svg_create_centers \
-	$(BINDIR)/svg_calculate_distances $(BINDIR)/svg_make_unknown_port_names \
-	$(BINDIR)/svg_assign_portnames \
-#	$(BINDIR)/svg_match_ports_to_components
+$(BINDIR)/svg_emit : svg_emit.pl $(PL_COMMON)
+	gplc $< --output $(BINDIR)/svg_emit --no-top-level
 
-all : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL) test-yed-based-compiler
-all-no-test : misc bootstrap $(BINDIR)/fb-to-prolog make-yed-based-compiler $(LOCAL_PL)
-
-make-yed-based-compiler: misc dependencies bootstrap $(YED_DIAGRAM)
-	$(grash) $(BOOTSTRAP_COMPILER) $(YED_DIAGRAM) >$(YED_BASED_COMPILER)
-	sleep 1  # need to wait for the network to die down
-
-test-yed-based-compiler : make-yed-based-compiler $(YED_DIAGRAM_AS_SVG)
-	$(grash) $(YED_BASED_COMPILER) $(YED_COMPILER_AS_SVG) >$(BOOTSTRAP_COMPILER_OUTPUT)
-	sleep 1  # need to wait for the network to die down
-
-bootstrap : dependencies
-
-regression : all
-	@echo 'cannot do regression, since port numbers are chosen at random'
-
-# Prelude.head empty list IFF you try pass the .svg in as stdin instead of as 1st arg on command line
-temps: all-no-test
-	svg-to-lisp $(YED_COMPILER_AS_SVG) >$(TEMP1)
+temps: bootstrap $(LOCAL_PL)
+	svg-to-lisp $(SVG_DIAGRAM) >$(TEMP1)
 	fb-to-prolog <$(TEMP1) >$(TEMP1A)
-	svg_insert <$(TEMP1A) >$(TEMP2)
+	boot_insert <$(TEMP1A) >$(TEMP2)
 	plsort <$(TEMP2) >$(TEMP3)
 	pl_check_input <$(TEMP3) >$(TEMP4)
 	pl_calc_bounds <$(TEMP4) >$(TEMP5)
-	svg_add_kinds <$(TEMP5) >$(TEMP6)
-	svg_make_unknown_port_names <$(TEMP6) >$(TEMP7)
-	svg_create_centers <$(TEMP7) >$(TEMP8)
-	svg_calculate_distances <$(TEMP8) >$(TEMP9)
-	svg_assign_portnames <$(TEMP9) >$(TEMP10)
+	boot_add_kinds <$(TEMP5) >$(TEMP6)
+	boot_make_unknown_port_names <$(TEMP6) >$(TEMP7)
+	boot_create_centers <$(TEMP7) >$(TEMP8)
+	boot_calculate_distances <$(TEMP8) >$(TEMP9)
+	boot_assign_portnames <$(TEMP9) >$(TEMP10)
 	pl_mark_directions <$(TEMP10) >$(TEMP11)
-	pl_match_ports_to_components <$(TEMP11) >$(TEMP12)
+	svg_match_ports_to_components <$(TEMP11) >$(TEMP12)
 	pl_assign_pipe_numbers_to_inputs <$(TEMP12) >$(TEMP13)
 	pl_assign_pipe_numbers_to_outputs <$(TEMP13) >$(TEMP14)
 	pl_assign_fds <$(TEMP14) >$(TEMP15)
-	pl_emit <$(TEMP15) >$(BOOTSTRAP_COMPILER_OUTPUT)
-
-
-
-$(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
-	            fix-arrows.lisp fix-lines.lisp main.lisp
-	buildapp --output $(BINDIR)/fb-to-prolog \
-		--load util.lisp \
-		--load toprolog.lisp \
-		--load fix-translate.lisp \
-		--load collapse-lines.lisp \
-		--load create-text-objects.lisp \
-		--load fix-arrows.lisp \
-		--load fix-lines.lisp \
-		--load main.lisp \
-		--entry main
-
-clean:
-	rm -f $(SVG_BOOTSTRAP_COMPILER) misc $(TEST_LISP) $(TEST_FB) $(LOCAL_PL) \
-	$(SVG_BOOTSTRAP_COMPILER) $(LISP_FROM_SVG) $(SVG_COMPILER_PROLOGFB) 
-	rm -f $(TEMP1) $(TEMP2) $(TEMP3) $(TEMP4) $(TEMP5) $(TEMP6) $(TEMP7) \
-	$(TEMP8) $(TEMP9) $(TEMP10) $(TEMP11) $(TEMP12) 
-	rm -f $(BINDIR)/svg_emit $(BINDIR)/svg_match_ports_to_components
-	rm -f *.pro
-
-cleanfb:
-	rm -f *.pro
-
-$(BINDIR)/svg_add_kinds : svg_add_kinds.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/svg_add_kinds --no-top-level
-
-$(BINDIR)/svg_make_unknown_port_names : svg_make_unknown_port_names.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/svg_make_unknown_port_names --no-top-level
-
-$(BINDIR)/svg_create_centers : svg_create_centers.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/svg_create_centers --no-top-level
-
-$(BINDIR)/svg_calculate_distances : svg_calculate_distances.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/svg_calculate_distances --no-top-level
-
-$(BINDIR)/svg_assign_portnames : svg_assign_portnames.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/svg_assign_portnames --no-top-level
-
-# $(BINDIR)/svg_match_ports_to_components : svg_match_ports_to_components.pl $(PL_COMMON)
-#	gplc $< --output $(BINDIR)/svg_match_ports_to_components --no-top-level
-
-# $(BINDIR)/svg_emit : svg_emit.pl $(PL_COMMON)
-# 	gplc $< --output $(BINDIR)/svg_emit --no-top-level
-
-# $(BINDIR)/svg_% : svg_%.pl $(PL_COMMON)
-# 	gplc $< --output $@ --no-top-level
-
-misc : 
-	mkdir -p $(BINDIR)
-
-	echo "#!/bin/sh" >$(BINDIR)/svg_insert
-	echo "echo 'component(top).'" >>$(BINDIR)/svg_insert
-	echo "cat -" >>$(BINDIR)/svg_insert
-	chmod a+x $(BINDIR)/svg_insert
-
-	echo "#!/bin/sh" >$(BINDIR)/plsort
-	echo "sort" >>$(BINDIR)/plsort
-	chmod a+x $(BINDIR)/plsort
-
-#	this needs to be replaced by a make of svg-to-lisp - currently this over-fills my Dropbox
-	cp ~/projects/svg-to-fb/svg-to-fb-mac ~/bin/svg-to-lisp
-	chmod a+x ~/bin/svg-to-lisp
-
-	touch misc
-
-dependencies :
-	cd ../grash && make all
-	cd ../pl_vsh && make all
-	cd ../bootstrap_svg && make all
-	cd ../svg-parser && make
+	svg_emit <$(TEMP15) >$(TEMP16)
