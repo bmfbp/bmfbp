@@ -11,7 +11,9 @@ BOOTSTRAP_COMPILER=$(BINDIR)/bootstrap-svg.gsh
 SVG_DIAGRAM=svg_compiler.svg
 SVG_OUTPUT=svg.gsh
 
-LOCAL_PL=$(BINDIR)/svg_emit $(BINDIR)/svg_match_ports_to_components
+# LOCAL_PL=$(BINDIR)/svg_emit $(BINDIR)/svg_match_ports_to_components
+# LOCAL_PL=$(BINDIR)/svg_emit
+LOCAL_PL=
 
 all : misc bootstrap
 	$(grash) $(BOOTSTRAP_COMPILER) $(SVG_DIAGRAM) >$(SVG_OUTPUT)
@@ -51,11 +53,11 @@ TEMP14=temp14.pro
 TEMP15=temp15.pro
 TEMP16=temp16.gsh
 
-$(BINDIR)/svg_match_ports_to_components : svg_match_ports_to_components.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/svg_match_ports_to_components --no-top-level
+# $(BINDIR)/svg_match_ports_to_components : svg_match_ports_to_components.pl $(PL_COMMON)
+# 	gplc $< --output $(BINDIR)/svg_match_ports_to_components --no-top-level
 
-$(BINDIR)/svg_emit : svg_emit.pl $(PL_COMMON)
-	gplc $< --output $(BINDIR)/svg_emit --no-top-level
+# $(BINDIR)/svg_emit : svg_emit.pl $(PL_COMMON)
+# 	gplc $< --output $(BINDIR)/svg_emit --no-top-level
 
 temps: bootstrap $(LOCAL_PL)
 	svg-to-lisp $(SVG_DIAGRAM) >$(TEMP1)
@@ -70,8 +72,8 @@ temps: bootstrap $(LOCAL_PL)
 	boot_calculate_distances <$(TEMP8) >$(TEMP9)
 	boot_assign_portnames <$(TEMP9) >$(TEMP10)
 	pl_mark_directions <$(TEMP10) >$(TEMP11)
-	svg_match_ports_to_components <$(TEMP11) >$(TEMP12)
+	pl_match_ports_to_components <$(TEMP11) >$(TEMP12)
 	pl_assign_pipe_numbers_to_inputs <$(TEMP12) >$(TEMP13)
 	pl_assign_pipe_numbers_to_outputs <$(TEMP13) >$(TEMP14)
 	pl_assign_fds <$(TEMP14) >$(TEMP15)
-	svg_emit <$(TEMP15) >$(TEMP16)
+	pl_emit <$(TEMP15) >$(TEMP16)
