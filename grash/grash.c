@@ -409,8 +409,8 @@ int main (int argc, char **argv) {
   
   p = fgets (line, sizeof(line), f);
   while (p != NULL) {
-    // fprintf(stderr,"grash: %s",line);
-    // fflush(stderr);
+    /* fprintf(stderr,"grash: %s",line); */
+    /* fflush(stderr); */
     interpret (line, argc, argv);
     p = fgets (line, sizeof(line), f);
   }
