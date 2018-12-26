@@ -3,7 +3,7 @@ module Types.Diagram where
 import qualified Data.Text as DT
 
 newtype PartName = PartName DT.Text deriving Show
-newtype EdgeId = EdgeId DT.Text deriving Show
+newtype EdgeId = EdgeId DT.Text deriving (Show, Eq)
 newtype NodeId = NodeId DT.Text deriving (Show, Eq, Ord)
 newtype FileDescriptor = FileDescriptor Int deriving Show
 

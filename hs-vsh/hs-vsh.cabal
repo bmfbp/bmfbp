@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 94f6d8fdbae8b09ec65898cb05ada93132d2eca1a4eeb044d3348ce8f4d4496c
+-- hash: b45d5e85021306a8e9916ab2e2efc4368ae0d3cd893c2e0478e94a55ec8960da
 
 name:           hs-vsh
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
       Parser.DrawIO
       Parser.Prolog
       Types.Diagram
+      Vsh.AssignPipeNumbers
       Vsh.CalcBounds
       Vsh.MatchPortsToComponents
   other-modules:
@@ -53,9 +54,67 @@ library
     , unordered-containers
   default-language: Haskell2010
 
+executable hs-vsh-assign-pipe-numbers-to-inputs
+  main-is: AssignPipeNumbersToInputs.hs
+  other-modules:
+      AssignPipeNumbersToOutputs
+      CalcBounds
+      MarkDirections
+      MatchPortsToComponents
+      ParseDrawIO
+      Paths_hs_vsh
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is AssignPipeNumbersToInputs
+  build-depends:
+      array
+    , attoparsec
+    , base
+    , containers
+    , directory
+    , extra
+    , hs-vsh
+    , linear
+    , regex-posix
+    , svg-tree ==0.6.2.3
+    , taggy
+    , text
+    , unordered-containers
+  default-language: Haskell2010
+
+executable hs-vsh-assign-pipe-numbers-to-outputs
+  main-is: AssignPipeNumbersToOutputs.hs
+  other-modules:
+      AssignPipeNumbersToInputs
+      CalcBounds
+      MarkDirections
+      MatchPortsToComponents
+      ParseDrawIO
+      Paths_hs_vsh
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is AssignPipeNumbersToOutputs
+  build-depends:
+      array
+    , attoparsec
+    , base
+    , containers
+    , directory
+    , extra
+    , hs-vsh
+    , linear
+    , regex-posix
+    , svg-tree ==0.6.2.3
+    , taggy
+    , text
+    , unordered-containers
+  default-language: Haskell2010
+
 executable hs-vsh-calc-bounds
   main-is: CalcBounds.hs
   other-modules:
+      AssignPipeNumbersToInputs
+      AssignPipeNumbersToOutputs
       MarkDirections
       MatchPortsToComponents
       ParseDrawIO
@@ -82,6 +141,8 @@ executable hs-vsh-calc-bounds
 executable hs-vsh-drawio-to-fb
   main-is: ParseDrawIO.hs
   other-modules:
+      AssignPipeNumbersToInputs
+      AssignPipeNumbersToOutputs
       CalcBounds
       MarkDirections
       MatchPortsToComponents
@@ -108,6 +169,8 @@ executable hs-vsh-drawio-to-fb
 executable hs-vsh-mark-directions
   main-is: MarkDirections.hs
   other-modules:
+      AssignPipeNumbersToInputs
+      AssignPipeNumbersToOutputs
       CalcBounds
       MatchPortsToComponents
       ParseDrawIO
@@ -134,6 +197,8 @@ executable hs-vsh-mark-directions
 executable hs-vsh-match-ports-to-components
   main-is: MatchPortsToComponents.hs
   other-modules:
+      AssignPipeNumbersToInputs
+      AssignPipeNumbersToOutputs
       CalcBounds
       MarkDirections
       ParseDrawIO

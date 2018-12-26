@@ -77,3 +77,25 @@ executables:
     - -main-is MatchPortsToComponents
     dependencies:
     - hs-vsh
+
+  hs-vsh-assign-pipe-numbers-to-inputs:
+    main:        AssignPipeNumbersToInputs.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is AssignPipeNumbersToInputs
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-assign-pipe-numbers-to-outputs:
+    main:        AssignPipeNumbersToOutputs.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is AssignPipeNumbersToOutputs
+    dependencies:
+    - hs-vsh
