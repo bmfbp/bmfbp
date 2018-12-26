@@ -17,7 +17,7 @@ PL_COMMON=../common/head.pl ../common/tail.pl
 
 BOOTSTRAP_COMPILER=$(BINDIR)/pl_bootstrap.gsh
 YED_DIAGRAM=yed_svg_compiler.graphml
-YED_BASED_COMPILER=$(BINDIR)/pl_svg_bootstrap_vsh.gsh
+YED_BASED_COMPILER=$(BINDIR)/svg_compiler_bootstrapped.gsh
 
 # real SVG compiler written as an SVG/XML diagram
 YED_COMPILER_AS_SVG=yed_compiler_as_svg.svg
