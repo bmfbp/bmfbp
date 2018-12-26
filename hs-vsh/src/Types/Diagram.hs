@@ -4,7 +4,7 @@ import qualified Data.Text as DT
 
 newtype PartName = PartName DT.Text deriving Show
 newtype EdgeId = EdgeId DT.Text deriving Show
-newtype NodeId = NodeId DT.Text deriving Show
+newtype NodeId = NodeId DT.Text deriving (Show, Eq)
 newtype FileDescriptor = FileDescriptor Int deriving Show
 
 data Anchor = Left | Right | Top | Bottom deriving Show
