@@ -24,6 +24,7 @@ SVG_DIAGRAM=svg_compiler.svg
 # final SVG compiler, compiles SVG, derived from an SVG workflow
 # grash $(SVG_GSH) xxx.svg >yyy.gsh
 SVG_GSH=$(BINDIR)/svg.gsh
+LOCAL_SVG_GSH=svg.gsh
 
 # make local versions of various passes and insert debug statements
 # LOCAL_PL=$(BINDIR)/svg_emit $(BINDIR)/svg_match_ports_to_components
@@ -33,7 +34,10 @@ LOCAL_PL=
 
 REGRESSION=svg_self_compiled.gsh
 
-all : finalize regression
+all : misc $(SVG_GSH) finalize regression
+
+$(SVG_GSH) : misc
+	cp $(LOCAL_SVG_GSH) $(SVG_GSH)
 
 self-compile : misc bootstrap
 # compile svg diagram using bootstrapped compiler, then...
@@ -61,6 +65,7 @@ cleanfb:
 	rm -f *.pro
 
 misc : 
+	mkdir -p ~/bin
 	touch misc
 
 bootstrap: $(SVG_COMPILER_BOOTSTRAPPED)
