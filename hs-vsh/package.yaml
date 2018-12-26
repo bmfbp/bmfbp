@@ -23,6 +23,8 @@ dependencies:
 - attoparsec
 - linear
 - extra
+- array
+- containers
 
 library:
   source-dirs: src
@@ -32,7 +34,7 @@ library:
     - -fno-warn-overlapping-patterns
 
 executables:
-  drawio-to-fb:
+  hs-vsh-drawio-to-fb:
     main:        ParseDrawIO.hs
     source-dirs: app
     ghc-options:
@@ -43,7 +45,7 @@ executables:
     dependencies:
     - hs-vsh
 
-  calc-bounds:
+  hs-vsh-calc-bounds:
     main:        CalcBounds.hs
     source-dirs: app
     ghc-options:
@@ -51,5 +53,27 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     - -main-is CalcBounds
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-mark-directions:
+    main:        MarkDirections.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is MarkDirections
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-match-ports-to-components:
+    main:        MatchPortsToComponents.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is MatchPortsToComponents
     dependencies:
     - hs-vsh
