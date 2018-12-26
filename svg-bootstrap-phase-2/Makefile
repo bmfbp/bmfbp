@@ -50,7 +50,7 @@ finalize: self-compile
 
 clean: clean-temps
 	rm -f $(LOCAL_PL) $(REGRESSION)
-
+	rm -f misc
 
 clean-temps: cleanfb
 	rm -f $(TEMP1) $(TEMP2) $(TEMP3) $(TEMP4) $(TEMP5) $(TEMP6) $(TEMP7) \
