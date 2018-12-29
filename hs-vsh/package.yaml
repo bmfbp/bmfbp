@@ -25,6 +25,7 @@ dependencies:
 - extra
 - array
 - containers
+- transformers
 
 library:
   source-dirs: src
@@ -97,5 +98,27 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     - -main-is AssignPipeNumbersToOutputs
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-assign-fds:
+    main:        AssignFds.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is AssignFds
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-emit:
+    main:        EmitGrash.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is EmitGrash
     dependencies:
     - hs-vsh

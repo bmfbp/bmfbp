@@ -2,8 +2,6 @@ module Vsh.MatchPortsToComponents where
 
 import Prelude hiding (Left, Right)
 import Types.Diagram
-import qualified Data.List.Extra as DLE
-import qualified Data.Array as DAR
 import qualified Data.Map.Strict as DMS
 
 matchPorts :: Diagram -> Diagram
