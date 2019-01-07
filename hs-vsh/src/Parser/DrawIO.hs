@@ -1,4 +1,4 @@
-module Parser where
+module Parser.DrawIO where
 
 import qualified Data.Text as DT
 import qualified Data.Text.Lazy as DTL

@@ -1,0 +1,124 @@
+name:       hs-vsh
+version:    0.1.0.0
+github:     "bmfbp/bmfbp"
+license:    Proprietary
+author:     "Ken Kan"
+maintainer: "kenhkan@gmail.com"
+copyright:  "2018 Ken Kan"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+description: Please see the README on GitHub at <https://github.com/bmfbp/bmfbp#readme>
+
+dependencies:
+- base
+- directory
+- text
+- taggy
+- regex-posix
+- unordered-containers
+- svg-tree == 0.6.2.3
+- attoparsec
+- linear
+- extra
+- array
+- containers
+- transformers
+
+library:
+  source-dirs: src
+  default-extensions:
+    - OverloadedStrings
+  ghc-options:
+    - -fno-warn-overlapping-patterns
+
+executables:
+  hs-vsh-drawio-to-fb:
+    main:        ParseDrawIO.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is ParseDrawIO
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-calc-bounds:
+    main:        CalcBounds.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is CalcBounds
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-mark-directions:
+    main:        MarkDirections.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is MarkDirections
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-match-ports-to-components:
+    main:        MatchPortsToComponents.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is MatchPortsToComponents
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-assign-pipe-numbers-to-inputs:
+    main:        AssignPipeNumbersToInputs.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is AssignPipeNumbersToInputs
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-assign-pipe-numbers-to-outputs:
+    main:        AssignPipeNumbersToOutputs.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is AssignPipeNumbersToOutputs
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-assign-fds:
+    main:        AssignFds.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is AssignFds
+    dependencies:
+    - hs-vsh
+
+  hs-vsh-emit:
+    main:        EmitGrash.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is EmitGrash
+    dependencies:
+    - hs-vsh
