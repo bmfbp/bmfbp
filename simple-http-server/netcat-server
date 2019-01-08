@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Start a netcat HTTP server on port 8080.
+nc -l 8080
