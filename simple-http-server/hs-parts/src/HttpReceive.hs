@@ -1,11 +1,8 @@
 module HttpReceive where
 
+import Types
 import qualified Data.Text as DT
 import qualified Data.Attoparsec.Text as DAT
-import qualified Data.List as DL
-
-type Pair = (DT.Text, DT.Text)
-type HttpRequest = [Pair]
 
 readHttpRequest :: DT.Text -> Either String DT.Text
 readHttpRequest input = do
@@ -35,9 +32,6 @@ httpRequestP = do
         DAT.string "\r\n"
         body <- DAT.take $ read $ DT.unpack length
         return (("Body", body) : returnValue)
-
-getHeader :: HttpRequest -> DT.Text -> Maybe DT.Text
-getHeader request name = DL.find ((== name) . fst) request >>= return . snd
 
 headerP :: DAT.Parser Pair
 headerP = do

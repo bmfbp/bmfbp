@@ -1,23 +1,5 @@
-name:                http-receive
+name:                hs-parts
 version:             0.1.0.0
-github:              "githubuser/http-receive"
-license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2019 Author name here"
-
-extra-source-files:
-- README.md
-- ChangeLog.md
-
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
-
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/http-receive#readme>
 
 dependencies:
 - base
@@ -30,7 +12,7 @@ library:
   source-dirs: src
 
 executables:
-  http-receive-exe:
+  http-receive:
     main:                HttpReceiveApp.hs
     source-dirs:         app
     ghc-options:
@@ -39,15 +21,15 @@ executables:
     - -with-rtsopts=-N
     - -main-is HttpReceiveApp
     dependencies:
-    - http-receive
+    - hs-parts
 
-tests:
-  http-receive-test:
-    main:                Spec.hs
-    source-dirs:         test
+  http-send:
+    main:                HttpSendApp.hs
+    source-dirs:         app
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -main-is HttpSendApp
     dependencies:
-    - http-receive
+    - hs-parts
