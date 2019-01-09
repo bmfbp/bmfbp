@@ -22,4 +22,4 @@ pairP = do
     return (name, value)
 
 prepareResponse :: DT.Text -> DT.Text
-prepareResponse body = DT.append "HTTP/1.1 200 OK\r\n" body
+prepareResponse body = DT.concat ["HTTP/1.1 200 OK\r\n", body, "\r\n"]

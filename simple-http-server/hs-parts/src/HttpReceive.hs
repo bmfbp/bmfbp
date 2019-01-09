@@ -3,11 +3,17 @@ module HttpReceive where
 import Types
 import qualified Data.Text as DT
 import qualified Data.Attoparsec.Text as DAT
+import qualified Control.Monad as CM
 
-readHttpRequest :: DT.Text -> Either String DT.Text
-readHttpRequest input = do
-    parsed <- DAT.parseOnly httpRequestP input
-    return $ toFactBase parsed
+import Debug.Trace
+
+readHttpRequest :: IO Char -> IO (Either String DT.Text)
+readHttpRequest getMore = go $ DAT.parse httpRequestP ""
+  where
+    go :: DAT.Result HttpRequest -> IO (Either String DT.Text)
+    go (DAT.Fail remaining _ _) = return $ Left $ DT.unpack remaining
+    go (DAT.Done _ parsed) = return $ Right $ toFactBase parsed
+    go (DAT.Partial cont) = getMore >>= (return . DT.singleton) >>= (go . cont)
 
 word :: DAT.Parser DT.Text
 word = fmap DT.pack $ DAT.many1' DAT.letter
@@ -35,6 +41,7 @@ httpRequestP = do
 
 headerP :: DAT.Parser Pair
 headerP = do
+    DAT.peekChar' >>= CM.guard . (/= '\r')
     name <- DAT.takeTill (== ':')
     DAT.char ':'
     DAT.many' DAT.space

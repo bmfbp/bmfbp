@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm loop
+mkfifo loop
+
+while true; do
+  <loop netcat-server | http-receive | redact | http-send >loop
+done
