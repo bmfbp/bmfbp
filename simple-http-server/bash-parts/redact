@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Redact the entire body.
+sed -e $'s/^Body\t.*/Body\tRedacted/'

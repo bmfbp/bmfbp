@@ -1,0 +1,59 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 10a80fb80306d2efd1be20e8a63ef587ee1f5759a6c4de7c57653ee92e6c17c0
+
+name:           hs-parts
+version:        0.1.0.0
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+
+library
+  exposed-modules:
+      HttpReceive
+      HttpSend
+      Types
+  other-modules:
+      Paths_hs_parts
+  hs-source-dirs:
+      src
+  default-extensions: OverloadedStrings
+  build-depends:
+      attoparsec
+    , base
+    , text
+  default-language: Haskell2010
+
+executable http-receive
+  main-is: HttpReceiveApp.hs
+  other-modules:
+      HttpSendApp
+      Paths_hs_parts
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is HttpReceiveApp
+  build-depends:
+      attoparsec
+    , base
+    , hs-parts
+    , text
+  default-language: Haskell2010
+
+executable http-send
+  main-is: HttpSendApp.hs
+  other-modules:
+      HttpReceiveApp
+      Paths_hs_parts
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is HttpSendApp
+  build-depends:
+      attoparsec
+    , base
+    , hs-parts
+    , text
+  default-language: Haskell2010
