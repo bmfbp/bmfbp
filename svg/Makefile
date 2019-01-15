@@ -1,14 +1,14 @@
 all:
-	cd runtime && make
-	cd svg-parser && make
+	cd ../grash && make
+	cd ../hs-vsh && make
 	cd parts && make
 	cd compiler && make
 
 clean:
-	cd runtime && make clean
+	cd ../grash && make clean
 	cd compiler && make clean
 	cd parts && make clean
-	cd svg-parser && make clean
+	cd ../hs-vsh && make clean
 
 test : 
 	cd compiler && make test
