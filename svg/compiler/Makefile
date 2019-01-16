@@ -1,5 +1,5 @@
 BINDIR=~/bin
-SVG_DIAGRAM=svg_compiler.svg
+SVG_DIAGRAM=svgc.svg
 REGRESSION=regression.gsh
 
 all: dependencies
