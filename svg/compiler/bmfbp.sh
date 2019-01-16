@@ -1,3 +1,3 @@
 #!/bin/bash
-grash ~/bin/svg.gsh < $1
+grash ~/bin/svg.gsh `basename $1 .svg` < $1
 

@@ -24,7 +24,7 @@ $(BINDIR)/plsort:
 
 $(BINDIR)/insert:
 	echo "#!/bin/sh" >$(BINDIR)/insert
-	echo "echo 'component(top).'" >>$(BINDIR)/insert
+#	echo "echo 'component(canned).'" >>$(BINDIR)/insert
 	echo "cat -" >>$(BINDIR)/insert
 	chmod a+x $(BINDIR)/insert
 

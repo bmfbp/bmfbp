@@ -28,7 +28,7 @@
 				      ,*default-font-height*))))))
 	       (error "badly formed translate /~A/~%" list)))))
 
-    ((line rect)
+    ((line rect component)
      list)
 
     (otherwise

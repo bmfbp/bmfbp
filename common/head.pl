@@ -7,7 +7,7 @@
 :- dynamic(bounding_box_top/2).
 :- dynamic(center_x/2).
 :- dynamic(center_y/2).
-:- dynamic(component/1) .
+:- dynamic(component/1).
 :- dynamic(edge/1) .
 :- dynamic(eltype/2) .
 :- dynamic(geometry_h/2).

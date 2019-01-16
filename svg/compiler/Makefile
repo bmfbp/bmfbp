@@ -2,6 +2,8 @@ BINDIR=~/bin
 SVG_DIAGRAM=svg_compiler.svg
 REGRESSION=regression.gsh
 
+all: dependencies
+
 dependencies:
 	mkdir -p $(BINDIR)
 	cp bmfbp.sh $(BINDIR)/bmfbp
@@ -13,8 +15,9 @@ clean: clean-temps
 
 clean-temps:
 	rm -f *.pro
-	rm -f temp1.lisp temp.gsh
+	rm -f temp1.lisp temp18.gsh
 
 test : dependencies
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	diff -q $(BINDIR)/svg.gsh $(REGRESSION)
+

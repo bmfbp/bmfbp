@@ -27,7 +27,7 @@
                `(translate ,pair ,(mapcar #'fix-lines tail))
                (error "fix-lines: badly formed translate /~A/~%" list))))
 	
-	((rect text) list)
+	((rect text component) list)
 	
 	(line
 	 (let* ((absm (second list))

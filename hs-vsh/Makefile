@@ -3,5 +3,5 @@ hs-vsh-drawio-to-fb:
 	cp ~/.local/bin/hs-vsh-drawio-to-fb ~/bin
 
 clean:
-	rm ~/bin/hs-vsh-drawio-to-fb
+	rm -f ~/bin/hs-vsh-drawio-to-fb
 

@@ -25,6 +25,9 @@
     (let ((new-id (next-id)))
       (case (car list)
 
+	(component
+	 (format strm "component('~A').~%" (second list)))
+
         (line
 	 (let ((begin-id (next-id))
 	       (end-id (next-id))

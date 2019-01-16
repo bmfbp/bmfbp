@@ -14,7 +14,7 @@
                (tail (third list)))
 	   (assert (list-of-lists-p tail) () "fix-one-translate 2 x=~a y= ~a list=/~a/" x y list)
 	   (mapcar #'(lambda (item) (fix-one-translate (+ x (first pair)) (+ y (second pair)) item)) tail)))
-	
+
 	(rect
 	 (destructuring-bind (sym x1 y1 x2 y2)
              list
@@ -64,7 +64,7 @@
 	   (assert (list-of-lists-p tail) () "fix-translates 4 list=/~a/" list)
 	   (mapcar #'(lambda (item) (fix-one-translate (first pair) (second pair) item)) tail)))
 	
-	((rect text arrow line)
+	((rect text arrow line component)
 	 list)
 	
 	(otherwise
