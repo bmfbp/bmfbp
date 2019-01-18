@@ -12,3 +12,6 @@ clean:
 
 test : 
 	cd compiler && make test
+
+passes:
+	cd compiler && make passes
