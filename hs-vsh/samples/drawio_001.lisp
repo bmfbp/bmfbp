@@ -1,4 +1,3 @@
-(component someName)
 (translate
  (0.5 0.5)
  ((line (absm 190.0 30.0) (absl 310.0 30.0) (absl 310.0 173.63))
