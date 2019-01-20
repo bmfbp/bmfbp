@@ -3,7 +3,7 @@ all:
 	cd ../hs-vsh && make
 	cd parts && make
 	cd compiler && make
-#	cd compiler && make passes
+	cd compiler && make passes
 
 clean: clean-passes
 	cd ../grash && make clean
