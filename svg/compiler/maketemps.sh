@@ -1,8 +1,8 @@
 #!/bin/bash
 set -v
 hs-vsh-drawio-to-fb svgc <svgc.svg >temp1.lisp
-fb-to-prolog <temp1.lisp >temp2.pro
-insert <temp2.pro >temp3.pro
+lib_insert_part_name svgc <temp1.lisp >temp2.lisp
+fb-to-prolog <temp2.lisp >temp3.pro
 plsort <temp3.pro >temp4.pro
 check_input <temp4.pro >temp5.pro
 calc_bounds <temp5.pro >temp6.pro

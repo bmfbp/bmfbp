@@ -37,7 +37,7 @@ krof
 fork
   inPipe 3
   outPipe 7
-  exec fb-to-prolog
+  exec lib_insert_part_name
 krof
 fork
   inPipe 13
@@ -77,7 +77,7 @@ krof
 fork
   inPipe 7
   outPipe 13
-  exec insert
+  exec fb-to-prolog
 krof
 fork
   inPipe 11

@@ -12,21 +12,16 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/calculate_distances \
 	$(BINDIR)/create_centers \
 	$(BINDIR)/make_unknown_port_names \
-	$(BINDIR)/match_ports_to_components
+	$(BINDIR)/match_ports_to_components \
+	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/insert
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
 	echo "#!/bin/sh" >$(BINDIR)/plsort
 	echo "sort" >>$(BINDIR)/plsort
 	chmod a+x $(BINDIR)/plsort
-
-$(BINDIR)/insert:
-	echo "#!/bin/sh" >$(BINDIR)/insert
-#	echo "echo 'component(canned).'" >>$(BINDIR)/insert
-	echo "cat -" >>$(BINDIR)/insert
-	chmod a+x $(BINDIR)/insert
 
 $(BINDIR)/% : %.pl $(PL_COMMON)
 	gplc $< --output $@ --no-top-level
@@ -44,7 +39,10 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 		--load main.lisp \
 		--entry main
 
+$(BINDIR)/lib_insert_part_name: lib_insert_part_name.lisp
+	buildapp --output $(BINDIR)/lib_insert_part_name --load lib_insert_part_name.lisp --entry main
+
 clean :
 	rm -f $(EXECS)
-	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/insert
+	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name
 

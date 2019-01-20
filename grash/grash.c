@@ -30,6 +30,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
@@ -223,8 +224,6 @@ void  parseArgs(char *line, int *argc, char **argv) {
   
 void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
   /* tack extra command-line args onto tail of argv, using pointer copies */
-  fprintf (stderr, "oargc=%d argc=%d\n", oargc, *argc);
-  fflush (stderr);
   if (oargc > 2) {
     int i = 2;
     while (i < oargc) {
@@ -234,7 +233,6 @@ void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
     }
     argv[i] = NULL;
   }
-  fprintf (stderr, "oargc=%d argc=%d\n", oargc, *argc);
 }
 
 void doExecFirst (char *p, int oargc, char **oargv) {
@@ -243,26 +241,7 @@ void doExecFirst (char *p, int oargc, char **oargv) {
   pid_t pid;
   int i, j;
 
-  /* fprintf (stderr, "pre-pre-execingFirst[%d]:", oargc); */
-  /* fflush (stderr); */
-  /* for(i=0; i < oargc; i+=1) { */
-  /*   fprintf (stderr, " %s", oargv[i]); */
-  /*   fflush (stderr); */
-  /* } */
-  /* fprintf (stderr, "\n"); */
-  /* fflush (stderr); */
-
   parseArgs (p, &argc, argv);
-
-  /* fprintf (stderr, "after parseArgs pre-execingFirst[%d]:", oargc); */
-  /* fflush (stderr); */
-  /* for(i=0; i < oargc; i+=1) { */
-  /*   fprintf (stderr, " %s", oargv[i]); */
-  /*   fflush (stderr); */
-  /* } */
-  /* fprintf (stderr, "\n"); */
-  /* fflush (stderr); */
-
   argc = oargc-1;
   // argv[0] contains the component name to be executed, copy rest of args over into argv
   // argv[1] contains the .gsh script being run by grash
@@ -276,16 +255,6 @@ void doExecFirst (char *p, int oargc, char **oargv) {
   argv[i-1] = NULL;
 
   closeUnusedPipes();
-
-  /* fprintf (stderr, "execingFirst[%d]:", argc); */
-  /* fflush (stderr); */
-  /* for(i=0; i < argc; i+=1) { */
-  /*   fprintf (stderr, " %s", argv[i]); */
-  /*   fflush (stderr); */
-  /* } */
-  /* fprintf (stderr, "\n"); */
-  /* fflush (stderr); */
-
   pid = execvp (argv[0], argv);
   if (pid < 0) {
     fprintf (stderr, "exec failed: %s\n", argv[0]);
@@ -351,7 +320,12 @@ void interpret (char *line, int argc, char **argv) {
     }
     p = parse ("exec", line);
     if (p) {
-      doExec (p, argc, argv);
+      if (4 <= strlen(p) && 'l' == p[0] && 'i' == p[1] && 'b' == p[2] && '_' == p[3]) {
+	// builtins begin with "lib_" ; builtins need to get argc and argv passed into them
+	doExecFirst (p, argc, argv);
+      } else {
+	doExec (p, argc, argv);
+      }
       return;
     }
     quit(line, "grash: can't happen");
@@ -409,8 +383,6 @@ int main (int argc, char **argv) {
   
   p = fgets (line, sizeof(line), f);
   while (p != NULL) {
-    /* fprintf(stderr,"grash: %s",line); */
-    /* fflush(stderr); */
     interpret (line, argc, argv);
     p = fgets (line, sizeof(line), f);
   }
