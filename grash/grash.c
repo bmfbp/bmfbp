@@ -64,8 +64,6 @@
           N is the new (child's) FD to be overwritten with the dup'ed pipe (0 for stdin, 1 for stdout, etc).
   inPipe N - shorthand for above ; dup2(pipes[N][0],0)
   outPipe N - shorthand for above ; dup2(pipes[N][1],1)
-  // exec <args> : splits the args and calls execvp, after closing all pipes
-  //exec1st <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
   exec <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
   fork : forks a new process
          parent ignores all subsequent commands until krof is seen
@@ -206,7 +204,7 @@ char *trim_white_space(char *p) {
   return p;
 }
 
-void  parseArgs(char *line, int *argc, char **argv) {
+void parseArgs(char *line, int *argc, char **argv) {
   /* convert the char line into argc/argv */
   *argc = 0;
   while (*line != '\0') {
@@ -223,19 +221,6 @@ void  parseArgs(char *line, int *argc, char **argv) {
   *argv = NULL;
 }
   
-void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
-  /* tack extra command-line args onto tail of argv, using pointer copies */
-  if (oargc > 2) {
-    int i = 2;
-    while (i < oargc) {
-      argv[*argc] = oargv[i];
-      *argc += 1;
-      i += 1;
-    }
-    argv[i] = NULL;
-  }
-}
-
 void doExecFirst (char *p, int oargc, char **oargv) {
   char *argv[ARGVMAX];
   int argc;
