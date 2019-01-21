@@ -8,7 +8,8 @@
 
 (defun run (argv)
   (let ((sexpr (read *standard-input* nil 'EOF)))
-    (assert (and (not (eq 'EOF sexpr)) (listp sexpr)))
+    (assert (not (eq 'EOF sexpr)))
+    (assert (listp sexpr))
     (let* ((name `(component ,(second argv)))
 	   (new (cons name sexpr)))
       (write new))
