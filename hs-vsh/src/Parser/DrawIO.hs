@@ -31,12 +31,16 @@ data PathCommand
     | UnsupportedPathCommand
     deriving (Show)
 
-parseSVG :: DT.Text -> DT.Text
-parseSVG input = output
+parseSVG :: Maybe String -> DT.Text -> DT.Text
+parseSVG componentNameMb input = output
   where
     nodes = TTD.domify $ TTP.taggyWith True (DTL.fromStrict input)
     collapsed = collapseEmpty $ Container $ map (collapseEmpty . parseNode) nodes
-    output = lispify collapsed
+    output = DT.append componentFact (lispify collapsed)
+    componentFact =
+      case componentNameMb of
+        Nothing -> ""
+        Just name -> DT.pack $ "(component " ++ name ++ ")"
 
 wrapInParens :: [DT.Text] -> DT.Text
 wrapInParens content = DT.concat ["(", DT.intercalate " " content, ")"]
