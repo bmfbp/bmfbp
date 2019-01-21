@@ -86,5 +86,5 @@ fork
 krof
 fork
   outPipe 3
-  exec1st hs-vsh-drawio-to-fb
+  exec hs-vsh-drawio-to-fb
 krof

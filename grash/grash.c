@@ -64,8 +64,9 @@
           N is the new (child's) FD to be overwritten with the dup'ed pipe (0 for stdin, 1 for stdout, etc).
   inPipe N - shorthand for above ; dup2(pipes[N][0],0)
   outPipe N - shorthand for above ; dup2(pipes[N][1],1)
-  exec <args> : splits the args and calls execvp, after closing all pipes
-  exec1st <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
+  // exec <args> : splits the args and calls execvp, after closing all pipes
+  //exec1st <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
+  exec <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
   fork : forks a new process
          parent ignores all subsequent commands until krof is seen
   krof : signifies end of forked child section
@@ -296,12 +297,9 @@ void interpret (char *line, int argc, char **argv) {
       push (p);
       return;
     }
-    p = parse ("exec1st", line);
-    if (!p) {
-      p = parse ("exec", line);  // intention: treat exec the same as exec1st (re. command line args)
-    }
+    p = parse ("exec", line);
     if (p) {
-      doExecFirst (p, argc, argv);
+      doExecFirst (p, argc, argv);  // all execs run doExecFirst
       return;
     }
     quit(line, "grash: can't happen");
