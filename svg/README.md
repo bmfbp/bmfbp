@@ -13,6 +13,14 @@ To use:
 > bmfbp [filename].svg >[grash output name].gsh
 > grash [grash output name].gsh
 
+
+To test subnets (compiler written in 4 passes):
+> make clean-passes
+> make passes
+> make test-passes
+
+(N.B. this requires a kludge - the exec1st component must be at the top level (not a subnet) ; in this case "hs-vsh-drawio-to-fb")
+
 We use Draw.IO diagrams for this version.
 Drawing conventions:
 
