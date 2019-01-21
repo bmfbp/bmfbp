@@ -262,23 +262,6 @@ void doExecFirst (char *p, int oargc, char **oargv) {
   }
 }
 
-void doExec (char *p, int oargc, char **oargv) {
-  char *argv[ARGVMAX];
-  int argc;
-  pid_t pid;
-  int i;
-
-  parseArgs (p, &argc, argv);
-
-  closeUnusedPipes();
-
-  pid = execvp (argv[0], argv);
-  if (pid < 0) {
-    fprintf (stderr, "exec failed: %s\n", argv[0]);
-    quit ("", "exec failed!");
-  }
-}
-
 void interpret (char *line, int argc, char **argv) {
   char *p;
 
@@ -314,19 +297,11 @@ void interpret (char *line, int argc, char **argv) {
       return;
     }
     p = parse ("exec1st", line);
+    if (!p) {
+      p = parse ("exec", line);  // intention: treat exec the same as exec1st (re. command line args)
+    }
     if (p) {
       doExecFirst (p, argc, argv);
-      return;
-    }
-    p = parse ("exec", line);
-    if (p) {
-      if (4 <= strlen(p) && 'l' == p[0] && 'i' == p[1] && 'b' == p[2] && '_' == p[3]) {
-	// builtins begin with "lib_" ; builtins need to get argc and argv passed into them
-	fprintf(stderr,"calling exec1st\n");
-	doExecFirst (p, argc, argv);
-      } else {
-	doExecFirst (p, argc, argv);
-      }
       return;
     }
     quit(line, "grash: can't happen");
