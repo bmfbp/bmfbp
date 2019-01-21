@@ -322,9 +322,10 @@ void interpret (char *line, int argc, char **argv) {
     if (p) {
       if (4 <= strlen(p) && 'l' == p[0] && 'i' == p[1] && 'b' == p[2] && '_' == p[3]) {
 	// builtins begin with "lib_" ; builtins need to get argc and argv passed into them
+	fprintf(stderr,"calling exec1st\n");
 	doExecFirst (p, argc, argv);
       } else {
-	doExec (p, argc, argv);
+	doExecFirst (p, argc, argv);
       }
       return;
     }
