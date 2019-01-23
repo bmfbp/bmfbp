@@ -1,0 +1,4 @@
+#!/bin/bash
+#BINDIR=~/bin
+#grash $(BINDIR)/parser.gsh $1 $2
+grash ~/bin/parser.gsh $1 $2
