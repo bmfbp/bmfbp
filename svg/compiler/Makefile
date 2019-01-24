@@ -20,6 +20,7 @@ clean-temps:
 
 test : dependencies
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
+	sleep 1
 	diff -q $(BINDIR)/svg.gsh $(REGRESSION)
 
 passes :
