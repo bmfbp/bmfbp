@@ -13,7 +13,7 @@ clean: clean-passes
 
 test : 
 	cd compiler && make test
-#	cd compiler && make test-passes
+	cd compiler && make test-passes
 
 passes:
 	cd compiler && make passes
