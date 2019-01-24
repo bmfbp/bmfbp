@@ -1,81 +1,124 @@
-// --------------------------------------------------
+// ----------------------------------------------------------------------------
 //
-// Five Parts:
-//
-// - Part A: It sends an incrementing count starting from 0 times 2 every
-// second to its OUT pin.
-// - Part B: It sends an incrementing count starting from 0 times 3 every
-// second to its OUT pin.
-// - Part C: It receives a count from its IN pin and sends to its first OUT
-// pin.  If the packet value is odd, send another packet with a message to its
-// second OUT pin.
-// - Part D: It prints packets from its IN pin to the console.
-// - Part E: It prints packets from its IN pin to the console, prefixed with "WARNING: ".
+// The Parts
 
-// This two-layer definition is necessary because everything in JS is wrapped
-// in a lambda and we don't have access to mutable variables that survive
-// across function calls.
-function sendIncrementingCountTimesTwo(part, send, releaseDeferred) {
+// Part A: It keeps an incrementing count starting from 0 every second,
+// multiplied by 2 and send it to its OUT pin.
+function partA(part, send, releaseDeferred) {
   var count = 0;
+
   setInterval(function () {
     count++;
     // TODO: Future suggestion: Allow sending to a pin name instead of a pin
     // index.
     send(part, 0, count * 2);
-    // TODO: Having to call `releaseDeferred` within a Part feels like a hack
-    // to me.  Though maybe it's necessary given that this is a "driver".
     releaseDeferred(part);
   }, 1000);
+
+  // This two-layer definition is necessary because everything in JS is wrapped
+  // in a lambda and we don't have access to mutable variables that survive
+  // across function calls.
   return function (pin, packet) {
   };
 }
 
-function sendIncrementingCountTimesThree(part, send, releaseDeferred) {
+// Part B: It keeps an incrementing count starting from 0 every second,
+// multiplied by 3 and send it to its OUT pin.
+function partB(part, send, releaseDeferred) {
   var count = 0;
+
   setInterval(function () {
     count++;
     send(part, 0, count * 3);
     releaseDeferred(part);
   }, 1000);
+
   return function (pin, packet) {
   };
 }
 
-function forwardAndOrAddOne(part, send) {
+// Part C: It receives a count from its IN pin and creates an object with the
+// key of "count" and the value as the count from the IN pin. It then sends the
+// object to its first OUT pin. If the count is odd, send another packet with a
+// message to its second OUT pin.
+function partC(part, send) {
   return function (pin, packet) {
-    send(part, 0, packet);
-    if (packet % 2 != 0) {
-      send(part, 1, "Odd number detected: " + packet);
+    switch (pin) {
+      case 0:
+        send(part, 0, {
+          "count": packet
+        });
+
+        if (packet % 2 != 0) {
+          send(part, 1, {
+            "message": "Odd number detected",
+            "count": packet
+          });
+        }
     }
   };
 }
 
-function printToConsole(part, send) {
+// Part D: It prints packets from its IN pin to the console.
+function partD(part, send) {
   return function (pin, packet) {
-    console.log(packet);
+    switch (pin) {
+      case 0:
+        console.log(packet);
+    }
   };
 }
 
-function printToConsoleWithWarning(part, send) {
+// Part E: It takes the message in the packet from its IN pin, adds one to the
+// count property, then print it to the console, prefixed with "ADDED ONE: "
+function partE(part, send) {
   return function (pin, packet) {
-    console.log("WARNING: " + packet);
+    switch (pin) {
+      case 0:
+        // TODO: Currently this would increment the count for `partF` as well
+        // because there is no copying. This is an issue to be addressed.
+        packet.count++;
+        console.log("ADDED ONE: " + packet.count);
+    }
   };
 }
 
-// --------------------------------------------------
+// Part F: It prints the message in the packet from its IN pin to the console,
+// prefixed with "WARNING: ".
+function partF(part, send) {
+  return function (pin, packet) {
+    switch (pin) {
+      case 0:
+        console.log("WARNING: " + packet.message + ": " + packet.count);
+    }
+  };
+}
+
+// ----------------------------------------------------------------------------
 //
 // The schematic, conceptually:
 //
-//     B ----v
-//     A --> C --> D
-//           +---> E
+//     B --0--+
+//            |
+//            v
+//     A --1--+-> C --2---> D
+//                |
+//                +-+--3--> E
+//                  +--4--> F
+//
+// where the IN pin of both E and F are connected to the same OUT pin of C.
+//
+// The numbers in the schematic refer to the wire numbers.
 
 const schematic = {
   // Wires here are same as pipes in grash. Not using the word "pipes" to
   // avoid confusion with UNIX pipes.
-  wireCount: 4,
+  wireCount: 5,
   parts: [
     {
+      // TODO: Discussion item: Do we even need to keep track of which wires
+      // are incoming and outgoing? They are already indirectly tracked with
+      // which pins they belong to.
       inWires: [],
       // The pin index in `send()` is the index of this array, meaning that
       // if the following is `[3, 4]`, the Part would call `send()` with
@@ -83,46 +126,47 @@ const schematic = {
       outWires: [0],
       inPins: [],
       outPins: [[0]],
-      exec: sendIncrementingCountTimesTwo,
-      // Like `exec1st` in grash, just separated out.
-      exec1st: true
+      exec: partA
     },
     {
       inWires: [],
       outWires: [1],
       inPins: [],
       outPins: [[1]],
-      exec: sendIncrementingCountTimesThree,
-      exec1st: true
+      exec: partB
     },
     {
       inWires: [0, 1],
-      outWires: [2, 3],
+      outWires: [2, 3, 4],
       // Maps pin index to wire number. e.g. The below says IN pin number 0
       // of this Part is attached to wires number 0 and number 1, which
       // are the same as the wire number above in `inWires`.
       inPins: [[0, 1]],
       // The below says the OUT pin number 0 is attached to wire number 2
       // and the OUT pin number 1 is attached to wire number 3.
-      outPins: [[2], [3]],
-      exec: forwardAndOrAddOne,
-      exec1st: false
+      outPins: [[2], [3, 4]],
+      exec: partC
     },
     {
       inWires: [2],
       outWires: [],
       inPins: [[2]],
       outPins: [],
-      exec: printToConsole,
-      exec1st: false
+      exec: partD
     },
     {
       inWires: [3],
       outWires: [],
       inPins: [[3]],
       outPins: [],
-      exec: printToConsoleWithWarning,
-      exec1st: false
+      exec: partE
+    },
+    {
+      inWires: [4],
+      outWires: [],
+      inPins: [[4]],
+      outPins: [],
+      exec: partF
     }
   ]
 };
@@ -186,7 +230,7 @@ function bmfbp(schematic) {
     var inEvent;
 
     while (readyParts.length > 0) {
-      partIndex = readyParts.pop();
+      partIndex = readyParts.shift();
       queue = inQueue[partIndex];
 
       while (queue.length > 0) {
@@ -219,7 +263,6 @@ function bmfbp(schematic) {
         }
       }
     }
-    // TODO: Is exposing `releaseDeferred` is a hack?
     partMains[i] = part.exec(i, send, releaseDeferred);
   }
 
