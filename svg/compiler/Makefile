@@ -34,6 +34,8 @@ passes :
 	chmod a+x $(BINDIR)/svgpasses $(BINDIR)/unity $(BINDIR)/scanner $(BINDIR)/parser $(BINDIR)/semantics $(BINDIR)/emitter $(BINDIR)/comparegsh.sh
 
 test-passes: passes
+	svgpasses <passes.svg >temp200.pro
+	sleep 1
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
 	sleep 1
