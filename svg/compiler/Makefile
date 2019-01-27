@@ -21,25 +21,23 @@ clean-temps:
 test : dependencies
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	sleep 1
+#	don't use comparegsh.sh here, it will overwrite svg.gsh
 	diff -q $(BINDIR)/svg.gsh $(REGRESSION)
 
 passes :
 	bmfbp passes.svg >$(BINDIR)/svgpasses.gsh
 	bmfbp scanner.svg >$(BINDIR)/scanner.gsh
 	bmfbp parser.svg >$(BINDIR)/parser.gsh
+	bmfbp semantics.svg >$(BINDIR)/semantics.gsh
 	bmfbp emitter.svg >$(BINDIR)/emitter.gsh
-	cp svgpasses scanner parser semantic emitter $(BINDIR)
-	chmod a+x $(BINDIR) $(BINDIR)/svgpasses
-	chmod a+x $(BINDIR) $(BINDIR)/scanner
-	chmod a+x $(BINDIR) $(BINDIR)/parser
-	chmod a+x $(BINDIR) $(BINDIR)/semantic
-	chmod a+x $(BINDIR) $(BINDIR)/emitter
+	cp svgpasses scanner parser semantics emitter unity comparegsh.sh $(BINDIR)
+	chmod a+x $(BINDIR)/svgpasses $(BINDIR)/unity $(BINDIR)/scanner $(BINDIR)/parser $(BINDIR)/semantics $(BINDIR)/emitter $(BINDIR)/comparegsh.sh
 
 test-passes: passes
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
 	sleep 1
-	diff -q $(PASSES-REGRESSION) $(REGRESSION)
+	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
 
 clean-passes :
 	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh $(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh

@@ -13,6 +13,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/create_centers \
 	$(BINDIR)/make_unknown_port_names \
 	$(BINDIR)/match_ports_to_components \
+	$(BINDIR)/sem_partsHaveSomePorts \
 	$(BINDIR)/lib_insert_part_name
 
 all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name
