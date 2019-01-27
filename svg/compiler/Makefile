@@ -21,8 +21,8 @@ clean-temps:
 test : dependencies
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	sleep 1
-#	don't use comparegsh.sh here, it will overwrite svg.gsh
-	diff -q $(BINDIR)/svg.gsh $(REGRESSION)
+	cp $(BINDIR)/svg.gsh ./temp.gsh
+	comparegsh.sh temp.gsh $(REGRESSION)
 
 passes :
 	bmfbp passes.svg >$(BINDIR)/svgpasses.gsh
