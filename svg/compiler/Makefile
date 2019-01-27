@@ -34,10 +34,16 @@ passes :
 	chmod a+x $(BINDIR)/svgpasses $(BINDIR)/unity $(BINDIR)/scanner $(BINDIR)/parser $(BINDIR)/semantics $(BINDIR)/emitter $(BINDIR)/comparegsh.sh
 
 test-passes: passes
+# emantics is contained only in svgpasses version
 	svgpasses <passes.svg >temp200.pro
 	sleep 1
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
+	sleep 1
+	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
+	sleep 1
+	bmfbp passes.svg >$(REGRESSION)
+	svgpasses passes <passes.svg >$(PASSES-REGRESSION)
 	sleep 1
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
 
