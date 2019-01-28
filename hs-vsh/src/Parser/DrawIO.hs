@@ -18,6 +18,7 @@ data Output
     | Translate Float Float [Output]
     | Path [PathCommand]
     | Rect Float Float Float Float 
+    | Ellipse Float Float Float Float 
     | Text DT.Text
     | Empty
     deriving (Show)
@@ -53,6 +54,7 @@ lispify (Container children) = wrapInParens $ map lispify children
 lispify (Translate x y children) = wrapInParens ["translate", wrapInParens [showToText x, showToText y], wrapInParens $ map lispify children]
 lispify (Path commands) = wrapInParens ("line" : map lispifyPathCommand commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
+lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
 
@@ -125,6 +127,16 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               width <- lookupAttrIntoString "width"
               height <- lookupAttrIntoString "height"
               return (Rect (readFloat x) (readFloat y) (readFloat width) (readFloat height))
+          in
+            maybe defaultOutput id result
+        "ellipse" ->
+          let
+            result = do
+              cx <- lookupAttrIntoString "cx"
+              cy <- lookupAttrIntoString "cy"
+              rx <- lookupAttrIntoString "rx"
+              ry <- lookupAttrIntoString "ry"
+              return (Rect (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
           in
             maybe defaultOutput id result
         "foreignObject" -> Empty
