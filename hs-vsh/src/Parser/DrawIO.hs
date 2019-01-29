@@ -17,7 +17,7 @@ data Output
     = Container [Output]
     | Translate Float Float [Output]
     | Path [PathCommand]
-    | Rect Int Int Int Int
+    | Rect Float Float Float Float 
     | Text DT.Text
     | Empty
     deriving (Show)
@@ -120,7 +120,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               y <- lookupAttrIntoString "y"
               width <- lookupAttrIntoString "width"
               height <- lookupAttrIntoString "height"
-              return (Rect (readInt x) (readInt y) (readInt width) (readInt height))
+              return (Rect (readFloat x) (readFloat y) (readFloat width) (readFloat height))
           in
             maybe defaultOutput id result
         "foreignObject" -> Empty
