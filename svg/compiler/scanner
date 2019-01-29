@@ -1,0 +1,4 @@
+#!/bin/bash
+#BINDIR=~/bin
+#grash $(BINDIR)/scanner.gsh $1 $2
+grash ~/bin/scanner.gsh $1 $2

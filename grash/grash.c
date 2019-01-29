@@ -30,6 +30,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
@@ -63,8 +64,7 @@
           N is the new (child's) FD to be overwritten with the dup'ed pipe (0 for stdin, 1 for stdout, etc).
   inPipe N - shorthand for above ; dup2(pipes[N][0],0)
   outPipe N - shorthand for above ; dup2(pipes[N][1],1)
-  exec <args> : splits the args and calls execvp, after closing all pipes
-  exec1st <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
+  exec <args> : splits the args, appends args from the command line and calls execvp, after closing all pipes
   fork : forks a new process
          parent ignores all subsequent commands until krof is seen
   krof : signifies end of forked child section
@@ -204,7 +204,7 @@ char *trim_white_space(char *p) {
   return p;
 }
 
-void  parseArgs(char *line, int *argc, char **argv) {
+void parseArgs(char *line, int *argc, char **argv) {
   /* convert the char line into argc/argv */
   *argc = 0;
   while (*line != '\0') {
@@ -221,48 +221,13 @@ void  parseArgs(char *line, int *argc, char **argv) {
   *argv = NULL;
 }
   
-void appendArgs (int *argc, char **argv, int oargc, char **oargv) {
-  /* tack extra command-line args onto tail of argv, using pointer copies */
-  fprintf (stderr, "oargc=%d argc=%d\n", oargc, *argc);
-  fflush (stderr);
-  if (oargc > 2) {
-    int i = 2;
-    while (i < oargc) {
-      argv[*argc] = oargv[i];
-      *argc += 1;
-      i += 1;
-    }
-    argv[i] = NULL;
-  }
-  fprintf (stderr, "oargc=%d argc=%d\n", oargc, *argc);
-}
-
 void doExecFirst (char *p, int oargc, char **oargv) {
   char *argv[ARGVMAX];
   int argc;
   pid_t pid;
   int i, j;
 
-  /* fprintf (stderr, "pre-pre-execingFirst[%d]:", oargc); */
-  /* fflush (stderr); */
-  /* for(i=0; i < oargc; i+=1) { */
-  /*   fprintf (stderr, " %s", oargv[i]); */
-  /*   fflush (stderr); */
-  /* } */
-  /* fprintf (stderr, "\n"); */
-  /* fflush (stderr); */
-
   parseArgs (p, &argc, argv);
-
-  /* fprintf (stderr, "after parseArgs pre-execingFirst[%d]:", oargc); */
-  /* fflush (stderr); */
-  /* for(i=0; i < oargc; i+=1) { */
-  /*   fprintf (stderr, " %s", oargv[i]); */
-  /*   fflush (stderr); */
-  /* } */
-  /* fprintf (stderr, "\n"); */
-  /* fflush (stderr); */
-
   argc = oargc-1;
   // argv[0] contains the component name to be executed, copy rest of args over into argv
   // argv[1] contains the .gsh script being run by grash
@@ -276,33 +241,6 @@ void doExecFirst (char *p, int oargc, char **oargv) {
   argv[i-1] = NULL;
 
   closeUnusedPipes();
-
-  /* fprintf (stderr, "execingFirst[%d]:", argc); */
-  /* fflush (stderr); */
-  /* for(i=0; i < argc; i+=1) { */
-  /*   fprintf (stderr, " %s", argv[i]); */
-  /*   fflush (stderr); */
-  /* } */
-  /* fprintf (stderr, "\n"); */
-  /* fflush (stderr); */
-
-  pid = execvp (argv[0], argv);
-  if (pid < 0) {
-    fprintf (stderr, "exec failed: %s\n", argv[0]);
-    quit ("", "exec failed!");
-  }
-}
-
-void doExec (char *p, int oargc, char **oargv) {
-  char *argv[ARGVMAX];
-  int argc;
-  pid_t pid;
-  int i;
-
-  parseArgs (p, &argc, argv);
-
-  closeUnusedPipes();
-
   pid = execvp (argv[0], argv);
   if (pid < 0) {
     fprintf (stderr, "exec failed: %s\n", argv[0]);
@@ -344,14 +282,9 @@ void interpret (char *line, int argc, char **argv) {
       push (p);
       return;
     }
-    p = parse ("exec1st", line);
-    if (p) {
-      doExecFirst (p, argc, argv);
-      return;
-    }
     p = parse ("exec", line);
     if (p) {
-      doExec (p, argc, argv);
+      doExecFirst (p, argc, argv);  // all execs run doExecFirst
       return;
     }
     quit(line, "grash: can't happen");
@@ -409,8 +342,6 @@ int main (int argc, char **argv) {
   
   p = fgets (line, sizeof(line), f);
   while (p != NULL) {
-    /* fprintf(stderr,"grash: %s",line); */
-    /* fflush(stderr); */
     interpret (line, argc, argv);
     p = fgets (line, sizeof(line), f);
   }
