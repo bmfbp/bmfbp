@@ -12,6 +12,9 @@
 // 4. One Part connected to multiple downstream Parts on one Pin
 //      a. The first downstream Part modifies the incoming packet. The second
 //         downstream Part should not be impacted.
+//      b. The downstream Parts share the same wire to honor the
+//         "at-the-same-time" semantic. See
+//         https://github.com/bmfbp/bmfbp/pull/11#discussion_r252028600.
 // 5. One Part connected to multiple downstream Parts on multiple Pins
 // 6. Multiple instances of the same Part are used
 
@@ -121,11 +124,11 @@ function partF(part, send) {
 //
 //     2 --5--> A --0--+
 //                     |
-//     3 --6--> A --1--+-> C --2---> D
+//     3 --6--> A --1--+-> C --2--> D
 //                         |
-//                         +-+--3--> E
-//                           |
-//                           +--4--> F
+//                         +-3-+--> E
+//                             |
+//                             +--> F
 //
 // where the IN pin of both E and F are connected to the same OUT pin of C.
 //
@@ -134,7 +137,7 @@ function partF(part, send) {
 const schematic = {
   // Wires here are same as pipes in grash. Not using the word "pipes" to
   // avoid confusion with UNIX pipes.
-  wireCount: 7,
+  wireCount: 6,
   // These are constants sent to the specified wires once the network has been
   // loaded.
   constants: [
@@ -170,14 +173,14 @@ const schematic = {
     },
     {
       inWires: [0, 1],
-      outWires: [2, 3, 4],
+      outWires: [2, 3],
       // Maps pin index to wire number. e.g. The below says IN pin number 0
       // of this Part is attached to wires number 0 and number 1, which
       // are the same as the wire number above in `inWires`.
       inPins: [[0], [1]],
       // The below says the OUT pin number 0 is attached to wire number 2
       // and the OUT pin number 1 is attached to wire number 3.
-      outPins: [[2], [3, 4]],
+      outPins: [[2], [3]],
       exec: partC
     },
     {
@@ -195,9 +198,9 @@ const schematic = {
       exec: partE
     },
     {
-      inWires: [4],
+      inWires: [3],
       outWires: [],
-      inPins: [[4]],
+      inPins: [[3]],
       outPins: [],
       exec: partF
     }
@@ -243,10 +246,8 @@ function bmfbp(schematic) {
   const parts = new Array(schematic.parts.length);
   // The main entry points of the Parts, indexed like `parts` above
   const partMains = new Array(schematic.parts.length);
-  // Maps wire number to the Part that is on the receiving end of the wire
-  const wireToReceiver = new Array(schematic.wireCount);
-  // Maps input wire number to the pin index of the receiving Part
-  const wireToReceiverPin = new Array(schematic.parts.length);
+  // Maps wire number to the Parts that are on the receiving end of the wire
+  const wireToReceivers = new Array(schematic.wireCount);
   // The input and output queues of the Parts, indexed by the Part index.
   // There is exactly one input queue and one output queue for each Part.
   const inQueue = new Array(schematic.parts.length);
@@ -256,12 +257,19 @@ function bmfbp(schematic) {
   // Indexes of the Parts that can be activated
   const readyParts = [];
 
+  function PartPinTuple(part, pin) {
+    return {
+      part: part,
+      pin: pin
+    };
+  }
+
   function OutEvent(packet, from, pin) {
     return {
       packet: packet,
       from: from,
       pin: pin
-    }
+    };
   }
 
   function send(originatingPartIndex, pinIndex, packet) {
@@ -269,12 +277,18 @@ function bmfbp(schematic) {
   }
 
   function pushToInQueue(wireNumber, outEvent) {
-    var receivingPartIndex = wireToReceiver[wireNumber];
-    readyParts.push(receivingPartIndex);
-    inQueue[receivingPartIndex].push({
-      pin: wireToReceiverPin[receivingPartIndex][wireNumber],
-      packet: outEvent.packet
-    });
+    const receivers = wireToReceivers[wireNumber];
+    var i, l;
+    var receiver;
+
+    for (i = 0, l = receivers.length; i < l; i++) {
+      receiver = receivers[i];
+      readyParts.push(receiver.part);
+      inQueue[receiver.part].push({
+        pin: receiver.pin,
+        packet: outEvent.packet
+      });
+    }
   }
 
   function releaseDeferred(partIndex) {
@@ -319,16 +333,17 @@ function bmfbp(schematic) {
   for (i = 0, l = schematic.parts.length; i < l; i++) {
     part = schematic.parts[i];
     parts[i] = part;
-    wireToReceiverPin[i] = new Array(schematic.wireCount);
     inQueue[i] = [];
     outQueue[i] = [];
     for (m = 0, n = part.inWires.length; m < n; m++) {
       wireNumber = part.inWires[m];
-      wireToReceiver[wireNumber] = i;
+      if (!wireToReceivers || !(wireToReceivers instanceof Array) || !(wireToReceivers[wireNumber] instanceof Array)) {
+        wireToReceivers[wireNumber] = [];
+      }
 
       for (o = 0, p = part.inPins.length; o < p; o++) {
         if (part.inPins[o].indexOf(wireNumber) > -1) {
-          wireToReceiverPin[i][wireNumber] = o;
+          wireToReceivers[wireNumber].push(new PartPinTuple(i, o));
         }
       }
     }
