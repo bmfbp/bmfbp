@@ -1,40 +1,56 @@
 // ----------------------------------------------------------------------------
 //
-// The Parts
+// ------------------------
+// ----- Requirements -----
+// ------------------------
+//
+// The example schematic used must satisfy:
+//
+// 1. Part(s) that is a "driver" Part that can trigger the flow
+// 2. Multiple Parts connected to one downstream Part on one Pin
+// 3. Multiple Parts connected to one downstream Part on multiple Pins
+// 4. One Part connected to multiple downstream Parts on one Pin
+//      a. The first downstream Part modifies the incoming packet. The second
+//         downstream Part should not be impacted.
+// 5. One Part connected to multiple downstream Parts on multiple Pins
+// 6. Multiple instances of the same Part are used
 
-// Part A: It keeps an incrementing count starting from 0 every second,
-// multiplied by 2 and send it to its OUT pin.
+// ----------------------------------------------------------------------------
+//
+// ---------------------
+// ----- The Parts -----
+// ---------------------
+
+// Part A: It receives an integer value from input pin 0. It then keeps a count
+// incremented by 1 every second. It sends to output pin 0 the new count
+// multiplied by that integer value from the input.
 function partA(part, send, releaseDeferred) {
   var count = 0;
+  var incrementBy = null;
 
   setInterval(function () {
-    count++;
-    // TODO: Future suggestion: Allow sending to a pin name instead of a pin
-    // index.
-    send(part, 0, count * 2);
-    releaseDeferred(part);
+    if (incrementBy !== null) {
+      count++;
+      // TODO: Future suggestion: Allow sending to a pin name instead of a pin
+      // index.
+      send(part, 0, count * incrementBy);
+      releaseDeferred(part);
+    }
   }, 1000);
 
   // This two-layer definition is necessary because everything in JS is wrapped
   // in a lambda and we don't have access to mutable variables that survive
   // across function calls.
   return function (pin, packet) {
+    switch (pin) {
+      case 0:
+        incrementBy = packet;
+    }
   };
 }
 
-// Part B: It keeps an incrementing count starting from 0 every second,
-// multiplied by 3 and send it to its OUT pin.
-function partB(part, send, releaseDeferred) {
-  var count = 0;
-
-  setInterval(function () {
-    count++;
-    send(part, 0, count * 3);
-    releaseDeferred(part);
-  }, 1000);
-
-  return function (pin, packet) {
-  };
+// Part B: Not used
+function partB() {
 }
 
 // Part C: It receives a count from its IN pin and creates an object with the
@@ -45,6 +61,7 @@ function partC(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
+      case 1:
         send(part, 0, {
           "count": packet
         });
@@ -64,7 +81,7 @@ function partD(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
-        console.log(packet);
+        console.log("Packet content: " + JSON.stringify(packet));
     }
   };
 }
@@ -96,15 +113,19 @@ function partF(part, send) {
 
 // ----------------------------------------------------------------------------
 //
-// The schematic, conceptually:
+// -------------------------
+// ----- The schematic -----
+// -------------------------
 //
-//     B --0--+
-//            |
-//            v
-//     A --1--+-> C --2---> D
-//                |
-//                +-+--3--> E
-//                  +--4--> F
+// Conceptually:
+//
+//     2 --5--> A --0--+
+//                     |
+//     3 --6--> A --1--+-> C --2---> D
+//                         |
+//                         +-+--3--> E
+//                           |
+//                           +--4--> F
 //
 // where the IN pin of both E and F are connected to the same OUT pin of C.
 //
@@ -113,27 +134,39 @@ function partF(part, send) {
 const schematic = {
   // Wires here are same as pipes in grash. Not using the word "pipes" to
   // avoid confusion with UNIX pipes.
-  wireCount: 5,
+  wireCount: 7,
+  // These are constants sent to the specified wires once the network has been
+  // loaded.
+  constants: [
+    {
+      value: 2,
+      wire: 5
+    },
+    {
+      value: 3,
+      wire: 6
+    },
+  ],
   parts: [
     {
       // TODO: Discussion item: Do we even need to keep track of which wires
       // are incoming and outgoing? They are already indirectly tracked with
       // which pins they belong to.
-      inWires: [],
+      inWires: [5],
       // The pin index in `send()` is the index of this array, meaning that
       // if the following is `[3, 4]`, the Part would call `send()` with
       // `send(1, "whatever")` to send the message down wire number 4.
       outWires: [0],
-      inPins: [],
+      inPins: [[5]],
       outPins: [[0]],
       exec: partA
     },
     {
-      inWires: [],
+      inWires: [6],
       outWires: [1],
-      inPins: [],
+      inPins: [[6]],
       outPins: [[1]],
-      exec: partB
+      exec: partA
     },
     {
       inWires: [0, 1],
@@ -141,7 +174,7 @@ const schematic = {
       // Maps pin index to wire number. e.g. The below says IN pin number 0
       // of this Part is attached to wires number 0 and number 1, which
       // are the same as the wire number above in `inWires`.
-      inPins: [[0, 1]],
+      inPins: [[0], [1]],
       // The below says the OUT pin number 0 is attached to wire number 2
       // and the OUT pin number 1 is attached to wire number 3.
       outPins: [[2], [3, 4]],
@@ -173,7 +206,37 @@ const schematic = {
 
 // --------------------------------------------------
 //
-// The bmfbp runtime
+// ------------------------- 
+// ----- Sample output ----- 
+// ------------------------- 
+//
+// Note that this network runs indefinitely.
+//
+//     Packet content: {"count":2}
+//     Packet content: {"count":3}
+//     ADDED ONE: 4
+//     WARNING: Odd number detected: 4
+//     Packet content: {"count":4}
+//     Packet content: {"count":6}
+//     Packet content: {"count":6}
+//     Packet content: {"count":9}
+//     ADDED ONE: 10
+//     WARNING: Odd number detected: 10
+//     Packet content: {"count":8}
+//     Packet content: {"count":12}
+//     Packet content: {"count":10}
+//     Packet content: {"count":15}
+//     ADDED ONE: 16
+//     WARNING: Odd number detected: 16
+//     Packet content: {"count":12}
+//     Packet content: {"count":18}
+//     ...
+
+// --------------------------------------------------
+//
+// ---------------------------- 
+// ----- The bmfbp kernel ----- 
+// ---------------------------- 
 
 function bmfbp(schematic) {
   // Maps Part index in `schematic.parts` to Part object
@@ -193,33 +256,38 @@ function bmfbp(schematic) {
   // Indexes of the Parts that can be activated
   const readyParts = [];
 
+  function OutEvent(packet, from, pin) {
+    return {
+      packet: packet,
+      from: from,
+      pin: pin
+    }
+  }
+
   function send(originatingPartIndex, pinIndex, packet) {
-    outQueue[originatingPartIndex].push({
-      from: originatingPartIndex,
-      pin: pinIndex,
-      packet: packet
+    outQueue[originatingPartIndex].push(OutEvent(packet, originatingPartIndex, pinIndex));
+  }
+
+  function pushToInQueue(wireNumber, outEvent) {
+    var receivingPartIndex = wireToReceiver[wireNumber];
+    readyParts.push(receivingPartIndex);
+    inQueue[receivingPartIndex].push({
+      pin: wireToReceiverPin[receivingPartIndex][wireNumber],
+      packet: outEvent.packet
     });
   }
 
   function releaseDeferred(partIndex) {
     var i, l;
-    var receivingPartIndex;
     var outEvent;
-    var wireNumber;
 
     const queue = outQueue[partIndex];
     while (queue.length > 0) {
-      outEvent = queue.pop();
+      outEvent = queue.shift();
 
       const wires = parts[outEvent.from].outPins[outEvent.pin];
       for (i = 0, l = wires.length; i < l; i++) {
-        wireNumber = wires[i];
-        receivingPartIndex = wireToReceiver[wireNumber];
-        inQueue[receivingPartIndex].push({
-          pin: wireToReceiverPin[receivingPartIndex][wireNumber],
-          packet: outEvent.packet
-        });
-        readyParts.push(receivingPartIndex);
+        pushToInQueue(wires[i], outEvent);
       }
     }
   }
@@ -245,6 +313,7 @@ function bmfbp(schematic) {
   var i, l, m, n, o, p;
   var part;
   var wireNumber;
+  var constant;
 
   // Prepare the Parts
   for (i = 0, l = schematic.parts.length; i < l; i++) {
@@ -264,6 +333,11 @@ function bmfbp(schematic) {
       }
     }
     partMains[i] = part.exec(i, send, releaseDeferred);
+  }
+
+  for (i = 0, l = schematic.constants.length; i < l; i++) {
+    constant = schematic.constants[i];
+    pushToInQueue(constant.wire, OutEvent(constant.value));
   }
 
   // This is JavaScript's way to do an infinite loop.
