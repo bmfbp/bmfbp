@@ -128,7 +128,7 @@ function kindF(part, send) {
 // Conceptually:
 //
 //     2 --5--> part1 isa A --0--+
-//                     |
+//                               |
 //     3 --6--> part2 isa A --1--+-> part3 isa C --2--> part4 isa D
 //                         |
 //                         +-3-+--> part5 isa E
