@@ -4,6 +4,11 @@
 // ----- Requirements -----
 // ------------------------
 //
+// Parts use code from a prototype.  I call that prototype a "kind".  In other languages
+// "kind" is called "class" or "prototype".
+// Parts are instances of kinds.  A schematic or a system may contain more than one
+// instance of the same kind.
+//
 // The example schematic used must satisfy:
 //
 // 1. Part(s) that is a "driver" Part that can trigger the flow
@@ -21,13 +26,13 @@
 // ----------------------------------------------------------------------------
 //
 // ---------------------
-// ----- The Parts -----
+// ----- The Kinds -----
 // ---------------------
 
-// Part A: It receives an integer value from input pin 0. It then keeps a count
+// Kind A: It receives an integer value from input pin 0. It then keeps a count
 // incremented by 1 every second. It sends to output pin 0 the new count
 // multiplied by that integer value from the input.
-function partA(part, send, releaseDeferred) {
+function kindA(part, send, releaseDeferred) {
   var count = 0;
   var incrementBy = null;
 
@@ -52,15 +57,15 @@ function partA(part, send, releaseDeferred) {
   };
 }
 
-// Part B: Not used
-function partB() {
+// B: Not used
+function kindB() {
 }
 
-// Part C: It receives a count from its IN pin and creates an object with the
+// Kind C: It receives a count from its IN pin and creates an object with the
 // key of "count" and the value as the count from the IN pin. It then sends the
 // object to its first OUT pin. If the count is odd, send another packet with a
 // message to its second OUT pin.
-function partC(part, send) {
+function kindC(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
@@ -79,8 +84,8 @@ function partC(part, send) {
   };
 }
 
-// Part D: It prints packets from its IN pin to the console.
-function partD(part, send) {
+// Kind D: It prints packets from its IN pin to the console.
+function kindD(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
@@ -89,9 +94,9 @@ function partD(part, send) {
   };
 }
 
-// Part E: It takes the message in the packet from its IN pin, adds one to the
+// kind E: It takes the message in the packet from its IN pin, adds one to the
 // count property, then print it to the console, prefixed with "ADDED ONE: "
-function partE(part, send) {
+function kindE(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
@@ -103,9 +108,9 @@ function partE(part, send) {
   };
 }
 
-// Part F: It prints the message in the packet from its IN pin to the console,
+// kind F: It prints the message in the packet from its IN pin to the console,
 // prefixed with "WARNING: ".
-function partF(part, send) {
+function kindF(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
@@ -122,15 +127,15 @@ function partF(part, send) {
 //
 // Conceptually:
 //
-//     2 --5--> A --0--+
+//     2 --5--> part1 isa A --0--+
 //                     |
-//     3 --6--> A --1--+-> C --2--> D
+//     3 --6--> part2 isa A --1--+-> part3 isa C --2--> part4 isa D
 //                         |
-//                         +-3-+--> E
+//                         +-3-+--> part5 isa E
 //                             |
-//                             +--> F
+//                             +--> part6 isa F
 //
-// where the IN pin of both E and F are connected to the same OUT pin of C.
+// where the IN pin of both part5 and part6 are connected to the same OUT pin of part3.
 //
 // The numbers in the schematic refer to the wire numbers.
 
@@ -162,14 +167,16 @@ const schematic = {
       outWires: [0],
       inPins: [[5]],
       outPins: [[0]],
-      exec: partA
+      exec: kindA,
+      name: "part1"
     },
     {
       inWires: [6],
       outWires: [1],
       inPins: [[6]],
       outPins: [[1]],
-      exec: partA
+      exec: kindA,
+      name: "part2"
     },
     {
       inWires: [0, 1],
@@ -181,28 +188,32 @@ const schematic = {
       // The below says the OUT pin number 0 is attached to wire number 2
       // and the OUT pin number 1 is attached to wire number 3.
       outPins: [[2], [3]],
-      exec: partC
+      exec: kindC,
+      name: "part3"
     },
     {
       inWires: [2],
       outWires: [],
       inPins: [[2]],
       outPins: [],
-      exec: partD
+      exec: kindD,
+      name: "part4"
     },
     {
       inWires: [3],
       outWires: [],
       inPins: [[3]],
       outPins: [],
-      exec: partE
+      exec: kindE,
+      name: "part5"
     },
     {
       inWires: [3],
       outWires: [],
       inPins: [[3]],
       outPins: [],
-      exec: partF
+      exec: kindF,
+      name: "part6"
     }
   ]
 };
