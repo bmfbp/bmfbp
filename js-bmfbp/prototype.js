@@ -6,17 +6,24 @@
 //
 // The example schematic used must satisfy:
 //
-// 1. Part(s) that is a "driver" Part that can trigger the flow
-// 2. Multiple Parts connected to one downstream Part on one Pin
-// 3. Multiple Parts connected to one downstream Part on multiple Pins
-// 4. One Part connected to multiple downstream Parts on one Pin
-//      a. The first downstream Part modifies the incoming packet. The second
-//         downstream Part should not be impacted.
-//      b. The downstream Parts share the same wire to honor the
-//         "at-the-same-time" semantic. See
-//         https://github.com/bmfbp/bmfbp/pull/11#discussion_r252028600.
-// 5. One Part connected to multiple downstream Parts on multiple Pins
-// 6. Multiple instances of the same Part are used
+// 1.  Part(s) that is a "driver" Part that can trigger the flow
+// 2.  Multiple Parts connected to one downstream Part on one Pin
+// 3.  Multiple Parts connected to one downstream Part on multiple Pins
+// 4.  One Part connected to multiple downstream Parts on one Pin
+//       a. The first downstream Part modifies the incoming packet. The
+//          second downstream Part should not be impacted.
+//       b. The downstream Parts share the same wire to honor the
+//          "at-the-same-time" semantic. See
+//          https://github.com/bmfbp/bmfbp/pull/11#discussion_r252028600.
+// 5.  One Part connected to multiple downstream Parts on multiple Pins
+// 6.  Multiple instances of the same Part are used within one Composite
+// 7.  Use Composites
+// 8.  Multiple instances of the same Part are used in multiple composites
+// 9.  A source of a Composite is connected directly to a sink of that same
+//     Composite.
+// 10. A Sink of a Composite that is not connected
+// 11. A Source of a Composite that is not connected
+// 12. An output pin of a Leaf Part that is not connected
 
 // ----------------------------------------------------------------------------
 //
@@ -52,8 +59,21 @@ function partA(part, send, releaseDeferred) {
   };
 }
 
-// Part B: Not used
-function partB() {
+// Part B: It receives a packet from input pin 0. It then prefix that packet to
+// all incoming packets from input pin 1 and outputs to output pin 0.
+function partB(part, send) {
+  var prefix = "";
+
+  return function (pin, packet) {
+    switch (pin) {
+      case 0:
+        prefix = packet;
+        break;
+      case 1:
+        send(part, 0, prefix + JSON.stringify(packet));
+        break;
+    }
+  };
 }
 
 // Part C: It receives a count from its IN pin and creates an object with the
@@ -104,12 +124,13 @@ function partE(part, send) {
 }
 
 // Part F: It prints the message in the packet from its IN pin to the console,
-// prefixed with "WARNING: ".
+// prefixed with "WARNING: " and send it to output pin 0.
 function partF(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
-        console.log("WARNING: " + packet.message + ": " + packet.count);
+        const message = "WARNING: " + packet.message + ": " + packet.count;
+        console.log(message);
     }
   };
 }
@@ -120,24 +141,47 @@ function partF(part, send) {
 // ----- The schematic -----
 // -------------------------
 //
-// Conceptually:
+// Using upper-case letters A to M to represent Leaf Parts, upper-case
+// letters N to Z to represent Composites, lower-case letters to represent
+// Sources and Sinks (the parenthesized number after it represents the
+// source or sink number within that composite), numbers to represent wires
+// with the same composite, and quotes strings to represent constants.
 //
-//     2 --5--> A --0--+
-//                     |
-//     3 --6--> A --1--+-> C --2--> D
-//                         |
-//                         +-3-+--> E
-//                             |
-//                             +--> F
+// Composite N:
+//
+//     "2" --5--> A --0--+
+//                       |
+//     "3" --6--> A --1--+-> C --2--> D
+//                           |   |
+//                           |   +--> a(0)
+//                           |
+//                           +-3-+--> E
+//                               |
+//                               +--> F
 //
 // where the IN pin of both E and F are connected to the same OUT pin of C.
 //
-// The numbers in the schematic refer to the wire numbers.
+// Composite O:
+//
+//     "Composite O: " --0--> B --2--> D
+//                            ^
+//                            |
+//     b(0) --1---------------+
+//
+//     c(1) --3--> d(0)
+//
+// Composite P:
+//
+//     N --0----------> O
+//                      ^
+//                      |
+//     "Test NC 1" --1--+
 
-const schematic = {
+const compositeN = {
+  name: "compositeN",
   // Wires here are same as pipes in grash. Not using the word "pipes" to
   // avoid confusion with UNIX pipes.
-  wireCount: 6,
+  wireCount: 7,
   // These are constants sent to the specified wires once the network has been
   // loaded.
   constants: [
@@ -150,6 +194,8 @@ const schematic = {
       wire: 6
     },
   ],
+  sources: [],
+  sinks: [2],
   parts: [
     {
       // TODO: Discussion item: Do we even need to keep track of which wires
@@ -207,6 +253,66 @@ const schematic = {
   ]
 };
 
+const compositeO = {
+  name: "compositeO",
+  wireCount: 4,
+  constants: [
+    {
+      value: "Composite O: ",
+      wire: 0
+    }
+  ],
+  // Maps the source number to wire number
+  sources: [1, 3],
+  // Maps the sink number to wire number
+  sinks: [3],
+  parts: [
+    {
+      inWires: [0, 1],
+      outWires: [2],
+      inPins: [[0], [1]],
+      outPins: [[2]],
+      exec: partB
+    },
+    {
+      inWires: [2],
+      outWires: [],
+      inPins: [[2]],
+      outPins: [],
+      exec: partD
+    }
+  ]
+};
+
+const compositeP = {
+  name: "compositeP",
+  wireCount: 3,
+  constants: [
+    {
+      value: "Test NC 1",
+      wire: 1
+    }
+  ],
+  sources: [],
+  sinks: [],
+  parts: [
+    {
+      inWires: [],
+      outWires: [0],
+      inPins: [],
+      outPins: [[0]],
+      exec: compositeN
+    },
+    {
+      inWires: [0, 1, 2],
+      outWires: [],
+      inPins: [[0], [1], [2]],
+      outPins: [[]],
+      exec: compositeO
+    }
+  ]
+};
+
 // --------------------------------------------------
 //
 // ------------------------- 
@@ -215,25 +321,30 @@ const schematic = {
 //
 // Note that this network runs indefinitely.
 //
-//     Packet content: {"count":2}
-//     Packet content: {"count":3}
-//     ADDED ONE: 4
-//     WARNING: Odd number detected: 4
-//     Packet content: {"count":4}
-//     Packet content: {"count":6}
-//     Packet content: {"count":6}
-//     Packet content: {"count":9}
-//     ADDED ONE: 10
-//     WARNING: Odd number detected: 10
-//     Packet content: {"count":8}
-//     Packet content: {"count":12}
-//     Packet content: {"count":10}
-//     Packet content: {"count":15}
-//     ADDED ONE: 16
-//     WARNING: Odd number detected: 16
-//     Packet content: {"count":12}
-//     Packet content: {"count":18}
-//     ...
+// The first column is the Composite name, the second column is the Part
+// name, and the third column is the console output.
+//
+//     N D    Packet content: {"count":2}
+//     N D    Packet content: {"count":3}
+//     N E    ADDED ONE: 4
+//     N F    WARNING: Odd number detected: 4
+//     O D    Packet content: "Composite O: {\"count\":2}"
+//     O D    Packet content: "Composite O: {\"count\":3}"
+//     N D    Packet content: {"count":4}
+//     N D    Packet content: {"count":6}
+//     O D    Packet content: "Composite O: {\"count\":4}"
+//     O D    Packet content: "Composite O: {\"count\":6}"
+//     N D    Packet content: {"count":6}
+//     N D    Packet content: {"count":9}
+//     N E    ADDED ONE: 10
+//     N F    WARNING: Odd number detected: 10
+//     O D    Packet content: "Composite O: {\"count\":6}"
+//     O D    Packet content: "Composite O: {\"count\":9}"
+//     N D    Packet content: {"count":8}
+//     N D    Packet content: {"count":12}
+//     O D    Packet content: "Composite O: {\"count\":8}"
+//     O D    Packet content: "Composite O: {\"count\":12}"
+//            ...
 
 // --------------------------------------------------
 //
@@ -241,22 +352,7 @@ const schematic = {
 // ----- The bmfbp kernel ----- 
 // ---------------------------- 
 
-function bmfbp(schematic) {
-  // Maps Part index in `schematic.parts` to Part object
-  const parts = new Array(schematic.parts.length);
-  // The main entry points of the Parts, indexed like `parts` above
-  const partMains = new Array(schematic.parts.length);
-  // Maps wire number to the Parts that are on the receiving end of the wire
-  const wireToReceivers = new Array(schematic.wireCount);
-  // The input and output queues of the Parts, indexed by the Part index.
-  // There is exactly one input queue and one output queue for each Part.
-  const inQueue = new Array(schematic.parts.length);
-  // The output queue is an array of arrays, first indexed by Part index,
-  // then by the Part's pin index.
-  const outQueue = new Array(schematic.parts.length);
-  // Indexes of the Parts that can be activated
-  const readyParts = [];
-
+function bmfbp(topComposite) {
   function PartPinTuple(part, pin) {
     return {
       part: part,
@@ -272,91 +368,197 @@ function bmfbp(schematic) {
     };
   }
 
-  function send(originatingPartIndex, pinIndex, packet) {
-    outQueue[originatingPartIndex].push(OutEvent(packet, originatingPartIndex, pinIndex));
-  }
+  function initComposite(schematic) {
+    // Maps Part index in `schematic.parts` to Part object
+    const parts = new Array(schematic.parts.length);
+    // The main entry points of the Parts, indexed like `parts` above
+    const partMains = new Array(schematic.parts.length);
+    // Maps wire number to the Parts that are on the receiving end of the wire
+    const wireToReceivers = new Array(schematic.wireCount);
+    // The input and output queues of the Parts, indexed by the Part index.
+    // There is exactly one input queue and one output queue for each Part.
+    const inQueue = new Array(schematic.parts.length);
+    // The output queue is an array of arrays, first indexed by Part index,
+    // then by the Part's pin index.
+    const outQueue = new Array(schematic.parts.length);
+    // Indexes of the Parts that can be activated
+    const readyParts = [];
+    const wireToSource = schematic.sources;
+    // We need to transform the `sinks` in schematic, which maps Sink number
+    // to Wire number, to an array that maps Wire number to Sink number for
+    // efficiency at run-time.
+    const wireToSinks = new Array(schematic.wireCount);
+    // This is the `send()` subroutine to send packets via the sinks of this
+    // composite. We don't have access to this until the parent Composite
+    // calls the main function of this Composite.
+    var compositeSend = null;
+    // We need a way to know when to flush the Sinks.
+    var flushSinks = false;
+    // This is how the Composite triggers the parent Composite to process any
+    // packet sent to this Composite's Sinks.
+    var releaseCompositeDeferred = null;
 
-  function pushToInQueue(wireNumber, outEvent) {
-    const receivers = wireToReceivers[wireNumber];
-    var i, l;
-    var receiver;
-
-    for (i = 0, l = receivers.length; i < l; i++) {
-      receiver = receivers[i];
-      readyParts.push(receiver.part);
-      inQueue[receiver.part].push({
-        pin: receiver.pin,
-        packet: outEvent.packet
-      });
+    function send(originatingPartIndex, pinIndex, packet) {
+      outQueue[originatingPartIndex].push(OutEvent(packet, originatingPartIndex, pinIndex));
     }
-  }
 
-  function releaseDeferred(partIndex) {
-    var i, l;
-    var outEvent;
+    function pushToInQueue(wireNumber, outEvent) {
+      const receivers = wireToReceivers[wireNumber];
+      const sinks = wireToSinks[wireNumber];
+      var i, l;
+      var receiver;
 
-    const queue = outQueue[partIndex];
-    while (queue.length > 0) {
-      outEvent = queue.shift();
+      // For Sinks
+      for (i = 0, l = sinks.length; i < l; i++) {
+        compositeSend(sinks[i], outEvent.packet);
+        flushSinks = true;
+      }
 
-      const wires = parts[outEvent.from].outPins[outEvent.pin];
-      for (i = 0, l = wires.length; i < l; i++) {
-        pushToInQueue(wires[i], outEvent);
+      // For other Parts in the Composite
+      for (i = 0, l = receivers.length; i < l; i++) {
+        receiver = receivers[i];
+        readyParts.push(receiver.part);
+        inQueue[receiver.part].push({
+          pin: receiver.pin,
+          packet: outEvent.packet
+        });
       }
     }
-  }
 
-  function dispatch() {
-    var partIndex;
-    var queue;
-    var inEvent;
+    function releaseDeferred(partIndex) {
+      var i, l;
+      var outEvent;
 
-    while (readyParts.length > 0) {
-      partIndex = readyParts.shift();
-      queue = inQueue[partIndex];
-
+      const queue = outQueue[partIndex];
       while (queue.length > 0) {
-        inEvent = queue.pop();
-        partMains[partIndex](inEvent.pin, inEvent.packet);
-      }
+        outEvent = queue.shift();
 
-      releaseDeferred(partIndex);
-    }
-  }
-
-  var i, l, m, n, o, p;
-  var part;
-  var wireNumber;
-  var constant;
-
-  // Prepare the Parts
-  for (i = 0, l = schematic.parts.length; i < l; i++) {
-    part = schematic.parts[i];
-    parts[i] = part;
-    inQueue[i] = [];
-    outQueue[i] = [];
-    for (m = 0, n = part.inWires.length; m < n; m++) {
-      wireNumber = part.inWires[m];
-      if (!wireToReceivers || !(wireToReceivers instanceof Array) || !(wireToReceivers[wireNumber] instanceof Array)) {
-        wireToReceivers[wireNumber] = [];
-      }
-
-      for (o = 0, p = part.inPins.length; o < p; o++) {
-        if (part.inPins[o].indexOf(wireNumber) > -1) {
-          wireToReceivers[wireNumber].push(new PartPinTuple(i, o));
+        const wires = parts[outEvent.from].outPins[outEvent.pin];
+        for (i = 0, l = wires.length; i < l; i++) {
+          pushToInQueue(wires[i], outEvent);
         }
       }
+
+      setTimeout(dispatch, 0);
     }
-    partMains[i] = part.exec(i, send, releaseDeferred);
+
+    function dispatch() {
+      var partIndex;
+      var queue;
+      var inEvent;
+
+      while (readyParts.length > 0) {
+        partIndex = readyParts.shift();
+        queue = inQueue[partIndex];
+
+        while (queue.length > 0) {
+          inEvent = queue.pop();
+          partMains[partIndex](inEvent.pin, inEvent.packet);
+        }
+
+        releaseDeferred(partIndex);
+      }
+
+      if (flushSinks) {
+        releaseCompositeDeferred();
+      }
+    }
+
+    // The parent of this Composite calls this like a Leaf Part's function with
+    // the same arguments to "set up" the Part. This allows the outer
+    // Composites to be able to treat Composites and Leaf Parts in the same
+    // way.
+    function main(part, send, release) {
+      // This is for when a Sink needs to send a packet to the outer
+      // Composite. Note that how the Sink would call this `send()`
+      // subroutine is a bit different than how a Leaf Part would call its
+      // `send()`. The Part number is inferred.
+      compositeSend = function (pin, packet) {
+        send(part, pin, packet);
+      };
+
+      releaseCompositeDeferred = function () {
+        release(part);
+      };
+
+      setTimeout(dispatch, 0);
+
+      // Whenever there is a packet coming from the outer Composite, push it
+      // directly to the queue and wait for dispatch.
+      return function (sourceNumber, packet) {
+        pushToInQueue(wireToSource[sourceNumber], OutEvent(packet));
+        setTimeout(dispatch, 0);
+      };
+    }
+
+    var i, l, m, n, o, p;
+    var part;
+    var wireNumber;
+    var constant;
+
+    // Initialize arrays.
+    for (i = 0, l = wireToSinks.length; i < l; i++) {
+      wireToSinks[i] = [];
+    }
+    for (i = 0, l = wireToReceivers.length; i < l; i++) {
+      wireToReceivers[i] = [];
+    }
+
+    // Prepare the Sinks.
+    for (i = 0, l = schematic.sinks.length; i < l; i++) {
+      wireToSinks[schematic.sinks[i]].push(i);
+    }
+
+    // Prepare the Parts.
+    for (i = 0, l = schematic.parts.length; i < l; i++) {
+      part = schematic.parts[i];
+      parts[i] = part;
+      inQueue[i] = [];
+      outQueue[i] = [];
+      for (m = 0, n = part.inWires.length; m < n; m++) {
+        wireNumber = part.inWires[m];
+        for (o = 0, p = part.inPins.length; o < p; o++) {
+          if (part.inPins[o].indexOf(wireNumber) > -1) {
+            wireToReceivers[wireNumber].push(new PartPinTuple(i, o));
+          }
+        }
+      }
+      partMains[i] = initPart(part.exec)(i, send, releaseDeferred);
+    }
+
+    for (i = 0, l = schematic.constants.length; i < l; i++) {
+      constant = schematic.constants[i];
+      pushToInQueue(constant.wire, OutEvent(constant.value));
+    }
+
+    return main;
   }
 
-  for (i = 0, l = schematic.constants.length; i < l; i++) {
-    constant = schematic.constants[i];
-    pushToInQueue(constant.wire, OutEvent(constant.value));
+  function initPart(part) {
+    // Leaf part
+    if (part instanceof Function) {
+      return part;
+    }
+
+    // Composite
+    if (part.hasOwnProperty("wireCount") && part.hasOwnProperty("parts")) {
+      return initComposite(part);
+    }
+
+    throw new Error("Unexpected Part");
   }
 
-  // This is JavaScript's way to do an infinite loop.
-  setInterval(dispatch, 0);
+  initPart(topComposite);
 }
 
-bmfbp(schematic);
+// --------------------------------------------------
+//
+// -----------------------
+// ----- Entry point ----- 
+// -----------------------
+
+// Normally we just need to initiate one bmfbp system. To run multiple bmfbp
+// systems, call `bmfbp()` multiple times. See
+// https://github.com/bmfbp/bmfbp/issues/12#issuecomment-458563466 for possible
+// reasons why we would want to do that.
+bmfbp(compositeP);
