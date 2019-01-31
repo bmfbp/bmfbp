@@ -115,8 +115,6 @@ function partE(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
-        // TODO: Currently this would increment the count for `partF` as well
-        // because there is no copying. This is an issue to be addressed.
         packet.count++;
         console.log("ADDED ONE: " + packet.count);
     }
@@ -131,6 +129,22 @@ function partF(part, send) {
       case 0:
         const message = "WARNING: " + packet.message + ": " + packet.count;
         console.log(message);
+    }
+  };
+}
+
+// Part G: This is the COPY Kind with two output pins. The incoming packet must
+// not contain circular reference.
+function partG(part, send) {
+  function copy(packet) {
+    return JSON.parse(JSON.stringify(packet));
+  }
+
+  return function (pin, packet) {
+    switch (pin) {
+      case 0:
+        send(part, 0, copy(packet));
+        send(part, 1, copy(packet));
     }
   };
 }
@@ -155,9 +169,9 @@ function partF(part, send) {
 //                           |   |
 //                           |   +--> a(0)
 //                           |
-//                           +-3-+--> E
-//                               |
-//                               +--> F
+//                           +-3--> G --+--7--> E
+//                                      |
+//                                      +--8--> F
 //
 // where the IN pin of both E and F are connected to the same OUT pin of C.
 //
@@ -181,7 +195,7 @@ const compositeN = {
   name: "compositeN",
   // Wires here are same as pipes in grash. Not using the word "pipes" to
   // avoid confusion with UNIX pipes.
-  wireCount: 7,
+  wireCount: 9,
   // These are constants sent to the specified wires once the network has been
   // loaded.
   constants: [
@@ -237,18 +251,25 @@ const compositeN = {
       exec: partD
     },
     {
-      inWires: [3],
+      inWires: [7],
       outWires: [],
-      inPins: [[3]],
+      inPins: [[7]],
       outPins: [],
       exec: partE
     },
     {
-      inWires: [3],
+      inWires: [8],
       outWires: [],
-      inPins: [[3]],
+      inPins: [[8]],
       outPins: [],
       exec: partF
+    },
+    {
+      inWires: [3],
+      outWires: [7, 8],
+      inPins: [[3]],
+      outPins: [[7], [8]],
+      exec: partG
     }
   ]
 };
@@ -327,7 +348,7 @@ const compositeP = {
 //     N D    Packet content: {"count":2}
 //     N D    Packet content: {"count":3}
 //     N E    ADDED ONE: 4
-//     N F    WARNING: Odd number detected: 4
+//     N F    WARNING: Odd number detected: 3
 //     O D    Packet content: "Composite O: {\"count\":2}"
 //     O D    Packet content: "Composite O: {\"count\":3}"
 //     N D    Packet content: {"count":4}
@@ -337,7 +358,7 @@ const compositeP = {
 //     N D    Packet content: {"count":6}
 //     N D    Packet content: {"count":9}
 //     N E    ADDED ONE: 10
-//     N F    WARNING: Odd number detected: 10
+//     N F    WARNING: Odd number detected: 9
 //     O D    Packet content: "Composite O: {\"count\":6}"
 //     O D    Packet content: "Composite O: {\"count\":9}"
 //     N D    Packet content: {"count":8}
