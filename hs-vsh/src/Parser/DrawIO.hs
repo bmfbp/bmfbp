@@ -18,7 +18,7 @@ data Output
     | Translate Float Float [Output]
     | Path [PathCommand]
     | Rect Float Float Float Float 
-    | Ellipse Float Float Float Float 
+    | Ellipse Float Float Float Float
     | Text DT.Text
     | Empty
     deriving (Show)
@@ -132,7 +132,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               cy <- lookupAttrIntoString "cy"
               rx <- lookupAttrIntoString "rx"
               ry <- lookupAttrIntoString "ry"
-              return (Rect (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
+              return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
           in
             maybe defaultOutput id result
         "foreignObject" -> Empty
