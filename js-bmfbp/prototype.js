@@ -16,9 +16,9 @@
 //          "at-the-same-time" semantic. See
 //          https://github.com/bmfbp/bmfbp/pull/11#discussion_r252028600.
 // 5.  One Part connected to multiple downstream Parts on multiple Pins
-// 6.  Multiple instances of the same Part are used within one Composite
+// 6.  Multiple instances of the same Kind are used within one Composite
 // 7.  Use Composites
-// 8.  Multiple instances of the same Part are used in multiple composites
+// 8.  Multiple instances of the same Kind are used in multiple composites
 // 9.  A source of a Composite is connected directly to a sink of that same
 //     Composite.
 // 10. A Sink of a Composite that is not connected
@@ -28,13 +28,13 @@
 // ----------------------------------------------------------------------------
 //
 // ---------------------
-// ----- The Parts -----
+// ----- The Kinds -----
 // ---------------------
 
-// Part A: It receives an integer value from input pin 0. It then keeps a count
+// Kind A: It receives an integer value from input pin 0. It then keeps a count
 // incremented by 1 every second. It sends to output pin 0 the new count
 // multiplied by that integer value from the input.
-function partA(part, send, releaseDeferred) {
+function kindA(partId, send, releaseDeferred) {
   var count = 0;
   var incrementBy = null;
 
@@ -43,8 +43,8 @@ function partA(part, send, releaseDeferred) {
       count++;
       // TODO: Future suggestion: Allow sending to a pin name instead of a pin
       // index.
-      send(part, 0, count * incrementBy);
-      releaseDeferred(part);
+      send(partId, 0, count * incrementBy);
+      releaseDeferred(partId);
     }
   }, 1000);
 
@@ -59,9 +59,9 @@ function partA(part, send, releaseDeferred) {
   };
 }
 
-// Part B: It receives a packet from input pin 0. It then prefix that packet to
+// Kind B: It receives a packet from input pin 0. It then prefix that packet to
 // all incoming packets from input pin 1 and outputs to output pin 0.
-function partB(part, send) {
+function kindB(partId, send) {
   var prefix = "";
 
   return function (pin, packet) {
@@ -70,27 +70,27 @@ function partB(part, send) {
         prefix = packet;
         break;
       case 1:
-        send(part, 0, prefix + JSON.stringify(packet));
+        send(partId, 0, prefix + JSON.stringify(packet));
         break;
     }
   };
 }
 
-// Part C: It receives a count from its IN pin and creates an object with the
+// Kind C: It receives a count from its IN pin and creates an object with the
 // key of "count" and the value as the count from the IN pin. It then sends the
 // object to its first OUT pin. If the count is odd, send another packet with a
 // message to its second OUT pin.
-function partC(part, send) {
+function kindC(partId, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
       case 1:
-        send(part, 0, {
+        send(partId, 0, {
           "count": packet
         });
 
         if (packet % 2 != 0) {
-          send(part, 1, {
+          send(partId, 1, {
             "message": "Odd number detected",
             "count": packet
           });
@@ -99,8 +99,8 @@ function partC(part, send) {
   };
 }
 
-// Part D: It prints packets from its IN pin to the console.
-function partD(part, send) {
+// Kind D: It prints packets from its IN pin to the console.
+function kindD(partId, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
@@ -109,9 +109,9 @@ function partD(part, send) {
   };
 }
 
-// Part E: It takes the message in the packet from its IN pin, adds one to the
+// Kind E: It takes the message in the packet from its IN pin, adds one to the
 // count property, then print it to the console, prefixed with "ADDED ONE: "
-function partE(part, send) {
+function kindE(partId, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
@@ -121,9 +121,9 @@ function partE(part, send) {
   };
 }
 
-// Part F: It prints the message in the packet from its IN pin to the console,
+// Kind F: It prints the message in the packet from its IN pin to the console,
 // prefixed with "WARNING: " and send it to output pin 0.
-function partF(part, send) {
+function kindF(partId, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
@@ -133,9 +133,9 @@ function partF(part, send) {
   };
 }
 
-// Part G: This is the COPY Kind with two output pins. The incoming packet must
+// Kind G: This is the COPY Kind with two output pins. The incoming packet must
 // not contain circular reference.
-function partG(part, send) {
+function kindG(partId, send) {
   function copy(packet) {
     return JSON.parse(JSON.stringify(packet));
   }
@@ -143,8 +143,8 @@ function partG(part, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
-        send(part, 0, copy(packet));
-        send(part, 1, copy(packet));
+        send(partId, 0, copy(packet));
+        send(partId, 1, copy(packet));
     }
   };
 }
@@ -222,14 +222,14 @@ const compositeN = {
       outWires: [0],
       inPins: [[5]],
       outPins: [[0]],
-      exec: partA
+      exec: kindA
     },
     {
       inWires: [6],
       outWires: [1],
       inPins: [[6]],
       outPins: [[1]],
-      exec: partA
+      exec: kindA
     },
     {
       inWires: [0, 1],
@@ -241,35 +241,35 @@ const compositeN = {
       // The below says the OUT pin number 0 is attached to wire number 2
       // and the OUT pin number 1 is attached to wire number 3.
       outPins: [[2], [3]],
-      exec: partC
+      exec: kindC
     },
     {
       inWires: [2],
       outWires: [],
       inPins: [[2]],
       outPins: [],
-      exec: partD
+      exec: kindD
     },
     {
       inWires: [7],
       outWires: [],
       inPins: [[7]],
       outPins: [],
-      exec: partE
+      exec: kindE
     },
     {
       inWires: [8],
       outWires: [],
       inPins: [[8]],
       outPins: [],
-      exec: partF
+      exec: kindF
     },
     {
       inWires: [3],
       outWires: [7, 8],
       inPins: [[3]],
       outPins: [[7], [8]],
-      exec: partG
+      exec: kindG
     }
   ]
 };
@@ -293,14 +293,14 @@ const compositeO = {
       outWires: [2],
       inPins: [[0], [1]],
       outPins: [[2]],
-      exec: partB
+      exec: kindB
     },
     {
       inWires: [2],
       outWires: [],
       inPins: [[2]],
       outPins: [],
-      exec: partD
+      exec: kindD
     }
   ]
 };
@@ -342,7 +342,7 @@ const compositeP = {
 //
 // Note that this network runs indefinitely.
 //
-// The first column is the Composite name, the second column is the Part
+// The first column is the Composite name, the second column is the Kind
 // name, and the third column is the console output.
 //
 //     N D    Packet content: {"count":2}
@@ -489,17 +489,17 @@ function bmfbp(topComposite) {
     // the same arguments to "set up" the Part. This allows the outer
     // Composites to be able to treat Composites and Leaf Parts in the same
     // way.
-    function main(part, send, release) {
+    function main(partId, send, release) {
       // This is for when a Sink needs to send a packet to the outer
       // Composite. Note that how the Sink would call this `send()`
       // subroutine is a bit different than how a Leaf Part would call its
       // `send()`. The Part number is inferred.
       compositeSend = function (pin, packet) {
-        send(part, pin, packet);
+        send(partId, pin, packet);
       };
 
       releaseCompositeDeferred = function () {
-        release(part);
+        release(partId);
       };
 
       setTimeout(dispatch, 0);
