@@ -58,7 +58,7 @@ emitComponent(ID) :-
     forall(inputOfParent(ID,In),writeIn(In)),
     forall(outputOfParent(ID,O),writeOut(O)),
     writeSpaces,
-    writeExec(ID),
+    writeExec,
     write(' '),
     kind(ID,Name),
     write(Name),
@@ -74,10 +74,8 @@ inputOfParent(P,In) :-
 outputOfParent(P,Out) :-
     parent(Out,P),source(_,Out).
     
-writeExec(ID) :-
-    hasInput(ID),write(exec),!.
-writeExec(_) :-
-    write(exec1st),!.
+writeExec :-
+    write(exec),!.
 
 hasInput(ID) :-
     eltype(ID,box),

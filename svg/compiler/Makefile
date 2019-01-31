@@ -20,6 +20,7 @@ clean-temps:
 
 test : dependencies
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
+	sleep 1
 	diff -q $(BINDIR)/svg.gsh $(REGRESSION)
 
 passes :
@@ -27,10 +28,8 @@ passes :
 	bmfbp scanner.svg >$(BINDIR)/scanner.gsh
 	bmfbp parser.svg >$(BINDIR)/parser.gsh
 	bmfbp emitter.svg >$(BINDIR)/emitter.gsh
-	echo "#!/bin/bash\ngrash $(BINDIR)/scanner.gsh" >$(BINDIR)/scanner
-	echo "#!/bin/bash\ngrash $(BINDIR)/parser.gsh" >$(BINDIR)/parser
-	echo '#!/bin/bash\ncat -' >$(BINDIR)/semantic
-	echo "#!/bin/bash\ngrash $(BINDIR)/emitter.gsh" >$(BINDIR)/emitter
+	cp svgpasses scanner parser semantic emitter $(BINDIR)
+	chmod a+x $(BINDIR) $(BINDIR)/svgpasses
 	chmod a+x $(BINDIR) $(BINDIR)/scanner
 	chmod a+x $(BINDIR) $(BINDIR)/parser
 	chmod a+x $(BINDIR) $(BINDIR)/semantic
@@ -38,7 +37,7 @@ passes :
 
 test-passes: passes
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
-	grash $(BINDIR)/svgpasses.gsh svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
+	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
 	sleep 1
 	diff -q $(PASSES-REGRESSION) $(REGRESSION)
 
