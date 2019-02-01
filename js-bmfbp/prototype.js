@@ -172,10 +172,22 @@ const compositeN = {
       value: 3,
       wire: 6
     },
+    {
+      value: 1,
+      wire: 1
+    }
   ],
   sources: [],
   sinks: [2],
   parts: [
+    {
+      inWires: [1],
+      outWires: [],
+      inPins: [[1]],
+      outPins: [],
+      outPinCount: 1,
+      exec: kindA
+    },
     {
       // TODO: Discussion item: Do we even need to keep track of which wires
       // are incoming and outgoing? They are already indirectly tracked with
@@ -187,6 +199,7 @@ const compositeN = {
       outWires: [0],
       inPins: [[5]],
       outPins: [[0]],
+      outPinCount: 1,
       exec: kindA
     },
     {
@@ -194,6 +207,7 @@ const compositeN = {
       outWires: [0],
       inPins: [[6]],
       outPins: [[0]],
+      outPinCount: 1,
       exec: kindA
     },
     {
@@ -206,6 +220,7 @@ const compositeN = {
       // The below says the OUT pin number 0 is attached to wire number 2
       // and the OUT pin number 1 is attached to wire number 3.
       outPins: [[2], [3]],
+      outPinCount: 2,
       exec: kindC
     },
     {
@@ -213,6 +228,7 @@ const compositeN = {
       outWires: [],
       inPins: [[2]],
       outPins: [],
+      outPinCount: 0,
       exec: kindD
     },
     {
@@ -220,6 +236,7 @@ const compositeN = {
       outWires: [],
       inPins: [[7]],
       outPins: [],
+      outPinCount: 0,
       exec: kindE
     },
     {
@@ -227,6 +244,7 @@ const compositeN = {
       outWires: [],
       inPins: [[8]],
       outPins: [],
+      outPinCount: 0,
       exec: kindF
     },
     {
@@ -234,6 +252,7 @@ const compositeN = {
       outWires: [7, 8],
       inPins: [[3]],
       outPins: [[7], [8]],
+      outPinCount: 2,
       exec: kindG
     }
   ]
@@ -258,6 +277,7 @@ const compositeO = {
       outWires: [2],
       inPins: [[0], [1]],
       outPins: [[2]],
+      outPinCount: 1,
       exec: kindB
     },
     {
@@ -265,6 +285,7 @@ const compositeO = {
       outWires: [],
       inPins: [[2]],
       outPins: [],
+      outPinCount: 0,
       exec: kindD
     }
   ]
@@ -277,6 +298,10 @@ const compositeP = {
     {
       value: "Test NC 1",
       wire: 1
+    },
+    {
+      value: "Test NC 2",
+      wire: 2
     }
   ],
   sources: [],
@@ -287,6 +312,7 @@ const compositeP = {
       outWires: [0],
       inPins: [],
       outPins: [[0]],
+      outPinCount: 1,
       exec: compositeN
     },
     {
@@ -294,6 +320,7 @@ const compositeP = {
       outWires: [],
       inPins: [[0], [1], [2]],
       outPins: [[]],
+      outPinCount: 1,
       exec: compositeO
     }
   ]
@@ -374,6 +401,8 @@ function bmfbp(topComposite) {
     // to Wire number, to an array that maps Wire number to Sink number for
     // efficiency at run-time.
     const wireToSinks = new Array(schematic.wireCount);
+    // Maps a tuple of Part ID and output Pin ID to wires
+    const partPinToWires = new Array(schematic.parts.length);
     // This is the `send()` subroutine to send packets via the sinks of this
     // composite. We don't have access to this until the parent Composite
     // calls the main function of this Composite.
@@ -414,12 +443,13 @@ function bmfbp(topComposite) {
     function releaseDeferred(partIndex) {
       var i, l;
       var outEvent;
-
+      var wires;
       const queue = outQueue[partIndex];
+
       while (queue.length > 0) {
         outEvent = queue.shift();
 
-        const wires = parts[outEvent.from].outPins[outEvent.pin];
+        wires = partPinToWires[outEvent.from][outEvent.pin];
         for (i = 0, l = wires.length; i < l; i++) {
           pushToInQueue(wires[i], outEvent);
         }
@@ -472,7 +502,12 @@ function bmfbp(topComposite) {
       // Whenever there is a packet coming from the outer Composite, push it
       // directly to the queue and wait for dispatch.
       return function (sourceNumber, packet) {
-        pushToInQueue(wireToSource[sourceNumber], OutEvent(packet));
+        const sourceWireNumber = wireToSource[sourceNumber];
+        if (sourceWireNumber) {
+          pushToInQueue(sourceWireNumber, OutEvent(packet));
+        } else {
+          // TODO: NC. What to do here?
+        }
         setTimeout(dispatch, 0);
       };
     }
@@ -481,6 +516,8 @@ function bmfbp(topComposite) {
     var part;
     var wireNumber;
     var constant;
+    var wires;
+    var outPinCount;
 
     // Initialize arrays.
     for (i = 0, l = wireToSinks.length; i < l; i++) {
@@ -488,6 +525,19 @@ function bmfbp(topComposite) {
     }
     for (i = 0, l = wireToReceivers.length; i < l; i++) {
       wireToReceivers[i] = [];
+    }
+    for (i = 0, l = parts.length; i < l; i++) {
+      part = schematic.parts[i];
+      outPinCount = part.outPinCount;
+      partPinToWires[i] = new Array(outPinCount);
+      for (m = 0, n = outPinCount; m < n; m++) {
+        wires = part.outPins[m];
+        if (wires) {
+          partPinToWires[i][m] = wires;
+        } else {
+          partPinToWires[i][m] = [];
+        }
+      }
     }
 
     // Prepare the Sinks.
