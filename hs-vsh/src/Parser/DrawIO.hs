@@ -52,6 +52,7 @@ lispify (Translate x y children) = wrapInParens ["translate", wrapInParens [show
 lispify (Path commands) = wrapInParens ("line" : map lispifyPathCommand commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
+lispify (Dot) = wrapInParens ["dot"]
 lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
 
