@@ -47,4 +47,4 @@ clean-passes :
 	rm -f $(PASSES-REGRESSION)
 
 junk:
-	hs-vsh-drawio-to-fb junk <junk.svg >junk.lisp
+	hs-vsh-drawio-to-fb junk <ellipse-test.svg >junk.lisp

@@ -19,6 +19,7 @@ data Output
     | Path [PathCommand]
     | Rect Float Float Float Float 
     | Ellipse Float Float Float Float
+    | Dot
     | Text DT.Text
     | Empty
     deriving (Show)
