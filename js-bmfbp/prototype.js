@@ -84,7 +84,6 @@ function kindC(partId, send) {
   return function (pin, packet) {
     switch (pin) {
       case 0:
-      case 1:
         send(partId, 0, {
           "count": packet
         });
@@ -155,41 +154,7 @@ function kindG(partId, send) {
 // ----- The schematic -----
 // -------------------------
 //
-// Using upper-case letters A to M to represent Leaf Parts, upper-case
-// letters N to Z to represent Composites, lower-case letters to represent
-// Sources and Sinks (the parenthesized number after it represents the
-// source or sink number within that composite), numbers to represent wires
-// with the same composite, and quotes strings to represent constants.
-//
-// Composite N:
-//
-//     "2" --5--> A --0--+
-//                       |
-//     "3" --6--> A --1--+-> C --2--> D
-//                           |   |
-//                           |   +--> a(0)
-//                           |
-//                           +-3--> G --+--7--> E
-//                                      |
-//                                      +--8--> F
-//
-// where the IN pin of both E and F are connected to the same OUT pin of C.
-//
-// Composite O:
-//
-//     "Composite O: " --0--> B --2--> D
-//                            ^
-//                            |
-//     b(0) --1---------------+
-//
-//     c(1) --3--> d(0)
-//
-// Composite P:
-//
-//     N --0----------> O
-//                      ^
-//                      |
-//     "Test NC 1" --1--+
+// See the `drawings` directory.
 
 const compositeN = {
   name: "compositeN",
@@ -226,18 +191,18 @@ const compositeN = {
     },
     {
       inWires: [6],
-      outWires: [1],
+      outWires: [0],
       inPins: [[6]],
-      outPins: [[1]],
+      outPins: [[0]],
       exec: kindA
     },
     {
-      inWires: [0, 1],
+      inWires: [0],
       outWires: [2, 3],
       // Maps pin index to wire number. e.g. The below says IN pin number 0
       // of this Part is attached to wires number 0 and number 1, which
       // are the same as the wire number above in `inWires`.
-      inPins: [[0], [1]],
+      inPins: [[0]],
       // The below says the OUT pin number 0 is attached to wire number 2
       // and the OUT pin number 1 is attached to wire number 3.
       outPins: [[2], [3]],
