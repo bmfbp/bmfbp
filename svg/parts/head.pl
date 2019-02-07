@@ -39,10 +39,6 @@
 :- dynamic(sink/1).
 :- dynamic(source/1).
 :- dynamic(rect/2).
-:- dynamic(rect_x/2).
-:- dynamic(rect_y/2).
-:- dynamic(rect_w/2).
-:- dynamic(rect_h/2).
 :- dynamic(sink/2) .
 :- dynamic(sinkfd/2).
 :- dynamic(source/2) .
@@ -62,7 +58,3 @@
 :- dynamic(distance_xy/2).
 
 :- dynamic(ellipse/1).
-:- dynamic(geometry_ry/2).
-:- dynamic(geometry_rx/2).
-:- dynamic(geometry_cx/2).
-:- dynamic(geometry_cy/2).
