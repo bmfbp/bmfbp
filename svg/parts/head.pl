@@ -60,3 +60,9 @@
 :- dynamic(join_centerPair/2).
 :- dynamic(join_distance/2).
 :- dynamic(distance_xy/2).
+
+:- dynamic(ellipse/1).
+:- dynamic(geometry_ry/2).
+:- dynamic(geometry_rx/2).
+:- dynamic(geometry_cx/2).
+:- dynamic(geometry_cy/2).

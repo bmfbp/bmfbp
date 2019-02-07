@@ -68,6 +68,13 @@
            (format strm "rect(~A,'').~%eltype(~A,box).~%node(~A).~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id new-id x1 new-id y1 new-id w new-id h)))
         
+        (ellipse
+         (destructuring-bind (e-sym x1 y1 w h)
+             list
+           (declare (ignore e-sym))
+           (format strm "ellipse(~A).~%eltype(~A,ellipse).~%node(~A).~%geometry_cx(~A,~A).~%geometry_cy(~A,~A).~%geometry_rx(~A,~A).~%geometry_ry(~A,~A).~%"
+                   new-id new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+        
         (text
          (destructuring-bind (text-sym str x1 y1 w h)
              list

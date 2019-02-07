@@ -7,6 +7,7 @@ writeFB :-
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
     forall(rect(X,_), writeterm(rect(X,nil))),
+    forall(ellipse(X), writeterm(ellipse(X))),
     forall(rect_x(X,Y), writeterm(rect_x(X,Y))),
     forall(rect_y(X,Y), writeterm(rect_y(X,Y))),
     forall(rect_w(X,Y), writeterm(rect_w(X,Y))),
@@ -43,6 +44,12 @@ writeFB :-
     forall(geometry_w(X,Y), writeterm(geometry_w(X,Y))),
     forall(geometry_x(X,Y), writeterm(geometry_x(X,Y))),
     forall(geometry_y(X,Y), writeterm(geometry_y(X,Y))),
+
+    forall(geometry_ry(X,Y), writeterm(geometry_ry(X,Y))),
+    forall(geometry_rx(X,Y), writeterm(geometry_rx(X,Y))),
+    forall(geometry_cx(X,Y), writeterm(geometry_cx(X,Y))),
+    forall(geometry_cy(X,Y), writeterm(geometry_cy(X,Y))),
+
     forall(node(X), writeterm(node(X))),
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
