@@ -16,7 +16,7 @@ clean: clean-temps clean-passes
 
 clean-temps:
 	rm -f *.pro
-	rm -f temp1.lisp temp18.gsh
+	rm -f temp1.lisp temp18.gsh test.lisp
 
 test : dependencies
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
@@ -45,3 +45,6 @@ clean-passes :
 	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh $(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh
 	rm -f $(BINDIR)/semantic $(BINDIR)/scanner $(BINDIR)/parser $(BINDIR)/emitter
 	rm -f $(PASSES-REGRESSION)
+
+et:
+	hs-vsh-drawio-to-fb svgc <ellipse-test.svg >test.lisp
