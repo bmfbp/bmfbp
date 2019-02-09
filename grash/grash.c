@@ -349,5 +349,6 @@ int main (int argc, char **argv) {
   while ((pid = wait(&status)) != -1) {
     fprintf(stderr, "%d exits %d\n", pid, WEXITSTATUS(status));
   }
+  fprintf(stderr, "GRASH DONE\n");
   exit(0);
 }
