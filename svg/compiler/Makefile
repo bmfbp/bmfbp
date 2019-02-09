@@ -10,6 +10,8 @@ dependencies:
 	cp bmfbp.sh $(BINDIR)/bmfbp
 	chmod a+x $(BINDIR)/bmfbp
 	cp svg.gsh $(BINDIR)
+	cp comparegsh.sh $(BINDIR)
+	chmod a+x $(BINDIR)/comparegsh.sh
 
 clean: clean-temps clean-passes
 	rm -f $(BINDIR)/bmfbp $(BINDIR)/svg.gsh $(REGRESSION)
@@ -20,8 +22,7 @@ clean-temps:
 
 test : dependencies
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
-	sleep 1
-	diff -q $(BINDIR)/svg.gsh $(REGRESSION)
+	$(BINDIR)/comparegsh.sh $(BINDIR)/svg.gsh $(REGRESSION)
 
 passes :
 	bmfbp passes.svg >$(BINDIR)/svgpasses.gsh
