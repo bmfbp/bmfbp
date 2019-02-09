@@ -39,8 +39,7 @@ passes :
 test-passes: passes
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
-	sleep 1
-	diff -q $(PASSES-REGRESSION) $(REGRESSION)
+	$(BINDIR)/comparegsh.sh $(REGRESSION) $(PASSES-REGRESSION)
 
 clean-passes :
 	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh $(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh
