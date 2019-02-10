@@ -1,0 +1,36 @@
+A simple example of hierarchical state machines:
+
+Imagine a piece of hardware - a lamp with two momentary switches.
+
+The switches produce "pulses" when they are pressed.  In software terms, each
+switch simply emits a "true" value when it is pressed down.
+
+We need to write a controller for the lamp and switches.  We want to
+turn the lamp on and cycle it through three intensities - low, mid and high.
+
+A simple way to think about this is to use a single state machine that tracks
+one of the switches - the "power" switch (abbrev. "PWR").  That machine has two
+states - OFF and ON.  The state machine starts off in the OFF state.
+When the PWR switch is pushed for the first time, the state machine goes to the
+ON state.  When the pwr switch is pushed again, the state machine goes back to the
+OFF state and repeats the cycle for each push of PWR button.
+
+In the ON state, we have another state machine (a submachine) with only 3 states (LOW, MED, HIGH).
+
+When the lamp is ON, the other button is tracked by the submachine.  The lamp always
+turns ON in the LOW intensity state.  Whenever the lamp is ON, the submachine will
+track the state of second button.  When the lamp is turned OFF, it turns the lamp
+off and snaps the submachine back into the LOW state, for the next time the lamp
+is turned ON again.  If the lamp is ON, the first push of the second button will
+move the submachine to the MID state (and that state will cause the lamp to go from
+LOW to MID intensity).  The next push of the second button will cause the submachine
+to transit from the MID state to the HIGH state.  Another push of the second button
+will cause a transition from HIGH to LOW and repeat the cycle.   At any time
+in this cycle, pushing the PWR button will cause the lamp to turn OFF and
+the submachine to reset itself.
+
+
+A "flat" (non-Harel) state diagram of this behaviour is shown in:
+
+lamp1 video:
+https://www.youtube.com/watch?v=j5MJRHJSyvY
