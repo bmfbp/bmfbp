@@ -32,20 +32,44 @@ the submachine to reset itself.
 
 A "flat" (non-Harel) state diagram of this behaviour is shown in:
 
+The lamp1 video shows the construction of the hardware simulator - a picture of a lamp and a UI (in LispWorks) that can be controllerd from the REPL
+
 lamp1 video (no sound):
 https://www.youtube.com/watch?v=j5MJRHJSyvY
 
 
+The second video, lamp2, shows the editor constructing the "inside" of a simple controller for the lamp - it has 3 input pins (low, mid, high).  Each pin is given an event-name (1st line) and a Lisp command to run (2nd line) when the event arrives.  The part is name "lamp-wrap.vfg" 
 lamp2 video (no sound)
-https://www.youtube.com/watch?v=O2Sfpr89fWA
+https://www.youtube.com/watch?v=O2Sfpr89fWAhttps://www.youtube.com/watch?v=O2Sfpr89fWA
+
+
+The third video, lamp3, shows the lamp-wrap part from the "outside" and another part - a simple controller called "lamp-on-off".  The wide gray rectangle is the "indication" showing what will be selected when the left mouse button is clicked.  In this experimental editor, selection is done in multiple steps - pressing a key on the keyboard to show all "nodes" and "controls (little circles and squares), selecting (left-mouse click) one or more nodes.  Multiple selection is performed by pressing a key then left-clicking on a node to add it to the selection list - each node becomes invisible when it is selected.  This is not an ideal UX, but, it does show that standard graphical editing commands can be broken down into separately bind-able functions.  In this case the graphical editing atoms are: "show nodes", "add next selection to selection list" and "select" (the first two functions are bound to keys on the keyboard, the last function is bound to the left mouse buton).  Again, this experimental editor is not an ideal UX (binding scripts were not created at this point), and, enlarging a rectangle takes many operations (select several nodes, then dragging all selected nodes to enlarge the rectangle).
+
+The video also shows the use of mark (cyan) and cursor (red) to draw line segments between output pins and input pins.  To join an output to an input: (1) click a key to create a pre-canned graphical object (a pin) at the cursor, (2) position the cursor over the pin text, (3) click a key to edit the text underneath the cursor, (4) change the text using a pop-up text editor, (5) close the text editor (6) position the mouse over the end of the pin, (7) click a key to "drop" the mark where the mouse is, (8) position the cursor over the end of the target pin, (9) click a key to draw a line segment between mark and cursor.
+
+The video shows the compiled Lisp code for the schematic being edited (lamp1.vfg), then shows "diving into" the lamp-on-off.vfg part and editing the part using HSMs (hierarchical state machines).
+
+None of the parts are built into the editor.  The editor only knows how to deal with graphic atoms, like rectangles (squared and rounded), lines (straight or curved) and text.  The more complex parts were pre-built as graphical macros, with a normalize origin (0,0), saved in a pre-determined directory.  The key bindings bring these parts, as macros, onto the canvas (e.g. a rounded rectangle containing the text "StateName").
+
+Text is not automatically attached to arrows.  This is done (invisibly in this case) as another bind-able keystroke - mark a point on a textbox, move the cursor over an arrow, hit a key to "glue" the text to the line.
+
+Entry code ("(send self 'off)") to the state "off" is similarly glued to the top of the "off" state rectangle.
+
+The video ends with a demonstration of the simulation hardware (the lamp) and commands at the REPL to (1) instantiate the event-flow and all of its contained parts ("(setq xx (top 'lamp1)") and the ability to send events to the PWR button of the top level part.
 
 lamp3 video (no sound)
 https://www.youtube.com/watch?v=l3Usl8kny1A
 
+
+The fourth video (lamp4) shows a slightly more complicated schematic, and the 3-state HSM contained in the part lamp-control2.vfg.  (The example uses only one button - the POWER button - to control the lamp).
+
 lamp4 video (no sound)
 https://www.youtube.com/watch?v=ALkGy1rMAMw
 
-lamp5 video (no sound)
+
+The final video (lamp5) shows the finished example, built as an HSM.  The lamp intensity is controlled by the part intens.vfg, which is a submachine (state drawn as a dotted line rectangle) of the top-level part lamp-example.vfg.
+lamp5 video (no sound).  This example uses two buttons, POWER and INTENSITY.
+
 https://www.youtube.com/watch?v=4NbZzOnGl-w
 
 
