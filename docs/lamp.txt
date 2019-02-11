@@ -32,5 +32,25 @@ the submachine to reset itself.
 
 A "flat" (non-Harel) state diagram of this behaviour is shown in:
 
-lamp1 video:
+lamp1 video (no sound):
 https://www.youtube.com/watch?v=j5MJRHJSyvY
+
+
+lamp2 video (no sound)
+https://www.youtube.com/watch?v=O2Sfpr89fWA
+
+lamp3 video (no sound)
+https://www.youtube.com/watch?v=l3Usl8kny1A
+
+lamp4 video (no sound)
+https://www.youtube.com/watch?v=ALkGy1rMAMw
+
+lamp5 video (no sound)
+https://www.youtube.com/watch?v=4NbZzOnGl-w
+
+
+
+Draw.io diagrams of the simple lamp-controller state machine:
+
+flat two-button lamp controller.svg
+hierarchical two-button lamp controller.svg
