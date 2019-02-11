@@ -1,0 +1,23 @@
+All Parts are concurrent, hence, the editor can be built piece-meal and snapped together.
+
+Pieces:
+
+- Renderer - renders graphic atoms onto screen (browser?) from a display list and/or factbase, e.g. straight line segments, curved line segments, text, ellipses, (rects?  - can be built with straight line segments), rounded rects, cursor, mark, "transients" (some kind of representation of objects that have been selected), highlighting (indication), mouse
+
+- Factbase - to hold the graphic atoms (?), including groups of graphic objects
+
+- mouse tracker
+
+- keyboard tracker
+
+- "control" tracker (often referred to as "graphic handles" ; to change a Bezier curve)
+
+- hit-stack controller - add/remove objects from hit-stack, return (handle to) top of hit-stack, roll hit-stack
+
+- operators - to manipulate graphic atoms:
+
+-- show/hide controls and nodes 
+-- group/ungroup all selected items
+-- add item to selection list
+-- 
+
