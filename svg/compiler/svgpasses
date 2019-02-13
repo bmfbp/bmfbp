@@ -1,4 +1,3 @@
 #!/bin/bash
-#BINDIR=~/bin
-#grash $(BINDIR)/svgpasses.gsh $1 $2
-grash ~/bin/svgpasses.gsh $1 $2
+BINDIR=~/bin
+grash ${BINDIR}/svgpasses.gsh $1 $2

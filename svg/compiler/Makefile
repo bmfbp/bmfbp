@@ -1,3 +1,8 @@
+# usage:
+# linux: svgpasses <name> > <outfile>
+# js   : svgjs     <name> > <outfile.js>
+
+
 BINDIR=~/bin
 SVG_DIAGRAM=svgc.svg
 REGRESSION=regression.gsh
@@ -28,12 +33,15 @@ passes :
 	bmfbp scanner.svg >$(BINDIR)/scanner.gsh
 	bmfbp parser.svg >$(BINDIR)/parser.gsh
 	bmfbp emitter.svg >$(BINDIR)/emitter.gsh
-	cp svgpasses scanner parser semantic emitter $(BINDIR)
+	bmfbp js-emitter.svg >$(BINDIR)/js-emitter.gsh
+	cp svgpasses svgjs scanner parser semantic emitter js-emitter $(BINDIR)
 	chmod a+x $(BINDIR) $(BINDIR)/svgpasses
+	chmod a+x $(BINDIR) $(BINDIR)/svgjs
 	chmod a+x $(BINDIR) $(BINDIR)/scanner
 	chmod a+x $(BINDIR) $(BINDIR)/parser
 	chmod a+x $(BINDIR) $(BINDIR)/semantic
 	chmod a+x $(BINDIR) $(BINDIR)/emitter
+	chmod a+x $(BINDIR) $(BINDIR)/js-emitter
 
 test-passes: passes
 	bmfbp $(SVG_DIAGRAM) >$(REGRESSION)
@@ -42,6 +50,9 @@ test-passes: passes
 	diff -q $(PASSES-REGRESSION) $(REGRESSION)
 
 clean-passes :
-	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh $(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh
-	rm -f $(BINDIR)/semantic $(BINDIR)/scanner $(BINDIR)/parser $(BINDIR)/emitter
+	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh \
+		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh \
+		${BINDIR}/js-emitter.gsh ${BINDIR}/svgjs.gsh
+	rm -f $(BINDIR)/semantic $(BINDIR)/scanner $(BINDIR)/parser \
+		$(BINDIR)/emitter ${BINDIR}/js-emitter
 	rm -f $(PASSES-REGRESSION)

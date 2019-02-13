@@ -7,6 +7,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/assign_pipe_numbers_to_outputs \
 	$(BINDIR)/assign_fds \
 	$(BINDIR)/emit \
+	$(BINDIR)/emit-js \
 	$(BINDIR)/add_kinds \
 	$(BINDIR)/assign_portnames \
 	$(BINDIR)/calculate_distances \
