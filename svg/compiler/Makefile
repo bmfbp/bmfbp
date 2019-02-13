@@ -34,14 +34,23 @@ test : dependencies
 	cp $(BINDIR)/svg.gsh ./temp.gsh
 	comparegsh.sh temp.gsh $(REGRESSION)
 
-passes :
+passes : passes-linux passes-js
+
+passes-linux :
 	flatbmfbp passes.svg >$(BINDIR)/svgpasses.gsh
 	flatbmfbp scanner.svg >$(BINDIR)/scanner.gsh
 	flatbmfbp parser.svg >$(BINDIR)/parser.gsh
 	flatbmfbp semantics.svg >$(BINDIR)/semantics.gsh
 	flatbmfbp emitter.svg >$(BINDIR)/emitter.gsh
 	cp svgpasses scanner parser semantics emitter unity comparegsh.sh $(BINDIR)
-	chmod a+x $(BINDIR)/svgpasses $(BINDIR)/unity $(BINDIR)/scanner $(BINDIR)/parser $(BINDIR)/semantics $(BINDIR)/emitter $(BINDIR)/comparegsh.sh
+	chmod a+x $(BINDIR)/svgpasses $(BINDIR)/unity $(BINDIR)/scanner $(BINDIR)/parser \
+		$(BINDIR)/semantics $(BINDIR)/emitter $(BINDIR)/comparegsh.sh
+
+passes-js :
+	flatbmfbp js-passes.svg >$(BINDIR)/js-passes.gsh
+	flatbmfbp pass-js-emit.svg >$(BINDIR)/pass-js-emit.gsh
+	cp js-passes pass-js-emit $(BINDIR)
+	chmod a+x ${BINDIR}/js-passes ${BINDIR}/pass-js-emit
 
 test-passes: passes
 # semantics is contained only in svgpasses version
