@@ -10,6 +10,9 @@ PASSES-REGRESSION=passes-regression.gsh
 
 all: dependencies
 
+svgjs : dependencies ./build-svgjs
+	./build-svgjs
+
 dependencies:
 	mkdir -p $(BINDIR)
 	cp bmfbp.sh $(BINDIR)/bmfbp
