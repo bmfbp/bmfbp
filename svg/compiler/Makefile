@@ -49,12 +49,10 @@ test-passes: passes
 	sleep 1
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
-	sleep 1
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
 	sleep 1
 	flatbmfbp passes.svg >$(REGRESSION)
 	svgpasses passes <passes.svg >$(PASSES-REGRESSION)
-	sleep 1
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
 
 clean-passes :
