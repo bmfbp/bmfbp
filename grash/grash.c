@@ -331,8 +331,10 @@ int main (int argc, char **argv) {
   } else {
     f = fopen (argv[1], "r");
   }
-  if (f == NULL)
+  if (f == NULL) {
+    fprintf(stderr, "got: /%s/\n", argv[1]);
     quit ("", "usage: grash {filename|-} [args]");
+  }
 
   for (r = 0; r < PIPEMAX; r++) {
     pipes[r][READ_END] = -1;
