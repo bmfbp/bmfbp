@@ -1,3 +1,4 @@
 #!/bin/bash
 export BINDIR=~/bin
+grash ${BINDIR}/svgpasses.gsh pass-js-emit <pass-js-emit.svg >${BINDIR}/pass-js-emit.gsh
 grash ${BINDIR}/svgpasses.gsh svgjs <js-passes.svg >${BINDIR}/svgjs.gsh

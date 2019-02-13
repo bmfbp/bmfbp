@@ -58,7 +58,7 @@ test-passes: passes
 clean-passes :
 	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh \
 		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh \
-		${BINDIR}/js-emitter.gsh ${BINDIR}/svgjs.gsh
+		${BINDIR}/svgjs.gsh
 	rm -f $(BINDIR)/semantics $(BINDIR)/scanner $(BINDIR)/parser \
 		$(BINDIR)/emitter ${BINDIR}/js-emitter
 	rm -f $(PASSES-REGRESSION)
