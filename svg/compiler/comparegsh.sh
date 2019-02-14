@@ -12,7 +12,3 @@ then echo OK
 else echo BAD
 fi
 echo
-
-       
-
-       
