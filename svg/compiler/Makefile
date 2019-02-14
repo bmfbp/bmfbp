@@ -10,8 +10,8 @@ PASSES-REGRESSION=passes-regression.gsh
 
 all: dependencies passes
 
-svgjs : dependencies ./build-svgjs
-	./build-svgjs
+svgpasses : dependencies ./build-svgpasses
+	./build-svg
 
 dependencies:
 	mkdir -p $(BINDIR)
@@ -47,14 +47,11 @@ passes-linux :
 		$(BINDIR)/semantics $(BINDIR)/emitter $(BINDIR)/comparegsh.sh
 
 passes-js :
-	flatbmfbp js-passes.svg >$(BINDIR)/js-passes.gsh
-	flatbmfbp pass-js-emit.svg >$(BINDIR)/pass-js-emit.gsh
-	cp js-passes pass-js-emit $(BINDIR)
-	chmod a+x ${BINDIR}/js-passes ${BINDIR}/pass-js-emit
+	./build-js.sh
 
 test-passes: passes
 # semantics is contained only in svgpasses version
-	svgpasses <passes.svg >temp200.pro
+	svgpasses passes <passes.svg >temp200.pro
 	sleep 1
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
@@ -69,5 +66,6 @@ clean-passes :
 		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh \
 		${BINDIR}/svgjs.gsh
 	rm -f $(BINDIR)/semantics $(BINDIR)/scanner $(BINDIR)/parser \
-		$(BINDIR)/emitter ${BINDIR}/js-emitter
+		$(BINDIR)/emitter ${BINDIR}/js-emitter ${BINDIR}/svgjs \
+		${BINDIR}/svgjspasses*
 	rm -f $(PASSES-REGRESSION)
