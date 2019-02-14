@@ -332,7 +332,7 @@ int main (int argc, char **argv) {
     f = fopen (argv[1], "r");
   }
   if (f == NULL) {
-    fprintf(stderr, "got: /%s/\n", argv[1]);
+    fprintf(stderr, "got: >>> %s\n", argv[1]);
     quit ("", "usage: grash {filename|-} [args]");
   }
 

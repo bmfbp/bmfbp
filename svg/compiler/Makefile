@@ -51,14 +51,12 @@ passes-js :
 
 test-passes: passes
 # semantics is contained only in svgpasses version
-	svgpasses passes <passes.svg >temp200.pro
-	sleep 1
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
-	svgpasses svgc <$(SVG_DIAGRAM) >$(PASSES-REGRESSION)
+	grash ${BINDIR}/svgpasses.gsh svgc < ${SVG_DIAGRAM} >${PASSES-REGRESSION}
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
 	sleep 1
 	flatbmfbp passes.svg >$(REGRESSION)
-	svgpasses passes <passes.svg >$(PASSES-REGRESSION)
+	grash ${BINDIR}/svgpasses.gsh passes <passes.svg >${PASSES-REGRESSION}
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
 
 clean-passes :
