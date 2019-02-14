@@ -2,7 +2,7 @@
 set -v
 
 # scanner
-hs-vsh-drawio-to-fb svgc <svgc.svg >temp1.lisp
+hs-vsh-drawio-to-fb svg <svg.svg >temp1.lisp
 lib_insert_part_name svgc <temp1.lisp >temp2.lisp
 fb-to-prolog <temp2.lisp >temp3.pro
 plsort <temp3.pro >temp4.pro
