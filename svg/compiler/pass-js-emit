@@ -1,5 +1,3 @@
 #!/bin/bash
-echo "in pass-js-emit"
 BINDIR=~/bin
-set -x
 grash ${BINDIR}/pass-js-emit.gsh $1 $2

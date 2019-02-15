@@ -1,6 +1,5 @@
 # usage:
 # linux: svgpasses <name> > <outfile>
-# js   : svgjs     <name> > <outfile.js>
 
 
 BINDIR=~/bin
@@ -9,6 +8,10 @@ REGRESSION=regression.gsh
 PASSES-REGRESSION=passes-regression.gsh
 
 all: dependencies passes
+
+js : all
+	./build-js
+	./run-js
 
 svgpasses : dependencies ./build-svgpasses
 	./build-svg
@@ -61,9 +64,8 @@ test-passes: passes
 
 clean-passes :
 	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh \
-		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh \
-		${BINDIR}/svgjs.gsh
+		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh
 	rm -f $(BINDIR)/semantics $(BINDIR)/scanner $(BINDIR)/parser \
-		$(BINDIR)/emitter ${BINDIR}/js-emitter ${BINDIR}/svgjs \
+		$(BINDIR)/emitter ${BINDIR}/js-emitter \
 		${BINDIR}/svgjspasses*
 	rm -f $(PASSES-REGRESSION)

@@ -44,18 +44,18 @@ writeIn(In) :-
     writeSpaces,
     inPipeP(In),!,
     pipeNum(In,Pipe),
-    write('      "inPins" : [],'),
-    % write(' '),
-    % write(Pipe),
+    write('      "inPins" : ['),
+    write(Pipe),
+    write('],'),
     nl.
 
 writeOut(Out) :-
     writeSpaces,
     outPipeP(Out),!,
     pipeNum(Out,Pipe),
-    write('      "outPins" : [],'),
-    % write(' '),
-    % write(Pipe),
+    write('      "outPins" : ['),
+    write(Pipe),
+    write('],'),
     nl.
 
 
