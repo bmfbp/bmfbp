@@ -30,6 +30,8 @@
 :- dynamic(pipeNum/2).
 :- dynamic(portName/2) .
 :- dynamic(portNameByID/2) .
+:- dynamic(portIndex/2) .
+:- dynamic(portIndexByID/2) .
 :- dynamic(unassigned/1) .
 :- dynamic(source/2) .
 :- dynamic(source_x/2) .

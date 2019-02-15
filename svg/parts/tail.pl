@@ -46,6 +46,8 @@ writeFB :-
     forall(node(X), writeterm(node(X))),
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
+    forall(portIndex(X,Y), writeterm(portIndex(X,Y))),
+    forall(portIndexByID(X,Y), writeterm(portIndexByID(X,Y))),
     forall(portName(X,Y), writeterm(portName(X,Y))),
     forall(portNameByID(X,Y), writeterm(portNameByID(X,Y))),
     forall(unassigned(X), writeterm(unassigned(X))),
@@ -74,6 +76,12 @@ readFB(Str) :-
 element(end_of_file, _) :- !.
 element(eltype(X,Y), Str) :- !,
 			   asserta(eltype(X,Y)),
+		       readFB(Str).
+element(portIndex(X,Y), Str) :- !,
+			   asserta(portIndex(X,Y)),
+		       readFB(Str).
+element(portIndexByID(X,Y), Str) :- !,
+			   asserta(portIndexByID(X,Y)),
 		       readFB(Str).
 element(portName(X,Y), Str) :- !,
 			   asserta(portName(X,Y)),
