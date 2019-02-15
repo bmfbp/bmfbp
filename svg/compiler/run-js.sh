@@ -1,4 +1,5 @@
 #!/bin/bash
 export BINDIR=~/bin
-${BINDIR}/grash ${BINDIR}/js-passes.gsh svgc <svgc.svg
+grash ${BINDIR}/js-passes.gsh jspasses <js-passes.svg > temp.js
+
 

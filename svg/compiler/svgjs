@@ -1,3 +1,0 @@
-#!/bin/bash
-export BINDIR=~/bin
-grash ${BINDIR}/svgjs.gsh $1 $2
