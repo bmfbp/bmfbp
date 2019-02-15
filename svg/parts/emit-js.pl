@@ -24,7 +24,7 @@ main :-
     halt.
 
 inPipeP(P) :-
-    portName(P,0).
+    portIndex(P,0).
 
 inPipeP(P) :-
     portName(P,in).
@@ -36,7 +36,7 @@ outPipeP(P) :-
     portName(P,out).
 
 outPipeP(P) :-
-    portName(P,1).
+    portIndex(P,1).
 
 outPipeP(P) :-
     source(P).
@@ -45,7 +45,7 @@ errPipeP(P) :-
     portName(P,err).
 
 errPipeP(P) :-
-    portName(P,2).
+    portIndex(P,2).
 
 writeIn(In) :-
     writeSpaces,
