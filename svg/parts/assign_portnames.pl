@@ -14,7 +14,16 @@ assignPort(TextID):-
     minimumDistanceToAPort(TextID,PortID),
     text(TextID,Str),
     asserta(portNameByID(PortID,TextID)),
-    asserta(portName(PortID,Str)).
+    asserta(portName(PortID,Str)),
+    tryIndex(PortID,TextID,Str).
+
+tryIndex(PortID,NumericID,Num):-
+    number(Num),
+    asserta(portIndexByID(PortID,NumericID)),
+    asserta(portIndex(PortID,Num)).
+    
+tryIndex(_,_,_):-
+    true.
 
 minimumDistanceToAPort(TextID,PortID) :-
     unassigned(TextID),  %% redundant (since the caller asserts this)
