@@ -29,11 +29,17 @@ inPipeP(P) :-
 inPipeP(P) :-
     portName(P,in).
 
+inPipeP(P) :-
+    sink(_,P).
+
 outPipeP(P) :-
     portName(P,out).
 
 outPipeP(P) :-
     portName(P,1).
+
+outPipeP(P) :-
+    source(P).
 
 errPipeP(P) :-
     portName(P,err).
@@ -43,7 +49,7 @@ errPipeP(P) :-
 
 writeIn(In) :-
     writeSpaces,
-    inPipeP(In),!,
+    inPipeP(In),
     pipeNum(In,Pipe),
     write('      "inPins" : [['),
     write(Pipe),
@@ -52,7 +58,7 @@ writeIn(In) :-
 
 writeOut(Out) :-
     writeSpaces,
-    outPipeP(Out),!,
+    outPipeP(Out),
     pipeNum(Out,Pipe),
     write('      "outPins" : [[],['),
     write(Pipe),
@@ -64,23 +70,21 @@ emitComponent(ID) :-
     write('    {'),
     nl,
     forall(inputOfParent(ID,In),writeIn(In)),
-    forall(outputOfParent(ID,O),writeOut(O)),
-    writeSpaces,
-    write('      "exec" : "'),
+    forall(outputOfParent(ID,Out),writeOut(Out)),
+    write('        "exec" : "'),
     kind(ID,Name),
     write(Name),
-    write('"'),
     nl,
     write('    },'),
     nl.
 
 writeSpaces :- write('  ').
 
-inputOfParent(P,In) :-
-    parent(In,P),sink(_,In).
+inputOfParent(Parent,In) :-
+    parent(In,Parent),sink(_,In).
 
-outputOfParent(P,Out) :-
-    parent(Out,P),source(_,Out).
+outputOfParent(Parent,Out) :-
+    parent(Out,Parent),source(_,Out).
     
 hasInput(ID) :-
     eltype(ID,box),
