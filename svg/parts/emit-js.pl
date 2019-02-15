@@ -11,11 +11,12 @@ main :-
     write('.js"'),
     nl,
     npipes(Npipes),
-    write('  "wirecount: " '),
+    write('  "wirecount" : '),
     write(Npipes),
-    write(","),
+    write(','),
     nl,
     write('  "parts" : ['),
+    nl,
     forall(kind(ID,_),emitComponent(ID)),
     write('  ]'),
     nl,
@@ -44,18 +45,18 @@ writeIn(In) :-
     writeSpaces,
     inPipeP(In),!,
     pipeNum(In,Pipe),
-    write('      "inPins" : ['),
+    write('      "inPins" : [['),
     write(Pipe),
-    write('],'),
+    write(']],'),
     nl.
 
 writeOut(Out) :-
     writeSpaces,
     outPipeP(Out),!,
     pipeNum(Out,Pipe),
-    write('      "outPins" : ['),
+    write('      "outPins" : [[],['),
     write(Pipe),
-    write('],'),
+    write(']],'),
     nl.
 
 
@@ -65,11 +66,9 @@ emitComponent(ID) :-
     forall(inputOfParent(ID,In),writeIn(In)),
     forall(outputOfParent(ID,O),writeOut(O)),
     writeSpaces,
-    writeExec,
-    write('      "exec": "'),
+    write('      "exec" : "'),
     kind(ID,Name),
     write(Name),
-    nl,
     write('"'),
     nl,
     write('    },'),
@@ -83,9 +82,6 @@ inputOfParent(P,In) :-
 outputOfParent(P,Out) :-
     parent(Out,P),source(_,Out).
     
-writeExec :-
-    write(exec),!.
-
 hasInput(ID) :-
     eltype(ID,box),
     parent(Port,ID),
