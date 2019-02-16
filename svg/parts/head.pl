@@ -62,3 +62,6 @@
 :- dynamic(join_centerPair/2).
 :- dynamic(join_distance/2).
 :- dynamic(distance_xy/2).
+:- dynamic(inputPin/2).
+:- dynamic(outputPin/2).
+:- dynamic(wireIndex/2).

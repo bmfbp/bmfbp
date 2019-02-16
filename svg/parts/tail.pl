@@ -57,6 +57,9 @@ writeFB :-
     forall(pipeNum(X,Y), writeterm(pipeNum(X,Y))),
     forall(sourcefd(X,Y), writeterm(sourcefd(X,Y))),
     forall(sinkfd(X,Y), writeterm(sinkfd(X,Y))),
+    forall(inputPin(X,Y), writeterm(inputPin(X,Y))),
+    forall(outputPin(X,Y), writeterm(outputPin(X,Y))),
+    forall(wireIndex(X,Y), writeterm(wireIndex(X,Y))),
     forall(parent(X,Y), writeterm(parent(X,Y))).
 
 wspc :-
@@ -168,6 +171,18 @@ element(center_y(X,Y), Str) :- !,
 
 element(parent(X,Y), Str) :- !,
 			     asserta(parent(X,Y)),
+			     readFB(Str).
+
+element(wireIndex(X,Y), Str) :- !,
+			     asserta(wireIndex(X,Y)),
+			     readFB(Str).
+
+element(inputPin(X,Y), Str) :- !,
+			     asserta(inputPin(X,Y)),
+			     readFB(Str).
+
+element(outputPin(X,Y), Str) :- !,
+			     asserta(outputPin(X,Y)),
 			     readFB(Str).
 
 element(line(X,Y), Str) :- !,

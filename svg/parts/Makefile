@@ -8,6 +8,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/assign_fds \
 	$(BINDIR)/emit \
 	$(BINDIR)/emit-js \
+	$(BINDIR)/inOutPins \
 	$(BINDIR)/add_kinds \
 	$(BINDIR)/assign_portnames \
 	$(BINDIR)/calculate_distances \
