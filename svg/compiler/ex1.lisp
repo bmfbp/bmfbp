@@ -6,24 +6,32 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
 |#
 
 ;;; mechanisms
-(defmacro @with-handles (handle-list @body body)
+(defmacro @with-handles (handle-list &body body)
   `(let ,handle-list
      ,@body))
 
 (defmacro @create-script-from-file-into (script-handle)
-  `(with-open-file (f "/Users/tarvydas/projects/bmfbp/svg/compiler/temp.lisp" :direction :input) 
+  `(with-open-file (f "/Users/tarvydas/projects/bmfbp/svg/compiler/temp.lisp" :direction :input)
     (setf ,script-handle (read f)))) ;; TODO: needs more error checking
     
 (defmacro @create-hash-table-into (table-handle)
-  `(setf ,table-handle (make-hash-table))
+  `(setf ,table-handle (make-hash-table)))
 
-(defmacro @must-not-exist (id table-handle)
-  `(when (gethash ,table-handle ,id)
+(defmacro @must-not-exist-in-table (id table-handle)
+  `(when (gethash ,id ,table-handle)
     (error "part (~A) defined more than once~%" ,id)))
+
+(defmacro @must-exist-in-table (id table-handle)
+  `(multiple-value-bind (val success)
+       (gethash ,id ,table-handle)
+     (declare (ignore val))
+(maphash #'(lambda (key val) (format *standard-output* "key=~S val=~S~%" key val)) ,table-handle)
+     (unless success
+       (error "part ~A not defined~%" ,id))))
 
 (defmacro @put-part-in-table (id table-handle)
   ;; at each part-id, there 3 properties: exec, ins (list), outs (list)
-  (setf (gethash ,id ,table-handle) nil))
+  `(setf (gethash ,id ,table-handle) nil))
 
 (defmacro @put-parts-list-into-table (table-handle script-handle)
   `(let ((parts (getf ,script-handle 'parts)))
@@ -32,13 +40,13 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
                  (let ((part-id (first part-pair))
                        (part-exec (second part-pair)))
                    (declare (ignorable part-exec))
-                   (@must-not-exist-in-table part-id table-handle)
-                   (@put-part-in-table part-id table-handle)))
+                   (@must-not-exist-in-table part-id ,table-handle)
+                   (@put-part-in-table part-id ,table-handle)))
              execs))))
 
-(defmacro @put-exec-into-table (id exec table-handle)
-  `(push (gethash ,id ,table-handle)
-         `(exec ,exec)))
+(defmacro @put-exec-into-table (id exec-function table-handle)
+  `(push (list 'exec ,exec-function)
+         (gethash ,id ,table-handle)))
 
 (defmacro @put-part-execs-into-table (table-handle script-handle)
   `(let ((parts (getf ,script-handle 'parts)))
@@ -46,18 +54,22 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
        (mapc #'(lambda (part-pair)
                  (let ((part-id (first part-pair))
                        (part-exec (second part-pair)))
-                   (@must-not-exist-in-table part-id table-handle)
-                   (@put-exec-into-table part-id part-exec table-handle)))
+                   (@must-exist-in-table ',part-id ,table-handle)
+                   (@put-exec-into-table ',part-id part-exec ,table-handle)))
              execs))))
+
+;;; end mechanisms
+
 
 (defun test ()
   (@with-handles (%script% %table%)
     (@create-script-from-file-into %script%)
     (@create-hash-table-into %table%)
     (@put-parts-list-into-table %table% %script%)
-    (@put-part-execs-into %table% %script%)))
+    (@put-part-execs-into-table %table% %script%)))
 
 
+#|
   (with-open-file (f "/Users/tarvydas/projects/bmfbp/svg/compiler/temp.lisp" :direction :input) 
     (let ((script (read f))
           (table (make-hash-table))) ;; part: id..execs
@@ -84,4 +96,7 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
                 (setf (getf (first part-pair) table) ;; part id
                       (list 'exec (second part-pair)))) ;; exec function
             execs))))
+
+|#
+
   
