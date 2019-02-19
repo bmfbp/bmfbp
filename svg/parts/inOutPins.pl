@@ -16,48 +16,37 @@
 % (input) pipe.
 main :-
     readFB(user_input), 
-    forall(pipeNum(_,PipeIndex),makeInputsAndOutputsForOnePipe(PipeIndex)),
+    forall(sink(_,PortID),makeInputForPipe(PortID)),
+    forall(source(_,PortID),makeOutputForPipe(PortID)),
     writeFB,
     halt.
 
-makeInputsAndOutputsForOnePipe(PipeIndex) :-
-    trace,
-    makeOutputsForPipe(PipeIndex),
-    makeInputsForPipe(PipeIndex).
-    
-makeInputsForPipe(WireIndex) :-
-    true.
-    %% pipeNum(PortId,WireIndex),
-    %% portIndex(PortId,Pin),
-    %% sink(Edge,PortId),
-    %% parent(PortId,Part),
-
-    %% we('Part='),we(Part),
-    %% we(' PortId='),we(PortId),
-    %% we(' Edge='),we(Edge), 
-    %% we(' WireIndex='),we(WireIndex),
-    %% we(' Pin='),we(Pin),
-    %% nle,
-    
-    %% asserta(inputPin(Part,Pin)),
-    %% asserta(wireIndex(Pin,WireIndex)).
-
-
-makeOutputsForPipe(PipeIndex) :-
-    pipeNum(PortId,WireIndex),
-    portIndex(PortId,Pin),
-    source(Edge,PortId),
-    parent(PortId,Part),
+makeInputForPipe(PortID) :-
+    pipeNum(PortID,WireIndex),
+    portIndex(PortID,Pin),
+    parent(PortID,Part),
 
     we('Part='),we(Part),
-    we(' PortId='),we(PortId),
-    we(' Edge='),we(Edge), 
+    we(' in  PortID='),we(PortID),
+    we(' WireIndex='),we(WireIndex),
+    we(' Pin='),we(Pin),
+    nle,
+    
+    asserta(inputPin(Part,Pin)),
+    asserta(wireIndex(Pin,WireIndex)).
+
+makeOutputForPipe(PortID) :-
+    pipeNum(PortID,WireIndex),
+    portIndex(PortID,Pin),
+    parent(PortID,Part),
+
+    we('Part='),we(Part),
+    we(' out PortID='),we(PortID),
     we(' WireIndex='),we(WireIndex),
     we(' Pin='),we(Pin),
     nle,
     
     asserta(outputPin(Part,Pin)),
-    asserta(wireIndex(Pin,WireIndex)),
-wen('z').
+    asserta(wireIndex(Pin,WireIndex)).
 
 :- include('tail').
