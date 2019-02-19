@@ -6,67 +6,152 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
 |#
 
 ;;; mechanisms
-(defmacro @with-handles (handle-list &body body)
-  `(let ,handle-list
-     ,@body))
+(defparameter %script% nil)
+(defparameter %table% nil)
 
-(defmacro @create-script-from-file-into (script-handle)
-  `(with-open-file (f "/Users/tarvydas/projects/bmfbp/svg/compiler/temp.lisp" :direction :input)
-    (setf ,script-handle (read f)))) ;; TODO: needs more error checking
+(defun @read-script-from-file ()
+  (with-open-file (f "/Users/tarvydas/projects/bmfbp/svg/compiler/temp.lisp" :direction :input)
+    (setf %script% (read f)))) ;; TODO: needs more error checking
     
-(defmacro @create-hash-table-into (table-handle)
-  `(setf ,table-handle (make-hash-table)))
+(defun @create-parts-table ()
+  (setf %table% (make-hash-table)))
 
-(defmacro @must-not-exist-in-table (id table-handle)
-  `(when (gethash ,id ,table-handle)
-    (error "part (~A) defined more than once~%" ,id)))
+(defun @preamble ()
+  (format *standard-output* "{~%  \"name\" : ~S,~%" (getf %script% 'name))
+  (format *standard-output* "  \"wirecount\" : ~d,~%" (getf %script% 'wirecount))
+  (format *standard-output* "  \"parts\" : [~%"))
 
-(defmacro @must-exist-in-table (id table-handle)
-  `(multiple-value-bind (val success)
-       (gethash ,id ,table-handle)
-     (declare (ignore val))
-(maphash #'(lambda (key val) (format *standard-output* "key=~S val=~S~%" key val)) ,table-handle)
-     (unless success
-       (error "part ~A not defined~%" ,id))))
+(defun @postamble ()
+  (format *standard-output* "~%  ]~%")
+  (format *standard-output* "}~%"))
 
-(defmacro @put-part-in-table (id table-handle)
-  ;; at each part-id, there 3 properties: exec, ins (list), outs (list)
-  `(setf (gethash ,id ,table-handle) nil))
+(defun @must-not-exist-in-table (id)
+  (when (gethash id %table%)
+    (error "part (~A) defined more than once~%" id)))
 
-(defmacro @put-parts-list-into-table (table-handle script-handle)
-  `(let ((parts (getf ,script-handle 'parts)))
-     (let ((execs (getf parts 'execs)))
-       (mapc #'(lambda (part-pair)
-                 (let ((part-id (first part-pair))
-                       (part-exec (second part-pair)))
-                   (declare (ignorable part-exec))
-                   (@must-not-exist-in-table part-id ,table-handle)
-                   (@put-part-in-table part-id ,table-handle)))
-             execs))))
+(defun @must-exist-in-table (id)
+  (multiple-value-bind (val success)
+      (gethash id %table%)
+    (declare (ignore val))
+    (unless success
+      (error "part ~A not defined~%" id))))
 
-(defmacro @put-exec-into-table (id exec-function table-handle)
-  `(push (list 'exec ,exec-function)
-         (gethash ,id ,table-handle)))
+(defun @put-part-in-table (id)
+  ;; at each part-id, there is a hash table with 6 keys: id, exec, ins-max, outs-max, ins (list), outs (list)
+  (let ((ht (make-hash-table)))
+    (setf (gethash :id ht) id
+          (gethash :exec ht) nil
+          (gethash :ins ht) nil
+          (gethash :outs ht) nil)
+    (setf (gethash id %table%) ht)))
 
-(defmacro @put-part-execs-into-table (table-handle script-handle)
-  `(let ((parts (getf ,script-handle 'parts)))
-     (let ((execs (getf parts 'execs)))
-       (mapc #'(lambda (part-pair)
-                 (let ((part-id (first part-pair))
-                       (part-exec (second part-pair)))
-                   (@must-exist-in-table ',part-id ,table-handle)
-                   (@put-exec-into-table ',part-id part-exec ,table-handle)))
-             execs))))
+(defun @put-parts-into-table ()
+  (let ((parts (getf %script% 'parts)))
+    (let ((execs (getf parts 'execs)))
+      (mapc #'(lambda (part-pair)
+                (let ((part-id (first part-pair))
+                      (part-exec (second part-pair)))
+                  (declare (ignorable part-exec))
+                  (@must-not-exist-in-table part-id)
+                  (@put-part-in-table part-id)))
+            execs))))
+
+(defun @put-exec-into-table (id exec-function)
+  (@must-exist-in-table id)
+  (let ((ht (gethash id %table%)))
+    (setf (gethash :exec ht) exec-function)))
+
+(defun @put-part-execs-into-table ()
+  (let ((parts (getf %script% 'parts)))
+    (let ((execs (getf parts 'execs)))
+      (mapc #'(lambda (part-pair)
+                (let ((part-id (first part-pair))
+                      (part-exec (second part-pair)))
+                  (@must-exist-in-table part-id)
+                  (@put-exec-into-table part-id part-exec)))
+            execs))))
+
+(defun @emit-parts ()
+  (let ((first t))
+    (maphash #'(lambda (key val)
+                 (unless first
+                   (format *standard-output* ",~%"))
+                 (setf first nil)
+                 (format *standard-output* "    {~%")
+                   (format *standard-output* "      \"partName\" : \"~S\",~%" key)
+                   (format *standard-output* "      \"exec\" : ~S~%" (gethash :exec val))
+                 (format *standard-output* "    }"))
+             %table%)))
+
+(defun @add-part-tuple-to-input-list (part-id port-id wire-index pin-index)
+  (@must-exist-in-table part-id)
+  (let ((part-ht (gethash part-id %table%))
+        (new-tuple (list port-id wire-index pin-index)))
+    (let ((old-list (gethash :ins part-ht)))
+      (setf (gethash :ins part-ht)
+            (cons new-tuple old-list)))))
+  
+(defun @add-part-tuple-to-output-list (part-id port-id wire-index pin-index)
+  (@must-exist-in-table part-id)
+  (let ((part-ht (gethash part-id %table%))
+        (new-tuple (list port-id wire-index pin-index)))
+    (let ((old-list (gethash :outs part-ht)))
+      (setf (gethash :outs part-ht)
+            (cons new-tuple old-list)))))
+  
+                 
+(defun @make-inputs-for-each-part ()
+  ;; for each part in the table, add a list of inputs ; each input is a tuple {port-id, wire-index, input-pin-index}
+  (let ((input-list (getf %script% 'ins)))
+    (dolist (in input-list)
+      (multiple-value-bind (part-id port-id wire-index pin-index) in
+        (@add-part-tuple-to-input-list part-id port-id wire-index pin-index)))))
+
+(defun @make-outputs-for-each-part ()
+  ;; for each part in the table, add a list of inputs ; each input is a tuple {port-id, wire-index, input-pin-index}
+  (let ((output-list (getf %script% 'outs)))
+    (dolist (out output-list)
+      (multiple-value-bind (part-id port-id wire-index pin-index) out
+        (@add-part-tuple-to-output-list part-id port-id wire-index pin-index)))))
+
+(defun @get-max-pin (pin-list)
+  (let ((max-so-far 0))
+    (dolist (tuple pin-list)
+      (multiple-value-bind (port-id wire-index pin-index) tuple (declare (ignore port-id wire-index))
+        (setf max-so-far (max max-so-far pin-index))))
+    max-so-far))
+
+(defun @compute-number-of-input-pins-for-each-part ()
+  ;; set the ins-max hashtable field for each part
+  (maphash #'(lambda (part-id properties-hash) (declare (ignore part-id))
+               (let ((max-pin (@get-max-pin (gethash :ins properties-hash))))
+                 (setf (gethash :ins-max properties-hash) max-pin)))
+           %table%))
+
+(defun @compute-number-of-output-pins-for-each-part ()
+  ;; set the ins-max hashtable field for each part
+  (maphash #'(lambda (part-id properties-hash) (declare (ignore part-id))
+               (let ((max-pin (@get-max-pin (gethash :outs properties-hash))))
+                 (setf (gethash :outs-max properties-hash) max-pin)))
+           %table%))
+
 
 ;;; end mechanisms
 
 
 (defun test ()
-  (@with-handles (%script% %table%)
-    (@create-script-from-file-into %script%)
-    (@create-hash-table-into %table%)
-    (@put-parts-list-into-table %table% %script%)
-    (@put-part-execs-into-table %table% %script%)))
+  (@read-script-from-file)
+  (@create-parts-table)
+  (@preamble)
+    (@put-parts-into-table)
+    (@put-part-execs-into-table)
+    (@make-inputs-for-each-part)
+    (@compute-number-of-input-pins-for-each-part)
+    (@make-outputs-for-each-part)
+    (@compute-number-of-output-pins-for-each-part)
+    (@emit-parts)
+  (@postamble)
+  (values))
 
 
 #|
