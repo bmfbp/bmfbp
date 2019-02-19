@@ -102,14 +102,14 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
                  
 (defun @make-inputs-for-each-part ()
   ;; for each part in the table, add a list of inputs ; each input is a tuple {port-id, wire-index, input-pin-index}
-  (let ((input-list (getf %script% 'ins)))
+  (let ((input-list (getf (getf %script% 'parts) 'ins)))
     (dolist (in input-list)
       (multiple-value-bind (part-id port-id wire-index pin-index) in
         (@add-part-tuple-to-input-list part-id port-id wire-index pin-index)))))
 
 (defun @make-outputs-for-each-part ()
   ;; for each part in the table, add a list of inputs ; each input is a tuple {port-id, wire-index, input-pin-index}
-  (let ((output-list (getf %script% 'outs)))
+  (let ((output-list (getf (getf %script% 'parts) 'outs)))
     (dolist (out output-list)
       (multiple-value-bind (part-id port-id wire-index pin-index) out
         (@add-part-tuple-to-output-list part-id port-id wire-index pin-index)))))
