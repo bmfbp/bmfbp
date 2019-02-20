@@ -103,11 +103,11 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
         (@add-part-tuple-to-output-list part-id port-id wire-index pin-index)))))
 
 (defun @get-max-pin (pin-list)
-  (let ((max-so-far 0))
+  (let ((max-so-far -1))
     (dolist (tuple pin-list)
       (destructuring-bind (port-id wire-index pin-index) tuple (declare (ignore port-id wire-index))
         (setf max-so-far (max max-so-far pin-index))))
-    max-so-far))
+    (1+ max-so-far)))
 
 (defun @compute-number-of-input-pins-for-each-part ()
   ;; set the ins-max hashtable field for each part
@@ -124,8 +124,14 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
            %table%))
 
 (defun @emit-parts ()
-  (labels ((emit-input-pins (part-id properties)
-             (format *standard-output* "      \"in-count\ : ~A,~%" (gethash :ins-max properties)))
+  (labels ((emit-ins (part-id properties)
+             (let ((ins (gethash :ins properties)))
+               (format *standard-output* "      ins ~S~%" ins)
+               (format *standard-output* "      \"inPins\" : [")
+               (format *standard-output* "]~%")))
+           (emit-input-pins (part-id properties)
+             (format *standard-output* "      \"in-count\ : ~A,~%" (gethash :ins-max properties))
+             (emit-ins part-id properties))
            (emit-pins (part-id properties)
              (emit-input-pins part-id properties))
            (emit-part (key val)
