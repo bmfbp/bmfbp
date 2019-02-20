@@ -71,18 +71,6 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
                   (@put-exec-into-table part-id part-exec)))
             execs))))
 
-(defun @emit-parts ()
-  (let ((first t))
-    (maphash #'(lambda (key val)
-                 (unless first
-                   (format *standard-output* ",~%"))
-                 (setf first nil)
-                 (format *standard-output* "    {~%")
-                   (format *standard-output* "      \"partName\" : \"~S\",~%" key)
-                   (format *standard-output* "      \"exec\" : ~S~%" (gethash :exec val))
-                 (format *standard-output* "    }"))
-             %table%)))
-
 (defun @add-part-tuple-to-input-list (part-id port-id wire-index pin-index)
   (@must-exist-in-table part-id)
   (let ((part-ht (gethash part-id %table%))
@@ -134,6 +122,18 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
                (let ((max-pin (@get-max-pin (gethash :outs properties-hash))))
                  (setf (gethash :outs-max properties-hash) max-pin)))
            %table%))
+
+(defun @emit-parts ()
+  (let ((first t))
+    (maphash #'(lambda (key val)
+                 (unless first
+                   (format *standard-output* ",~%"))
+                 (setf first nil)
+                 (format *standard-output* "    {~%")
+                   (format *standard-output* "      \"partName\" : \"~S\",~%" key)
+                   (format *standard-output* "      \"exec\" : ~S~%" (gethash :exec val))
+                 (format *standard-output* "    }"))
+             %table%)))
 
 
 ;;; end mechanisms
