@@ -124,16 +124,18 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
            %table%))
 
 (defun @emit-parts ()
-  (let ((first t))
-    (maphash #'(lambda (key val)
-                 (unless first
-                   (format *standard-output* ",~%"))
-                 (setf first nil)
-                 (format *standard-output* "    {~%")
-                   (format *standard-output* "      \"partName\" : \"~S\",~%" key)
-                   (format *standard-output* "      \"exec\" : ~S~%" (gethash :exec val))
-                 (format *standard-output* "    }"))
-             %table%)))
+  (labels ((emit-part (key val)
+             (format *standard-output* "    {~%")
+               (format *standard-output* "      \"partName\" : \"~S\",~%" key)
+               (format *standard-output* "      \"exec\" : ~S~%" (gethash :exec val))
+             (format *standard-output* "    }")))
+    (let ((first t))
+      (maphash #'(lambda (key val)
+                   (unless first
+                     (format *standard-output* ",~%"))
+                   (setf first nil)
+                   (emit-part key val))
+               %table%))))
 
 
 ;;; end mechanisms
