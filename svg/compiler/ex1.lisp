@@ -104,20 +104,20 @@ Part=id371 out PortID=id376 WireIndex=0 Pin=1
   ;; for each part in the table, add a list of inputs ; each input is a tuple {port-id, wire-index, input-pin-index}
   (let ((input-list (getf (getf %script% 'parts) 'ins)))
     (dolist (in input-list)
-      (multiple-value-bind (part-id port-id wire-index pin-index) in
+      (destructuring-bind (part-id port-id wire-index pin-index) in
         (@add-part-tuple-to-input-list part-id port-id wire-index pin-index)))))
 
 (defun @make-outputs-for-each-part ()
   ;; for each part in the table, add a list of inputs ; each input is a tuple {port-id, wire-index, input-pin-index}
   (let ((output-list (getf (getf %script% 'parts) 'outs)))
     (dolist (out output-list)
-      (multiple-value-bind (part-id port-id wire-index pin-index) out
+      (destructuring-bind (part-id port-id wire-index pin-index) out
         (@add-part-tuple-to-output-list part-id port-id wire-index pin-index)))))
 
 (defun @get-max-pin (pin-list)
   (let ((max-so-far 0))
     (dolist (tuple pin-list)
-      (multiple-value-bind (port-id wire-index pin-index) tuple (declare (ignore port-id wire-index))
+      (destructuring-bind (port-id wire-index pin-index) tuple (declare (ignore port-id wire-index))
         (setf max-so-far (max max-so-far pin-index))))
     max-so-far))
 
