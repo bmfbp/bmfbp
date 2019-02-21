@@ -11,87 +11,79 @@ main :-
     write('.js"'),
     nl,
     npipes(Npipes),
-    write('  "wirecount" : '),
+    write('wirecount  '),
     write(Npipes),
-    write(','),
     nl,
-    write('  "parts" : ['),
+    write('parts ('),
     nl,
-    forall(kind(ID,_),emitComponent(ID)),
-    write('  ]'),
-    nl,
-    write('}'),
+    forall(kind(ID,_),emitIns(ID)),
+    forall(kind(ID,_),emitOuts(ID)),
+    emitExecs,
+    write('  )'),
+    halt,
+    write(')'),
     halt.
 
-inPipeP(P) :-
-    portIndex(P,0).
-
-inPipeP(P) :-
-    portName(P,in).
-
-inPipeP(P) :-
-    sink(_,P).
-
-outPipeP(P) :-
-    portName(P,out).
-
-outPipeP(P) :-
-    portIndex(P,1).
-
-outPipeP(P) :-
-    source(P).
-
-errPipeP(P) :-
-    portName(P,err).
-
-errPipeP(P) :-
-    portIndex(P,2).
-
-writeIn(In) :-
-    writeSpaces,
-    inPipeP(In),
-    pipeNum(In,Pipe),
-    write('      "inPins" : [['),
-    write(Pipe),
-    write(']],'),
-    nl.
-
-writeOut(Out) :-
-    writeSpaces,
-    outPipeP(Out),
-    pipeNum(Out,Pipe),
-    write('      "outPins" : [[],['),
-    write(Pipe),
-    write(']],'),
-    nl.
-
-
-emitComponent(ID) :-
-    write('    {'),
+emitExecs:-
+    write('execs ('),
     nl,
-    forall(inputOfParent(ID,In),writeIn(In)),
-    forall(outputOfParent(ID,Out),writeOut(Out)),
-    write('        "exec" : "'),
-    kind(ID,Name),
-    write(Name),
-    nl,
-    write('    },'),
+    forall(kind(PartID,ExecName),emitExec(PartID,ExecName)),
+    write(')'),
     nl.
 
-writeSpaces :- write('  ').
+emitExec(PartID,ExecName) :-
+    write('('),
+    write(PartID),
+    write(' "'),
+    write(ExecName),
+    write('")'),
+    nl.
 
-inputOfParent(Parent,In) :-
-    parent(In,Parent),sink(_,In).
+emitIns(ParentID) :-
+    write('ins ('),
+    nl,
+    forall(parent(PortID,ParentID),emitIn(ParentID,PortID)),
+    write(')'),
+    nl.	  
 
-outputOfParent(Parent,Out) :-
-    parent(Out,Parent),source(_,Out).
-    
-hasInput(ID) :-
-    eltype(ID,box),
-    parent(Port,ID),
-    eltype(Port,port),
-    sink(_,Port).
+emitOuts(ParentID) :-
+    write('outs ('),
+    nl,
+    forall(parent(PortID,ParentID),emitOut(ParentID,PortID)),
+    write(')'),
+    nl.	  
 
+emitIn(ParentID,PortID) :-
+    eltype(PortID,port),
+    sink(Edge,PortID),
+    edge(Edge),
+    portIndex(PortID,Pin),
+    pipeNum(PortID,Wire),
+    write('('),
+    write(ParentID),
+    write(PortID),
+    write(' '),
+    write(Wire),
+    write(' '),
+    write(Pin),
+    write(')'),
+    nl.
+
+emitOut(ParentID,PortID) :-
+    eltype(PortId,port),
+    source(Edge,PortID),
+    edge(Edge),
+    portIndex(PortId,Pin),
+    pipeNum(PortID,Wire),
+    write('('),
+    write(ParentID),
+    write(PortID),
+    write(' '),
+    write(Wire),
+    write(' '),
+    write(Pin),
+    write(')'),
+    nl.
 
 :- include('tail').
 
