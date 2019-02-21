@@ -3,9 +3,9 @@
 
 main :-
     readFB(user_input),
-    write('{'),
+    write('('),
     nl,
-    write('  "name" : "'),
+    write('name "'),
     component(Name),
     write(Name),
     write('.js"'),
@@ -16,42 +16,43 @@ main :-
     nl,
     write('parts ('),
     nl,
-    forall(kind(ID,_),emitIns(ID)),
-    forall(kind(ID,_),emitOuts(ID)),
+    emitIns,
+    emitOuts,
     emitExecs,
     write('  )'),
     halt,
     write(')'),
     halt.
 
-emitExecs:-
-    write('execs ('),
-    nl,
-    forall(kind(PartID,ExecName),emitExec(PartID,ExecName)),
-    write(')'),
-    nl.
-
-emitExec(PartID,ExecName) :-
-    write('('),
-    write(PartID),
-    write(' "'),
-    write(ExecName),
-    write('")'),
-    nl.
-
-emitIns(ParentID) :-
+emitIns :-
     write('ins ('),
     nl,
-    forall(parent(PortID,ParentID),emitIn(ParentID,PortID)),
+    forall(partHasAnInput(PartID),emitIns(PartID)),
     write(')'),
-    nl.	  
+    nl.
 
-emitOuts(ParentID) :-
+emitIns(PartID) :-
+    forall(inputPortBelongingToPart(PortID),emitIn(PartID,PortID)).
+
+partHasAnInput(PartID):-
+    kind(PartID,_),
+    inputPin(PartID,_).
+
+emitOuts :-
     write('outs ('),
     nl,
-    forall(parent(PortID,ParentID),emitOut(ParentID,PortID)),
+    forall(partHasAnOutput(PartID),emitOuts(PartID)),
     write(')'),
-    nl.	  
+    nl.
+
+emitOuts(PartID) :-
+    forall(outputPortBelongingToPart(PortID),emitOut(PartID,PortID)).
+
+partHasAnOutput(PartID):-
+    kind(PartID,_),
+    outputPin(PartID,_).
+
+
 
 emitIn(ParentID,PortID) :-
     eltype(PortID,port),
@@ -61,6 +62,7 @@ emitIn(ParentID,PortID) :-
     pipeNum(PortID,Wire),
     write('('),
     write(ParentID),
+    write(' '),
     write(PortID),
     write(' '),
     write(Wire),
@@ -83,6 +85,21 @@ emitOut(ParentID,PortID) :-
     write(' '),
     write(Pin),
     write(')'),
+    nl.
+
+emitExecs:-
+    write('execs ('),
+    nl,
+    forall(kind(PartID,ExecName),emitExec(PartID,ExecName)),
+    write(')'),
+    nl.
+
+emitExec(PartID,ExecName) :-
+    write('('),
+    write(PartID),
+    write(' "'),
+    write(ExecName),
+    write('")'),
     nl.
 
 :- include('tail').
