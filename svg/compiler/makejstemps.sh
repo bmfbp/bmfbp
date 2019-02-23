@@ -27,4 +27,5 @@ assign_pipe_numbers_to_outputs <temp14.pro >temp15.pro
 assign_fds <temp15.pro >temp16a.pro
 inOutPins <temp16a.pro >temp16.pro
 plsort <temp16.pro >temp17.pro
-emit-js <temp17.pro >temp18.gsh
+emit-js <temp17.pro >temp18.lisp
+emit-js2 <temp18.lisp >temp19.js

@@ -18,7 +18,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/sem_partsHaveSomePorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -45,7 +45,10 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 $(BINDIR)/lib_insert_part_name: lib_insert_part_name.lisp
 	buildapp --output $(BINDIR)/lib_insert_part_name --load lib_insert_part_name.lisp --entry main
 
+$(BINDIR)/emit-js2: emit-js2.lisp
+	buildapp --output $(BINDIR)/emit-js2 --load emit-js2.lisp --entry main
+
 clean :
 	rm -f $(EXECS)
-	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name
+	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2
 
