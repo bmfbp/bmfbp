@@ -25,13 +25,6 @@ makeInputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
     portIndex(PortID,Pin),
     parent(PortID,Part),
-
-    we('Part='),we(Part),
-    we(' in  PortID='),we(PortID),
-    we(' WireIndex='),we(WireIndex),
-    we(' Pin='),we(Pin),
-    nle,
-    
     asserta(inputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
 
@@ -39,13 +32,6 @@ makeOutputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
     portIndex(PortID,Pin),
     parent(PortID,Part),
-
-    we('Part='),we(Part),
-    we(' out PortID='),we(PortID),
-    we(' WireIndex='),we(WireIndex),
-    we(' Pin='),we(Pin),
-    nle,
-    
     asserta(outputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
 

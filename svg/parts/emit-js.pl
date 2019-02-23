@@ -16,52 +16,34 @@ main :-
     nl,
     write('parts ('),
     nl,
-    emitIns,
-    emitOuts,
+    emitAllPins,
     emitExecs,
-    write('  )'),
-    halt,
+    write(' )'),
+    nl,
     write(')'),
     halt.
 
-emitIns :-
-    write('ins ('),
-    nl,
-    forall(partHasAnInput(PartID),emitIns(PartID)),
-    write(')'),
-    nl.
+emitAllPins :-
+    write('  ins ('), nl,
+    forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
+    write('  )'), nl,
+    write('  outs ('), nl,
+    forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
+    write('  )'), nl.
 
-emitIns(PartID) :-
-    forall(inputPortBelongingToPart(PortID),emitIn(PartID,PortID)).
+getAllInPinsForPart(PartID):-
+    forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).
 
-partHasAnInput(PartID):-
-    kind(PartID,_),
-    inputPin(PartID,_).
+inPinOfPart(PortID,PartID) :-
+    parent(PortID,PartID),
+    sink(_,PortID).
 
-emitOuts :-
-    write('outs ('),
-    nl,
-    forall(partHasAnOutput(PartID),emitOuts(PartID)),
-    write(')'),
-    nl.
-
-emitOuts(PartID) :-
-    forall(outputPortBelongingToPart(PortID),emitOut(PartID,PortID)).
-
-partHasAnOutput(PartID):-
-    kind(PartID,_),
-    outputPin(PartID,_).
-
-
-
-emitIn(ParentID,PortID) :-
+getOneInPin(PortID,PartID):-
     eltype(PortID,port),
-    sink(Edge,PortID),
-    edge(Edge),
-    portIndex(PortID,Pin),
     pipeNum(PortID,Wire),
-    write('('),
-    write(ParentID),
+    portIndex(PortID,Pin),
+    write('    ('),
+    write(PartID),
     write(' '),
     write(PortID),
     write(' '),
@@ -71,14 +53,20 @@ emitIn(ParentID,PortID) :-
     write(')'),
     nl.
 
-emitOut(ParentID,PortID) :-
-    eltype(PortId,port),
-    source(Edge,PortID),
-    edge(Edge),
-    portIndex(PortId,Pin),
+getAllOutPinsForPart(PartID):-
+    forall(outPinOfPart(PortID,PartID),getOneOutPin(PortID,PartID)).
+
+outPinOfPart(PortID,PartID) :-
+    parent(PortID,PartID),
+    source(_,PortID).
+
+getOneOutPin(PortID,PartID):-
+    eltype(PortID,port),
     pipeNum(PortID,Wire),
-    write('('),
-    write(ParentID),
+    portIndex(PortID,Pin),
+    write('    ('),
+    write(PartID),
+    write(' '),
     write(PortID),
     write(' '),
     write(Wire),
@@ -86,16 +74,17 @@ emitOut(ParentID,PortID) :-
     write(Pin),
     write(')'),
     nl.
+
 
 emitExecs:-
-    write('execs ('),
+    write('  execs ('),
     nl,
     forall(kind(PartID,ExecName),emitExec(PartID,ExecName)),
-    write(')'),
+    write('  )'),
     nl.
 
 emitExec(PartID,ExecName) :-
-    write('('),
+    write('    ('),
     write(PartID),
     write(' "'),
     write(ExecName),
@@ -103,4 +92,8 @@ emitExec(PartID,ExecName) :-
     nl.
 
 :- include('tail').
+
+
+
+
 
