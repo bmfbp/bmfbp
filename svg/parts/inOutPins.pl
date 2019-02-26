@@ -16,11 +16,8 @@
 % (input) pipe.
 main :-
     readFB(user_input),
-    wen('a'),
     forall(sink(_,PortID),makeInputForPipe(PortID)),
-    wen('b'),
     forall(source(_,PortID),makeOutputForPipe(PortID)),
-    wen('c'),
     writeFB,
     halt.
 
@@ -32,13 +29,12 @@ makeInputForPipe(PortID) :-
     asserta(wireIndex(Pin,WireIndex)).
 
 makeOutputForPipe(PortID) :-
-    wen('W'),
+    n_c(PortID).
+
+makeOutputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
-    wen(PortID),
     portIndex(PortID,Pin),
-    wen('Y'),
     parent(PortID,Part),
-    wen('Z'),
     asserta(outputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
 
