@@ -65,3 +65,4 @@
 :- dynamic(inputPin/2).
 :- dynamic(outputPin/2).
 :- dynamic(wireIndex/2).
+:- dynamic(n_c/1).

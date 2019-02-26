@@ -27,9 +27,11 @@ assign_parent_for_port(PortID) :-
 
 assign_parent_for_port(PortID) :-
     portName(PortID,Text),
+    asserta(n_c(PortID)),
     nle,nle,we('no parent box for port '),we(PortID),we(' named '),we(Text),nle,nle,nle.
 
 assign_parent_for_port(PortID) :-
+    asserta(n_c(PortID)),
     nle,nle,we('no parent box for port '),we(PortID),nle,nle,nle.
 
 intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, ParentRight, ParentBottom) :-
