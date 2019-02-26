@@ -28,6 +28,9 @@ makeInputForPipe(PortID) :-
     asserta(inputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
 
+makeInputForPipe(PortID) :-
+    n_c(PortID).
+
 makeOutputForPipe(PortID) :-
     n_c(PortID).
 
