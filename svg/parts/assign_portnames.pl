@@ -18,7 +18,6 @@ assignPort(TextID):-
     tryIndex(PortID,TextID,Str).
 
 tryIndex(PortID,NumericID,Num):-
-wen(Num),
     number(Num),
     asserta(portIndexByID(PortID,NumericID)),
     asserta(portIndex(PortID,Num)).
