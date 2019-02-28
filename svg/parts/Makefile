@@ -16,6 +16,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/make_unknown_port_names \
 	$(BINDIR)/match_ports_to_components \
 	$(BINDIR)/sem_partsHaveSomePorts \
+	$(BINDIR)/sem_allPortsHaveAnIndex \
 	$(BINDIR)/lib_insert_part_name
 
 all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2

@@ -4,8 +4,8 @@ set -v
 # scanner
 #hs-vsh-drawio-to-fb test1 <test1.svg >temp1.lisp
 #hs-vsh-drawio-to-fb test1 <test2.svg >temp1.lisp
-hs-vsh-drawio-to-fb test1 <test2a.svg >temp1.lisp
-#hs-vsh-drawio-to-fb test1 <test3.svg >temp1.lisp
+#hs-vsh-drawio-to-fb test1 <test2a.svg >temp1.lisp
+hs-vsh-drawio-to-fb test1 <test3.svg >temp1.lisp
 lib_insert_part_name svgc <temp1.lisp >temp2.lisp
 fb-to-prolog <temp2.lisp >temp3.pro
 plsort <temp3.pro >temp4.pro
@@ -23,9 +23,10 @@ match_ports_to_components <temp12.pro >temp13.pro
 
 #semantic - empty
 sem_partsHaveSomePorts <temp13.pro >temp13a.pro
+sem_allPortsHaveAnIndex <temp13a.pro >temp13b.pro
 
 # emitter
-assign_pipe_numbers_to_inputs <temp13.pro >temp14.pro
+assign_pipe_numbers_to_inputs <temp13b.pro >temp14.pro
 assign_pipe_numbers_to_outputs <temp14.pro >temp15.pro
 assign_fds <temp15.pro >temp16a.pro
 inOutPins <temp16a.pro >temp16.pro
