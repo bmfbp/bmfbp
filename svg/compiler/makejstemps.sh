@@ -5,7 +5,9 @@ set -v
 #hs-vsh-drawio-to-fb test1 <test1.svg >temp1.lisp
 #hs-vsh-drawio-to-fb test1 <test2.svg >temp1.lisp
 #hs-vsh-drawio-to-fb test1 <test2a.svg >temp1.lisp
-hs-vsh-drawio-to-fb test1 <test3.svg >temp1.lisp
+#hs-vsh-drawio-to-fb test1 <test3.svg >temp1.lisp
+#hs-vsh-drawio-to-fb test1 <test4.svg >temp1.lisp
+hs-vsh-drawio-to-fb test1 <test5.svg >temp1.lisp
 lib_insert_part_name svgc <temp1.lisp >temp2.lisp
 fb-to-prolog <temp2.lisp >temp3.pro
 plsort <temp3.pro >temp4.pro
@@ -18,7 +20,9 @@ make_unknown_port_names <temp7.pro >temp8.pro
 create_centers <temp8.pro >temp9.pro
 calculate_distances <temp9.pro >temp10.pro
 assign_portnames <temp10.pro >temp11.pro
-mark_directions <temp11.pro >temp12.pro
+markIndexedPorts <temp11.pro >temp11a.pro
+coincidentPorts <temp11a.pro >temp11b.pro
+mark_directions <temp11b.pro >temp12.pro
 match_ports_to_components <temp12.pro >temp13.pro
 
 #semantic - empty

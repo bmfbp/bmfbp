@@ -3,8 +3,7 @@
 (defparameter %table% nil)
 
 (defun @read-script-from-file ()
-  (with-open-file (f "/Users/tarvydas/projects/bmfbp/svg/compiler/temp.lisp" :direction :input)
-    (setf %script% (read f)))) ;; TODO: needs more error checking
+  (setf %script% (read *standard-input*))) ;; TODO: needs more error checking
     
 (defun @create-parts-table ()
   (setf %table% (make-hash-table)))
@@ -123,10 +122,10 @@
                          (destructuring-bind (port wire pin)
                              tuple
                            (declare (ignore port))
-                           (unless first
-                             (format *standard-output* ",")
-                             (setq first nil))
                            (when (= i pin)
+                             (unless first
+                               (format *standard-output* ","))
+                             (setq first nil)
                              (format *standard-output* "~a" wire))))
                      pinlist)))
            (emit-pin-list (count pinlist)

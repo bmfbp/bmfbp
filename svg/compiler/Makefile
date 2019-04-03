@@ -29,7 +29,7 @@ clean: clean-temps clean-passes
 
 clean-temps:
 	rm -f *.pro
-	rm -f temp1.lisp temp18.gsh
+	rm -f temp1.lisp temp18.lisp temp19.js
 
 test : dependencies
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)

@@ -61,6 +61,8 @@ writeFB :-
     forall(outputPin(X,Y), writeterm(outputPin(X,Y))),
     forall(wireIndex(X,Y), writeterm(wireIndex(X,Y))),
     forall(n_c(X), writeterm(n_c(X))),
+    forall(indexedSink(X), writeterm(indexedSink(X))),
+    forall(indexedSource(X), writeterm(indexedSource(X))),
     forall(parent(X,Y), writeterm(parent(X,Y))).
 
 wspc :-
@@ -337,6 +339,14 @@ element(distance(X,Y), Str) :- !,
 
 element(n_c(X), Str) :- !,
 			     asserta(n_c(X)),
+			     readFB(Str).
+
+element(indexedSink(X), Str) :- !,
+			     asserta(indexedSink(X)),
+			     readFB(Str).
+
+element(indexedSource(X), Str) :- !,
+			     asserta(indexedSource(X)),
 			     readFB(Str).
 
 
