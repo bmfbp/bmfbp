@@ -8,47 +8,47 @@ main :-
     write(Name),
     write('.gsh'),
     nl,
-    npipes(Npipes),
-    write('pipes '),
-    write(Npipes),
+    nwires(Nwires),
+    write('wires '),
+    write(Nwires),
     nl,
     forall(kind(ID,_),emitComponent(ID)),
     halt.
 
-inPipeP(P) :-
+inWireP(P) :-
     portName(P,0).
 
-inPipeP(P) :-
+inWireP(P) :-
     portName(P,in).
 
-outPipeP(P) :-
+outWireP(P) :-
     portName(P,out).
 
-outPipeP(P) :-
+outWireP(P) :-
     portName(P,1).
 
-errPipeP(P) :-
+errWireP(P) :-
     portName(P,err).
 
-errPipeP(P) :-
+errWireP(P) :-
     portName(P,2).
 
 writeIn(In) :-
     writeSpaces,
-    inPipeP(In),!,
-    pipeNum(In,Pipe),
-    write('inPipe'),
+    inWireP(In),!,
+    wireNum(In,Wire),
+    write('inWire'),
     write(' '),
-    write(Pipe),
+    write(Wire),
     nl.
 
 writeOut(Out) :-
     writeSpaces,
-    outPipeP(Out),!,
-    pipeNum(Out,Pipe),
-    write('outPipe'),
+    outWireP(Out),!,
+    wireNum(Out,Wire),
+    write('outWire'),
     write(' '),
-    write(Pipe),
+    write(Wire),
     nl.
 
 

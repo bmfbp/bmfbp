@@ -1,41 +1,41 @@
 :- initialization(main).
 :- include('head').
 
-% Pipes (term taken from Unix) are just indices to an array of pipes.
-% Each pipe is just an array of 2 elements - the input side of a tube
+% Wires (term taken from electronics schematics) are just indices to an array of wires.
+% Each wire is described by an array of 2 elements - the input side of a tube
 % and the output side of the same tube.
-% We can fashion fan-in and fan-out by thinking of pipes as one-way
+% We can fashion fan-in and fan-out by thinking of wires as one-way
 % segments between one input port and one output port.  Fan-in is fashioned
-% as multiple pipes outputing to the same (input/sink) port (i.e. all of these
-% kinds of pipes have the same output-side port (a sink)).
-% Fan-out is fashioned by a single pipe from the source to a "copier"
-% (a "dot" on a schematic).  The "copier" has as many output pipes are needed
-% to service all fan-out segments with unique pipes (i.e. all of fan-out
-% pipes have the same source port).  Later, we can remove the concept of
-% "copier" and simply have a bunch of pipes that all have the same source
-% (input) pipe.
+% as multiple wires outputing to the same (input/sink) port (i.e. all of these
+% kinds of wires have the same output-side port (a sink)).
+% Fan-out is fashioned by a single wire from the source to a "copier"
+% (a "dot" on a schematic).  The "copier" has as many output wires as needed
+% to service all fan-out segments with unique wires (i.e. all of fan-out
+% wires have the same source port).  Later, we can remove the concept of
+% "copier" and simply have a bunch of wires that all have the same source
+% (input) wire.
 main :-
     readFB(user_input),
-    forall(sink(_,PortID),makeInputForPipe(PortID)),
-    forall(source(_,PortID),makeOutputForPipe(PortID)),
+    forall(sink(_,PortID),makeInputForWire(PortID)),
+    forall(source(_,PortID),makeOutputForWire(PortID)),
     writeFB,
     halt.
 
-makeInputForPipe(PortID) :-
-    pipeNum(PortID,WireIndex),
+makeInputForWire(PortID) :-
+    wireNum(PortID,WireIndex),
     portIndex(PortID,Pin),
     parent(PortID,Part),
     asserta(inputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
 
-makeInputForPipe(PortID) :-
+makeInputForWire(PortID) :-
     n_c(PortID).
 
-makeOutputForPipe(PortID) :-
+makeOutputForWire(PortID) :-
     n_c(PortID).
 
-makeOutputForPipe(PortID) :-
-    pipeNum(PortID,WireIndex),
+makeOutputForWire(PortID) :-
+    wireNum(PortID,WireIndex),
     portIndex(PortID,Pin),
     parent(PortID,Part),
     asserta(outputPin(Part,Pin)),

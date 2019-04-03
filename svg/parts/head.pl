@@ -25,9 +25,9 @@
 :- dynamic(move_relative_x/2) .
 :- dynamic(move_relative_y/2) .
 :- dynamic(node/1) .
-:- dynamic(npipes/1).
+:- dynamic(nwiress/1).
 :- dynamic(parent/2).
-:- dynamic(pipeNum/2).
+:- dynamic(wireNum/2).
 :- dynamic(portName/2) .
 :- dynamic(portNameByID/2) .
 :- dynamic(portIndex/2) .
@@ -46,9 +46,9 @@
 :- dynamic(rect_w/2).
 :- dynamic(rect_h/2).
 :- dynamic(sink/2) .
-:- dynamic(sinkfd/2).
+:- dynamic(sinkIndex/2).
 :- dynamic(source/2) .
-:- dynamic(sourcefd/2).
+:- dynamic(sourceIndex/2).
 :- dynamic(stroke_absolute_x/2) .
 :- dynamic(stroke_absolute_y/2) .
 :- dynamic(stroke_relative_x/2) .

@@ -4,15 +4,15 @@
 main :-
     g_assign(counter,0),
     readFB(user_input),
-    forall(sink(_,Pin),assign_pipe_number(Pin)),
+    forall(sink(_,Pin),assign_wire_number(Pin)),
     g_read(counter,N),
-    asserta(npipes(N)),
+    asserta(nwire(N)),
     writeFB,
     halt.
 
-assign_pipe_number(Pin) :-
+assign_wire_number(Pin) :-
     g_read(counter,Old),
-    asserta(pipeNum(Pin,Old)),
+    asserta(wireNum(Pin,Old)),
     inc(counter,_).
 
 :- include('tail').
