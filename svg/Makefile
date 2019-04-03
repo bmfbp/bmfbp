@@ -2,7 +2,8 @@ all:
 	cd ../grash && make
 	cd ../hs-vsh && make
 	cd parts && make
-	cd compiler && make
+#	cd compiler && make
+	cd compiler && make js
 	cd compiler && make passes
 
 clean: clean-passes

@@ -4,6 +4,9 @@ To build:
 > make clean
 > make
 
+< see compiler/temp.js for output >
+
+
 To regression test:
 > make clean
 > make
