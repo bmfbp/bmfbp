@@ -5,7 +5,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/mark_directions \
 	$(BINDIR)/assign_wire_numbers_to_inputs \
 	$(BINDIR)/assign_wire_numbers_to_outputs \
-	$(BINDIR)/assign_fds \
+	$(BINDIR)/assign_portIndices \
 	$(BINDIR)/emit-js \
 	$(BINDIR)/inOutPins \
 	$(BINDIR)/add_kinds \
@@ -52,5 +52,5 @@ $(BINDIR)/emit-js2: emit-js2.lisp
 
 clean :
 	rm -f $(EXECS)
-	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2
+	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2 ${BINDIR}/js-passes* ${BINDIR}/sem_* ${BINDIR}/semantics.gsh
 

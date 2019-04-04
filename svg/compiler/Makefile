@@ -7,14 +7,11 @@ SVG_DIAGRAM=svgc.svg
 REGRESSION=regression.gsh
 PASSES-REGRESSION=passes-regression.gsh
 
-all: dependencies passes
+all: dependencies js
 
-js : all
+js :
 	./build-js.sh
 	./run-js.sh
-
-svgpasses : dependencies ./build-svgpasses
-	./build-svg
 
 dependencies:
 	mkdir -p $(BINDIR)
@@ -24,30 +21,26 @@ dependencies:
 	chmod a+x $(BINDIR)/flatbmfbp
 	cp svg.gsh $(BINDIR)
 
-clean: clean-temps clean-passes
+clean: clean-temps clean-passes clean-dependencies
 	rm -f $(BINDIR)/bmfbp $(BINDIR)/svg.gsh $(REGRESSION) $(BINDIR)/flatbmfbp
+	rm -f ${BINDIR}/pass-js-emit.gsh
+	rm -f ${BINDIR}/pass-js-emit
 
 clean-temps:
 	rm -f *.pro
 	rm -f temp1.lisp temp18.lisp temp19.js
+
+clean-dependencies:
+	rm -f ${BINDIR}/bmfbp.sh
+	rm -f ${BINDIR}/flatbmfbp.sh
+	rm -f ${BINDIR}/svg.gsh
+	rm -f ${BINDIR}/comparegsh.sh
 
 test : dependencies
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	sleep 1
 	cp $(BINDIR)/svg.gsh ./temp.gsh
 	comparegsh.sh temp.gsh $(REGRESSION)
-
-passes : passes-linux passes-js
-
-passes-linux :
-	flatbmfbp passes.svg >$(BINDIR)/svgpasses.gsh
-	flatbmfbp scanner.svg >$(BINDIR)/scanner.gsh
-	flatbmfbp parser.svg >$(BINDIR)/parser.gsh
-	flatbmfbp semantics.svg >$(BINDIR)/semantics.gsh
-	flatbmfbp emitter.svg >$(BINDIR)/emitter.gsh
-	cp svgpasses scanner parser semantics emitter unity comparegsh.sh $(BINDIR)
-	chmod a+x $(BINDIR)/svgpasses $(BINDIR)/unity $(BINDIR)/scanner $(BINDIR)/parser \
-		$(BINDIR)/semantics $(BINDIR)/emitter $(BINDIR)/comparegsh.sh
 
 passes-js :
 	./build-js.sh
@@ -64,7 +57,7 @@ test-passes: passes
 
 clean-passes :
 	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh \
-		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh
+		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh ${BINDIR}/svgpasses
 	rm -f $(BINDIR)/semantics $(BINDIR)/scanner $(BINDIR)/parser \
 		$(BINDIR)/emitter ${BINDIR}/js-emitter \
 		${BINDIR}/svgjspasses*

@@ -25,7 +25,7 @@
 :- dynamic(move_relative_x/2) .
 :- dynamic(move_relative_y/2) .
 :- dynamic(node/1) .
-:- dynamic(nwiress/1).
+:- dynamic(nwires/1).
 :- dynamic(parent/2).
 :- dynamic(wireNum/2).
 :- dynamic(portName/2) .
