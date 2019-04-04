@@ -1,3 +1,3 @@
 #!/bin/bash
 export BINDIR=~/bin
-grash ${BINDIR}/js-passes.gsh test1 <test1.svg > temp.js
+grash ${BINDIR}/js-passes.gsh test5 <test5.svg > temp.js

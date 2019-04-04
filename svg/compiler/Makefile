@@ -10,8 +10,8 @@ PASSES-REGRESSION=passes-regression.gsh
 all: dependencies passes
 
 js : all
-	./build-js
-	./run-js
+	./build-js.sh
+	./run-js.sh
 
 svgpasses : dependencies ./build-svgpasses
 	./build-svg
