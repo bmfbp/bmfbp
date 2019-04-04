@@ -7,15 +7,21 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/assign_pipe_numbers_to_outputs \
 	$(BINDIR)/assign_fds \
 	$(BINDIR)/emit \
+	$(BINDIR)/emit-js \
+	$(BINDIR)/inOutPins \
 	$(BINDIR)/add_kinds \
 	$(BINDIR)/assign_portnames \
 	$(BINDIR)/calculate_distances \
 	$(BINDIR)/create_centers \
 	$(BINDIR)/make_unknown_port_names \
 	$(BINDIR)/match_ports_to_components \
+	$(BINDIR)/sem_partsHaveSomePorts \
+	$(BINDIR)/sem_allPortsHaveAnIndex \
+	$(BINDIR)/markIndexedPorts \
+	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -42,7 +48,10 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 $(BINDIR)/lib_insert_part_name: lib_insert_part_name.lisp
 	buildapp --output $(BINDIR)/lib_insert_part_name --load lib_insert_part_name.lisp --entry main
 
+$(BINDIR)/emit-js2: emit-js2.lisp
+	buildapp --output $(BINDIR)/emit-js2 --load emit-js2.lisp --entry main
+
 clean :
 	rm -f $(EXECS)
-	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name
+	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2
 

@@ -1,0 +1,9 @@
+#!/bin/bash
+set -v
+make clean
+make
+make test
+cd compiler
+./build-js.sh
+#./run-js.sh
+./makejstemps.sh

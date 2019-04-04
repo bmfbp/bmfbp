@@ -1,0 +1,59 @@
+All Parts are concurrent, hence, the editor can be built piece-meal and snapped together.
+
+Pieces:
+
+- Renderer - renders graphic atoms onto screen (browser?) from a display list and/or factbase, e.g. straight line segments, curved line segments, text, ellipses, (rects?  - can be built with straight line segments), rounded rects, cursor, mark, "transients" (some kind of representation of objects that have been selected), highlighting (indication), mouse
+
+- Factbase - to hold the graphic atoms (?), including groups of graphic objects
+
+- mouse gesture tracker ; mouse-move (by various increments)
+
+- keyboard tracker & keybinding
+
+- "control" tracker (often referred to as "graphic handles" ; to change a Bezier curve)
+
+- hit-stack controller - add/remove objects from hit-stack, provide top of hit-stack, roll hit-stack
+
+
+- buffers - allow editing of multiple diagrams simultaneously - show buffers, switch buffer, new/open/close buffer
+
+- build - compile a buffer, compile all buffers
+
+- error viewer/buffer
+
+- status line(s)
+
+- menu system
+
+- views - show a buffer on-screen
+
+- grid - set-size, provide closest coordinate as a function of a given coordinate
+
+- text editor - in-place editing is most convenient, else pop-up text editor ; edit/save/new text item ; set foreground/background colour, size, font, bold/italic/underline/overstrike, text-anchor etc.
+
+- graphic object attributes - foreground/background colours, line-width
+
+- arrowheads
+
+- macros - normalize selected graphic object, save/restore
+
+- operators - to manipulate graphic atoms (all accessible from keyboard / menu, may be bound to mouse gestures)
+-- show/hide controls and nodes (a "node" is a natural endpoint of some graphic element, e.g. two ends of a line, bounding box of a textbox, etc. ; a "control" is an artificial handle that provides manipulation of graphic elements, e.g. handles that control the curvature of a Bezier curve).
+-- group/ungroup/resize all selected items
+-- add item(s) to selection list
+-- resize NESW (north/east/south/west), expand/shrink group/item uniformly in all directions
+-- create/follow link into new/existing buffer
+-- copy/del/paste selected
+-- move selected: to mark, to cursor
+-- move viewport view (panning, scrolling, zooming)
+-- select at cursor including all objects connected to selected item (eg. select all nodes of a line, then move the selected items (nodes))
+
+- transients ; create/make-invisible/move (separate FB for convenience?) 
+
+- region/marquee/rubber-band tracker
+
+- search
+
+- print - convert to pdf(?) and print (save then print?)
+>>>>>>> editor
+

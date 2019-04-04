@@ -46,6 +46,8 @@ writeFB :-
     forall(node(X), writeterm(node(X))),
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
+    forall(portIndex(X,Y), writeterm(portIndex(X,Y))),
+    forall(portIndexByID(X,Y), writeterm(portIndexByID(X,Y))),
     forall(portName(X,Y), writeterm(portName(X,Y))),
     forall(portNameByID(X,Y), writeterm(portNameByID(X,Y))),
     forall(unassigned(X), writeterm(unassigned(X))),
@@ -55,6 +57,12 @@ writeFB :-
     forall(pipeNum(X,Y), writeterm(pipeNum(X,Y))),
     forall(sourcefd(X,Y), writeterm(sourcefd(X,Y))),
     forall(sinkfd(X,Y), writeterm(sinkfd(X,Y))),
+    forall(inputPin(X,Y), writeterm(inputPin(X,Y))),
+    forall(outputPin(X,Y), writeterm(outputPin(X,Y))),
+    forall(wireIndex(X,Y), writeterm(wireIndex(X,Y))),
+    forall(n_c(X), writeterm(n_c(X))),
+    forall(indexedSink(X), writeterm(indexedSink(X))),
+    forall(indexedSource(X), writeterm(indexedSource(X))),
     forall(parent(X,Y), writeterm(parent(X,Y))).
 
 wspc :-
@@ -74,6 +82,12 @@ readFB(Str) :-
 element(end_of_file, _) :- !.
 element(eltype(X,Y), Str) :- !,
 			   asserta(eltype(X,Y)),
+		       readFB(Str).
+element(portIndex(X,Y), Str) :- !,
+			   asserta(portIndex(X,Y)),
+		       readFB(Str).
+element(portIndexByID(X,Y), Str) :- !,
+			   asserta(portIndexByID(X,Y)),
 		       readFB(Str).
 element(portName(X,Y), Str) :- !,
 			   asserta(portName(X,Y)),
@@ -160,6 +174,18 @@ element(center_y(X,Y), Str) :- !,
 
 element(parent(X,Y), Str) :- !,
 			     asserta(parent(X,Y)),
+			     readFB(Str).
+
+element(wireIndex(X,Y), Str) :- !,
+			     asserta(wireIndex(X,Y)),
+			     readFB(Str).
+
+element(inputPin(X,Y), Str) :- !,
+			     asserta(inputPin(X,Y)),
+			     readFB(Str).
+
+element(outputPin(X,Y), Str) :- !,
+			     asserta(outputPin(X,Y)),
 			     readFB(Str).
 
 element(line(X,Y), Str) :- !,
@@ -307,13 +333,21 @@ element(distance_xy(X,Y), Str) :- !,
 element(centerPair(X,Y), Str) :- !,
 			     asserta(centerPair(X,Y)),
 			     readFB(Str).
-element(distanc(X,Y), Str) :- !,
-			     asserta(distanc(X,Y)),
-			     readFB(Str).
-element(distanc_xy(X,Y), Str) :- !,
-			     asserta(distance_xy(X,Y)),
+element(distance(X,Y), Str) :- !,
+			     asserta(distance(X,Y)),
 			     readFB(Str).
 
+element(n_c(X), Str) :- !,
+			     asserta(n_c(X)),
+			     readFB(Str).
+
+element(indexedSink(X), Str) :- !,
+			     asserta(indexedSink(X)),
+			     readFB(Str).
+
+element(indexedSource(X), Str) :- !,
+			     asserta(indexedSource(X)),
+			     readFB(Str).
 
 
     

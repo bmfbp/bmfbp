@@ -1,4 +1,3 @@
 #!/bin/bash
-#BINDIR=~/bin
-#grash $(BINDIR)/emitter.gsh $1 $2
-grash ~/bin/emitter.gsh $1 $2
+BINDIR=~/bin
+grash ${BINDIR}/emitter.gsh $1 $2

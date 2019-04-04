@@ -12,27 +12,26 @@ assignUnassignedTextToPorts :-
 
 assignPort(TextID):-
     minimumDistanceToAPort(TextID,PortID),
-%  write(user_error,'0 '),write(user_error,TextID),wspc,write(user_error,PortID),nl(user_error),
-    asserta(portNameByID(PortID,TextID)),
     text(TextID,Str),
-%  write(user_error,TextID),wspc,write(user_error,PortID),wspc,write(user_error,Str),nlu,
-    asserta(portName(PortID,Str)).
+    asserta(portNameByID(PortID,TextID)),
+    asserta(portName(PortID,Str)),
+    tryIndex(PortID,TextID,Str).
+
+tryIndex(PortID,NumericID,Num):-
+    number(Num),
+    asserta(portIndexByID(PortID,NumericID)),
+    asserta(portIndex(PortID,Num)).
+    
+tryIndex(_,_,_):-
+    true.
 
 minimumDistanceToAPort(TextID,PortID) :-
-%  write(user_error,'1 '),write(user_error,TextID),nl(user_error),
     unassigned(TextID),  %% redundant (since the caller asserts this)
-%  write(user_error,'2 '),write(user_error,TextID),nl(user_error),
     findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDList),
-%  write(user_error,'3 '),write(user_error,TextID),nl(user_error),
     splitLists(DistancePortIDList,Distances,PortIDs),
-%  write(user_error,'4 '),write(user_error,TextID),nl(user_error),
-%  write(user_error,'5 '),write(user_error,TextID),nl(user_error),
     findMinimumDistanceInList(Distances,Min),
-%  write(user_error,'6 '),write(user_error,TextID),nl(user_error),
     findPositionOfMinimumInList(Min,Distances,Index),
-%  write(user_error,'7 '),write(user_error,TextID),nl(user_error),
     findPortAtIndex(Index,PortIDs,PortID).
-%  we('8 '),we(TextID),wspc,we(Index),wspc,we(PortID),nl(user_error).
 
 findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDPairList):-
     findall(DistancePortIDPair,findOneDistanceToAPortFromGivenUnassignedText(TextID,DistancePortIDPair),DistancePortIDPairList).

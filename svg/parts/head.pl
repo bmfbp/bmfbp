@@ -30,6 +30,8 @@
 :- dynamic(pipeNum/2).
 :- dynamic(portName/2) .
 :- dynamic(portNameByID/2) .
+:- dynamic(portIndex/2) .
+:- dynamic(portIndexByID/2) .
 :- dynamic(unassigned/1) .
 :- dynamic(source/2) .
 :- dynamic(source_x/2) .
@@ -60,3 +62,9 @@
 :- dynamic(join_centerPair/2).
 :- dynamic(join_distance/2).
 :- dynamic(distance_xy/2).
+:- dynamic(inputPin/2).
+:- dynamic(outputPin/2).
+:- dynamic(wireIndex/2).
+:- dynamic(n_c/1).
+:- dynamic(indexedSink/1).
+:- dynamic(indexedSource/1).

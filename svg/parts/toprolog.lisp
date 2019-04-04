@@ -52,7 +52,7 @@
 		 (format strm "bounding_box_right(~A,~A).~%" begin-id (+ x1 *p*))
 		 (format strm "bounding_box_bottom(~A,~A).~%" begin-id (+ y1 *p*))
 		 
-		 (format strm "edge(~A).~%" edge-id)
+		 ;(format strm "edge(~A).~%" edge-id)
 		 (format strm "node(~A).~%" end-id)
 		 (format strm "sink(~A,~A).~%" edge-id end-id)
 		 (format strm "eltype(~A,port).~%" end-id)

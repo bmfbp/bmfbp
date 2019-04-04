@@ -1,0 +1,3 @@
+#!/bin/bash
+BINDIR=~/bin
+grash ${BINDIR}/pass-js-emit.gsh $1 $2
