@@ -24,7 +24,6 @@ findCoincidentSink(A):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
-    %we('sink '),we(B),we(' coincides with sink '),we(A),we(' index '),wen(I),
     asserta(portIndex(B,I)).
 
 findCoincidentSink(_):-
@@ -48,7 +47,6 @@ findCoincidentSource(A):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
-    %we('source '),we(B),we(' coincides with source '),we(A),we(' index '),wen(I),
     asserta(portIndex(B,I)).
 
 findCoincidentSource(_):-

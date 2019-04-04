@@ -26,8 +26,10 @@
 :- dynamic(move_relative_y/2) .
 :- dynamic(node/1) .
 :- dynamic(npipes/1).
+:- dynamic(nwires/1).
 :- dynamic(parent/2).
 :- dynamic(pipeNum/2).
+:- dynamic(wireNum/2).
 :- dynamic(portName/2) .
 :- dynamic(portNameByID/2) .
 :- dynamic(portIndex/2) .
