@@ -7,9 +7,9 @@ SVG_DIAGRAM=svgc.svg
 REGRESSION=regression.gsh
 PASSES-REGRESSION=passes-regression.gsh
 
-all: dependencies passes
+all: dependencies passes js
 
-js : all
+js :
 	./build-js.sh
 	./run-js.sh
 
