@@ -12,7 +12,7 @@ krof
 fork
   inPipe 16
   outPipe 5
-  exec assign_fds
+  exec assign_portIndices
 krof
 fork
   inPipe 4

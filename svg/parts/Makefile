@@ -5,7 +5,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/mark_directions \
 	$(BINDIR)/assign_wire_numbers_to_inputs \
 	$(BINDIR)/assign_wire_numbers_to_outputs \
-	$(BINDIR)/assign_fds \
+	$(BINDIR)/assign_portIndices \
 	$(BINDIR)/emit \
 	$(BINDIR)/emit-js \
 	$(BINDIR)/inOutPins \
