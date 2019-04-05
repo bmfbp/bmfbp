@@ -4,6 +4,13 @@ To build:
 > make clean
 > make
 
+To build js version:
+> make clean
+> make
+> cd compiler
+> make js
+(look at temp.js)
+
 To regression test:
 > make clean
 > make
