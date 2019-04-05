@@ -17,12 +17,12 @@ krof
 fork
   inPipe 4
   outPipe 16
-  exec assign_pipe_numbers_to_outputs
+  exec assign_wire_numbers_to_outputs
 krof
 fork
   inPipe 10
   outPipe 4
-  exec assign_pipe_numbers_to_inputs
+  exec assign_wire_numbers_to_inputs
 krof
 fork
   inPipe 9
