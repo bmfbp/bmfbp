@@ -24,8 +24,11 @@ dependencies:
 	chmod a+x $(BINDIR)/flatbmfbp
 	cp svg.gsh $(BINDIR)
 
-clean: clean-temps clean-passes
+clean: clean-temps clean-passes clean-dependencies clean-js
 	rm -f $(BINDIR)/bmfbp $(BINDIR)/svg.gsh $(REGRESSION) $(BINDIR)/flatbmfbp
+
+clean-dependencies:
+	rm -rf ${BINDIR}/bmfbp ${BINDIR}/flatbmfbp ${BINDIR}/svg.gsh ${BINDIR}/comparegsh.sh
 
 clean-temps:
 	rm -f *.pro
@@ -63,9 +66,14 @@ test-passes: passes
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
 
 clean-passes :
-	rm -f $(BINDIR)/svgpasses.gsh $(BINDIR)/scanner.gsh \
-		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh
-	rm -f $(BINDIR)/semantics $(BINDIR)/scanner $(BINDIR)/parser \
+	rm -f $(BINDIR)/svgpasses* $(BINDIR)/scanner.gsh \
+		$(BINDIR)/parser.gsh $(BINDIR)/emitter.gsh ${BINDIR}/unity
+	rm -f $(BINDIR)/semantics* $(BINDIR)/scanner $(BINDIR)/parser \
 		$(BINDIR)/emitter ${BINDIR}/js-emitter \
 		${BINDIR}/svgjspasses*
 	rm -f $(PASSES-REGRESSION)
+
+clean-js:
+	rm -f ${BINDIR}/js-emitter ${BINDIR}/js-passes* ${BINDIR}/pass-js-emit*
+	rm -f temp.js
+
