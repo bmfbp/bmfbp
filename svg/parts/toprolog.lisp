@@ -41,7 +41,7 @@
                (destructuring-bind (end-sym x2 y2)
                    end
 		 (declare (ignore end-sym))
-		 (format strm "line(~A,'').~%"	new-id)
+		 (format strm "line(~A).~%"	new-id)
 
 		 (format strm "edge(~A).~%" edge-id)
 		 (format strm "source(~A,~A).~%" edge-id begin-id)
