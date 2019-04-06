@@ -8,6 +8,7 @@
 % yEd creates lines with clearly delineated sources and sinks, hence, this pass is
 % redundant for this particular application (using yEd); just read and re-emit all facts
 
+%% obsolete - no longer used, except in flatbmfbp bootstrapper
 
 :- initialization(main).
 :- include('head').
