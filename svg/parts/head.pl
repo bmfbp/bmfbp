@@ -41,7 +41,7 @@
 :- dynamic(sink_y/2) .
 :- dynamic(sink/1).
 :- dynamic(source/1).
-:- dynamic(rect/2).
+:- dynamic(rect/1).
 :- dynamic(rect_x/2).
 :- dynamic(rect_y/2).
 :- dynamic(rect_w/2).

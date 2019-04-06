@@ -62,7 +62,7 @@
          (destructuring-bind (rect-sym x1 y1 w h)
              list
            (declare (ignore rect-sym))
-           (format strm "rect(~A,'').~%eltype(~A,box).~%~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+           (format strm "rect(~A).~%eltype(~A,box).~%~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))
         
         (text
@@ -79,7 +79,7 @@
          (destructuring-bind (arrow-sym x1 y1)
              list
            (declare (ignore arrow-sym))
-           (format strm "arrow(~A,'').~%arrow_x(~A,~A).~%arrow_y(~A,~A).~%"
+           (format strm "arrow(~A).~%arrow_x(~A,~A).~%arrow_y(~A,~A).~%"
                    new-id new-id x1 new-id y1)))
 
         (otherwise
