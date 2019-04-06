@@ -37,7 +37,7 @@ assign_parent_for_port(PortID) :-
 intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, ParentRight, ParentBottom) :-
     % true if child bounding box center intersect parent bounding box
     % bottom is >= top in this coord system
-    % the code below only checks to see if all edges of the port are within the parent box
+    % the code below only checks to see if all lines of the port are within the parent box
     % this should be tightened up to check that a port actually intersects one of the edges of the parent box
     PortLeft =< ParentRight,
     PortRight >= ParentLeft,

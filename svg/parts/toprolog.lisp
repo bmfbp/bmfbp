@@ -30,8 +30,7 @@
 
         (line
 	 (let ((begin-id (next-id))
-	       (end-id (next-id))
-	       (edge-id (next-id)))
+	       (end-id (next-id)))
            (destructuring-bind (line-sym begin end)
                list
              (declare (ignore line-sym))
@@ -42,16 +41,14 @@
                    end
 		 (declare (ignore end-sym))
 		 (format strm "line(~A).~%"	new-id)
-
-		 (format strm "edge(~A).~%" edge-id)
-		 (format strm "source(~A,~A).~%" edge-id begin-id)
+		 (format strm "source(~A,~A).~%" new-id begin-id)
 		 (format strm "eltype(~A,port).~%" begin-id)
 		 (format strm "bounding_box_left(~A,~A).~%" begin-id (- x1 *p*))
 		 (format strm "bounding_box_top(~A,~A).~%" begin-id (- y1 *p*))
 		 (format strm "bounding_box_right(~A,~A).~%" begin-id (+ x1 *p*))
 		 (format strm "bounding_box_bottom(~A,~A).~%" begin-id (+ y1 *p*))
 		 
-		 (format strm "sink(~A,~A).~%" edge-id end-id)
+		 (format strm "sink(~A,~A).~%" new-id end-id)
 		 (format strm "eltype(~A,port).~%" end-id)
 		 (format strm "bounding_box_left(~A,~A).~%" end-id (- x2 *p*))
 		 (format strm "bounding_box_top(~A,~A).~%" end-id (- y2 *p*))

@@ -37,7 +37,6 @@ writeFB :-
     forall(center_x(X,Y), writeterm(center_x(X,Y))),
     forall(center_y(X,Y), writeterm(center_y(X,Y))),
     forall(component(X), writeterm(component(X))),
-    forall(edge(X), writeterm(edge(X))),
     forall(eltype(X,Y), writeterm(eltype(X,Y))),
     forall(geometry_h(X,Y), writeterm(geometry_h(X,Y))),
     forall(geometry_w(X,Y), writeterm(geometry_w(X,Y))),
@@ -121,9 +120,6 @@ element(used(X), Str) :- !,
 		       readFB(Str).
 element(component(X), Str) :- !,
 			   asserta(component(X)),
-		       readFB(Str).
-element(edge(X), Str) :- !,
-			   asserta(edge(X)),
 		       readFB(Str).
 element(source(X,Y), Str) :- !,
 			   asserta(source(X,Y)),

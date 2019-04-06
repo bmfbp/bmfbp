@@ -9,9 +9,9 @@ main :-
     halt.
 
 aopn(INPUT_PIN) :- 
-    sink(EDGE,INPUT_PIN),
+    sink(LINE,INPUT_PIN),
     pipeNum(INPUT_PIN,INPUT_PIPE),
-    source(EDGE,OUTPUT_PIN),
+    source(LINE,OUTPUT_PIN),
     asserta(pipeNum(OUTPUT_PIN,INPUT_PIPE)),
     asserta(wireNum(OUTPUT_PIN,INPUT_PIPE)). % redundant, but supports name change
     
