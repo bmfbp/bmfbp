@@ -44,7 +44,6 @@
 		 (format strm "line(~A,'').~%"	new-id)
 
 		 (format strm "edge(~A).~%" edge-id)
-		 (format strm "node(~A).~%" begin-id)
 		 (format strm "source(~A,~A).~%" edge-id begin-id)
 		 (format strm "eltype(~A,port).~%" begin-id)
 		 (format strm "bounding_box_left(~A,~A).~%" begin-id (- x1 *p*))
@@ -52,8 +51,6 @@
 		 (format strm "bounding_box_right(~A,~A).~%" begin-id (+ x1 *p*))
 		 (format strm "bounding_box_bottom(~A,~A).~%" begin-id (+ y1 *p*))
 		 
-		 ;(format strm "edge(~A).~%" edge-id)
-		 (format strm "node(~A).~%" end-id)
 		 (format strm "sink(~A,~A).~%" edge-id end-id)
 		 (format strm "eltype(~A,port).~%" end-id)
 		 (format strm "bounding_box_left(~A,~A).~%" end-id (- x2 *p*))
@@ -65,8 +62,8 @@
          (destructuring-bind (rect-sym x1 y1 w h)
              list
            (declare (ignore rect-sym))
-           (format strm "rect(~A,'').~%eltype(~A,box).~%node(~A).~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                   new-id new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+           (format strm "rect(~A,'').~%eltype(~A,box).~%~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
         
         (text
          (destructuring-bind (text-sym str x1 y1 w h)
