@@ -134,9 +134,9 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               cy <- lookupAttrIntoString "cy"
               rx <- lookupAttrIntoString "rx"
               ry <- lookupAttrIntoString "ry"
-	      if rx ~== ry
-	        then return (Dot)
-		else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
+              if rx == ry
+                then return (Dot)
+                else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
           in
             maybe defaultOutput id result
         "foreignObject" -> Empty
