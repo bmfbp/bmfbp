@@ -6,11 +6,9 @@ writeFB :-
     forall(arrow(X,_), writeterm(arrow(X,nil))),
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
-    forall(rect(X,_), writeterm(rect(X,nil))),
-    forall(rect_x(X,Y), writeterm(rect_x(X,Y))),
-    forall(rect_y(X,Y), writeterm(rect_y(X,Y))),
-    forall(rect_w(X,Y), writeterm(rect_w(X,Y))),
-    forall(rect_h(X,Y), writeterm(rect_h(X,Y))),
+    forall(rect(X), writeterm(rect(X))),
+    forall(ellipse(X), writeterm(ellipse(X))),
+    forall(dot(X), writeterm(dot(X))),
     forall(line(X,_), writeterm(line(X,nil))), 
     forall(line_begin_x(X,Y), writeterm(line_begin_x(X,Y))), 
     forall(line_begin_y(X,Y), writeterm(line_begin_y(X,Y))), 
@@ -267,24 +265,16 @@ element(move_relative_y(X,Y), Str) :- !,
 			     readFB(Str).
 
 
-element(rect(X,Y), Str) :- !,
-			     asserta(rect(X,Y)),
+element(rect(X), Str) :- !,
+			     asserta(rect(X)),
 			     readFB(Str).
 
-element(rect_x(X,Y), Str) :- !,
-			     asserta(rect_x(X,Y)),
+element(ellipse(X), Str) :- !,
+			     asserta(ellipse(X)),
 			     readFB(Str).
 
-element(rect_y(X,Y), Str) :- !,
-			     asserta(rect_y(X,Y)),
-			     readFB(Str).
-
-element(rect_w(X,Y), Str) :- !,
-			     asserta(rect_w(X,Y)),
-			     readFB(Str).
-
-element(rect_h(X,Y), Str) :- !,
-			     asserta(rect_h(X,Y)),
+element(dot(X), Str) :- !,
+			     asserta(dot(X)),
 			     readFB(Str).
 
 element(stroke_relative_x(X,Y), Str) :- !,

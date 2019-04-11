@@ -19,7 +19,7 @@ data Output
     | Path [PathCommand]
     | Rect Float Float Float Float 
     | Ellipse Float Float Float Float
-    | Dot
+    | Dot Float Float Float Float
     | Text DT.Text
     | Empty
     deriving (Show)
@@ -52,7 +52,7 @@ lispify (Translate x y children) = wrapInParens ["translate", wrapInParens [show
 lispify (Path commands) = wrapInParens ("line" : map lispifyPathCommand commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
-lispify (Dot) = wrapInParens ["dot"]
+lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
 
@@ -135,7 +135,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               rx <- lookupAttrIntoString "rx"
               ry <- lookupAttrIntoString "ry"
               if rx == ry
-                then return (Dot)
+                then return (Dot (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
                 else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
           in
             maybe defaultOutput id result

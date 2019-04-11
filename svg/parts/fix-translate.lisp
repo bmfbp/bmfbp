@@ -21,6 +21,18 @@
 	   (declare (ignore sym))
 	   `(rect ,(+ x x1) ,(+ y y1) ,(+ x x2) ,(+ y y2))))
 
+	(ellipse
+	 (destructuring-bind (sym x1 y1 x2 y2)
+             list
+	   (declare (ignore sym))
+	   `(ellipse ,(+ x x1) ,(+ y y1) ,x2 ,y2)))
+
+	(dot
+	 (destructuring-bind (sym x1 y1 x2 y2)
+             list
+	   (declare (ignore sym))
+	   `(dot ,(+ x x1) ,(+ y y1) ,x2 ,y2)))
+
 	(line
 	 (destructuring-bind (line-sym begin end)
              list
@@ -64,7 +76,7 @@
 	   (assert (list-of-lists-p tail) () "fix-translates 4 list=/~a/" list)
 	   (mapcar #'(lambda (item) (fix-one-translate (first pair) (second pair) item)) tail)))
 	
-	((rect text arrow line component)
+	((rect text arrow line component ellipse dot)
 	 list)
 	
 	(otherwise

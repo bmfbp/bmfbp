@@ -79,3 +79,6 @@ clean-js:
 
 junk:
 	hs-vsh-drawio-to-fb junk <ellipse-test.svg >junk.lisp
+	lib_insert_part_name svgc <junk.lisp >temp2.lisp
+	fb-to-prolog <temp2.lisp >temp3.pro
+
