@@ -77,3 +77,5 @@ clean-js:
 	rm -f ${BINDIR}/js-emitter ${BINDIR}/js-passes* ${BINDIR}/pass-js-emit*
 	rm -f temp.js
 
+junk:
+	hs-vsh-drawio-to-fb junk <ellipse-test.svg >junk.lisp
