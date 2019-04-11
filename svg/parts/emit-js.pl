@@ -10,9 +10,9 @@ main :-
     write(Name),
     write('.js"'),
     nl,
-    npipes(Npipes),
+    nwires(Nwires),
     write('wirecount  '),
-    write(Npipes),
+    write(Nwires),
     nl,
     write('parts ('),
     nl,
@@ -40,7 +40,7 @@ inPinOfPart(PortID,PartID) :-
 
 getOneInPin(PortID,PartID):-
     eltype(PortID,port),
-    pipeNum(PortID,Wire),
+    wireNum(PortID,Wire),
     portIndex(PortID,Pin),
     write('    ('),
     write(PartID),
@@ -62,7 +62,7 @@ outPinOfPart(PortID,PartID) :-
 
 getOneOutPin(PortID,PartID):-
     eltype(PortID,port),
-    pipeNum(PortID,Wire),
+    wireNum(PortID,Wire),
     portIndex(PortID,Pin),
     write('    ('),
     write(PartID),
