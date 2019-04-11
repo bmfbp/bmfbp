@@ -41,7 +41,7 @@
                (destructuring-bind (end-sym x2 y2)
                    end
 		 (declare (ignore end-sym))
-		 (format strm "line(~A,'').~%"	new-id)
+		 (format strm "line(~A).~%"	new-id)
 
 		 (format strm "edge(~A).~%" edge-id)
 		 (format strm "source(~A,~A).~%" edge-id begin-id)
@@ -93,7 +93,7 @@
          (destructuring-bind (arrow-sym x1 y1)
              list
            (declare (ignore arrow-sym))
-           (format strm "arrow(~A,'').~%arrow_x(~A,~A).~%arrow_y(~A,~A).~%"
+           (format strm "arrow(~A).~%arrow_x(~A,~A).~%arrow_y(~A,~A).~%"
                    new-id new-id x1 new-id y1)))
 
         (otherwise

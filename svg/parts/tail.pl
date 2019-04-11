@@ -3,13 +3,13 @@ writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.
 
 
 writeFB :-
-    forall(arrow(X,_), writeterm(arrow(X,nil))),
+    forall(arrow(X), writeterm(arrow(X))),
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
     forall(rect(X), writeterm(rect(X))),
     forall(ellipse(X), writeterm(ellipse(X))),
     forall(dot(X), writeterm(dot(X))),
-    forall(line(X,_), writeterm(line(X,nil))), 
+    forall(line(X), writeterm(line(X))), 
     forall(line_begin_x(X,Y), writeterm(line_begin_x(X,Y))), 
     forall(line_begin_y(X,Y), writeterm(line_begin_y(X,Y))), 
     forall(line_end_x(X,Y), writeterm(line_end_x(X,Y))), 
@@ -186,8 +186,8 @@ element(outputPin(X,Y), Str) :- !,
 			     asserta(outputPin(X,Y)),
 			     readFB(Str).
 
-element(line(X,Y), Str) :- !,
-			     asserta(line(X,Y)),
+element(line(X), Str) :- !,
+			     asserta(line(X)),
 			     readFB(Str).
 
 element(line_begin_x(X,Y), Str) :- !,
@@ -214,8 +214,8 @@ element(wireNum(X,Y), Str) :- !,
 			     asserta(wireNum(X,Y)),
 			     readFB(Str).
 
-element(arrow(X,Y), Str) :- !,
-			     asserta(arrow(X,Y)),
+element(arrow(X), Str) :- !,
+			     asserta(arrow(X)),
 			     readFB(Str).
 
 element(arrow_x(X,Y), Str) :- !,

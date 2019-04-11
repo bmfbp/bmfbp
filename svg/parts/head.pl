@@ -1,4 +1,4 @@
-:- dynamic(arrow/2).
+:- dynamic(arrow/1).
 :- dynamic(arrow_x/2).
 :- dynamic(arrow_y/2).
 :- dynamic(bounding_box_bottom/2).
@@ -15,7 +15,7 @@
 :- dynamic(geometry_x/2).
 :- dynamic(geometry_y/2).
 :- dynamic(kind/2) .
-:- dynamic(line/2) .
+:- dynamic(line/1) .
 :- dynamic(line_begin_x/2) .
 :- dynamic(line_begin_y/2) .
 :- dynamic(line_end_x/2) .
