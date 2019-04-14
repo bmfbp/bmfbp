@@ -359,4 +359,34 @@ inc(Var, Value) :-
     g_read(Var, Value),
     X is Value+1,
     g_assign(Var, X).
-    
+
+boundingboxCompletelyInside(ID1,ID2) :-
+    bounding_box_left(ID1,L1),
+    bounding_box_top(ID1,T1),
+    bounding_box_right(ID1,R1),
+    bounding_box_bottom(ID1,B1),
+
+    bounding_box_left(ID2,L2),
+    bounding_box_top(ID2,T2),
+    bounding_box_right(ID2,R2),
+    bounding_box_bottom(ID2,B2),
+
+    L1 >= L2,
+    T1 >= T2,
+    R2 >= R1,
+    B2 >= B1.
+
+pointCompletelyInsideBoundingBox(ID1,ID2) :-
+    bounding_box_left(ID1,L1),
+    bounding_box_top(ID1,T1),
+
+    bounding_box_left(ID2,L2),
+    bounding_box_top(ID2,T2),
+    bounding_box_right(ID2,R2),
+    bounding_box_bottom(ID2,B2),
+
+    L1 >= L2,
+    T1 >= T2,
+    R2 >= L1,
+    B2 >= T1.
+
