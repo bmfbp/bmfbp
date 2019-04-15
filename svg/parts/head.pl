@@ -24,7 +24,6 @@
 :- dynamic(move_absolute_y/2) .
 :- dynamic(move_relative_x/2) .
 :- dynamic(move_relative_y/2) .
-:- dynamic(node/1) .
 :- dynamic(npipes/1).
 :- dynamic(nwires/1).
 :- dynamic(parent/2).
