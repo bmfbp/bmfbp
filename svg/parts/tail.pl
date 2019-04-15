@@ -43,6 +43,7 @@ writeFB :-
     forall(geometry_y(X,Y), writeterm(geometry_y(X,Y))),
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
+    forall(selfPort(X,Y), writeterm(selfPort(X,Y))),
     forall(portIndex(X,Y), writeterm(portIndex(X,Y))),
     forall(portIndexByID(X,Y), writeterm(portIndexByID(X,Y))),
     forall(portName(X,Y), writeterm(portName(X,Y))),
@@ -101,6 +102,9 @@ element(unassigned(X), Str) :- !,
 		       readFB(Str).
 element(kind(X,Y), Str) :- !,
 			   asserta(kind(X,Y)),
+		       readFB(Str).
+element(selfPort(X,Y), Str) :- !,
+			   asserta(selfPort(X,Y)),
 		       readFB(Str).
 element(geometry_x(X,Y), Str) :- !,
 			   asserta(geometry_x(X,Y)),

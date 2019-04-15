@@ -15,6 +15,7 @@
 :- dynamic(geometry_x/2).
 :- dynamic(geometry_y/2).
 :- dynamic(kind/2) .
+:- dynamic(selfPort/2) .
 :- dynamic(line/1) .
 :- dynamic(line_begin_x/2) .
 :- dynamic(line_begin_y/2) .
