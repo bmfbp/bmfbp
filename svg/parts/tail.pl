@@ -55,6 +55,10 @@ writeFB :-
     forall(sink(X,Y), writeterm(sink(X,Y))),
     forall(npipes(X), writeterm(npipes(X))),
     forall(pipeNum(X,Y), writeterm(pipeNum(X,Y))),
+
+    forall(nwires(X), writeterm(nwires(X))),
+    forall(wireNum(X,Y), writeterm(wireNum(X,Y))),
+
     forall(sourcefd(X,Y), writeterm(sourcefd(X,Y))),
     forall(sinkfd(X,Y), writeterm(sinkfd(X,Y))),
     forall(inputPin(X,Y), writeterm(inputPin(X,Y))),
@@ -212,6 +216,10 @@ element(pipeNum(X,Y), Str) :- !,
 			     asserta(pipeNum(X,Y)),
 			     readFB(Str).
 
+element(wireNum(X,Y), Str) :- !,
+			     asserta(wireNum(X,Y)),
+			     readFB(Str).
+
 element(arrow(X,Y), Str) :- !,
 			     asserta(arrow(X,Y)),
 			     readFB(Str).
@@ -238,6 +246,10 @@ element(source(P,F), Str) :- !,
 
 element(npipes(X), Str) :- !,
 			     asserta(npipes(X)),
+			     readFB(Str).
+
+element(nwires(X), Str) :- !,
+			     asserta(nwires(X)),
 			     readFB(Str).
 
 element(move_absolute_x(X,Y), Str) :- !,

@@ -30,9 +30,9 @@ sem_partsHaveSomePorts <temp13.pro >temp13a.pro
 sem_allPortsHaveAnIndex <temp13a.pro >temp13b.pro
 
 # emitter
-assign_pipe_numbers_to_inputs <temp13b.pro >temp14.pro
-assign_pipe_numbers_to_outputs <temp14.pro >temp15.pro
-assign_fds <temp15.pro >temp16a.pro
+assign_wire_numbers_to_inputs <temp13b.pro >temp14.pro
+assign_wire_numbers_to_outputs <temp14.pro >temp15.pro
+assign_portIndices <temp15.pro >temp16a.pro
 inOutPins <temp16a.pro >temp16.pro
 plsort <temp16.pro >temp17.pro
 emit-js <temp17.pro >temp18.lisp

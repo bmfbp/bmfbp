@@ -22,8 +22,8 @@ match_ports_to_components <temp12.pro >temp13.pro
 sem_partsHaveSomePorts <temp13.pro >temp13a.pro
 
 # emitter
-assign_pipe_numbers_to_inputs <temp13.pro >temp14.pro
-assign_pipe_numbers_to_outputs <temp14.pro >temp15.pro
-assign_fds <temp15.pro >temp16.pro
+assign_wire_numbers_to_inputs <temp13.pro >temp14.pro
+assign_wire_numbers_to_outputs <temp14.pro >temp15.pro
+assign_portIndices <temp15.pro >temp16.pro
 plsort <temp16.pro >temp17.pro
 emit <temp17.pro >temp18.gsh

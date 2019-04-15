@@ -3,9 +3,9 @@ BINDIR = ~/bin
 EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/calc_bounds \
 	$(BINDIR)/mark_directions \
-	$(BINDIR)/assign_pipe_numbers_to_inputs \
-	$(BINDIR)/assign_pipe_numbers_to_outputs \
-	$(BINDIR)/assign_fds \
+	$(BINDIR)/assign_wire_numbers_to_inputs \
+	$(BINDIR)/assign_wire_numbers_to_outputs \
+	$(BINDIR)/assign_portIndices \
 	$(BINDIR)/emit \
 	$(BINDIR)/emit-js \
 	$(BINDIR)/inOutPins \
