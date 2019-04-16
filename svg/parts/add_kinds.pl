@@ -7,11 +7,11 @@ main :-
     writeFB,
     halt.
 
-createKinds(OBJ) :-
+createKinds(BoxID) :-
     text(TextID,Str),
-    textCompletelyInsideBox(TextID,OBJ),
+    textCompletelyInsideBox(TextID,BoxID),
     asserta(used(TextID)),
-    asserta(kind(Box,Str)).
+    asserta(kind(BoxID,Str)).
 
 textCompletelyInsideBox(TextID,BoxID) :-
     pointCompletelyInsideBoundingBox(TextID,BoxID).
