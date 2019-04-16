@@ -49,27 +49,31 @@ wen(p),
 wen(q),
     asserta(portIndex(PortID,Index)).
 
-portTouchesEllipse(_,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,_,EBottomY):-
+portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,_,EBottomY):-
     % port touches left side of ellipse bounding rect
+    PortLeftX =< ELeftX
     PortRightX >= ELeftX,
-    PortTopY =< ETopY,
-    PortBottomY >= EBottomY.
+    PortTopY >= ETopY,
+    PortBottomY =< EBottomY.
 
-portTouchesEllipse(PortLeftX,_,PortRightX,PortBottomY,ELeftX,ETopY,ERightX,_):-
+portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,ERightX,_):-
     % port touches top of ellipse bounding rect
+    PortTopY =< ETopY,
     PortBottomY >= ETopY,
     PortLeftX >= ELeftX,
     PortRightX =< ERightX.
 
-portTouchesEllipse(PortLeftX,PortTopY,_,PortBottomY,_,ETopY,ERightX,EBottomY):-
+portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,_,ETopY,ERightX,EBottomY):-
     % port touches right side of ellipse bounding rect
     PortLeftX =< ERightX,
-    PortTopY =< ETopY,
-    PortBottomY >= EBottomY.
+    PortRightX >= ERightX,
+    PortTopY >= ETopY,
+    PortBottomY =< EBottomY.
 
-portTouchesEllipse(PortLeftX,PortTopY,PortRightX,_,ELeftX,_,ERightX,EBottomY):-
+portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,_,ERightX,EBottomY):-
     % port touches bottom of ellipse bounding rect
     PortTopY =< EBottomY,
+    PortBottomY >= EBottomY,
     PortLeftX >= ELeftX,
     PortRightX =< ERightX.
 
