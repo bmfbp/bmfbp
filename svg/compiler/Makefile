@@ -85,9 +85,5 @@ junk:
 	check_input <temp4.pro >temp5.pro
 #	
 	calc_bounds <temp5.pro >temp6.pro
-	add_kinds <temp6.pro >temp7.pro
-	make_unknown_port_names <temp7.pro >temp8.pro
-	create_centers <temp8.pro >temp9.pro
-	calculate_distances <temp9.pro >temp10.pro
-	assign_portnames <temp10.pro >temp11.pro
-	markIndexedPorts <temp11.pro >temp11a.pro
+	add_kinds <temp6.pro >temp6a.pro
+	add_selfPorts <temp6a.pro >temp7.pro
