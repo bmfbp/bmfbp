@@ -37,6 +37,13 @@ createTextBoundingBox(ID) :-
     asserta(bounding_box_top(ID,Y)),
     Right is CX + HalfWidth,
     Bottom is Y + Height,
+
+    text(ID,Str),
+    we(ID),wspc,wen(Str),
+    we(ID),wspc,we(CX),wspc,we(Y),wspc,we(HalfWidth),wspc,wen(Height),
+    we(ID),wspc,we(X),wspc,we(Y),wspc,we(Right),wspc,wen(Bottom),
+    nle,
+
     asserta(bounding_box_right(ID,Right)),
     asserta(bounding_box_bottom(ID,Bottom)).
 

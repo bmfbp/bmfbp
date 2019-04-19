@@ -8,13 +8,14 @@ main :-
     halt.
 
 createKinds(Box) :-
-%    write(user_error,'ck '),write(user_error,Box),nl(user_error),
+we('ck '),we(Box),nle,
     text(TextID,Str),
-%    write(user_error,TextID),write(user_error,' '),write(user_error,Str),write(user_error,' '),
+we(TextID),wspc,we(Str),wspc,
     textCompletelyInsideBox(TextID,Box),
-%    write(user_error,' '),write(user_error,Text),write(user_error,' '),
+text(TextID,Str),wspc,we(TextID),wspc,wen(Str),
     asserta(used(TextID)),
-    asserta(kind(Box,Str)).
+    asserta(kind(Box,Str)),
+we('text '),we(TextID),wspc,we(Str),we(' inside box '),wen(Box).
 
 textCompletelyInsideBox(TextID,BoxID) :-
     pointCompletelyInsideBoundingBox(TextID,BoxID).
@@ -31,25 +32,24 @@ boundingboxCompletelyInside(ID1,ID2) :-
     bounding_box_right(ID2,R2),
     bounding_box_bottom(ID2,B2),
 
-%write(user_error,'inside '), write(user_error,' '),
-%write(user_error,L1), write(user_error,' '),
-%write(user_error,T1), write(user_error,' '),
-%write(user_error,R1), write(user_error,' '),
-%write(user_error,B1), write(user_error,' '),
-%write(user_error,L2), write(user_error,' '),
-%write(user_error,T2), write(user_error,' '),
-%write(user_error,R2), write(user_error,' '),
-%write(user_error,B2), write(user_error,' '),
-%nl(user_error),
+we(L1), wspc,
+we(T1), wspc,
+we(R1), wspc,
+we(B1), wspc,
+we(L2), wspc,
+we(T2), wspc,
+we(R2), wspc,
+we(B2), wspc,
+nle,
     L1 >= L2,
-%write(user_error,'a'),
+we('a'),
     T1 >= T2,
-%write(user_error,'b'),
+we('b'),
     R2 >= R1,
-%write(user_error,'c'),
-    B2 >= B1.
-%write(user_error,'d'),
-%nl(user_error).    
+we('c'),
+    B2 >= B1,
+we('d'),
+nle.    
 
 pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_left(ID1,L1),
@@ -60,23 +60,23 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID2,R2),
     bounding_box_bottom(ID2,B2),
 
-%write(user_error,'inside '), write(user_error,' '),
-%write(user_error,L1), write(user_error,' '),
-%write(user_error,T1), write(user_error,' '),
-%write(user_error,L2), write(user_error,' '),
-%write(user_error,T2), write(user_error,' '),
-%write(user_error,R2), write(user_error,' '),
-%write(user_error,B2), write(user_error,' '),
-%nl(user_error),
+we('pcibb id1='), we(ID1),we(' id2='),we(ID2),wspc,
+we(L1), wspc,
+we(T1), wspc,
+we(L2), wspc,
+we(T2), wspc,
+we(R2), wspc,
+we(B2), wspc,
+nle,
     L1 >= L2,
-%write(user_error,'a'),
+we('a'),
     T1 >= T2,
-%write(user_error,'b'),
+we('b'),
     R2 >= L1,
-%write(user_error,'c'),
-    B2 >= T1.
-%write(user_error,'d'),
-%nl(user_error).    
+we('c'),
+    B2 >= T1,
+we('d'),
+nle.    
 
 
 :- include('tail').
