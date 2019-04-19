@@ -71,7 +71,7 @@
         
 
         (text
-	 ;; text is given as {center-x, top-y, width, height}
+	 ;; text is given as {center-x, top-y, width/2, height}
          (destructuring-bind (text-sym str x1 y1 w h)
              list
            (declare (ignore text-sym))

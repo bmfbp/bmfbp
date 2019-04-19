@@ -13,7 +13,7 @@ main :-
 
 createBoundingBoxes :-
     forall(rect(ID,_), createRectBoundingBox(ID)),
-    forall(text(ID,_), createTextBoundingBox(ID)).
+    forall(text(ID,_), createRectBoundingBox(ID)).
 
 createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),
@@ -28,13 +28,14 @@ createRectBoundingBox(ID) :-
     asserta(bounding_box_bottom(ID,Bottom)).
 
 createTextBoundingBox(ID) :-
-    geometry_center_x(ID,X),
+    geometry_center_x(ID,CX),
     geometry_top_y(ID, Y),
-    geometry_w(ID, Width),
+    geometry_w(ID, HalfWidth),
     geometry_h(ID, Height),
+    X is (CX - HalfWidth),
     asserta(bounding_box_left(ID,X)),
     asserta(bounding_box_top(ID,Y)),
-    Right is X + Width,
+    Right is CX + HalfWidth,
     Bottom is Y + Height,
     asserta(bounding_box_right(ID,Right)),
     asserta(bounding_box_bottom(ID,Bottom)).
