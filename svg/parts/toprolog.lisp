@@ -62,20 +62,23 @@
 		 (format strm "bounding_box_bottom(~A,~A).~%" end-id (+ y2 *p*)))))))
         
         (rect
+	 ;; rect is given as {top-left, width, height}
          (destructuring-bind (rect-sym x1 y1 w h)
              list
            (declare (ignore rect-sym))
-           (format strm "rect(~A,'').~%eltype(~A,box).~%node(~A).~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+           (format strm "rect(~A,'').~%eltype(~A,box).~%node(~A).~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id new-id x1 new-id y1 new-id w new-id h)))
         
+
         (text
+	 ;; text is given as {center-x, top-y, width, height}
          (destructuring-bind (text-sym str x1 y1 w h)
              list
            (declare (ignore text-sym))
 	   (if (all-digits-p str)
-               (format strm "text(~A,~A).~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+               (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                        new-id str new-id x1 new-id y1 new-id w new-id h)
-             (format strm "text(~A,'~A').~%geometry_x(~A,~A).~%geometry_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+             (format strm "text(~A,'~A').~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                      new-id str new-id x1 new-id y1 new-id w new-id h))))
            
         (arrow

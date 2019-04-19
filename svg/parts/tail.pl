@@ -41,8 +41,10 @@ writeFB :-
     forall(eltype(X,Y), writeterm(eltype(X,Y))),
     forall(geometry_h(X,Y), writeterm(geometry_h(X,Y))),
     forall(geometry_w(X,Y), writeterm(geometry_w(X,Y))),
-    forall(geometry_x(X,Y), writeterm(geometry_x(X,Y))),
-    forall(geometry_y(X,Y), writeterm(geometry_y(X,Y))),
+    forall(geometry_left_x(X,Y), writeterm(geometry_left_x(X,Y))),
+    forall(geometry_top_y(X,Y), writeterm(geometry_top_y(X,Y))),
+    forall(geometry_center_x(X,Y), writeterm(geometry_center_x(X,Y))),
+    forall(geometry_center_y(X,Y), writeterm(geometry_center_y(X,Y))),
     forall(node(X), writeterm(node(X))),
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
@@ -105,11 +107,17 @@ element(unassigned(X), Str) :- !,
 element(kind(X,Y), Str) :- !,
 			   asserta(kind(X,Y)),
 		       readFB(Str).
-element(geometry_x(X,Y), Str) :- !,
-			   asserta(geometry_x(X,Y)),
+element(geometry_left_x(X,Y), Str) :- !,
+			   asserta(geometry_left_x(X,Y)),
 		       readFB(Str).
-element(geometry_y(X,Y), Str) :- !,
-			   asserta(geometry_y(X,Y)),
+element(geometry_top_y(X,Y), Str) :- !,
+			   asserta(geometry_top_y(X,Y)),
+		       readFB(Str).
+element(geometry_center_x(X,Y), Str) :- !,
+			   asserta(geometry_center_x(X,Y)),
+		       readFB(Str).
+element(geometry_center_y(X,Y), Str) :- !,
+			   asserta(geometry_center_y(X,Y)),
 		       readFB(Str).
 element(geometry_w(X,Y), Str) :- !,
 			   asserta(geometry_w(X,Y)),
@@ -136,12 +144,20 @@ element(sink(X,Y), Str) :- !,
 			   asserta(sink(X,Y)),
 		       readFB(Str).
 
-element(geometry_x(X,Y), Str) :- !,
-				 asserta(geometry_x(X,Y)),
+element(geometry_left_x(X,Y), Str) :- !,
+				 asserta(geometry_left_x(X,Y)),
 				 readFB(Str).
 
-element(geometry_y(X,Y), Str) :- !,
-				 asserta(geometry_y(X,Y)),
+element(geometry_top_y(X,Y), Str) :- !,
+				 asserta(geometry_top_y(X,Y)),
+				 readFB(Str).
+
+element(geometry_center_x(X,Y), Str) :- !,
+				 asserta(geometry_center_x(X,Y)),
+				 readFB(Str).
+
+element(geometry_center_y(X,Y), Str) :- !,
+				 asserta(geometry_center_y(X,Y)),
 				 readFB(Str).
 
 element(geometry_w(X,Y), Str) :- !,

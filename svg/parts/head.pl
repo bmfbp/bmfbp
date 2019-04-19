@@ -12,8 +12,10 @@
 :- dynamic(eltype/2) .
 :- dynamic(geometry_h/2).
 :- dynamic(geometry_w/2).
-:- dynamic(geometry_x/2).
-:- dynamic(geometry_y/2).
+:- dynamic(geometry_left_x/2).
+:- dynamic(geometry_center_x/2).
+:- dynamic(geometry_center_y/2).
+:- dynamic(geometry_top_y/2).
 :- dynamic(kind/2) .
 :- dynamic(line/2) .
 :- dynamic(line_begin_x/2) .
