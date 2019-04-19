@@ -13,7 +13,7 @@ main :-
 
 createBoundingBoxes :-
     forall(rect(ID,_), createRectBoundingBox(ID)),
-    forall(text(ID,_), createRectBoundingBox(ID)).
+    forall(text(ID,_), createTextBoundingBox(ID)).
 
 createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),
