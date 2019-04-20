@@ -8,7 +8,7 @@ main :-
     halt.
 
 createBoundingBoxes :-
-    forall(rect(ID,_), createRectBoundingBox(ID)),
+    forall(rect(ID), createRectBoundingBox(ID)),
     forall(text(ID,_), createTextBoundingBox(ID)).
 
 createRectBoundingBox(ID) :-
