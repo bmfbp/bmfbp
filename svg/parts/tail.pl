@@ -43,7 +43,6 @@ writeFB :-
     forall(geometry_top_y(X,Y), writeterm(geometry_top_y(X,Y))),
     forall(geometry_center_x(X,Y), writeterm(geometry_center_x(X,Y))),
     forall(geometry_center_y(X,Y), writeterm(geometry_center_y(X,Y))),
-    forall(node(X), writeterm(node(X))),
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
     forall(selfPort(X,Y), writeterm(selfPort(X,Y))),
@@ -81,7 +80,6 @@ wen(X):- we(X),nle.
 
 readFB(Str) :-
     read_term(Str,T0,[]),
-    %write(user_error,T0),nl(user_error),flush_output(user_error),
     element(T0,Str).
 
 element(end_of_file, _) :- !.
@@ -108,6 +106,7 @@ element(kind(X,Y), Str) :- !,
 		       readFB(Str).
 element(geometry_left_x(X,Y), Str) :- !,
 			   asserta(geometry_left_x(X,Y)),
+		       readFB(Str).
 element(selfPort(X,Y), Str) :- !,
 			   asserta(selfPort(X,Y)),
 		       readFB(Str).
