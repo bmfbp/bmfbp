@@ -9,7 +9,7 @@ PASSES-REGRESSION=passes-regression.gsh
 
 all: linux-based-compiler
 
-linux-based-compiler: dependencies passes
+linux-based-compiler: dependencies passes build-js
 # the linux-based compiler is used to compile the compiler for compiling js (build-js)
 
 build-js :

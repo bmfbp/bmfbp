@@ -70,14 +70,14 @@ conditionalWriteIn(ID):-
     inputOfParent(ID,_),
     forall(inputOfParent(ID,In),writeIn(In)).
 
-conditionalWriteIn(ID):-
+conditionalWriteIn(_):-
     true.
 
 conditionalWriteOut(ID):-
     outputOfParent(ID,_),
     forall(outputOfParent(ID,O),writeOut(O)).
 
-conditionalWriteOut(ID):-
+conditionalWriteOut(_):-
     true.
 
 writeSpaces :- write('  ').
