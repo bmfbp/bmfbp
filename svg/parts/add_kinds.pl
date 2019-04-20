@@ -26,7 +26,11 @@ boundingboxCompletelyInside(ID1,ID2) :-
     bounding_box_left(ID2,L2),
     bounding_box_top(ID2,T2),
     bounding_box_right(ID2,R2),
-    bounding_box_bottom(ID2,B2).
+    bounding_box_bottom(ID2,B2),
+    L1 >= L2,
+    T1 >= T2,
+    R2 >= R1,
+    B2 >= B1.
 
 pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_left(ID1,L1),
@@ -35,6 +39,10 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_left(ID2,L2),
     bounding_box_top(ID2,T2),
     bounding_box_right(ID2,R2),
-    bounding_box_bottom(ID2,B2).
+    bounding_box_bottom(ID2,B2),
+    L1 >= L2,
+    T1 >= T2,
+    R2 >= L1,
+    B2 >= T1.
 
 :- include('tail').

@@ -1,4 +1,4 @@
-(defparameter *default-font-width* 1) ;; kludge - Draw.IO should be able to tell us the extent of the string, but doesn't
+(defparameter *default-font-width* 2) ;; kludge - Draw.IO should be able to tell us the extent of the string, but doesn't
 (defparameter *default-font-height* 12)
 
 
