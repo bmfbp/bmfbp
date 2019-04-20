@@ -55,8 +55,8 @@ writeOut(Out) :-
 emitComponent(ID) :-
     write('fork'),
     nl,
-    forall(inputOfParent(ID,In),writeIn(In)),
-    forall(outputOfParent(ID,O),writeOut(O)),
+    conditionalWriteIn(ID),
+    conditionalWriteOut(ID),
     writeSpaces,
     writeExec,
     write(' '),
@@ -65,6 +65,20 @@ emitComponent(ID) :-
     nl,
     write('krof'),
     nl.
+
+conditionalWriteIn(ID):-
+    inputOfParent(ID,_),
+    forall(inputOfParent(ID,In),writeIn(In)).
+
+conditionalWriteIn(ID):-
+    true.
+
+conditionalWriteOut(ID):-
+    outputOfParent(ID,_),
+    forall(outputOfParent(ID,O),writeOut(O)).
+
+conditionalWriteOut(ID):-
+    true.
 
 writeSpaces :- write('  ').
 
