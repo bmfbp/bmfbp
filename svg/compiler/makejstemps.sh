@@ -15,7 +15,8 @@ check_input <temp4.pro >temp5.pro
 
 # parser
 calc_bounds <temp5.pro >temp6.pro
-add_kinds <temp6.pro >temp7.pro
+add_kinds <temp6.pro >temp6a.pro
+add_selfPorts <temp6a.pro >temp7.pro
 make_unknown_port_names <temp7.pro >temp8.pro
 create_centers <temp8.pro >temp9.pro
 calculate_distances <temp9.pro >temp10.pro

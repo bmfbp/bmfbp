@@ -13,6 +13,10 @@ match_ports :-
     forall(eltype(PortID, port),assign_parent_for_port(PortID)).
 
 assign_parent_for_port(PortID) :-
+    % if port already has a parent (e.g. ellipse), quit while happy.
+    parent(PortID,_).
+
+assign_parent_for_port(PortID) :-
     bounding_box_left(PortID, Left),
     bounding_box_top(PortID, Top),
     bounding_box_right(PortID, Right),

@@ -1,10 +1,6 @@
 :- initialization(main).
 :- include('head').
 
-% yEd creates "nodes" and "edges
-% by convention, "GenericNodes" represent boxes and other kinds of nodes are pins.
-% in this pass, create a bounding box (left,top,right,bottom) for each "node" with geometry
-
 main :-
     readFB(user_input), 
     createBoundingBoxes,
