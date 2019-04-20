@@ -7,15 +7,15 @@ SVG_DIAGRAM=svgc.svg
 REGRESSION=regression.gsh
 PASSES-REGRESSION=passes-regression.gsh
 
-all: linux-based-compiler
+all: linux-based-compiler build-js
 
-linux-based-compiler: dependencies passes build-js
+linux-based-compiler: dependencies passes
 # the linux-based compiler is used to compile the compiler for compiling js (build-js)
 
-build-js :
+build-js : linux-based-compiler
 	./build-js.sh
 
-run-js:
+run-js: build-js
 	./run-js.sh
 
 svgpasses : dependencies ./build-svgpasses
