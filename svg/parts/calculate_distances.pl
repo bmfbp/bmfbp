@@ -5,8 +5,16 @@ main :-
     readFB(user_input), 
     g_assign(counter,0),
     forall(eltype(PortID,'port'),makeAllCenterPairs(PortID)),
+    conditionalEllipseCenterPairs,
     writeFB,
     halt.
+
+conditionalEllipseCenterPairs :-
+    ellipse(_),
+    forall(ellipse(PortID),makeAllCenterPairs(PortID)).
+
+conditionalEllipseCenterPairs :-
+    true.
 
 makeAllCenterPairs(PortID) :-
     % each port gets one centerPair for each unused text item

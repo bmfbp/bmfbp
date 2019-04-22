@@ -4,9 +4,17 @@
 main :-
     readFB(user_input), 
     forall(unassigned(TextID),createCenter(TextID)),
+    conditionalEllipseCenters,
     forall(eltype(PortID,'port'),createCenter(PortID)),
     writeFB,
     halt.
+
+conditionalEllipseCenters:-
+    ellipse(_),
+    forall(ellipse(ID),createCenter(ID)).
+
+conditionalEllipseCenters:-
+    true.
 
 createCenter(ID) :-
     bounding_box_left(ID,Left),

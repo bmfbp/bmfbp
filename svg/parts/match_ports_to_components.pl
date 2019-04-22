@@ -17,16 +17,13 @@ assign_parent_for_port(PortID) :-
     parent(PortID,_).
 
 assign_parent_for_port(PortID) :-
-    bounding_box_left(PortID, Left),
-    bounding_box_top(PortID, Top),
-    bounding_box_right(PortID, Right),
-    bounding_box_bottom(PortID, Bottom),
-    bounding_box_left(ParentID, PLeft),
-    bounding_box_top(ParentID, PTop),
-    bounding_box_right(ParentID, PRight),
-    bounding_box_bottom(ParentID, PBottom),
+    ellipse(ParentID),
+    portIntersection(PortID,ParentID),
+    asserta(parent(PortID, ParentID)).
+
+assign_parent_for_port(PortID) :-
     eltype(ParentID, box),
-    intersects(Left, Top, Right, Bottom, PLeft, PTop, PRight, PBottom),
+    portIntersection(PortID,ParentID),
     asserta(parent(PortID, ParentID)).
 
 assign_parent_for_port(PortID) :-
@@ -37,6 +34,18 @@ assign_parent_for_port(PortID) :-
 assign_parent_for_port(PortID) :-
     asserta(n_c(PortID)),
     nle,nle,we('no parent box for port '),we(PortID),nle,nle,nle.
+
+
+portIntersection(PortID,ParentID):-
+    bounding_box_left(PortID, Left),
+    bounding_box_top(PortID, Top),
+    bounding_box_right(PortID, Right),
+    bounding_box_bottom(PortID, Bottom),
+    bounding_box_left(ParentID, PLeft),
+    bounding_box_top(ParentID, PTop),
+    bounding_box_right(ParentID, PRight),
+    bounding_box_bottom(ParentID, PBottom),
+    intersects(Left, Top, Right, Bottom, PLeft, PTop, PRight, PBottom).
 
 intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, ParentRight, ParentBottom) :-
     % true if child bounding box center intersect parent bounding box
