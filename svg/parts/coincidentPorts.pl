@@ -14,21 +14,13 @@ coincidentSinks:-
     forall(indexedSink(X),findCoincidentSink(X)).
 
 findCoincidentSink(A):-
-wen(a),    
     center_y(A,Ay),
-wen(b),    
     center_y(B,By),
-wen(c),    
     center_x(A,Ax),
-wen(d),    
     center_x(B,Bx),
-wen(e),    
     A \== B,
-wen(f),    
     sink(_,B),
-wen(g),    
     notIndexedSink(B),
-wen(h),    
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
