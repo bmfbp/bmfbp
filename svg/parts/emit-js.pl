@@ -14,6 +14,11 @@ main :-
     write('wirecount  '),
     write(Nwires),
     nl,
+    write('self ('),
+    nl,
+    emitAllSelfPins,
+    emitSelfExecs,
+    write(' )'),
     write('parts ('),
     nl,
     emitAllPins,
@@ -30,6 +35,9 @@ emitAllPins :-
     write('  outs ('), nl,
     forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
     write('  )'), nl.
+
+getAllInPinsForPart(PartID):-
+    forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).
 
 getAllInPinsForPart(PartID):-
     forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).

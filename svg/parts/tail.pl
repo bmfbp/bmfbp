@@ -63,6 +63,8 @@ writeFB :-
     forall(sinkfd(X,Y), writeterm(sinkfd(X,Y))),
     forall(inputPin(X,Y), writeterm(inputPin(X,Y))),
     forall(outputPin(X,Y), writeterm(outputPin(X,Y))),
+    forall(selfInputPin(X,Y), writeterm(selfInputPin(X,Y))),
+    forall(selfOutputPin(X,Y), writeterm(selfOutputPin(X,Y))),
     forall(wireIndex(X,Y), writeterm(wireIndex(X,Y))),
     forall(n_c(X), writeterm(n_c(X))),
     forall(indexedSink(X), writeterm(indexedSink(X))),
@@ -203,6 +205,14 @@ element(inputPin(X,Y), Str) :- !,
 
 element(outputPin(X,Y), Str) :- !,
 			     asserta(outputPin(X,Y)),
+			     readFB(Str).
+
+element(selfInputPin(X,Y), Str) :- !,
+			     asserta(selfInputPin(X,Y)),
+			     readFB(Str).
+
+element(selfOutputPin(X,Y), Str) :- !,
+			     asserta(selfOutputPin(X,Y)),
 			     readFB(Str).
 
 element(line(X), Str) :- !,
