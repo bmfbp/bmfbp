@@ -30,15 +30,12 @@ makeInputForPipe(PortID) :-
 makeInputForPipe(PortID) :-
     n_c(PortID).
 
-makeOutputForPipe(PortID) :-
-    n_c(PortID).
-
-makeInput(Part,PortID,Pin,WireIndex) :-
+makeInput(Part,_,Pin,WireIndex) :-
     rect(Part),
     asserta(inputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
 
-makeInput(Part,PortID,Pin,WireIndex) :-
+makeInput(Part,_,Pin,WireIndex) :-
     ellipse(Part),
     asserta(selfOutputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
@@ -56,12 +53,15 @@ makeOutputForPipe(PortID) :-
     parent(PortID,Part),
     makeOutput(Part,PortID,Pin,WireIndex).
 
-makeOutput(Part,PortID,Pin,WireIndex):-
+makeOutputForPipe(PortID) :-
+    n_c(PortID).
+
+makeOutput(Part,_,Pin,WireIndex):-
     rect(Part),
     asserta(outputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
 
-makeOutput(Part,PortID,Pin,WireIndex):-
+makeOutput(Part,_,Pin,WireIndex):-
     ellipse(Part),
     asserta(selfInputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
