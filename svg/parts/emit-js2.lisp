@@ -11,7 +11,10 @@
 (defun @preamble ()
   (format *standard-output* "{~%  \"name\" : ~S,~%" (getf %script% 'name))
   (format *standard-output* "  \"wirecount\" : ~d,~%" (getf %script% 'wirecount))
-  (format *standard-output* "  \"parts\" : [~%"))
+  (format *standard-output* "  \"self\" : ~%"))
+
+(defun @preamble-for-children-parts ()
+  (format *standard-output* "~%  \"parts\" : [~%"))
 
 (defun @postamble ()
   (format *standard-output* "~%  ]~%")
@@ -115,7 +118,7 @@
                  (setf (gethash :outs-max properties-hash) max-pin)))
            %table%))
 
-(defun @emit-parts ()
+(defun emit-parts (&key self)
   (labels ((emit-wires-for-pin (i pinlist)
              (let ((first t))
                (mapc #'(lambda (tuple)
@@ -163,12 +166,25 @@
                (format *standard-output* "      \"exec\" : ~S~%" (gethash :exec val))
              (format *standard-output* "    }")))
     (let ((first t))
-      (maphash #'(lambda (part-id val)
-                   (unless first
-                     (format *standard-output* ",~%"))
-                   (setf first nil)
-                   (emit-part part-id val))
-               %table%))))
+      (labels ((emit (part-id val)
+                    (unless first
+                      (format *standard-output* ",~%"))
+                    (setf first nil)
+                    (emit-part part-id val)))
+	(maphash #'(lambda (part-id val)
+		     (if (and self (eq 'self part-id))
+			 (emit part-id val)
+			 (when (and (not self) 
+				    (not (eq 'self part-id)))
+			   (emit part-id val))))
+		 %table%)))))
+
+(defun @emit-self-part ()
+  (emit-parts :self t))
+
+(defun @emit-children-parts ()
+  (emit-parts :self nil))
+
 
 
 ;;; end mechanisms
@@ -184,6 +200,8 @@
     (@compute-number-of-input-pins-for-each-part)
     (@make-outputs-for-each-part)
     (@compute-number-of-output-pins-for-each-part)
-    (@emit-parts)
+    (@emit-self-part)
+    (@preamble-for-children-parts)
+    (@emit-children-parts)
   (@postamble)
   (values))
