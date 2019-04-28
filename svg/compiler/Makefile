@@ -109,4 +109,7 @@ junk:
 	assign_portIndices <temp15.pro >temp16a.pro
 	inOutPins <temp16a.pro >temp17.pro
 	emit-js <temp17.pro >temp18.lisp
+#	emit-js2 <temp18.lisp >temp19.js
+
+junk2: 
 	emit-js2 <temp18.lisp >temp19.js
