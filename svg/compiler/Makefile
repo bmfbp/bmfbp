@@ -81,7 +81,7 @@ clean-js:
 	rm -f temp.js
 
 junk:
-	hs-vsh-drawio-to-fb junk <test7.svg >junk.lisp
+	hs-vsh-drawio-to-fb test7 <test7.svg >junk.lisp
 	lib_insert_part_name svgc <junk.lisp >temp2.lisp
 	fb-to-prolog <temp2.lisp >temp3.pro
 	plsort <temp3.pro >temp4.pro
