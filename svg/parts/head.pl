@@ -66,6 +66,8 @@
 :- dynamic(distance_xy/2).
 :- dynamic(inputPin/2).
 :- dynamic(outputPin/2).
+:- dynamic(selfInputPin/2).
+:- dynamic(selfOutputPin/2).
 :- dynamic(wireIndex/2).
 :- dynamic(n_c/1).
 :- dynamic(indexedSink/1).

@@ -2,7 +2,7 @@
 set -v
 make clean
 make
-make test
+#make test
 cd compiler
 ./build-js.sh
 #./run-js.sh

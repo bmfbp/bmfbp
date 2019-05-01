@@ -21,15 +21,30 @@ main :-
     write(' )'),
     nl,
     write(')'),
+    nl,
     halt.
 
 emitAllPins :-
     write('  ins ('), nl,
+    forall(selfInputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
     forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
     write('  )'), nl,
     write('  outs ('), nl,
+    forall(selfOutputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
     forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
     write('  )'), nl.
+
+printSelfInputOrOutput(Pin) :-
+    write('    (self nil '),
+    wireIndex(Pin,WireIndex),
+    write(WireIndex),
+    write(' '),
+    write(Pin),
+    write(')'),
+    nl.
+    
+getAllInPinsForPart(PartID):-
+    forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).
 
 getAllInPinsForPart(PartID):-
     forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).
@@ -80,6 +95,8 @@ emitExecs:-
     write('  execs ('),
     nl,
     forall(kind(PartID,ExecName),emitExec(PartID,ExecName)),
+    write('    (self "schematic")'),
+    nl,
     write('  )'),
     nl.
 
