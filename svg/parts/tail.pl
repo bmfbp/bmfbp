@@ -296,21 +296,12 @@ element(move_relative_y(X,Y), Str) :- !,
 
 element(rect(X), Str) :- !,
 			     asserta(rect(X)),
-<<<<<<< HEAD
 			     readFB(Str).
 
 element(ellipse(X), Str) :- !,
 			     asserta(ellipse(X)),
 			     readFB(Str).
 
-=======
-			     readFB(Str).
-
-element(ellipse(X), Str) :- !,
-			     asserta(ellipse(X)),
-			     readFB(Str).
-
->>>>>>> master
 element(dot(X), Str) :- !,
 			     asserta(dot(X)),
 			     readFB(Str).
