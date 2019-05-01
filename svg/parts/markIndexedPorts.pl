@@ -16,3 +16,8 @@ markIndexed(P) :-
     source(_,P),
     asserta(indexedSource(P)).
 
+markIndexed(P) :-
+    we('port '),
+    we(P),
+    wen(' has no index!').
+

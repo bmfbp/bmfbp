@@ -1,10 +1,6 @@
 :- initialization(main).
 :- include('head').
 
-% yEd creates "nodes" and "edges
-% by convention, "GenericNodes" represent boxes and other kinds of nodes are pins.
-% in this pass, create a bounding box (left,top,right,bottom) for each "node" with geometry
-
 main :-
     readFB(user_input), 
     createBoundingBoxes,
@@ -12,8 +8,16 @@ main :-
     halt.
 
 createBoundingBoxes :-
-    forall(rect(ID,_), createRectBoundingBox(ID)),
+    conditionalCreateEllipseBB,
+    forall(rect(ID), createRectBoundingBox(ID)),
     forall(text(ID,_), createTextBoundingBox(ID)).
+
+conditionalCreateEllipseBB:-
+    ellipse(_),
+    forall(ellipse(ID), createEllipseBoundingBox(ID)).
+
+conditionalCreateEllipseBB :- % for pre-ellipse code  
+    true.
 
 createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),
@@ -37,6 +41,20 @@ createTextBoundingBox(ID) :-
     asserta(bounding_box_top(ID,Y)),
     Right is CX + HalfWidth,
     Bottom is Y + Height,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom)).
+
+createEllipseBoundingBox(ID) :-
+    geometry_center_x(ID,CX),
+    geometry_center_y(ID,CY),
+    geometry_w(ID,HalfWidth),
+    geometry_h(ID,HalfHeight),
+    Left is CX - HalfWidth,
+    Top is CY - HalfHeight,
+    asserta(bounding_box_left(ID,Left)),
+    asserta(bounding_box_top(ID,Top)),
+    Right is CX + HalfWidth,
+    Bottom is CY + HalfHeight,
     asserta(bounding_box_right(ID,Right)),
     asserta(bounding_box_bottom(ID,Bottom)).
 

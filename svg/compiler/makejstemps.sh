@@ -2,13 +2,8 @@
 set -v
 
 # scanner
-#hs-vsh-drawio-to-fb test1 <test1.svg >temp1.lisp
-#hs-vsh-drawio-to-fb test1 <test2.svg >temp1.lisp
-#hs-vsh-drawio-to-fb test1 <test2a.svg >temp1.lisp
-#hs-vsh-drawio-to-fb test1 <test3.svg >temp1.lisp
-#hs-vsh-drawio-to-fb test1 <test4.svg >temp1.lisp
-hs-vsh-drawio-to-fb test1 <test5.svg >temp1.lisp
-lib_insert_part_name svgc <temp1.lisp >temp2.lisp
+hs-vsh-drawio-to-fb test7 <test7.svg >temp1.lisp
+lib_insert_part_name test7 <temp1.lisp >temp2.lisp
 fb-to-prolog <temp2.lisp >temp3.pro
 plsort <temp3.pro >temp4.pro
 check_input <temp4.pro >temp5.pro
@@ -33,7 +28,6 @@ sem_allPortsHaveAnIndex <temp13a.pro >temp13b.pro
 assign_wire_numbers_to_inputs <temp13b.pro >temp14.pro
 assign_wire_numbers_to_outputs <temp14.pro >temp15.pro
 assign_portIndices <temp15.pro >temp16a.pro
-inOutPins <temp16a.pro >temp16.pro
-plsort <temp16.pro >temp17.pro
+inOutPins <temp16a.pro >temp17.pro
 emit-js <temp17.pro >temp18.lisp
 emit-js2 <temp18.lisp >temp19.js

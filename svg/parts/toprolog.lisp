@@ -41,10 +41,9 @@
                (destructuring-bind (end-sym x2 y2)
                    end
 		 (declare (ignore end-sym))
-		 (format strm "line(~A,'').~%"	new-id)
+		 (format strm "line(~A).~%"	new-id)
 
 		 (format strm "edge(~A).~%" edge-id)
-		 (format strm "node(~A).~%" begin-id)
 		 (format strm "source(~A,~A).~%" edge-id begin-id)
 		 (format strm "eltype(~A,port).~%" begin-id)
 		 (format strm "bounding_box_left(~A,~A).~%" begin-id (- x1 *p*))
@@ -52,8 +51,6 @@
 		 (format strm "bounding_box_right(~A,~A).~%" begin-id (+ x1 *p*))
 		 (format strm "bounding_box_bottom(~A,~A).~%" begin-id (+ y1 *p*))
 		 
-		 ;(format strm "edge(~A).~%" edge-id)
-		 (format strm "node(~A).~%" end-id)
 		 (format strm "sink(~A,~A).~%" edge-id end-id)
 		 (format strm "eltype(~A,port).~%" end-id)
 		 (format strm "bounding_box_left(~A,~A).~%" end-id (- x2 *p*))
@@ -66,9 +63,23 @@
          (destructuring-bind (rect-sym x1 y1 w h)
              list
            (declare (ignore rect-sym))
-           (format strm "rect(~A,'').~%eltype(~A,box).~%node(~A).~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                   new-id new-id new-id new-id x1 new-id y1 new-id w new-id h)))
-        
+           (format strm "rect(~A).~%eltype(~A,box).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+
+	(ellipse
+         (destructuring-bind (sym x1 y1 w h)
+             list
+           (declare (ignore sym))
+           (format strm "ellipse(~A).~%eltype(~A,ellipse).~%~%geometry_center_x(~A,~A).~%geometry_center_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+
+	(dot
+         (destructuring-bind (sym x1 y1 w h)
+             list
+           (declare (ignore sym))
+           (format strm "dot(~A).~%eltype(~A,dot).~%~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+
 
         (text
 	 ;; text is given as {center-x, top-y, width/2, height}
@@ -85,7 +96,7 @@
          (destructuring-bind (arrow-sym x1 y1)
              list
            (declare (ignore arrow-sym))
-           (format strm "arrow(~A,'').~%arrow_x(~A,~A).~%arrow_y(~A,~A).~%"
+           (format strm "arrow(~A).~%arrow_x(~A,~A).~%arrow_y(~A,~A).~%"
                    new-id new-id x1 new-id y1)))
 
         (otherwise

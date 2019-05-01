@@ -1,4 +1,4 @@
-:- dynamic(arrow/2).
+:- dynamic(arrow/1).
 :- dynamic(arrow_x/2).
 :- dynamic(arrow_y/2).
 :- dynamic(bounding_box_bottom/2).
@@ -17,7 +17,8 @@
 :- dynamic(geometry_center_y/2).
 :- dynamic(geometry_top_y/2).
 :- dynamic(kind/2) .
-:- dynamic(line/2) .
+:- dynamic(selfPort/2) .
+:- dynamic(line/1) .
 :- dynamic(line_begin_x/2) .
 :- dynamic(line_begin_y/2) .
 :- dynamic(line_end_x/2) .
@@ -26,7 +27,6 @@
 :- dynamic(move_absolute_y/2) .
 :- dynamic(move_relative_x/2) .
 :- dynamic(move_relative_y/2) .
-:- dynamic(node/1) .
 :- dynamic(npipes/1).
 :- dynamic(nwires/1).
 :- dynamic(parent/2).
@@ -44,11 +44,9 @@
 :- dynamic(sink_y/2) .
 :- dynamic(sink/1).
 :- dynamic(source/1).
-:- dynamic(rect/2).
-:- dynamic(rect_x/2).
-:- dynamic(rect_y/2).
-:- dynamic(rect_w/2).
-:- dynamic(rect_h/2).
+:- dynamic(rect/1).
+:- dynamic(ellipse/1).
+:- dynamic(dot/1).
 :- dynamic(sink/2) .
 :- dynamic(sinkfd/2).
 :- dynamic(source/2) .

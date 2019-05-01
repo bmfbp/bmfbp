@@ -3,15 +3,13 @@ writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.
 
 
 writeFB :-
-    forall(arrow(X,_), writeterm(arrow(X,nil))),
+    forall(arrow(X), writeterm(arrow(X))),
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
-    forall(rect(X,_), writeterm(rect(X,nil))),
-    forall(rect_x(X,Y), writeterm(rect_x(X,Y))),
-    forall(rect_y(X,Y), writeterm(rect_y(X,Y))),
-    forall(rect_w(X,Y), writeterm(rect_w(X,Y))),
-    forall(rect_h(X,Y), writeterm(rect_h(X,Y))),
-    forall(line(X,_), writeterm(line(X,nil))), 
+    forall(rect(X), writeterm(rect(X))),
+    forall(ellipse(X), writeterm(ellipse(X))),
+    forall(dot(X), writeterm(dot(X))),
+    forall(line(X), writeterm(line(X))), 
     forall(line_begin_x(X,Y), writeterm(line_begin_x(X,Y))), 
     forall(line_begin_y(X,Y), writeterm(line_begin_y(X,Y))), 
     forall(line_end_x(X,Y), writeterm(line_end_x(X,Y))), 
@@ -45,9 +43,9 @@ writeFB :-
     forall(geometry_top_y(X,Y), writeterm(geometry_top_y(X,Y))),
     forall(geometry_center_x(X,Y), writeterm(geometry_center_x(X,Y))),
     forall(geometry_center_y(X,Y), writeterm(geometry_center_y(X,Y))),
-    forall(node(X), writeterm(node(X))),
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
+    forall(selfPort(X,Y), writeterm(selfPort(X,Y))),
     forall(portIndex(X,Y), writeterm(portIndex(X,Y))),
     forall(portIndexByID(X,Y), writeterm(portIndexByID(X,Y))),
     forall(portName(X,Y), writeterm(portName(X,Y))),
@@ -82,7 +80,6 @@ wen(X):- we(X),nle.
 
 readFB(Str) :-
     read_term(Str,T0,[]),
-    %write(user_error,T0),nl(user_error),flush_output(user_error),
     element(T0,Str).
 
 element(end_of_file, _) :- !.
@@ -110,6 +107,9 @@ element(kind(X,Y), Str) :- !,
 element(geometry_left_x(X,Y), Str) :- !,
 			   asserta(geometry_left_x(X,Y)),
 		       readFB(Str).
+element(selfPort(X,Y), Str) :- !,
+			   asserta(selfPort(X,Y)),
+		       readFB(Str).
 element(geometry_top_y(X,Y), Str) :- !,
 			   asserta(geometry_top_y(X,Y)),
 		       readFB(Str).
@@ -127,9 +127,6 @@ element(geometry_h(X,Y), Str) :- !,
 		       readFB(Str).
 element(used(X), Str) :- !,
 			   asserta(used(X)),
-		       readFB(Str).
-element(node(X), Str) :- !,
-			   asserta(node(X)),
 		       readFB(Str).
 element(component(X), Str) :- !,
 			   asserta(component(X)),
@@ -208,8 +205,8 @@ element(outputPin(X,Y), Str) :- !,
 			     asserta(outputPin(X,Y)),
 			     readFB(Str).
 
-element(line(X,Y), Str) :- !,
-			     asserta(line(X,Y)),
+element(line(X), Str) :- !,
+			     asserta(line(X)),
 			     readFB(Str).
 
 element(line_begin_x(X,Y), Str) :- !,
@@ -236,8 +233,8 @@ element(wireNum(X,Y), Str) :- !,
 			     asserta(wireNum(X,Y)),
 			     readFB(Str).
 
-element(arrow(X,Y), Str) :- !,
-			     asserta(arrow(X,Y)),
+element(arrow(X), Str) :- !,
+			     asserta(arrow(X)),
 			     readFB(Str).
 
 element(arrow_x(X,Y), Str) :- !,
@@ -287,24 +284,16 @@ element(move_relative_y(X,Y), Str) :- !,
 			     readFB(Str).
 
 
-element(rect(X,Y), Str) :- !,
-			     asserta(rect(X,Y)),
+element(rect(X), Str) :- !,
+			     asserta(rect(X)),
 			     readFB(Str).
 
-element(rect_x(X,Y), Str) :- !,
-			     asserta(rect_x(X,Y)),
+element(ellipse(X), Str) :- !,
+			     asserta(ellipse(X)),
 			     readFB(Str).
 
-element(rect_y(X,Y), Str) :- !,
-			     asserta(rect_y(X,Y)),
-			     readFB(Str).
-
-element(rect_w(X,Y), Str) :- !,
-			     asserta(rect_w(X,Y)),
-			     readFB(Str).
-
-element(rect_h(X,Y), Str) :- !,
-			     asserta(rect_h(X,Y)),
+element(dot(X), Str) :- !,
+			     asserta(dot(X)),
 			     readFB(Str).
 
 element(stroke_relative_x(X,Y), Str) :- !,
@@ -389,4 +378,34 @@ inc(Var, Value) :-
     g_read(Var, Value),
     X is Value+1,
     g_assign(Var, X).
-    
+
+boundingboxCompletelyInside(ID1,ID2) :-
+    bounding_box_left(ID1,L1),
+    bounding_box_top(ID1,T1),
+    bounding_box_right(ID1,R1),
+    bounding_box_bottom(ID1,B1),
+
+    bounding_box_left(ID2,L2),
+    bounding_box_top(ID2,T2),
+    bounding_box_right(ID2,R2),
+    bounding_box_bottom(ID2,B2),
+
+    L1 >= L2,
+    T1 >= T2,
+    R2 >= R1,
+    B2 >= B1.
+
+pointCompletelyInsideBoundingBox(ID1,ID2) :-
+    bounding_box_left(ID1,L1),
+    bounding_box_top(ID1,T1),
+
+    bounding_box_left(ID2,L2),
+    bounding_box_top(ID2,T2),
+    bounding_box_right(ID2,R2),
+    bounding_box_bottom(ID2,B2),
+
+    L1 >= L2,
+    T1 >= T2,
+    R2 >= L1,
+    B2 >= T1.
+

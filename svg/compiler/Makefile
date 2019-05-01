@@ -7,10 +7,15 @@ SVG_DIAGRAM=svgc.svg
 REGRESSION=regression.gsh
 PASSES-REGRESSION=passes-regression.gsh
 
-all: dependencies passes js
+all: linux-based-compiler build-js
 
-js :
+linux-based-compiler: dependencies passes
+# the linux-based compiler is used to compile the compiler for compiling js (build-js)
+
+build-js : linux-based-compiler
 	./build-js.sh
+
+run-js: build-js
 	./run-js.sh
 
 svgpasses : dependencies ./build-svgpasses
@@ -77,13 +82,3 @@ clean-js:
 	rm -f ${BINDIR}/js-emitter ${BINDIR}/js-passes* ${BINDIR}/pass-js-emit*
 	rm -f temp.js
 
-junk:
-	hs-vsh-drawio-to-fb test1 <test99.svg >temp1.lisp
-	lib_insert_part_name svgc <temp1.lisp >temp2.lisp
-	fb-to-prolog <temp2.lisp >temp3.pro
-	plsort <temp3.pro >temp4.pro
-	check_input <temp4.pro >temp5.pro
-
-# parser
-	calc_bounds <temp5.pro >temp6.pro
-	add_kinds <temp6.pro >temp7.pro

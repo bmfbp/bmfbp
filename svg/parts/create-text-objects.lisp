@@ -28,7 +28,7 @@
 				      ,*default-font-height*))))))
 	       (error "badly formed translate /~A/~%" list)))))
 
-    ((line rect component)
+    ((line rect component ellipse dot)
      list)
 
     (otherwise

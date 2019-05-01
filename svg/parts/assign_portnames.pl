@@ -22,7 +22,8 @@ tryIndex(PortID,NumericID,Num):-
     asserta(portIndexByID(PortID,NumericID)),
     asserta(portIndex(PortID,Num)).
     
-tryIndex(_,_,_):-
+tryIndex(PortID,NumericID,Num):-
+    we(PortId),we(' nonnumeric name '),we(NumericID),wspc,wen(Num),
     true.
 
 minimumDistanceToAPort(TextID,PortID) :-
