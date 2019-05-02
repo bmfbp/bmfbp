@@ -41,7 +41,6 @@ clean-temps:
 
 test : dependencies
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
-	sleep 1
 	cp $(BINDIR)/svg.gsh ./temp.gsh
 	comparegsh.sh temp.gsh $(REGRESSION)
 
@@ -65,7 +64,6 @@ test-passes: passes
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
 	grash ${BINDIR}/svgpasses.gsh svgc < ${SVG_DIAGRAM} >${PASSES-REGRESSION}
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)
-	sleep 1
 	flatbmfbp passes.svg >$(REGRESSION)
 	grash ${BINDIR}/svgpasses.gsh passes <passes.svg >${PASSES-REGRESSION}
 	$(BINDIR)/comparegsh.sh $(PASSES-REGRESSION) $(REGRESSION)

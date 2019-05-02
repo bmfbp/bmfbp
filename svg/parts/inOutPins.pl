@@ -25,20 +25,52 @@ makeInputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
     portIndex(PortID,Pin),
     parent(PortID,Part),
-    asserta(inputPin(Part,Pin)),
-    asserta(wireIndex(Pin,WireIndex)).
+    makeInput(Part,PortID,Pin,WireIndex).
 
 makeInputForPipe(PortID) :-
     n_c(PortID).
 
-makeOutputForPipe(PortID) :-
-    n_c(PortID).
+makeInput(Part,_,Pin,WireIndex) :-
+    rect(Part),
+    asserta(inputPin(Part,Pin)),
+    asserta(wireIndex(Pin,WireIndex)).
+
+makeInput(Part,_,Pin,WireIndex) :-
+    ellipse(Part),
+    asserta(selfOutputPin(Part,Pin)),
+    asserta(wireIndex(Pin,WireIndex)).
+
+makeInput(Part,PortID,Pin,WireIndex) :-
+    we('cannot happen in inOutPins/makeInput '),
+    we(Part),wspc,
+    we(PortID),wspc,
+    we(Pin),wspc,
+    we(WireIndex),wspc.
 
 makeOutputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
     portIndex(PortID,Pin),
     parent(PortID,Part),
+    makeOutput(Part,PortID,Pin,WireIndex).
+
+makeOutputForPipe(PortID) :-
+    n_c(PortID).
+
+makeOutput(Part,_,Pin,WireIndex):-
+    rect(Part),
     asserta(outputPin(Part,Pin)),
     asserta(wireIndex(Pin,WireIndex)).
+
+makeOutput(Part,_,Pin,WireIndex):-
+    ellipse(Part),
+    asserta(selfInputPin(Part,Pin)),
+    asserta(wireIndex(Pin,WireIndex)).
+
+makeOutput(Part,PortID,Pin,WireIndex):-
+    we('cannot happen in inOutPins/makeOutput '),
+    we(Part),wspc,
+    we(PortID),wspc,
+    we(Pin),wspc,
+    we(WireIndex),wspc.
 
 :- include('tail').
