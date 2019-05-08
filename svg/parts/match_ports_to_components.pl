@@ -27,9 +27,9 @@ assign_parent_for_port(PortID) :-
     asserta(parent(PortID, ParentID)).
 
 assign_parent_for_port(PortID) :-
-    portName(PortID,Text),
+    portIndex(PortID,IX),
     asserta(n_c(PortID)),
-    nle,nle,we('no parent box for port '),we(PortID),we(' named '),we(Text),nle,nle,nle.
+    nle,nle,we('no parent box for port '),we(PortID),we(' named '),we(IX),nle,nle,nle.
 
 assign_parent_for_port(PortID) :-
     asserta(n_c(PortID)),
@@ -47,15 +47,29 @@ portIntersection(PortID,ParentID):-
     bounding_box_bottom(ParentID, PBottom),
     intersects(Left, Top, Right, Bottom, PLeft, PTop, PRight, PBottom).
 
-intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, ParentRight, ParentBottom) :-
-    % true if child bounding box center intersect parent bounding box
-    % bottom is >= top in this coord system
-    % the code below only checks to see if all edges of the port are within the parent box
-    % this should be tightened up to check that a port actually intersects one of the edges of the parent box
+intersects(PortLeft,_,_,PortBottom,ParentLeft, ParentTop, ParentRight, ParentBottom) :-
+    PortLeft >= ParentLeft,
     PortLeft =< ParentRight,
-    PortRight >= ParentLeft,
-    PortTop =< ParentBottom,
+    PortBottom =< ParentBottom,
     PortBottom >= ParentTop.
+
+intersects(PortLeft,PortTop,_,_,ParentLeft, ParentTop, ParentRight, ParentBottom) :-
+    PortLeft >= ParentLeft,
+    PortLeft =< ParentRight,
+    PortTop >= ParentTop,
+    PortTop =< ParentBottom.
+
+intersects(_,_,PortRight,PortBottom,ParentLeft, ParentTop, ParentRight, ParentBottom) :-
+    PortRight >= ParentLeft,
+    PortRight =< ParentRight,
+    PortBottom >= ParentTop,
+    PortBottom =< ParentBottom.
+
+intersects(_,PortTop,PortRight,_,ParentLeft, ParentTop, ParentRight, ParentBottom) :-
+    PortRight >= ParentLeft,
+    PortRight =< ParentRight,
+    PortTop >= ParentTop,
+    PortTop =< ParentBottom.
 
 :- include('tail').
 

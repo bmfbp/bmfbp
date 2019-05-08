@@ -14,7 +14,7 @@ createKinds(BoxID) :-
     asserta(kind(BoxID,Str)).
 
 textCompletelyInsideBox(TextID,BoxID) :-
-    pointCompletelyInsideBoundingBox(TextID,BoxID).
+    leftTopPointCompletelyInsideBoundingBox(TextID,BoxID).
 %    boundingboxCompletelyInside(TextID,BoxID).
 
 :- include('tail').
