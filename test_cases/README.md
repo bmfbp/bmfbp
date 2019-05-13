@@ -6,6 +6,14 @@ comprehensively test the bmfbp system.
 You can open all the composite diagrams using the file `all_diagrams.svg` in
 Draw.IO.
 
+The compiler is expected to produce something like the `output/executable.js`.
+When run, it would produce the same output as `output/executable_output.txt`.
+You can run the JS file by running `node output/executable.js`.
+
+The JSON files in the `output/` are the expected output of the compiler for the
+composites. For instance, `output/tee.json` is the JSON representation of
+`composites/tee.svg`.
+
 ## Valid cases in a diagram
 
 The test case schematics under the directory `composites` reference these
