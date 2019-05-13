@@ -1,0 +1,22 @@
+{
+  "name": "Pass on 0. Add 1 on 1.",
+  "wireCount": 4,
+  "self": {
+    "partName": "Pass on 0. Add 1 on 1.",
+    "inCount": 3,
+    "outCount": 1,
+    "inPins": [[0], [1], [2]],
+    "outPins": [[0, 3]],
+    "exec": "pass_and_add"
+  },
+  "parts": [
+    {
+      "partName": "Add 1",
+      "inCount": 1,
+      "outCount": 1,
+      "inPins": [[1]],
+      "outPins": [[3]],
+      "exec": "add_1"
+    }
+  ]
+}
