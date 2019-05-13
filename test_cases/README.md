@@ -3,6 +3,9 @@
 This directory contains schematics, code for leaves, and documentation to
 comprehensively test the bmfbp system.
 
+You can open all the composite diagrams using the file `all_diagrams.svg` in
+Draw.IO.
+
 ## Valid cases in a diagram
 
 The test case schematics under the directory `composites` reference these
