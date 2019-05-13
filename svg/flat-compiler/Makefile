@@ -30,6 +30,5 @@ clean-temps:
 
 test : dependencies
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
-	cp $(BINDIR)/svg.gsh ./temp.gsh
-	comparegsh.sh temp.gsh $(REGRESSION)
+	comparegsh.sh svg.gsh.old $(REGRESSION)
 

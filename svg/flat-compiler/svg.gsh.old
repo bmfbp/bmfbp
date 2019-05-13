@@ -1,5 +1,5 @@
 #name svgc.gsh
-pipes 21
+pipes 17
 fork
   inPipe 6
   exec emit
@@ -20,7 +20,7 @@ fork
   exec assign_wire_numbers_to_outputs
 krof
 fork
-  inPipe 20
+  inPipe 10
   outPipe 4
   exec assign_wire_numbers_to_inputs
 krof
@@ -56,32 +56,9 @@ fork
 krof
 fork
   inPipe 1
-#  outPipe 2
-  outPipe 17
+  outPipe 2
   exec assign_portnames
 krof
-
-fork
-  inPipe 17
-  outPipe 18
-  exec markIndexedPorts
-krof
-fork
-  inPipe 18
-  outPipe 2
-  exec coincidentPorts
-krof
-fork
-  inPipe 10
-  outPipe 19
-  exec sem_partsHaveSomePorts
-krof
-fork
-  inPipe 19
-  outPipe 20
-  exec sem_allPortsHaveAnIndex
-krof
-
 fork
   inPipe 0
   outPipe 1
