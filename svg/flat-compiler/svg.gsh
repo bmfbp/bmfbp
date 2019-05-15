@@ -100,7 +100,7 @@ krof
 fork
   inPipe 7
   outPipe 13
-  exec fb-to-prolog
+  exec fb_to_prolog
 krof
 fork
   inPipe 11
@@ -109,5 +109,5 @@ fork
 krof
 fork
   outPipe 3
-  exec hs-vsh-drawio-to-fb
+  exec hs_vsh_drawio_to_fb
 krof

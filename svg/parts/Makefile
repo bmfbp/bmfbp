@@ -7,7 +7,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/assign_wire_numbers_to_outputs \
 	$(BINDIR)/assign_portIndices \
 	$(BINDIR)/emit \
-	$(BINDIR)/emit-js \
+	$(BINDIR)/emit_js \
 	$(BINDIR)/inOutPins \
 	$(BINDIR)/add_kinds \
 	$(BINDIR)/add_selfPorts \
@@ -22,7 +22,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name ${BINDIR}/emit_js2
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -33,9 +33,9 @@ $(BINDIR)/plsort:
 $(BINDIR)/% : %.pl $(PL_COMMON)
 	gplc $< --output $@ --no-top-level
 
-$(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
+$(BINDIR)/fb_to_prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp
-	buildapp --output $(BINDIR)/fb-to-prolog \
+	buildapp --output $(BINDIR)/fb_to_prolog \
 		--load util.lisp \
 		--load toprolog.lisp \
 		--load fix-translate.lisp \
@@ -49,10 +49,10 @@ $(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 $(BINDIR)/lib_insert_part_name: lib_insert_part_name.lisp
 	buildapp --output $(BINDIR)/lib_insert_part_name --load lib_insert_part_name.lisp --entry main
 
-$(BINDIR)/emit-js2: emit-js2.lisp
-	buildapp --output $(BINDIR)/emit-js2 --load emit-js2.lisp --entry main
+$(BINDIR)/emit_js2: emit_js2.lisp
+	buildapp --output $(BINDIR)/emit_js2 --load emit_js2.lisp --entry main
 
 clean :
 	rm -f $(EXECS)
-	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name ${BINDIR}/emit-js2
+	rm -f $(BINDIR)/fb_to_prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name ${BINDIR}/emit_js2
 

@@ -19,6 +19,8 @@
            `(translate ,pair ,(mapcar #'create-text-objects tail))
            (if (matches-text-item-p tail)
                (let ((text (text-part tail)))
+		 (when (numberp (position #\< text))
+		   (error (format nil "text /~A/ contains < ~%" text)))
 		 (let ((half-width (/ (* (length text) *default-font-width*) 2)))
 		   `((translate ,pair
 			       ((text ,text 

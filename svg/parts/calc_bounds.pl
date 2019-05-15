@@ -2,7 +2,7 @@
 :- include('head').
 
 main :-
-    readFB(user_input), 
+    readFB(user_input),
     createBoundingBoxes,
     writeFB,
     halt.
@@ -57,5 +57,8 @@ createEllipseBoundingBox(ID) :-
     Bottom is CY + HalfHeight,
     asserta(bounding_box_right(ID,Right)),
     asserta(bounding_box_bottom(ID,Bottom)).
+
+createEllipseBoundingBox(_) :-
+    true.
 
 :- include('tail').
