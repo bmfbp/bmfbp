@@ -27,9 +27,6 @@ element(Name,unassigned(X), Str) :- !,
 element(Name,kind(X,Y), Str) :- !,
 			   asserta(kind(X,Y)),
 		       readFB(Name,Str).
-%% element(Name,geometry_left_x(X,Y), Str) :- !,
-%% 			   asserta(geometry_left_x(X,Y)),
-%% 		       readFB(Name,Str).
 element(Name,selfPort(X,Y), Str) :- !,
 			   asserta(selfPort(X,Y)),
 		       readFB(Name,Str).
@@ -303,4 +300,3 @@ element(_,Term, _) :-
     write(user_error,'failed read '),
     write(user_error,Term),
     nl(user_error).
-    % type_error(element, Term).
