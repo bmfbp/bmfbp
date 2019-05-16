@@ -360,6 +360,7 @@ int main (int argc, char **argv) {
       pid = wait4(-1, &stat, WNOHANG, 0);
       fprintf(stderr,"child %d died\n", pid);
     } while (pid > 0);
+    fprintf(stderr,"FINISHED waiting for children\n");
   }
   exit(0);
 }
