@@ -351,5 +351,15 @@ int main (int argc, char **argv) {
   while ((pid = wait(&status)) != -1) {
     fprintf(stderr, "%d exits %d\n", pid, WEXITSTATUS(status));
   }
+  {
+    // wait for all children to exit
+    int stat;
+    pid_t pid;
+    do {
+      fprintf(stderr,"waiting for any child\n");
+      pid = wait4(-1, &stat, WNOHANG, 0);
+      fprintf(stderr,"child %d died\n", pid);
+    } while (pid > 0);
+  }
   exit(0);
 }
