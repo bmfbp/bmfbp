@@ -27,14 +27,14 @@ cases by its numeric index.
     1. Zero pin
     2. One pin
     3. Many pins
-3. An output pin can be attached to zero or more input pins via wires.
-    1. Zero pin
-    2. One pin
-    3. Many pins
-4. An input pin can be attached to zero or more output pins via wires.
-    1. Zero pin
-    2. One pin
-    3. Many pins
+3. An output pin can be attached to zero or more wires.
+    1. Zero wire
+    2. One wire
+    3. Many wires
+4. An input pin can be attached to zero or more wires.
+    1. Zero wire
+    2. One wire
+    3. Many wires
 5. A kind can be either a leaf or a composite.
     1. Leaf
     2. Composite
@@ -52,11 +52,15 @@ cases by its numeric index.
 9. A composite contains zero or more kinds.
     1. Zero kind
     2. Many kind
-10. A source can be attached to zero or more input pins.
-    1. Zero pin
-    2. One pin
-    3. Many pins
-11. A sink can be attached to zero or more output pins.
-    1. Zero pin
-    2. One pin
-    3. Many pins
+10. A source can be attached to zero or more wires.
+    1. Zero wire
+    2. One wire
+    3. Many wires
+11. A sink can be attached to zero or more wires.
+    1. Zero wire
+    2. One wire
+    3. Many wires
+12. A wire can be attached to:
+    1. Exactly one input pin and zero output pin
+    2. Exactly one output pin and zero input pin
+    3. Exactly one output pin and one input pin

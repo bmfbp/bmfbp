@@ -5,11 +5,11 @@
 // ----------------------
 
 const kinds = {
-  "output_1_every_second_for_3_times": (() => {
-    return (partId, send, release) => {
+  "output_1_every_second_for_3_times": (function () {
+    return function (partId, send, release) {
       var count = 0;
 
-      const outputOne = () => {
+      const outputOne = function () {
         send(partId, 0, 1);
         release(partId);
 
@@ -23,18 +23,18 @@ const kinds = {
       return function (pin, packet) {};
     };
   })(),
-  "add_1": (() => {
-    return (partId, send, release) => {
-      return (pin, packet) => {
+  "add_1": (function () {
+    return function (partId, send, release) {
+      return function (pin, packet) {
         send(partId, 0, packet + 1);
       };
     };
   })(),
-  "duplicate_every_third": (() => {
-    return (partId, send, release) => {
+  "duplicate_every_third": (function () {
+    return function (partId, send, release) {
       let packetCount = 0;
 
-      return (pin, packet) => {
+      return function (pin, packet) {
         if (++packetCount % 3 === 0) {
           send(partId, 1, packet);
         }
@@ -43,19 +43,19 @@ const kinds = {
       };
     };
   })(),
-  "print_to_log": (() => {
-    return (partId, send, release) => {
-      return (pin, packet) => {
+  "print_to_log": (function () {
+    return function (partId, send, release) {
+      return function (pin, packet) {
         console.log(packet);
       };
     };
   })(),
-  "pass_and_add": (() => {
+  "pass_and_add": (function () {
     return {
-      "name": "Pass on 0. Add 1 on 1.",
+      "name": "pass_and_add",
       "wireCount": 4,
       "self": {
-        "partName": "Pass on 0. Add 1 on 1.",
+        "partName": "pass_and_add",
         "inCount": 3,
         "outCount": 1,
         "inPins": [[0], [1], [2]],
@@ -64,7 +64,7 @@ const kinds = {
       },
       "parts": [
         {
-          "partName": "Add 1",
+          "partName": "add_1",
           "inCount": 1,
           "outCount": 1,
           "inPins": [[1]],
@@ -74,7 +74,7 @@ const kinds = {
       ]
     };
   })(),
-  "tee": (() => {
+  "tee": (function () {
     return {
       "name": "tee",
       "wireCount": 3,
@@ -90,12 +90,12 @@ const kinds = {
       ]
     };
   })(),
-  "top_level": (() => {
+  "top_level": (function () {
     return {
-      "name": "",
+      "name": "top_level",
       "wireCount": 11,
       "self": {
-        "partName": "",
+        "partName": "top_level",
         "inCount": 0,
         "outCount": 0,
         "inPins": [],
@@ -104,7 +104,7 @@ const kinds = {
       },
       "parts": [
         {
-          "partName": "output \"1\" every second for 3 times",
+          "partName": "output_1_every_second_for_3_times",
           "inCount": 0,
           "outCount": 1,
           "inPins": [],
@@ -112,7 +112,7 @@ const kinds = {
           "exec": "output_1_every_second_for_3_times"
         },
         {
-          "partName": "print to log",
+          "partName": "print_to_log",
           "inCount": 2,
           "outCount": 0,
           "inPins": [[1], [0]],
@@ -120,7 +120,7 @@ const kinds = {
           "exec": "print_to_log"
         },
         {
-          "partName": "Add 1",
+          "partName": "add_1",
           "inCount": 1,
           "outCount": 1,
           "inPins": [[2]],
@@ -136,7 +136,7 @@ const kinds = {
           "exec": "tee"
         },
         {
-          "partName": "Pass on 0. Add 1 on 1.",
+          "partName": "pass_and_add",
           "inCount": 2,
           "outCount": 1,
           "inPins": [[3], [5]],
@@ -144,7 +144,7 @@ const kinds = {
           "exec": "pass_and_add"
         },
         {
-          "partName": "Add 1",
+          "partName": "add_1",
           "inCount": 1,
           "outCount": 1,
           "inPins": [[6]],
@@ -152,7 +152,7 @@ const kinds = {
           "exec": "add_1"
         },
         {
-          "partName": "Duplicate every third input packet to 1",
+          "partName": "duplicate_every_third",
           "inCount": 1,
           "outCount": 2,
           "inPins": [[7, 8]],
@@ -160,7 +160,7 @@ const kinds = {
           "exec": "duplicate_every_third"
         },
         {
-          "partName": "print to log",
+          "partName": "print_to_log",
           "inCount": 1,
           "outCount": 0,
           "inPins": [[10]],

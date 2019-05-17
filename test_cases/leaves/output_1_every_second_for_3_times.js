@@ -1,7 +1,7 @@
-return (partId, send, release) => {
+return function (partId, send, release) {
   var count = 0;
 
-  const outputOne = () => {
+  const outputOne = function () {
     send(partId, 0, 1);
     release(partId);
 

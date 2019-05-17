@@ -11,7 +11,7 @@
   },
   "parts": [
     {
-      "partName": "output \"1\" every second for 3 times",
+      "partName": "output_1_every_second_for_3_times",
       "inCount": 0,
       "outCount": 1,
       "inPins": [],
@@ -19,7 +19,7 @@
       "exec": "output_1_every_second_for_3_times"
     },
     {
-      "partName": "print to log",
+      "partName": "print_to_log",
       "inCount": 2,
       "outCount": 0,
       "inPins": [[1], [0]],
@@ -27,7 +27,7 @@
       "exec": "print_to_log"
     },
     {
-      "partName": "Add 1",
+      "partName": "add_1",
       "inCount": 1,
       "outCount": 1,
       "inPins": [[2]],
@@ -43,7 +43,7 @@
       "exec": "tee"
     },
     {
-      "partName": "Pass on 0. Add 1 on 1.",
+      "partName": "pass_and_add",
       "inCount": 2,
       "outCount": 1,
       "inPins": [[3], [5]],
@@ -51,7 +51,7 @@
       "exec": "pass_and_add"
     },
     {
-      "partName": "Add 1",
+      "partName": "add_1",
       "inCount": 1,
       "outCount": 1,
       "inPins": [[6]],
@@ -59,7 +59,7 @@
       "exec": "add_1"
     },
     {
-      "partName": "Duplicate every third input packet to 1",
+      "partName": "duplicate_every_third",
       "inCount": 1,
       "outCount": 2,
       "inPins": [[7, 8]],
@@ -67,7 +67,7 @@
       "exec": "duplicate_every_third"
     },
     {
-      "partName": "print to log",
+      "partName": "print_to_log",
       "inCount": 1,
       "outCount": 0,
       "inPins": [[10]],
