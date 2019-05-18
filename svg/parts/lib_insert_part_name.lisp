@@ -1,3 +1,9 @@
+(defmacro bmassert (expr)
+  `(unless ,expr
+     (format *error-output* "assertion ~A failed~%" ',expr)
+     #+sbcl (sb-ext:quit)))
+
+
 (defun copy-stdin-to-stdout ()
   (let ((sexpr (read *standard-input* nil 'EOF)))
     (loop
@@ -8,8 +14,9 @@
 
 (defun run (argv)
   (let ((sexpr (read *standard-input* nil 'EOF)))
-    (assert (not (eq 'EOF sexpr)))
-    (assert (listp sexpr))
+    (bmassert (not (eq 'EOF sexpr)))
+    ;(format *error-output* "~&sexpr=~S~%" sexpr)
+    (bmassert (listp sexpr)) ;; assert that stdin has a factbase on it
     (let* ((name `(component ,(second argv)))
 	   (new (cons name sexpr)))
       (write new))
@@ -21,5 +28,6 @@
 
 #+sbcl 
 (defun main (argv)
+  (sb-ext:disable-debugger)
   (run argv))
 

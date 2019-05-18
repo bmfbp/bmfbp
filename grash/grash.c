@@ -241,6 +241,11 @@ void doExecFirst (char *p, int oargc, char **oargv) {
   argv[i-1] = NULL;
 
   closeUnusedPipes();
+  /* fprintf(stderr, "\nexecing: %s", argv[0]); */
+  /* for (i = 1; i < argc ; i += 1) { */
+  /*   fprintf(stderr, " %s", argv[i]); */
+  /* } */
+  /* fprintf(stderr, "\n"); */
   pid = execvp (argv[0], argv);
   if (pid < 0) {
     fprintf (stderr, "exec failed: %s\n", argv[0]);
