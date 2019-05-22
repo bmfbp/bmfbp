@@ -49,7 +49,11 @@ showToText = DT.pack . show
 lispify :: Output -> DT.Text
 lispify (Container children) = wrapInParens $ map lispify children
 lispify (Translate x y children) = wrapInParens ["translate", wrapInParens [showToText x, showToText y], wrapInParens $ map lispify children]
-lispify (Path commands) = wrapInParens ("line" : map lispifyPathCommand commands)
+lispify (Path commands)
+  -- We assume a heptagon as a speech bubble, as a speech bubble has 7 sides. It's 8 because
+  -- we need to count the trailing 'Z'.
+  | length commands == 8 = wrapInParens ("speech-bubble" : map lispifyPathCommand commands)
+  | otherwise = wrapInParens ("line" : map lispifyPathCommand commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
