@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Parser.DrawIO where
 
 import qualified Data.Text as DT
@@ -12,6 +14,9 @@ import qualified Data.Attoparsec.Text as DAT
 import qualified Graphics.Svg.PathParser as GSP
 import qualified Graphics.Svg.Types as GST
 import qualified Linear.V2 as LV
+import qualified Data.Aeson as DAS
+import qualified GHC.Generics as GGN
+import qualified Data.Text.Lazy.Encoding as DTLE
 
 data Output
     = Container [Output]
@@ -21,6 +26,7 @@ data Output
     | Ellipse Float Float Float Float
     | Dot Float Float Float Float
     | Text DT.Text
+    | Metadata [KindMetadata]
     | Empty
     deriving (Show)
 
@@ -32,6 +38,18 @@ data PathCommand
     | Z
     | UnsupportedPathCommand
     deriving (Show)
+
+data KindMetadata
+    = KindMetadata
+        { name :: !DT.Text
+        , repo :: !DT.Text
+        , ref :: !DT.Text
+        , dir :: !DT.Text
+        , file :: !DT.Text
+        } deriving (Show, GGN.Generic)
+
+instance DAS.FromJSON KindMetadata
+instance DAS.ToJSON KindMetadata
 
 parseSVG :: DT.Text -> DT.Text
 parseSVG input = output
@@ -57,6 +75,7 @@ lispify (Path commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
+lispify (Metadata md) = wrapInParens ["metadata", showToText (DAS.encode md)]
 lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
 
@@ -86,7 +105,11 @@ parseNode :: TTD.Node -> Output
 parseNode (TTD.NodeContent text) =
     case DT.strip text of
       "" -> Empty
-      t -> Text t
+      t ->
+        -- Parse as metadata if in JSON format.
+        case (DAS.eitherDecode (DTLE.encodeUtf8 $ DTL.fromStrict t) :: Either String [KindMetadata]) of
+          Left _ -> Text t
+          Right md -> Metadata md
 parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = attrs, TTD.eltChildren = children })) =
     let
       rest = map parseNode children

@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.0.
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bd828274f35dde9a3d446452f3bb9ed288c596976573efa9f2808f6bc2df42f6
+-- hash: e8874c4b1e97f015c6769f6497f124276a205e44cd62fbdd7aa9df0d47cf24de
 
 name:           hs-vsh
 version:        0.1.0.0
@@ -42,7 +42,8 @@ library
   default-extensions: OverloadedStrings
   ghc-options: -fno-warn-overlapping-patterns
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -72,7 +73,8 @@ executable hs-vsh-assign-fds
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is AssignFds
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -103,7 +105,8 @@ executable hs-vsh-assign-pipe-numbers-to-inputs
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is AssignPipeNumbersToInputs
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -134,7 +137,8 @@ executable hs-vsh-assign-pipe-numbers-to-outputs
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is AssignPipeNumbersToOutputs
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -165,7 +169,8 @@ executable hs-vsh-calc-bounds
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is CalcBounds
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -196,7 +201,8 @@ executable hs-vsh-drawio-to-fb
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is ParseDrawIO
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -227,7 +233,8 @@ executable hs-vsh-emit
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is EmitGrash
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -258,7 +265,8 @@ executable hs-vsh-mark-directions
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is MarkDirections
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
@@ -289,7 +297,8 @@ executable hs-vsh-match-ports-to-components
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is MatchPortsToComponents
   build-depends:
-      array
+      aeson
+    , array
     , attoparsec
     , base
     , containers
