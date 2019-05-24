@@ -1,0 +1,14 @@
+{
+  "name": "tee",
+  "wireCount": 3,
+  "self": {
+    "partName": "tee",
+    "inCount": 1,
+    "outCount": 3,
+    "inPins": [[0, 1]],
+    "outPins": [[0], [1], [2]],
+    "exec": "tee"
+  },
+  "parts": [
+  ]
+}
