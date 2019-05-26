@@ -10,7 +10,7 @@ dependencies:
 	chmod a+x $(BINDIR)/jsbmfbp
 
 clean:
-	rm -f temp*.pro temp*.js temp*.lisp
+	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp
 
 test: dependencies
 	jsbmfbp test <./js-test-emitter.svg
