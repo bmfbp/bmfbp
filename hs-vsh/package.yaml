@@ -26,6 +26,7 @@ dependencies:
 - array
 - containers
 - transformers
+- aeson
 
 library:
   source-dirs: src

@@ -1,0 +1,78 @@
+{
+  "name": "top_level",
+  "wireCount": 11,
+  "self": {
+    "partName": "top_level",
+    "inCount": 0,
+    "outCount": 0,
+    "inPins": [],
+    "outPins": [],
+    "exec": "top_level"
+  },
+  "parts": [
+    {
+      "partName": "output_1_every_second_for_3_times",
+      "inCount": 0,
+      "outCount": 1,
+      "inPins": [],
+      "outPins": [[0, 2, 4]],
+      "exec": "output_1_every_second_for_3_times"
+    },
+    {
+      "partName": "print_to_log",
+      "inCount": 2,
+      "outCount": 0,
+      "inPins": [[1], [0]],
+      "outPins": [],
+      "exec": "print_to_log"
+    },
+    {
+      "partName": "add_1",
+      "inCount": 1,
+      "outCount": 1,
+      "inPins": [[2]],
+      "outPins": [[3]],
+      "exec": "add_1"
+    },
+    {
+      "partName": "tee",
+      "inCount": 1,
+      "outCount": 2,
+      "inPins": [[4]],
+      "outPins": [[5], [6]],
+      "exec": "tee"
+    },
+    {
+      "partName": "pass_and_add",
+      "inCount": 2,
+      "outCount": 1,
+      "inPins": [[3], [5]],
+      "outPins": [[7]],
+      "exec": "pass_and_add"
+    },
+    {
+      "partName": "add_1",
+      "inCount": 1,
+      "outCount": 1,
+      "inPins": [[6]],
+      "outPins": [[8]],
+      "exec": "add_1"
+    },
+    {
+      "partName": "duplicate_every_third",
+      "inCount": 1,
+      "outCount": 2,
+      "inPins": [[7, 8]],
+      "outPins": [[9], [10]],
+      "exec": "duplicate_every_third"
+    },
+    {
+      "partName": "print_to_log",
+      "inCount": 1,
+      "outCount": 0,
+      "inPins": [[10]],
+      "outPins": [],
+      "exec": "print_to_log"
+    }
+  ]
+}
