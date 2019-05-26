@@ -186,7 +186,7 @@ executable hs-vsh-calc-bounds
     , unordered-containers
   default-language: Haskell2010
 
-executable hs-vsh-drawio-to-fb
+executable hs_vsh_drawio_to_fb
   main-is: ParseDrawIO.hs
   other-modules:
       AssignFds
