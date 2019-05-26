@@ -22,7 +22,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb-to-prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js2
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js2
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -33,9 +33,9 @@ $(BINDIR)/plsort:
 $(BINDIR)/% : %.pl $(PL_COMMON)
 	gplc $< --output $@ --no-top-level
 
-$(BINDIR)/fb-to-prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
+$(BINDIR)/fb_to_prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-lines.lisp create-text-objects.lisp \
 	            fix-arrows.lisp fix-lines.lisp main.lisp
-	buildapp --output $(BINDIR)/fb-to-prolog \
+	buildapp --output $(BINDIR)/fb_to_prolog \
 		--load util.lisp \
 		--load toprolog.lisp \
 		--load fix-translate.lisp \
@@ -54,6 +54,6 @@ $(BINDIR)/emit_js2: emit_js2.lisp
 
 clean :
 	rm -f $(EXECS)
-	rm -f $(BINDIR)/fb-to-prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name 
+	rm -f $(BINDIR)/fb_to_prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name 
 	rm -f $(BINDIR)/emit_js2
 

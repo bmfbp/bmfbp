@@ -2,7 +2,7 @@ BINDIR=~/bin
 
 all:
 	cd ../grash && make
-	cd ../hs-vsh && make && mv $(BINDIR)/hs-vsh-drawio-to-fb $(BINDIR)/hs_vsh_drawio_to_fb
+	cd ../hs-vsh && make
 	cd parts && make
 	cd compiler && make
 	cd js-compiler && make
