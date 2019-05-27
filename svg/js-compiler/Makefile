@@ -14,3 +14,4 @@ clean:
 
 test: dependencies
 	jsbmfbp test_diagrams/js_test_emitter.svg
+	cat temp22.js

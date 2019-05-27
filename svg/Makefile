@@ -16,3 +16,4 @@ clean:
 
 test : 
 	cd flat-compiler && make test
+	cd js-compiler && make test
