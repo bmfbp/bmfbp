@@ -14,8 +14,11 @@
 
 (defparameter *p* 20)  ;; port width and height - play with this if you get "no parent for box" errors
 
-(defun contains-whitespace-p (s)
-  (not (null (position #\space s))))
+(defun contains-junk-p (s)
+  (notevery #'(lambda (c) (or 
+			   (alphanumericp c)
+			   (char= c #\_)))
+	    s))
 
 (defun to-prolog (list strm)
   (unless (listp list)
@@ -91,8 +94,8 @@
          (destructuring-bind (text-sym str x1 y1 w h)
              list
            (declare (ignore text-sym))
-	   (when (contains-whitespace-p str)
-	     (format *error-output* "string /~S/ contains whitespace (not allowed)~%" str)
+	   (when (contains-junk-p str)
+	     (format *error-output* "string /~S/ contains non-alphanumeric characters (not allowed)~%" str)
 	     (exit))
 	   (if (all-digits-p str)
                (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
