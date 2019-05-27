@@ -13,4 +13,4 @@ clean:
 	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp
 
 test: dependencies
-	jsbmfbp test <./js-test-emitter.svg
+	jsbmfbp test_diagrams/js_test_emitter.svg

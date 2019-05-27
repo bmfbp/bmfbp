@@ -2,9 +2,9 @@
 NAME=$(basename $1 .svg)
 
 # scanner
-hs-vsh-drawio-to-fb $NAME <$1 >temp1.pro
-lib_insert_part_NAME $NAME <temp1.pro >temp2.pro
-fb_to_prolog $NAME <temp2.pro >temp3.pro
+hs_vsh_drawio_to_fb <$1 >temp1.lisp
+lib_insert_part_NAME $NAME <temp1.lisp >temp2.lisp
+fb_to_prolog $NAME <temp2.lisp >temp3.pro
 sort <temp3.pro >temp4.pro
 check_input $NAME <temp4.pro >temp5.pro
 
