@@ -1,13 +1,17 @@
 (defun run (strm)
   (let ((list (read strm nil nil)))
     (assert (listp list) () "run not a list list=/~a/" list)
-    (let ((fixed 
-           (mapcar #'fix-translates
-		   (mapcar #'collapse-lines
-			   (mapcar #'fix-arrows
-				   (mapcar #'fix-lines
-					   (mapcar #'create-text-objects list)))))))
-      (to-prolog fixed *standard-output*))))
+    (let ((comments-removed (remove-if (lambda (sublist)
+					 (eq (car sublist) 'speech-bubble))
+				       list)))
+      (let ((fixed 
+             (mapcar #'fix-translates
+		     (mapcar #'collapse-lines
+			     (mapcar #'fix-arrows
+				     (mapcar #'fix-lines
+					     (mapcar #'create-text-objects 
+						     comments-removed)))))))
+      (to-prolog fixed *standard-output*)))))
 
 #-lispworks
 (defun main (argv)
