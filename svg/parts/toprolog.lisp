@@ -14,8 +14,13 @@
 
 (defparameter *p* 20)  ;; port width and height - play with this if you get "no parent for box" errors
 
+(defun contains-whitespace-p (s)
+  (not (null (position #\space s))))
+
 (defun to-prolog (list strm)
-  (assert (listp list) () "to-prolog list=/~a/" list)
+  (unless (listp list)
+    (format *error-output* "to-prolog list=/~a/" list)
+    (exit))
   (if (listp (car list))
 
       (progn
@@ -86,6 +91,9 @@
          (destructuring-bind (text-sym str x1 y1 w h)
              list
            (declare (ignore text-sym))
+	   (when (contains-whitespace-p str)
+	     (format *error-output* "string /~S/ contains whitespace (not allowed)~%" str)
+	     (exit))
 	   (if (all-digits-p str)
                (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                        new-id str new-id x1 new-id y1 new-id w new-id h)
@@ -103,5 +111,3 @@
          (error (format nil "bad format in toprolog /~A/" list))))))
       
   (values))
-
-    

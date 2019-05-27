@@ -193,6 +193,10 @@
 
 (defun main (argv)
   (declare (ignore argv))
+  (setf *debugger-hook* #'(lambda (c h)
+			    (declare (ignore h))
+			    (print c)
+			    (abort)))
   (@read-script-from-file)
   (@create-parts-table)
   (@preamble)

@@ -1,4 +1,8 @@
 (defun run (strm)
+  (setf *debugger-hook* #'(lambda (c h)
+			    (declare (ignore h))
+			    (print c)
+			    (abort)))
   (let ((list (read strm nil nil)))
     (assert (listp list) () "run not a list list=/~a/" list)
     (let ((comments-removed (remove-if (lambda (sublist)
