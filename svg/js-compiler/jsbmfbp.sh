@@ -14,7 +14,7 @@ add_kinds $NAME <temp6.pro >temp7.pro
 make_unknown_port_NAMEs $NAME <temp7.pro >temp8.pro
 create_centers $NAME <temp8.pro >temp9.pro
 calculate_distances $NAME <temp9.pro >temp10.pro
-assign_portNAMEs $NAME <temp10.pro >temp11.pro
+assign_portnames $NAME <temp10.pro >temp11.pro
 markIndexedPorts $NAME <temp11.pro >temp12.pro
 coincidentPorts $NAME <temp12.pro >temp13.pro
 mark_directions $NAME <temp13.pro >temp14.pro
