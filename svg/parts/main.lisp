@@ -1,4 +1,5 @@
 (defun run (strm)
+  (init-string-map)
   (setf *debugger-hook* #'(lambda (c h)
 			    (declare (ignore h))
 			    (print c)
@@ -15,7 +16,8 @@
 				     (mapcar #'fix-lines
 					     (mapcar #'create-text-objects 
 						     comments-removed)))))))
-      (to-prolog fixed *standard-output*)))))
+	(to-prolog fixed *standard-output*)
+	(write-string-map "temp-string-map.lisp")))))
 
 #-lispworks
 (defun main (argv)

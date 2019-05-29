@@ -3,7 +3,7 @@
     (loop
        (case (schar str i)
 	 ((#\0 #\1 #\2 #\3 #\4 #\5 #\5 #\6 #\7 #\8 #\9)
-	  (when (< (decf i)0)
+	  (when (< (decf i) 0)
 	    (return t)))	  
 	 (otherwise
 	  (return-from all-digits-p nil)))))
@@ -94,15 +94,12 @@
          (destructuring-bind (text-sym str x1 y1 w h)
              list
            (declare (ignore text-sym))
-	   (when (contains-junk-p str)
-	     (format *error-output* "string /~S/ contains non-alphanumeric characters (not allowed)~%" str)
-	     (exit))
-	   (if (all-digits-p str)
-               (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                       new-id str new-id x1 new-id y1 new-id w new-id h)
-             (format strm "text(~A,'~A').~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                     new-id str new-id x1 new-id y1 new-id w new-id h))))
-           
+	   (let ((strid (if (all-digits-p str) 
+			    str 
+			    (string-to-map str))))
+             (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                     new-id strid new-id x1 new-id y1 new-id w new-id h))))
+
         (arrow
          (destructuring-bind (arrow-sym x1 y1)
              list
