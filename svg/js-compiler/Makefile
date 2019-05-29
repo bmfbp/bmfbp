@@ -15,3 +15,12 @@ clean:
 test: dependencies
 	jsbmfbp test_diagrams/js_test_emitter.svg
 	cat temp22.js
+
+tee:
+	jsbmfbp test_diagrams/tee.svg
+
+top:
+	jsbmfbp test_diagrams/top_level.svg
+
+pass:
+	jsbmfbp test_diagrams/pass_and_add.svg
