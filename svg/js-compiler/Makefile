@@ -8,13 +8,15 @@ dependencies:
 	cd ../parts && make
 	cp ./jsbmfbp.sh $(BINDIR)/jsbmfbp
 	chmod a+x $(BINDIR)/jsbmfbp
+	cp ./compare-graph.sh $(BINDIR)/compare-graph
+	chmod a+x $(BINDIR)/compare-graph
 
 clean:
-	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp
+	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph
 
 test: dependencies
 	jsbmfbp test_diagrams/js_test_emitter.svg
-	cat temp22.js
+	compare-graph temp22.js graph-out.js
 
 tee:
 	jsbmfbp test_diagrams/tee.svg
