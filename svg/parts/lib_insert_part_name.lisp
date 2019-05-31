@@ -17,7 +17,7 @@
 
 #+lispworks
 (defun main ()
-  (run sys:*line-arguments-list))
+  (run sys:*line-arguments-list*))
 
 #+sbcl 
 (defun main (argv)
