@@ -22,7 +22,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js2
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js2 $(BINDIR)/unmap-strings
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -46,6 +46,11 @@ $(BINDIR)/fb_to_prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 		--load main.lisp \
 		--entry main
 
+$(BINDIR)/unmap-strings: unmap-strings.lisp
+	buildapp --output $(BINDIR)/unmap-strings \
+		--load unmap-strings.lisp \
+		--entry main
+
 $(BINDIR)/lib_insert_part_name: lib_insert_part_name.lisp
 	buildapp --output $(BINDIR)/lib_insert_part_name --load lib_insert_part_name.lisp --entry main
 
@@ -54,6 +59,7 @@ $(BINDIR)/emit_js2: emit_js2.lisp
 
 clean :
 	rm -f $(EXECS)
-	rm -f $(BINDIR)/fb_to_prolog $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name 
+	rm -f $(BINDIR)/fb_to_prolog $(BINDIR)/plsort \
+	$(BINDIR)/lib_insert_part_name $(BINDIR)/unmap-strings
 	rm -f $(BINDIR)/emit_js2
 
