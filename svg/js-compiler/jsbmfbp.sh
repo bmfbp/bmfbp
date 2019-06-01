@@ -28,7 +28,8 @@ sem_allPortsHaveAnIndex <temp16.pro >temp17.pro
 assign_wire_numbers_to_inputs $NAME <temp17.pro >temp18.pro
 assign_wire_numbers_to_outputs $NAME <temp18.pro >temp19.pro
 assign_portIndices $NAME <temp19.pro >temp20.pro
-emit_js $NAME <temp20.pro >temp21.lisp
+emit_js $NAME <temp20.pro >temp21a.lisp
+unmap-strings $NAME <temp21a.lisp >temp21.lisp
 emit_js2 $NAME <temp21.lisp >temp22.js
 
 

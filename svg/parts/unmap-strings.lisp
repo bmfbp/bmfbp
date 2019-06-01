@@ -1,21 +1,43 @@
 ;; see comment in main()
 
-(defparameter *in-stream* nil)
+(defparameter *map-stream* nil)
+(defparameter *fixup-stream* nil)
 (defparameter *string-map* nil)
-(defparameter *input* nil)
-(defparameter *output* nil)
+(defparameter *sexpr-to-be-fixed* nil)
+(defparameter *fixed-up-sexpr* nil)
 
 (defun die ()
   #+lispworks (quit)
   #+sbcl (exit)
   )
   
+(defun replacement-uid-p (sym)
+  "check if the symbol is of the form stringuidG, retuns T or nil"
+  (if (symbolp sym)
+      (let ((str (symbol-name sym)))
+        (let ((replacement-prefix "STRUIDG"))
+          (let ((len (length replacement-prefix)))
+            (and
+             (stringp str)  ;; redundant
+             (>= (length str) len)
+             (string= replacement-prefix (subseq str 0 len))))))
+    nil))
+  
+(defun replacement-string-uid-p (str)
+  "check if the string is of the form stringuidG, retuns T or nil"
+  (if (stringp str)
+      (let ((replacement-prefix "struidG"))
+        (let ((len (length replacement-prefix)))
+          (and
+           (>= (length str) len)
+           (string= replacement-prefix (subseq str 0 len)))))
+    nil))
+  
 (defun @get-uid-for-read-map (sym)
-  "helper for @read-map ; return sym, if it is a string-map 'struidGxxx'"
+  "helper for @read-map ; return sym, if it is a string-map id of the form 'struidGxxx'"
   (when (symbolp sym)
-    (let ((namestr (symbol-name sym)))
-      (when (string= "stringuidG" (subseq namestr 0 9))
-	sym))))
+      (when (replacement-uid-p sym)
+	sym)))
 
 (defun @read-map ()
   "read the temp-string-map.lisp pairs into a local hashtable"
@@ -27,46 +49,45 @@
 	   (return))
 	 (let ((uid (@get-uid-for-read-map (car pair))))
 	   (when uid 
-	       (setf (gethash uid *string-map*) (second pair)))
-	   (setf pair (read *in-stream* nil 'EOF)))))))
+             (setf (gethash uid *string-map*) (second pair)))
+	   (setf pair (read *map-stream* nil 'EOF)))))))
 
 (defun @read-input ()
-  "set *input* to the sexpr from stdin"
-  (let ((sexpr (read *standard-input* nil 'EOF)))
+  "set *sexpr-to-be-fixed* to the sexpr from stdin"
+  (let ((sexpr (read *fixup-stream* nil 'EOF)))
     (when (or 
            (not (listp sexpr))
            (eq 'EOF sexpr))
       (format *error-output* "stdin doesn't contain an intermediate file~%")
       (die))
-    (setf *input* sexpr)))
+    (setf *sexpr-to-be-fixed* sexpr)))
 
-(defun @replace-mapped-strings (in)
+(defun @replace-mapped-strings (to-be-fixed-up)
   "return the sexpr in 'in' with expanded strings (struidGxxx -> original string)"
-  (mapcar #'(lambda (item)
-	      (cond ((listp item)
-		     (cons (@replace-mapped-strings (first item))
-			   (@replace-mapped-strings (rest item))))
-		    ((and
-		      (stringp item)
-		      (> (length item) 7)
-		      (string= "struidG" (subseq item 0 7)))
-		     (let ((uid (intern item)))
-		       (multiple-value-bind (original-string success)
-			   (gethash uid *string-map*)
-			 (if success
-			     original-string
-			     item))))
-		    (t item)))
-	  in))
+  (if (null to-be-fixed-up)
+      nil
+    (if (listp to-be-fixed-up)
+        (mapcar #'@replace-mapped-strings to-be-fixed-up)
+      (let ((item to-be-fixed-up))
+        (cond
+         ((replacement-string-uid-p item)
+          (assert (stringp item))
+          (let ((uid (intern (string-upcase item))))
+            (multiple-value-bind (original-string success)
+                (gethash uid *string-map*)
+              (if success
+                  original-string
+                item))))
+         (t item))))))
 
 (defun @rewrite-input-replacing-mapped-strings ()
-  (setf *output* (@replace-mapped-strings *input*))
-  (unless (and *output* (listp *output*))
+  (setf *fixed-up-sexpr* (@replace-mapped-strings *sexpr-to-be-fixed*))
+  (unless (and *fixed-up-sexpr* (listp *fixed-up-sexpr*))
     (format *error-output* "something went wrong during replacement~%")
     (die)))
 
 (defun @write-output ()
-  (write *output* :stream *standard-output*))
+  (write *fixed-up-sexpr* :stream *standard-output*))
 
 (defun run ()
   "strings were replaced by simple uids (prolog doesn't define strings of arbitrary characters, but it does define simple ids) ; the map (id -> original) was written to temp-string-map.lisp ; now, we read in the map from temp-string-map.lisp, read a sexpr from stdin and replace the ids found in sexpr by the original strings, then write the modified sexpr to stdout ; everything from this point on must be handled by lisp (or any other language that is not prolog)"
@@ -77,12 +98,17 @@
 
 #+lispworks
 (defun main ()
-  (with-open-file (fin "temp-string-map.lisp" :direction :input)
-    (setf *standard-input* fin)
-    (run)))
+  (with-open-file (fixup "temp21a.lisp" :direction :input)
+    (setf *fixup-stream* fixup)
+    (with-open-file (map "temp-string-map.lisp" :direction :input)
+      (setf *map-stream* map)
+      (run))))
 
 #+sbcl 
 (defun main (argv)
   (declare (ignore argv))
-  (run))
+  (setf *fixup-stream* *standard-input*)
+  (with-open-file (map "temp-string-map.lisp" :direction :input)
+    (setf *map-stream* map)
+    (run)))
 
