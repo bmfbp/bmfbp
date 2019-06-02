@@ -16,7 +16,7 @@
       "out-count" : 0,
       "inPins" : [[0]],
       "outPins" : [],
-      "exec" : "struidG371"
+      "exec" : "emit"
     },
     {
       "partName" : "ID374",
@@ -24,7 +24,7 @@
       "out-count" : 2,
       "inPins" : [[1]],
       "outPins" : [[],[0]],
-      "exec" : "struidG376"
+      "exec" : "assign_portIndices"
     },
     {
       "partName" : "ID382",
@@ -32,7 +32,7 @@
       "out-count" : 2,
       "inPins" : [[2]],
       "outPins" : [[],[1]],
-      "exec" : "struidG384"
+      "exec" : "assign_wire_numbers_to_outputs"
     },
     {
       "partName" : "ID392",
@@ -40,7 +40,7 @@
       "out-count" : 2,
       "inPins" : [],
       "outPins" : [[],[2]],
-      "exec" : "struidG394"
+      "exec" : "assign_wire_numbers_to_inputs"
     }
   ]
 }
