@@ -36,7 +36,7 @@ library:
     - -fno-warn-overlapping-patterns
 
 executables:
-  hs-vsh-drawio-to-fb:
+  hs_vsh_drawio_to_fb:
     main:        ParseDrawIO.hs
     source-dirs: app
     ghc-options:
