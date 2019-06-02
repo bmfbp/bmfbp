@@ -16,10 +16,23 @@
 	   (mapcar #'(lambda (item) (fix-one-translate (+ x (first pair)) (+ y (second pair)) item)) tail)))
 
 	(rect
-	 (destructuring-bind (sym x1 y1 x2 y2)
+	 (destructuring-bind (sym x1 y1 w h)
              list
 	   (declare (ignore sym))
-	   `(rect ,(+ x x1) ,(+ y y1) ,(+ x x2) ,(+ y y2))))
+	   `(rect ,(+ x x1) ,(+ y y1) ,w ,h)))
+
+	(speechbubble
+	 ;; speechbubble is in (speechbubble p1 p2 p3 p4 p5 p6 p7 (z)) format
+	 ;; where p1 is (absm x y), other p's are (absl x y) format
+	 ;; p1 is top-left, p2 if top-right, p3 is bottom-right, p7 is bottom-left
+	 (destructuring-bind (text-sym p1 p2 p3 p4 p5 p6 p7 zed) 
+             list
+	   (declare (ignore text-sym zed p4 p5 p6 p7))
+	   (let ((x1 (first p1))
+		 (y1 (second p1)))
+	     (let ((w (- (first p2) x1))
+		   (h (- (second p3) y1)))
+	       `(comment ,(+ x x1) ,(+ y y1) ,w ,h)))))
 
 	(ellipse
 	 (destructuring-bind (sym x1 y1 x2 y2)

@@ -74,6 +74,22 @@
            (format strm "rect(~A).~%eltype(~A,box).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))
 
+	(comment
+	 ;; bubble is same as rect
+         (destructuring-bind (sym x1 y1 w h)
+             list
+           (declare (ignore sym))
+           (format strm "comment(~A).~%eltype(~A,comment).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+
+	(metadata
+	 ;; metadata is same as rect
+         (destructuring-bind (sym x1 y1 w h)
+             list
+           (declare (ignore sym))
+           (format strm "metadata(~A).~%eltype(~A,metadata).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+
 	(ellipse
          (destructuring-bind (sym x1 y1 w h)
              list

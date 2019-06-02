@@ -22,7 +22,7 @@ test: dependencies
 
 dependencies:
 	mkdir -p $(BINDIR)
-# need alread-built flat compiler in ~/bin	
+# need already-built flat compiler in ~/bin	
 	cp svg.gsh-notignored $(BINDIR)/svg.gsh
 # script to build an svg file using the already-built svg.gsh
 	cp flatbmfbp.sh $(BINDIR)/flatbmfbp

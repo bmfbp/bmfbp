@@ -6,18 +6,15 @@
 			    (abort)))
   (let ((list (read strm nil nil)))
     (assert (listp list) () "run not a list list=/~a/" list)
-    (let ((comments-removed (remove-if (lambda (sublist)
-					 (eq (car sublist) 'speech-bubble))
-				       list)))
-      (let ((fixed 
-             (mapcar #'fix-translates
-		     (mapcar #'collapse-lines
-			     (mapcar #'fix-arrows
-				     (mapcar #'fix-lines
-					     (mapcar #'create-text-objects 
-						     comments-removed)))))))
-	(to-prolog fixed *standard-output*)
-	(write-string-map "temp-string-map.lisp")))))
+    (let ((fixed 
+           (mapcar #'fix-translates
+		   (mapcar #'collapse-lines
+			   (mapcar #'fix-arrows
+				   (mapcar #'fix-lines
+					   (mapcar #'create-text-objects 
+						   list)))))))
+      (to-prolog fixed *standard-output*)
+      (write-string-map "temp-string-map.lisp"))))
 
 #-lispworks
 (defun main (argv)
