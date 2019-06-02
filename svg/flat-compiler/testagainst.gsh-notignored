@@ -1,0 +1,88 @@
+#name svgc.gsh
+pipes 16
+fork
+  inPipe 9
+  exec struidG483
+krof
+fork
+  inPipe 10
+  outPipe 9
+  exec struidG461
+krof
+fork
+  inPipe 0
+  outPipe 10
+  exec struidG458
+krof
+fork
+  inPipe 11
+  outPipe 0
+  exec struidG455
+krof
+fork
+  outPipe 11
+  exec struidG452
+krof
+fork
+  inPipe 6
+  exec struidG449
+krof
+fork
+  inPipe 2
+  outPipe 7
+  exec struidG438
+krof
+fork
+  inPipe 12
+  outPipe 8
+  exec struidG435
+krof
+fork
+  inPipe 3
+  outPipe 4
+  exec struidG427
+krof
+fork
+  inPipe 4
+  outPipe 5
+  exec struidG424
+krof
+fork
+  inPipe 13
+  outPipe 6
+  exec struidG392
+krof
+fork
+  inPipe 14
+  outPipe 13
+  exec struidG389
+krof
+fork
+  inPipe 15
+  outPipe 14
+  exec struidG386
+krof
+fork
+  inPipe 1
+  outPipe 15
+  exec struidG383
+krof
+fork
+  inPipe 7
+  outPipe 1
+  exec struidG380
+krof
+fork
+  inPipe 8
+  outPipe 3
+  exec struidG377
+krof
+fork
+  inPipe 5
+  outPipe 2
+  exec struidG374
+krof
+fork
+  outPipe 12
+  exec struidG371
+krof

@@ -1,6 +1,7 @@
 BINDIR=~/bin
 SVG_DIAGRAM=svgc.svg
 REGRESSION=regression.gsh
+TESTAGAINST=testagainst.gsh-notignored
 
 all: linux-based-compiler
 
@@ -13,15 +14,16 @@ clean: clean-dependencies
 	rm -f *.pro
 	rm -f temp1.lisp temp18.lisp temp19.js temp2.lisp
 	rm -f temp.gsh temp18.gsh temp19.js
+	rm -f temp-string-map.lisp
 
 test: dependencies
 	flatbmfbp $(SVG_DIAGRAM) >$(REGRESSION)
-	comparegsh.sh $(REGRESSION) ./svg.gsh
+	comparegsh.sh $(REGRESSION) $(TESTAGAINST)
 
 dependencies:
 	mkdir -p $(BINDIR)
 # need alread-built flat compiler in ~/bin	
-	cp svg.gsh $(BINDIR)
+	cp svg.gsh-notignored $(BINDIR)/svg.gsh
 # script to build an svg file using the already-built svg.gsh
 	cp flatbmfbp.sh $(BINDIR)/flatbmfbp
 	chmod a+x $(BINDIR)/flatbmfbp
