@@ -6,11 +6,6 @@
 (defparameter *sexpr-to-be-fixed* nil)
 (defparameter *fixed-up-sexpr* nil)
 
-(defun die ()
-  #+lispworks (quit)
-  #+sbcl (exit)
-  )
-  
 (defun replacement-uid-p (sym)
   "check if the symbol is of the form stringuidG, retuns T or nil"
   (if (symbolp sym)

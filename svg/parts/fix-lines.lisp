@@ -27,7 +27,7 @@
                `(translate ,pair ,(mapcar #'fix-lines tail))
                (error "fix-lines: badly formed translate /~A/~%" list))))
 	
-	((rect text component ellipse dot speech-bubble) list)
+	((rect text component ellipse dot speechbubble) list)
 	
 	(line
 	 (let* ((absm (second list))

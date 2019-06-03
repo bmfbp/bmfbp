@@ -25,3 +25,10 @@
      #'(lambda (k v)
 	 (format f "(~A ~S)~%" k v))
      *string-map*)))
+
+(defun die ()
+  #+lispworks (quit)
+  #+sbcl (exit)
+  )
+  
+

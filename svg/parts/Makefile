@@ -48,6 +48,7 @@ $(BINDIR)/fb_to_prolog: util.lisp toprolog.lisp fix-translate.lisp collapse-line
 
 $(BINDIR)/unmap-strings: unmap-strings.lisp
 	buildapp --output $(BINDIR)/unmap-strings \
+		--load util.lisp \
 		--load unmap-strings.lisp \
 		--entry main
 

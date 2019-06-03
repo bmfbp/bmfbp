@@ -90,7 +90,7 @@
 	   (assert (list-of-lists-p tail) () "fix-translates 4 list=/~a/" list)
 	   (mapcar #'(lambda (item) (fix-one-translate (first pair) (second pair) item)) tail)))
 	
-	((rect text arrow line component ellipse dot speech-bubble)
+	((rect text arrow line component ellipse dot speechbubble)
 	 list)
 	
 	(otherwise

@@ -74,7 +74,7 @@
            (format strm "rect(~A).~%eltype(~A,box).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))
 
-	(speech-bubble
+	(speechbubble
 	 ;; bubble is same as rect
          (destructuring-bind (sym x1 y1 w h)
              list
