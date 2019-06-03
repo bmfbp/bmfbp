@@ -15,7 +15,7 @@
              `(translate ,pair ,(mapcar #'fix-arrows tail))
            (error "fix-arrows: badly formed translate /~A/~%" list))))
       
-      ((rect text arrow component ellipse dot speechbubble) list)
+      ((rect text arrow component ellipse dot speech-bubble) list)
       
       (line
        (if (eq 'z (first (first (last list))))

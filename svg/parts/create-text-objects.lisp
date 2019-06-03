@@ -28,7 +28,7 @@
 				      ,*default-font-height*))))))
 	       (error "badly formed translate /~A/~%" list)))))
 
-    ((line rect component ellipse dot speechbubble)
+    ((line rect component ellipse dot speech-bubble)
      list)
 
     (otherwise

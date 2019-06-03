@@ -7,7 +7,8 @@
       (mapcar #'(lambda (l)
                   (fix-one-translate x y l))
               list)
-
+(let ()
+(format *error-output* "list: ~A~%" list)
       (case (car list)
 	(translate
 	 (let ((pair (second list))
@@ -21,8 +22,8 @@
 	   (declare (ignore sym))
 	   `(rect ,(+ x x1) ,(+ y y1) ,w ,h)))
 
-	(speechbubble
-	 ;; speechbubble is in (speechbubble p1 p2 p3 p4 p5 p6 p7 (z)) format
+	(speech-bubble
+	 ;; speech-bubble is in (speech-bubble p1 p2 p3 p4 p5 p6 p7 (z)) format
 	 ;; where p1 is (absm x y), other p's are (absl x y) format
 	 ;; p1 is top-left, p2 if top-right, p3 is bottom-right, p7 is bottom-left
 	 (destructuring-bind (text-sym p1 p2 p3 p4 p5 p6 p7 zed) 
@@ -73,7 +74,7 @@
 	   `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
 
 	(otherwise
-	 (error (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list))))))
+	 (error (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))
 
 (defun fix-translates (list)
   (assert (listp list) () "fix-translates 3 list=/~a/" list)
@@ -89,7 +90,7 @@
 	   (assert (list-of-lists-p tail) () "fix-translates 4 list=/~a/" list)
 	   (mapcar #'(lambda (item) (fix-one-translate (first pair) (second pair) item)) tail)))
 	
-	((rect text arrow line component ellipse dot)
+	((rect text arrow line component ellipse dot speech-bubble)
 	 list)
 	
 	(otherwise
