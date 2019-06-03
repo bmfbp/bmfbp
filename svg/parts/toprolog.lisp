@@ -75,12 +75,15 @@
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))
 
 	(speechbubble
-	 ;; bubble is same as rect
-         (destructuring-bind (sym x1 y1 w h)
+         (destructuring-bind (sym p1 p2 p3 p4 p5 p6 p7 zed)
              list
-           (declare (ignore sym))
+           (declare (ignore sym zed p4 p5 p6 p7))
+	   (let ((x1 (second p1))
+		 (y1 (third p1)))
+	     (let ((w (- (second p2) x1))
+		   (h (- (third p3) y1)))
            (format strm "comment(~A).~%eltype(~A,comment).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))))
 
 	(metadata
 	 ;; metadata is same as rect
