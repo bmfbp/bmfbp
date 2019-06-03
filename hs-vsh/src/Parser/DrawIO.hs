@@ -80,12 +80,12 @@ lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
 
 lispifyPathCommand :: PathCommand -> DT.Text
-lispifyPathCommand (AbsM points) = lispifyPoints points "absm"
-lispifyPathCommand (AbsL points) = lispifyPoints points "absl"
-lispifyPathCommand (RelM points) = lispifyPoints points "relm"
-lispifyPathCommand (RelL points) = lispifyPoints points "rell"
+lispifyPathCommand (AbsM points) = lispifyPoints points "abSm"
+lispifyPathCommand (AbsL points) = lispifyPoints points "abSl"
+lispifyPathCommand (RelM points) = lispifyPoints points "reLm"
+lispifyPathCommand (RelL points) = lispifyPoints points "reLl"
 lispifyPathCommand Z = "(Z)"
-lispifyPathCommand UnsupportedPathCommand = ""
+lispifyPathCommand UnsupportedPathCommand = "XX"
 
 lispifyPoints :: [GST.RPoint] -> DT.Text -> DT.Text
 lispifyPoints points tag = wrapInParens (tag : concat (map go points))
