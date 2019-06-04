@@ -10,6 +10,7 @@ main :-
 createBoundingBoxes :-
     conditionalCreateEllipseBB,
     forall(rect(ID), createRectBoundingBox(ID)),
+    forall(speechbubble(ID), createRectBoundingBox(ID)),
     forall(text(ID,_), createTextBoundingBox(ID)).
 
 conditionalCreateEllipseBB:-

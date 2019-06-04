@@ -426,6 +426,8 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID2,R2),
     bounding_box_bottom(ID2,B2),
 
+    % we('point inside: L1/T1/L2/T2/R2/B2: '),we(L1),wspc,we(T1),wspc,we(L2),wspc,we(T2),wspc,we(R2),wspc,wen(B2),
+
     L1 >= L2,
     T1 >= T2,
     R2 >= L1,

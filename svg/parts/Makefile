@@ -10,6 +10,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/emit_js \
 	$(BINDIR)/inOutPins \
 	$(BINDIR)/add_kinds \
+	$(BINDIR)/find_comments \
 	$(BINDIR)/add_selfPorts \
 	$(BINDIR)/assign_portnames \
 	$(BINDIR)/calculate_distances \

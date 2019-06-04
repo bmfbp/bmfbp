@@ -82,7 +82,7 @@
 		 (y1 (third p1)))
 	     (let ((w (- (second p2) x1))
 		   (h (- (third p3) y1)))
-           (format strm "comment(~A).~%eltype(~A,comment).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+           (format strm "speechbubble(~A).~%eltype(~A,speechbubble).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))))
 
 	(metadata
