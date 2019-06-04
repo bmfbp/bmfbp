@@ -1,6 +1,8 @@
 BINDIR=~/bin
 
-all:
+all: clean build test test2
+
+build: 
 	cd ../grash && make
 	cd ../hs-vsh && make
 	cd parts && make
@@ -17,3 +19,8 @@ clean:
 test : 
 	cd flat-compiler && make test
 	cd js-compiler && make test
+
+test2 : 
+	cd js-compiler && make test2
+
+
