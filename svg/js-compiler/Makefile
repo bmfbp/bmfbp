@@ -19,14 +19,13 @@ test: dependencies
 	compare-graph temp22.js graph-out.js
 
 test2:
-	jsbmfbp test_diagrams/js_test2_emitter.svg
-	compare-graph temp22.js graph-out.js
+	./tester.sh test_diagrams/js_test2_emitter.svg
 
 tee:
-	jsbmfbp test_diagrams/tee.svg
+	./tester.sh test_diagrams/tee.svg
 
 top:
-	jsbmfbp test_diagrams/top_level.svg
+	./tester.sh test_diagrams/top_level.svg
 
 pass:
-	jsbmfbp test_diagrams/pass_and_add.svg
+	./tester.sh test_diagrams/pass_and_add.svg
