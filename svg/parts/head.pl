@@ -48,6 +48,7 @@
 :- dynamic(speechbubble/1).
 :- dynamic(comment/1).
 :- dynamic(metadata/1).
+:- dynamic(metadata/2).
 :- dynamic(ellipse/1).
 :- dynamic(dot/1).
 :- dynamic(sink/2) .

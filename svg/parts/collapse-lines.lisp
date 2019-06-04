@@ -23,7 +23,8 @@
                `(translate ,pair ,(mapcar #'collapse-lines tail))
                (error "badly formed translate"))))
 	
-	((rect text arrow component ellipse dot speechbubble) list)
+	((rect text arrow component ellipse dot speechbubble metadata) 
+	 list)
 	
 	(line
 	 (let ((start (second list))

@@ -10,6 +10,7 @@ writeFB :-
     forall(comment(X), writeterm(comment(X))),
     forall(speechbubble(X), writeterm(speechbubble(X))),
     forall(metadata(X), writeterm(metadata(X))),
+    forall(metadata(X,Y), writeterm(metadata(X,Y))),
     forall(ellipse(X), writeterm(ellipse(X))),
     forall(dot(X), writeterm(dot(X))),
     forall(line(X), writeterm(line(X))), 
@@ -308,6 +309,10 @@ element(comment(X), Str) :- !,
 			     readFB(Str).
 element(metadata(X), Str) :- !,
 			     asserta(metadata(X)),
+			     readFB(Str).
+
+element(metadata(X,Y), Str) :- !,
+			     asserta(metadata(X,Y)),
 			     readFB(Str).
 
 element(ellipse(X), Str) :- !,

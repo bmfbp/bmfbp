@@ -72,6 +72,9 @@
 	     (declare (ignore text-sym))
 	     `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
 
+	  (metadata
+	   list)
+
 	  (otherwise
 	   (error (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))
 
@@ -89,7 +92,7 @@
 	   (assert (list-of-lists-p tail) () "fix-translates 4 list=/~a/" list)
 	   (mapcar #'(lambda (item) (fix-one-translate (first pair) (second pair) item)) tail)))
 	
-	((rect text arrow line component ellipse dot speechbubble)
+	((rect text arrow line component ellipse dot speechbubble metadata)
 	 list)
 	
 	(otherwise

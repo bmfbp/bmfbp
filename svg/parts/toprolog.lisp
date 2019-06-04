@@ -87,11 +87,23 @@
 
 	(metadata
 	 ;; metadata is same as rect
-         (destructuring-bind (sym x1 y1 w h)
+         (destructuring-bind (sym string)
              list
            (declare (ignore sym))
-           (format strm "metadata(~A).~%eltype(~A,metadata).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+	   (let ((strid (string-to-map string)))
+             (format strm "metadata(~A,~A).~%eltype(~A,metadata).~%"
+                     new-id strid new-id))))
+
+        (text
+	 ;; text is given as {center-x, top-y, width/2, height}
+         (destructuring-bind (text-sym str x1 y1 w h)
+             list
+           (declare (ignore text-sym))
+	   (let ((strid (if (all-digits-p str) 
+			    str 
+			    (string-to-map str))))
+             (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                     new-id strid new-id x1 new-id y1 new-id w new-id h))))
 
 	(ellipse
          (destructuring-bind (sym x1 y1 w h)
@@ -107,17 +119,6 @@
            (format strm "dot(~A).~%eltype(~A,dot).~%~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))
 
-
-        (text
-	 ;; text is given as {center-x, top-y, width/2, height}
-         (destructuring-bind (text-sym str x1 y1 w h)
-             list
-           (declare (ignore text-sym))
-	   (let ((strid (if (all-digits-p str) 
-			    str 
-			    (string-to-map str))))
-             (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                     new-id strid new-id x1 new-id y1 new-id w new-id h))))
 
         (arrow
          (destructuring-bind (arrow-sym x1 y1)
