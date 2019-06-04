@@ -3,9 +3,15 @@
 
 main :-
     readFB(user_input), 
-    forall(eltype(ID,box),createKinds(ID)),
+    condDoKinds,
     writeFB,
     halt.
+
+condDoKinds :-
+    forall(eltype(ID,box),createKinds(ID)),
+    !.
+
+condDoKinds :- true.
 
 createKinds(BoxID) :-
     text(TextID,Str),

@@ -34,6 +34,8 @@ emitAllPins :-
     forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
     write('  )'), nl.
 
+emitAllPins :- true.
+
 printSelfInputOrOutput(Pin) :-
     write('    (self nil '),
     wireIndex(Pin,WireIndex),
