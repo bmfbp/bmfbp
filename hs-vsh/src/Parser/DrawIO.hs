@@ -102,14 +102,19 @@ collapseEmpty (Translate x y zs) = Translate x y $ map collapseEmpty zs
 collapseEmpty x = x
 
 parseNode :: TTD.Node -> Output
-parseNode (TTD.NodeContent text) =
-    case DT.strip text of
-      "" -> Empty
-      t ->
-        -- Parse as metadata if in JSON format.
-        case (DAS.eitherDecode (DTLE.encodeUtf8 $ DTL.fromStrict t) :: Either String [KindMetadata]) of
-          Left _ -> Text t
-          Right md -> Metadata md
+parseNode (TTD.NodeContent content) =
+    let
+      handleUnparsedNodeContent (TTD.NodeContent text) =
+        case DT.strip text of
+          "" -> Empty
+          t ->
+            -- Parse as metadata if in JSON format.
+            case (DAS.eitherDecode (DTLE.encodeUtf8 $ DTL.fromStrict t) :: Either String [KindMetadata]) of
+              Left _ -> Text t
+              Right md -> Metadata md
+      handleUnparsedNodeContent element = parseNode element
+    in
+      Container $ map handleUnparsedNodeContent $ TTD.parseDOM False $ DTL.fromStrict content
 parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = attrs, TTD.eltChildren = children })) =
     let
       rest = map parseNode children
