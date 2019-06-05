@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 154725ca10b86ad657199c35a53172d53bb9e872a96ce0fb8d50dd8fcbc6c8ad
+-- hash: e8874c4b1e97f015c6769f6497f124276a205e44cd62fbdd7aa9df0d47cf24de
 
 name:           hs-vsh
 version:        0.1.0.0
@@ -186,6 +186,38 @@ executable hs-vsh-calc-bounds
     , unordered-containers
   default-language: Haskell2010
 
+executable hs_vsh_drawio_to_fb
+  main-is: ParseDrawIO.hs
+  other-modules:
+      AssignFds
+      AssignPipeNumbersToInputs
+      AssignPipeNumbersToOutputs
+      CalcBounds
+      EmitGrash
+      MarkDirections
+      MatchPortsToComponents
+      Paths_hs_vsh
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is ParseDrawIO
+  build-depends:
+      aeson
+    , array
+    , attoparsec
+    , base
+    , containers
+    , directory
+    , extra
+    , hs-vsh
+    , linear
+    , regex-posix
+    , svg-tree ==0.6.2.3
+    , taggy
+    , text
+    , transformers
+    , unordered-containers
+  default-language: Haskell2010
+
 executable hs-vsh-emit
   main-is: EmitGrash.hs
   other-modules:
@@ -264,38 +296,6 @@ executable hs-vsh-match-ports-to-components
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is MatchPortsToComponents
-  build-depends:
-      aeson
-    , array
-    , attoparsec
-    , base
-    , containers
-    , directory
-    , extra
-    , hs-vsh
-    , linear
-    , regex-posix
-    , svg-tree ==0.6.2.3
-    , taggy
-    , text
-    , transformers
-    , unordered-containers
-  default-language: Haskell2010
-
-executable hs_vsh_drawio_to_fb
-  main-is: ParseDrawIO.hs
-  other-modules:
-      AssignFds
-      AssignPipeNumbersToInputs
-      AssignPipeNumbersToOutputs
-      CalcBounds
-      EmitGrash
-      MarkDirections
-      MatchPortsToComponents
-      Paths_hs_vsh
-  hs-source-dirs:
-      app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is ParseDrawIO
   build-depends:
       aeson
     , array
