@@ -23,7 +23,6 @@ data Output
     | Translate Float Float [Output]
     | Path [PathCommand]
     | Rect Float Float Float Float 
-    | RoundedRect Float Float Float Float Float Float
     | Ellipse Float Float Float Float
     | Dot Float Float Float Float
     | Text DT.Text
@@ -74,7 +73,6 @@ lispify (Path commands)
   | length commands == 8 = wrapInParens ("speechbubble" : map lispifyPathCommand commands)
   | otherwise = wrapInParens ("line" : map lispifyPathCommand commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
-lispify (RoundedRect x y w h rx ry) = wrapInParens ["roundedrect", showToText x, showToText y, showToText w, showToText h, showToText rx, showToText ry]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Metadata md) = wrapInParens ["metadata", showToText (DAS.encode md)]
