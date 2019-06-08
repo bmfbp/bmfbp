@@ -7,6 +7,7 @@ writeFB :-
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
     forall(rect(X), writeterm(rect(X))),
+    forall(roundedRect(X), writeterm(roundedRect(X))),
     forall(comment(X), writeterm(comment(X))),
     forall(speechbubble(X), writeterm(speechbubble(X))),
     forall(metadata(X), writeterm(metadata(X))),
@@ -300,6 +301,9 @@ element(move_relative_y(X,Y), Str) :- !,
 
 element(rect(X), Str) :- !,
 			     asserta(rect(X)),
+			     readFB(Str).
+element(roundedRect(X), Str) :- !,
+			     asserta(roundedRect(X)),
 			     readFB(Str).
 element(speechbubble(X), Str) :- !,
 			     asserta(speechbubble(X)),

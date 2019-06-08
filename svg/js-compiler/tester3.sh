@@ -1,17 +1,18 @@
 #!/bin/bash
 NAME=$(basename $1 .svg)
+set -v
 
 # scanner
-#hs_vsh_drawio_to_fb <$1 >temp1.lisp
-cp metadata.lisp temp1.lisp
+hs_vsh_drawio_to_fb <$1 >temp1.lisp
 lib_insert_part_NAME $NAME <temp1.lisp >temp2.lisp
 fb_to_prolog $NAME <temp2.lisp >temp3.pro
 sort <temp3.pro >temp4.pro
 check_input $NAME <temp4.pro >temp5.pro
 
 
-# calc_bounds $NAME <temp5.pro >temp6.pro
-# find_comments $NAME <temp6.pro >temp6a.pro
+calc_bounds $NAME <temp5.pro >temp6.pro
+find_comments $NAME <temp6.pro >temp6a.pro
+find_metadata $NAME <temp6a.pro >temp6b.pro
 
 # # rest of parser
 # add_kinds $NAME <temp6a.pro >temp7.pro

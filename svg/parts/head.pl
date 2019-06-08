@@ -45,6 +45,7 @@
 :- dynamic(sink/1).
 :- dynamic(source/1).
 :- dynamic(rect/1).
+:- dynamic(roundedRect/1).
 :- dynamic(speechbubble/1).
 :- dynamic(comment/1).
 :- dynamic(metadata/1).
