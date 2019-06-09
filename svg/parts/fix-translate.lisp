@@ -76,7 +76,7 @@
 	   list)
 
 	  (otherwise
-	   (error (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))
+	   (die (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))
 
 (defun fix-translates (list)
   (assert (listp list) () "fix-translates 3 list=/~a/" list)
@@ -96,5 +96,5 @@
 	 list)
 	
 	(otherwise
-	 (error (format nil "bad format in fix-translates /~A/" list))))))
+	 (die (format nil "bad format in fix-translates /~A/" list))))))
 
