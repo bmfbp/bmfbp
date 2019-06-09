@@ -49,23 +49,28 @@
                                         ,half-width
                                         ,*default-font-height*)))))))
 
-               ((matches-metadata-p tail)
-                (let ((text (match-metadata tail)))
-                  ;; (translate (N M) ((metadata "[lotsofstrings]")) --> ((translate (N M) ((metadata "[lotsofstrings]" 0 0 w/2 h))))
-                  ;; if formatted correctly, this will contain sets of 5 strings - width is max in fives plus NN chars ("[{...}]" and quotes)
-                  (let ((len (get-metadata-len text)))
-                    (let ((half-width (/ (* len *default-font-width*) 2)))
-                      `((translate ,pair
-                                   ((metadata ,text 
-                                              0
-                                              0
-                                              ,half-width
-                                              ,*default-font-height*))))))))
                (t (failure))))))
     
     ((line rect component ellipse dot speechbubble)
      list)
 
+    (metadata
+     (cond
+      ((matches-metadata-p (third list))
+       (let ((pair (second list))
+             (tail (third list)))
+         (let ((text (match-metadata tail)))
+           ;; (translate (N M) ((metadata "[lotsofstrings]")) --> ((translate (N M) ((metadata "[lotsofstrings]" 0 0 w/2 h))))
+           ;; if formatted correctly, this will contain sets of 5 strings - width is max in fives plus NN chars ("[{...}]" and quotes)
+            (let ((len (get-metadata-len text)))
+              (let ((half-width (/ (* len *default-font-width*) 2)))
+		`((translate ,pair
+                             ((metadata ,text 
+					0
+					0
+					,half-width
+					,*default-font-height*)))))))))
+      (t (die (format nil "badly formed metadata /~A/~%" list)))))
+
     (otherwise
      (die (format nil "~%bad format in create-text-object /~A/~%" list)))))
-
