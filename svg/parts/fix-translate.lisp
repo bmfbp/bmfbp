@@ -73,7 +73,7 @@
 	     `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
 
 	  (metadata
-	   list)
+	   list )
 
 	  (otherwise
 	   (die (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))
