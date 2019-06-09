@@ -22,9 +22,10 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/sem_allPortsHaveAnIndex \
 	$(BINDIR)/markIndexedPorts \
 	$(BINDIR)/coincidentPorts \
-	$(BINDIR)/lib_insert_part_name
+	$(BINDIR)/lib_insert_part_name \
+	$(BINDIR)/fix_metadata_parens
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js2 $(BINDIR)/unmap-strings
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js2 $(BINDIR)/unmap-strings $(BINDIR)/fix_metadata_parens
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -61,6 +62,12 @@ $(BINDIR)/emit_js2: emit_js2.lisp
 	buildapp --output $(BINDIR)/emit_js2 \
 		--load util.lisp \
 		--load emit_js2.lisp \
+		--entry main
+
+$(BINDIR)/fix_metadata_parens: fix-metadata-parens.lisp
+	buildapp --output $(BINDIR)/fix_metadata_parens \
+		--load util.lisp \
+		--load fix-metadata-parens.lisp \
 		--entry main
 
 clean :

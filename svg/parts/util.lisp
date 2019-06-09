@@ -32,4 +32,5 @@
   #+sbcl (exit)
   )
   
-
+(defmacro exit-loop ()
+  `(return nil))
