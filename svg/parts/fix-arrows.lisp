@@ -13,7 +13,7 @@
              (tail (third list)))
          (if (list-of-lists-p tail)
              `(translate ,pair ,(mapcar #'fix-arrows tail))
-           (error "fix-arrows: badly formed translate /~A/~%" list))))
+           (die (format nil "fix-arrows: badly formed translate /~A/~%" list)))))
       
       ((rect text arrow component ellipse dot speechbubble metadata) 
        list)
@@ -30,5 +30,5 @@
          list))
     
     (otherwise
-     (error (format nil "bad format in fix-arrows /~A/" list))))))
+     (die (format nil "bad format in fix-arrows /~A/" list))))))
 

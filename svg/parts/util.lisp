@@ -26,7 +26,8 @@
 	 (format f "(~A ~S)~%" k v))
      *string-map*)))
 
-(defun die ()
+(defun die (msg)
+  (format *error-output* "~%~S~%" msg)
   #+lispworks (quit)
   #+sbcl (exit)
   )

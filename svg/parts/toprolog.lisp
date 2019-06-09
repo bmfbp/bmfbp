@@ -22,8 +22,7 @@
 
 (defun to-prolog (list strm)
   (unless (listp list)
-    (format *error-output* "to-prolog list=/~a/" list)
-    (die))
+    (die (format nil "to-prolog list=/~a/" list)))
   (if (listp (car list))
 
       (progn
@@ -128,6 +127,6 @@
                    new-id new-id x1 new-id y1)))
 
         (otherwise
-         (error (format nil "bad format in toprolog /~A/" list))))))
+         (die (format nil "bad format in toprolog /~A/" list))))))
       
   (values))

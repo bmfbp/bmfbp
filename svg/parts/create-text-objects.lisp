@@ -31,7 +31,7 @@
   (case (car list)
     
     (translate
-     (flet ((failure () (error "badly formed translate /~A/~%" list)))
+     (flet ((failure () (die (format nil "badly formed translate /~A/~%" list))))
        (let ((pair (second list))
              (tail (third list)))
 	 
@@ -69,4 +69,5 @@
      list)
 
     (otherwise
-     (error (format nil "bad format in create-text-object /~A/" list)))))
+     (die (format nil "~%bad format in create-text-object /~A/~%" list)))))
+

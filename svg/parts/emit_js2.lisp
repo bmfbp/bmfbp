@@ -22,14 +22,14 @@
 
 (defun @must-not-exist-in-table (id)
   (when (gethash id %table%)
-    (error "part (~A) defined more than once~%" id)))
+    (die (format nil "part (~A) defined more than once~%" id))))
 
 (defun @must-exist-in-table (id)
   (multiple-value-bind (val success)
       (gethash id %table%)
     (declare (ignore val))
     (unless success
-      (error "part ~A not defined~%" id))))
+      (die (format nil "part ~A not defined~%" id)))))
 
 (defun @put-part-in-table (id)
   ;; at each part-id, there is a hash table with 6 keys: id, exec, ins-max, outs-max, ins (list), outs (list)

@@ -53,8 +53,7 @@
     (when (or 
            (not (listp sexpr))
            (eq 'EOF sexpr))
-      (format *error-output* "stdin doesn't contain an intermediate file~%")
-      (die))
+      (die (format nil "stdin doesn't contain an intermediate file~%")))
     (setf *sexpr-to-be-fixed* sexpr)))
 
 (defun @replace-mapped-strings (to-be-fixed-up)
@@ -78,8 +77,7 @@
 (defun @rewrite-input-replacing-mapped-strings ()
   (setf *fixed-up-sexpr* (@replace-mapped-strings *sexpr-to-be-fixed*))
   (unless (and *fixed-up-sexpr* (listp *fixed-up-sexpr*))
-    (format *error-output* "something went wrong during replacement~%")
-    (die)))
+    (die (format nil "something went wrong during replacement")))
 
 (defun @write-output ()
   (write *fixed-up-sexpr* :stream *standard-output*))

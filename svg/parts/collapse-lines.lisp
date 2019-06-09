@@ -21,7 +21,7 @@
                (tail (third list)))
 	   (if (list-of-lists-p tail)
                `(translate ,pair ,(mapcar #'collapse-lines tail))
-               (error "badly formed translate"))))
+               (die "badly formed translate"))))
 	
 	((rect text arrow component ellipse dot speechbubble metadata) 
 	 list)
@@ -33,5 +33,5 @@
 		  (line-end ,(grid10 (fourth end)) ,(grid10 (fifth end))))))
 	
 	(otherwise
-	 (error (format nil "bad format in collapse-lines /~A/" list))))))
+	 (die(format nil "bad format in collapse-lines /~A/" list))))))
 
