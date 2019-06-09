@@ -77,7 +77,7 @@
 (defun @rewrite-input-replacing-mapped-strings ()
   (setf *fixed-up-sexpr* (@replace-mapped-strings *sexpr-to-be-fixed*))
   (unless (and *fixed-up-sexpr* (listp *fixed-up-sexpr*))
-    (die (format nil "something went wrong during replacement")))
+    (die (format nil "something went wrong during replacement"))))
 
 (defun @write-output ()
   (write *fixed-up-sexpr* :stream *standard-output*))

@@ -8,7 +8,7 @@ main :-
     halt.
 
 createComments(BubbleID) :-
-    text(TextID,Str),
+    text(TextID,_),
     textCompletelyInsideBox(TextID,BubbleID),
     asserta(used(TextID)),
     asserta(comment(TextID)).

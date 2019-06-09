@@ -58,7 +58,10 @@ $(BINDIR)/lib_insert_part_name: lib_insert_part_name.lisp
 	buildapp --output $(BINDIR)/lib_insert_part_name --load lib_insert_part_name.lisp --entry main
 
 $(BINDIR)/emit_js2: emit_js2.lisp
-	buildapp --output $(BINDIR)/emit_js2 --load emit_js2.lisp --entry main
+	buildapp --output $(BINDIR)/emit_js2 \
+		--load util.lisp \
+		--load emit_js2.lisp \
+		--entry main
 
 clean :
 	rm -f $(EXECS)

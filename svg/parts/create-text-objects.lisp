@@ -35,8 +35,6 @@
        (let ((pair (second list))
              (tail (third list)))
 	 
-	 (format *error-output* "in translate: /~S/~%" list)
-
 	 (cond ((list-of-lists-p tail)
                 `(translate ,pair ,(mapcar #'create-text-objects tail)))
 
