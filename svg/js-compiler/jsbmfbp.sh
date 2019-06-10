@@ -11,7 +11,8 @@ check_input $NAME <temp4.pro >temp5.pro
 # parser
 calc_bounds $NAME <temp5.pro >temp6.pro
 add_kinds $NAME <temp6.pro >temp7.pro
-make_unknown_port_NAMEs $NAME <temp7.pro >temp8.pro
+add_selfPorts $NAME <temp7.pro >temp7a.pro
+make_unknown_port_NAMEs $NAME <temp7a.pro >temp8.pro
 create_centers $NAME <temp8.pro >temp9.pro
 calculate_distances $NAME <temp9.pro >temp10.pro
 assign_portnames $NAME <temp10.pro >temp11.pro
