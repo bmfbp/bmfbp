@@ -22,9 +22,9 @@ test2:
 	./tester.sh test_diagrams/js_test2_emitter.svg
 
 test3:
-	./tester3.sh test_diagrams/js_test3_emitter.svg
+	./tester.sh test_diagrams/js_test3_emitter.svg
 
-tee:
+test4:
 	./tester.sh test_diagrams/tee.svg
 
 top:
