@@ -3,7 +3,7 @@ NAME=$(basename $1 .svg)
 
 # scanner
 hs_vsh_drawio_to_fb <$1 >temp1.lisp
-lib_insert_part_NAME $NAME <temp1.lisp >temp2.lisp
+lib_insert_part_name $NAME <temp1.lisp >temp2.lisp
 fb_to_prolog $NAME <temp2.lisp >temp3.pro
 sort <temp3.pro >temp4.pro
 check_input $NAME <temp4.pro >temp5.pro
@@ -14,7 +14,8 @@ find_comments $NAME <temp6.pro >temp6a.pro
 
 # rest of parser
 add_kinds $NAME <temp6a.pro >temp7.pro
-make_unknown_port_NAMEs $NAME <temp7.pro >temp8.pro
+add_selfPorts $NAME <temp7.pro >temp7a.pro
+make_unknown_port_names $NAME <temp7a.pro >temp8.pro
 create_centers $NAME <temp8.pro >temp9.pro
 calculate_distances $NAME <temp9.pro >temp10.pro
 assign_portnames $NAME <temp10.pro >temp11.pro
