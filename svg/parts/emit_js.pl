@@ -14,6 +14,7 @@ main :-
     write('wirecount  '),
     write(Nwires),
     nl,
+    emitMetaData,
     write('parts ('),
     nl,
     emitAllPins,
@@ -23,6 +24,15 @@ main :-
     write(')'),
     nl,
     halt.
+
+emitMetaData :-
+    metadata(_,Str),
+    write('metadata  '),
+    write(Str),
+    nl.
+
+emitMetaData :-
+    true.
 
 emitAllPins :-
     write('  ins ('), nl,
@@ -44,7 +54,10 @@ printSelfInputOrOutput(Pin) :-
     write(Pin),
     write(')'),
     nl.
-    
+
+getAllInPinsForPart(PartID) :-
+    pinless(PartID).  %% skip pinless parts (there should be at most 1 - the metadata rect).
+
 getAllInPinsForPart(PartID):-
     forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).
 
@@ -69,6 +82,9 @@ getOneInPin(PortID,PartID):-
     write(Pin),
     write(')'),
     nl.
+
+getAllOutPinsForPart(PartID):-
+    pinless(PartID).  %% do nothing
 
 getAllOutPinsForPart(PartID):-
     forall(outPinOfPart(PortID,PartID),getOneOutPin(PortID,PartID)).
@@ -101,6 +117,9 @@ emitExecs:-
     nl,
     write('  )'),
     nl.
+
+emitExec(PartID,_) :-
+    pinless(PartID).  %% do nothing
 
 emitExec(PartID,ExecName) :-
     write('    ('),

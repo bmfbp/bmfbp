@@ -21,6 +21,12 @@
 	     (declare (ignore sym))
 	     `(rect ,(+ x x1) ,(+ y y1) ,w ,h)))
 
+	  (metadata
+	   (destructuring-bind (sym str x1 y1 w h)
+               list
+	     (declare (ignore sym))
+	     `(metadata ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
+
 	  (speech-bubble
 	   ;; speech-bubble is in (speech-bubble p1 p2 p3 p4 p5 p6 p7 (z)) format
 	   ;; where p1 is (absm x y), other p's are (absl x y) format
@@ -71,9 +77,6 @@
                list
 	     (declare (ignore text-sym))
 	     `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
-
-	  (metadata
-	   list )
 
 	  (otherwise
 	   (die (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))

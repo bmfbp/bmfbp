@@ -73,6 +73,41 @@
            (format strm "rect(~A).~%eltype(~A,box).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))
 
+        (metadata
+	 ;; same as rect except with extra string
+         (destructuring-bind (sym str x y w h)
+             list
+           (declare (ignore sym))
+           (let ((strid (string-to-map str))
+                 (rr-id (next-id))
+                 (text-id (next-id)))
+             (format strm "metadata(~A,~A).~%" new-id strid)
+             (format strm "eltype(~A,metadata).~%" new-id)
+             (format strm "used(~A).~%" strid)
+
+             ;; rounded rect
+             (let ((fake-w (+ 10 w))
+                   (fake-h (+ 10 h))
+                   (fake-left-x (- x 10))
+                   (fake-top-y (- y 10)))
+               ;; the actual coords of the rounded rect might come from the first pass, but we fake them here for
+               ;; ease of implementation of the POC
+               (format strm "roundedrect(~A).~%" rr-id)
+               (format strm "eltype(~A,roundedrect).~%" rr-id)
+               (format strm "geometry_left_x(~A,~A).~%" rr-id fake-left-x)
+               (format strm "geometry_top_y(~A,~A).~%" rr-id fake-top-y)
+               (format strm "geometry_w(~A,~A).~%" rr-id fake-w)
+               (format strm "geometry_h(~A,~A).~%" rr-id fake-h))
+             
+             ;; text
+             (format strm "text(~A,~A).~%" text-id strid)
+             (format strm "geometry_center_x(~A,~A).~%" text-id (+ x (/ w 2)))
+             (format strm "geometry_top_y(~A,~A).~%" text-id y)
+             (format strm "geometry_w(~A,~A).~%" text-id w)
+             (format strm "geometry_h(~A,~A).~%" text-id h))))
+             
+
+
 	(speechbubble
          (destructuring-bind (sym p1 p2 p3 p4 p5 p6 p7 zed)
              list
@@ -83,15 +118,6 @@
 		   (h (- (third p3) y1)))
            (format strm "speechbubble(~A).~%eltype(~A,speechbubble).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                    new-id new-id new-id x1 new-id y1 new-id w new-id h)))))
-
-	(metadata
-	 ;; metadata is same as rect
-         (destructuring-bind (sym string)
-             list
-           (declare (ignore sym))
-	   (let ((strid (string-to-map string)))
-             (format strm "metadata(~A,~A).~%eltype(~A,metadata).~%"
-                     new-id strid new-id))))
 
         (text
 	 ;; text is given as {center-x, top-y, width/2, height}

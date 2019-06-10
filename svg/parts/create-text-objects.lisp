@@ -8,23 +8,12 @@
 (defun text-part (tail)
   (first tail))
 
-(defun matches-metadata-p (tail)
-  "return t if tail looks like metada"
-  (and 
-   (>= (length tail) 2)
-   (eq 'metadata (first tail))
-   (stringp (second tail))))
-
-(defun match-metadata (tail)
-  "return text part of metadata"
-  (second tail))
-
 (defun get-metadata-len (text)
   ;; faking it for now, too hard to calculate, let's wait for a better editor
   ;; in prolog, the text will match a rounded rectangle if its upper-left
   ;; corner is in the rounded rectangle (and we will mostly ignore the width)
   (declare (ignore text))
-  1)
+  10)
 
 (defun create-text-objects (list)
   (assert (listp list))
@@ -55,22 +44,13 @@
      list)
 
     (metadata
-     (cond
-      ((matches-metadata-p (third list))
-       (let ((pair (second list))
-             (tail (third list)))
-         (let ((text (match-metadata tail)))
-           ;; (translate (N M) ((metadata "[lotsofstrings]")) --> ((translate (N M) ((metadata "[lotsofstrings]" 0 0 w/2 h))))
-           ;; if formatted correctly, this will contain sets of 5 strings - width is max in fives plus NN chars ("[{...}]" and quotes)
-            (let ((len (get-metadata-len text)))
-              (let ((half-width (/ (* len *default-font-width*) 2)))
-		`((translate ,pair
-                             ((metadata ,text 
-					0
-					0
-					,half-width
-					,*default-font-height*)))))))))
-      (t (die (format nil "badly formed metadata /~A/~%" list)))))
-
+     (if (and 
+	  (= 2 (length list)) 
+	  (stringp (second list)))
+	 ;; (metadata "[lotsofstrings]") --> (metadata stdid 0 0 w/2 h)
+	 (let ((half-width (/ (* (get-metadata-len (second list)) *default-font-width*) 2)))
+	   `(metadata ,(second list) 0 0 ,half-width ,*default-font-height*))
+	 (die (format nil "badly formed metadata /~S/~%" list))))
+    
     (otherwise
      (die (format nil "~%bad format in create-text-object /~A/~%" list)))))

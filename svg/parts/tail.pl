@@ -7,10 +7,10 @@ writeFB :-
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
     forall(rect(X), writeterm(rect(X))),
-    forall(roundedRect(X), writeterm(roundedRect(X))),
+    forall(roundedrect(X), writeterm(roundedrect(X))),
+    forall(pinless(X), writeterm(pinless(X))),
     forall(comment(X), writeterm(comment(X))),
     forall(speechbubble(X), writeterm(speechbubble(X))),
-    forall(metadata(X), writeterm(metadata(X))),
     forall(metadata(X,Y), writeterm(metadata(X,Y))),
     forall(ellipse(X), writeterm(ellipse(X))),
     forall(dot(X), writeterm(dot(X))),
@@ -302,8 +302,11 @@ element(move_relative_y(X,Y), Str) :- !,
 element(rect(X), Str) :- !,
 			     asserta(rect(X)),
 			     readFB(Str).
-element(roundedRect(X), Str) :- !,
-			     asserta(roundedRect(X)),
+element(roundedrect(X), Str) :- !,
+			     asserta(roundedrect(X)),
+			     readFB(Str).
+element(pinless(X), Str) :- !,
+			     asserta(pinless(X)),
 			     readFB(Str).
 element(speechbubble(X), Str) :- !,
 			     asserta(speechbubble(X)),
@@ -311,10 +314,6 @@ element(speechbubble(X), Str) :- !,
 element(comment(X), Str) :- !,
 			     asserta(comment(X)),
 			     readFB(Str).
-element(metadata(X), Str) :- !,
-			     asserta(metadata(X)),
-			     readFB(Str).
-
 element(metadata(X,Y), Str) :- !,
 			     asserta(metadata(X,Y)),
 			     readFB(Str).

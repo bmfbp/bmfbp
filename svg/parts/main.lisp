@@ -1,9 +1,10 @@
 (defun run (strm)
   (init-string-map)
+  #-lispworks
   (setf *debugger-hook* #'(lambda (c h)
-			    (declare (ignore h))
-			    (print c)
-			    (abort)))
+ 			    (declare (ignore h))
+ 			    (print c)
+ 			    (abort)))
   (let ((list (read strm nil nil)))
     (assert (listp list) () "run not a list list=/~a/" list)
     (let ((fixed 
@@ -25,3 +26,4 @@
 (defun main (fname)
   (with-open-file (f fname :direction :input)
     (run f)))
+

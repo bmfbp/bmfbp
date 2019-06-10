@@ -11,6 +11,9 @@
 (defun @preamble ()
   (format *standard-output* "{~%  \"name\" : ~S,~%" (getf %script% 'name))
   (format *standard-output* "  \"wirecount\" : ~d,~%" (getf %script% 'wirecount))
+  (let ((md (getf %script% 'metadata)))
+    (when md
+      (format *standard-output* "  \"metadata\" : ~d,~%" md)))
   (format *standard-output* "  \"self\" : "))
 
 (defun @preamble-for-children-parts ()

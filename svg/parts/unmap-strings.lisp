@@ -19,14 +19,21 @@
     nil))
   
 (defun replacement-string-uid-p (str)
-  "check if the string is of the form stringuidG, retuns T or nil"
+  "check if the string is of the form stringuidG, if symbolp then compare against stringguidg, returns T or nil"
   (if (stringp str)
       (let ((replacement-prefix "struidG"))
         (let ((len (length replacement-prefix)))
           (and
            (>= (length str) len)
            (string= replacement-prefix (subseq str 0 len)))))
-    nil))
+      (if (symbolp str)
+	  (let ((replacement-prefix "struidg")
+		(string (string-downcase (symbol-name str))))
+            (let ((len (length replacement-prefix)))
+              (and
+               (>= (length string) len)
+               (string= replacement-prefix (subseq string 0 len)))))
+	  nil)))
   
 (defun @get-uid-for-read-map (sym)
   "helper for @read-map ; return sym, if it is a string-map id of the form 'struidGxxx'"
@@ -65,8 +72,10 @@
       (let ((item to-be-fixed-up))
         (cond
          ((replacement-string-uid-p item)
-          (assert (stringp item))
-          (let ((uid (intern (string-upcase item))))
+          (assert (or (stringp item) (symbolp item)))
+          (let ((uid (if (stringp item)
+			 (intern (string-upcase item))
+			 item)))
             (multiple-value-bind (original-string success)
                 (gethash uid *string-map*)
               (if success

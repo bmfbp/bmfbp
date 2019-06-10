@@ -45,10 +45,10 @@
 :- dynamic(sink/1).
 :- dynamic(source/1).
 :- dynamic(rect/1).
-:- dynamic(roundedRect/1).
+:- dynamic(roundedrect/1).
+:- dynamic(pinless/1).
 :- dynamic(speechbubble/1).
 :- dynamic(comment/1).
-:- dynamic(metadata/1).
 :- dynamic(metadata/2).
 :- dynamic(ellipse/1).
 :- dynamic(dot/1).
