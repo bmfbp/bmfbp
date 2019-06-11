@@ -25,6 +25,9 @@ test3:
 	./tester.sh test_diagrams/js_test3_emitter.svg
 
 test4:
+	./tester3.sh test_diagrams/js_test3_emitter.svg
+
+tee:
 	./tester.sh test_diagrams/tee.svg
 
 top:
