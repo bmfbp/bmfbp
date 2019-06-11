@@ -26,4 +26,7 @@ test2 :
 test3 : 
 	cd js-compiler && make test3
 
+test4 : 
+	cd js-compiler && make test4
+
 
