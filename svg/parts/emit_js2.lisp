@@ -194,12 +194,7 @@
 
 ;;; end mechanisms
 
-(defun main (argv)
-  (declare (ignore argv))
-  (setf *debugger-hook* #'(lambda (c h)
-			    (declare (ignore h))
-			    (print c)
-			    (abort)))
+(defun main1 ()
   (@read-script-from-file)
   (@create-parts-table)
   (@preamble)
@@ -214,3 +209,18 @@
     (@emit-children-parts)
   (@postamble)
   (values))
+
+#-lispworks
+(defun main (argv)
+  (declare (ignore argv))
+  (setf *debugger-hook* #'(lambda (c h)
+			    (declare (ignore h))
+			    (print c)
+			    (abort)))
+  (main1))
+
+
+#+lispworks
+(defun main ()
+  (main1))
+  
