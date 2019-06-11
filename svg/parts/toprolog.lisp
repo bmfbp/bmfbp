@@ -83,7 +83,7 @@
                  (text-id (next-id)))
              (format strm "metadata(~A,~A).~%" new-id strid)
              (format strm "eltype(~A,metadata).~%" new-id)
-             (format strm "used(~A).~%" strid)
+             (format strm "used(~A).~%" text-id)
 
              ;; rounded rect
              (let ((fake-w (+ 10 w))
