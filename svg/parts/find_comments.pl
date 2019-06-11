@@ -3,9 +3,15 @@
 
 main :-
     readFB(user_input), 
-    forall(speechbubble(ID),createComments(ID)),
+    condComment,
     writeFB,
     halt.
+
+condComment :-
+    forall(speechbubble(ID),createComments(ID)).
+
+condComment :-
+    true.
 
 createComments(BubbleID) :-
     text(TextID,_),
@@ -15,6 +21,6 @@ createComments(BubbleID) :-
 
 
 textCompletelyInsideBox(TextID,BubbleID) :-
-    boundingboxCompletelyInside(TextID,BubbleID).
+    pointCompletelyInsideBoundingBox(TextID,BubbleID).
 
 :- include('tail').

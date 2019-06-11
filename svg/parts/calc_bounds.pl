@@ -9,9 +9,24 @@ main :-
 
 createBoundingBoxes :-
     conditionalCreateEllipseBB,
-    forall(rect(ID), createRectBoundingBox(ID)),
-    forall(speechbubble(ID), createRectBoundingBox(ID)),
+    condRect,
+    condSpeech,
+    condText.
+
+condRect :-
+    forall(rect(ID), createRectBoundingBox(ID)).
+condRect :-
+    true.
+
+condSpeech :-
+    forall(speechbubble(ID), createRectBoundingBox(ID)).
+condSpeech :-
+    true.
+
+condText :-
     forall(text(ID,_), createTextBoundingBox(ID)).
+condText :-
+    true.
 
 conditionalCreateEllipseBB:-
     ellipse(_),

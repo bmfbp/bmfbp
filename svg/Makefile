@@ -1,6 +1,6 @@
 BINDIR=~/bin
 
-all: clean build test
+all: clean build test test2
 
 build: 
 	cd ../grash && make

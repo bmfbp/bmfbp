@@ -34,5 +34,3 @@ inOutPins <temp22.pro >temp23.pro
 emit_js $NAME <temp23.pro >temp24.lisp
 unmap-strings $NAME <temp24.lisp >temp25.lisp
 emit_js2 $NAME <temp25.lisp >temp26.js
-
-
