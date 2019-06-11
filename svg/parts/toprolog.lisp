@@ -81,7 +81,7 @@
            (let ((strid (string-to-map str))
                  (rr-id (next-id))
                  (text-id (next-id)))
-             (format strm "metadata(~A,~A).~%" new-id strid)
+             (format strm "metadata(~A,~A).~%" new-id text-id)
              (format strm "eltype(~A,metadata).~%" new-id)
              (format strm "used(~A).~%" text-id)
 
