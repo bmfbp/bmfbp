@@ -1,0 +1,4 @@
+{
+  "entrypoint": "./json_object_stacker.js",
+  "kindType": "nodejs"
+}

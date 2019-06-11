@@ -1,0 +1,4 @@
+{
+  "entrypoint": "./json_array_splitter.js",
+  "kindType": "nodejs"
+}
