@@ -3,9 +3,15 @@
 
 main :-
     readFB(user_input),
-    forall(eltype(EllipseID,ellipse),createSelfPorts(EllipseID)),
+    condEllipses,
     writeFB,
     halt.
+
+condEllipses :-
+    forall(eltype(EllipseID,ellipse),createSelfPorts(EllipseID)).
+
+condEllipses :-
+    true.
 
 createSelfPorts(EllipseID) :-
     % find one port that touches the ellispe (if there are more, then the "coincidentPorts"
