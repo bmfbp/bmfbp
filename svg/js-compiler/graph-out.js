@@ -14,7 +14,7 @@
       "partName" : "ID369",
       "in-count" : 1,
       "out-count" : 0,
-      "inPins" : [[0]],
+      "inPins" : [[2]],
       "outPins" : [],
       "exec" : "emit"
     },
@@ -23,14 +23,14 @@
       "in-count" : 1,
       "out-count" : 2,
       "inPins" : [[1]],
-      "outPins" : [[],[0]],
+      "outPins" : [[],[2]],
       "exec" : "assign_portIndices"
     },
     {
       "partName" : "ID382",
       "in-count" : 1,
       "out-count" : 2,
-      "inPins" : [[2]],
+      "inPins" : [[0]],
       "outPins" : [[],[1]],
       "exec" : "assign_wire_numbers_to_outputs"
     },
@@ -39,7 +39,7 @@
       "in-count" : 0,
       "out-count" : 2,
       "inPins" : [],
-      "outPins" : [[],[2]],
+      "outPins" : [[],[0]],
       "exec" : "assign_wire_numbers_to_inputs"
     }
   ]

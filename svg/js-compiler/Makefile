@@ -16,7 +16,7 @@ clean:
 
 test: dependencies
 	jsbmfbp test_diagrams/js_test_emitter.svg
-	compare-graph temp22.js graph-out.js
+	compare-graph temp25.js graph-out.js
 
 test2:
 	./tester.sh test_diagrams/js_test2_emitter.svg

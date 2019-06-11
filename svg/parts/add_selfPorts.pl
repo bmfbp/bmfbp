@@ -3,9 +3,7 @@
 
 main :-
     readFB(user_input),
-wen(aa),
     forall(eltype(EllipseID,ellipse),createSelfPorts(EllipseID)),
-wen(bb),
     writeFB,
     halt.
 
