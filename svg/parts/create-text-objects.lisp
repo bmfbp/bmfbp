@@ -47,10 +47,10 @@
      (if (and 
 	  (= 2 (length list)) 
 	  (stringp (second list)))
-	 ;; (metadata "[lotsofstrings]") --> (metadata stdid 0 0 w/2 h)
+	 ;; (metadata "[lotsofstrings]") --> (metadata strid 0 0 w/2 h)
 	 (let ((half-width (/ (* (get-metadata-len (second list)) *default-font-width*) 2)))
 	   `(metadata ,(second list) 0 0 ,half-width ,*default-font-height*))
 	 (die (format nil "badly formed metadata /~S/~%" list))))
     
     (otherwise
-     (die (format nil "~%bad format in create-text-object /~A/~%" list)))))
+     (die (format nil "~%bad format in create-text-objects /~A/~%" list)))))
