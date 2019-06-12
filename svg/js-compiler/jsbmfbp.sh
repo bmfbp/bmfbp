@@ -27,7 +27,7 @@ match_ports_to_components <temp17.pro >temp18.pro
 sem_partsHaveSomePorts <temp18.pro >temp19.pro
 sem_allPortsHaveAnIndex <temp19.pro >temp20.pro
 
-#sem_info <temp20.pro
+sem_info <temp20.pro
 
 # emitter
 assign_wire_numbers_to_inputs $NAME <temp20.pro >temp21.pro
