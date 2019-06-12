@@ -2,11 +2,24 @@
 :- include('head').
 
 main :-
+    main1,
     readFB(user_input), 
     %forall(eltype(PortID,port),portInfo(PortID)),
-    forall(log(Rel1,X,Y),printLog3(Rel1,X,Y)),
-    forall(log(Rel,A,B,C),printLog4(Rel,A,B,C)),
+    %% forall(log(Rel1,X,Y),printLog3(Rel1,X,Y)),
+    %% forall(log(Rel,A,B,C),printLog4(Rel,A,B,C)),
+    dumpLog,
     halt.
+
+main1 :-
+    main2('PAUL','WAS','HERE','TOO').
+
+main2(A,B,C,D) :-
+    asserta(log(A,B,C,D)),
+    asserta(log(paul,was,here)),
+    asserta(log(paul,was,' ',too)),
+    asserta(log(x)),
+    asserta(log(a,b)),
+    asserta(log(abc)).
 
 portInfo(PortID) :-
     infoName(PortID),

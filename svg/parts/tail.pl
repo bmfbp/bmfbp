@@ -454,3 +454,20 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     R2 >= L1,
     B2 >= T1.
 
+dumpLog :-
+    forall(log(X),printLog(X)),
+    forall(log(Z,Y),printLog(Z,Y)),
+    forall(log(A,B,C),printLog(A,B,C)),
+    forall(log(D,E,F,G),printLog(D,E,F,G)).
+
+printLog(X) :-
+    we('logged: '),wen(X).
+
+printLog(X,Y) :-
+    we('logged: '),we(X),wspc,wen(Y).
+
+printLog(X,Y,Z) :-
+    we('logged: '),we(X),wspc,we(Y),wspc,wen(Z).
+
+printLog(A,X,Y,Z) :-
+    we('logged: '),we(A),wspc,we(X),wspc,we(Y),wspc,wen(Z).
