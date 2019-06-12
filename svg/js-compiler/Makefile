@@ -16,16 +16,16 @@ clean:
 
 test: dependencies
 	jsbmfbp test_diagrams/js_test_emitter.svg
-	compare-graph temp26.js graph-out.js
+	compare-graph temp27.js graph-out.js
 
 test2:
-	./tester.sh test_diagrams/js_test2_emitter.svg
+	jsbmfbp test_diagrams/js_test2_emitter.svg
 
 test3:
-	./tester.sh test_diagrams/js_test3_emitter.svg
+	jsbmfbp test_diagrams/js_test3_emitter.svg
 
 test4:
-	./tester.sh test_diagrams/js_test4_emitter.svg
+	jsbmfbp test_diagrams/js_test4_emitter.svg
 
 tee:
 	./tester.sh test_diagrams/tee.svg

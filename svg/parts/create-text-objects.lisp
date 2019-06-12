@@ -17,12 +17,21 @@
 
 (defun create-text-objects (list)
   (assert (listp list))
+(format *error-output* "list: ~S~%" list)
   (case (car list)
     
     (translate
      (flet ((failure () (die (format nil "badly formed translate /~A/~%" list))))
        (let ((pair (second list))
              (tail (third list)))
+
+	 (when (and
+		(= 1 (length tail))
+		(listp (first tail))
+		(stringp (first (first tail)))
+		(null  (second (first tail))))
+	   (format *error-output* "~%~%fixed bug2 in create-text-objects.lisp~%~%")
+	   (setf tail (first tail)))
 	 
 	 (cond ((list-of-lists-p tail)
                 `(translate ,pair ,(mapcar #'create-text-objects tail)))
@@ -53,4 +62,4 @@
 	 (die (format nil "badly formed metadata /~S/~%" list))))
     
     (otherwise
-     (die (format nil "~%bad format in create-text-objects /~A/~%" list)))))
+     (die (format nil "~%bad format in create-text-objects /~S/~%" list)))))

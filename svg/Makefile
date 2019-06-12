@@ -1,6 +1,6 @@
 BINDIR=~/bin
 
-all: clean build test test2 test3
+all: clean build test test2 test3 test4
 
 build: 
 	cd ../grash && make
@@ -29,4 +29,12 @@ test3 :
 test4 : 
 	cd js-compiler && make test4
 
+tee:
+	cd js-compiler && make tee
+
+top:
+	cd js-compiler && make top
+
+pass:
+	cd js-compiler && make pass
 

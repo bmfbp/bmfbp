@@ -26,8 +26,9 @@ main :-
     halt.
 
 emitMetaData :-
-    metadata(_,Str),
+    metadata(_,TextID),
     write('metadata  '),
+    text(TextID,Str),
     write(Str),
     nl.
 
