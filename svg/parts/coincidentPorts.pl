@@ -35,9 +35,12 @@ notIndexedSink(X) :-
 
 
 coincidentSources:-
-    forall(indexedSource(X),findCoincidentSource(X)).
+    forall(indexedSource(X),findAllCoincidentSources(X)).
 
-findCoincidentSource(A):-
+findAllCoincidentSources(A) :-
+    forall(source(_,B),findCoincidentSource(A,B)).
+
+findCoincidentSource(A,B):-
     center_y(A,Ay),
     center_y(B,By),
     center_x(A,Ax),
@@ -51,7 +54,7 @@ findCoincidentSource(A):-
 we('coincident sources '),we(A),wspc,we(B),wspc,we(' on port '),wen(I),
     asserta(portIndex(B,I)).
 
-findCoincidentSource(_):-
+findCoincidentSource(_,_):-
     true.
 
 notIndexedSource(X) :-
