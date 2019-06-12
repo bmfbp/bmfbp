@@ -32,6 +32,9 @@ assign_wire_numbers_to_inputs $NAME <temp20.pro >temp21.pro
 assign_wire_numbers_to_outputs $NAME <temp21.pro >temp22.pro
 assign_portIndices $NAME <temp22.pro >temp23.pro
 inOutPins <temp23.pro >temp24.pro
+
+dumplog <temp24.pro
+
 emit_js $NAME <temp24.pro >temp25.lisp
 unmap-strings $NAME <temp25.lisp >temp26.lisp
 emit_js2 $NAME <temp26.lisp >temp27.js

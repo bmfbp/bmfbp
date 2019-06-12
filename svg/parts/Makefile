@@ -21,6 +21,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/sem_partsHaveSomePorts \
 	$(BINDIR)/sem_allPortsHaveAnIndex \
 	$(BINDIR)/sem_info \
+	$(BINDIR)/dumplog \
 	$(BINDIR)/markIndexedPorts \
 	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
