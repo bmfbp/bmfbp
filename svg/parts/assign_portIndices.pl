@@ -24,7 +24,6 @@ main :-
     forall(portName(P,err),assign_source_fd(P,2)), % stderr == 2
     forall(integerSinkPortName(P,N),assign_sink_fd(P,N)),
     forall(integerSourcePortName(P,N),assign_source_fd(P,N)),
-
     writeFB,
     halt.
 
@@ -41,10 +40,12 @@ integerSourcePortName(P,N) :-
 
 assign_source_fd(P,N) :-
     %write(P), write(' '), write(N), nl,
+    asserta(log(sourcefd,P,N)),
     asserta(sourcefd(P,N)).
 
 assign_sink_fd(P,N) :-
     %write(P), write(' '), write(N), nl,
+    asserta(log(sinkfd,P,N)),
     asserta(sinkfd(P,N)).
 
 %has_fd(P) :-
