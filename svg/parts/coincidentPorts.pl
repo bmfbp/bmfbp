@@ -11,9 +11,12 @@ main :-
 
 
 coincidentSinks:-
-    forall(indexedSink(X),findCoincidentSink(X)).
+    forall(indexedSink(X),findAllCoincidentSinks(X)).
 
-findCoincidentSink(A):-
+findAllCoincidentSinks(A) :-
+    forall(sink(_,B),findCoincidentSink(A,B)).
+
+findCoincidentSink(A,B):-
     center_y(A,Ay),
     center_y(B,By),
     center_x(A,Ax),
@@ -27,7 +30,7 @@ findCoincidentSink(A):-
 we('coincident sinks '),we(A),wspc,we(B),wspc,we(' on port '),wen(I),
     asserta(portIndex(B,I)).
 
-findCoincidentSink(_):-
+findCoincidentSink(_,_):-
     true.
 
 notIndexedSink(X) :-
