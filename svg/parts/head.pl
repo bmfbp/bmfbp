@@ -77,3 +77,5 @@
 :- dynamic(n_c/1).
 :- dynamic(indexedSink/1).
 :- dynamic(indexedSource/1).
+:- dynamic(log/4).
+

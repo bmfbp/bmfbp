@@ -27,7 +27,7 @@ findCoincidentSink(A,B):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
-we('coincident sinks '),we(A),wspc,we(B),wspc,we(' on port '),wen(I),
+    asserta(log(coincidentSink,A,B,I)),
     asserta(portIndex(B,I)).
 
 findCoincidentSink(_,_):-
@@ -54,7 +54,7 @@ findCoincidentSource(A,B):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
-we('coincident sources '),we(A),wspc,we(B),wspc,we(' on port '),wen(I),
+    asserta(log(coincidentSource,A,B,I)),
     asserta(portIndex(B,I)).
 
 findCoincidentSource(_,_):-
