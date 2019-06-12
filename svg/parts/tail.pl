@@ -74,7 +74,20 @@ writeFB :-
     forall(n_c(X), writeterm(n_c(X))),
     forall(indexedSink(X), writeterm(indexedSink(X))),
     forall(indexedSource(X), writeterm(indexedSource(X))),
-    forall(parent(X,Y), writeterm(parent(X,Y))).
+    forall(parent(X,Y), writeterm(parent(X,Y))),
+    writelog.
+
+writelog :-
+    forall(log(X),writelog(X)),
+    forall(log(Z,Y),writelog(Z,Y)),
+    forall(log(A,B,C),writelog(A,B,C)),
+    forall(log(D,E,F,G),writelog(D,E,F,G)).
+
+writelog(X) :- writeterm(log(X)),nl.
+writelog(Y,Z) :-writeterm(log(Y,Z)),nl.
+writelog(X,Y,Z) :-writeterm(log(X,Y,Z)),nl.
+writelog(W,X,Y,Z) :-writeterm(log(W,X,Y,Z)),nl.
+
 
 wspc :-
     write(user_error,' ').
@@ -394,6 +407,22 @@ element(indexedSink(X), Str) :- !,
 
 element(indexedSource(X), Str) :- !,
 			     asserta(indexedSource(X)),
+			     readFB(Str).
+
+element(log(W), Str) :- !,
+			     asserta(log(W)),
+			     readFB(Str).
+
+element(log(W,X), Str) :- !,
+			     asserta(log(W,X)),
+			     readFB(Str).
+
+element(log(W,X,Y), Str) :- !,
+			     asserta(log(W,X,Y)),
+			     readFB(Str).
+
+element(log(W,X,Y,Z), Str) :- !,
+			     asserta(log(W,X,Y,Z)),
 			     readFB(Str).
 
 
