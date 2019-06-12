@@ -1,0 +1,10 @@
+Look at ex1.lisp and ex2.lisp.  Both have been reformatted for readability.  Execute "./run.sh" to regenerate (unformatted) output again.
+
+
+ex1.lisp:
+
+At the very bottom, there is an extra () after the metadata.  The whole result is wrapped in an extra set of parens.
+
+ex2.lisp:
+
+Search for "output_1_every_second_for_3_times" and note that there is an extra () after the string and that the string and the () are wrapped in an extra set of parens.
