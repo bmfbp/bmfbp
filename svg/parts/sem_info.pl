@@ -3,8 +3,9 @@
 
 main :-
     readFB(user_input), 
-    forall(eltype(PortID,port),portInfo(PortID)),
-    forall(log(Rel,A,_,_),printLog(Rel,A)),
+    %forall(eltype(PortID,port),portInfo(PortID)),
+    forall(log(Rel1,X,Y),printLog3(Rel1,X,Y)),
+    forall(log(Rel,A,B,C),printLog4(Rel,A,B,C)),
     halt.
 
 portInfo(PortID) :-
@@ -31,12 +32,16 @@ infoIndex(PortID) :-
     portIndex(PortID,Index),
     we('port '),we(PortID),we(' has Index '),wen(Index).
 
-printLog(Rel,A) :-
-    log(Rel,A,B,I),
-    we(Rel),wspc,we(A),wspc,we(B),wspc,wen(I),
+printLog3(Rel,A,B) :-
+    we(3),we(Rel),wspc,we(A),wspc,wen(B),
     !.
+printLog3(_,_,_) :-
+    !,true.
 
-printLog(_,_) :-
-    true.
+printLog4(Rel,A,B,C) :-
+    we(4),we(Rel),wspc,we(A),wspc,we(B),wspc,wen(C),
+    !.
+printLog4(_,_,_,_) :-
+    !,true.
 
 :- include('tail').

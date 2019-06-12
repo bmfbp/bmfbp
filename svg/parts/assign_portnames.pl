@@ -15,10 +15,12 @@ assignPort(TextID):-
     text(TextID,Str),
     asserta(portNameByID(PortID,TextID)),
     asserta(portName(PortID,Str)),
+    asserta(log('port name ',PortID,TextID,Str)),
     tryIndex(PortID,TextID,Str).
 
 tryIndex(PortID,NumericID,Num):-
     number(Num),
+    asserta(log('port index ',PortID,Num,NumericID)),
     asserta(portIndexByID(PortID,NumericID)),
     asserta(portIndex(PortID,Num)).
     

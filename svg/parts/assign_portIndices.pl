@@ -41,10 +41,12 @@ integerSourcePortName(P,N) :-
 
 assign_source_fd(P,N) :-
     %write(P), write(' '), write(N), nl,
+    asserta(log(coincidentSource,P,N)),
     asserta(sourcefd(P,N)).
 
 assign_sink_fd(P,N) :-
-    %write(P), write(' '), write(N), nl,
+    %% we(P), we(' '),we(N),nle,
+    asserta(log(coincidentSink,P,N,z)),
     asserta(sinkfd(P,N)).
 
 %has_fd(P) :-

@@ -76,6 +76,9 @@ writeFB :-
     forall(indexedSource(X), writeterm(indexedSource(X))),
     forall(log(coincidentSink,X,Y,Z), writeterm(log(coincidentSink,X,Y,Z))),
     forall(log(coincidentSource,X,Y,Z), writeterm(log(coincidentSource,X,Y,Z))),
+    forall(log(coincidentSource,X,Y), writeterm(log(coincidentSource,X,Y))),
+    forall(log(sink_fd,X,Y,Z), writeterm(log(sink_fd,X,Y,Z))),
+    forall(log(sink_fd,X,Y,Z), writeterm(log(sink_fd,X,Y,Z))),
     forall(parent(X,Y), writeterm(parent(X,Y))).
 
 wspc :-
@@ -398,12 +401,12 @@ element(indexedSource(X), Str) :- !,
 			     asserta(indexedSource(X)),
 			     readFB(Str).
 
-element(log(coincidentSink,X,Y,Z), Str) :- !,
-			     asserta(log(coincidentSink,X,Y,Z)),
+element(log(R,X,Y), Str) :- !,
+			     asserta(log(R,X,Y)),
 			     readFB(Str).
 
-element(log(coincidentSource,X,Y,Z), Str) :- !,
-			     asserta(log(coincidentSource,X,Y,Z)),
+element(log(R,X,Y,Z), Str) :- !,
+			     asserta(log(R,X,Y,Z)),
 			     readFB(Str).
 
 
