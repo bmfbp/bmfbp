@@ -8,6 +8,14 @@ main :-
     halt.
 
 check_has_index(PortID):-
+    portIndex(PortID,First),
+    portIndex(PortID,Second),
+    First =\= Second,
+    !,
+    nle,nle,we('port '),we(PortID),we( 'has more than one index '),we(First),wspc,wen(Second).
+
+
+check_has_index(PortID):-
     portIndex(PortID,_),!.
 
 check_has_index(PortID):-
