@@ -27,6 +27,10 @@ test3:
 test4:
 	jsbmfbp test_diagrams/js_test4_emitter.svg
 
+xx:
+	cd .. && make
+	make top
+
 tee:
 	./tester.sh test_diagrams/tee.svg
 

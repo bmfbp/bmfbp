@@ -18,7 +18,7 @@ portInfo(PortID) :-
 portInfo(PortID) :-
     infoIndex(PortID).
 
-portInfo(PortID) :-
+portInfo(_) :-
     true.
 
 

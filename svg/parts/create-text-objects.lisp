@@ -17,7 +17,7 @@
 
 (defun create-text-objects (list)
   (assert (listp list))
-(format *error-output* "list: ~S~%" list)
+  ;(format *error-output* "list: ~S~%" list)
   (case (car list)
     
     (translate
