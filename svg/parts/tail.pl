@@ -470,3 +470,13 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     R2 >= L1,
     B2 >= T1.
 
+dumplog :-
+    forall(log(X),dumplog(X)),
+    forall(log(Z,Y),dumplog(Z,Y)),
+    forall(log(A,B,C),dumplog(A,B,C)),
+    forall(log(D,E,F,G),dumplog(D,E,F,G)).
+
+dumplog(W) :- wen(W).
+dumplog(W,X) :- we(W),wspc,wen(X).
+dumplog(W,X,Y) :- we(W),wspc,we(X),wspc,wen(Y).
+dumplog(W,X,Y,Z) :- we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
