@@ -18,7 +18,7 @@ createAllKinds(BoxID) :-
 
 createOneKind(BoxID,TextID) :-
     text(TextID,Str),
-    %% \+ used(TextID),
+    \+ used(TextID),
     textCompletelyInsideBox(TextID,BoxID),
     asserta(used(TextID)),
     asserta(kind(BoxID,Str)).
