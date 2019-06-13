@@ -11,20 +11,12 @@
     }
   "parts" : [
     {
-      "partName" : "ID369",
-      "in-count" : 1,
-      "out-count" : 0,
-      "inPins" : [[2]],
-      "outPins" : [],
-      "exec" : "emit"
-    },
-    {
-      "partName" : "ID374",
-      "in-count" : 1,
+      "partName" : "ID392",
+      "in-count" : 0,
       "out-count" : 2,
-      "inPins" : [[1]],
-      "outPins" : [[],[2]],
-      "exec" : "assign_portIndices"
+      "inPins" : [],
+      "outPins" : [[],[0]],
+      "exec" : "assign_wire_numbers_to_inputs"
     },
     {
       "partName" : "ID382",
@@ -35,12 +27,20 @@
       "exec" : "assign_wire_numbers_to_outputs"
     },
     {
-      "partName" : "ID392",
-      "in-count" : 0,
+      "partName" : "ID374",
+      "in-count" : 1,
       "out-count" : 2,
-      "inPins" : [],
-      "outPins" : [[],[0]],
-      "exec" : "assign_wire_numbers_to_inputs"
+      "inPins" : [[1]],
+      "outPins" : [[],[2]],
+      "exec" : "assign_portIndices"
+    },
+    {
+      "partName" : "ID369",
+      "in-count" : 1,
+      "out-count" : 0,
+      "inPins" : [[2]],
+      "outPins" : [],
+      "exec" : "emit"
     }
   ]
 }
