@@ -82,3 +82,5 @@
 :- dynamic(log/2).
 :- dynamic(log/3).
 :- dynamic(log/4).
+:- dynamic(log/5).
+:- dynamic(log/6).
