@@ -12,7 +12,7 @@ portsOnWire(SourcePort,Wire,SinkPort) :-
     parentOf(SinkPort,SinkParent),
     kindOf(SinkParent,SinkParentName),
     portIndexOf(SinkPort,SinkIndex),
-    asserta(log(sourcewiresinkparent,SourceParentName,SourceIndex,Wire,SinkParentName,SinkIndex)).
+    asserta(log(parent_source_wire_parent_sink,SourceParentName,SourceIndex,Wire,SinkParentName,SinkIndex)).
 
 sourceOf(Wire,Port) :-
     source(Wire,Port),!.

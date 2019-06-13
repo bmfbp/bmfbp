@@ -21,7 +21,7 @@
 					     (mapcar #'create-text-objects 
 						     list)))))))
 	(to-prolog fixed *standard-output*)
-	(write-string-map "temp-string-map.lisp")))))
+	(write-string-map "temp-string-map.lisp" "strings.sed")))))
 
 #-lispworks
 (defun main (argv)

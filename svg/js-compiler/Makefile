@@ -29,7 +29,9 @@ test4:
 
 xx:
 	cd .. && make
-	make top
+	make top 2> junk.txt
+	sed -f strings.sed <junk.txt >junk2.txt
+	cat junk2.txt
 
 tee:
 	./tester.sh test_diagrams/tee.svg
