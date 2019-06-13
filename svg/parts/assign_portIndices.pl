@@ -17,7 +17,6 @@
 % 
 
 main :-
-    %g_assign(fdnum,3),  % non-special case fd's start at 3 and up to maximum
     readFB(user_input),
     forall(portName(P,in),assign_sink_fd(P,0)), % stdin == 0
     forall(portName(P,out),assign_source_fd(P,1)), % stdout == 1
@@ -31,7 +30,6 @@ integerSinkPortName(P,N) :-
     portName(P,N),
     sink(_,P),
     integer(N).
-    %write(user_error,'integer sink '),write(user_error,P),write(user_error,' '),write(user_error,N),nl(user_error).
 
 integerSourcePortName(P,N) :-
     portName(P,N),
@@ -39,16 +37,9 @@ integerSourcePortName(P,N) :-
     integer(N).
 
 assign_source_fd(P,N) :-
-    %write(P), write(' '), write(N), nl,
-    asserta(log(sourcefd,P,N)),
     asserta(sourcefd(P,N)).
 
 assign_sink_fd(P,N) :-
-    %write(P), write(' '), write(N), nl,
-    asserta(log(sinkfd,P,N)),
     asserta(sinkfd(P,N)).
 
-%has_fd(P) :-
-%    ( sourcefd(P,_) ; (sinkfd(P,_) ).
-    
 :- include('tail').
