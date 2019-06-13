@@ -25,9 +25,10 @@
       (maphash
        #'(lambda (k v)
 	   (format f "(~A ~S)~%" k v)
-	   (format sed "s/ ~A/.[~A]/g~%" k v))
+	   (format sed "s/ ~A/[~A]/g~%" k v))
        *string-map*)
       (format sed "s/] /]./g~%")
+      (format sed "s/null null null/N.C./g~%")
       (format sed "s/parent_source_wire_parent_sink//g~%"))))
 
 (defun die (msg)
