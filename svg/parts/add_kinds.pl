@@ -8,19 +8,25 @@ main :-
     halt.
 
 condDoKinds :-
-    forall(eltype(ID,box),createKinds(ID)),
+    forall(eltype(ID,box),createAllKinds(ID)),
     !.
 
 condDoKinds :- true.
 
-createKinds(BoxID) :-
+createAllKinds(BoxID) :-
+    forall(text(TextID,_),createOneKind(BoxID,TextID)).
+
+createOneKind(BoxID,TextID) :-
     text(TextID,Str),
+    %% \+ used(TextID),
     textCompletelyInsideBox(TextID,BoxID),
     asserta(used(TextID)),
     asserta(kind(BoxID,Str)).
 
+createOneKind(_,_) :-
+    true.
+
 textCompletelyInsideBox(TextID,BoxID) :-
     pointCompletelyInsideBoundingBox(TextID,BoxID).
-%    boundingboxCompletelyInside(TextID,BoxID).
 
 :- include('tail').

@@ -20,6 +20,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/match_ports_to_components \
 	$(BINDIR)/sem_partsHaveSomePorts \
 	$(BINDIR)/sem_allPortsHaveAnIndex \
+	$(BINDIR)/sem_noDuplicateKinds \
 	$(BINDIR)/sem_info \
 	$(BINDIR)/loginfo \
 	$(BINDIR)/dumplog \
