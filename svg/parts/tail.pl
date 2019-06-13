@@ -81,12 +81,16 @@ writelog :-
     forall(log(X),writelog(X)),
     forall(log(Z,Y),writelog(Z,Y)),
     forall(log(A,B,C),writelog(A,B,C)),
-    forall(log(D,E,F,G),writelog(D,E,F,G)).
+    forall(log(D,E,F,G),writelog(D,E,F,G)),
+    forall(log(H,I,J,K,L),writelog(H,I,J,K,L)),
+    forall(log(M,N,O,P,Q,R),writelog(M,N,O,P,Q,R)).
 
-writelog(X) :- writeterm(log(X)),nl.
-writelog(Y,Z) :-writeterm(log(Y,Z)),nl.
-writelog(X,Y,Z) :-writeterm(log(X,Y,Z)),nl.
-writelog(W,X,Y,Z) :-writeterm(log(W,X,Y,Z)),nl.
+writelog(X) :- writeterm(log(X)).
+writelog(Y,Z) :-writeterm(log(Y,Z)).
+writelog(X,Y,Z) :-writeterm(log(X,Y,Z)).
+writelog(W,X,Y,Z) :-writeterm(log(W,X,Y,Z)).
+writelog(A,B,C,D,E) :-writeterm(log(A,B,C,D,E)).
+writelog(A,B,C,D,E,F) :-writeterm(log(A,B,C,D,E,F)).
 
 
 wspc :-
@@ -425,6 +429,14 @@ element(log(W,X,Y,Z), Str) :- !,
 			     asserta(log(W,X,Y,Z)),
 			     readFB(Str).
 
+element(log(A,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,W,X,Y,Z)),
+			     readFB(Str).
+
+element(log(A,B,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,B,W,X,Y,Z)),
+			     readFB(Str).
+
 
     
 element(Term, _) :-
@@ -474,9 +486,13 @@ dumplog :-
     forall(log(X),dumplog(X)),
     forall(log(Z,Y),dumplog(Z,Y)),
     forall(log(A,B,C),dumplog(A,B,C)),
-    forall(log(D,E,F,G),dumplog(D,E,F,G)).
+    forall(log(D,E,F,G),dumplog(D,E,F,G)),
+    forall(log(H,I,J,K,L),dumplog(H,I,J,K,L)),
+    forall(log(M,N,O,P,Q,R),dumplog(M,N,O,P,Q,R)).
 
 dumplog(W) :- wen(W).
 dumplog(W,X) :- we(W),wspc,wen(X).
 dumplog(W,X,Y) :- we(W),wspc,we(X),wspc,wen(Y).
 dumplog(W,X,Y,Z) :- we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(V,W,X,Y,Z) :- we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(U,V,W,X,Y,Z) :- we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
