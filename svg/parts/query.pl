@@ -3,7 +3,7 @@
 logAllEdges :-
     forall(edge(Wire),portsOnWire(_,Wire,_)).
 
-portsOnWire(Source,Wire,Sink) :-
+portsOnWire(SourcePort,Wire,SinkPort) :-
     sourceOf(Wire,SourcePort),
     portIndexOf(SourcePort,SourceIndex),
     parentOf(SourcePort,SourceParent),
