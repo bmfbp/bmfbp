@@ -5,7 +5,7 @@ logAllEdges :-
     forall(edge(Wire),logEdge(Wire)).
 
 logEdge(Wire) :-
-    log(wire,Wire).
+    asserta(log(wire,Wire)).
 
 portsOnWire(Source,Wire,Sink) :-
     source(Wire,Source),
