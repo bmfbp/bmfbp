@@ -20,9 +20,9 @@ check_has_exactly_one_kind(RectID) :-
     !.
 
 check_has_exactly_one_kind(RectID) :-
-    nle,we('ERROR!!! '),we(RectID),wen(' has no kind'),
-    !,
-    asserta(log('fATAL_ERRORS_DURING_COMPILATION')).
+    % not actually an error if the RectID belongs to metadata
+    nle,we(' '),we(RectID),wen(' has no kind'),
+    !.
 
 :- include('tail').
 

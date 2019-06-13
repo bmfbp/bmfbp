@@ -12,36 +12,36 @@ portsOnWire(SourcePort,Wire,SinkPort) :-
     parentOf(SinkPort,SinkParent),
     kindOf(SinkParent,SinkParentName),
     portIndexOf(SinkPort,SinkIndex),
-    asserta(log(parent_source_wire_parent_sink,SourceParentName,SourceIndex,Wire,SinkParentName,SinkIndex)).
+    asserta(log(parent_source_wire_parent_sink,SourceParent,SourceParentName,SourceIndex,wire(Wire),SinkParent,SinkParentName,SinkIndex)).
 
 sourceOf(Wire,Port) :-
     source(Wire,Port),!.
 sourceOf(_,Port) :-
-    Port = nil.
+    Port = null.
 
 sinkOf(Wire,Port) :-
     sink(Wire,Port),!.
 sinkOf(_,Port) :-
-    Port = nil.
+    Port = null.
 
 
 parentOf(Port,Parent) :-
     parent(Port,Parent),!.
 
 parentOf(_,Parent) :-
-    Parent = nil.
+    Parent = null.
 
 
 portIndexOf(Port,Index) :-
     portIndex(Port,Index),!.
 
 portIndexOf(_,Index) :-
-    Index = nil.
+    Index = null.
 
 
 kindOf(Parent,Name) :-
     kind(Parent,Name),!.
 
 kindOf(_,Name) :-
-    Name = nil.
+    Name = null.
 

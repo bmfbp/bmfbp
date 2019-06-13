@@ -19,13 +19,13 @@ createMetaDataRect(MID) :-
     metadataCompletelyInsideBoundingBox(TextID,BoxID),
     asserta(used(TextID)),
     asserta(roundedRect(BoxID)),
+    asserta(log(box_is_meta_data,BoxID)),
     retract(rect(BoxID)).
 
 createMetaDataRect(TextID) :-
     wen(' '),we('createMetaDataRect failed '),wen(TextID).
 
 metadataCompletelyInsideBoundingBox(TextID,BoxID) :-
-    % we('mtcib: '),we(TextID),wspc,wen(BoxID),
     pointCompletelyInsideBoundingBox(TextID,BoxID).
 
 :- include('tail').

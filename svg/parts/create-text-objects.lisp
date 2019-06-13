@@ -17,9 +17,9 @@
 
 (defun create-text-objects (list)
   (assert (listp list))
-					;(format *error-output* "list: ~S~%" list)
+  (format *error-output* "list: ~S~%" list)
   (if (listp (car list))
-      (create-text-objects (car list))
+      (mapcar #'create-text-objects list)
       (case (car list)
 	
 	(translate
@@ -27,13 +27,13 @@
 	   (let ((pair (second list))
 		 (tail (third list)))
 
-	     (when (and
-		    (= 1 (length tail))
-		    (listp (first tail))
-		    (stringp (first (first tail)))
-		    (null  (second (first tail))))
-	       (format *error-output* "~%~%fixed bug2 in create-text-objects.lisp~%~%")
-	       (setf tail (first tail)))
+	     ;; (when (and
+	     ;; 	    (= 1 (length tail))
+	     ;; 	    (listp (first tail))
+	     ;; 	    (stringp (first (first tail)))
+	     ;; 	    (null  (second (first tail))))
+	     ;;   (format *error-output* "~%~%fixed bug2 in create-text-objects.lisp~%~%")
+	     ;;   (setf tail (first tail)))
 	     
 	     (cond ((list-of-lists-p tail)
                     `(translate ,pair ,(mapcar #'create-text-objects tail)))
