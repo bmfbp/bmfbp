@@ -74,6 +74,7 @@ collapseEmpty (Container (Empty : xs)) = collapseEmpty $ Container (map collapse
 collapseEmpty (Container (x : Empty : xs)) = Container (collapseEmpty x : map collapseEmpty xs)
 collapseEmpty (Container (Container [] : xs)) = Container $ map collapseEmpty xs
 collapseEmpty (Container [x]) = collapseEmpty x
+collapseEmpty (Container (x : Container [] : xs)) = Container (x : map collapseEmpty xs)
 collapseEmpty (Container xs) = Container $ map collapseEmpty xs
 collapseEmpty (Translate x y zs) = Translate x y $ map collapseEmpty zs
 collapseEmpty x = x
