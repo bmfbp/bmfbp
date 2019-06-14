@@ -12,7 +12,7 @@ dependencies:
 	chmod a+x $(BINDIR)/compare-graph
 
 clean:
-	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph
+	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph temp.log*.txt
 
 test: dependencies
 	jsbmfbp test_diagrams/js_test_emitter.svg
@@ -30,9 +30,6 @@ test4:
 xx:
 	cd .. && make
 	make top
-#	make top 2> junk.txt
-#	sed -f strings.sed <junk.txt >junk2.txt
-#	cat junk2.txt
 
 tee:
 	./tester.sh test_diagrams/tee.svg
