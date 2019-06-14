@@ -1,0 +1,4 @@
+{
+  "entrypoint": "./determine_kind_type.js",
+  "kindType": "nodejs"
+}

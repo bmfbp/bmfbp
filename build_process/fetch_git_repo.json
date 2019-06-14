@@ -1,0 +1,4 @@
+{
+  "entrypoint": "./fetch_git_repo.js",
+  "kindType": "nodejs"
+}
