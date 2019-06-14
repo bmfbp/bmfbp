@@ -29,6 +29,7 @@
        *string-map*)
       (format sed "s/] /]./g~%")
       (format sed "s/null null null/N.C./g~%")
+      (format sed "s/ null /.self./g~%")
       (format sed "s/parent_source_wire_parent_sink//g~%"))))
 
 (defun die (msg)
