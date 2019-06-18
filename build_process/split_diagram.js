@@ -1,23 +1,21 @@
+const part = require('_part_');
 const child_process = require('child_process');
 
-return function (partId, send, release) {
-  const command = 'split_diagram';
+const diagramOutPin = part.outPin('diagram');
+const metadataAsJsonArrayOutPin = part.outPin('metadata as json array');
 
-  return function (pin, packet) {
-    switch (pin) {
-      case 'svg content':
-        child_process.exec(command, function(err, stdout, stderr) {
-          if (err) {
-            console.error(err);
-            return;
-          }
+const command = 'split_diagram';
 
-          // Use output stream 0.
-          send(partId, 'diagram', stdout);
-          // Use output stream 1.
-          send(partId, 'metadata as json array', stderr);
-        });
-        break;
+part.inPin('svg content', (packet) => {
+  child_process.exec(command, function(err, stdout, stderr) {
+    if (err) {
+      console.error(err);
+      return;
     }
-  };
-};
+
+    // Use output stream 0.
+    diagramOutPin(stdout);
+    // Use output stream 1.
+    metadataAsJsonArrayOutPin(stderr);
+  });
+});

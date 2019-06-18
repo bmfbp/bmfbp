@@ -1,21 +1,19 @@
-return function (partId, send, release) {
-  var state = 'stopped';
+const part = require('_part_');
 
-  return function (pin, packet) {
-    switch (pin) {
-      case 'start':
-        state = 'started';
-        break;
+const getAPartOutPin = part.outPin('get a part');
 
-      case 'continue':
-        if (state === 'started') {
-          send(partId, 'get a part', true);
-        }
-        break;
+var state = 'stopped';
 
-      case 'done':
-        state = 'stopped';
-        break;
-    }
-  };
-};
+part.inPin('start', (packet) => {
+  state = 'started';
+});
+
+part.inPin('continue', (packet) => {
+  if (state === 'started') {
+    getAPartOutPin(true);
+  }
+});
+
+part.inPin('done', (packet) => {
+  state = 'stopped';
+});

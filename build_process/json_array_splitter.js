@@ -1,11 +1,9 @@
-return function (partId, send, release) {
-  return function (pin, packet) {
-    switch (pin) {
-      case 'json':
-        packet().forEach(function (object) {
-          send(partId, 'objects', object);
-        });
-        break;
-    }
-  };
-};
+const part = require('_part_');
+
+const objectsOutPin = part.outPin('objects');
+
+part.inPin('json', (packet) => {
+  packet().forEach(function (object) {
+    objectsOutPin(object);
+  });
+});
