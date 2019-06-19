@@ -41,7 +41,7 @@ data PathCommand
 
 data KindMetadata
     = KindMetadata
-        { name :: !DT.Text
+        { kindName :: !DT.Text
         , repo :: !DT.Text
         , ref :: !DT.Text
         , dir :: !DT.Text
@@ -93,6 +93,7 @@ lispifyPoints points tag = wrapInParens (tag : concat (map go points))
     go (LV.V2 x y) = map DT.pack [show x, show y]
 
 collapseEmpty :: Output -> Output
+collapseEmpty (Container [x, Container []]) = collapseEmpty x
 collapseEmpty (Container (Empty : xs)) = collapseEmpty $ Container (map collapseEmpty xs)
 collapseEmpty (Container (x : Empty : xs)) = Container (collapseEmpty x : map collapseEmpty xs)
 collapseEmpty (Container (Container [] : xs)) = Container $ map collapseEmpty xs
@@ -109,7 +110,7 @@ parseNode (TTD.NodeContent content) =
         case DT.strip text of
           "" -> Empty
           t ->
-            -- Parse as metadata if in JSON format.
+            -- Tag as metadata if in JSON format.
             case (DAS.eitherDecode (DTLE.encodeUtf8 $ DTL.fromStrict t) :: Either String [KindMetadata]) of
               Left _ -> Text t
               Right md -> Metadata md
@@ -125,6 +126,10 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
       readInt = maybe 0 id . TR.readMaybe :: String -> Int
     in
       case name of
+        -- Pass through
+        "div" -> Container rest
+        -- Pass through
+        "span" -> Container rest
         "g" ->
           let
             result = do
@@ -172,7 +177,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
                 else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
           in
             maybe defaultOutput id result
-        "foreignObject" -> Empty
+        "foreignObject" -> collapseEmpty $ Container rest
         _ -> defaultOutput
 
 mapPathCommands :: [GST.PathCommand] -> [PathCommand]
