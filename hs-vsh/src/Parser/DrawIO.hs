@@ -93,6 +93,7 @@ lispifyPoints points tag = wrapInParens (tag : concat (map go points))
     go (LV.V2 x y) = map DT.pack [show x, show y]
 
 collapseEmpty :: Output -> Output
+collapseEmpty (Container [x, Container []]) = collapseEmpty x
 collapseEmpty (Container (Empty : xs)) = collapseEmpty $ Container (map collapseEmpty xs)
 collapseEmpty (Container (x : Empty : xs)) = Container (collapseEmpty x : map collapseEmpty xs)
 collapseEmpty (Container (Container [] : xs)) = Container $ map collapseEmpty xs
