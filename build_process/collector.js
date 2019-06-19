@@ -1,25 +1,23 @@
-return function (partId, send, release) {
-  var composites = [];
-  var leaves = [];
+const part = require('_part_');
 
-  return function (pin, packet) {
-    switch (pin) {
-      case 'composite':
-        composites.push(packet());
-        break;
+var composites = [];
+var leaves = [];
 
-      case 'leaf':
-        leaves.push(packet());
-        break;
+const intermediateCodeOutPin = part.outPin('intermediate code');
 
-      case 'done':
-        send(partId, 'intermediate code', {
-          composites: composites,
-          leaves: leaves
-        });
-        composites = [];
-        leaves = [];
-        break;
-    }
-  };
-};
+part.inPin('composite', (packet) => {
+  composites.push(packet);
+});
+
+part.inPin('leaf', (packet) => {
+  leaves.push(packet);
+});
+
+part.inPin('done', (packet) => {
+  intermediateCodeOutPin({
+    composites: composites,
+    leaves: leaves
+  });
+  composites = [];
+  leaves = [];
+});

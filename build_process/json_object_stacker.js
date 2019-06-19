@@ -1,19 +1,18 @@
-return function (partId, send, release) {
-  const stack = [];
+const part = require('_part_');
 
-  return function (pin, packet) {
-    switch (pin) {
-      case 'push object':
-        stack.push(packet);
-        break;
+const noMoreOutPin = part.outPin('no more');
+const partMetadataOutPin = part.outPin('part metadata'));
 
-      case 'get a part':
-        if (stack.length === 0) {
-          send(partId, 'no more', true);
-        } else {
-          send(partId, 'part metadata', stack.pop());
-        }
-        break;
-    }
-  };
-};
+const stack = [];
+
+part.inPin('push object', (packet) => {
+  stack.push(packet);
+});
+
+part.inPin('get a part', (packet) => {
+  if (stack.length === 0) {
+    noMoreOutPin(true);
+  } else {
+    partMetadataOutPin(stack.pop());
+  }
+});
