@@ -5,6 +5,13 @@
 (defun matches-text-item-p (tail)
   (stringp (first tail)))
 
+(defun matches-not-supported-p (tail)
+  (when (and (listp tail) (= 1 (length tail)))
+    (let ((str (first tail)))
+      (and 
+       (stringp str)
+       (string= "[Not supported by viewer]" str)))))
+
 (defun text-part (tail)
   (first tail))
 
@@ -41,6 +48,11 @@
 		 
 		 (cond ((list-of-lists-p tail)
 			`(translate ,pair ,(mapcar #'create-text-objects tail)))
+		       
+		       ((matches-not-supported-p tail)
+			; (TRANSLATE (588.0 47.0) ("[Not supported by viewer]"))) --> nothing
+			(format *error-output* "~%[Not supported by viewer] becomes (nothing)~%")
+			'(nothing))
 		       
 		       ((matches-text-item-p tail)
 			;; (translate (N M) ("emit")) --> ((translate (N M) ((text "emit" 0 0 w/2 h))))

@@ -32,6 +32,8 @@
     (let ((new-id (next-id)))
       (case (car list)
 
+	(nothing nil)
+
 	(component
 	 (format strm "component('~A').~%" (second list)))
 

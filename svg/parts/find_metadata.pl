@@ -26,6 +26,6 @@ createMetaDataRect(TextID) :-
     wen(' '),we('createMetaDataRect failed '),wen(TextID).
 
 metadataCompletelyInsideBoundingBox(TextID,BoxID) :-
-    pointCompletelyInsideBoundingBox(TextID,BoxID).
+    centerCompletelyInsideBoundingBox(TextID,BoxID).
 
 :- include('tail').

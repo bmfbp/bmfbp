@@ -27,7 +27,7 @@
                `(translate ,pair ,(mapcar #'fix-lines tail))
                (die (format nil"fix-lines: badly formed translate /~A/~%" list)))))
 	
-	((rect text component ellipse dot speechbubble metadata) 
+	((rect text component ellipse dot speechbubble metadata nothing) 
 	 list)
 	
 	(line

@@ -78,6 +78,9 @@
 	     (declare (ignore text-sym))
 	     `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
 
+	  (nothing
+	   list)
+	  
 	  (otherwise
 	   (die (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))
 
