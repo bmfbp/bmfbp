@@ -500,8 +500,8 @@ centerCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID1,R1),
     bounding_box_bottom(ID1,B1),
     
-    Cx is R1 - L1,
-    Cy is B1 - T1,
+    Cx is L1 + (R1 - L1),
+    Cy is T1 + (B1 - T1),
 
     bounding_box_left(ID2,L2),
     bounding_box_top(ID2,T2),
