@@ -1,4 +1,5 @@
 BINDIR=~/bin
+TEST_CASES=../../test_cases
 
 all: dependencies
 # depends on the parts being built
@@ -15,27 +16,27 @@ clean:
 	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph temp.log*.txt
 
 test: dependencies
-	jsbmfbp test_diagrams/js_test_emitter.svg
+	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
 	compare-graph temp28.js graph-out.js
 
 test2:
-	jsbmfbp test_diagrams/js_test2_emitter.svg
+	jsbmfbp $(TEST_CASES)/firstTests/js_test2_emitter.svg
 
 test3:
-	jsbmfbp test_diagrams/js_test3_emitter.svg
+	jsbmfbp $(TEST_CASES)/firstTests/js_test3_emitter.svg
 
 test4:
-	jsbmfbp test_diagrams/js_test4_emitter.svg
+	jsbmfbp $(TEST_CASES)/firstTests/js_test4_emitter.svg
 
 xx:
 	cd .. && make
 	make top
 
 tee:
-	./tester.sh test_diagrams/tee.svg
+	./tester.sh $(TEST_CASES)/tee.svg
 
 top:
-	./tester.sh test_diagrams/top_level.svg
+	./tester.sh $(TEST_CASES)/top_level.svg
 
 pass:
-	./tester.sh test_diagrams/pass_and_add.svg
+	./tester.sh $(TEST_CASES)/pass_and_add.svg
