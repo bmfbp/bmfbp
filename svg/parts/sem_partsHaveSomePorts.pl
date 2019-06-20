@@ -11,7 +11,7 @@ check_has_port(ParentID):-
     parent(_,ParentID),!.
 
 check_has_port(ParentID):-
-    nle,we('warning parent '),we(ParentID),wen(' has no port'),nle,
+    asserta(log(ParentID,'warning_parent_has_no_port_but_ok_if_it_is_metadata')),
     asserta(pinless(ParentID)).
 
 :- include('tail').
