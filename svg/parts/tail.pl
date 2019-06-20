@@ -494,6 +494,39 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     R2 >= L1,
     B2 >= T1.
 
+centerCompletelyInsideBoundingBox(ID1,ID2) :-
+    bounding_box_left(ID1,L1),
+    bounding_box_top(ID1,T1),
+    bounding_box_right(ID1,R1),
+    bounding_box_bottom(ID1,B1),
+    
+    Cx is R1 - L1,
+    Cy is B1 - T1,
+
+    bounding_box_left(ID2,L2),
+    bounding_box_top(ID2,T2),
+    bounding_box_right(ID2,R2),
+    bounding_box_bottom(ID2,B2),
+
+    we('ccibb id1/center/id2 '),
+    we(ID1), wspc,
+    we(L1), wspc,
+    we(T1), wspc,
+    we(R1), wspc,
+    we(B1), wspc,
+    we(Cx), wspc,
+    we(Cy), wspc,
+    we(ID2), wspc,
+    we(L2), wspc,
+    we(T2), wspc,
+    we(R2), wspc,
+    wen(B2),
+
+    Cx >= L2,
+    Cx =< R2,
+    Cy >= T2,
+    Cy =< B2.
+
 dumplog :-
     forall(log(X),dumplog(X)),
     forall(log(Z,Y),dumplog(Z,Y)),
