@@ -76,7 +76,7 @@ lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showT
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Metadata md) = wrapInParens ["metadata", showToText (DAS.encode md)]
-lispify (Text t) = DT.concat ["\"", t, "\""]
+lispify (Text t) = DT.concat ["\n", "\"", t, "\"", "\n"]
 lispify Empty = ""
 
 lispifyPathCommand :: PathCommand -> DT.Text
