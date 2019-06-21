@@ -31,6 +31,7 @@ test4:
 xx:
 	cd .. && make
 	make top
+	compare-graph log_top.txt temp.log.txt
 
 tee:
 	./tester.sh $(TEST_CASES)/composites/tee.svg
