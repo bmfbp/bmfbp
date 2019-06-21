@@ -12,14 +12,14 @@ check_has_index(PortID):-
     portIndex(PortID,Second),
     First =\= Second,
     !,
-    we('ERROR:'),we('port '),we(PortID),we( 'has more than one index '),we(First),wspc,wen(Second).
+    we('eRROR:'),we('port '),we(PortID),we( 'has more than one index '),we(First),wspc,wen(Second).
 
 
 check_has_index(PortID):-
     portIndex(PortID,_),!.
 
 check_has_index(PortID):-
-    we('ERROR: '),we('port '),we(PortID),wen(' has no index').
+    we('eRROR: '),we('port '),we(PortID),wen(' has no index').
 
 :- include('tail').
 
