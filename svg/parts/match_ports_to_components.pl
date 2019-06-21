@@ -30,13 +30,13 @@ assign_parent_for_port(PortID) :-
     portName(PortID,Text),
     asserta(log(nc,PortID)),
     asserta(n_c(PortID)),
-    asserta(log('eRROR', 'no_parent_box_for_port',PortID,Text)).
+    asserta(log('eRROR', 'no_parent_box_for_port',PortID,Text,'matchPortsToComponents')).
     % we('ERROR: '),we('no parent box for port '),we(PortID),we(' named '),wen(Text).
 
 assign_parent_for_port(PortID) :-
     asserta(log(nc,PortID)),
     asserta(n_c(PortID)),
-    asserta(log('eRROR', 'no_parent_box_for_port',PortID)).
+    asserta(log('eRROR', 'no_parent_box_for_port',PortID,'matchPortsToComponents')).
     %we('ERROR: '),we('no parent box for port '),wen(PortID).
 
 
