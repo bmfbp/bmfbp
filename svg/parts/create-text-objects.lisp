@@ -29,7 +29,7 @@
       (mapcar #'create-text-objects list)
       (if (stringp (car list))
 	  (progn
-	    (format *error-output* "fixed text as car of list~%")
+	    ;(format *error-output* "fixed text as car of list~%")
 	    (mapcar #'create-text-objects (rest list)))
 	  (case (car list)
 	    
@@ -51,7 +51,7 @@
 		       
 		       ((matches-not-supported-p tail)
 			; (TRANSLATE (588.0 47.0) ("[Not supported by viewer]"))) --> nothing
-			(format *error-output* "~%[Not supported by viewer] becomes (nothing)~%")
+			; (format *error-output* "~%[Not supported by viewer] becomes (nothing)~%")
 			'(nothing))
 		       
 		       ((matches-text-item-p tail)
