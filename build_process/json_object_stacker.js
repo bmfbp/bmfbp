@@ -1,18 +1,22 @@
-const part = require('_part_');
-
-const noMoreOutPin = part.outPin('no more');
-const partMetadataOutPin = part.outPin('part metadata'));
+const setMain = require('bmfbp');
 
 const stack = [];
 
-part.inPin('push object', (packet) => {
-  stack.push(packet);
-});
+setMain((pin, packet, send) => {
+  switch (pin) {
+    case 'push object':
+      stack.push(packet);
+      break;
 
-part.inPin('get a part', (packet) => {
-  if (stack.length === 0) {
-    noMoreOutPin(true);
-  } else {
-    partMetadataOutPin(stack.pop());
+    case 'get a part':
+      if (stack.length === 0) {
+        send('no more', true);
+      } else {
+        send('part metadata', stack.pop());
+      }
+      break;
+
+    default:
+      throw new Error(`Unexpected pin: ${pin}`);
   }
 });

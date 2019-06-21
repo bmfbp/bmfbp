@@ -1,19 +1,36 @@
-const part = require('_part_');
+const setMain = require('bmfbp');
 
-const getAPartOutPin = part.outPin('get a part');
+let state = 'stopped';
 
-var state = 'stopped';
+setMain((pin, packet, send) => {
+  switch (state) {
+    case 'stopped':
+      switch (pin) {
+        case 'start':
+          state = 'started';
+          break;
 
-part.inPin('start', (packet) => {
-  state = 'started';
-});
+        default:
+          // No action needed
+      }
+      break;
 
-part.inPin('continue', (packet) => {
-  if (state === 'started') {
-    getAPartOutPin(true);
+    case 'started':
+      switch (pin) {
+        case 'continue':
+          send('get a part', true);
+          break;
+
+        case 'done':
+          state = 'stopped';
+          break;
+
+        default:
+          // No action needed
+      }
+      break;
+
+    default:
+      throw new Error(`Unexpected state: ${state}`);
   }
-});
-
-part.inPin('done', (packet) => {
-  state = 'stopped';
 });
