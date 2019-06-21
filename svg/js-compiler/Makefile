@@ -30,14 +30,14 @@ test4:
 
 xx:
 	cd .. && make
-	make top
-	compare-graph log_top.txt temp.log.txt
 
 tee:
 	./tester.sh $(TEST_CASES)/composites/tee.svg
 
 top:
-	./tester.sh $(TEST_CASES)/composites/top_level.svg
+	jsbmfbp $(TEST_CASES)/composites/top_level.svg
+#	compare-graph log_top.txt temp.log.txt
+	compare-graph temp28.js top_regression.js
 
 pass:
 	./tester.sh $(TEST_CASES)/composites/pass_and_add.svg
