@@ -29,18 +29,18 @@ test4:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test4_emitter.svg
 
 xx:
-	cd .. && make
+	cd .. && make && make pass
 
 tee:
 	./tester.sh $(TEST_CASES)/composites/tee.svg
 
 top:
 	jsbmfbp $(TEST_CASES)/composites/top_level.svg
-#	compare-graph log_top.txt temp.log.txt
 	compare-graph temp28.js top_regression.js
 
 pass:
-	./tester.sh $(TEST_CASES)/composites/pass_and_add.svg
+	jsbmfbp $(TEST_CASES)/composites/pass_and_add.svg
+	compare-graph temp28.js pass_and_add_regression.js
 
 aa:
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/firstTests/js_test_emitter.svg >temp001.lisp
