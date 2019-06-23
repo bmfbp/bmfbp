@@ -12,7 +12,6 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/add_kinds \
 	$(BINDIR)/find_comments \
 	$(BINDIR)/find_metadata \
-	$(BINDIR)/count_metadata \
 	$(BINDIR)/add_selfPorts \
 	$(BINDIR)/assign_portnames \
 	$(BINDIR)/calculate_distances \
