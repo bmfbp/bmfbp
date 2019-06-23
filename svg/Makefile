@@ -1,6 +1,6 @@
 BINDIR=~/bin
 
-all: clean build test test2 test3 test4 top pass
+all: clean build test test2 test3 test4 top pass tee
 
 build: 
 	cd ../grash && make

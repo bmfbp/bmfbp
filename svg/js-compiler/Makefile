@@ -29,11 +29,11 @@ test4:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test4_emitter.svg
 
 xx:
-	cd ../ && make 
-	make tee
+	cd ../ && make
 
 tee:
 	./tester.sh $(TEST_CASES)/composites/tee.svg
+	compare-graph temp28.js tee_regression.js
 
 top:
 	jsbmfbp $(TEST_CASES)/composites/top_level.svg
