@@ -114,7 +114,7 @@
 	     
 	     (cond ((null *metadata-already-seen*)
 		    (setf *metadata-already-seen* str)
-		    (format *error-output* "doing new metadata~%")
+		    ;(format *error-output* "doing new metadata~%")
 		    (do-meta))
 		   ((not (string= *metadata-already-seen* str))
 		    (die "more than one different metadata"))
