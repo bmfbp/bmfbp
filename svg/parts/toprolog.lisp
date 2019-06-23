@@ -32,7 +32,7 @@
         (mapc #'(lambda (x) (to-prolog x strm)) (rest list)))
 
     (let ((new-id (next-id)))
-      (format *error-output* "to-prolog list: ~S~%" list)
+      ;(format *error-output* "to-prolog list: ~S~%" list)
       (case (car list)
 
 	(nothing nil)
