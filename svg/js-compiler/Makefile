@@ -43,13 +43,21 @@ pass:
 	compare-graph temp28.js pass_and_add_regression.js
 
 aa:
+	cd .. && make
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/firstTests/js_test_emitter.svg >temp001.lisp
+	count_metadata <temp001.lisp
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/firstTests/js_test2_emitter.svg >temp002.lisp
+	count_metadata <temp002.lisp
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/firstTests/js_test3_emitter.svg >temp003.lisp
+	count_metadata <temp003.lisp
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/firstTests/js_test4_emitter.svg >temp004.lisp
+	count_metadata <temp004.lisp
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/composites/tee.svg >temp005.lisp
+	count_metadata <temp005.lisp
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/composites/pass_and_add.svg >temp006.lisp
+	count_metadata <temp006.lisp
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/composites/top_level.svg >temp007.lisp
+	count_metadata <temp007.lisp
 
 bb:
 # problem with this one - generates no metadata -- because we need to use "kindName" instead of "name"
