@@ -27,7 +27,7 @@ findCoincidentSink(A,B):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
-    asserta(log(coincidentsink,A,B,I)),
+    asserta(log(coincident_sink,A,B,I)),
     asserta(portIndex(B,I)).
 
 findCoincidentSink(_,_):-
@@ -54,7 +54,7 @@ findCoincidentSource(A,B):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
-    asserta(log(coincidentsource,A,B,I)),
+    asserta(log(coincident_source,A,B,I)),
     asserta(portIndex(B,I)).
 
 findCoincidentSource(_,_):-
