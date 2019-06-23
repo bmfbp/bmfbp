@@ -14,34 +14,28 @@ match_ports :-
 
 assign_parent_for_port(PortID) :-
     % if port already has a parent (e.g. ellipse), quit while happy.
-    parent(PortID,_).
+    parent(PortID,_),!.
 
 assign_parent_for_port(PortID) :-
     ellipse(ParentID),
     portIntersection(PortID,ParentID),
-    asserta(parent(PortID, ParentID)).
+    asserta(parent(PortID, ParentID)),!.
 
 assign_parent_for_port(PortID) :-
     eltype(ParentID, box),
     portIntersection(PortID,ParentID),
-    asserta(parent(PortID, ParentID)).
+    asserta(parent(PortID, ParentID)),!.
 
 assign_parent_for_port(PortID) :-
     portName(PortID,Text),
-    asserta(log(nc,PortID)),
+    asserta(log(PortID,'is_nc')),
     asserta(n_c(PortID)),
-    asserta(log('eRROR', 'no_parent_box_for_port',PortID,Text,'matchPortsToComponents')).
+    !.
 
 assign_parent_for_port(PortID) :-
-    portName(PortID,Text),
-    asserta(log(nc,PortID)),
+    asserta(log(PortID,'is_nc')),
     asserta(n_c(PortID)),
-    asserta(log('eRROR', 'no_parent_box_for_port',PortID,Text,'matchPortsToComponents')).
-
-assign_parent_for_port(PortID) :-
-    asserta(log(nc,PortID)),
-    asserta(n_c(PortID)),
-    asserta(log('eRROR', 'no_parent_box_for_port',PortID,'matchPortsToComponents')).
+    !.
 
 portIntersection(PortID,ParentID):-
     bounding_box_left(PortID, Left),
