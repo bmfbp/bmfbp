@@ -76,7 +76,7 @@ lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showT
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Metadata md) = wrapInParens ["metadata", showToText (DAS.encode md)]
-lispify (Text t) = DT.concat ["\n", "\"", t, "\"", "\n"]
+lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
 
 lispifyPathCommand :: PathCommand -> DT.Text
@@ -98,7 +98,6 @@ collapseEmpty (Container (Empty : xs)) = collapseEmpty $ Container (map collapse
 collapseEmpty (Container (x : Empty : xs)) = Container (collapseEmpty x : map collapseEmpty xs)
 collapseEmpty (Container (Container [] : xs)) = Container $ map collapseEmpty xs
 collapseEmpty (Container [x]) = collapseEmpty x
-collapseEmpty (Container (x : Container [] : xs)) = Container (x : map collapseEmpty xs)
 collapseEmpty (Container xs) = Container $ map collapseEmpty xs
 collapseEmpty (Translate x y zs) = Translate x y $ map collapseEmpty zs
 collapseEmpty x = x
