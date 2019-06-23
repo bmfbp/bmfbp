@@ -29,7 +29,8 @@ test4:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test4_emitter.svg
 
 xx:
-	cd .. && make && make pass
+	cd ../ && make 
+	make top
 
 tee:
 	./tester.sh $(TEST_CASES)/composites/tee.svg
