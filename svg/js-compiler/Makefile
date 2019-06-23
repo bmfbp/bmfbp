@@ -30,7 +30,7 @@ test4:
 
 xx:
 	cd ../ && make 
-	make top
+	make pass
 
 tee:
 	./tester.sh $(TEST_CASES)/composites/tee.svg
