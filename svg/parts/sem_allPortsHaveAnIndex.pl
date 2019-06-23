@@ -18,6 +18,9 @@ check_has_index(PortID):-
     portIndex(PortID,_),!.
 
 check_has_index(PortID):-
+    n_c(PortID).
+
+check_has_index(PortID):-
     asserta(log('eRROR',PortID,'has_no_index','allPortsHaveAnIndex')).
 
 :- include('tail').
