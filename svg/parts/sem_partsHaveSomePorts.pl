@@ -11,7 +11,10 @@ check_has_port(ParentID):-
     parent(_,ParentID),!.
 
 check_has_port(ParentID):-
-    asserta(log(ParentID,'warning_parent_has_no_port_but_ok_if_it_is_metadata','partsHaveSomePorts')),
+    roundedrect(ParentID).
+
+check_has_port(ParentID):-
+    asserta(log(ParentID,'error_parent_has_no_port','partsHaveSomePorts')),
     asserta(pinless(ParentID)).
 
 :- include('tail').
