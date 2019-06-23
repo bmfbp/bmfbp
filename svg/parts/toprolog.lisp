@@ -20,6 +20,8 @@
 			   (char= c #\_)))
 	    s))
 
+(defparameter *metadata-already-seen* nil)
+
 (defun to-prolog (list strm)
   (unless (listp list)
     (die (format nil "to-prolog list=/~a/" list)))
@@ -30,6 +32,7 @@
         (mapc #'(lambda (x) (to-prolog x strm)) (rest list)))
 
     (let ((new-id (next-id)))
+      (format *error-output* "to-prolog list: ~S~%" list)
       (case (car list)
 
 	(nothing nil)
@@ -80,34 +83,45 @@
          (destructuring-bind (sym str x y w h)
              list
            (declare (ignore sym))
-           (let ((strid (string-to-map str))
-                 (rr-id (next-id))
-                 (text-id (next-id)))
-             (format strm "metadata(~A,~A).~%" new-id text-id)
-             (format strm "eltype(~A,metadata).~%" new-id)
-             (format strm "used(~A).~%" text-id)
-
-             ;; rounded rect
-             (let ((fake-w (+ 10 w))
-                   (fake-h (+ 10 h))
-                   (fake-left-x (- x 10))
-                   (fake-top-y (- y 10)))
-               ;; the actual coords of the rounded rect might come from the first pass, but we fake them here for
-               ;; ease of implementation of the POC
-               (format strm "roundedrect(~A).~%" rr-id)
-               (format strm "eltype(~A,roundedrect).~%" rr-id)
-               (format strm "geometry_left_x(~A,~A).~%" rr-id fake-left-x)
-               (format strm "geometry_top_y(~A,~A).~%" rr-id fake-top-y)
-               (format strm "geometry_w(~A,~A).~%" rr-id fake-w)
-               (format strm "geometry_h(~A,~A).~%" rr-id fake-h))
-             
-             ;; text
-             (format strm "text(~A,~A).~%" text-id strid)
-             (format strm "geometry_center_x(~A,~A).~%" text-id (+ x (/ w 2)))
-             (format strm "geometry_top_y(~A,~A).~%" text-id y)
-             (format strm "geometry_w(~A,~A).~%" text-id w)
-             (format strm "geometry_h(~A,~A).~%" text-id h))))
-             
+	   (flet ((do-meta ()
+		    (let ((strid (string-to-map str))
+			  (rr-id (next-id))
+			  (text-id (next-id)))
+		      (format strm "metadata(~A,~A).~%" new-id text-id)
+		      (format strm "eltype(~A,metadata).~%" new-id)
+		      (format strm "used(~A).~%" text-id)
+		      
+		      ;; rounded rect
+		      (let ((fake-w (+ 10 w))
+			    (fake-h (+ 10 h))
+			    (fake-left-x (- x 10))
+			    (fake-top-y (- y 10)))
+			;; the actual coords of the rounded rect might come from the first pass, but we fake them here for
+			;; ease of implementation of the POC
+			(format strm "roundedrect(~A).~%" rr-id)
+			(format strm "eltype(~A,roundedrect).~%" rr-id)
+			(format strm "geometry_left_x(~A,~A).~%" rr-id fake-left-x)
+			(format strm "geometry_top_y(~A,~A).~%" rr-id fake-top-y)
+			(format strm "geometry_w(~A,~A).~%" rr-id fake-w)
+			(format strm "geometry_h(~A,~A).~%" rr-id fake-h))
+		      
+		      ;; text
+		      (format strm "text(~A,~A).~%" text-id strid)
+		      (format strm "geometry_center_x(~A,~A).~%" text-id (+ x (/ w 2)))
+		      (format strm "geometry_top_y(~A,~A).~%" text-id y)
+		      (format strm "geometry_w(~A,~A).~%" text-id w)
+		      (format strm "geometry_h(~A,~A).~%" text-id h))))
+	     
+	     (cond ((null *metadata-already-seen*)
+		    (setf *metadata-already-seen* str)
+		    (format *error-output* "doing new metadata~%")
+		    (do-meta))
+		   ((not (string= *metadata-already-seen* str))
+		    (die "more than one different metadata"))
+		   (t
+		    (format *error-output* "~%skipping duplicate metadata~%")
+					; skip
+		    )))))
 
 
 	(speechbubble
