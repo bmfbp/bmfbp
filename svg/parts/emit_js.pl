@@ -8,7 +8,7 @@ main :-
     write('name "'),
     component(Name),
     write(Name),
-    write('.js"'),
+    write('"'),
     nl,
     nwires(Nwires),
     write('wirecount  '),

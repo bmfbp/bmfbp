@@ -21,12 +21,15 @@ test: dependencies
 
 test2:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test2_emitter.svg
+	compare-graph temp28.json test2_regression.json
 
 test3:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test3_emitter.svg
+	compare-graph temp28.json test3_regression.json
 
 test4:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test4_emitter.svg
+	compare-graph temp28.json test4_regression.json
 
 xx:
 	cd ../ && make

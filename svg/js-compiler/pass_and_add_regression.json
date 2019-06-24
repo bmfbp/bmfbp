@@ -1,5 +1,5 @@
 {
-  "name" : "pass_and_add.js",
+  "name" : "pass_and_add",
   "wirecount" : 4,
   "metadata" : [{"dir":"test_cases/leaves","kindName":"add_1","repo":"https://github.com/bmfbp/bmfbp.git","file":"add_1.js","ref":"master"}],
   "self" : {
