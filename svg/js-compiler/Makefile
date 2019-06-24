@@ -13,11 +13,11 @@ dependencies:
 	chmod a+x $(BINDIR)/compare-graph
 
 clean:
-	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph temp.log*.txt
+	rm -f temp*.pro temp*.json temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph temp.log*.txt
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
-	compare-graph temp28.js graph-out.js
+	compare-graph temp28.json graph-out.json
 
 test2:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test2_emitter.svg
@@ -33,15 +33,15 @@ xx:
 
 tee:
 	./tester.sh $(TEST_CASES)/composites/tee.svg
-	compare-graph temp28.js tee_regression.js
+	compare-graph temp28.json tee_regression.json
 
 top:
 	jsbmfbp $(TEST_CASES)/composites/top_level.svg
-	compare-graph temp28.js top_regression.js
+	compare-graph temp28.json top_regression.json
 
 pass:
 	jsbmfbp $(TEST_CASES)/composites/pass_and_add.svg
-	compare-graph temp28.js pass_and_add_regression.js
+	compare-graph temp28.json pass_and_add_regression.json
 
 aa:
 	cd .. && make
