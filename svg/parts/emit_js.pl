@@ -35,24 +35,52 @@ emitMetaData :-
 emitMetaData :-
     true.
 
+%
+% facts of interest:
+%
+% selfInputPin(PartID,PinID)
+% selfOutputPin(PartID,PinID)
+% portIndex(PinID,PinIndex)
+% wireIndex(PinID,WireIndex)
+%
+
 emitAllPins :-
     write('  ins ('), nl,
-    forall(selfInputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
+    condSelfInputPins,
     forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
     write('  )'), nl,
     write('  outs ('), nl,
-    forall(selfOutputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
+    condSelfOutputPins,
     forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
     write('  )'), nl.
 
 emitAllPins :- true.
 
-printSelfInputOrOutput(Pin) :-
+condSelfInputPins:-
+    forall(selfInputPin(_,PinID),printSelfInput(PinID)).
+condSelfInputPins:-true.
+
+condSelfOutputPins:-
+    forall(selfOutputPin(_,PinID),printSelfOutput(PinID)).
+condSelfOutputPins:-true.
+
+printSelfInput(PinID):-
     write('    (self nil '),
-    wireIndex(Pin,WireIndex),
+    wireIndex(PinID,WireIndex),
     write(WireIndex),
     write(' '),
-    write(Pin),
+    portIndex(PinID,PinIndex),
+    write(PinIndex),
+    write(')'),
+    nl.
+
+printSelfOutput(PinID):-
+    write('    (self nil '),
+    wireIndex(PinID,WireIndex),
+    write(WireIndex),
+    write(' '),
+    portIndex(PinID,PinIndex),
+    write(PinIndex),
     write(')'),
     nl.
 

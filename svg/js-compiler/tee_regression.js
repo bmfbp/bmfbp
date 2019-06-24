@@ -5,7 +5,7 @@
       "partName" : "SELF",
       "in-count" : 1,
       "out-count" : 3,
-      "inPins" : [[0,0]],
+      "inPins" : [[1,0]],
       "outPins" : [[0],[1],[2]],
       "exec" : "schematic"
     }

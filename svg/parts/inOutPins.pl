@@ -38,15 +38,21 @@ makeInputForPipe(PortID) :-
 makeInputForPipe(PortID) :-
     n_c(PortID).
 
-makeInput(Part,_,Pin,WireIndex) :-
-    rect(Part),
-    asserta(inputPin(Part,Pin)),
-    asserta(wireIndex(Pin,WireIndex)).
+% wireIndex(PinID,WireIndex)
+% wire index is unique
+% PinID (PortID) is unique, pin index is not unique
+% portIndex(PortID,PortIndex) is the same as portIndex(PinID,PinIndex)
 
-makeInput(Part,_,Pin,WireIndex) :-
+makeInput(Part,PinID,_,WireIndex) :-
+    rect(Part),
+    asserta(inputPin(Part,PinID)),
+    asserta(wireIndex(PinID,WireIndex)).
+
+makeInput(Part,PinID,_,WireIndex) :-
     ellipse(Part),
-    asserta(selfOutputPin(Part,Pin)),
-    asserta(wireIndex(Pin,WireIndex)).
+    we('makeOutput in'),wspc,we(Part),wspc,we(PinID),wspc,wen(WireIndex),
+    asserta(selfOutputPin(Part,PinID)),
+    asserta(wireIndex(PinID,WireIndex)).
 
 makeInput(Part,PortID,Pin,WireIndex) :-
     we('cannot happen in inOutPins/makeInput '),
@@ -57,28 +63,29 @@ makeInput(Part,PortID,Pin,WireIndex) :-
 
 makeOutputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
-    portIndex(PortID,Pin),
+    portIndex(PortID,PinIndex),
     parent(PortID,Part),
-    makeOutput(Part,PortID,Pin,WireIndex).
+    makeOutput(Part,PortID,PinIndex,WireIndex).
 
 makeOutputForPipe(PortID) :-
     n_c(PortID).
 
-makeOutput(Part,_,Pin,WireIndex):-
+makeOutput(Part,PinID,_,WireIndex):-
     rect(Part),
-    asserta(outputPin(Part,Pin)),
-    asserta(wireIndex(Pin,WireIndex)).
+    asserta(outputPin(Part,PinID)),
+    asserta(wireIndex(PinID,WireIndex)).
 
-makeOutput(Part,_,Pin,WireIndex):-
+makeOutput(Part,PinID,_,WireIndex):-
     ellipse(Part),
-    asserta(selfInputPin(Part,Pin)),
-    asserta(wireIndex(Pin,WireIndex)).
+    we('makeOutput out'),wspc,we(Part),wspc,we(PinID),wspc,wen(WireIndex),
+    asserta(selfInputPin(Part,PinID)),
+    asserta(wireIndex(PinID,WireIndex)).
 
-makeOutput(Part,PortID,Pin,WireIndex):-
+makeOutput(Part,PortID,PinIndex,WireIndex):-
     we('cannot happen in inOutPins/makeOutput '),
     we(Part),wspc,
     we(PortID),wspc,
-    we(Pin),wspc,
-    we(WireIndex),wspc.
+    we(PinIndex),wspc,
+    wen(WireIndex).
 
 :- include('tail').

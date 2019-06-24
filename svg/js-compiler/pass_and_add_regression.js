@@ -7,7 +7,7 @@
       "in-count" : 3,
       "out-count" : 1,
       "inPins" : [[0],[1],[3]],
-      "outPins" : [[0,0]],
+      "outPins" : [[2,0]],
       "exec" : "schematic"
     }
   "parts" : [

@@ -15,6 +15,7 @@ assign_pipeWire_number(Pin) :-
     g_read(counter,Old),
     asserta(pipeNum(Pin,Old)),
     asserta(wireNum(Pin,Old)), % redundant, see above
+    asserta(log(Pin,'assigned_to_wire',Old)),
     inc(counter,_).
 
 :- include('tail').
