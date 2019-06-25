@@ -9,7 +9,7 @@
       "inPins" : [[],[],[],[3]],
       "outPins" : [[],[],[],[],[],[],[],[],[],[],[],[],[4]],
       "exec" : "js_test4_emitter"
-    }
+    },
   "parts" : [
     {
       "partName" : "ID369",

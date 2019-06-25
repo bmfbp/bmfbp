@@ -9,7 +9,7 @@
       "inPins" : [[0],[1],[3]],
       "outPins" : [[2,0]],
       "exec" : "pass_and_add"
-    }
+    },
   "parts" : [
     {
       "partName" : "ID385",

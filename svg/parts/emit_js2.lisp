@@ -17,7 +17,7 @@
   (format *standard-output* "  \"self\" : "))
 
 (defun @preamble-for-children-parts ()
-  (format *standard-output* "~%  \"parts\" : [~%"))
+  (format *standard-output* ",~%  \"parts\" : [~%"))
 
 (defun @postamble ()
   (format *standard-output* "~%  ]~%")

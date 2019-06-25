@@ -8,7 +8,7 @@
       "inPins" : [[1,0]],
       "outPins" : [[0],[1],[2]],
       "exec" : "tee"
-    }
+    },
   "parts" : [
 
   ]

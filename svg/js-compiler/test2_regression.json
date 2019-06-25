@@ -8,7 +8,7 @@
       "inPins" : [],
       "outPins" : [],
       "exec" : "js_test2_emitter"
-    }
+    },
   "parts" : [
     {
       "partName" : "ID369",
