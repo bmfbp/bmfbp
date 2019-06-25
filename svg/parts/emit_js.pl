@@ -18,7 +18,7 @@ main :-
     write('parts ('),
     nl,
     emitAllPins,
-    emitExecs,
+    emitExecs(Name),
     write(' )'),
     nl,
     write(')'),
@@ -138,11 +138,11 @@ getOneOutPin(PortID,PartID):-
     nl.
 
 
-emitExecs:-
+emitExecs(Name):-
     write('  execs ('),
     nl,
     forall(kind(PartID,ExecName),emitExec(PartID,ExecName)),
-    write('    (self "schematic")'),
+    write('    (self "'),write(Name),write('")'),
     nl,
     write('  )'),
     nl.
