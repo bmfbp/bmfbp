@@ -1,11 +1,11 @@
 {
   "name" : "pass_and_add",
-  "wirecount" : 4,
+  "wireCount" : 4,
   "metadata" : [{"dir":"test_cases/leaves","kindName":"add_1","repo":"https://github.com/bmfbp/bmfbp.git","file":"add_1.js","ref":"master"}],
   "self" : {
       "partName" : "pass_and_add",
-      "in-count" : 3,
-      "out-count" : 1,
+      "inCount" : 3,
+      "outCount" : 1,
       "inPins" : [[0],[1],[3]],
       "outPins" : [[2,0]],
       "exec" : "pass_and_add"
@@ -13,8 +13,8 @@
   "parts" : [
     {
       "partName" : "ID385",
-      "in-count" : 1,
-      "out-count" : 1,
+      "inCount" : 1,
+      "outCount" : 1,
       "inPins" : [[1]],
       "outPins" : [[2]],
       "exec" : "add_1"

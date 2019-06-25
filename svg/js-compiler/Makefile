@@ -63,3 +63,18 @@ bb:
 	hs_vsh_drawio_to_fb <$(TEST_CASES)/firstTests/meta4.svg >temp008.lisp
 #	sed -f sed-temp1.sed <temp008.lisp >temp888.lisp
 
+rewrite-regressions:
+	make test1
+	cp temp28.json test1_regression.json
+	make test2
+	cp temp28.json test2_regression.json
+	make test3
+	cp temp28.json test3_regression.json
+	make test4
+	cp temp28.json test4_regression.json
+	make top
+	cp temp28.json top_regression.json
+	make pass
+	cp temp28.json pass_and_add_regression.json
+	make tee
+	cp temp28.json tee_regression.json

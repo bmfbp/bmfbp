@@ -10,7 +10,7 @@
 
 (defun @preamble ()
   (format *standard-output* "{~%  \"name\" : ~S,~%" (getf %script% 'name))
-  (format *standard-output* "  \"wirecount\" : ~d,~%" (getf %script% 'wirecount))
+  (format *standard-output* "  \"wireCount\" : ~d,~%" (getf %script% 'wirecount))
   (let ((md (getf %script% 'metadata)))
     (when md
       (format *standard-output* "  \"metadata\" : ~d,~%" md)))
@@ -156,8 +156,8 @@
                (emit-pin-list count outs)
                (format *standard-output* "],~%")))
            (emit-input-pins (properties)
-             (format *standard-output* "      \"in-count\" : ~A,~%" (gethash :ins-max properties))
-             (format *standard-output* "      \"out-count\" : ~A,~%" (gethash :outs-max properties))
+             (format *standard-output* "      \"inCount\" : ~A,~%" (gethash :ins-max properties))
+             (format *standard-output* "      \"outCount\" : ~A,~%" (gethash :outs-max properties))
              (emit-ins properties)
              (emit-outs properties))
            (emit-pins (properties)
