@@ -17,7 +17,9 @@ clean:
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
-	compare-graph temp28.json graph-out.json
+	compare-graph temp28.json test1_regression.json
+
+test1: test
 
 test2:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test2_emitter.svg

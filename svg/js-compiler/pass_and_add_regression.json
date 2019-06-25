@@ -3,12 +3,12 @@
   "wirecount" : 4,
   "metadata" : [{"dir":"test_cases/leaves","kindName":"add_1","repo":"https://github.com/bmfbp/bmfbp.git","file":"add_1.js","ref":"master"}],
   "self" : {
-      "partName" : "SELF",
+      "partName" : "pass_and_add",
       "in-count" : 3,
       "out-count" : 1,
       "inPins" : [[0],[1],[3]],
       "outPins" : [[2,0]],
-      "exec" : "schematic"
+      "exec" : "pass_and_add"
     }
   "parts" : [
     {

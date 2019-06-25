@@ -2,12 +2,12 @@
   "name" : "tee",
   "wirecount" : 3,
   "self" : {
-      "partName" : "SELF",
+      "partName" : "tee",
       "in-count" : 1,
       "out-count" : 3,
       "inPins" : [[1,0]],
       "outPins" : [[0],[1],[2]],
-      "exec" : "schematic"
+      "exec" : "tee"
     }
   "parts" : [
 

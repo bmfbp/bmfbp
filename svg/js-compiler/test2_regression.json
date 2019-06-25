@@ -2,12 +2,12 @@
   "name" : "js_test2_emitter",
   "wirecount" : 3,
   "self" : {
-      "partName" : "SELF",
+      "partName" : "js_test2_emitter",
       "in-count" : 0,
       "out-count" : 0,
       "inPins" : [],
       "outPins" : [],
-      "exec" : "schematic"
+      "exec" : "js_test2_emitter"
     }
   "parts" : [
     {
