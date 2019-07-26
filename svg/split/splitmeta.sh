@@ -12,7 +12,12 @@ check_input $NAME <temp4.pro >temp5.pro
 # parser
 calc_bounds $NAME <temp5.pro >temp6.pro
 find_comments $NAME <temp6.pro >temp7.pro
-find_metadata $NAME <temp7.pro >temp8.pro
-sed -f strings.sed <temp8.pro >temp.txt
-cat temp.txt
+isolate_metadata $NAME <temp7.pro >temp9.pro
+sed -E -f strings.sed <temp9.pro >temp10.pro
+
+#grep -E 'metadata.id...,id(...)..' <temp8.pro >temp9.pro
+#sed -E 's/metadata.id...,id(...)../\1/gp' <temp9.pro >temp10.pro
+
+#sed -f strings.sed <temp8.pro >temp.txt
+#cat temp.txt
 

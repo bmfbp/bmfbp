@@ -8,11 +8,13 @@ build:
 	cd parts && make
 	cd flat-compiler && make
 	cd js-compiler && make
+	cd split && make
 
 clean: 
 	cd ../grash && make clean
 	cd flat-compiler && make clean
 	cd js-compiler && make clean
+	cd split && make clean
 	cd parts && make clean
 	cd ../hs-vsh && make clean
 
