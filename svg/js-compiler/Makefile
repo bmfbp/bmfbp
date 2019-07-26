@@ -33,7 +33,7 @@ xx:
 	make top
 
 tee:
-	./tester.sh $(TEST_CASES)/composites/tee.svg
+	jsbmfbp $(TEST_CASES)/composites/tee.svg
 
 top:
 	jsbmfbp $(TEST_CASES)/composites/top_level.svg
