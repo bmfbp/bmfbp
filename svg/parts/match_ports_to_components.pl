@@ -27,7 +27,7 @@ assign_parent_for_port(PortID) :-
     asserta(parent(PortID, ParentID)),!.
 
 assign_parent_for_port(PortID) :-
-    portName(PortID,Text),
+    portName(PortID,_),
     asserta(log(PortID,'is_nc')),
     asserta(n_c(PortID)),
     !.
