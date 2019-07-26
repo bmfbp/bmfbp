@@ -13,7 +13,7 @@ dependencies:
 	chmod a+x $(BINDIR)/compare-graph
 
 clean:
-	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph temp.log*.txt
+	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph temp.log*.txt strings.sed
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
