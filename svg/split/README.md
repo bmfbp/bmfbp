@@ -12,5 +12,5 @@ To use the part:
 
 ~/bin/part_split ../../test_cases/composites/top_level.svg
 
-which has a dsingle output to stdout
+which has a single output to stdout
 
