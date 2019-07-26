@@ -6,4 +6,11 @@ To simply USE the created Component, run ../make first (which builds the parts i
 
 For example:
 
-~/bin/splitmeta ../../test_cases/composites/pass_and_add.svg
+~/bin/splitmeta ../../test_cases/composites/top_level.svg
+
+To use the part:
+
+~/bin/part_split ../../test_cases/composites/top_level.svg
+
+which has a dsingle output to stdout
+
