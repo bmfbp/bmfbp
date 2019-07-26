@@ -4,4 +4,11 @@ To simply USE the created compiler, run ../make first (which builds the parts in
 
 For example:
 
-~/bin/jsbmfbp ../../test_cases/composites/pass_and_add.svg
+~/bin/jsbmfbp ../../test_cases/composites/top_level.svg
+
+
+To use the part:
+
+~/bin/part_compile ../../test_cases/composites/top_level.svg
+
+which has a single output to stdout

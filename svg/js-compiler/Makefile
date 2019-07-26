@@ -9,6 +9,8 @@ dependencies:
 	cd ../parts && make
 	cp ./jsbmfbp.sh $(BINDIR)/jsbmfbp
 	chmod a+x $(BINDIR)/jsbmfbp
+	cp ./part_compile.sh $(BINDIR)/part_compile
+	chmod a+x $(BINDIR)/part_compile
 	cp ./compare-graph.sh $(BINDIR)/compare-graph
 	chmod a+x $(BINDIR)/compare-graph
 
