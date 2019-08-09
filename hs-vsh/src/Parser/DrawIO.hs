@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Parser.DrawIO where
 
 import qualified Data.Text as DT
@@ -12,6 +14,9 @@ import qualified Data.Attoparsec.Text as DAT
 import qualified Graphics.Svg.PathParser as GSP
 import qualified Graphics.Svg.Types as GST
 import qualified Linear.V2 as LV
+import qualified Data.Aeson as DAS
+import qualified GHC.Generics as GGN
+import qualified Data.Text.Lazy.Encoding as DTLE
 
 data Output
     = Container [Output]
@@ -21,6 +26,7 @@ data Output
     | Ellipse Float Float Float Float
     | Dot Float Float Float Float
     | Text DT.Text
+    | Metadata [KindMetadata]
     | Empty
     deriving (Show)
 
@@ -32,6 +38,18 @@ data PathCommand
     | Z
     | UnsupportedPathCommand
     deriving (Show)
+
+data KindMetadata
+    = KindMetadata
+        { kindName :: !DT.Text
+        , repo :: !DT.Text
+        , ref :: !DT.Text
+        , dir :: !DT.Text
+        , file :: !DT.Text
+        } deriving (Show, GGN.Generic)
+
+instance DAS.FromJSON KindMetadata
+instance DAS.ToJSON KindMetadata
 
 parseSVG :: DT.Text -> DT.Text
 parseSVG input = output
@@ -49,10 +67,15 @@ showToText = DT.pack . show
 lispify :: Output -> DT.Text
 lispify (Container children) = wrapInParens $ map lispify children
 lispify (Translate x y children) = wrapInParens ["translate", wrapInParens [showToText x, showToText y], wrapInParens $ map lispify children]
-lispify (Path commands) = wrapInParens ("line" : map lispifyPathCommand commands)
+lispify (Path commands)
+  -- We assume a heptagon as a speech bubble, as a speech bubble has 7 sides. It's 8 because
+  -- we need to count the trailing 'Z'.
+  | length commands == 8 = wrapInParens ("speechbubble" : map lispifyPathCommand commands)
+  | otherwise = wrapInParens ("line" : map lispifyPathCommand commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
+lispify (Metadata md) = wrapInParens ["metadata", showToText (DAS.encode md)]
 lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
 
@@ -70,6 +93,7 @@ lispifyPoints points tag = wrapInParens (tag : concat (map go points))
     go (LV.V2 x y) = map DT.pack [show x, show y]
 
 collapseEmpty :: Output -> Output
+collapseEmpty (Container [x, Container []]) = collapseEmpty x
 collapseEmpty (Container (Empty : xs)) = collapseEmpty $ Container (map collapseEmpty xs)
 collapseEmpty (Container (x : Empty : xs)) = Container (collapseEmpty x : map collapseEmpty xs)
 collapseEmpty (Container (Container [] : xs)) = Container $ map collapseEmpty xs
@@ -80,10 +104,19 @@ collapseEmpty (Translate x y zs) = Translate x y $ map collapseEmpty zs
 collapseEmpty x = x
 
 parseNode :: TTD.Node -> Output
-parseNode (TTD.NodeContent text) =
-    case DT.strip text of
-      "" -> Empty
-      t -> Text t
+parseNode (TTD.NodeContent content) =
+    let
+      handleUnparsedNodeContent (TTD.NodeContent text) =
+        case DT.strip text of
+          "" -> Empty
+          t ->
+            -- Tag as metadata if in JSON format.
+            case (DAS.eitherDecode (DTLE.encodeUtf8 $ DTL.fromStrict t) :: Either String [KindMetadata]) of
+              Left _ -> Text t
+              Right md -> Metadata md
+      handleUnparsedNodeContent element = parseNode element
+    in
+      Container $ map handleUnparsedNodeContent $ TTD.parseDOM False $ DTL.fromStrict content
 parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = attrs, TTD.eltChildren = children })) =
     let
       rest = map parseNode children
@@ -93,6 +126,10 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
       readInt = maybe 0 id . TR.readMaybe :: String -> Int
     in
       case name of
+        -- Pass through
+        "div" -> Container rest
+        -- Pass through
+        "span" -> Container rest
         "g" ->
           let
             result = do
@@ -140,7 +177,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
                 else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
           in
             maybe defaultOutput id result
-        "foreignObject" -> Empty
+        "foreignObject" -> collapseEmpty $ Container rest
         _ -> defaultOutput
 
 mapPathCommands :: [GST.PathCommand] -> [PathCommand]
