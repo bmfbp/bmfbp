@@ -19,7 +19,7 @@ clean:
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
-	compare-graph temp28.js graph-out.js
+	compare-graph temp28.json graph-out.js
 
 test2:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test2_emitter.svg
@@ -39,8 +39,8 @@ tee:
 
 top:
 	jsbmfbp $(TEST_CASES)/composites/top_level.svg
-	compare-graph temp28.js top_regression.js
+	compare-graph temp28.json top_regression.js
 
 pass:
 	jsbmfbp $(TEST_CASES)/composites/pass_and_add.svg
-	compare-graph temp28.js pass_and_add_regression.js
+	compare-graph temp28.json pass_and_add_regression.js
