@@ -16,10 +16,18 @@
 % (input) pipe.
 main :-
     readFB(user_input),
-    forall(sink(_,PortID),makeInputForPipe(PortID)),
-    forall(source(_,PortID),makeOutputForPipe(PortID)),
+    condSink,
+    condSource,
     writeFB,
     halt.
+
+condSink :-
+    forall(sink(_,PortID),makeInputForPipe(PortID)),!.
+condSink :- true.
+
+condSource :-
+    forall(source(_,PortID),makeOutputForPipe(PortID)),!.
+condSource :- true.
 
 makeInputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),

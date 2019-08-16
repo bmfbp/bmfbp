@@ -7,60 +7,82 @@
       (mapcar #'(lambda (l)
                   (fix-one-translate x y l))
               list)
+      (let ()
+	(case (car list)
+	  (translate
+	   (let ((pair (second list))
+		 (tail (third list)))
+	     (assert (list-of-lists-p tail) () "fix-one-translate 2 x=~a y= ~a list=/~a/" x y list)
+	     (mapcar #'(lambda (item) (fix-one-translate (+ x (first pair)) (+ y (second pair)) item)) tail)))
 
-      (case (car list)
-	(translate
-	 (let ((pair (second list))
-               (tail (third list)))
-	   (assert (list-of-lists-p tail) () "fix-one-translate 2 x=~a y= ~a list=/~a/" x y list)
-	   (mapcar #'(lambda (item) (fix-one-translate (+ x (first pair)) (+ y (second pair)) item)) tail)))
+	  (rect
+	   (destructuring-bind (sym x1 y1 w h)
+               list
+	     (declare (ignore sym))
+	     `(rect ,(+ x x1) ,(+ y y1) ,w ,h)))
 
-	(rect
-	 (destructuring-bind (sym x1 y1 x2 y2)
-             list
-	   (declare (ignore sym))
-	   `(rect ,(+ x x1) ,(+ y y1) ,(+ x x2) ,(+ y y2))))
+	  (metadata
+	   (destructuring-bind (sym str x1 y1 w h)
+               list
+	     (declare (ignore sym))
+	     `(metadata ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
 
-	(ellipse
-	 (destructuring-bind (sym x1 y1 x2 y2)
-             list
-	   (declare (ignore sym))
-	   `(ellipse ,(+ x x1) ,(+ y y1) ,x2 ,y2)))
+	  (speech-bubble
+	   ;; speech-bubble is in (speech-bubble p1 p2 p3 p4 p5 p6 p7 (z)) format
+	   ;; where p1 is (absm x y), other p's are (absl x y) format
+	   ;; p1 is top-left, p2 if top-right, p3 is bottom-right, p7 is bottom-left
+	   (destructuring-bind (text-sym p1 p2 p3 p4 p5 p6 p7 zed) 
+               list
+	     (declare (ignore text-sym zed p4 p5 p6 p7))
+	     (let ((x1 (first p1))
+		   (y1 (second p1)))
+	       (let ((w (- (first p2) x1))
+		     (h (- (second p3) y1)))
+		 `(comment ,(+ x x1) ,(+ y y1) ,w ,h)))))
 
-	(dot
-	 (destructuring-bind (sym x1 y1 x2 y2)
-             list
-	   (declare (ignore sym))
-	   `(dot ,(+ x x1) ,(+ y y1) ,x2 ,y2)))
+	  (ellipse
+	   (destructuring-bind (sym x1 y1 x2 y2)
+               list
+	     (declare (ignore sym))
+	     `(ellipse ,(+ x x1) ,(+ y y1) ,x2 ,y2)))
 
-	(line
-	 (destructuring-bind (line-sym begin end)
-             list
-	   (declare (ignore line-sym))
-	   (destructuring-bind (begin-sym x1 y1)
-               begin
-             (declare (ignore begin-sym))
-             (destructuring-bind (end-sym x2 y2)
-		 end
-               (declare (ignore end-sym))
-               `(line (begin-line ,(+ x x1) ,(+ y y1))
-                      (end-line ,(+ x x2) ,(+ y y2)))))))
+	  (dot
+	   (destructuring-bind (sym x1 y1 x2 y2)
+               list
+	     (declare (ignore sym))
+	     `(dot ,(+ x x1) ,(+ y y1) ,x2 ,y2)))
 
-	(arrow
-	 (destructuring-bind (arrow-sym x1 y1)
-             list
-	   (declare (ignore arrow-sym))
-	   `(arrow ,(+ x x1) ,(+ y y1))))
+	  (line
+	   (destructuring-bind (line-sym begin end)
+               list
+	     (declare (ignore line-sym))
+	     (destructuring-bind (begin-sym x1 y1)
+		 begin
+               (declare (ignore begin-sym))
+               (destructuring-bind (end-sym x2 y2)
+		   end
+		 (declare (ignore end-sym))
+		 `(line (begin-line ,(+ x x1) ,(+ y y1))
+			(end-line ,(+ x x2) ,(+ y y2)))))))
 
-	(text
-	 ;; text is in (x y w h) format
-	 (destructuring-bind (text-sym str x1 y1 w h)
-             list
-	   (declare (ignore text-sym))
-	   `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
+	  (arrow
+	   (destructuring-bind (arrow-sym x1 y1)
+               list
+	     (declare (ignore arrow-sym))
+	     `(arrow ,(+ x x1) ,(+ y y1))))
 
-	(otherwise
-	 (error (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list))))))
+	  (text
+	   ;; text is in (x y w h) format
+	   (destructuring-bind (text-sym str x1 y1 w h)
+               list
+	     (declare (ignore text-sym))
+	     `(text ,str ,(+ x x1) ,(+ y y1) ,w ,h)))
+
+	  (nothing
+	   list)
+	  
+	  (otherwise
+	   (die (format nil "bad format in fix-one-translate /~A ~A ~A/" x y list)))))))
 
 (defun fix-translates (list)
   (assert (listp list) () "fix-translates 3 list=/~a/" list)
@@ -76,9 +98,9 @@
 	   (assert (list-of-lists-p tail) () "fix-translates 4 list=/~a/" list)
 	   (mapcar #'(lambda (item) (fix-one-translate (first pair) (second pair) item)) tail)))
 	
-	((rect text arrow line component ellipse dot)
+	((rect text arrow line component ellipse dot speechbubble metadata)
 	 list)
 	
 	(otherwise
-	 (error (format nil "bad format in fix-translates /~A/" list))))))
+	 (die (format nil "bad format in fix-translates /~A/" list))))))
 

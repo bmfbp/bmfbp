@@ -11,9 +11,12 @@ main :-
 
 
 coincidentSinks:-
-    forall(indexedSink(X),findCoincidentSink(X)).
+    forall(indexedSink(X),findAllCoincidentSinks(X)).
 
-findCoincidentSink(A):-
+findAllCoincidentSinks(A) :-
+    forall(sink(_,B),findCoincidentSink(A,B)).
+
+findCoincidentSink(A,B):-
     center_y(A,Ay),
     center_y(B,By),
     center_x(A,Ax),
@@ -24,9 +27,10 @@ findCoincidentSink(A):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
+    asserta(log(coincidentsink,A,B,I)),
     asserta(portIndex(B,I)).
 
-findCoincidentSink(_):-
+findCoincidentSink(_,_):-
     true.
 
 notIndexedSink(X) :-
@@ -34,9 +38,12 @@ notIndexedSink(X) :-
 
 
 coincidentSources:-
-    forall(indexedSource(X),findCoincidentSource(X)).
+    forall(indexedSource(X),findAllCoincidentSources(X)).
 
-findCoincidentSource(A):-
+findAllCoincidentSources(A) :-
+    forall(source(_,B),findCoincidentSource(A,B)).
+
+findCoincidentSource(A,B):-
     center_y(A,Ay),
     center_y(B,By),
     center_x(A,Ax),
@@ -47,9 +54,10 @@ findCoincidentSource(A):-
     closeTogether(Ax,Bx),
     closeTogether(Ay,By),
     portIndex(A,I),
+    asserta(log(coincidentsource,A,B,I)),
     asserta(portIndex(B,I)).
 
-findCoincidentSource(_):-
+findCoincidentSource(_,_):-
     true.
 
 notIndexedSource(X) :-

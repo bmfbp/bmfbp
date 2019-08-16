@@ -45,6 +45,11 @@
 :- dynamic(sink/1).
 :- dynamic(source/1).
 :- dynamic(rect/1).
+:- dynamic(roundedrect/1).
+:- dynamic(pinless/1).
+:- dynamic(speechbubble/1).
+:- dynamic(comment/1).
+:- dynamic(metadata/2).
 :- dynamic(ellipse/1).
 :- dynamic(dot/1).
 :- dynamic(sink/2) .
@@ -72,3 +77,12 @@
 :- dynamic(n_c/1).
 :- dynamic(indexedSink/1).
 :- dynamic(indexedSource/1).
+
+:- dynamic(log/1).
+:- dynamic(log/2).
+:- dynamic(log/3).
+:- dynamic(log/4).
+:- dynamic(log/5).
+:- dynamic(log/6).
+:- dynamic(log/7).
+:- dynamic(log/8).

@@ -8,10 +8,20 @@ main :-
     halt.
 
 check_has_index(PortID):-
+    portIndex(PortID,First),
+    portIndex(PortID,Second),
+    First =\= Second,
+    !,
+    asserta(log('eRROR',PortID,'has_more_than_one_index',First,Second,'allPortsHaveAnIndex')).
+
+check_has_index(PortID):-
     portIndex(PortID,_),!.
 
 check_has_index(PortID):-
-    nle,nle,we('port '),we(PortID),wen(' has no index'),nle,nle.
+    n_c(PortID).
+
+check_has_index(PortID):-
+    asserta(log('eRROR',PortID,'has_no_index','allPortsHaveAnIndex')).
 
 :- include('tail').
 

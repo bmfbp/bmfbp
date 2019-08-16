@@ -1,4 +1,0 @@
-#!/bin/bash
-#BINDIR=~/bin
-#grash $(BINDIR)/semantics.gsh $1 $2
-grash ~/bin/semantics.gsh $1 $2
