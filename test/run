@@ -1,0 +1,2 @@
+cp ../build_process/ide.svg .
+part_compile ide.svg
