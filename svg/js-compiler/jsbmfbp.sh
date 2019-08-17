@@ -1,6 +1,11 @@
 #!/bin/bash
 NAME=$(basename $1 .svg)
 
+if grep -q "Not supported by viewer" $1 
+then
+   echo "BAD svg" ; exit 1
+fi
+
 # scanner
 hs_vsh_drawio_to_fb <$1 >temp1.lisp
 lib_insert_part_name $NAME <temp1.lisp >temp2.lisp
