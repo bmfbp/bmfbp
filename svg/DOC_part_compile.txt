@@ -1,0 +1,15 @@
+To run the compiler part, "part_compile" must be in ~/bin and ~/bin must be on the path.
+
+> part_compile <path-to-svg-file>
+
+e.g.
+
+> part_compile ~/projects/bmfbp/test_cases/composites/top_level.svg
+
+When part_compile finishes, the resulting JSON will be in ./temp28.json AND, the compiler will dump diagnostics to the terminal along with temp28.json.
+
+N.B. "part_compile" is a shell script and will create 30+ temp files in the working directory (./).  I use these temp files for debugging.  Once we are out of debug mode, we will clean up the temp files.  In fact, the target is to use pipes and to not use temp files at all.  Later.
+
+part_compile uses the shell script "~/bin/jsbmfbp"
+
+To build the compiler part ("part_compile" and, also, the splitter "part_split"): "git checkout split", "cd bmfbp/svg", then "make".

@@ -1,0 +1,15 @@
+To run the splitter part, "part_split" must be in ~/bin and ~/bin must be on the path.
+
+> part_split <path-to-svg-file>
+
+e.g.
+
+> part_split ~/projects/bmfbp/test_cases/composites/top_level.svg
+
+When part_split runs, it will output the .svg file to stdout (">") and will output the meta data portion to stderr ("2>").
+
+N.B. "part_split" is a shell script and will create 10+ temp files in the working directory (./).  I use these temp files for debugging.  Once we are out of debug mode, we will clean up the temp files.  In fact, the target is to use pipes and to not use temp files at all.  Later.
+
+part_split uses the shell script "~/bin/splitmeta"
+
+To build the splitter part ("part_split" and, also, the compiler "part_compile"): "git checkout split", "cd bmfbp/svg", then "make".

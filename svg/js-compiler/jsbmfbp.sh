@@ -3,7 +3,6 @@ NAME=$(basename $1 .svg)
 
 # scanner
 hs_vsh_drawio_to_fb <$1 >temp1.lisp
-#sed -f sed-temp1.sed <temp0.lisp >temp1.lisp
 lib_insert_part_name $NAME <temp1.lisp >temp2.lisp
 fb_to_prolog $NAME <temp2.lisp >temp3.pro
 sort <temp3.pro >temp4.pro
@@ -40,7 +39,7 @@ dumplog <temp25.pro 2>temp.log-unfixed.txt
 
 emit_js $NAME <temp25.pro >temp26.lisp
 unmap-strings $NAME <temp26.lisp >temp27.lisp
-emit_js2 $NAME <temp27.lisp >temp28.js
+emit_js2 $NAME <temp27.lisp >temp28.json
 
 sed -f strings.sed <temp.log-unfixed.txt >temp.log.txt
 cat temp.log.txt
