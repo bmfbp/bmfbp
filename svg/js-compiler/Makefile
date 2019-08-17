@@ -30,6 +30,9 @@ test3:
 test4:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test4_emitter.svg
 
+test5:
+	jsbmfbp $(TEST_CASES)/firstTests/js_test5_emitter.svg
+
 xx:
 	cd ../ && make 
 	make top
