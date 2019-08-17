@@ -17,6 +17,7 @@ import qualified Linear.V2 as LV
 import qualified Data.Aeson as DAS
 import qualified GHC.Generics as GGN
 import qualified Data.Text.Lazy.Encoding as DTLE
+import qualified Data.List.Extra as DLE
 
 data Output
     = Container [Output]
@@ -178,6 +179,16 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
           in
             maybe defaultOutput id result
         "foreignObject" -> collapseEmpty $ Container rest
+        "switch" ->
+          let
+            -- Draw.IO idiosyncrasy. It doesn't export anything that is wrapped.
+            isSupportedText (Text "[Not supported by viewer]") = Nothing
+            isSupportedText x = Just x
+          in
+            -- Find the first instance of it.
+            case DLE.firstJust isSupportedText rest of
+              Nothing -> Empty
+              Just x -> x
         _ -> defaultOutput
 
 mapPathCommands :: [GST.PathCommand] -> [PathCommand]
