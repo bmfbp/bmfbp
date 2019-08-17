@@ -13,6 +13,9 @@ check_has_exactly_one_kind(RectID) :-
     Kind1 \= Kind2,
     !,
     asserta(log('fATAL_ERRORS_DURING_COMPILATION','noDuplicateKinds')),
+    asserta(log('rect ', RectID)),
+    asserta(log(Kind1)),
+    asserta(log(Kind2)),
     nle,we('ERROR!!! '),we(RectID),we(' has more than one kind '),we(Kind1),wspc,wen(Kind2).
 
 check_has_exactly_one_kind(RectID) :-
