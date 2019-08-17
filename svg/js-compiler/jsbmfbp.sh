@@ -1,9 +1,9 @@
 #!/bin/bash
 NAME=$(basename $1 .svg)
 
-if grep -q "Not supported by viewer" $1 
-then
-   echo "BAD svg (contains Not supported by viewer)" ; exit 1
+if grep -q "Not supported by viewer" $1 ; then
+   echo "BAD svg (contains Not supported by viewer)"
+   exit 1
 fi
 
 # scanner
