@@ -68,7 +68,7 @@
       "kindName" : "duplicate_every_third_input_packet_to_1"
     },
     {
-      "partName" : "ID506",
+      "partName" : "ID505",
       "inCount" : 1,
       "outCount" : 0,
       "inPins" : [[10]],
