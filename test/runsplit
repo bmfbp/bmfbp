@@ -1,0 +1,3 @@
+#!/bin/bash
+cp ../build_process/ide.svg .
+part_split ide.svg 1>/dev/null
