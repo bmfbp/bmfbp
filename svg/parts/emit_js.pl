@@ -38,7 +38,9 @@ emitMetaData :-
 emitAllPins :-
     write('  ins ('), nl,
     forall(selfInputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
+wen('a'),
     forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
+wen('b'),
     write('  )'), nl,
     write('  outs ('), nl,
     forall(selfOutputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
