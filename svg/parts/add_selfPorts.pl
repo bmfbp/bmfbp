@@ -27,14 +27,13 @@ createSelfPorts(EllipseID) :-
     bounding_box_right(PortID,PortRightX),
     bounding_box_bottom(PortID,PortBottomY),
     portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,ERightX,EBottomY),
-    text(IndexID,Index),
-    textCompletelyInside(IndexID,EllipseID),
+    text(NameID,Name),
+    textCompletelyInside(NameID,EllipseID),
     !,
-    number(Index),
     asserta(parent(EllipseID,PortID)),
-    asserta(used(IndexID)),
-    asserta(portIndexByID(PortID,IndexID)),
-    asserta(portIndex(PortID,Index)).
+    asserta(used(NameID)),
+    asserta(portNameByID(PortID,NameID)),
+    asserta(portName(PortID,Name)).
 
 portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,_,EBottomY):-
     % port touches left side of ellipse bounding rect

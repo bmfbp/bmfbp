@@ -5,14 +5,14 @@ logAllEdges :-
 
 portsOnWire(SourcePort,Wire,SinkPort) :-
     sourceOf(Wire,SourcePort),
-    portIndexOf(SourcePort,SourceIndex),
+    portNameOf(SourcePort,SourceName),
     parentOf(SourcePort,SourceParent),
     kindOf(SourceParent,SourceParentName),
     sinkOf(Wire,SinkPort),
     parentOf(SinkPort,SinkParent),
     kindOf(SinkParent,SinkParentName),
-    portIndexOf(SinkPort,SinkIndex),
-    asserta(log(parent_source_wire_parent_sink,SourceParent,SourceParentName,SourceIndex,wire(Wire),SinkParent,SinkParentName,SinkIndex)).
+    portNameOf(SinkPort,SinkName),
+    asserta(log(parent_source_wire_parent_sink,SourceParent,SourceParentName,SourceName,wire(Wire),SinkParent,SinkParentName,SinkName)).
 
 sourceOf(Wire,Port) :-
     source(Wire,Port),!.
@@ -32,11 +32,11 @@ parentOf(_,Parent) :-
     Parent = null.
 
 
-portIndexOf(Port,Index) :-
-    portIndex(Port,Index),!.
+portNameOf(Port,Name) :-
+    portName(Port,Name),!.
 
-portIndexOf(_,Index) :-
-    Index = null.
+portNameOf(_,Name) :-
+    Name = null.
 
 
 kindOf(Parent,Name) :-

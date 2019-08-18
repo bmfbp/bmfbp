@@ -31,7 +31,7 @@ condSource :- true.
 
 makeInputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
-    portIndex(PortID,Pin),
+    portName(PortID,Pin),
     parent(PortID,Part),
     makeInput(Part,PortID,Pin,WireIndex).
 
@@ -57,7 +57,7 @@ makeInput(Part,PortID,Pin,WireIndex) :-
 
 makeOutputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
-    portIndex(PortID,Pin),
+    portName(PortID,Pin),
     parent(PortID,Part),
     makeOutput(Part,PortID,Pin,WireIndex).
 
