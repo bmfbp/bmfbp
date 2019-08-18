@@ -23,7 +23,7 @@ tryIndex(PortID,NumericID,Num):-
     asserta(portIndex(PortID,Num)).
     
 tryIndex(PortID,NumericID,Num):-
-   we(PortID),we(' nonnumeric name '),we(NumericID),wspc,wen(Num),
+    we(PortID),we(' nonnumeric name '),we(NumericID),wspc,wen(Num),
 %    asserta(log(PortID,' nonnumeric name ',NumericID, Num)),
     true.
 
