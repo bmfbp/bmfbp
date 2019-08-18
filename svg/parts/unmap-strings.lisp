@@ -116,7 +116,7 @@
 	  (setf *map-stream* map)
 	  (run)))
     (end-of-file (c)
-      (format *error-output* "FATAL 'end of file error; in unmap-strings /~S/~%" c)
+      (format *error-output* "FATAL 'end of file error' in unmap-strings /~S/~%" c)
       (values))      
     (simple-error (c)
       (format *error-output* "FATAL error in unmap-strings /~S/~%" c))
