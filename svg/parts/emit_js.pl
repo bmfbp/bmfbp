@@ -38,9 +38,7 @@ emitMetaData :-
 emitAllPins :-
     write('  ins ('), nl,
     forall(selfInputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
-wen('a'),
     forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
-wen('b'),
     write('  )'), nl,
     write('  outs ('), nl,
     forall(selfOutputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
@@ -75,7 +73,7 @@ inPinOfPart(PortID,PartID) :-
 getOneInPin(PortID,PartID):-
     eltype(PortID,port),
     wireNum(PortID,Wire),
-    portIndex(PortID,Pin),
+    portName(PortID,Pin),
     write('    ('),
     write(PartID),
     write(' '),
@@ -100,7 +98,7 @@ outPinOfPart(PortID,PartID) :-
 getOneOutPin(PortID,PartID):-
     eltype(PortID,port),
     wireNum(PortID,Wire),
-    portIndex(PortID,Pin),
+    portName(PortID,Pin),
     write('    ('),
     write(PartID),
     write(' '),

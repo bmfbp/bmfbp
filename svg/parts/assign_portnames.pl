@@ -14,26 +14,15 @@ assignPort(TextID):-
     minimumDistanceToAPort(TextID,PortID),
     text(TextID,Str),
     asserta(portNameByID(PortID,TextID)),
-    asserta(portName(PortID,Str)),
-    tryIndex(PortID,TextID,Str).
-
-tryIndex(PortID,NumericID,Num):-
-    number(Num),
-    asserta(portIndexByID(PortID,NumericID)),
-    asserta(portIndex(PortID,Num)).
-    
-tryIndex(PortID,NumericID,Num):-
-    we(PortID),we(' nonnumeric name '),we(NumericID),wspc,wen(Num),
-%    asserta(log(PortID,' nonnumeric name ',NumericID, Num)),
-    true.
+    asserta(portName(PortID,Str)).
 
 minimumDistanceToAPort(TextID,PortID) :-
     unassigned(TextID),  %% redundant (since the caller asserts this)
     findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDList),
     splitLists(DistancePortIDList,Distances,PortIDs),
     findMinimumDistanceInList(Distances,Min),
-    findPositionOfMinimumInList(Min,Distances,Index),
-    findPortAtIndex(Index,PortIDs,PortID).
+    findPositionOfMinimumInList(Min,Distances,Name),
+    findPortWithName(Name,PortIDs,PortID).
 
 findAllDistancesToPortsFromGivenUnassignedText(TextID,DistancePortIDPairList):-
     findall(DistancePortIDPair,findOneDistanceToAPortFromGivenUnassignedText(TextID,DistancePortIDPair),DistancePortIDPairList).
@@ -51,7 +40,7 @@ findMinimumDistanceInList(Distances,Min):-
 findPositionOfMinimumInList(Min,List,Position):-
     nth(Position,List,Min).
 
-findPortAtIndex(Position,Ports,PortID):-
+findPortWithName(Position,Ports,PortID):-
     nth(Position,Ports,PortID).
 
 

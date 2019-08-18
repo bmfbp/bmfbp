@@ -51,8 +51,6 @@ writeFB :-
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
     forall(selfPort(X,Y), writeterm(selfPort(X,Y))),
-    forall(portIndex(X,Y), writeterm(portIndex(X,Y))),
-    forall(portIndexByID(X,Y), writeterm(portIndexByID(X,Y))),
     forall(portName(X,Y), writeterm(portName(X,Y))),
     forall(portNameByID(X,Y), writeterm(portNameByID(X,Y))),
     forall(unassigned(X), writeterm(unassigned(X))),
@@ -72,8 +70,8 @@ writeFB :-
     forall(selfOutputPin(X,Y), writeterm(selfOutputPin(X,Y))),
     forall(wireIndex(X,Y), writeterm(wireIndex(X,Y))),
     forall(n_c(X), writeterm(n_c(X))),
-    forall(indexedSink(X), writeterm(indexedSink(X))),
-    forall(indexedSource(X), writeterm(indexedSource(X))),
+    forall(namedSink(X), writeterm(namedSink(X))),
+    forall(namedSource(X), writeterm(namedSource(X))),
     forall(parent(X,Y), writeterm(parent(X,Y))),
     writelog.
 
@@ -113,12 +111,6 @@ readFB(Str) :-
 element(end_of_file, _) :- !.
 element(eltype(X,Y), Str) :- !,
 			   asserta(eltype(X,Y)),
-		       readFB(Str).
-element(portIndex(X,Y), Str) :- !,
-			   asserta(portIndex(X,Y)),
-		       readFB(Str).
-element(portIndexByID(X,Y), Str) :- !,
-			   asserta(portIndexByID(X,Y)),
 		       readFB(Str).
 element(portName(X,Y), Str) :- !,
 			   asserta(portName(X,Y)),
@@ -409,12 +401,12 @@ element(n_c(X), Str) :- !,
 			     asserta(n_c(X)),
 			     readFB(Str).
 
-element(indexedSink(X), Str) :- !,
-			     asserta(indexedSink(X)),
+element(namedSink(X), Str) :- !,
+			     asserta(namedSink(X)),
 			     readFB(Str).
 
-element(indexedSource(X), Str) :- !,
-			     asserta(indexedSource(X)),
+element(namedSource(X), Str) :- !,
+			     asserta(namedSource(X)),
 			     readFB(Str).
 
 element(log(W), Str) :- !,
