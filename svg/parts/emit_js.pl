@@ -45,7 +45,8 @@ emitAllPins :-
     forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
     write('  )'), nl.
 
-emitAllPins :- true.
+emitAllPins :-
+    true.
 
 printSelfInputOrOutput(Pin) :-
     write('    (self nil '),

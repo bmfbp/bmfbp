@@ -213,11 +213,15 @@
 #-lispworks
 (defun main (argv)
   (declare (ignore argv))
-  (setf *debugger-hook* #'(lambda (c h)
-			    (declare (ignore h))
-			    (print c)
-			    (abort)))
-  (main1))
+  (handler-case
+      (progn
+	  (main1))
+    (end-of-file (c)
+      (format *error-output* "FATAL 'end of file error; in unmap-strings /~S/~%" c))
+    (simple-error (c)
+      (format *error-output* "FATAL error in unmap-strings /~S/~%" c))
+    (error (c)
+      (format *error-output* "FATAL error in unmap-strings /~S/~%" c))))
 
 
 #+lispworks

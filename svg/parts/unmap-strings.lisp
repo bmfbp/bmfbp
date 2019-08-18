@@ -109,8 +109,17 @@
 #+sbcl 
 (defun main (argv)
   (declare (ignore argv))
-  (setf *fixup-stream* *standard-input*)
-  (with-open-file (map "temp-string-map.lisp" :direction :input)
-    (setf *map-stream* map)
-    (run)))
-
+  (handler-case
+      (progn
+	(setf *fixup-stream* *standard-input*)
+	(with-open-file (map "temp-string-map.lisp" :direction :input)
+	  (setf *map-stream* map)
+	  (run)))
+    (end-of-file (c)
+      (format *error-output* "FATAL 'end of file error; in unmap-strings /~S/~%" c)
+      (values))      
+    (simple-error (c)
+      (format *error-output* "FATAL error in unmap-strings /~S/~%" c))
+    (error (c)
+      (format *error-output* "FATAL error in unmap-strings /~S/~%" c))))
+  

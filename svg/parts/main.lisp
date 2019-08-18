@@ -26,11 +26,15 @@
 #-lispworks
 (defun main (argv)
   (declare (ignore argv))
-  (setf *debugger-hook* #'(lambda (c h)
- 			    (declare (ignore h))
- 			    (print c)
- 			    (abort)))
-  (run *standard-input*))
+  (handler-case
+      (progn
+	(run *standard-input*))
+    (end-of-file (c)
+      (format *error-output* "FATAL 'end of file error; in main /~S/~%" c))
+    (simple-error (c)
+      (format *error-output* "FATAL error in main /~S/~%" c))
+    (error (c)
+      (format *error-output* "FATAL error in main /~S/~%" c))))
 
 #+lispworks
 (defun main (fname)

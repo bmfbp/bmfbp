@@ -20,8 +20,8 @@ check_has_index(PortID):-
 check_has_index(PortID):-
     n_c(PortID).
 
-check_has_index(PortID):-
-    asserta(log('fATAL',PortID,'has_no_index','allPortsHaveAnIndex')).
+check_has_index(_):-
+    true.
 
 :- include('tail').
 

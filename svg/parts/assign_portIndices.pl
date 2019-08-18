@@ -21,10 +21,20 @@ main :-
     forall(portName(P,in),assign_sink_fd(P,0)), % stdin == 0
     forall(portName(P,out),assign_source_fd(P,1)), % stdout == 1
     forall(portName(P,err),assign_source_fd(P,2)), % stderr == 2
-    forall(integerSinkPortName(P,N),assign_sink_fd(P,N)),
-    forall(integerSourcePortName(P,N),assign_source_fd(P,N)),
+    forall(sinkPortName(P,N),assign_sink_fd(P,N)),
+    forall(sourcePortName(P,N),assign_source_fd(P,N)),
     writeFB,
     halt.
+
+sinkPortName(P,N) :-
+    portName(P,N),
+    sink(_,P),
+    integer(N).
+
+sourcePortName(P,N) :-
+    portName(P,N),
+    source(_,P),
+    integer(N).
 
 integerSinkPortName(P,N) :-
     portName(P,N),
