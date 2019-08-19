@@ -119,7 +119,7 @@
       (format *error-output* "FATAL 'end of file error' in unmap-strings /~S/~%" c)
       (values))      
     (simple-error (c)
-      (format *error-output* "FATAL error in unmap-strings /~S/~%" c))
+      (format *error-output* "FATAL error b in unmap-strings /~S/~%" c))
     (error (c)
-      (format *error-output* "FATAL error in unmap-strings /~S/~%" c))))
+      (format *error-output* "FATAL error c in unmap-strings /~S/~%" c))))
   
