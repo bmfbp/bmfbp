@@ -80,6 +80,7 @@ $(BINDIR)/emit_js2: emit_js2.lisp
 $(BINDIR)/emit_js3: emit_js3.lisp
 	buildapp --output $(BINDIR)/emit_js3 \
 		--load util.lisp \
+		--load loop-macros.lisp \
 		--load emit_js3.lisp \
 		--entry main
 
