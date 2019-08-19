@@ -68,6 +68,15 @@ $(BINDIR)/emit_js2: emit_js2.lisp
 		--load emit_js2.lisp \
 		--entry main
 
+# $(BINDIR)/emit_js3: emit_js3.lisp
+# 	buildapp --output $(BINDIR)/emit_js3 \
+# 		--load ~/quicklisp/setup.lisp \
+# 		--eval '(ql:quickload "alexandria")' \
+# 		--load-system alexandria \
+# 		--load util.lisp \
+# 		--load emit_js3.lisp \
+# 		--entry main
+
 $(BINDIR)/emit_js3: emit_js3.lisp
 	buildapp --output $(BINDIR)/emit_js3 \
 		--load util.lisp \
