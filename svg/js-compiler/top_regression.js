@@ -12,68 +12,68 @@
     }
   "parts" : [
     {
-      "partName" : "ID369",
+      "partName" : "ID505",
       "inCount" : 0,
-      "outCount" : 1,
-      "inPins" : [],
-      "outPins" : [[2,1,0]],
-      "kindName" : "output_1_every_second_for_3_times"
-    },
-    {
-      "partName" : "ID372",
-      "inCount" : 2,
       "outCount" : 0,
-      "inPins" : [[8],[0]],
+      "inPins" : [],
       "outPins" : [],
       "kindName" : "print_to_log"
-    },
-    {
-      "partName" : "ID375",
-      "inCount" : 1,
-      "outCount" : 1,
-      "inPins" : [[1]],
-      "outPins" : [[3]],
-      "kindName" : "add_1"
-    },
-    {
-      "partName" : "ID378",
-      "inCount" : 1,
-      "outCount" : 2,
-      "inPins" : [[2]],
-      "outPins" : [[4],[5]],
-      "kindName" : "tee"
-    },
-    {
-      "partName" : "ID381",
-      "inCount" : 2,
-      "outCount" : 1,
-      "inPins" : [[3],[4]],
-      "outPins" : [[7]],
-      "kindName" : "pass_on_0_add_1_on_1"
-    },
-    {
-      "partName" : "ID384",
-      "inCount" : 1,
-      "outCount" : 1,
-      "inPins" : [[5]],
-      "outPins" : [[6]],
-      "kindName" : "add_1"
     },
     {
       "partName" : "ID387",
-      "inCount" : 1,
-      "outCount" : 2,
-      "inPins" : [[7,6]],
-      "outPins" : [[9],[10]],
+      "inCount" : 0,
+      "outCount" : 1,
+      "inPins" : [],
+      "outPins" : [[1]],
       "kindName" : "duplicate_every_third_input_packet_to_1"
     },
     {
-      "partName" : "ID505",
+      "partName" : "ID384",
+      "inCount" : 0,
+      "outCount" : 0,
+      "inPins" : [],
+      "outPins" : [],
+      "kindName" : "add_1"
+    },
+    {
+      "partName" : "ID381",
       "inCount" : 1,
       "outCount" : 0,
-      "inPins" : [[10]],
+      "inPins" : [[7]],
+      "outPins" : [],
+      "kindName" : "pass_on_0_add_1_on_1"
+    },
+    {
+      "partName" : "ID378",
+      "inCount" : 0,
+      "outCount" : 1,
+      "inPins" : [],
+      "outPins" : [[6]],
+      "kindName" : "tee"
+    },
+    {
+      "partName" : "ID375",
+      "inCount" : 0,
+      "outCount" : 0,
+      "inPins" : [],
+      "outPins" : [],
+      "kindName" : "add_1"
+    },
+    {
+      "partName" : "ID372",
+      "inCount" : 1,
+      "outCount" : 0,
+      "inPins" : [[2]],
       "outPins" : [],
       "kindName" : "print_to_log"
+    },
+    {
+      "partName" : "ID369",
+      "inCount" : 0,
+      "outCount" : 0,
+      "inPins" : [],
+      "outPins" : [],
+      "kindName" : "output_1_every_second_for_3_times"
     }
   ]
 }
