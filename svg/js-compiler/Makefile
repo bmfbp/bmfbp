@@ -9,13 +9,15 @@ dependencies:
 	cd ../parts && make
 	cp ./jsbmfbp.sh $(BINDIR)/jsbmfbp
 	chmod a+x $(BINDIR)/jsbmfbp
+	cp ./jsbmfbp2.sh $(BINDIR)/jsbmfbp2
+	chmod a+x $(BINDIR)/jsbmfbp2
 	cp ./part_compile.sh $(BINDIR)/part_compile
 	chmod a+x $(BINDIR)/part_compile
 	cp ./compare-graph.sh $(BINDIR)/compare-graph
 	chmod a+x $(BINDIR)/compare-graph
 
 clean:
-	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp $(BINDIR)/compare-graph temp.log*.txt strings.sed
+	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp* $(BINDIR)/compare-graph temp.log*.txt strings.sed $(BINDIR)/part_compile
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
@@ -46,4 +48,8 @@ top:
 
 pass:
 	jsbmfbp $(TEST_CASES)/composites/pass_and_add.svg
+	compare-graph temp28.json pass_and_add_regression.js
+
+pass2:
+	jsbmfbp2 $(TEST_CASES)/composites/pass_and_add.svg
 	compare-graph temp28.json pass_and_add_regression.js
