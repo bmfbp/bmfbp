@@ -454,6 +454,11 @@ inc(Var, Value) :-
     X is Value+1,
     g_assign(Var, X).
 
+dec(Var, Value) :-
+    g_read(Var, Value),
+    X is Value-1,
+    g_assign(Var, X).
+
 boundingboxCompletelyInside(ID1,ID2) :-
     bounding_box_left(ID1,L1),
     bounding_box_top(ID1,T1),
@@ -479,7 +484,7 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID2,R2),
     bounding_box_bottom(ID2,B2),
 
-    % we('point inside: L1/T1/L2/T2/R2/B2: '),we(L1),wspc,we(T1),wspc,we(L2),wspc,we(T2),wspc,we(R2),wspc,wen(B2),
+    %we('point inside: L1/T1/L2/T2/R2/B2: '),we(L1),wspc,we(T1),wspc,we(L2),wspc,we(T2),wspc,we(R2),wspc,wen(B2),
 
     L1 >= L2,
     T1 >= T2,

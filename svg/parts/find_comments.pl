@@ -11,6 +11,7 @@ condComment :-
     forall(speechbubble(ID),createComments(ID)).
 
 condComment :-
+    asserta(log('fATAL',commentFinderFailed)),
     true.
 
 createComments(BubbleID) :-
@@ -18,7 +19,6 @@ createComments(BubbleID) :-
     textCompletelyInsideBox(TextID,BubbleID),
     asserta(used(TextID)),
     asserta(comment(TextID)).
-
 
 textCompletelyInsideBox(TextID,BubbleID) :-
     pointCompletelyInsideBoundingBox(TextID,BubbleID).

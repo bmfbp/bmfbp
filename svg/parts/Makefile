@@ -22,6 +22,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/sem_partsHaveSomePorts \
 	$(BINDIR)/sem_allPortsHaveAnIndex \
 	$(BINDIR)/sem_noDuplicateKinds \
+	$(BINDIR)/sem_speechVScomments \
 	$(BINDIR)/sem_info \
 	$(BINDIR)/loginfo \
 	$(BINDIR)/dumplog \
@@ -29,7 +30,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js3 $(BINDIR)/unmap-strings
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js3 $(BINDIR)/unmap-strings $(BINDIR)/emit_js2
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -62,20 +63,12 @@ $(BINDIR)/unmap-strings: unmap-strings.lisp
 $(BINDIR)/lib_insert_part_name: lib_insert_part_name.lisp
 	buildapp --output $(BINDIR)/lib_insert_part_name --load lib_insert_part_name.lisp --entry main
 
+# for looking back at index-based pins (testing new version)
 $(BINDIR)/emit_js2: emit_js2.lisp
 	buildapp --output $(BINDIR)/emit_js2 \
 		--load util.lisp \
 		--load emit_js2.lisp \
 		--entry main
-
-# $(BINDIR)/emit_js3: emit_js3.lisp
-# 	buildapp --output $(BINDIR)/emit_js3 \
-# 		--load ~/quicklisp/setup.lisp \
-# 		--eval '(ql:quickload "alexandria")' \
-# 		--load-system alexandria \
-# 		--load util.lisp \
-# 		--load emit_js3.lisp \
-# 		--entry main
 
 $(BINDIR)/emit_js3: emit_js3.lisp
 	buildapp --output $(BINDIR)/emit_js3 \
@@ -88,5 +81,5 @@ clean :
 	rm -f $(EXECS)
 	rm -f $(BINDIR)/fb_to_prolog $(BINDIR)/plsort \
 	$(BINDIR)/lib_insert_part_name $(BINDIR)/unmap-strings
-	rm -f $(BINDIR)/emit_js[23]
+	rm -f $(BINDIR)/emit_js[23]*
 
