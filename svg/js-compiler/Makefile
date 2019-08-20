@@ -41,6 +41,7 @@ xx:
 
 tee:
 	jsbmfbp $(TEST_CASES)/composites/tee.svg
+	compare-graph temp28.json tee_regression.js
 
 top:
 	jsbmfbp $(TEST_CASES)/composites/top_level.svg
@@ -48,8 +49,4 @@ top:
 
 pass:
 	jsbmfbp $(TEST_CASES)/composites/pass_and_add.svg
-	compare-graph temp28.json pass_and_add_regression.js
-
-pass2:
-	jsbmfbp2 $(TEST_CASES)/composites/pass_and_add.svg
 	compare-graph temp28.json pass_and_add_regression.js
