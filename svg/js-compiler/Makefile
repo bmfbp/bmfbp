@@ -50,3 +50,7 @@ top:
 pass:
 	jsbmfbp $(TEST_CASES)/composites/pass_and_add.svg
 	compare-graph temp28.json pass_and_add_regression.js
+
+pass2:
+	jsbmfbp2 $(TEST_CASES)/composites/pass_and_add.svg
+	compare-graph temp28.json pass_and_add_regression.js
