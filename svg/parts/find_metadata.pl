@@ -19,6 +19,8 @@ createMetaDataRect(MID) :-
     metadataCompletelyInsideBoundingBox(TextID,BoxID),
     asserta(used(TextID)),
     asserta(roundedrect(BoxID)),
+    component(Main),
+    asserta(parent(Main,BoxID)),
     asserta(log(BoxID,box_is_meta_data)),
     retract(rect(BoxID)).
 
