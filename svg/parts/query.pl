@@ -5,6 +5,7 @@ logAllEdges :-
 
 portsOnWire(SourcePort,Wire,SinkPort) :-
     sourceOf(Wire,SourcePort),
+    wireNum(Wire,WireNum),
     portNameOf(SourcePort,SourceName),
     parentOf(SourcePort,SourceParent),
     kindOf(SourceParent,SourceParentName),
@@ -12,7 +13,7 @@ portsOnWire(SourcePort,Wire,SinkPort) :-
     parentOf(SinkPort,SinkParent),
     kindOf(SinkParent,SinkParentName),
     portNameOf(SinkPort,SinkName),
-    asserta(log(parent_source_wire_parent_sink,SourceParent,SourceParentName,SourceName,wire(Wire),SinkParent,SinkParentName,SinkName)).
+    asserta(log(parent_source_wire_parent_sink,SourceParent,SourceParentName,SourceName,wire(WireNum),SinkParent,SinkParentName,SinkName)).
 
 sourceOf(Wire,Port) :-
     source(Wire,Port),!.
