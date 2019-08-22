@@ -127,7 +127,7 @@
 			      (third pin-descriptor))
 			  pin-list)))
     (if (every-item-is-a-number-p pin-ids)
-	(iota (positive-maximum pin-ids))
+	(iota (1+ (positive-maximum pin-ids)))
 	pin-ids)))
 
 (defun @compute-number-of-input-pins-for-each-part ()
@@ -192,6 +192,7 @@
              (let ((outs (gethash :outs properties))
                    (enumeration (gethash :outs-enumeration properties)))
                (format *standard-output* "      \"outPins\" : [")
+(format *error-output* "~&enumeration=~S outs=~S~%" enumeration outs)
                (emit-pin-list enumeration outs)
                (format *standard-output* "],~%")))
            (emit-pins (properties)
