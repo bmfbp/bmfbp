@@ -37,17 +37,47 @@ emitMetaData :-
 
 emitAllPins :-
     write('  ins ('), nl,
-    forall(selfInputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
-    forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
+      forall(selfInputPin(PortID),printSelfInputPort(PortID)),
     write('  )'), nl,
     write('  outs ('), nl,
+      forall(selfOutputPin(PortID),printSelfOutputPort(PortID)),
+    write('  )'), nl.
+
+    forall(selfInputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
+    forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
+
+
     forall(selfOutputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
     forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
-    write('  )'), nl.
 
 emitAllPins :-
     true.
 
+printSelfInputPort(PortID) :-
+    write('    (self nil '),
+    source(EdgeID,PortID),
+    edge(EdgeID),
+    wireNum(EdgeID,WN),
+    write(WN),
+    write(' '),
+    write(PortID),
+    write(')'),
+    nl.
+    
+printSelfOutputPort(PortID) :-
+    write('    (self nil '),
+    sink(EdgeID,PortID),
+    edge(EdgeID),
+    wireNum(EdgeID,WN),
+    write(WN),
+    write(' '),
+    write(PortID),
+    write(')'),
+    nl.
+
+
+
+    
 printSelfInputOrOutput(Pin) :-
     write('    (self nil '),
     wireIndex(Pin,WireIndex),

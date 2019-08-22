@@ -237,6 +237,28 @@ element(selfOutputPin(X,Y), Str) :- !,
 			     asserta(selfOutputPin(X,Y)),
 			     readFB(Str).
 
+
+element(selfInputPin(X), Str) :- !,
+			     asserta(selfInputPin(X)),
+			     readFB(Str).
+
+element(selfOutputPin(X), Str) :- !,
+			     asserta(selfOutputPin(X)),
+			     readFB(Str).
+
+element(inputPin(X), Str) :- !,
+			     asserta(inputPin(X)),
+			     readFB(Str).
+
+element(outputPin(X), Str) :- !,
+			     asserta(outputPin(X)),
+			     readFB(Str).
+
+
+
+
+
+
 element(line(X), Str) :- !,
 			     asserta(line(X)),
 			     readFB(Str).

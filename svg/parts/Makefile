@@ -6,6 +6,8 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/assign_wire_numbers_to_edges \
 	$(BINDIR)/selfInputPins \
 	$(BINDIR)/selfOutputPins \
+	$(BINDIR)/inputPins \
+	$(BINDIR)/outputPins \
 	$(BINDIR)/pinless \
 	$(BINDIR)/assign_wire_numbers_to_inputs \
 	$(BINDIR)/assign_wire_numbers_to_outputs \
