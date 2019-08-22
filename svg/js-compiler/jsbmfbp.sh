@@ -35,12 +35,9 @@ sem_noDuplicateKinds <temp20a.pro >temp20b.pro
 sem_speechVScomments <temp20b.pro >temp20.pro
 
 # emitter
-assign_wire_numbers_to_inputs $NAME <temp20.pro >temp21.pro
-assign_wire_numbers_to_outputs $NAME <temp21.pro >temp22.pro
-assign_portIndices $NAME <temp22.pro >temp23.pro
-inOutPins <temp23.pro >temp24.pro
+assign_wire_numbers_to_edges $NAME <temp20.pro >temp21.pro
 
-loginfo <temp24.pro >temp25.pro
+loginfo <temp21.pro >temp25.pro
 dumplog <temp25.pro 2>temp.log-unfixed.txt
 
 if grep -q 'ATAL' temp.log-unfixed.txt ; then
