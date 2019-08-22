@@ -13,6 +13,7 @@ assignUnassignedTextToPorts :-
 assignPort(TextID):-
     minimumDistanceToAPort(TextID,PortID),
     text(TextID,Str),
+    asserta(port(PortID)),
     asserta(portNameByID(PortID,TextID)),
     asserta(portName(PortID,Str)).
 
