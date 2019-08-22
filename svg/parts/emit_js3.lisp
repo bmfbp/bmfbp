@@ -192,7 +192,6 @@
              (let ((outs (gethash :outs properties))
                    (enumeration (gethash :outs-enumeration properties)))
                (format *standard-output* "      \"outPins\" : [")
-(format *error-output* "~&enumeration=~S outs=~S~%" enumeration outs)
                (emit-pin-list enumeration outs)
                (format *standard-output* "],~%")))
            (emit-pins (properties)
