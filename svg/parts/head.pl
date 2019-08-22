@@ -32,6 +32,7 @@
 :- dynamic(parent/2).
 :- dynamic(pipeNum/2).
 :- dynamic(wireNum/2).
+:- dynamic(port/1) .
 :- dynamic(portName/2) .
 :- dynamic(portNameByID/2) .
 :- dynamic(unassigned/1) .
