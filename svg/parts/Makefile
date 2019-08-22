@@ -4,6 +4,9 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/calc_bounds \
 	$(BINDIR)/mark_directions \
 	$(BINDIR)/assign_wire_numbers_to_edges \
+	$(BINDIR)/selfInputPins \
+	$(BINDIR)/selfOutputPins \
+	$(BINDIR)/pinless \
 	$(BINDIR)/assign_wire_numbers_to_inputs \
 	$(BINDIR)/assign_wire_numbers_to_outputs \
 	$(BINDIR)/assign_portIndices \
