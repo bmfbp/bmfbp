@@ -26,7 +26,8 @@ assign_portnames $NAME <temp13.pro >temp14.pro
 markIndexedPorts $NAME <temp14.pro >temp15.pro
 coincidentPorts $NAME <temp15.pro >temp16.pro
 mark_directions $NAME <temp16.pro >temp17.pro
-match_ports_to_components <temp17.pro >temp18.pro
+match_ports_to_components <temp17.pro >temp18a.pro
+pinless <temp18a.pro >temp18.pro
 
 # semantics
 sem_partsHaveSomePorts <temp18.pro >temp19.pro
