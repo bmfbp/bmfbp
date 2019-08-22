@@ -37,8 +37,13 @@ sem_speechVScomments <temp20b.pro >temp20.pro
 
 # emitter
 assign_wire_numbers_to_edges $NAME <temp20.pro >temp21.pro
+selfInputPins <temp21.pro >temp22a.pro
+selfOutputPins <temp22a.pro >temp22b.pro
+inputPins <temp22b.pro >temp22c.pro
+outputPins <temp21c.pro >temp22.pro
 
-loginfo <temp21.pro >temp25.pro
+
+loginfo <temp22.pro >temp25.pro
 dumplog <temp25.pro 2>temp.log-unfixed.txt
 
 if grep -q 'ATAL' temp.log-unfixed.txt ; then

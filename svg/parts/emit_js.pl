@@ -35,20 +35,20 @@ emitMetaData :-
 emitMetaData :-
     true.
 
+% for self print
+% (self nil wireNum portName)
+% for parts print
+% (partid portid wireNum portName)
+% skip pinless parts
 emitAllPins :-
     write('  ins ('), nl,
       forall(selfInputPin(PortID),printSelfInputPort(PortID)),
+      forall(inputPin(PartID,_),printInputPort(PartID)),
     write('  )'), nl,
     write('  outs ('), nl,
       forall(selfOutputPin(PortID),printSelfOutputPort(PortID)),
+      forall(outputPin(PartID,_),printOutputPort(PartID)),
     write('  )'), nl.
-
-    forall(selfInputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
-    forall(eltype(PartID,box),getAllInPinsForPart(PartID)),
-
-
-    forall(selfOutputPin(_,WireIndex),printSelfInputOrOutput(WireIndex)),
-    forall(eltype(PartID,box),getAllOutPinsForPart(PartID)),
 
 emitAllPins :-
     true.
@@ -60,7 +60,8 @@ printSelfInputPort(PortID) :-
     wireNum(EdgeID,WN),
     write(WN),
     write(' '),
-    write(PortID),
+    portName(portID,Name),
+    write(Name),
     write(')'),
     nl.
     
@@ -71,74 +72,60 @@ printSelfOutputPort(PortID) :-
     wireNum(EdgeID,WN),
     write(WN),
     write(' '),
-    write(PortID),
+    portName(portID,Name),
+    write(Name),
     write(')'),
     nl.
 
+% (partid portid wireNum portName)
+% skip pinless parts
+printInputPort(PartID) :-
+    pinless(PartID),!.
 
-
-    
-printSelfInputOrOutput(Pin) :-
-    write('    (self nil '),
-    wireIndex(Pin,WireIndex),
-    write(WireIndex),
-    write(' '),
-    write(Pin),
-    write(')'),
-    nl.
-
-getAllInPinsForPart(PartID) :-
-    pinless(PartID).  %% skip pinless parts (there should be at most 1 - the metadata rect).
-
-getAllInPinsForPart(PartID):-
-    forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).
-
-getAllInPinsForPart(PartID):-
-    forall(inPinOfPart(PortID,PartID),getOneInPin(PortID,PartID)).
-
-inPinOfPart(PortID,PartID) :-
-    parent(PortID,PartID),
-    sink(_,PortID).
-
-getOneInPin(PortID,PartID):-
-    eltype(PortID,port),
-    wireNum(PortID,Wire),
-    portName(PortID,Pin),
+printInputPort(PartID) :-
     write('    ('),
+    inputPort(PartID,PortID),
+    sink(EdgeID,PortID),
+    edge(EdgeID),
+    wireNum(EdgeID,WN),
     write(PartID),
     write(' '),
     write(PortID),
     write(' '),
-    write(Wire),
+    write(WN),
     write(' '),
-    write(Pin),
+    portName(portID,Name),
+    write(Name),
     write(')'),
     nl.
 
-getAllOutPinsForPart(PartID):-
-    pinless(PartID).  %% do nothing
+printInputPort(PartID) :-
+    true.
 
-getAllOutPinsForPart(PartID):-
-    forall(outPinOfPart(PortID,PartID),getOneOutPin(PortID,PartID)).
 
-outPinOfPart(PortID,PartID) :-
-    parent(PortID,PartID),
-    source(_,PortID).
 
-getOneOutPin(PortID,PartID):-
-    eltype(PortID,port),
-    wireNum(PortID,Wire),
-    portName(PortID,Pin),
+printOutputPort(PartID) :-
+    pinless(PartID),!.
+
+printOutputPort(PartID) :-
     write('    ('),
+    outputPort(PartID,PortID),
+    sourse(EdgeID,PortID),
+    edge(EdgeID),
+    wireNum(EdgeID,WN),
     write(PartID),
     write(' '),
     write(PortID),
     write(' '),
-    write(Wire),
+    write(WN),
     write(' '),
-    write(Pin),
+    portName(portID,Name),
+    write(Name),
     write(')'),
     nl.
+
+printOutputPort(PartID) :-
+    true.
 
 
 emitExecs:-
