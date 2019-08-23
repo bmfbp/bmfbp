@@ -14,17 +14,17 @@ match_ports :-
 
 assign_parent_for_port(PortID) :-
     % if port already has a parent (e.g. ellipse), quit while happy.
-    parent(PortID,_),!.
+    parent(_,PortID),!.
 
 assign_parent_for_port(PortID) :-
     ellipse(ParentID),
     portIntersection(PortID,ParentID),
-    asserta(parent(PortID, ParentID)),!.
+    asserta(parent(ParentID,PortID)),!.
 
 assign_parent_for_port(PortID) :-
     eltype(ParentID, box),
     portIntersection(PortID,ParentID),
-    asserta(parent(PortID, ParentID)),!.
+    asserta(parent(ParentID,PortID)),!.
 
 assign_parent_for_port(PortID) :-
     portName(PortID,_),
