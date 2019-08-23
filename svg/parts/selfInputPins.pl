@@ -9,7 +9,7 @@ main :-
 
 condSourceEllipse :-
     forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)).
-condSource :- true.
+condSourceEllispe :- true.
 
 makeSelfInputPins(EllipseID) :-
 wen(a),

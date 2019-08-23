@@ -10,7 +10,7 @@ main :-
 condSinkEllipse :-
     forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)),
     !.
-condSource :- true.
+condSourceEllipse :- true.
 
 makeSelfOutputPins(EllipseID) :-
     parent(Main,EllipseID),
