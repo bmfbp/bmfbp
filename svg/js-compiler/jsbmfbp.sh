@@ -32,6 +32,7 @@ pinless <temp18a.pro >temp18.pro
 
 # semantics
 sem_partsHaveSomePorts <temp18.pro >temp19.pro
+sem_portsHaveSinkOrSource <temp19.pro >temp20a.pro
 sem_noDuplicateKinds <temp20a.pro >temp20b.pro
 sem_speechVScomments <temp20b.pro >temp20.pro
 
