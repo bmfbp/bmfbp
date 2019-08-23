@@ -60,7 +60,7 @@ printSelfInputPort(PortID) :-
     wireNum(EdgeID,WN),
     write(WN),
     write(' '),
-    portName(portID,Name),
+    portName(PortID,Name),
     write(Name),
     write(')'),
     nl.
@@ -72,7 +72,7 @@ printSelfOutputPort(PortID) :-
     wireNum(EdgeID,WN),
     write(WN),
     write(' '),
-    portName(portID,Name),
+    portName(PortID,Name),
     write(Name),
     write(')'),
     nl.
@@ -94,7 +94,7 @@ printInputPort(PartID) :-
     write(' '),
     write(WN),
     write(' '),
-    portName(portID,Name),
+    portName(PortID,Name),
     write(Name),
     write(')'),
     nl.
@@ -119,7 +119,7 @@ printOutputPort(PartID) :-
     write(' '),
     write(WN),
     write(' '),
-    portName(portID,Name),
+    portName(PortID,Name),
     write(Name),
     write(')'),
     nl.
