@@ -21,7 +21,7 @@ wen(c),
 wen(d),
     port(PortID),
 wen(e),
-    source(PortID),
+    source(_,PortID),
 wen(f),
     asserta(selfInputPin(PortID)).  % self-input -> is a source (backwards from part inputs)
 

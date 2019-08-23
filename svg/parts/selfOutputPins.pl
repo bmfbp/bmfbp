@@ -17,7 +17,7 @@ makeSelfOutputPins(EllipseID) :-
     component(Main),
     parent(EllipseID,PortID),
     port(PortID),
-    sink(PortID),
+    sink(_,PortID),
     asserta(selfOutputPin(PortID)).  % self-output -> is a sink (backwards from part inputs)
 
 :- include('tail').

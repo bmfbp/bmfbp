@@ -15,7 +15,7 @@ condSinkRect :- true.
 makeInputPins(RectID) :-
     parent(RectID,PortID),
     port(PortID),
-    sink(PortID),
+    sink(_,PortID),
     asserta(inputPin(PortID)).
 
 :- include('tail').

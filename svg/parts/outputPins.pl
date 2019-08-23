@@ -15,7 +15,7 @@ condSourceRect :- true.
 makeOutputPins(RectID) :-
     parent(RectID,PortID),
     port(PortID),
-    source(PortID),
+    source(_,PortID),
     asserta(outputPin(PortID)).
 
 :- include('tail').
