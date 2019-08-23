@@ -16,6 +16,6 @@ makeOutputPins(RectID) :-
     parent(RectID,PortID),
     port(PortID),
     source(_,PortID),
-    asserta(outputPin(PortID)).
+    asserta(outputPin(PortID)),!.
 
 :- include('tail').

@@ -8,7 +8,8 @@ main :-
     halt.
 
 condSourceEllipse :-
-    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)).
+    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)),!.
+
 condSourceEllispe :- true.
 
 makeSelfInputPins(EllipseID) :-
@@ -23,6 +24,6 @@ wen(d),
 wen(e),
     source(_,PortID),
 wen(f),
-    asserta(selfInputPin(PortID)).  % self-input -> is a source (backwards from part inputs)
+    asserta(selfInputPin(PortID)),!.  % self-input -> is a source (backwards from part inputs)
 
 :- include('tail').
