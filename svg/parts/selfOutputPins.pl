@@ -18,6 +18,6 @@ makeSelfOutputPins(EllipseID) :-
     parent(EllipseID,PortID),
     port(PortID),
     sink(_,PortID),
-    asserta(selfOutputPin(PortID)).  % self-output -> is a sink (backwards from part inputs)
+    asserta(selfOutputPin(PortID)),!.  % self-output -> is a sink (backwards from part inputs)
 
 :- include('tail').
