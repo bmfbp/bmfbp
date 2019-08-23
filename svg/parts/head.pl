@@ -29,7 +29,7 @@
 :- dynamic(move_relative_y/2) .
 :- dynamic(npipes/1).
 :- dynamic(nwires/1).
-:- dynamic(parent/2).
+:- dynamic(parent/2). % parent(ParentID,OF-X)
 :- dynamic(pipeNum/2).
 :- dynamic(wireNum/2).
 :- dynamic(port/1) .

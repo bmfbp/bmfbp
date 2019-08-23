@@ -8,7 +8,7 @@ main :-
     halt.
 
 check_has_port(ParentID):-
-    parent(PortID,ParentID),
+    parent(ParentID,PortID),
     port(PortID),
     !.
 

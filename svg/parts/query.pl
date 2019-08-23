@@ -26,7 +26,7 @@ sinkOf(_,Port) :-
 
 
 parentOf(Port,Parent) :-
-    parent(Port,Parent),!.
+    parent(Parent,Port),!.
 
 parentOf(_,Parent) :-
     Parent = null.
