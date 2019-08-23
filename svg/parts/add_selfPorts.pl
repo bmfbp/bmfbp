@@ -8,7 +8,7 @@ main :-
     halt.
 
 condEllipses :-
-    forall(eltype(EllipseID,ellipse),createSelfPorts(EllipseID)).
+    forall(ellipse(EllipseID),createSelfPorts(EllipseID)).
 
 condEllipses :-
     true.
@@ -17,7 +17,7 @@ createSelfPorts(EllipseID) :-
     % find one port that touches the ellispe (if there are more, then the "coincidentPorts"
     % pass will find them), asserta all facts needed by ports downstream - portIndex, sink,
     % source, parent
-    eltype(PortID,port),
+    port(PortID,
     bounding_box_left(EllipseID,ELeftX),
     bounding_box_top(EllipseID,ETopY),
     bounding_box_right(EllipseID,ERightX),
@@ -31,7 +31,6 @@ createSelfPorts(EllipseID) :-
     textCompletelyInside(NameID,EllipseID),
     !,
     asserta(parent(EllipseID,PortID)),
-    asserta(port(PortID)),
     asserta(used(NameID)),
     asserta(portNameByID(PortID,NameID)),
     asserta(portName(PortID,Name)).
