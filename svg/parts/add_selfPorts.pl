@@ -31,6 +31,7 @@ createSelfPorts(EllipseID) :-
     textCompletelyInside(NameID,EllipseID),
     !,
     asserta(parent(EllipseID,PortID)),
+    asserta(port(PortID)),
     asserta(used(NameID)),
     asserta(portNameByID(PortID,NameID)),
     asserta(portName(PortID,Name)).
