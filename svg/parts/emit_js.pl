@@ -99,7 +99,7 @@ printInputPort(PartID) :-
     write(')'),
     nl.
 
-printInputPort(PartID) :-
+printInputPort(_) :-
     true.
 
 
@@ -124,7 +124,7 @@ printOutputPort(PartID) :-
     write(')'),
     nl.
 
-printOutputPort(PartID) :-
+printOutputPort(_) :-
     true.
 
 
