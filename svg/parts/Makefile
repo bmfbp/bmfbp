@@ -27,7 +27,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/make_unknown_port_names \
 	$(BINDIR)/match_ports_to_components \
 	$(BINDIR)/sem_partsHaveSomePorts \
-	$(BINDIR)/sem_allPortsHaveAnIndex \
+	$(BINDIR)/sem_portsHaveSinkOrSource \
 	$(BINDIR)/sem_noDuplicateKinds \
 	$(BINDIR)/sem_speechVScomments \
 	$(BINDIR)/sem_info \
