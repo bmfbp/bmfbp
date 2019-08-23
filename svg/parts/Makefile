@@ -9,6 +9,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/inputPins \
 	$(BINDIR)/outputPins \
 	$(BINDIR)/pinless \
+	$(BINDIR)/assign_parents_to_ellipses \
 	$(BINDIR)/assign_wire_numbers_to_inputs \
 	$(BINDIR)/assign_wire_numbers_to_outputs \
 	$(BINDIR)/assign_portIndices \

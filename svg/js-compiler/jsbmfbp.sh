@@ -14,7 +14,8 @@ sort <temp3.pro >temp4.pro
 check_input $NAME <temp4.pro >temp5.pro
 
 # parser
-calc_bounds $NAME <temp5.pro >temp6.pro
+calc_bounds $NAME <temp5.pro >temp6a.pro
+assign_parents_to_ellipses <temp6a.pro >temp6.pro
 find_comments $NAME <temp6.pro >temp7.pro
 find_metadata $NAME <temp7.pro >temp8.pro
 add_kinds $NAME <temp8.pro >temp9.pro
@@ -40,7 +41,7 @@ assign_wire_numbers_to_edges $NAME <temp20.pro >temp21.pro
 selfInputPins <temp21.pro >temp22a.pro
 selfOutputPins <temp22a.pro >temp22b.pro
 inputPins <temp22b.pro >temp22c.pro
-outputPins <temp21c.pro >temp22.pro
+outputPins <temp22c.pro >temp22.pro
 
 
 loginfo <temp22.pro >temp25.pro
