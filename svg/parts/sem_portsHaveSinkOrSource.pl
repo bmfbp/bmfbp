@@ -8,13 +8,13 @@ main :-
     halt.
 
 hasSinkOrSource(PortID):-
-    sink(PortID),!.
+    sink(_,PortID),!.
 
 hasSinkOrSource(PortID):-
-    source(PortID),!.
+    source(_,PortID),!.
 
 hasSinkOrSource(PortID):-
-    asserta(log('fATAL',port_isnt_marked_sink_or_source,PortID)).
+    asserta(log('fATAL',port_isnt_marked_sink_or_source,PortID)),!.
 
 :- include('tail').
 
