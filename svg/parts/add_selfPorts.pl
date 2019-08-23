@@ -17,7 +17,7 @@ createSelfPorts(EllipseID) :-
     % find one port that touches the ellispe (if there are more, then the "coincidentPorts"
     % pass will find them), asserta all facts needed by ports downstream - portIndex, sink,
     % source, parent
-    port(PortID,
+    port(PortID),
     bounding_box_left(EllipseID,ELeftX),
     bounding_box_top(EllipseID,ETopY),
     bounding_box_right(EllipseID,ERightX),
