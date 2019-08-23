@@ -13,17 +13,14 @@ condSourceEllipse :-
 condSourceEllispe :- true.
 
 makeSelfInputPins(EllipseID) :-
-wen(a),
     parent(Main,EllipseID),
-wen(b),
     component(Main),
-wen(c),
     parent(EllipseID,PortID),
-wen(d),
     port(PortID),
-wen(e),
     source(_,PortID),
-wen(f),
     asserta(selfInputPin(PortID)),!.  % self-input -> is a source (backwards from part inputs)
+
+makeSelfInputPins(_) :-
+    true.
 
 :- include('tail').
