@@ -3,7 +3,7 @@
 
 main :-
     readFB(user_input),
-    condSourceRect
+    condSourceRect,
     writeFB,
     halt.
 

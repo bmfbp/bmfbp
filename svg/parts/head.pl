@@ -76,6 +76,8 @@
 :- dynamic(selfOutputPin/1).
 :- dynamic(inputPin/2).
 :- dynamic(outputPin/2).
+:- dynamic(inputPort/2).
+:- dynamic(outputPort/2).
 :- dynamic(wireIndex/2).
 :- dynamic(n_c/1).
 :- dynamic(namedSink/1).

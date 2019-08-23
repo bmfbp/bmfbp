@@ -110,7 +110,7 @@ printOutputPort(PartID) :-
 printOutputPort(PartID) :-
     write('    ('),
     outputPort(PartID,PortID),
-    sourse(EdgeID,PortID),
+    source(EdgeID,PortID),
     edge(EdgeID),
     wireNum(EdgeID,WN),
     write(PartID),
