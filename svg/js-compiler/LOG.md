@@ -26,3 +26,4 @@ In English, this says "part id374 sends from pin 1 on wire #2 to part id369 pin 
 
 (This exact relationship can be seen on the diagram js_test_emitter.svg)
 
+The emitted JSON is in temp28.json.
