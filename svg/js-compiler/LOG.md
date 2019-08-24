@@ -26,4 +26,10 @@ In English, this says "part id374 sends from pin 1 on wire #2 to part id369 pin 
 
 (This exact relationship can be seen on the diagram js_test_emitter.svg)
 
-The emitted JSON is in temp28.json.
+The emitted JSON is in temp28.json.  "Emit_js3.lisp" creates temp28.json.
+
+A pre-pass, "emit_js.pl", creates temp26.lisp and unmap-strings creates temp27.lisp.
+
+"Emit_js.pl" collects the pertinent information from the factbase and emits it in Lisp form for further formatting.
+
+"Unmap-strings" converts references to "struidGnnn" back into Lisp strings.  (Prolog doesn't like spaces in atom names, so we hash away all strings early on and give them single atomic names).
