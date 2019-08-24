@@ -548,18 +548,9 @@ centerCompletelyInsideBoundingBox(ID1,ID2) :-
     Cy >= T2,
     Cy =< B2.
 
-%% dumplog :-
-%%     forall(log(X),dumplog(X)),
-%%     forall(log(Z,Y),dumplog(Z,Y)),
-%%     forall(log(A,B,C),dumplog(A,B,C)),
-%%     forall(log(D,E,F,G),dumplog(D,E,F,G)),
-%%     forall(log(H,I,J,K,L),dumplog(H,I,J,K,L)),
-%%     forall(log(M,N,O,P,Q,R),dumplog(M,N,O,P,Q,R)),
-%%     forall(log(M1,N1,O1,P1,Q1,R1,S1),dumplog(M1,N1,O1,P1,Q1,R1,S1)),
-%%     forall(log(M2,N2,O2,P2,Q2,R2,S2,T2),dumplog(M2,N2,O2,P2,Q2,R2,S2,T2)),
-%%     forall(log(L3,M3,N3,O3,P3,Q3,R3,S3,T3),dumplog(L3,M3,N3,O3,P3,Q3,R3,S3,T3)).
-
 dumplog :-
+    forall(log(X),dumplog(X)),
+    forall(log(Z,Y),dumplog(Z,Y)),
     forall(log(A,B,C),dumplog(A,B,C)),
     forall(log(D,E,F,G),dumplog(D,E,F,G)),
     forall(log(H,I,J,K,L),dumplog(H,I,J,K,L)),
