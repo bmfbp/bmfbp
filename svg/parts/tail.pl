@@ -84,7 +84,8 @@ writelog :-
     forall(log(H,I,J,K,L),writelog(H,I,J,K,L)),
     forall(log(M,N,O,P,Q,R),writelog(M,N,O,P,Q,R)),
     forall(log(S,T,U,V,W,X,Y),writelog(S,T,U,V,W,X,Y)),
-    forall(log(R,S,T,U,V,W,X,Y),writelog(R,S,T,U,V,W,X,Y)).
+    forall(log(R,S,T,U,V,W,X,Y),writelog(R,S,T,U,V,W,X,Y)),
+    forall(log(R,S,T,U,V,W,X,Y,Z),writelog(R,S,T,U,V,W,X,Y,Z)).
 
 writelog(X) :- writeterm(log(X)).
 writelog(Y,Z) :-writeterm(log(Y,Z)).
@@ -94,6 +95,7 @@ writelog(A,B,C,D,E) :-writeterm(log(A,B,C,D,E)).
 writelog(A,B,C,D,E,F) :-writeterm(log(A,B,C,D,E,F)).
 writelog(A,B,C,D,E,F,G) :-writeterm(log(A,B,C,D,E,F,G)).
 writelog(A,B,C,D,E,F,G,H) :-writeterm(log(A,B,C,D,E,F,G,H)).
+writelog(A,B,C,D,E,F,G,H,I) :-writeterm(log(A,B,C,D,E,F,G,H,I)).
 
 
 wspc :-
@@ -459,6 +461,10 @@ element(log(A,B,C,D,W,X,Y,Z), Str) :- !,
 			     asserta(log(A,B,C,D,W,X,Y,Z)),
 			     readFB(Str).
 
+element(log(A,B,C,D,E,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,B,C,D,E,W,X,Y,Z)),
+			     readFB(Str).
+
 
     
 element(Term, _) :-
@@ -542,21 +548,37 @@ centerCompletelyInsideBoundingBox(ID1,ID2) :-
     Cy >= T2,
     Cy =< B2.
 
+%% dumplog :-
+%%     forall(log(X),dumplog(X)),
+%%     forall(log(Z,Y),dumplog(Z,Y)),
+%%     forall(log(A,B,C),dumplog(A,B,C)),
+%%     forall(log(D,E,F,G),dumplog(D,E,F,G)),
+%%     forall(log(H,I,J,K,L),dumplog(H,I,J,K,L)),
+%%     forall(log(M,N,O,P,Q,R),dumplog(M,N,O,P,Q,R)),
+%%     forall(log(M1,N1,O1,P1,Q1,R1,S1),dumplog(M1,N1,O1,P1,Q1,R1,S1)),
+%%     forall(log(M2,N2,O2,P2,Q2,R2,S2,T2),dumplog(M2,N2,O2,P2,Q2,R2,S2,T2)),
+%%     forall(log(L3,M3,N3,O3,P3,Q3,R3,S3,T3),dumplog(L3,M3,N3,O3,P3,Q3,R3,S3,T3)).
+
 dumplog :-
-    forall(log(X),dumplog(X)),
-    forall(log(Z,Y),dumplog(Z,Y)),
     forall(log(A,B,C),dumplog(A,B,C)),
     forall(log(D,E,F,G),dumplog(D,E,F,G)),
     forall(log(H,I,J,K,L),dumplog(H,I,J,K,L)),
     forall(log(M,N,O,P,Q,R),dumplog(M,N,O,P,Q,R)),
     forall(log(M1,N1,O1,P1,Q1,R1,S1),dumplog(M1,N1,O1,P1,Q1,R1,S1)),
-    forall(log(M2,N2,O2,P2,Q2,R2,S2,T2),dumplog(M2,N2,O2,P2,Q2,R2,S2,T2)).
+    forall(log(M2,N2,O2,P2,Q2,R2,S2,T2),dumplog(M2,N2,O2,P2,Q2,R2,S2,T2)),
+    forall(log(L3,M3,N3,O3,P3,Q3,R3,S3,T3),dumplog(L3,M3,N3,O3,P3,Q3,R3,S3,T3)).
 
 dumplog(W) :- wen(W).
 dumplog(W,X) :- we(W),wspc,wen(X).
 dumplog(W,X,Y) :- we(W),wspc,we(X),wspc,wen(Y).
 dumplog(W,X,Y,Z) :- we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
 dumplog(V,W,X,Y,Z) :- we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_) :- true.
 dumplog(U,V,W,X,Y,Z) :- we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_) :- true.
 dumplog(T,U,V,W,X,Y,Z) :- we(T),wspc,we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_,_) :- true.
 dumplog(S,T,U,V,W,X,Y,Z) :- we(S),wspc,we(T),wspc,we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_,_,_) :- true.
+dumplog(R,S,T,U,V,W,X,Y,Z) :- we(R),wspc,we(S),wspc,we(T),wspc,we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_,_,_,_) :- true.

@@ -37,7 +37,8 @@ test5:
 
 xx:
 	cd ../ && make 
-	make top
+	make test4
+	cat temp.log.txt
 
 tee:
 	jsbmfbp $(TEST_CASES)/composites/tee.svg
