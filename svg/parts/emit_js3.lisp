@@ -127,7 +127,7 @@
 			      (third pin-descriptor))
 			  pin-list)))
     (if (every-item-is-a-number-p pin-ids)
-	(iota (1+ (positive-maximum pin-ids)))
+	(iota (positive-maximum pin-ids))
 	pin-ids)))
 
 (defun @compute-number-of-input-pins-for-each-part ()
