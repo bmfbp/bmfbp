@@ -1,5 +1,6 @@
 :- initialization(main).
 :- include('head').
+:- include('port').
 
 main :-
     readFB(user_input),
@@ -15,8 +16,7 @@ condSourceEllispe :- true.
 makeSelfInputPins(EllipseID) :-
     parent(Main,EllipseID),
     component(Main),
-    parent(EllipseID,PortID),
-    port(PortID),
+    portFor(EllipseID,PortID),
     source(_,PortID),
     asserta(selfInputPin(PortID)),!.  % self-input -> is a source (backwards from part inputs)
 

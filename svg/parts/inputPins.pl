@@ -1,5 +1,6 @@
 :- initialization(main).
 :- include('head').
+:- include('port').
 
 main :-
     readFB(user_input),
@@ -13,8 +14,7 @@ condSinkRect :-
 condSinkRect :- true.
 
 makeInputPins(RectID) :-
-    parent(RectID,PortID),
-    port(PortID),
+    portFor(RectID,PortID),
     sink(_,PortID),
     asserta(inputPin(PortID)),!.
 
