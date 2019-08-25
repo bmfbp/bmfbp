@@ -115,8 +115,8 @@
             "partName" : "ID369",
             "inCount"  : 2,
             "outCount" : 1,
-            "inPins"   : { "p14" : [3] ,"p10" : [5, 6] },
-            "outPins"  : { "p11" : [0] },
+            "inPins"   : { "p14" : [3], "p10" : [5,6] },
+            "outPins"  : { "p11" : [0,7] },
           }
         ]
       }
