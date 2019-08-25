@@ -37,7 +37,7 @@ test5:
 
 xx:
 	cd ../ && make 
-	make test
+	make test4
 	cat temp.log.txt
 
 tee:

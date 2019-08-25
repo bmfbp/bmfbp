@@ -38,7 +38,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/emit_js3 $(BINDIR)/unmap-strings $(BINDIR)/emit_js2
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/unmap-strings $(BINDIR)/emit_js2
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
