@@ -52,7 +52,7 @@ if grep -q 'ATAL' temp.log-unfixed.txt ; then
     echo QUIT
     exit 1
 else    
-    emit_js $NAME <temp25.pro >temp26.lisp
+    new_emit_js $NAME <temp25.pro >temp26.lisp
     unmap-strings $NAME <temp26.lisp >temp27.lisp
     emit_js3 $NAME <temp27.lisp >temp28.json
     sed -f strings.sed <temp.log-unfixed.txt >temp.log.txt

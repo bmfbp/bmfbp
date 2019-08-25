@@ -8,9 +8,9 @@ main :-
     halt.
 
 logAllEdges :-
-    forall(edge(Wire),portsOnWire(_,Wire,_)).
+    forall(edge(Wire),portsOnWire(Wire)).
 
-portsOnWire(SourcePort,Wire,SinkPort) :-
+portsOnWire(Wire) :-
     get_info(SourceParent,SourceParentName,SourceName,Wire,WN,SinkParent,SinkParentName,SinkName),
     asserta(log(parent_source_wire_parent_sink,SourceParent,SourceParentName,SourceName,wire(Wire),wireNum(WN),SinkParent,SinkParentName,SinkName)).
 
