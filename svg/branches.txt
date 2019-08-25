@@ -3,6 +3,7 @@ parent << edges << names-not-indices4 << names-not-indices
 edges << names-not-indices4 << names-not-indices
 names-not-indices4 << names-not-indices
 names-not-indices << split
+mod-log << names-not-indices << split
 
 to delete:
 names-not-indices4 (merged into names-not-indices, but won't delete)
