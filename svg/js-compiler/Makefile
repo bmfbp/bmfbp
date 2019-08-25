@@ -35,9 +35,12 @@ test4:
 test5:
 	jsbmfbp $(TEST_CASES)/firstTests/js_test5_emitter.svg
 
+test6:
+	jsbmfbp $(TEST_CASES)/firstTests/js_test6_emitter.svg
+
 xx:
 	cd ../ && make 
-	make test4
+	make test6
 	cat temp.log.txt
 
 tee:

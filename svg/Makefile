@@ -34,6 +34,9 @@ test4 :
 test5 : 
 	cd js-compiler && make test5
 
+test6 : 
+	cd js-compiler && make test6
+
 tee:
 	cd js-compiler && make tee
 
