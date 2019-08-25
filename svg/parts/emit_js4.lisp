@@ -1,17 +1,11 @@
 (defmacro @loop (&body body) `(loop ,@body))
 (defmacro @exit-when (expr) `(when ,expr (return)))
 
-(defmacro child-id (w) `(first ,w))
-(defmacro child-name (w) `(second ,w))
-
 (defun main ()
   (with-open-file (t27 "~/projects/bmfbp/svg/js-compiler/temp27.lisp" :direction :input)
     (let ((whole (read t27))
           (hashmap (make-hash-table))
-          (source-ids (make-hash-table))
-          (source-names (make-hash-table))
-          (sink-ids (make-hash-table))
-          (sink-names (make-hash-table))
+          (parts-by-name (make-hash-table :test 'equal))
           (out *standard-output*))
 
       ;; top level hashmap contains component Name, Metadata, Wirecount and Wires
@@ -22,31 +16,61 @@
         (pop whole)
         (pop whole))
 
+      ;; collect all parts into a hash table
+      (@insert-part-names parts-by-name (gethash 'wires hashmap))
 
 
+     (format out "~&{~%")
+     (format out "  \"partName\" : ~S,~%" (gethash 'name hashmap))
+     (format out "  \"wireCount\" : ~S,~%" (gethash 'wirecount hashmap))
+     (format out "  \"metaData\" : ~S,~%" (gethash 'metadata hashmap))
+     (format out "  \"self\" :~%")
+       (emit-part out "self" (gethash "self" parts-by-name))
+     (format out "  \"parts\" : [~%")
+     (maphash #'(lambda (name part-table)
+                  (unless (string= "self" name)
+                    (format out "  {~%")
+                    (emit-part out name part-table)
+                    (format out "  }~%")))
+              parts-by-name)
+     (format out "  ]~%")
+     (format out "},~%"))))
 
+(defun emit-part (out name part-table)
+  (format out "    \"partName\" : ~S~%" (gethash :id part-table))
+  (format out "    \"kindName\" : ~S~%" name))
 
+(defmacro source-name (w) `(second ,w))
+(defmacro sink-name (w) `(seventh ,w))
+(defmacro source-id (w) `(first ,w))
+(defmacro sink-id (w) `(sixth ,w))
 
+(defun @insert-part-names (table wire-list)
+  "put every part into the table with nil :source and :sink fields, and :id field set to Prolog id or 'self'"
+  (@loop
+    (@exit-when (null wire-list))
+    (let ((wire (first wire-list)))
+      (insert-part-name table (source-name wire) (source-id wire))
+      (insert-part-name table (sink-name wire) (sink-id wire))
+    (pop wire-list))))
 
-      (let ((wire-list (gethash 'wires hashmap)))
-        (@loop
-          (@exit-when (null wire-list))
-          
-
-          (let ((wire (first wire-list)))
-            (let ((id (wire-id wire))
-                  (name
-            (setf (gethash 
-            )
-          (pop wire-list)))
-
-        (let ((wcount (length wire-list))
-              (i 0))
-          (@loop
-            (@exit-when (> i wcount))
-            (setf (gethash 
-            (incf i))
-      )))
+(defun insert-part-name (table name0 id0)
+  ;; nb "SELF" is represented by 'NULL
+  (let ((name (if (eq 'NULL name0)
+                  "self"
+                name0))
+        (id (if (eq 'NULL name0)
+                "self"
+              id0)))
+    (multiple-value-bind (val success)
+        (gethash name table)
+      (declare (ignore val))
+      (unless success
+        (let ((part-table (make-hash-table)))
+          (setf (gethash :sink part-table) nil
+                (gethash :source part-table) nil
+                (gethash :id part-table) id)
+          (setf (gethash name table) part-table))))))
 
 #|
     {
