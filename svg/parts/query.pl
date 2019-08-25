@@ -1,9 +1,6 @@
 :- include(head).
 
-logAllEdges :-
-    forall(edge(Wire),portsOnWire(_,Wire,_)).
-
-portsOnWire(SourcePort,Wire,SinkPort) :-
+get_info(SourceParent,SourcParentName,SouceName,Wire,WN,SinkParent,SinkParentName,SinkName):-
     sourceOf(Wire,SourcePort),
     wireNum(Wire,WN),
     number(WN),
@@ -13,8 +10,7 @@ portsOnWire(SourcePort,Wire,SinkPort) :-
     sinkOf(Wire,SinkPort),
     parentOf(SinkPort,SinkParent),
     kindOf(SinkParent,SinkParentName),
-    portNameOf(SinkPort,SinkName),
-    asserta(log(parent_source_wire_parent_sink,SourceParent,SourceParentName,SourceName,wire(Wire),wireNum(WN),SinkParent,SinkParentName,SinkName)).
+    portNameOf(SinkPort,SinkName).
 
 sourceOf(Wire,Port) :-
     source(Wire,Port),!.
