@@ -1,6 +1,6 @@
 :- include(head).
 
-get_info(SourceParent,SourcParentName,SouceName,Wire,WN,SinkParent,SinkParentName,SinkName):-
+get_info(SourceParent,SourceParentName,SourceName,Wire,WN,SinkParent,SinkParentName,SinkName):-
     sourceOf(Wire,SourcePort),
     wireNum(Wire,WN),
     number(WN),

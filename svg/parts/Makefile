@@ -15,6 +15,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/assign_portIndices \
 	$(BINDIR)/emit \
 	$(BINDIR)/emit_js \
+	$(BINDIR)/new_emit_js \
 	$(BINDIR)/inOutPins \
 	$(BINDIR)/add_kinds \
 	$(BINDIR)/find_comments \
