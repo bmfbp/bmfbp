@@ -63,7 +63,7 @@ pass2:
 ide:
 	jsbmfbp $(BUILD_PROCESS)/ide.svg
 
-build_process:
+bp:
 	jsbmfbp $(BUILD_PROCESS)/build_process.svg
 
 comp:
