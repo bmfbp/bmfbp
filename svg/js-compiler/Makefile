@@ -66,3 +66,6 @@ ide:
 build_process:
 	jsbmfbp $(BUILD_PROCESS)/build_process.svg
 
+comp:
+	jsbmfbp $(BUILD_PROCESS)/compile_composite.svg
+
