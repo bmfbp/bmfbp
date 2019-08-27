@@ -38,7 +38,7 @@ EXECS = $(BINDIR)/check_input \
 	$(BINDIR)/coincidentPorts \
 	$(BINDIR)/lib_insert_part_name
 
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/unmap-strings $(BINDIR)/emit_js2
+all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/fb_to_prolog $(BINDIR)/lib_insert_part_name $(BINDIR)/unmap-strings $(BINDIR)/emit_js2 $(BINDIR)/new_emit_js2
 
 $(BINDIR)/plsort:
 	mkdir -p $(BINDIR)
@@ -78,11 +78,10 @@ $(BINDIR)/emit_js2: emit_js2.lisp
 		--load emit_js2.lisp \
 		--entry main
 
-$(BINDIR)/emit_js3: emit_js3.lisp
-	buildapp --output $(BINDIR)/emit_js3 \
+$(BINDIR)/new_emit_js2: new_emit_js2.lisp
+	buildapp --output $(BINDIR)/new_emit_js2 \
 		--load util.lisp \
-		--load loop-macros.lisp \
-		--load emit_js3.lisp \
+		--load new_emit_js2.lisp \
 		--entry main
 
 clean :
