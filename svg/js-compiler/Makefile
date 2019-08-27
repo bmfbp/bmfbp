@@ -1,5 +1,6 @@
 BINDIR=~/bin
 TEST_CASES=../../test_cases
+BUILD_PROCESS=../../build_process
 
 all: dependencies
 # depends on the parts being built
@@ -58,3 +59,10 @@ pass:
 pass2:
 	jsbmfbp2 $(TEST_CASES)/composites/pass_and_add.svg
 	compare-graph temp28.json pass_and_add_regression.js
+
+ide:
+	jsbmfbp $(BUILD_PROCESS)/ide.svg
+
+build_process:
+	jsbmfbp $(BUILD_PROCESS)/build_process.svg
+
