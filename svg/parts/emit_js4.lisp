@@ -51,12 +51,16 @@
                (@get-metadata () (gethash 'metadata top-level-hashmap))
                (@get-self-descriptor () (gethash "self" parts-by-name))
                (@emit-all-parts-except-self ()
-                 (maphash #'(lambda (name part-table)
-                              (unless (string= "self" name)
-                                (format out "  {~%")
-                                (emit-part out name part-table)
-                                (format out "  }~%")))
-                          parts-by-name))
+                 (let ((first-time t))
+                   (maphash #'(lambda (name part-table)
+                                (unless (string= "self" name)
+                                  (unless first-time
+                                    (format out "  },~%"))
+                                  (setf first-time nil)
+                                  (format out "  {~%")
+                                  (emit-part out name part-table)))
+                            parts-by-name))
+                   (format out "  }~%"))
                (@insert-source-pin-into-part (wire)
                  (let ((part-name (source-name wire))
                        (pin-name (source-pin-name wire)))
@@ -119,19 +123,19 @@
         (format out "},~%")))))
   
 (defun emit-part (out name part-desc)
-  (format out "    \"partName\" : ~S~%" (id part-desc))
-  (format out "    \"kindName\" : ~S~%" name)
-  (format out "    \"inCount\" : ~S~%" (hash-table-count (sinks part-desc)))
-  (format out "    \"outCount\" : ~S~%" (hash-table-count (sources part-desc)))
+  (format out "    \"partName\" : ~S,~%" (id part-desc))
+  (format out "    \"kindName\" : ~S,~%" name)
+  (format out "    \"inCount\" : ~S,~%" (hash-table-count (sinks part-desc)))
+  (format out "    \"outCount\" : ~S,~%" (hash-table-count (sources part-desc)))
   (format out "    \"inMap\" : ")
   (emit-pin-map out (sinks part-desc))
-  (format out "~%")
+  (format out ",~%")
   (format out "    \"outMap\" : ")
   (emit-pin-map out (sources part-desc))
-  (format out "~%")
+  (format out ",~%")
   (format out "    \"inPins\" : ")
   (emit-wire-list out (sinks part-desc))
-  (format out "~%")
+  (format out ",~%")
   (format out "    \"outPins\" : ")
   (emit-wire-list out (sources part-desc))
   (format out "~%")
@@ -191,43 +195,43 @@
         "parts" : [
           {
             "kindName" : "part1",
-            "partName" : "ID397",
+            "partName" : "ID411",
             "inCount"  : 1,
-            "inMap"    : { "p4" : 0 }
             "outCount" : 2,
+            "inMap"    : { "p4" : 0 }
             "outMap    : { "p13" : 0, "p5" : 1 }
             "inPins"   : [[1]],
-            "outPins"  : [[3]],[2]],
+            "outPins"  : [[3],[2]]
           },
           {
             "kindName" : "part2",
-            "partName" : "ID397",
+            "partName" : "ID394",
             "inCount"  : 1,
-            "inMap"    : { "p6" : 0 }
             "outCount" : 2,
+            "inMap"    : { "p6" : 0 }
             "outMap"   : { "p7" : 0, "p15" : 1 }
             "inPins"   : [[2]],
-            "outPins"  : [[4],[5]],
+            "outPins"  : [[4],[5]]
           },
           {
             "kindName" : "part3",
-            "partName" : "ID374",
+            "partName" : "ID381",
             "inCount"  : 1,
-            "inMap"    : { "p8" : 0 }
             "outCount" : 1,
+            "inMap"    : { "p8" : 0 }
             "outMap"   : { "p9" : 0 }
             "inPins"   : [[4]],
-            "outPins"  : [[6]],
+            "outPins"  : [[6]]
           },
           {
             "kindName" : "part4",
-            "partName" : "ID369",
+            "partName" : "ID374",
             "inCount"  : 2,
-            "inMap"    : { "p14" : 0, "p10" : 1 }
             "outCount" : 1,
+            "inMap"    : { "p14" : 0, "p10" : 1 }
             "outMap"   " { "p11" : 0 }
             "inPins"   : [[3], [5,6]],
-            "outPins"  : [[0,7]],
+            "outPins"  : [[0,7]]
           }
         ]
       }
