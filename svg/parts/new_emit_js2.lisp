@@ -14,7 +14,7 @@
 (defclass part-descriptor-class ()
   ((sinks :accessor sinks :initform (new-string-hashmap))
    (sources :accessor sources :initform (new-string-hashmap))
-   (id :accessor id :initform nil)))
+   (name :accessor name :initform nil)))
 
 
   
@@ -56,10 +56,10 @@
            hashmap)
   (format out "]")))
 
-(defun emit-part (out name part-desc)
-  (format out "    \"kindName\" : ~S,~%" name)
+(defun emit-part (out id part-desc)
+  (format out "    \"kindName\" : ~S,~%" (name part-desc))
   (unless (null part-desc)
-    (format out "    \"partName\" : ~S,~%" (if (id part-desc) (id part-desc) ""))
+    (format out "    \"partName\" : ~S,~%" id)
     (format out "    \"inCount\" : ~S,~%" (hash-table-count (sinks part-desc)))
     (format out "    \"outCount\" : ~S,~%" (hash-table-count (sources part-desc)))
     (format out "    \"inMap\" : ")
@@ -78,7 +78,7 @@
 (defun main0 (strm)
     (let ((whole (read strm))
           (top-level-hashmap (new-string-hashmap)) ;; 'name, 'wirecount, 'metadata, 'wires
-          (parts-by-name (new-string-hashmap)) ;; each part including self
+          (parts-by-id (new-string-hashmap)) ;; each part including self
           (out *standard-output*))
 
       ;; top level hashmap contains component Name, Metadata, Wirecount and Wires
@@ -97,7 +97,7 @@
                          (second whole))
                    (pop whole)
                    (pop whole)))
-               (insert-part-name (name0 id0)
+               (insert-part (name0 id0)
                  ;; nb "SELF" is represented by 'NULL
                  (let ((name (if (eq 'NULL name0)
                                  "self"
@@ -106,62 +106,62 @@
                                "self"
                              id0)))
                    (multiple-value-bind (val success)
-                       (gethash name parts-by-name)
+                       (gethash id parts-by-id)
                      (declare (ignore val))
                      (unless success
                        (let ((part-desc (make-instance 'part-descriptor-class)))
-                         (setf (id part-desc) id
+                         (setf (name part-desc) name
                                (sources part-desc) (new-string-hashmap)
                                (sinks part-desc) (new-string-hashmap))
-                         (setf (gethash name parts-by-name) part-desc))))))
-               (@insert-part-names-into-part-table ()
+                         (setf (gethash id parts-by-id) part-desc))))))
+               (@insert-parts-into-part-table ()
                  (let ((wire-list (get-wires)))
                    (@loop
                      (@exit-when (null wire-list))
                      (let ((wire (first wire-list)))
-                       (insert-part-name (source-name wire) (source-id wire))
-                       (insert-part-name (sink-name wire) (sink-id wire))
+                       (insert-part (source-name wire) (source-id wire))
+                       (insert-part (sink-name wire) (sink-id wire))
                        (pop wire-list)))))
                (@get-name ()  (gethash 'name top-level-hashmap))
                (@get-wirecount () (gethash 'wirecount top-level-hashmap))
                (@get-metadata () (gethash 'metadata top-level-hashmap))
-               (@get-self-descriptor () (gethash "self" parts-by-name))
+               (@get-self-descriptor () (gethash "self" parts-by-id))
                (@emit-all-parts-except-self ()
                  (let ((first-time t))
-                   (maphash #'(lambda (name part-table)
-                                (unless (string= "self" name)
+                   (maphash #'(lambda (id part-table)
+                                (unless (string= "self" id)
                                   (unless first-time
                                     (format out "  },~%"))
                                   (setf first-time nil)
                                   (format out "  {~%")
-                                  (emit-part out name part-table)))
-                            parts-by-name))
+                                  (emit-part out id part-table)))
+                            parts-by-id))
                    (format out "  }~%"))
                (@insert-source-pin-into-part (wire)
-                 (let ((part-name (source-name wire))
+                 (let ((part-id (source-id wire))
                        (pin-name (source-pin-name wire)))
-                   (let ((part-desc (gethash part-name parts-by-name)))
+                   (let ((part-desc (gethash part-id parts-by-id)))
                      (let ((sources (sources part-desc)))
                        (setf (gethash pin-name sources) nil)))))
                (@insert-sink-pin-into-part (wire)
-                 (let ((part-name (sink-name wire))
+                 (let ((part-id (sink-id wire))
                        (pin-name (sink-pin-name wire)))
-                   (let ((part-desc (gethash part-name parts-by-name)))
+                   (let ((part-desc (gethash part-id parts-by-id)))
                      (let ((sinks (sinks part-desc)))
                        (setf (gethash pin-name sinks) nil)))))
                (@add-source-wire (wire)
-                 (let ((part-name (source-name wire))
+                 (let ((part-id (source-id wire))
                        (pin-name  (source-pin-name wire))
                        (wire-num (wire-number wire)))
-                   (let ((part-desc (gethash part-name parts-by-name)))
+                   (let ((part-desc (gethash part-id parts-by-id)))
                      (let ((sources (sources part-desc)))
                        (setf (gethash pin-name sources)
                              (cons wire-num (gethash pin-name sources)))))))
                (@add-sink-wire (wire)
-                 (let ((part-name (sink-name wire))
+                 (let ((part-id (sink-id wire))
                        (pin-name  (sink-pin-name wire))
                        (wire-num (wire-number wire)))
-                   (let ((part-desc (gethash part-name parts-by-name)))
+                   (let ((part-desc (gethash part-id parts-by-id)))
                      (let ((sinks (sinks part-desc)))
                        (setf (gethash pin-name sinks)
                              (cons wire-num (gethash pin-name sinks)))))))
@@ -184,7 +184,7 @@
         (@make-top-level-description)
         
         ;; collect all parts into a hash table
-        (@insert-part-names-into-part-table)
+        (@insert-parts-into-part-table)
         (@insert-pins-into-parts)
       
         (format out "~&{~%")
