@@ -57,7 +57,7 @@
   (format out "]")))
 
 (defun emit-part (out id part-desc)
-  (format out "    \"kindName\" : ~S,~%" (name part-desc))
+  (format out "    \"kindName\" : ~S,~%" (if part-desc (name part-desc) "self"))
   (unless (null part-desc)
     (format out "    \"partName\" : ~S,~%" id)
     (format out "    \"inCount\" : ~S,~%" (hash-table-count (sinks part-desc)))
@@ -206,63 +206,3 @@
 (defun main (argv)
   (declare (ignore argv))
   (main0 *standard-input*))
-
-#|
-    {
-      "partname" : " js_test6_emitter",
-      "wireCount" : 8,
-      "metadata" : [...],
-      "self" : {
-          "partName" : "self",
-          "kindName" : "js_test6_emitter",
-          "inCount" : 1,
-          "outCount" : 2,
-          "inPins" :  [[0]], // p3 == index 0
-          "outPins" : [[0],[7]] // p12 == index 0, p16 == index 1 
-        },
-        "parts" : [
-          {
-            "kindName" : "part1",
-            "partName" : "ID411",
-            "inCount"  : 1,
-            "outCount" : 2,
-            "inMap"    : { "p4" : 0 }
-            "outMap    : { "p13" : 0, "p5" : 1 }
-            "inPins"   : [[1]],
-            "outPins"  : [[3],[2]]
-          },
-          {
-            "kindName" : "part2",
-            "partName" : "ID394",
-            "inCount"  : 1,
-            "outCount" : 2,
-            "inMap"    : { "p6" : 0 }
-            "outMap"   : { "p7" : 0, "p15" : 1 }
-            "inPins"   : [[2]],
-            "outPins"  : [[4],[5]]
-          },
-          {
-            "kindName" : "part3",
-            "partName" : "ID381",
-            "inCount"  : 1,
-            "outCount" : 1,
-            "inMap"    : { "p8" : 0 }
-            "outMap"   : { "p9" : 0 }
-            "inPins"   : [[4]],
-            "outPins"  : [[6]]
-          },
-          {
-            "kindName" : "part4",
-            "partName" : "ID374",
-            "inCount"  : 2,
-            "outCount" : 1,
-            "inMap"    : { "p14" : 0, "p10" : 1 }
-            "outMap"   " { "p11" : 0 }
-            "inPins"   : [[3], [5,6]],
-            "outPins"  : [[0,7]]
-          }
-        ]
-      }
-    }
-|#
-
