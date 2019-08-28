@@ -190,7 +190,9 @@
         (format out "~&{~%")
         (format out "  \"partName\" : ~S,~%" (@get-name))
         (format out "  \"wireCount\" : ~S,~%" (@get-wirecount))
-        (format out "  \"metaData\" : ~S,~%" (@get-metadata))
+        (let ((meta (@get-metadata)))
+	  (when meta
+	    (format out "  \"metaData\" : ~S,~%" meta)))
         (format out "  \"self\" : {~%")
         (@flip-sinks-and-sources-for-self)
         (emit-part out "self" (@get-self-descriptor))
