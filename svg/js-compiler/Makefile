@@ -61,11 +61,11 @@ pass2:
 	compare-graph temp28.json pass_and_add_regression.js
 
 ide:
-	jsbmfbp $(BUILD_PROCESS)/ide.svg
+	jsbmfbp $(BUILD_PROCESS)/kk/ide.svg
 
 bp:
-	jsbmfbp $(BUILD_PROCESS)/build_process.svg
+	jsbmfbp $(BUILD_PROCESS)/kk/build_process.svg
 
 comp:
-	jsbmfbp $(BUILD_PROCESS)/compile_composite.svg
+	jsbmfbp $(BUILD_PROCESS)/kk/compile_composites.svg
 
