@@ -66,6 +66,9 @@ ide:
 bp:
 	jsbmfbp $(BUILD_PROCESS)/kk/build_process.svg
 
+junk:
+	jsbmfbp $(BUILD_PROCESS)/kk/junk.svg
+
 comp:
 	jsbmfbp $(BUILD_PROCESS)/kk/compile_composites.svg
 
