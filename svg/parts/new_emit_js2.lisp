@@ -200,7 +200,7 @@
         (format out "  \"parts\" : [~%")
         (@emit-all-parts-except-self)
         (format out "  ]~%")
-        (format out "},~%"))))
+        (format out "}~%"))))
 
 #-lispworks
 (defun main (argv)
