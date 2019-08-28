@@ -1,8 +1,6 @@
-const setMain = require('bmfbp');
-
 const stack = [];
 
-setMain((pin, packet, send) => {
+exports.main = (pin, packet, send) => {
   switch (pin) {
     case 'push object':
       stack.push(packet);
@@ -15,8 +13,5 @@ setMain((pin, packet, send) => {
         send('part metadata', stack.pop());
       }
       break;
-
-    default:
-      throw new Error(`Unexpected pin: ${pin}`);
   }
-});
+};

@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./collector.js",
+  "kindType": "nodejs",
+  "inPins": [
+    "composite",
+    "leaf",
+    "done"
+  ],
+  "outPins": [
+    "intermediate code"
+  ]
+}

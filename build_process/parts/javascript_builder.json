@@ -1,0 +1,11 @@
+{
+  "entrypoint": "./javascript_builder.js",
+  "kindType": "nodejs",
+  "inPins": [
+    "intermediate code",
+    "temp directory"
+  ],
+  "outPins": [
+    "javascript source code"
+  ]
+}

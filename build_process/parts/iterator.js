@@ -1,8 +1,6 @@
-const setMain = require('bmfbp');
-
 let state = 'stopped';
 
-setMain((pin, packet, send) => {
+exports.main = (pin, packet, send) => {
   switch (state) {
     case 'stopped':
       switch (pin) {
@@ -29,8 +27,5 @@ setMain((pin, packet, send) => {
           // No action needed
       }
       break;
-
-    default:
-      throw new Error(`Unexpected state: ${state}`);
   }
-});
+};
