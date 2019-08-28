@@ -7,8 +7,8 @@
 (defmacro source-pin-name (w) `(third ,w)) ;; pin
 (defmacro sink-name (w) `(if (eq 'NULL (seventh ,w)) "self" (seventh ,w))) ;; part
 (defmacro sink-pin-name (w) `(eighth ,w)) ;; pin
-(defmacro source-id (w) `(first ,w))
-(defmacro sink-id (w) `(sixth ,w))
+(defmacro source-id (w) `(if (eq 'NULL (first ,w)) "self" (first ,w)))
+(defmacro sink-id (w) `(if (eq 'NULL (sixth ,w)) "self" (sixth ,w)))
 (defmacro wire-number (w) `(fifth ,w))
 
 (defclass part-descriptor-class ()
@@ -59,7 +59,7 @@
 (defun emit-part (out name part-desc)
   (format out "    \"kindName\" : ~S,~%" name)
   (unless (null part-desc)
-    (format out "    \"partName\" : ~S,~%" (id part-desc))
+    (format out "    \"partName\" : ~S,~%" (if (id part-desc) (id part-desc) ""))
     (format out "    \"inCount\" : ~S,~%" (hash-table-count (sinks part-desc)))
     (format out "    \"outCount\" : ~S,~%" (hash-table-count (sources part-desc)))
     (format out "    \"inMap\" : ")
