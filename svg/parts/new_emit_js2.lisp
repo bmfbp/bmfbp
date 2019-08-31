@@ -188,7 +188,7 @@
         (@insert-pins-into-parts)
       
         (format out "~&{~%")
-        (format out "  \"partName\" : ~S,~%" (@get-name))
+        ;(format out "  \"partName\" : ~S,~%" (@get-name))
         (format out "  \"wireCount\" : ~S,~%" (@get-wirecount))
         (let ((meta (@get-metadata)))
 	  (when meta
