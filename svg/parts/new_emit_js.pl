@@ -6,7 +6,7 @@ main :-
     readFB(user_input),
     write('('),
     nl,
-    write('name "'),
+    write('kindName "'),
     component(Name),
     write(Name),
     write('"'),
