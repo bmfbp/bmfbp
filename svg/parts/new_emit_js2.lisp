@@ -59,7 +59,7 @@
 (defun emit-part (out id part-desc)
   (format out "    \"kindName\" : ~S,~%" (if part-desc (name part-desc) "self"))
   (unless (null part-desc)
-    (format out "    \"partName\" : ~S,~%" id)
+    (format out "    \"partName\" : \"~A\",~%" id)
     (format out "    \"inCount\" : ~S,~%" (hash-table-count (sinks part-desc)))
     (format out "    \"outCount\" : ~S,~%" (hash-table-count (sources part-desc)))
     (format out "    \"inMap\" : ")
