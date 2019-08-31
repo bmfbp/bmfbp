@@ -79,7 +79,7 @@
 
 (defun main0 (strm)
     (let ((whole (read strm))
-          (top-level-hashmap (new-string-hashmap)) ;; 'name, 'wirecount, 'metadata, 'wires
+          (top-level-hashmap (new-string-hashmap)) ;; 'kindName, 'wirecount, 'metadata, 'wires
           (parts-by-id (new-string-hashmap)) ;; each part including self
           (out *standard-output*))
 
@@ -124,7 +124,7 @@
                        (insert-part (source-name wire) (source-id wire))
                        (insert-part (sink-name wire) (sink-id wire))
                        (pop wire-list)))))
-               (@get-name ()  (gethash 'name top-level-hashmap))
+               (@get-kindName ()  (gethash 'kindName top-level-hashmap))
                (@get-wirecount () (gethash 'wirecount top-level-hashmap))
                (@get-metadata () (gethash 'metadata top-level-hashmap))
                (@get-self-descriptor () (gethash "self" parts-by-id))
@@ -190,7 +190,7 @@
         (@insert-pins-into-parts)
       
         (format out "~&{~%")
-        ;(format out "  \"partName\" : ~S,~%" (@get-name))
+	(format out "  \"kindName\" : ~S,~%" (@get-kindName))
         (format out "  \"wireCount\" : ~S,~%" (@get-wirecount))
         (let ((meta (@get-metadata)))
 	  (when meta
