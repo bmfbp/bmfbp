@@ -56,10 +56,12 @@
            hashmap)
   (format out "]")))
 
-(defun emit-part (out id part-desc)
-  (format out "    \"kindName\" : ~S,~%" (if part-desc (name part-desc) "self"))
+(defun emit-part (out id part-desc &key (self nil))
+  (unless self
+    (format out "    \"kindName\" : ~S,~%" (if part-desc (name part-desc) "self")))
   (unless (null part-desc)
-    (format out "    \"partName\" : \"~A\",~%" id)
+    (unless self
+      (format out "    \"partName\" : \"~A\",~%" id))
     (format out "    \"inCount\" : ~S,~%" (hash-table-count (sinks part-desc)))
     (format out "    \"outCount\" : ~S,~%" (hash-table-count (sources part-desc)))
     (format out "    \"inMap\" : ")
@@ -195,7 +197,7 @@
 	    (format out "  \"metaData\" : ~S,~%" meta)))
         (format out "  \"self\" : {~%")
         (@flip-sinks-and-sources-for-self)
-        (emit-part out "self" (@get-self-descriptor))
+        (emit-part out "self" (@get-self-descriptor) :self t)
 	(format out "  },~%")
         (format out "  \"parts\" : [~%")
         (@emit-all-parts-except-self)
