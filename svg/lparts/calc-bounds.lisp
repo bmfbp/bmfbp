@@ -216,3 +216,133 @@
 (paiprolog:<- (sink id377 id376))
 (paiprolog:<- (sink id372 id371))
 
+
+
+(defun readfb (stream)
+  (flet ((read1 ()
+           (read stream nil 'eof)))
+    (paiprolog::clear-db)
+    (let ((clause (read1)))
+      (@:loop
+        (@:exit-when (eq 'eof clause))
+        (paiprolog::add-clause (paiprolog::replace-?-vars clause))
+        (setf clause (read1))))))
+
+(defun writefb (stream)
+  (let ((preds paiprolog::*db-predicates*))
+    (@:loop
+     (@:exit-when (null preds))
+     (let ((p (pop preds)))
+       (let ((clauses (get p 'clauses)))
+         (@:loop
+          (@:exit-when (null clauses))
+          (let ((c (pop clauses)))
+            (write c :stream stream))))))))
+
+(defun exactly-one (lis)
+  (assert (= 1 (length lis)))
+  (car lis))
+
+(defun create-rect-bb (id)
+  (let ((x (exactly-one (paiprolog:prolog-collect (?left) (geometry-left-x id ?left))))
+        (y (exactly-one (paiprolog:prolog-collect (?top) (geometry-top-left id ?top))))
+        (w (exactly-one (paiprolog:prolog-collect (?w) (geometry-w id ?w))))
+        (h (exactly-one (paiprolog:prolog-collect (?h) (geometry-h id ?h)))))
+    (let ((right (+ x w))
+          (bottom (+ y h)))
+      (paiprolog::add-clause `(bounding-box-left ,id ,x))
+      (paiprolog::add-clause `(bounding-box-top ,id ,y))
+      (paiprolog::add-clause `(bounding-box-right ,id ,right))
+      (paiprolog::add-clause `(bounding-box-bottom ,id ,bottom)))))
+
+(defun main ()
+  (with-open-file (in "~/projects/bmfbp/svg/lparts/fb5.lisp" :direction :input)
+    (with-open-file (out "~/projects/bmfbp/svg/lparts/fb6.lisp" :direction :output :if-exists :supersede)
+      #+nil(readfb in)
+      (let ((rect-list (paiprolog:prolog-collect (?R) (rect ?R))))
+        (mapc #'(lambda (r)
+                  (create-rect-bb r))
+              rect-list))
+      (writefb out))))
+
+
+
+#|
+:- initialization(main).
+:- include('head').
+
+main :-
+    readFB(user_input), 
+    createBoundingBoxes,
+    writeFB,
+    halt.
+
+createBoundingBoxes :-
+    conditionalCreateEllipseBB,
+    condRect,
+    condSpeech,
+    condText.
+
+condRect :-
+    forall(rect(ID), createRectBoundingBox(ID)).
+condRect :-
+    true.
+
+condSpeech :-
+    forall(speechbubble(ID), createRectBoundingBox(ID)).
+condSpeech :-
+    true.
+
+condText :-
+    forall(text(ID,_), createTextBoundingBox(ID)).
+condText :-
+    true.
+
+conditionalCreateEllipseBB:-
+    ellipse(_),
+    forall(ellipse(ID), createEllipseBoundingBox(ID)).
+
+conditionalCreateEllipseBB :- % for pre-ellipse code  
+    true.
+
+createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X),
+    geometry_top_y(ID, Y),
+    geometry_w(ID, Width),
+    geometry_h(ID, Height),
+    asserta(bounding_box_left(ID,X)),
+    asserta(bounding_box_top(ID,Y)),
+    Right is X + Width,
+    Bottom is Y + Height,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom)).
+
+createTextBoundingBox(ID) :-
+    geometry_center_x(ID,CX),
+    geometry_top_y(ID, Y),
+    geometry_w(ID, HalfWidth),
+    geometry_h(ID, Height),
+    X is (CX - HalfWidth),
+    asserta(bounding_box_left(ID,X)),
+    asserta(bounding_box_top(ID,Y)),
+    Right is CX + HalfWidth,
+    Bottom is Y + Height,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom)).
+
+createEllipseBoundingBox(ID) :-
+    geometry_center_x(ID,CX),
+    geometry_center_y(ID,CY),
+    geometry_w(ID,HalfWidth),
+    geometry_h(ID,HalfHeight),
+    Left is CX - HalfWidth,
+    Top is CY - HalfHeight,
+    asserta(bounding_box_left(ID,Left)),
+    asserta(bounding_box_top(ID,Top)),
+    Right is CX + HalfWidth,
+    Bottom is CY + HalfHeight,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom)).
+
+:- include('tail').
+|#
