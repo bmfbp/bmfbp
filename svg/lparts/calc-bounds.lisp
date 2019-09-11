@@ -1,6 +1,7 @@
 (ql:quickload :paip-prolog)
 (ql:quickload :loops)
 
+#+nil
 (defun assert-facts ()
   (<- (arrow id414))
   (<- (arrow id397))
@@ -222,14 +223,14 @@
 
 
 
-#+nil(defun readfb (stream)
+(defun readfb (stream)
   (flet ((read1 ()
            (read stream nil 'eof)))
-    (:clear-db)
+    (clear-db)
     (let ((clause (read1)))
       (@:loop
         (@:exit-when (eq 'eof clause))
-        (:add-clause (:replace-?-vars clause))
+        (add-clause (replace-?-vars (list clause)))
         (setf clause (read1))))))
 
 (defun writefb (stream)
@@ -272,9 +273,7 @@
 (defun main ()
   (with-open-file (in "~/projects/bmfbp/svg/lparts/fb5.lisp" :direction :input)
     (with-open-file (out "~/projects/bmfbp/svg/lparts/fb6.lisp" :direction :output :if-exists :supersede)
-      (clear-db)
-      (assert-facts)
-      #+nil(readfb in)
+      (readfb in)
       (let ((rect-list (prove-all '((rect ?R)
                                     (geometry-top-y ?R ?Y)
                                     (geometry-left-x ?R ?X)
