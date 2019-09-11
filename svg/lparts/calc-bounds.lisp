@@ -241,7 +241,8 @@
          (@:loop
           (@:exit-when (null clauses))
           (let ((c (pop clauses)))
-            (write c :stream stream))))))))
+            (assert (= 1 (length c)))
+            (write (car c) :stream stream))))))))
 
 (defun fetch-value (var alist)
   (let ((cell (assoc var alist)))
