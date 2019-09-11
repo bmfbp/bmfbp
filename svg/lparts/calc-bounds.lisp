@@ -1,4 +1,4 @@
-(ql:quickload :paiprolog)
+(ql:quickload :paip-prolog)
 (ql:quickload :loops)
 
 (defun assert-facts ()
@@ -233,7 +233,7 @@
         (setf clause (read1))))))
 
 (defun writefb (stream)
-  (let ((preds :*db-predicates*))
+  (let ((preds *db-predicates*))
     (@:loop
      (@:exit-when (null preds))
      (let ((p (pop preds)))
@@ -247,10 +247,6 @@
   (let ((cell (assoc var alist)))
     (when cell
       (cdr cell))))
-
-(defun exactly-one-solution-p (lists)
-  (and (listp lists)
-       (= 1 (length lists))))
 
 (defun create-rect-bb (alist)
   (let ((x (fetch-value '?x alist))
@@ -285,15 +281,10 @@
                                     (geometry-h ?R ?H))
                                   no-bindings)))
         (format *standard-output* "~&rect-list=~S" rect-list)
-        (assert (exactly-one-solution-p rect-list))
-        (create-rect-bb (car rect-list)))
-      (writefb out))))
-
-        #+nil(mapc #'(lambda (rect-id)
-                  (format *standard-output* "~&rect-id=~S~%" rect-id)
-                  (create-rect-bb rect-id))
+        (mapc #'(lambda (alist)
+                  (create-rect-bb alist))
               rect-list)
-
+        (writefb out)))))
 
 
 
