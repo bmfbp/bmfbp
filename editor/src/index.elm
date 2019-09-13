@@ -130,9 +130,31 @@ update message model =
 
 handleKey : Model -> String -> Model
 handleKey model key =
-  case key of
-    "c" -> copySelectedCanvasItemInstances model
-    _ -> model
+  let
+    createInstance = createNewCanvasItemInstance model
+  in
+    case key of
+      "c" -> copySelectedCanvasItemInstances model
+      "Backspace" -> deleteSelectedCanvasItemInstances model
+      "1" -> createInstance <| Part { x = 100, y = 100 } { x = 200, y = 200 }
+      "2" -> createInstance <| Wire [{ x = 100, y = 100 }, { x = 300, y = 100}]
+      "3" -> createInstance <| SourceSink { x = 100, y = 100 } 50
+      "4" -> createInstance <| Text { x = 100, y = 100 } "Text"
+      _ -> model
+
+createNewCanvasItemInstance : Model -> CanvasItem -> Model
+createNewCanvasItemInstance model canvasItem =
+  let
+    (newModel, newItem) = copyCanvasItemInstance model { id = -1, item = canvasItem }
+  in
+    { newModel | instantiatedItems = newItem :: model.instantiatedItems }
+
+deleteSelectedCanvasItemInstances : Model -> Model
+deleteSelectedCanvasItemInstances model =
+  { model
+      | instantiatedItems = List.filter (\x -> not (List.member x model.selectedItems)) model.instantiatedItems
+      , selectedItems = []
+  }
 
 copySelectedCanvasItemInstances : Model -> Model
 copySelectedCanvasItemInstances model =
@@ -171,7 +193,7 @@ subscriptions model =
     [ BE.onMouseDown (JD.map Point mouseDecoder)
     , BE.onMouseUp (JD.map Mark mouseDecoder)
     , BE.onMouseMove (JD.map MouseMove mouseDecoder)
-    , BE.onKeyPress (JD.map KeyPress keyDecoder)
+    , BE.onKeyDown (JD.map KeyPress keyDecoder)
     ]
 
 mouseDecoder : JD.Decoder Coordinates
@@ -181,8 +203,7 @@ mouseDecoder =
     (JD.at [ "offsetY" ] JD.int)
 
 keyDecoder : JD.Decoder String
-keyDecoder =
-  JD.field "key" JD.string
+keyDecoder = JD.field "key" JD.string
 
 updateItemCoordinates : Coordinates -> Coordinates -> CanvasItemInstance -> CanvasItemInstance
 updateItemCoordinates starting ending canvasItem =
