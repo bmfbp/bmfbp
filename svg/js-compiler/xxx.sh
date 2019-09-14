@@ -1,10 +1,11 @@
 #!/bin/bash
 cd ../lisp-parts
 ./deliver.sh
-cd ../js-compiler
+cd ..
 make clean
 make
-make test
+cd js-compiler
+make newbp
 echo
 head temp6a.lisp
 echo

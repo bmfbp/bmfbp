@@ -16,9 +16,14 @@ dependencies:
 	chmod a+x $(BINDIR)/part_compile
 	cp ./compare-graph.sh $(BINDIR)/compare-graph
 	chmod a+x $(BINDIR)/compare-graph
+	cp ./lisp-to-prolog.sh $(BINDIR)/lisp-to-prolog
+	chmod a+x $(BINDIR)/lisp-to-prolog
+	cp ./prolog-to-lisp.sh $(BINDIR)/prolog-to-lisp
+	chmod a+x $(BINDIR)/prolog-to-lisp
 
 clean:
 	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp* $(BINDIR)/compare-graph temp.log*.txt strings.sed $(BINDIR)/part_compile
+	rm -f $(BINDIR)/lisp-to-prolog $(BINDIR)/prolog-to-lisp
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
@@ -72,3 +77,6 @@ junk:
 comp:
 	jsbmfbp $(BUILD_PROCESS)/kk/compile_composites.svg
 
+
+newbp:
+	new-jsbmfbp $(BUILD_PROCESS)/kk/build_process.svg
