@@ -1,10 +1,6 @@
 (ql:quickload :paip-prolog)
 (ql:quickload :loops)
 
-
-
-
-
 (defun readfb (stream)
   (flet ((read1 ()
            (read stream nil 'eof)))
