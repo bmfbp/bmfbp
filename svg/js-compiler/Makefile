@@ -16,10 +16,6 @@ dependencies:
 	chmod a+x $(BINDIR)/part_compile
 	cp ./compare-graph.sh $(BINDIR)/compare-graph
 	chmod a+x $(BINDIR)/compare-graph
-	cp ./lisp-to-prolog.sh $(BINDIR)/lisp-to-prolog
-	chmod a+x $(BINDIR)/lisp-to-prolog
-	cp ./prolog-to-lisp.sh $(BINDIR)/prolog-to-lisp
-	chmod a+x $(BINDIR)/prolog-to-lisp
 
 clean:
 	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp* $(BINDIR)/compare-graph temp.log*.txt strings.sed $(BINDIR)/part_compile
@@ -79,4 +75,4 @@ comp:
 
 
 newbp:
-	new-jsbmfbp $(BUILD_PROCESS)/kk/build_process.svg
+	./new-jsbmfbp.sh $(BUILD_PROCESS)/kk/build_process.svg

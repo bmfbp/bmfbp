@@ -1,10 +1,10 @@
 #!/bin/bash
-cd ../lisp-parts
-./deliver.sh
 cd ..
 make clean
 make
-cd js-compiler
+cd lisp-parts
+./deliver.sh
+cd ../js-compiler
 make newbp
 echo
 head temp6a.lisp

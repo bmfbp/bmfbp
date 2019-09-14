@@ -6,6 +6,7 @@ build:
 	cd ../grash && make
 	cd ../hs-vsh && make
 	cd parts && make
+	cd lisp-parts && make
 	cd flat-compiler && make
 	cd js-compiler && make
 	cd split && make

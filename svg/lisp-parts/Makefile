@@ -2,44 +2,10 @@ BINDIR=~/bin
 
 LISPS = $(BINDIR)/lwpasses*
 
-EXECS =	$(BINDIR)/mark_directions \
-	$(BINDIR)/assign_wire_numbers_to_edges \
-	$(BINDIR)/selfInputPins \
-	$(BINDIR)/selfOutputPins \
-	$(BINDIR)/inputPins \
-	$(BINDIR)/outputPins \
-	$(BINDIR)/pinless \
-	$(BINDIR)/assign_parents_to_ellipses \
-	$(BINDIR)/assign_wire_numbers_to_inputs \
-	$(BINDIR)/assign_wire_numbers_to_outputs \
-	$(BINDIR)/assign_portIndices \
-	$(BINDIR)/emit \
-	$(BINDIR)/emit_js \
-	$(BINDIR)/new_emit_js \
-	$(BINDIR)/inOutPins \
-	$(BINDIR)/add_kinds \
-	$(BINDIR)/find_comments \
-	$(BINDIR)/find_metadata \
-	$(BINDIR)/isolate_metadata \
-	$(BINDIR)/add_selfPorts \
-	$(BINDIR)/assign_portnames \
-	$(BINDIR)/calculate_distances \
-	$(BINDIR)/create_centers \
-	$(BINDIR)/make_unknown_port_names \
-	$(BINDIR)/match_ports_to_components \
-	$(BINDIR)/sem_partsHaveSomePorts \
-	$(BINDIR)/sem_portsHaveSinkOrSource \
-	$(BINDIR)/sem_noDuplicateKinds \
-	$(BINDIR)/sem_speechVScomments \
-	$(BINDIR)/sem_info \
-	$(BINDIR)/loginfo \
-	$(BINDIR)/dumplog \
-	$(BINDIR)/markIndexedPorts \
-	$(BINDIR)/coincidentPorts \
-	$(BINDIR)/lib_insert_part_name
+all : $(LISPS) $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name $(BINDIR)/unmap-strings $(BINDIR)/emit_js2 $(BINDIR)/new_emit_js2 $(BINDIR)/lisp-to-prolog $(BINDIR)/prolog-to-lisp $(BINDIR)/calc_bounds
 
-
-all : $(EXECS) $(BINDIR)/plsort $(BINDIR)/lib_insert_part_name $(BINDIR)/unmap-strings $(BINDIR)/emit_js2 $(BINDIR)/new_emit_js2 $(BINDIR)/lisp-to-prolog $(BINDIR)/prolog-to-lisp $(BINDIR)/calc_bounds
+$(BINDIR)/lwpasses:
+	./deliver.sh
 
 $(BINDIR)/lisp-to-prolog:
 	cp lisp-to-prolog.sh $(BINDIR)/lisp-to-prolog
