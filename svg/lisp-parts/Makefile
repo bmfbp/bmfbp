@@ -1,6 +1,6 @@
 BINDIR=~/bin
 
-LISPS = $(BINDIR)/calc_bounds
+LISPS = $(BINDIR)/lwpasses*
 
 EXECS =	$(BINDIR)/mark_directions \
 	$(BINDIR)/assign_wire_numbers_to_edges \

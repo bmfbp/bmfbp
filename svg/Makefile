@@ -15,6 +15,7 @@ clean:
 	cd flat-compiler && make clean
 	cd js-compiler && make clean
 	cd split && make clean
+	cd parts && make clean
 	cd lisp-parts && make clean
 	cd ../hs-vsh && make clean
 
