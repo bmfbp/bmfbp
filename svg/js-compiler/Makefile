@@ -74,5 +74,8 @@ comp:
 	jsbmfbp $(BUILD_PROCESS)/kk/compile_composites.svg
 
 
-newbp:
+a:
 	./new-jsbmfbp.sh $(BUILD_PROCESS)/kk/build_process.svg
+
+b:
+	./new-jsbmfbp2.sh $(BUILD_PROCESS)/kk/build_process.svg
