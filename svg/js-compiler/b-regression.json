@@ -1,0 +1,139 @@
+{
+  "kindName" : "build_process",
+  "wireCount" : 22,
+  "metaData" : "[{\"dir\":\"build_process/\",\"kindName\":\"get file content in repo\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/get_file_content_in_repo.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"iterator\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/parts/iterator.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"compile composite\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/compile_composite.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"json object stacker\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/json_object_stacker.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"determine kind type\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/determine_kind_type.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"collector\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/collector.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"javascript builder\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/javascript_builder.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"fetch git repo\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/fetch_git_repo.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"prepare temp directory\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/prepare_temp_directory.json\",\"ref\":\"master\"}]",
+  "self" : {
+  },
+  "parts" : [
+  {
+    "kindName" : "json object stacker",
+    "partName" : "ID384",
+    "inCount" : 2,
+    "outCount" : 2,
+    "inMap" : { "push object" : 0, "get a part" : 1 },
+    "outMap" : { "no more" : 0, "part metadata" : 1 },
+    "inPins" : [[3],[6]],
+    "outPins" : [[7,0],[2,1]]
+  },
+  {
+    "kindName" : "collector",
+    "partName" : "ID415",
+    "inCount" : 3,
+    "outCount" : 1,
+    "inMap" : { "done" : 0, "composite" : 1, "leaf" : 2 },
+    "outMap" : { "intermediate code" : 0 },
+    "inPins" : [[0],[4],[9]],
+    "outPins" : [[5]]
+  },
+  {
+    "kindName" : "iterator",
+    "partName" : "ID423",
+    "inCount" : 3,
+    "outCount" : 1,
+    "inMap" : { "continue" : 0, "done" : 1, "start" : 2 },
+    "outMap" : { "get a part" : 0 },
+    "inPins" : [[1],[7],[12]],
+    "outPins" : [[6]]
+  },
+  {
+    "kindName" : "fetch git repo",
+    "partName" : "ID504",
+    "inCount" : 2,
+    "outCount" : 1,
+    "inMap" : { "git repo metadata" : 0, "temp directory" : 1 },
+    "outMap" : { "metadata" : 0 },
+    "inPins" : [[2],[16]],
+    "outPins" : [[14]]
+  },
+  {
+    "kindName" : "compile composite",
+    "partName" : "ID405",
+    "inCount" : 1,
+    "outCount" : 2,
+    "inMap" : { "svg" : 0 },
+    "outMap" : { "parts as json objects" : 0, "graph as json" : 1 },
+    "inPins" : [[11,10]],
+    "outPins" : [[3],[4]]
+  },
+  {
+    "kindName" : "javascript builder",
+    "partName" : "ID488",
+    "inCount" : 3,
+    "outCount" : 1,
+    "inMap" : { "intermediate code" : 0, "temp directory" : 1, "top-level name" : 2 },
+    "outMap" : { "javascript source code" : 0 },
+    "inPins" : [[5],[15],[21]],
+    "outPins" : [[13]]
+  },
+  {
+    "kindName" : "determine kindType",
+    "partName" : "ID449",
+    "inCount" : 2,
+    "outCount" : 2,
+    "inMap" : { "file content" : 0, "part metadata" : 1 },
+    "outMap" : { "schematic metadata" : 0, "leaf metadata" : 1 },
+    "inPins" : [[19],[20]],
+    "outPins" : [[8],[9]]
+  },
+  {
+    "kindName" : "get file content in repo",
+    "partName" : "ID459",
+    "inCount" : 2,
+    "outCount" : 1,
+    "inMap" : { "git repo metadata" : 0, "temp directory" : 1 },
+    "outMap" : { "file content" : 0 },
+    "inPins" : [[8],[17]],
+    "outPins" : [[10]]
+  },
+  {
+    "kindName" : "self",
+    "partName" : "ID476",
+    "inCount" : 0,
+    "outCount" : 1,
+    "inMap" : {  },
+    "outMap" : { "top-level svg" : 0 },
+    "inPins" : [],
+    "outPins" : [[12,11]]
+  },
+  {
+    "kindName" : "self",
+    "partName" : "ID491",
+    "inCount" : 1,
+    "outCount" : 0,
+    "inMap" : { "javascript source code" : 0 },
+    "outMap" : {  },
+    "inPins" : [[13]],
+    "outPins" : []
+  },
+  {
+    "kindName" : "get file content in repo",
+    "partName" : "ID552",
+    "inCount" : 2,
+    "outCount" : 2,
+    "inMap" : { "git repo metadata" : 0, "temp directory" : 1 },
+    "outMap" : { "file content" : 0, "metadata" : 1 },
+    "inPins" : [[14],[18]],
+    "outPins" : [[19],[20]]
+  },
+  {
+    "kindName" : "prepare temp directory",
+    "partName" : "ID531",
+    "inCount" : 0,
+    "outCount" : 1,
+    "inMap" : {  },
+    "outMap" : { "directory" : 0 },
+    "inPins" : [],
+    "outPins" : [[18,17,16,15]]
+  },
+  {
+    "kindName" : "self",
+    "partName" : "ID568",
+    "inCount" : 0,
+    "outCount" : 1,
+    "inMap" : {  },
+    "outMap" : { "top-level name" : 0 },
+    "inPins" : [],
+    "outPins" : [[21]]
+  }
+  ]
+}

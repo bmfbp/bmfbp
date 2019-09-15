@@ -79,3 +79,4 @@ a:
 
 b:
 	./new-jsbmfbp2.sh $(BUILD_PROCESS)/kk/build_process.svg
+	compare-graph temp28.json b-regression.json
