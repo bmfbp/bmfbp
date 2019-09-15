@@ -38,7 +38,7 @@
       (readfb in)
       (format *error-output* "~&running (expected 11/49/1/3)~%")
       (bounding-boxes)
-      ;(find-comments)
+      (assign-parents-to-ellipses)
       (writefb out)
       (values))))
 

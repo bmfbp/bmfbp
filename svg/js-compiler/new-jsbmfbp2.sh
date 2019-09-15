@@ -2,9 +2,12 @@
 #lwpasses $NAME <temp5.lisp >temp6a.lisp
 NAME=yyy
 
-lisp-to-prolog <temp6a.lisp >temp6a.pro
+#lisp-to-prolog <temp6a.lisp >temp6a.pro
 
-assign_parents_to_ellipses <temp6a.pro >temp6.pro
+#assign_parents_to_ellipses <temp6a.pro >temp6.pro
+
+lisp-to-prolog <temp6a.pro >temp6.pro
+
 find_comments $NAME <temp6.pro >temp7.pro
 find_metadata $NAME <temp7.pro >temp8.pro
 add_kinds $NAME <temp8.pro >temp9.pro
