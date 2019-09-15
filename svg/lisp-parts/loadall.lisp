@@ -1,7 +1,13 @@
-(ql:quickload :paip-prolog)
+(ql:quickload :paiprolog)
 (ql:quickload :loops)
 
-(clear-db)
+(defpackage :arrowgram
+  (:use :cl))
+
+(in-package :arrowgram)
+
+(paiprolog::clear-db)
+
 (load "~/projects/bmfbp/svg/lisp-parts/common-queries")
 (load "~/projects/bmfbp/svg/lisp-parts/assign-parents-to-ellipses")
 ;(load "~/projects/bmfbp/svg/lisp-parts/find-comments")

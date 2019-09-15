@@ -1,4 +1,6 @@
-(<- (find-and-assert-comments-query)
+(in-package :arrowgram)
+
+(paiprolog:<-- (find-and-assert-comments-query)
 (lisp ?junk1 (format *error-output* "~&in find-and-assert-comments-query 1~%"))
     (speechbubble ?bid)
 (lisp ?junk2 (format *error-output* "~&in find-and-assert-comments-query 2~%"))
@@ -10,11 +12,11 @@
     (add-clause `((used ,textid)))
     (add-clause `((comment ,textid))))
 
-(<- (find-and-assert-comments-query)
+(paiprolog:<-- (find-and-assert-comments-query)
 (lisp ?junk5 (format *error-output* "~&in find-and-assert-comments-query fatal~%"))
     (add-clause `((log "FATAL error in find-comments"))))
 
-(<- (textCompletelyInsideBox ?TextID ?BubbleID)
+(paiprolog:<-- (textCompletelyInsideBox ?TextID ?BubbleID)
     (pointCompletelyInsideBoundingBox ?TextID ?BubbleID))
 
 

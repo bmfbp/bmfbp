@@ -1,10 +1,12 @@
+(in-package :arrowgram)
+
 (defun readfb (stream)
   (flet ((read1 ()
            (read stream nil 'eof)))
     (let ((clause (read1)))
       (@:loop
         (@:exit-when (eq 'eof clause))
-        (add-clause (replace-?-vars (list clause)))
+        (paiprolog::add-clause (paiprolog::replace-?-vars (list clause)))
         (setf clause (read1))))))
 
 (defun writefb (stream)
