@@ -3,4 +3,5 @@ cd ..
 make clean
 make
 cd js-compiler
+make bp
 make a
