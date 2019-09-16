@@ -8,10 +8,10 @@ NAME=yyy
 
 #assign_parents_to_ellipses <temp6a.pro >temp6.pro
 #find_comments $NAME <temp6.pro >temp7.pro
+#find_metadata $NAME <temp7.pro >temp8.pro
 
-lisp-to-prolog <lisp-out.lisp >temp7.pro
+lisp-to-prolog <lisp-out.lisp >temp8.pro
 
-find_metadata $NAME <temp7.pro >temp8.pro
 add_kinds $NAME <temp8.pro >temp9.pro
 add_selfPorts $NAME <temp9.pro >temp10.pro
 make_unknown_port_names $NAME <temp10.pro >temp11.pro

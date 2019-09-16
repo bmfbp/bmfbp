@@ -95,6 +95,7 @@ FIXME ..
       (bounding-boxes)
       (assign-parents-to-ellipses)
       (find-comments)
+      (find-metadata)
       (writefb out)
       (values))))
 
