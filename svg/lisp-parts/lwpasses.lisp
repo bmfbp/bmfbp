@@ -1,5 +1,53 @@
 (in-package :arrowgram)
 
+(defparameter *facts* 
+  '(
+    arrow
+    arrow_x
+    arrow_y
+    bounding_box_bottom
+    bounding_box_left
+    bounding_box_right
+    bounding_box_top
+    center_x
+    center_y
+    comment
+    component
+    distance_xy
+    edge
+    ellipse
+    eltype
+    geometry_center_x
+    geometry_center_y
+    geometry_h
+    geometry_left_x
+    geometry_top_y
+    geometry_w
+    join_centerPair
+    join_distance
+    kind
+    line
+    log
+    metadata
+    namedSink
+    namedSource
+    nwires
+    parent
+    pinless
+    port
+    portName
+    portNameByID
+    rect
+    roundedrect
+    sink
+    source
+    speechbubble
+    text
+    unassigned
+    used
+    wireNum
+    ))
+  
 (defun readfb (stream)
   (flet ((read1 ()
            (read stream nil 'eof)))
@@ -10,17 +58,23 @@
         (setf clause (read1))))))
 
 (defun writefb (stream)
-  (let ((preds *db-predicates*))
+  (format *error-output* "~&~%writing~%")
+  (let ((preds paiprolog::*db-predicates*))
     (@:loop
      (@:exit-when (null preds))
      (let ((p (pop preds)))
-       (let ((clauses (get p 'clauses)))
-         (@:loop
-          (@:exit-when (null clauses))
-          (let ((c (pop clauses)))
-            (assert (= 1 (length c)))
-            (format stream "~&~a~%"
-                    (string-downcase (format nil "~a" (car c)))))))))))
+       (if (not (member p *facts*))
+           (format *error-output* "~&skip writing clause ~A~%" p)
+         (progn
+           ;(format *error-output* "~&writing predicate ~A~%" p)
+           (let ((clauses (paiprolog::get-clauses p)))
+             (@:loop
+               (@:exit-when (null clauses))
+               (let ((c (pop clauses)))
+                 ;(format *error-output* "~&clause /~S/~%" c)
+                 (assert (= 1 (length c)))
+                 (format stream "~&~a~%"
+                         (string-downcase (format nil "~a" (car c)))))))))))))
 
 #+nil
 (defun main ()
@@ -40,7 +94,7 @@ FIXME ..
       (format *error-output* "~&running (expected 11/49/1/3)~%")
       (bounding-boxes)
       (assign-parents-to-ellipses)
-;      (find-comments)
+      (find-comments)
       (writefb out)
       (values))))
 

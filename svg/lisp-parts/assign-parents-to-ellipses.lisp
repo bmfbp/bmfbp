@@ -1,10 +1,17 @@
 (in-package :arrowgram)
 
-(paiprolog:<-- (assign-parents-to-ellipses-query)
-    (ellipse ?eid)
-    (component ?comp)
-    !
-    (add-clause `((parent ?comp ?eid))))
-
 (defun assign-parents-to-ellipses ()
-  (prove-all '((assign-parents-to-ellipses-query)) no-bindings))
+  (let ((cid (car (paiprolog:prolog-collect (?comp)
+               (component ?comp))))
+        (all-ellipses (paiprolog:prolog-collect (?e)
+                        (ellipse ?e))))
+    (format *error-output* "~&~%component ~s~%" cid)
+    (format *error-output* "~&~%ellipses ~S~%" all-ellipses)
+    (mapc #'(lambda (e)
+              (paiprolog::add-clause `((parent ,cid ,e))))
+          all-ellipses)))
+                      
+
+;;;     (destructuring-bind (comp eid) (car answer)
+;;;       (paiprolog::add-clause `((parent ,comp ,eid))))))
+
