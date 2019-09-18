@@ -1,4 +1,4 @@
-(ql:quickload :paip-lisp)
+;(ql:quickload :paip-lisp)
 
 
 (<- (p 1))

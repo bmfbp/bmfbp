@@ -1,3 +1,5 @@
+(in-package :paip-lisp)
+
 (defun readfb (stream)
   (flet ((read1 ()
            (read stream nil 'eof)))
@@ -37,7 +39,7 @@ FIXME ..
       (readfb in)
       (format *error-output* "~&running (expected 11/49/1/3)~%")
       (bounding-boxes)
-      (assign-parents-to-ellipses)
+;      (assign-parents-to-ellipses)
 ;      (find-comments)
       (writefb out)
       (values))))

@@ -1,9 +1,11 @@
-(ql:quickload :paip-prolog)
+;(ql:quickload :paip-prolog)
+(asdf:load-system :paip)
+(load (asdf:system-relative-pathname :paip "lisp/prolog.lisp"))
 (ql:quickload :loops)
 
 (clear-db)
 (load "~/projects/bmfbp/svg/lisp-parts/common-queries")
 (load "~/projects/bmfbp/svg/lisp-parts/assign-parents-to-ellipses")
-;(load "~/projects/bmfbp/svg/lisp-parts/find-comments")
+(load "~/projects/bmfbp/svg/lisp-parts/find-comments")
 (load "~/projects/bmfbp/svg/lisp-parts/bounding-boxes")
 (load "~/projects/bmfbp/svg/lisp-parts/lwpasses")
