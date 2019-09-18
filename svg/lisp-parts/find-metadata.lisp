@@ -18,21 +18,3 @@
                 (paiprolog::add-clause `((log ,rect "box_is_meta_data")))
                 #+nil(paiprolog::retract-clause `(rect ,rect))))
           meta-list)))
-  
-
-#|
-
-;        (paiprolog::add-clause `((roundedrect ?Rect)))
-;       (paiprolog::add-clause `((parent ?Main ?Rect))))
-
-
-
-;    (declare (ignore dont-care))))
-
-
-
-           #+nil(asserta (roundedrect ?Rect))
-           #+nil(asserta (parent ?Main ?Rect))
-           #+nil(asserta (log ?Rect "box_is_meta_data"))
-           #+nil(retract (rect ?Rect))
-|#

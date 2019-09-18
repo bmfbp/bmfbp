@@ -14,6 +14,7 @@
     (>= ?R2 ?L1)
     (>= ?B2 ?T1))
 
+
 (paiprolog:<- (center-completely-inside-bounding-box ?ID1 ?ID2)
     (bounding_box_left ?ID1 ?L1)
     (bounding_box_top ?ID1 ?T1)

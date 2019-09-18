@@ -1,0 +1,10 @@
+- examine why in find-comments text-completely-inside-box returns the same result twice, whereas point-completely-inside-bounding-box returns it once
+
+- why does:
+
+cl-user>(arrowgram::deb)
+
+fail?
+
+- change (text id str) to (text id) and (text-str id str) or add text/2
+
