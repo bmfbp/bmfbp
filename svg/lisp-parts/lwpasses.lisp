@@ -96,7 +96,7 @@ FIXME ..
       (assign-parents-to-ellipses)
       (find-comments)
       (find-metadata)
-      (add-kinds)
+      (add-kinds) ;;;--- works to here
       ;(add-self-ports)
       (writefb out)
       (values))))

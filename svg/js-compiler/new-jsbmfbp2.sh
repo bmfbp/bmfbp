@@ -13,6 +13,7 @@ NAME=yyy
 
 lisp-to-prolog <lisp-out.lisp >temp9.pro
 
+
 add_selfPorts $NAME <temp9.pro >temp10.pro
 make_unknown_port_names $NAME <temp10.pro >temp11.pro
 create_centers $NAME <temp11.pro >temp12.pro
