@@ -1,4 +1,4 @@
-(in-package :paip-lisp)
+(in-package :arrowgram)
 
 (defun readfb (stream)
   (flet ((read1 ()
@@ -6,7 +6,7 @@
     (let ((clause (read1)))
       (@:loop
         (@:exit-when (eq 'eof clause))
-        (add-clause (replace-?-vars (list clause)))
+        (paip::add-clause (paip::replace-?-vars (list clause)))
         (setf clause (read1))))))
 
 (defun writefb (stream)

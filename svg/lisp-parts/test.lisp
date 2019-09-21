@@ -1,7 +1,8 @@
 (in-package :paip)
 
-(<- (p 1))
-(<- (p 2))
-(<- (p 3))
-(<- (p 4))
+(paip::<- (p 1))
+(paip::<- (p 2))
+(paip::<- (p 3))
+(paip::<- (p 4))
 
+;(all-solutions (P ?X))

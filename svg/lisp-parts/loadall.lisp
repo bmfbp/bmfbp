@@ -1,4 +1,4 @@
-;(ql:quickload :paip-prolog)
+
 (setq *handle-warn-on-redefinition* nil)
 
 
@@ -7,6 +7,7 @@
 (in-package :paip)
 
 (load (asdf:system-relative-pathname :paip "lisp/prolog.lisp"))
+
 (load "~/projects/bmfbp/svg/lisp-parts/everything.lisp")
 
 (defpackage :arrowgram
@@ -16,7 +17,9 @@
 
 (in-package :arrowgram)
 
+
 (paip::clear-db)
+
 
 (load "~/projects/bmfbp/svg/lisp-parts/assign-parents-to-ellipses")
 (load "~/projects/bmfbp/svg/lisp-parts/find-comments")
