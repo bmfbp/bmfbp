@@ -1,4 +1,4 @@
-(in-package :paip)
+(in-package :arrowgram)
 
 (defparameter *all-bindings* nil)
 
@@ -23,7 +23,7 @@
       (dolist (var vars)
         (push (cons var (paip::subst-bindings bindings var)) L))
       (push L *all-bindings*)))
-  fail)
+  paip::fail)
 
-(setf (get 'everything 'clauses) 'everything)
+(setf (get 'everything 'paip::clauses) 'everything)
 

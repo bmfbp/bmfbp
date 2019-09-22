@@ -10,7 +10,7 @@
         (setf clause (read1))))))
 
 (defun writefb (stream)
-  (let ((preds *db-predicates*))
+  (let ((preds paip::*db-predicates*))
     (@:loop
      (@:exit-when (null preds))
      (let ((p (pop preds)))
@@ -39,7 +39,7 @@ FIXME ..
       (readfb in)
       (format *error-output* "~&running (expected 11/49/1/3)~%")
       (bounding-boxes)
-;      (assign-parents-to-ellipses)
+      (assign-parents-to-ellipses)
 ;      (find-comments)
       (writefb out)
       (values))))

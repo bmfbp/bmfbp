@@ -1,4 +1,5 @@
 #!/bin/bash
+rm -rf ~/.cache/common-lisp
 cd ..
 make clean
 make
