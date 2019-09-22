@@ -11,3 +11,4 @@ os> ./new-jsbmfbp2.sh
 
 I haven't figure out how to wire pload into this stuff yet.
 I am using a "raw" clone of paip-lisp in ~/quicklisp/local-projects/paip-lisp.
+...
