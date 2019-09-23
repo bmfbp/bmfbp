@@ -15,10 +15,8 @@
 		     (progn
 		       (setf *package* (find-package :paip))
 		       (dolist (paip-requirement
-				 '("lisp/prolog.lisp"
-				   ;;; Needed for defintion of
-				   ;;; paip::replace-?-vars
-				   "lisp/krep.lisp"))
+				 '("lisp/prolog.lisp"))
+				   ;;; paip::replace-?-vars is at bottom of prolog.lisp
 			 (cl:load 
 			  (asdf:system-relative-pathname
 			   :paip paip-requirement))))

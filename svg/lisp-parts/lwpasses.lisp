@@ -33,8 +33,8 @@ FIXME ..
 
 (defun deb ()
 ;; should be 11/49/1/3 (rects/texts/speech/ellipse) for build_process.svg
-  (with-open-file (in "~/projects/bmfbp/svg/js-compiler/temp5.lisp" :direction :input)
-    (with-open-file (out "~/projects/bmfbp/svg/js-compiler/lisp-out.lisp" :direction :output :if-exists :supersede)
+  (with-open-file (in (asdf:system-relative-pathname :arrowgram "../js-compiler/temp5.lisp") :direction :input)
+    (with-open-file (out (asdf:system-relative-pathname :arrowgram "../js-compiler/lisp-out.lisp") :direction :output :if-exists :supersede)
       (readfb in)
       (format *error-output* "~&running (expected (rects/texts/speech/ellipse) 11/49/1/3)~%")
       (bounding-boxes)
