@@ -44,5 +44,7 @@ issue a
 
 then to run the simple test
 
-    (prove:run-all :arrowgram-test)
+    (prove:run :arrowgram-test)
+    
+    
 
