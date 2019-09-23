@@ -1,4 +1,8 @@
+;;; Deprecated in place of using arrowgram.asd
 
+
+;;; Paul:  which package is this special supposed to be in?
+;;; Doesn't seem to be present under SBCL
 (setq *handle-warn-on-redefinition* nil)
 
 (asdf:load-system :paip)
