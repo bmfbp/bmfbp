@@ -14,7 +14,7 @@
     (@:loop
      (@:exit-when (null preds))
      (let ((p (pop preds)))
-       (let ((clauses (get p 'clauses)))
+       (let ((clauses (get p 'paip::clauses)))
          (@:loop
           (@:exit-when (null clauses))
           (let ((c (pop clauses)))
@@ -31,18 +31,15 @@
 FIXME .. 
       (writefb out)))
 
-#+lispworks
 (defun deb ()
 ;; should be 11/49/1/3 (rects/texts/speech/ellipse) for build_process.svg
   (with-open-file (in "~/projects/bmfbp/svg/js-compiler/temp5.lisp" :direction :input)
     (with-open-file (out "~/projects/bmfbp/svg/js-compiler/lisp-out.lisp" :direction :output :if-exists :supersede)
       (readfb in)
-      (format *error-output* "~&running (expected 11/49/1/3)~%")
+      (format *error-output* "~&running (expected (rects/texts/speech/ellipse) 11/49/1/3)~%")
       (bounding-boxes)
-      (assign-parents-to-ellipses)
+;      (assign-parents-to-ellipses)
 ;      (find-comments)
       (writefb out)
       (values))))
 
-#+SBCL
-(ASSERT NIL)
