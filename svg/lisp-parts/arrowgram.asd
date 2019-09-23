@@ -27,7 +27,9 @@
   :depends-on (arrowgram)
   :components ((:module contents
 			:pathname "./"
-			:components ((:file "assign-parents-to-ellipses")
+			:components ((:file "common-queries")
+                                     (:file "find-comments")
+                                     (:file "assign-parents-to-ellipses")
 				     (:file "bounding-boxes"))))
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))

@@ -39,7 +39,7 @@ FIXME ..
       (format *error-output* "~&running (expected (rects/texts/speech/ellipse) 11/49/1/3)~%")
       (bounding-boxes)
       (assign-parents-to-ellipses)
-;      (find-comments)
+      (find-comments)
       (writefb out)
       (values))))
 

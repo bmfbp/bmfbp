@@ -3,12 +3,11 @@ set -v
 # parser
 NAME=yyy
 
-
+#assign_parents_to_ellipses $NAME <temp6a.pro >temp6.pro
+#find_comments $NAME <temp6.pro >temp7.pro
 
 lisp-to-prolog <lisp-out.lisp >temp7.pro
 
-#assign_parents_to_ellipses $NAME <temp6a.pro >temp6.pro
-find_comments $NAME <temp6.pro >temp7.pro
 find_metadata $NAME <temp7.pro >temp8.pro
 add_kinds $NAME <temp8.pro >temp9.pro
 add_selfPorts $NAME <temp9.pro >temp10.pro
