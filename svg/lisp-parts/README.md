@@ -23,6 +23,6 @@ The new compiler writes a tempfile, then converts it from lisp to prolog (lisp-t
 
 The shell script does a regression test, comparing results against saved files, and prints OK on success.  Currently, all such regression tests fail and print BAD.  I find that there is no point in creating new snapshots until I've converted the whole pipeline from gprolog to lisp.
 
-For example, the current output goes to ??/bmfbp/svg/js-compiler/lisp-out.lisp, gets munged by lisp-to-prolog and becomes temp6.pro.
+For example, the current output goes to ??/bmfbp/svg/js-compiler/lisp-out.lisp, gets munged by lisp-to-prolog and becomes temp6a.pro.
 
 For now, the input and output files are hard-wired into lwpasses.lisp.  Once everything works, we'll switch to using the code in lwpasses.lisp/main() and use *standard-input* and *standard-output* again. Note that SBCL expects a different form for main() than does LW.
