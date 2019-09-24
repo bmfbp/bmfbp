@@ -4,7 +4,7 @@ current usage:
 
 os> cd ??/bmfbp/svg/js-compiler
 os> ./xxx
-lisp> (load "??/bmfbp/svg/lisp-parts/loadall.lisp")
+lisp> (ql:quickload :arrowgram)
 lisp> (in-package :arrowgram)
 lisp> (deb) ;; (for "debug")
 os> cd ??/bmfbp/svg/js-compiler
