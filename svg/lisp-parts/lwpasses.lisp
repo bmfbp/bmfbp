@@ -1,13 +1,18 @@
 (in-package :arrowgram)
 
 (defun readfb (stream)
-  (flet ((read1 ()
-           (read stream nil 'eof)))
-    (let ((clause (read1)))
-      (@:loop
-        (@:exit-when (eq 'eof clause))
-        (paip::add-clause (paip::replace-?-vars (list clause)))
-        (setf clause (read1))))))
+  (let ((original-package *package*))
+    (unwind-protect
+         (progn 
+           (setf *package* (find-package :arrowgram))
+           (flet ((read1 ()
+                    (read stream nil 'eof)))
+             (let ((clause (read1)))
+               (@:loop
+                 (@:exit-when (eq 'eof clause))
+                 (paip::add-clause (paip::replace-?-vars (list clause)))
+                 (setf clause (read1))))))
+      (setf *package* original-package))))
 
 (defun writefb (stream)
   (let ((preds paip::*db-predicates*))
@@ -39,6 +44,7 @@ FIXME ..
       (format *error-output* "~&running (expected (rects/texts/speech/ellipse) 11/49/1/3)~%")
       (bounding-boxes)
       (assign-parents-to-ellipses)
+      #+nil ;; failing!
       (find-comments)
       (writefb out)
       (values))))

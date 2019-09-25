@@ -18,12 +18,12 @@
   Then ask the user if more solutions are desired."
   (declare (ignore other-goals))
   (if (null vars)
-      (format t "~&Yes")
-    (let ((L nil))
-      (dolist (var vars)
-        (push (cons var (paip::subst-bindings bindings var)) L))
-      (push L *all-bindings*)))
-  paip::fail)
+      t
+      (let ((L nil))
+        (dolist (var vars)
+          (push (cons var (paip::subst-bindings bindings var)) L))
+        (push L *all-bindings*)
+        paip::fail)))
 
 (setf (get 'everything 'paip::clauses) 'everything)
 

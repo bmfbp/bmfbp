@@ -1,6 +1,6 @@
 (in-package :arrowgram)
 
-(paip::<- (point-completely-inside-bounding-box ?id1 ?id2)
+(paip::<- (arrowgram::point-completely-inside-bounding-box ?id1 ?id2)
     (bounding_box_left ?id1 ?L1)
     (bounding_box_top ?id1 ?T1)
     (lisp ? (format *error-output* "~&id1/~A/ left/~A/ top/~A/~%" ?id1 ?L1 ?T1))
@@ -17,7 +17,7 @@
     (>= ?B2 ?T1))
 
 
-(paip::<- (center-completely-inside-bounding-box ?ID1 ?ID2)
+(paip::<- (arrowgram::center-completely-inside-bounding-box ?ID1 ?ID2)
     (bounding_box_left ?ID1 ?L1)
     (bounding_box_top ?ID1 ?T1)
     (bounding_box_right ?ID1 ?R1)

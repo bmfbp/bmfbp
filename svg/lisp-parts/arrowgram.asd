@@ -1,5 +1,5 @@
 (defsystem arrowgram
-  :depends-on (paip
+  :depends-on (paip  ;; https://github.com/??? TODO
 	       ;; <https://github.com/guitarvydas/loops>
 	       loops)
   :components ((:module package
@@ -9,7 +9,7 @@
 			:depends-on (package)
 			:pathname "./"
 			:components ((:file "everything"))))
-  :perform (load-op :after (op c)
+  :perform (load-op :after (operation component)
 	      (let ((original-package *package*))
 		(unwind-protect
 		     (progn
