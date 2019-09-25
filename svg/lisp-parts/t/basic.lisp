@@ -14,8 +14,11 @@
     (with-open-file (out output-pathname
                          :direction :output :if-exists :supersede)
       (arrowgram::readfb in :clear-fb t)
-      (prove:ok (length paip::*db-predicates*))
-      (format *error-output* "~&running (expected (rects/texts/speech/ellipse) 11/49/1/3)~%")
+      (prove:ok
+       (length paip::*db-predicates*)
+       "Successfully loaded a non-zero number of statements into the world factbase…")
+      (format *error-output*
+              "~&running (expected (rects/texts/speech/ellipse) 11/49/1/3)~%")
       (let ((bounding-results (arrowgram::bounding-boxes)))
         (prove:is bounding-results
                   '(11 49 1 3)
@@ -27,6 +30,7 @@
 
 ;;; Test the PARSE-ON-PATHS macro just for the bounding boxes
 (prove:plan 1)
+
 (let ((input-pathname
        (asdf:system-relative-pathname
         :arrowgram "../js-compiler/temp5.lisp"))
@@ -37,7 +41,8 @@
     (let ((bounding-results (arrowgram::bounding-boxes))
           (expected '(11 49 1 3)))
       (prove:is bounding-results
-                '(11 49 1 3)
-                "Compiling for bounding boxes…"))))
+                expected
+                (format nil "Bounding box compilation produces ~a elements"
+                        expected)))))
 
 (prove:finalize)

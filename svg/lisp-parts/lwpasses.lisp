@@ -1,10 +1,12 @@
 (in-package :arrowgram)
 
+;;; N.b. The current state of the world (aka. "the factbase") ends up
+;;; in PAIP::*db-predicates*
+
 (defun readfb (stream &key (clear-fb nil))
   "Read a factbase from STREAM
 
-When CLEAR-DB is non nil, then clear the existing factbase before
-reading."
+When CLEAR-FB is non nil, clear the existing factbase before reading."
   (when clear-fb
     (paip::clear-db))
   (let ((original-package *package*))
@@ -21,6 +23,7 @@ reading."
       (setf *package* original-package))))
 
 (defun writefb (stream)
+  "Write the contents the the current factbase to STREAM"
   (let ((preds paip::*db-predicates*))
     (@:loop
      (@:exit-when (null preds))
@@ -64,7 +67,7 @@ in OUTPUT-PATHNAME"
      (with-open-file (out ,output-pathname
                           :direction :output
                           :if-exists :supersede)
-       (format t "~&compiling~^~t'~a'~^to~^~t'~a'~^"
+       (format t "~&Compiling~%~t'~a'~%to~%~t'~a'~^"
                ,input-pathname ,output-pathname)
        (readfb in :clear-fb t)
        ,@body
