@@ -28,10 +28,14 @@
                                   (geometry_left_x ?id ?X)
                                   (geometry_w ?id ?W)
                                   (geometry_h ?id ?H))))
-    (format *error-output* "~&rect-list=~S" (length rect-list))
-    (mapc #'(lambda (alist)
-              (create-rect-bb alist))
-          rect-list)))
+    (let ((rectangle-count (length rect-list)))
+      (format *error-output* "~&rect-list=~S" rectangle-count)
+      (values 
+       (mapc #'(lambda (alist)
+                 (create-rect-bb alist))
+             rect-list)
+       rectangle-count))))
+
 
 (defun make-bounding-boxes-for-speech-bubbles ()
   (let ((speech-list (all-solutions (speechbubble ?id)
@@ -39,11 +43,13 @@
                                     (geometry_left_x ?id ?X)
                                     (geometry_w ?id ?W)
                                     (geometry_h ?id ?H))))
-    (format *error-output* "~&speech-list=~S" (length speech-list))
-    (mapc #'(lambda (alist)
-              (create-rect-bb alist))
-          speech-list)))
-
+    (let ((speech-list-count (length speech-list)))
+      (format *error-output* "~&speech-list=~S" speech-list-count)
+      (values
+       (mapc #'(lambda (alist)
+                 (create-rect-bb alist))
+             speech-list)
+       speech-list-count))))
 
 (defun create-text-bb (alist)
   (let ((x (fetch-value '?x alist))
@@ -63,11 +69,13 @@
                                   (geometry_center_x ?id ?X)
                                   (geometry_w ?id ?W)
                                   (geometry_h ?id ?H))))
-    (format *error-output* "~&text-list=~S" (length text-list))
-    (mapc #'(lambda (alist)
-              (create-text-bb alist))
-          text-list)))
-
+    (let ((bounding-box-count (length text-list)))
+      (format *error-output* "~&text-list=~S" bounding-box-count)
+      (values
+       (mapc #'(lambda (alist)
+                 (create-text-bb alist))
+             text-list)
+       bounding-box-count))))
 
 (defun create-ellipse-bb (alist)
   (let ((x (fetch-value '?x alist))
@@ -87,14 +95,28 @@
                                      (geometry_center_x ?id ?X)
                                      (geometry_w ?id ?W)
                                      (geometry_h ?id ?H))))
-    (format *error-output* "~&ellipse-list=~S" (length ellipse-list))
-    (mapc #'(lambda (alist)
-              (create-ellipse-bb alist))
-          ellipse-list)))
-
+    (let ((ellipse-count (length ellipse-list)))
+      (format *error-output* "~&ellipse-list=~S" ellipse-count)
+      (values
+       (mapc #'(lambda (alist)
+                 (create-ellipse-bb alist))
+             ellipse-list)
+       ellipse-count))))
 
 (defun bounding-boxes ()
-  (make-bounding-boxes-for-rectangles)
-  (make-bounding-boxes-for-text)
-  (make-bounding-boxes-for-speech-bubbles)
-  (make-bounding-boxes-for-ellipses))
+  (loop
+     :for routine
+     :in 
+       '(make-bounding-boxes-for-rectangles
+         make-bounding-boxes-for-text
+         make-bounding-boxes-for-speech-bubbles
+         make-bounding-boxes-for-ellipses)
+     :collecting
+       (multiple-value-bind (results count)
+           (funcall routine)
+         (if results
+             count
+             0))))
+
+
+             
