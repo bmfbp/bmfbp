@@ -70,6 +70,8 @@ in OUTPUT-PATHNAME"
        (format t "~&Compiling~%~t'~a'~%to~%~t'~a'~^"
                ,input-pathname ,output-pathname)
        (readfb in :clear-fb t)
-       ,@body
-       (writefb out))))
+       ;;; return the values of BODY as a simple list to our caller
+       (prog1
+           (multiple-value-list ,@body)
+         (writefb out)))))
 

@@ -4,7 +4,8 @@
   :depends-on (prove
 	       arrowgram/lwpasses)
   :pathname "t/"
-  :components ((:test-file "basic"))
+  :components ((:test-file "basic")
+               (:test-file "deb"))
   :perform (asdf:test-op (op c)
 	      (uiop:symbol-call :prove-asdf 'run-test-system c)))
 	       
