@@ -1,6 +1,6 @@
 (defsystem arrowgram
   :depends-on (paip            ;; <https://github.com/norvig/paip-lisp/>
-	       loops) 	       ;; <https://github.com/guitarvydas/loops/>
+               loops) 	       ;; <https://github.com/guitarvydas/loops/>
   :components ((:module package
 			:pathname "./"
 			:components ((:file "package")))
