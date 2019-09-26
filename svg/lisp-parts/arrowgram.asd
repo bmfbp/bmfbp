@@ -1,7 +1,6 @@
 (defsystem arrowgram
-  :depends-on (paip  ;; https://github.com/??? TODO
-	       ;; <https://github.com/guitarvydas/loops>
-	       loops)
+  :depends-on (paip            ;; <https://github.com/norvig/paip-lisp/>
+	       loops) 	       ;; <https://github.com/guitarvydas/loops/>
   :components ((:module package
 			:pathname "./"
 			:components ((:file "package")))
@@ -15,8 +14,8 @@
 		     (progn
 		       (setf *package* (find-package :paip))
 		       (dolist (paip-requirement
-				 '("lisp/prolog.lisp"))
-				   ;;; paip::replace-?-vars is at bottom of prolog.lisp
+				 '("lisp/prologc.lisp"
+                                   "lisp/prologcp.lisp"))
 			 (cl:load 
 			  (asdf:system-relative-pathname
 			   :paip paip-requirement))))
