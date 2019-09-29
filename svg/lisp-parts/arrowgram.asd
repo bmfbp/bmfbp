@@ -7,7 +7,7 @@
 	       (:module source
 			:depends-on (package)
 			:pathname "./"
-			:components ((:file "everything"))))
+			:components ((:file "collect"))))
   :perform (load-op :after (operation component)
 	      (let ((original-package *package*))
 		(unwind-protect

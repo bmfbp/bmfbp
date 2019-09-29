@@ -5,17 +5,21 @@
 (defmacro all-solutions (&rest goals)
   `(progn
      (setf *all-bindings* nil)
-     (top-level-everything ',(paip::replace-?-vars goals))
+     (top-level-collect ',(paip::replace-?-vars goals))
      *all-bindings*))
 
-(defun top-level-everything (goals)
-  (paip::prove-all `(,@goals (everything ,@(paip::variables-in goals)))
-             paip::no-bindings)
-  (values))
+(defun top-level-collect (goals)
+  (paip::clear-predicate 'arrowgram::top-level-query)
+  (let ((vars (delete '? (paip::variables-in goals))))
+    (paip::add-clause `(arrowgram::(top-level-query)
+                  ,@goals
+                  (arrowgram::collect-solutions ,(mapcar #'symbol-name vars)
+                                    ,vars))))
+  ;; Now run it
+  (paip::run-prolog 'arrowgram::top-level-query/0 #'paip::ignore)
+  *all-bindings*)
 
-(defun everything (vars bindings other-goals)
-  "Print each variable with its binding.
-  Then ask the user if more solutions are desired."
+(defun collect-solutions (vars bindings other-goals)
   (declare (ignore other-goals))
   (if (null vars)
       t
@@ -25,5 +29,5 @@
         (push L *all-bindings*)
         paip::fail)))
 
-(setf (get 'everything 'paip::clauses) 'everything)
+(setf (get 'collect-solutions 'paip::clauses) 'collect-solutions)
 
