@@ -10,7 +10,8 @@
 (in-package :paip)
 
  
-(load (asdf:system-relative-pathname :paip "lisp/prolog.lisp"))
+(load (asdf:system-relative-pathname :paip "lisp/prologc.lisp"))
+(load (asdf:system-relative-pathname :paip "lisp/prologc.lisp"))
 
 (ql:quickload :loops)
 
@@ -20,13 +21,14 @@
 
 (paip::clear-db)
 
-(in-package :arrowgram)
+(in-package :paip)
 
-(load "~/projects/bmfbp/svg/lisp-parts/everything.lisp")
+(load (asdf:system-relative-pathname :arrowgram "collect.lisp"))
 
 
 
-(load "~/projects/bmfbp/svg/lisp-parts/assign-parents-to-ellipses")
-;(load "~/projects/bmfbp/svg/lisp-parts/find-comments")
-(load "~/projects/bmfbp/svg/lisp-parts/bounding-boxes")
-(load "~/projects/bmfbp/svg/lisp-parts/lwpasses")
+(load (asdf:system-relative-pathname :arrowgram "assign-parents-to-ellipses.lisp"))
+;(load "find-comments")
+(load (asdf:system-relative-pathname :arrowgram "bounding-boxes.lisp"))
+(load (asdf:system-relative-pathname :arrowgram "lwpasses.lisp"))
+

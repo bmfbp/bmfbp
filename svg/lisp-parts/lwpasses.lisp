@@ -1,4 +1,4 @@
-(in-package :arrowgram)
+(in-package :paip)
 
 ;;; N.b. The current state of the world (aka. "the factbase") ends up
 ;;; in PAIP::*db-predicates*
@@ -12,7 +12,8 @@ When CLEAR-FB is non nil, clear the existing factbase before reading."
   (let ((original-package *package*))
     (unwind-protect
          (progn 
-           (setf *package* (find-package :arrowgram))
+           ;(setf *package* (find-package :arrowgram))
+           (setf *package* (find-package :paip))
            (flet ((read1 ()
                     (read stream nil 'eof)))
              (let ((clause (read1)))
@@ -52,9 +53,8 @@ FIXME ..
       (readfb in :clear-fb t)
       (format *error-output* "~&running (expected (rects/texts/speech/ellipse) 11/49/1/3)~%")
       (bounding-boxes)
-      (assign-parents-to-ellipses)
-      #+nil ;; failing!
-      (find-comments)
+      #+nil(assign-parents-to-ellipses)
+      #+nil(find-comments)
       (writefb out)
       (values))))
 

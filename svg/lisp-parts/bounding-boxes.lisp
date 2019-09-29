@@ -1,4 +1,4 @@
-(in-package :arrowgram)
+(in-package :paip)
 
 (defun fetch-value (var alist)
   (let ((cell (assoc var alist)))
@@ -23,6 +23,7 @@
       (create-bb id x y right bottom))))
 
 (defun make-bounding-boxes-for-rectangles ()
+  (prolog-compile-symbols)
   (let ((rect-list (all-solutions (rect ?id)
                                   (geometry_top_y ?id ?Y)
                                   (geometry_left_x ?id ?X)

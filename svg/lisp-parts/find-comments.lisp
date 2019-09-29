@@ -1,4 +1,4 @@
-(in-package :arrowgram)
+(in-package :paip)
 
 (defun find-comments ()
   (let ((matches (all-solutions (speechbubble ?bid)

@@ -1,6 +1,6 @@
 ;(all-solutions (P ?X))
 
-(in-package :arrowgram)
+(in-package :paip)
 
 (paip::<- (p 101))
 (paip::<- (p 102))

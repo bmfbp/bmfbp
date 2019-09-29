@@ -1,4 +1,4 @@
-(in-package :arrowgram)
+(in-package :paip)
 
 (defun assign-parents-to-ellipses ()
   (let ((all-ellipses (all-solutions (ellipse ?eid)))

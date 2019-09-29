@@ -1,4 +1,4 @@
-(in-package :arrowgram)
+(in-package :paip)
 
 (defparameter *all-bindings* nil)
 
@@ -13,14 +13,14 @@
   (let ((vars (delete '? (paip::variables-in goals))))
     (paip::add-clause `((paip::top-level-query)
                         ,@goals
-                        (arrowgram::collect-prolog-vars
+                        (paip::collect-prolog-vars
 			 ,(mapcar #'symbol-name vars)
                          ,vars))))
   (paip::run-prolog 'paip::top-level-query/0 #'paip::ignore)
   *all-bindings*)
 
 ;; callable from prolog clause
-(defun arrowgram::collect-prolog-vars/2 (var-names vars cont)
+(defun paip::collect-prolog-vars/2 (var-names vars cont)
   (let ((L nil))
     (if (null vars)
 	*all-bindings*
