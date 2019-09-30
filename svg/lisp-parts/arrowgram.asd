@@ -1,6 +1,14 @@
 (defsystem arrowgram
   :depends-on (paip            ;; <https://github.com/norvig/paip-lisp/>
                loops) 	       ;; <https://github.com/guitarvydas/loops/>
+  ;; see   ;; https://stackoverflow.com/questions/45730012/common-lisp-asdf-tests-compile-system-with-different-optimization-levels>
+  ;; and
+  ;;  <https://common-lisp.net/project/asdf/asdf/Controlling-file-compilation.html>
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
   :components ((:module package
 			:pathname "./"
 			:components ((:file "package")))
@@ -24,6 +32,11 @@
 
 (defsystem arrowgram/database
   :depends-on (arrowgram)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
   :components ((:module contents
 			:pathname "./"
 			:components ((:file "common-queries")
@@ -35,5 +48,10 @@
 
 (defsystem arrowgram/lwpasses
   :depends-on (arrowgram/database)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
   :components ((:file "lwpasses")))
 
