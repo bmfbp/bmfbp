@@ -53,5 +53,6 @@
                                          (safety 3)
                                          (speed 0)))
                     (funcall next))
-  :components ((:file "lwpasses")))
+  :components ((:file "lwpasses")
+               (:file "test-query")))
 
