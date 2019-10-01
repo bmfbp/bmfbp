@@ -1,6 +1,6 @@
 #!/bin/bash
 set -v
-hs-vsh-drawio-to-fb svgc <svgc.svg >temp1.lisp
+hs_vsh_drawio_to_fb svgc <svgc.svg >temp1.lisp
 lib_insert_part_name svgc <temp1.lisp >temp2.lisp
 fb_to_prolog <temp2.lisp >temp3.pro
 plsort <temp3.pro >temp4.pro
