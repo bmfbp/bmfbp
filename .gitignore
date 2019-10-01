@@ -13,3 +13,4 @@ temp*
 #*
 *.gsh
 .DS_Store
+*.sed

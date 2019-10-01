@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./get_file_content_in_repo.js",
+  "kindType": "nodejs",
+  "inPins": [
+    "git repo metadata",
+    "temp directory"
+  ],
+  "outPins": [
+    "metadata",
+    "file content"
+  ]
+}

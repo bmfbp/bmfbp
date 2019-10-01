@@ -1,3 +1,0 @@
-#!/bin/bash
-BINDIR=~/bin
-grash ${BINDIR}/svgpasses.gsh $1 $2

@@ -134,7 +134,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
           let
             result = do
               source <- lookupAttrIntoString "transform"
-              let regexp = "translate\\(([.0-9]+),([.0-9]+)\\)" :: String
+              let regexp = "translate\\(([-.0-9]+),([-.0-9]+)\\)" :: String
               (_, _, _, [x, y]) <- (source =~~ regexp :: Maybe (String, String, String, [String]))
               return (readFloat x, readFloat y)
           in
@@ -178,6 +178,10 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
           in
             maybe defaultOutput id result
         "foreignObject" -> collapseEmpty $ Container rest
+        "switch" ->
+          case rest of
+            [] -> Empty
+            (x:_) -> x
         _ -> defaultOutput
 
 mapPathCommands :: [GST.PathCommand] -> [PathCommand]

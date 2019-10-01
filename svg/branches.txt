@@ -1,0 +1,12 @@
+edge-wire-numbers 
+parent << edges << names-not-indices4 << names-not-indices
+edges << names-not-indices4 << names-not-indices
+names-not-indices4 << names-not-indices
+names-not-indices << split
+# merged back mod-log << names-not-indices << split
+new-emit << names-not-indices << split
+
+to delete:
+names-not-indices4 (merged into names-not-indices, but won't delete)
+
+

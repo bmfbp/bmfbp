@@ -1,0 +1,2 @@
+cp ../test_cases/firstTests/js_test5_emitter.svg .
+part_compile js_test5_emitter.svg

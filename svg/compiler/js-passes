@@ -1,3 +1,0 @@
-#!/bin/bash
-BINDIR=~/bin
-grash ${BINDIR}/js-passes.gsh $1 $2

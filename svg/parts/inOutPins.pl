@@ -16,15 +16,23 @@
 % (input) pipe.
 main :-
     readFB(user_input),
-    forall(sink(_,PortID),makeInputForPipe(PortID)),
-    forall(source(_,PortID),makeOutputForPipe(PortID)),
+    condSink,
+    condSource,
     writeFB,
     halt.
 
+condSink :-
+    forall(sink(_,PortID),makeInputForPipe(PortID)),!.
+condSink :- true.
+
+condSource :-
+    forall(source(_,PortID),makeOutputForPipe(PortID)),!.
+condSource :- true.
+
 makeInputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
-    portIndex(PortID,Pin),
-    parent(PortID,Part),
+    portName(PortID,Pin),
+    parent(Part,PortID),
     makeInput(Part,PortID,Pin,WireIndex).
 
 makeInputForPipe(PortID) :-
@@ -49,8 +57,8 @@ makeInput(Part,PortID,Pin,WireIndex) :-
 
 makeOutputForPipe(PortID) :-
     pipeNum(PortID,WireIndex),
-    portIndex(PortID,Pin),
-    parent(PortID,Part),
+    portName(PortID,Pin),
+    parent(Part,PortID),
     makeOutput(Part,PortID,Pin,WireIndex).
 
 makeOutputForPipe(PortID) :-

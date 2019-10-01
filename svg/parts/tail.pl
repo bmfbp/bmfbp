@@ -7,6 +7,11 @@ writeFB :-
     forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
     forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
     forall(rect(X), writeterm(rect(X))),
+    forall(roundedrect(X), writeterm(roundedrect(X))),
+    forall(pinless(X), writeterm(pinless(X))),
+    forall(comment(X), writeterm(comment(X))),
+    forall(speechbubble(X), writeterm(speechbubble(X))),
+    forall(metadata(X,Y), writeterm(metadata(X,Y))),
     forall(ellipse(X), writeterm(ellipse(X))),
     forall(dot(X), writeterm(dot(X))),
     forall(line(X), writeterm(line(X))), 
@@ -46,8 +51,7 @@ writeFB :-
     forall(used(X), writeterm(used(X))),
     forall(kind(X,Y), writeterm(kind(X,Y))),
     forall(selfPort(X,Y), writeterm(selfPort(X,Y))),
-    forall(portIndex(X,Y), writeterm(portIndex(X,Y))),
-    forall(portIndexByID(X,Y), writeterm(portIndexByID(X,Y))),
+    forall(port(X), writeterm(port(X))),
     forall(portName(X,Y), writeterm(portName(X,Y))),
     forall(portNameByID(X,Y), writeterm(portNameByID(X,Y))),
     forall(unassigned(X), writeterm(unassigned(X))),
@@ -63,13 +67,36 @@ writeFB :-
     forall(sinkfd(X,Y), writeterm(sinkfd(X,Y))),
     forall(inputPin(X,Y), writeterm(inputPin(X,Y))),
     forall(outputPin(X,Y), writeterm(outputPin(X,Y))),
-    forall(selfInputPin(X,Y), writeterm(selfInputPin(X,Y))),
-    forall(selfOutputPin(X,Y), writeterm(selfOutputPin(X,Y))),
+    forall(selfInputPin(X), writeterm(selfInputPin(X))),
+    forall(selfOutputPin(X), writeterm(selfOutputPin(X))),
     forall(wireIndex(X,Y), writeterm(wireIndex(X,Y))),
     forall(n_c(X), writeterm(n_c(X))),
-    forall(indexedSink(X), writeterm(indexedSink(X))),
-    forall(indexedSource(X), writeterm(indexedSource(X))),
-    forall(parent(X,Y), writeterm(parent(X,Y))).
+    forall(namedSink(X), writeterm(namedSink(X))),
+    forall(namedSource(X), writeterm(namedSource(X))),
+    forall(parent(X,Y), writeterm(parent(X,Y))),
+    writelog.
+
+writelog :-
+    forall(log(X),writelog(X)),
+    forall(log(Z,Y),writelog(Z,Y)),
+    forall(log(A,B,C),writelog(A,B,C)),
+    forall(log(D,E,F,G),writelog(D,E,F,G)),
+    forall(log(H,I,J,K,L),writelog(H,I,J,K,L)),
+    forall(log(M,N,O,P,Q,R),writelog(M,N,O,P,Q,R)),
+    forall(log(S,T,U,V,W,X,Y),writelog(S,T,U,V,W,X,Y)),
+    forall(log(R,S,T,U,V,W,X,Y),writelog(R,S,T,U,V,W,X,Y)),
+    forall(log(R,S,T,U,V,W,X,Y,Z),writelog(R,S,T,U,V,W,X,Y,Z)).
+
+writelog(X) :- writeterm(log(X)).
+writelog(Y,Z) :-writeterm(log(Y,Z)).
+writelog(X,Y,Z) :-writeterm(log(X,Y,Z)).
+writelog(W,X,Y,Z) :-writeterm(log(W,X,Y,Z)).
+writelog(A,B,C,D,E) :-writeterm(log(A,B,C,D,E)).
+writelog(A,B,C,D,E,F) :-writeterm(log(A,B,C,D,E,F)).
+writelog(A,B,C,D,E,F,G) :-writeterm(log(A,B,C,D,E,F,G)).
+writelog(A,B,C,D,E,F,G,H) :-writeterm(log(A,B,C,D,E,F,G,H)).
+writelog(A,B,C,D,E,F,G,H,I) :-writeterm(log(A,B,C,D,E,F,G,H,I)).
+
 
 wspc :-
     write(user_error,' ').
@@ -88,11 +115,8 @@ element(end_of_file, _) :- !.
 element(eltype(X,Y), Str) :- !,
 			   asserta(eltype(X,Y)),
 		       readFB(Str).
-element(portIndex(X,Y), Str) :- !,
-			   asserta(portIndex(X,Y)),
-		       readFB(Str).
-element(portIndexByID(X,Y), Str) :- !,
-			   asserta(portIndexByID(X,Y)),
+element(port(X), Str) :- !,
+			   asserta(port(X)),
 		       readFB(Str).
 element(portName(X,Y), Str) :- !,
 			   asserta(portName(X,Y)),
@@ -215,6 +239,20 @@ element(selfOutputPin(X,Y), Str) :- !,
 			     asserta(selfOutputPin(X,Y)),
 			     readFB(Str).
 
+
+element(selfInputPin(X), Str) :- !,
+			     asserta(selfInputPin(X)),
+			     readFB(Str).
+
+element(selfOutputPin(X), Str) :- !,
+			     asserta(selfOutputPin(X)),
+			     readFB(Str).
+
+
+
+
+
+
 element(line(X), Str) :- !,
 			     asserta(line(X)),
 			     readFB(Str).
@@ -297,6 +335,21 @@ element(move_relative_y(X,Y), Str) :- !,
 element(rect(X), Str) :- !,
 			     asserta(rect(X)),
 			     readFB(Str).
+element(roundedrect(X), Str) :- !,
+			     asserta(roundedrect(X)),
+			     readFB(Str).
+element(pinless(X), Str) :- !,
+			     asserta(pinless(X)),
+			     readFB(Str).
+element(speechbubble(X), Str) :- !,
+			     asserta(speechbubble(X)),
+			     readFB(Str).
+element(comment(X), Str) :- !,
+			     asserta(comment(X)),
+			     readFB(Str).
+element(metadata(X,Y), Str) :- !,
+			     asserta(metadata(X,Y)),
+			     readFB(Str).
 
 element(ellipse(X), Str) :- !,
 			     asserta(ellipse(X)),
@@ -368,12 +421,48 @@ element(n_c(X), Str) :- !,
 			     asserta(n_c(X)),
 			     readFB(Str).
 
-element(indexedSink(X), Str) :- !,
-			     asserta(indexedSink(X)),
+element(namedSink(X), Str) :- !,
+			     asserta(namedSink(X)),
 			     readFB(Str).
 
-element(indexedSource(X), Str) :- !,
-			     asserta(indexedSource(X)),
+element(namedSource(X), Str) :- !,
+			     asserta(namedSource(X)),
+			     readFB(Str).
+
+element(log(W), Str) :- !,
+			     asserta(log(W)),
+			     readFB(Str).
+
+element(log(W,X), Str) :- !,
+			     asserta(log(W,X)),
+			     readFB(Str).
+
+element(log(W,X,Y), Str) :- !,
+			     asserta(log(W,X,Y)),
+			     readFB(Str).
+
+element(log(W,X,Y,Z), Str) :- !,
+			     asserta(log(W,X,Y,Z)),
+			     readFB(Str).
+
+element(log(A,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,W,X,Y,Z)),
+			     readFB(Str).
+
+element(log(A,B,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,B,W,X,Y,Z)),
+			     readFB(Str).
+
+element(log(A,B,C,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,B,C,W,X,Y,Z)),
+			     readFB(Str).
+
+element(log(A,B,C,D,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,B,C,D,W,X,Y,Z)),
+			     readFB(Str).
+
+element(log(A,B,C,D,E,W,X,Y,Z), Str) :- !,
+			     asserta(log(A,B,C,D,E,W,X,Y,Z)),
 			     readFB(Str).
 
 
@@ -387,6 +476,11 @@ element(Term, _) :-
 inc(Var, Value) :-
     g_read(Var, Value),
     X is Value+1,
+    g_assign(Var, X).
+
+dec(Var, Value) :-
+    g_read(Var, Value),
+    X is Value-1,
     g_assign(Var, X).
 
 boundingboxCompletelyInside(ID1,ID2) :-
@@ -414,8 +508,68 @@ pointCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID2,R2),
     bounding_box_bottom(ID2,B2),
 
+    %we('point inside: L1/T1/L2/T2/R2/B2: '),we(L1),wspc,we(T1),wspc,we(L2),wspc,we(T2),wspc,we(R2),wspc,wen(B2),
+
     L1 >= L2,
     T1 >= T2,
     R2 >= L1,
     B2 >= T1.
 
+centerCompletelyInsideBoundingBox(ID1,ID2) :-
+    bounding_box_left(ID1,L1),
+    bounding_box_top(ID1,T1),
+    bounding_box_right(ID1,R1),
+    bounding_box_bottom(ID1,B1),
+    
+    Cx is L1 + (R1 - L1),
+    Cy is T1 + (B1 - T1),
+
+    bounding_box_left(ID2,L2),
+    bounding_box_top(ID2,T2),
+    bounding_box_right(ID2,R2),
+    bounding_box_bottom(ID2,B2),
+
+    %% we('ccibb id1/center/id2 '),
+    %% we(ID1), wspc,
+    %% we(L1), wspc,
+    %% we(T1), wspc,
+    %% we(R1), wspc,
+    %% we(B1), wspc,
+    %% we(Cx), wspc,
+    %% we(Cy), wspc,
+    %% we(ID2), wspc,
+    %% we(L2), wspc,
+    %% we(T2), wspc,
+    %% we(R2), wspc,
+    %% wen(B2),
+
+    Cx >= L2,
+    Cx =< R2,
+    Cy >= T2,
+    Cy =< B2.
+
+dumplog :-
+    forall(log(X),dumplog(X)),
+    forall(log(Z,Y),dumplog(Z,Y)),
+    forall(log(A,B,C),dumplog(A,B,C)),
+    forall(log(D,E,F,G),dumplog(D,E,F,G)),
+    forall(log(H,I,J,K,L),dumplog(H,I,J,K,L)),
+    forall(log(M,N,O,P,Q,R),dumplog(M,N,O,P,Q,R)),
+    forall(log(M1,N1,O1,P1,Q1,R1,S1),dumplog(M1,N1,O1,P1,Q1,R1,S1)),
+    forall(log(M2,N2,O2,P2,Q2,R2,S2,T2),dumplog(M2,N2,O2,P2,Q2,R2,S2,T2)),
+    forall(log(L3,M3,N3,O3,P3,Q3,R3,S3,T3),dumplog(L3,M3,N3,O3,P3,Q3,R3,S3,T3)).
+
+dumplog(W) :- wen(W).
+dumplog(W,X) :- we(W),wspc,wen(X).
+dumplog(W,X,Y) :- we(W),wspc,we(X),wspc,wen(Y).
+dumplog(W,X,Y,Z) :- we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(V,W,X,Y,Z) :- we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_) :- true.
+dumplog(U,V,W,X,Y,Z) :- we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_) :- true.
+dumplog(T,U,V,W,X,Y,Z) :- we(T),wspc,we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_,_) :- true.
+dumplog(S,T,U,V,W,X,Y,Z) :- we(S),wspc,we(T),wspc,we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_,_,_) :- true.
+dumplog(R,S,T,U,V,W,X,Y,Z) :- we(R),wspc,we(S),wspc,we(T),wspc,we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
+dumplog(_,_,_,_,_,_,_,_,_) :- true.
