@@ -19,6 +19,7 @@ dependencies:
 
 clean:
 	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp* $(BINDIR)/compare-graph temp.log*.txt strings.sed $(BINDIR)/part_compile
+	rm -f $(BINDIR)/lisp-to-prolog $(BINDIR)/prolog-to-lisp
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg

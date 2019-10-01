@@ -32,4 +32,4 @@ dependencies:
 	chmod a+x $(BINDIR)/comparegsh.sh
 
 clean-dependencies:
-	rm -f $(BINDIR)/flatbmfbp $(BINDIR)/comparsegsh.sh
+	rm -f $(BINDIR)/flatbmfbp $(BINDIR)/comparegsh.sh

@@ -1,0 +1,4 @@
+{
+  "entrypoint": "./split_diagram.js",
+  "kindType": "nodejs"
+}
