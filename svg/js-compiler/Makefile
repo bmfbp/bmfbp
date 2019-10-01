@@ -73,3 +73,9 @@ junk:
 comp:
 	jsbmfbp $(BUILD_PROCESS)/kk/compile_composites.svg
 
+a:
+	./new-jsbmfbp.sh $(BUILD_PROCESS)/kk/build_process.svg
+
+b:
+	./new-jsbmfbp2.sh $(BUILD_PROCESS)/kk/build_process.svg
+	compare-graph temp28.json b-regression.json
