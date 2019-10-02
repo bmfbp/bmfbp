@@ -1,11 +1,12 @@
 BINDIR=~/bin
 
-all: clean build test test2 test3 test4 tee pass top
+all: build test test2 test3 test4 tee pass top
 
 build: 
 	cd ../grash && make
 	cd ../hs-vsh && make
 	cd parts && make
+	cd lisp-parts && make all
 	cd flat-compiler && make
 	cd js-compiler && make
 	cd split && make
@@ -16,6 +17,7 @@ clean:
 	cd js-compiler && make clean
 	cd split && make clean
 	cd parts && make clean
+	cd lisp-parts && make clean
 	cd ../hs-vsh && make clean
 
 test : 

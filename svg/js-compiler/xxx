@@ -1,0 +1,8 @@
+#!/bin/bash
+rm -rf ~/.cache/common-lisp
+cd ..
+make clean
+make
+cd js-compiler
+make bp
+make a

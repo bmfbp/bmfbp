@@ -19,6 +19,7 @@ dependencies:
 
 clean:
 	rm -f temp*.pro temp*.js temp*.lisp $(BINDIR)/jsbmfbp* $(BINDIR)/compare-graph temp.log*.txt strings.sed $(BINDIR)/part_compile
+	rm -f $(BINDIR)/lisp-to-prolog $(BINDIR)/prolog-to-lisp
 
 test: dependencies
 	jsbmfbp $(TEST_CASES)/firstTests/js_test_emitter.svg
@@ -72,3 +73,9 @@ junk:
 comp:
 	jsbmfbp $(BUILD_PROCESS)/kk/compile_composites.svg
 
+a:
+	./new-jsbmfbp.sh $(BUILD_PROCESS)/kk/build_process.svg
+
+b:
+	./new-jsbmfbp2.sh $(BUILD_PROCESS)/kk/build_process.svg
+	compare-graph temp28.json b-regression.json

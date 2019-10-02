@@ -1,0 +1,4 @@
+{
+  "entrypoint": "./javascript_builder.js",
+  "kindType": "nodejs"
+}

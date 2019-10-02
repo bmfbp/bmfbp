@@ -1,0 +1,11 @@
+(in-package :arrowgram)
+
+(defun find-comments ()
+  (let ((matches (all-solutions (speechbubble ?bid)
+                                (text ?tid ?)
+                                (point-completely-inside-bounding-box ?tid ?bid))))
+    (mapc #'(lambda (triple)
+              (let ((tid (fetch-value '?tid triple)))
+                (paip::add-clause `((used ,tid)))
+                (paip::add-clause `((comment ,tid)))))
+          matches)))

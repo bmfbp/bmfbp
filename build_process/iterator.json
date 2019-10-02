@@ -1,0 +1,4 @@
+{
+  "entrypoint": "./iterator.js",
+  "kindType": "nodejs"
+}
