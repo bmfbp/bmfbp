@@ -28,3 +28,23 @@ The shell script does a regression test, comparing results against saved files, 
 For example, the current output goes to ??/bmfbp/svg/js-compiler/lisp-out.lisp, gets munged by lisp-to-prolog and becomes temp7.pro.
 
 For now, the input and output files are hard-wired into lwpasses.lisp.  Once everything works, we'll switch to using the code in lwpasses.lisp/main() and use *standard-input* and *standard-output* again. Note that SBCL expects a different form for main() than does LW.
+
+## Dependencies
+
+### loops
+
+Try <https://github.com/guitarvydas/loops>.
+
+## Testing
+
+Using PROVE, so for the first time for every installation, one must
+issue a
+
+    (ql:quickload :arrowgram-test)
+
+then to run the simple test
+
+    (prove:run :arrowgram-test)
+    
+    
+
