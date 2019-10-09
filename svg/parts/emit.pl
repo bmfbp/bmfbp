@@ -83,17 +83,17 @@ conditionalWriteOut(_):-
 writeSpaces :- write('  ').
 
 inputOfParent(P,In) :-
-    parent(In,P),sink(_,In).
+    parent(P,In),sink(_,In).
 
 outputOfParent(P,Out) :-
-    parent(Out,P),source(_,Out).
+    parent(P,Out),source(_,Out).
     
 writeExec :-
     write(exec),!.
 
 hasInput(ID) :-
     eltype(ID,box),
-    parent(Port,ID),
+    parent(ID,Port),
     eltype(Port,port),
     sink(_,Port).
 

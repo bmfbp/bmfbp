@@ -1,23 +1,26 @@
+% HISTORY: this used to work only with numeric indices
+% cut over to use port names, not indices
+
 :- initialization(main).
 :- include('head').
 :- include('tail').
 
 main :-
     readFB(user_input), 
-    forall(portIndex(P,_),markIndexed(P)),
+    forall(portName(P,_),markNamed(P)),
     writeFB,
     halt.
 
-markIndexed(P) :-
+markNamed(P) :-
     sink(_,P),
-    asserta(indexedSink(P)).
+    asserta(namedSink(P)).
 
-markIndexed(P) :-
+markNamed(P) :-
     source(_,P),
-    asserta(indexedSource(P)).
+    asserta(namedSource(P)).
 
-markIndexed(P) :-
+markName(P) :-
     we('port '),
     we(P),
-    wen(' has no index!').
+    wen(' has no name!').
 

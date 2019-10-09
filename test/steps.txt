@@ -1,0 +1,34 @@
+0. cd bmfbp/test
+1. open ../build_process/build_process.drawio
+2. select tab ide.svg
+3. mouse select (marquee) all boxes on ide.svg
+4. file>>export as>>svg>>selection only EXPORT as ../build_process/ide.svg (replace)
+5. cd bmfbp/test
+6. ./run >>>> complains about "BAD svg"
+7. back to Draw.IO, FILE>>Open ../build_process/ide.svg
+8. click on rounded rectangle, select TEXT, deselect Word-wrap and Formatted-text
+9. apple-S to save back to ide.svg
+10. ./run
+11. crashes into SBCL (type "(exit)")
+12. open temp1.lisp in editor
+13. search for "build process" - it is there 3 times, once in meta, twice in TRANSLATE
+
+-- what is confusing my compiler is :
+...
+
+(rect 842.0 0.0 80.0 80.0) 
+ (translate 
+  (846.5 33.5) 
+  (
+   ("build process" 
+    (translate 
+     (35.0 12.0) 
+     ("build process"))))) 
+
+...
+
+-- that is where the problems are -- there are no "Not supported" things in the .svg, but, "build process" is there twice at two different coords (cummulative) --
+
+-- I might be able to catch the (translate (x y) (("build process" (translate (a b) "build process" .... in Lisp if it is a pattern...
+
+-- (ignore, as this just goes further into the weeds)... I go on from here and deselect Word-wrap on every string, then get into trouble with the compiler - it complains that a box has two partKinds ("build process" and "build process", which appears as two different strings).

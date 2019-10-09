@@ -1,0 +1,4 @@
+rm -f temp*
+rm -f strings.sed
+rm -f *~
+rm -f *.svg

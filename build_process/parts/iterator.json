@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./iterator.js",
+  "kindType": "nodejs",
+  "inPins": [
+    "start",
+    "continue",
+    "done"
+  ],
+  "outPins": [
+    "get a part"
+  ]
+}

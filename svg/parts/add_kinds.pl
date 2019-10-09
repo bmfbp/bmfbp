@@ -3,18 +3,30 @@
 
 main :-
     readFB(user_input), 
-    forall(eltype(ID,box),createKinds(ID)),
+    condDoKinds,
     writeFB,
     halt.
 
-createKinds(BoxID) :-
+condDoKinds :-
+    forall(eltype(ID,box),createAllKinds(ID)),
+    !.
+
+condDoKinds :- true.
+
+createAllKinds(BoxID) :-
+    forall(text(TextID,_),createOneKind(BoxID,TextID)).
+
+createOneKind(BoxID,TextID) :-
     text(TextID,Str),
+    \+ used(TextID),
     textCompletelyInsideBox(TextID,BoxID),
     asserta(used(TextID)),
     asserta(kind(BoxID,Str)).
 
+createOneKind(_,_) :-
+    true.
+
 textCompletelyInsideBox(TextID,BoxID) :-
     pointCompletelyInsideBoundingBox(TextID,BoxID).
-%    boundingboxCompletelyInside(TextID,BoxID).
 
 :- include('tail').

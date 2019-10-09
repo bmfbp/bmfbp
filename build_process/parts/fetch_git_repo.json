@@ -1,0 +1,11 @@
+{
+  "entrypoint": "./fetch_git_repo.js",
+  "kindType": "nodejs",
+  "inPins": [
+    "git repo metadata",
+    "temp directory"
+  ],
+  "outPins": [
+    "metadata"
+  ]
+}

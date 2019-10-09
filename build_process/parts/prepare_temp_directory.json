@@ -1,0 +1,9 @@
+{
+  "entrypoint": "./prepare_temp_directory.js",
+  "kindType": "nodejs",
+  "inPins": [
+  ],
+  "outPins": [
+    "directory"
+  ]
+}

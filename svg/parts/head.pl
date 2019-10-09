@@ -29,22 +29,24 @@
 :- dynamic(move_relative_y/2) .
 :- dynamic(npipes/1).
 :- dynamic(nwires/1).
-:- dynamic(parent/2).
+:- dynamic(parent/2). % parent(ParentID,OF-X)
 :- dynamic(pipeNum/2).
 :- dynamic(wireNum/2).
+:- dynamic(port/1) .
 :- dynamic(portName/2) .
 :- dynamic(portNameByID/2) .
-:- dynamic(portIndex/2) .
-:- dynamic(portIndexByID/2) .
 :- dynamic(unassigned/1) .
 :- dynamic(source/2) .
 :- dynamic(source_x/2) .
 :- dynamic(source_y/2) .
 :- dynamic(sink_x/2) .
 :- dynamic(sink_y/2) .
-:- dynamic(sink/1).
-:- dynamic(source/1).
 :- dynamic(rect/1).
+:- dynamic(roundedrect/1).
+:- dynamic(pinless/1).
+:- dynamic(speechbubble/1).
+:- dynamic(comment/1).
+:- dynamic(metadata/2).
 :- dynamic(ellipse/1).
 :- dynamic(dot/1).
 :- dynamic(sink/2) .
@@ -68,7 +70,23 @@
 :- dynamic(outputPin/2).
 :- dynamic(selfInputPin/2).
 :- dynamic(selfOutputPin/2).
+:- dynamic(selfInputPin/1).
+:- dynamic(selfOutputPin/1).
+:- dynamic(inputPin/2).
+:- dynamic(outputPin/2).
+:- dynamic(inputPort/2).
+:- dynamic(outputPort/2).
 :- dynamic(wireIndex/2).
 :- dynamic(n_c/1).
-:- dynamic(indexedSink/1).
-:- dynamic(indexedSource/1).
+:- dynamic(namedSink/1).
+:- dynamic(namedSource/1).
+
+:- dynamic(log/1).
+:- dynamic(log/2).
+:- dynamic(log/3).
+:- dynamic(log/4).
+:- dynamic(log/5).
+:- dynamic(log/6).
+:- dynamic(log/7).
+:- dynamic(log/8).
+:- dynamic(log/9).

@@ -25,9 +25,10 @@
                (tail (third list)))
 	   (if (list-of-lists-p tail)
                `(translate ,pair ,(mapcar #'fix-lines tail))
-               (error "fix-lines: badly formed translate /~A/~%" list))))
+               (die (format nil"fix-lines: badly formed translate /~A/~%" list)))))
 	
-	((rect text component ellipse dot) list)
+	((rect text component ellipse dot speechbubble metadata nothing) 
+	 list)
 	
 	(line
 	 (let* ((absm (second list))
@@ -36,5 +37,5 @@
 	   `(line ,@(fixup-line (rest (rest list)) x1 y1))))
 	
 	(otherwise
-	 (error (format nil "bad format in fixup-line /~A/" list))))))
+	 (die (format nil "bad format in fixup-line /~A/" list))))))
   

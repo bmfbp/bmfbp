@@ -24,7 +24,7 @@ data Output
     | Path [PathCommand]
     | Rect Float Float Float Float 
     | Ellipse Float Float Float Float
-    | Dot Float Float Float Float
+--    | Dot Float Float Float Float
     | Text DT.Text
     | Metadata [KindMetadata]
     | Empty
@@ -74,7 +74,7 @@ lispify (Path commands)
   | otherwise = wrapInParens ("line" : map lispifyPathCommand commands)
 lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
-lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
+-- lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Metadata md) = wrapInParens ["metadata", showToText (DAS.encode md)]
 lispify (Text t) = DT.concat ["\"", t, "\""]
 lispify Empty = ""
@@ -134,7 +134,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
           let
             result = do
               source <- lookupAttrIntoString "transform"
-              let regexp = "translate\\(([.0-9]+),([.0-9]+)\\)" :: String
+              let regexp = "translate\\(([-.0-9]+),([-.0-9]+)\\)" :: String
               (_, _, _, [x, y]) <- (source =~~ regexp :: Maybe (String, String, String, [String]))
               return (readFloat x, readFloat y)
           in
@@ -172,12 +172,17 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               cy <- lookupAttrIntoString "cy"
               rx <- lookupAttrIntoString "rx"
               ry <- lookupAttrIntoString "ry"
-              if rx == ry
-                then return (Dot (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
-                else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
+	      return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
+--              if rx == ry
+--                then return (Dot (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
+--                else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
           in
             maybe defaultOutput id result
         "foreignObject" -> collapseEmpty $ Container rest
+        "switch" ->
+          case rest of
+            [] -> Empty
+            (x:_) -> x
         _ -> defaultOutput
 
 mapPathCommands :: [GST.PathCommand] -> [PathCommand]

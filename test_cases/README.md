@@ -32,7 +32,7 @@ cases by its numeric index.
     2. One wire
     3. Many wires
 4. An input pin can be attached to zero or more wires.
-    1. Zero wire
+    1. Zero wire - not allowed - case removed
     2. One wire
     3. Many wires
 5. A kind can be either a leaf or a composite.

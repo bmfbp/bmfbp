@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./json_object_stacker.js",
+  "kindType": "nodejs",
+  "inPins": [
+    "push object",
+    "get a part"
+  ],
+  "outPins": [
+    "no more",
+    "part metadata"
+  ]
+}
