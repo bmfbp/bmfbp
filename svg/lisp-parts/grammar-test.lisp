@@ -27,6 +27,9 @@
 findCoincidentSource(_,_):-
     true.
 "))
+
+;; (esrap:trace-rule 'prolog::PrologProgram :recursive t)
+
 #|
 notNamedSource(X) :-
     \+ namedSource(X)\.
