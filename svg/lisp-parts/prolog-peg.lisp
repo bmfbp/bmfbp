@@ -164,7 +164,7 @@
 (peg:rule prolog::pNotClause "pNot pSimpleClause"
   (:destructure (op clause)
     (declare (ignore op))
-    `(prolog::not-clause ,clause)))
+    `(prolog::op-not ,clause)))
 
 (peg:rule prolog::IdentifierOrVariable "Identifier / Variable"
   (:lambda (x) x))
