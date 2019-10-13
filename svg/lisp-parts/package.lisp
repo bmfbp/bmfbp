@@ -1,4 +1,7 @@
 (defpackage :arrowgram
-  (:use :cl))
+  (:use :cl :paip))
+
+(defpackage :prolog
+  (:use :cl :paip))
 
 

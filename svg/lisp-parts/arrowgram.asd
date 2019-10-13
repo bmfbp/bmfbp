@@ -30,6 +30,38 @@
 		  (setf *package* original-package)))))
 		       
 
+(defsystem arrowgram/grammar-tests
+  :depends-on (arrowgram esrap cl-peg)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./"
+			:components ((:file "grammar-test"))))
+  :perform (asdf:load-op :before (op c)
+              (funcall (uiop/package:find-symbol* :clear-db :paip))))
+
+(defsystem arrowgram/prolog-grammar
+  :depends-on (arrowgram esrap cl-peg arrowgram/grammar-tests)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./"
+			:components ((:file "spacing-peg")
+				     (:file "keyword-peg")
+				     (:file "comment-peg")
+				     (:file "identifier-peg")
+				     (:file "number-peg")
+				     (:file "prolog-peg")
+				     )))
+  :perform (asdf:load-op :before (op c)
+              (funcall (uiop/package:find-symbol* :clear-db :paip))))
+
 (defsystem arrowgram/database
   :depends-on (arrowgram)
   :around-compile (lambda (next)
