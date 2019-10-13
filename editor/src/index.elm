@@ -296,13 +296,34 @@ displayCanvasItemInstance model item =
           coordsToString { x, y } = String.fromInt x ++ "," ++ String.fromInt y
           pointsString = List.map coordsToString points |> String.join " "
         in
-          Svg.polyline
-            [ SA.fill "white"
-            , SA.stroke (if isSelected then "blue" else "black")
-            , SE.onClick (ToggleSelect item)
-            , SA.points pointsString
+          Svg.g
+            [ SE.onClick (ToggleSelect item)
             ]
-            []
+            [
+              -- This is the wire visible to the user.
+              (
+                Svg.polyline
+                  [ SA.fill "white"
+                  , SA.stroke (if isSelected then "blue" else "black")
+                  , SA.points pointsString
+                  , SA.strokeWidth "1"
+                  ]
+                  []
+              ),
+              -- This is the wire hidden to the user but of a wider stroke so
+              -- that the user can click on the wire more easily.
+              (
+                Svg.polyline
+                  [ SA.fill "white"
+                  , SA.stroke "black"
+                  , SA.points pointsString
+                  , SA.fillOpacity "0.0"
+                  , SA.strokeOpacity "0.0"
+                  , SA.strokeWidth "20"
+                  ]
+                  []
+              )
+            ]
       SourceSink center longRadius ->
         Svg.ellipse
           [ SA.fill "white"
