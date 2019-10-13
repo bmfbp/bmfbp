@@ -45,7 +45,7 @@
    (declare (ignore comma))
    clause))
 
-(peg:rule prolog::pClause "pCall / pTrue / pFalse / pCut / pHalt / pExpr / pAssertaClause / pRetractClause / pNotClause / pAssignClause / pReadFBClause / pWriteFBClause / pForallClause"
+(peg:rule prolog::pClause "pCall / pTrue / pFail / pCut / pHalt / pExpr / pAssertaClause / pRetractClause / pNotClause / pAssignClause / pReadFBClause / pWriteFBClause / pForallClause"
   (:lambda (x) x))
 
 (peg:rule prolog::pCall "Identifier pActuals?"
