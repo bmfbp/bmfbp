@@ -260,8 +260,22 @@ canvas : Model -> Html.Html Msg
 canvas model =
   let
     canvasItems = List.map (displayCanvasItemInstance model) model.instantiatedItems
+    definitions =
+      -- Arrowhead. Taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker.
+      [ Svg.marker
+          [ SA.id "arrowhead"
+          , SA.viewBox "0 0 10 10"
+          , SA.refX "10"
+          , SA.refY "5"
+          , SA.markerWidth "6"
+          , SA.markerHeight "6"
+          , SA.orient "auto-start-reverse"
+          ]
+          [ Svg.path [ SA.d "M 0 0 L 10 5 L 0 10 z" ] []
+          ]
+      ]
   in
-    Svg.svg [ SA.height "700" ] canvasItems
+    Svg.svg [ SA.height "700" ] (definitions ++ canvasItems)
 
 moveSelectedItems : Model -> CanvasItemInstance -> CanvasItemInstance
 moveSelectedItems model item =
@@ -307,6 +321,7 @@ displayCanvasItemInstance model item =
                   , SA.stroke (if isSelected then "blue" else "black")
                   , SA.points pointsString
                   , SA.strokeWidth "1"
+                  , SA.markerEnd "url(#arrowhead)"
                   ]
                   []
               ),
