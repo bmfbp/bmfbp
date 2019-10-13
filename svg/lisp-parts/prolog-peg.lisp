@@ -1,9 +1,10 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
-(peg:rule prolog::PrologProgram "(pDirective / pFact / pRule)+"
-  (:lambda (lis)
-    lis))
+(peg:rule prolog::PrologProgram "Spacing (pDirective / pFact / pRule)+"
+  (:destructure (spc lis)
+   (declare (ignore spc))
+   lis))
 
 (peg:rule prolog::pDirective "pColonDash (pInitialization / pInclude) pLpar Identifier pRpar pPeriod"
   (:lambda (lis)
