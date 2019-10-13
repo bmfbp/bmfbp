@@ -22,10 +22,10 @@
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pFail "'fail' Spacing"
-  (:lambda (x) (declare (ignore x)) '(lisp (prolog::op-fail))))
+  (:lambda (x) (declare (ignore x)) '(prolog::lisp (prolog::op-fail))))
 
 (peg:rule prolog::pTrue "'true' Spacing"
-  (:lambda (x) (declare (ignore x)) '(lisp (prolog::op-true))))
+  (:lambda (x) (declare (ignore x)) '(prolog::lisp (prolog::op-true))))
 
 (peg:rule prolog::pHalt "'halt' Spacing"
   (:lambda (x) (declare (ignore x))))

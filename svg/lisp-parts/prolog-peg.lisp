@@ -81,7 +81,16 @@
    (declare (ignore op))
    `(prolog::greater-equal ,v ,p)))
 
-(peg:rule prolog::pIsExpr "Variable pIs pPrimary"
+(peg:rule prolog::pIsExpr "pIsExpr1 / pIsExpr2"
+  (:lambda (x) x))
+
+(peg:rule prolog::pIsExpr1 "Variable pIs pPrimary ! pMathFollow"
+  (:lambda (x) x))
+
+(peg:rule prolog::pIsExpr2 "Variable pIs pMathExpr"
+  (:lambda (x) x))
+
+(peg:rule prolog::pMathFollow "pPlus / pMinus / pAsterisk / pSlash / pLpar"
   (:lambda (x) x))
 
 (peg:rule prolog::pMathExpr "pPlusExpr / pMinusExpr / pMulExpr / pDivExpr / pFunctionExpr / pNestedExpr"
@@ -92,7 +101,7 @@
    (declare (ignore lp rp))
    e))
 
-(peg:rule prolog::pFunctionExpr "Identifier pLpar Actuals+ pRpar"
+(peg:rule prolog::pFunctionExpr "Identifier pLpar pActuals+ pRpar"
   (:destructure (id lp actual-list rp)
    (declare (ignore lp rp))
    `(prolog::op-funcall ,id ,@actual-list)))

@@ -26,8 +26,10 @@
                "
 findCoincidentSource(_,_):-
     true.
+
 notNamedSource(X) :-
     \+ namedSource(X).
+
 closeTogether(X,Y):-
     Delta is X - Y,
     Abs is abs(Delta),
@@ -42,4 +44,4 @@ closeTogether(_,_) :-
 ")
 |#
 
-;; (esrap:trace-rule 'prolog::PrologProgram :recursive t)
+(esrap:trace-rule 'prolog::PrologProgram :recursive t)
