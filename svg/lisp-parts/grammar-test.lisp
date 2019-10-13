@@ -28,10 +28,6 @@ findCoincidentSource(_,_):-
     true.
 notNamedSource(X) :-
     \+ namedSource(X).
-"))
-
-
-#|
 closeTogether(X,Y):-
     Delta is X - Y,
     Abs is abs(Delta),
@@ -39,6 +35,10 @@ closeTogether(X,Y):-
 
 closeTogether(_,_) :- 
     fail.
+"))
+
+
+#|
 ")
 |#
 
