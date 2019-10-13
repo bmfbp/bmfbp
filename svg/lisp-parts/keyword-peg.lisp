@@ -3,7 +3,7 @@
 
 ;; not all of these are Prolog keywords, some are just convenience matches for
 ;; the working code base
-(peg:rule prolog::Keyword "pTrue / pFalse / pHalt / pIs / pAsserta / pRetract / pReadFB / pWriteFB / pInclude / pInitialization / pGAssign / pForall / pColonDash / pNotSame / pNot / pNotSame / pSame / pNotUnifySame / pUnifySame / pGreaterEqual / pLessEqual / pCut / pPeriod / pComma / pLpar / pRpar / pWriteterm / pWrite / pNl / pUserError / pCurrentInput / pGRead / pMinus / pPlus / pAsterisk / pSlash"
+(peg:rule prolog::Keyword "pTrue / pFail / pHalt / pIs / pAsserta / pRetract / pReadFB / pWriteFB / pInclude / pInitialization / pGAssign / pForall / pColonDash / pNotSame / pNot / pNotSame / pSame / pNotUnifySame / pUnifySame / pGreaterEqual / pLessEqual / pCut / pPeriod / pComma / pLpar / pRpar / pWriteterm / pWrite / pNl / pUserError / pCurrentInput / pGRead / pMinus / pPlus / pAsterisk / pSlash"
   (:lambda (x) x))
 
 (peg:rule prolog::pUserError "'user_error' Spacing"
@@ -15,14 +15,17 @@
 (peg:rule prolog::pGRead "'g_read' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pTrue "'write' Spacing"
+(peg:rule prolog::pWrite "'write' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pTrue "'nl' Spacing"
+(peg:rule prolog::pNl "'nl' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pFalse "'false' Spacing"
-  (:lambda (x) (declare (ignore x))))
+(peg:rule prolog::pFail "'fail' Spacing"
+  (:lambda (x) (declare (ignore x)) prolog::op-fail))
+
+(peg:rule prolog::pTrue "'true' Spacing"
+  (:lambda (x) (declare (ignore x)) prolog::op-true))
 
 (peg:rule prolog::pHalt "'halt' Spacing"
   (:lambda (x) (declare (ignore x))))

@@ -46,7 +46,7 @@
  (:lambda (c)
    c))
 
-(peg:rule prolog::FollowingIdentCharacter "[-/:~@$%^&*.+=_?A-Za-z-><0-9]"
+(peg:rule prolog::FollowingIdentCharacter "[-/:~@$%^&*+=_?A-Za-z-><0-9]"
  (:lambda (c)
    c))
 
