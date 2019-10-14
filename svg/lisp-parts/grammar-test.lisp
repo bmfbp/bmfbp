@@ -1,109 +1,16 @@
 (in-package :prolog)
 
 (defun test1 ()
-  (esrap:parse 'prolog::PrologProgram "x(y)."))
+  (esrap:parse 'prolog::pCommaSeparatedListOfExpr "true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B)"))
 
 (defun test2 ()
-  (esrap:parse 'prolog::PrologProgram "x(y). a(b)."))
+  (esrap:parse 'prolog::pCommaSeparatedListOfExpr "true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C)"))
 
 (defun test3 ()
-  (esrap:parse 'prolog::PrologProgram "x(Y) :- a(Y)."))
+  (esrap:parse 'prolog::pCommaSeparatedListOfExpr "true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F)"))
 
 (defun test4 ()
-  (esrap:parse 'prolog::PrologProgram "x(Y) :- a(Y),b(Y)."))
-
-(defun test5 ()
-  (esrap:parse 'prolog::PrologProgram "x(Y,Z) :- a(Y),b(Z)."))
-
-(defun test6 ()
-  (esrap:parse 'prolog::PrologProgram "x(Y,Z) :- a(Y,Z),b(Y,Z)."))
-
-(defun test7 ()
-  (esrap:parse 'prolog::PrologProgram "x(Y,Z) :- a(Y,Z,1),b(Y,Z,2)."))
-
-(defun test8 ()
-  (esrap:parse 'prolog::PrologProgram
-               "
-findCoincidentSource(_,_):-
-    true.
-
-notNamedSource(X) :-
-    \\+ namedSource(X).
-
-closeTogether(X,Y):-
-    Delta is X - Y,
-    Abs is abs(Delta),
-    Abs =< 20.
-
-closeTogether(_,_) :- 
-    fail.
-"))
-
-
-(defun test9 ()
-  (pprint (esrap:parse 'prolog::PrologProgram
-               "
-% a comment
-test(X) :-
-fun(X),
-true,
-fail,
-!,
-halt,
-asserta(log(coincidentsource,A,B,N)),
-retract(log(conincidentsource,A,B,N)),
-\\+ fun(X),
-\\+ true,
-readFB(user_input),
-writeFB,
-forall(rect(ID), createRectBoundingBox(ID)),
-A \\== B,
-A == B,
-A \\= B,
-A = B,
-123.
-"))
-T)
-
-;; (esrap:trace-rule 'prolog::PrologProgram :recursive t)
-
-
-(defun test10 ()
-  (pprint (esrap:parse 'prolog::PrologProgram
-               "
-:- initialization(main).
-:- include('head').
-"
-)))
-
-(defun test11 ()
-  (esrap:trace-rule 'prolog::pRuleHead :recursive nil)
-  (esrap:trace-rule 'prolog::pRuleBody :recursive nil)
-  (pprint (esrap:parse 'prolog::PrologProgram
-"
-conditionalEllipseCenters :-
-    ellipse(_),
-    forall(ellipse(ID),createCenter(ID)).
-
-conditionalEllipseCenters:-
-    true.
-
-")))
-
-(defun test12 ()
-  (esrap:trace-rule 'prolog::pReadClause :recursive nil)
-  (pprint (esrap:parse 'prolog::PrologProgram
-"
-    makeCenterPair(PortID,TextID) :-
-    makePairID(PortID,JoinPairID),
-    asserta(distance_xy(JoinPairID,DISTANCE)).
-
-makePairID(PortID,NewID) :-
-    g_read(counter,NewID),
-    asserta(join_centerPair(PortID,NewID)),
-    inc(counter,_).
-
-")))
+  (esrap:parse 'prolog::pProgram "test (true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F) )."))
 
 (defun test13 ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\

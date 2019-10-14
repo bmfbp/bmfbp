@@ -3,7 +3,7 @@
 
 ;; not all of these are Prolog keywords, some are just convenience matches for
 ;; the working code base
-(peg:rule prolog::Keyword "pTrue / pFail / pHalt / pIs / pAsserta / pRetract / pReadFB / pWriteFB / pInclude / pInitialization / pGAssign / pForall / pFindall / pColonDash / pNot / pNotSame / pSame / pNotUnifySame / pUnifySame / pGreaterEqual / pLessEqual / pCut / pPeriod / pComma / pLpar / pRpar / pWriteterm / pWrite / pNl / pUserError / pCurrentInput / pUserInput / pGRead / pMinus / pPlus / pAsterisk / pSlash"
+(peg:rule prolog::Keyword "pTrue / pFail / pHalt / pIs / pAsserta / pRetract / pReadFB / pWriteFB / pInclude / pInitialization / pGAssign / pForall / pFindall / pColonDash / pNot / pNotSame / pSame / pNotUnifySame / pUnifySame / pGreaterEqual / pLessEqual / pCut / pPeriod / pComma / pLpar / pRpar / pLBRack / pRBrack /pWriteterm / pWrite / pNl / pUserError / pCurrentInput / pUserInput / pGRead / pMinus / pPlus / pAsterisk / pSlash"
   (:lambda (x) x))
 
 (peg:rule prolog::pUserError "'user_error' Spacing"
@@ -110,6 +110,12 @@
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pRpar "')' Spacing"
+  (:lambda (x) (declare (ignore x))))
+
+(peg:rule prolog::pLBrack "'[' Spacing"
+  (:lambda (x) (declare (ignore x))))
+
+(peg:rule prolog::pRBrack "']' Spacing"
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pMinus "'-' Spacing"

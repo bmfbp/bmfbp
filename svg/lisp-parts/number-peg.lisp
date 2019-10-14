@@ -2,8 +2,9 @@
   (peg:into-package "PROLOG"))
 
 ;; no floats in the prolog we're working with
-(peg:rule prolog::Number "[0-9] IntegerFollow*"
-  (:destructure (firstNumber rest-list)
+(peg:rule prolog::Number "[0-9] IntegerFollow* Spacing"
+  (:destructure (firstNumber rest-list spc)
+   (declare (ignore spc))
    (let ((str (esrap:text firstNumber rest-list)))
      (let ((n (parse-integer str)))
        (if (or (null n) (not (numberp n)))
