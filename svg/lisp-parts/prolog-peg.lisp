@@ -46,7 +46,7 @@
    (declare (ignore comma))
    clause))
 
-(peg:rule prolog::pClause "pCall / pTrue / pFail / pCut / pHalt /pAssertaClause / pRetractClause / pNotClause / pAssignClause / pReadClause / pReadFBClause / pWriteFBClause / pForallClause / pExpr / Number"
+(peg:rule prolog::pClause "pCall / pTrue / pFail / pCut / pHalt /pAssertaClause / pRetractClause / pNotClause / pAssignClause / pReadClause / pReadFBClause / pWriteFBClause / pForallClause / pFindallClause / pExpr / Number"
   (:lambda (x) x))
 
 (peg:rule prolog::pCall "Identifier pActuals?"
@@ -179,6 +179,11 @@
   (:destructure (fa lp cl1 comma cl2 rp)
     (declare (ignore fa lp comma rp))
     `(prolog::forall ,cl1 ,cl2)))
+
+(peg:rule prolog::pFindallClause "pFindall pLpar Variable pComma pSimpleClause pComma Variable pRpar"
+  (:destructure (fa lp v1 comma1 cl comma2 v2 rp)
+    (declare (ignore fa lp comma1 comma2 rp))
+    `(prolog::forall ,v1 ,cl ,v2)))
 
 (peg:rule prolog::pSimpleClause "pClause"
   (:lambda (x) x))
