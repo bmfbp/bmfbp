@@ -43,6 +43,7 @@ closeTogether(_,_) :-
 (defun test9 ()
   (pprint (esrap:parse 'prolog::PrologProgram
                "
+% a comment
 test(X) :-
 fun(X),
 true,

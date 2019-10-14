@@ -1,7 +1,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
-(peg:rule prolog::Comment "'#' CommentStuff* EndOfLine"
+(peg:rule prolog::Comment "'%' CommentStuff* EndOfLine"
  (:lambda (list) (declare (ignore list))
    (values)))
 
