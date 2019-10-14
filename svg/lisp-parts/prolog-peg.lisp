@@ -167,7 +167,7 @@
 (peg:rule prolog::pForallClause "pForall pLpar pSimpleClause pComma pSimpleClause pRpar"
   (:destructure (fa lp cl1 comma cl2 rp)
     (declare (ignore fa lp comma rp))
-    `(prolog::forall ,cl1 ,@cl2)))
+    `(prolog::forall ,cl1 ,cl2)))
 
 (peg:rule prolog::pSimpleClause "pClause"
   (:lambda (x) x))
