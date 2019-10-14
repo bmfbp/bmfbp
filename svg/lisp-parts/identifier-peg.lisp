@@ -41,12 +41,11 @@
 (peg:rule prolog::FirstVariableCharacter "[A-Z]"
    (:lambda (c) c))
 
-;; N.B. dash (-) must go first or peg will try to form a character range
-(peg:rule prolog::FirstIdentCharacter "[-:~@$%^&*+=?a-z-><]"
+(peg:rule prolog::FirstIdentCharacter "[a-z]"
  (:lambda (c)
    c))
 
-(peg:rule prolog::FollowingIdentCharacter "[-/:~@$%^&*+=_?A-Za-z-><0-9]"
+(peg:rule prolog::FollowingIdentCharacter "[_A-Za-z0-9]"
  (:lambda (c)
    c))
 

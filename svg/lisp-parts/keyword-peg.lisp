@@ -48,7 +48,7 @@
 (peg:rule prolog::pWriteFB "'writeFB' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pInclude "'pInclude' Spacing"
+(peg:rule prolog::pInclude "'include' Spacing"
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pInitialization "'initialization' Spacing"

@@ -21,9 +21,10 @@
     (declare (ignore cdash spc))
     `(prolog::<- ,head ,@pBody)))
 
-(peg:rule prolog::pRuleHead "Identifier pFormals?"
-  (:destructure (id formals)
-     `(,id ,@formals)))
+(peg:rule prolog::pRuleHead "Identifier pFormals? Spacing"
+  (:destructure (id formals spc)
+   (declare (ignore spc))
+   `(,id ,@formals)))
 
 (peg:rule prolog::pFormals "pLpar pFormalComma+ pRpar"
   (:destructure (lp lis rp)
@@ -35,9 +36,9 @@
     (declare (ignore comma))
     id))
 
-(peg:rule prolog::pRuleBody "pClauseComma+ pPeriod"
-  (:destructure (clause-list comma)
-    (declare (ignore comma))
+(peg:rule prolog::pRuleBody "pClauseComma+ Spacing pPeriod"
+  (:destructure (clause-list spc p)
+    (declare (ignore sp p))
     clause-list))
 
 (peg:rule prolog::pClauseComma "pClause pComma?"
