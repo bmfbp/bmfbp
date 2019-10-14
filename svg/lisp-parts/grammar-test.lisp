@@ -40,8 +40,30 @@ closeTogether(_,_) :-
 "))
 
 
-#|
-")
-|#
+(defun test9 ()
+  (esrap:parse 'prolog::PrologProgram
+               "
+test(X) :-
+fun(X),
+true,
+fail,
+!,
+halt,
+asserta(log(coincidentsource,A,B,N)),
+retract(log(conincidentsource,A,B,N)),
+\+ fun(X),
+\+ true,
+readFB(user_input),
+writeFB,
+forall(rect(ID), createRectBoundingBox(ID)).
+A \== B,
+A == B,
+A \= B,
+A = B,
+123.
+"))
+
 
 ;; (esrap:trace-rule 'prolog::PrologProgram :recursive t)
+
+
