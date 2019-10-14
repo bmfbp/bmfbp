@@ -44,4 +44,4 @@ closeTogether(_,_) :-
 ")
 |#
 
-(esrap:trace-rule 'prolog::PrologProgram :recursive t)
+;; (esrap:trace-rule 'prolog::PrologProgram :recursive t)
