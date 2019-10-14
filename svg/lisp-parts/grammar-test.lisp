@@ -55,7 +55,7 @@ retract(log(conincidentsource,A,B,N)),
 \+ true,
 readFB(user_input),
 writeFB,
-forall(rect(ID), createRectBoundingBox(ID)).
+forall(rect(ID), createRectBoundingBox(ID)),
 A \== B,
 A == B,
 A \= B,
