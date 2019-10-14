@@ -70,19 +70,19 @@
   (:lambda (x) (declare (ignore x))))
 
 
-(peg:rule prolog::pNot "'\+' Spacing"
+(peg:rule prolog::pNot "'\\\\\+' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pNotSame "'\==' Spacing"
+(peg:rule prolog::pNotSame "'\\\\==' Spacing"
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pSame "'==' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pNotUnifySame "! pNotSame '\=' Spacing"
+(peg:rule prolog::pNotUnifySame "'\\\\=' !'=' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pUnifySame "! pSame '=' Spacing"
+(peg:rule prolog::pUnifySame "'=' ! '=' Spacing"
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pColonDash "':-' Spacing"
@@ -97,10 +97,10 @@
 (peg:rule prolog::pCut "'!' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pPeriod "'\.' Spacing"
+(peg:rule prolog::pPeriod "[.] Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pComma "'\,' Spacing"
+(peg:rule prolog::pComma "',' Spacing"
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pLpar "'(' Spacing"

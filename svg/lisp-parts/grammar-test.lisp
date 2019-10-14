@@ -40,6 +40,15 @@ closeTogether(_,_) :-
 "))
 
 
+(defun test9a ()
+  (pprint (esrap:parse 'prolog::PrologProgram
+               "
+test(X) :-
+A \== B,
+A == B.
+"))
+T)
+
 (defun test9 ()
   (pprint (esrap:parse 'prolog::PrologProgram
                "
@@ -63,7 +72,6 @@ A = B,
 123.
 "))
 T)
-
 
 ;; (esrap:trace-rule 'prolog::PrologProgram :recursive t)
 
