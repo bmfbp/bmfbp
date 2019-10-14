@@ -33,7 +33,7 @@ notNamedSource(X) :-
 closeTogether(X,Y):-
     Delta is X - Y,
     Abs is abs(Delta),
-    20 >= Abs.
+    Abs =< 20.
 
 closeTogether(_,_) :- 
     fail.
