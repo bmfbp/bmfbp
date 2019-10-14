@@ -1,3 +1,7 @@
+working on (prolog::test4)
+
+
+
 current usage (while debugging)
 
 lisp> (ql:quickload :arrowgram/prolog-grammar)
