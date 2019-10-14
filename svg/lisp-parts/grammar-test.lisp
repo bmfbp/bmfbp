@@ -40,15 +40,6 @@ closeTogether(_,_) :-
 "))
 
 
-(defun test9a ()
-  (pprint (esrap:parse 'prolog::PrologProgram
-               "
-test(X) :-
-A \== B,
-A == B.
-"))
-T)
-
 (defun test9 ()
   (pprint (esrap:parse 'prolog::PrologProgram
                "
@@ -60,14 +51,14 @@ fail,
 halt,
 asserta(log(coincidentsource,A,B,N)),
 retract(log(conincidentsource,A,B,N)),
-\+ fun(X),
-\+ true,
+\\+ fun(X),
+\\+ true,
 readFB(user_input),
 writeFB,
 forall(rect(ID), createRectBoundingBox(ID)),
-A \== B,
+A \\== B,
 A == B,
-A \= B,
+A \\= B,
 A = B,
 123.
 "))

@@ -122,18 +122,28 @@
   (:destructure (v1 p v2)
      `(prolog::op-minus ,v1 ,v2)))
 
-(peg:rule prolog::pEqExpr "pEqExpr1 / pEqExpr2"
+(peg:rule prolog::pEqExpr "pEqExpr1 / pEqExpr2 / pEqExpr3 / pEqExpr4"
   (:lambda (x) x))
 	  
 (peg:rule prolog::pEqExpr1 "Variable pNotUnifySame Variable"
   (:destructure (v1 op v2)
     (declare (ignore op))
-      `(prolog::not-unify-same ,v1 ,v2)))
+      `(prolog::op-not-unify-same ,v1 ,v2)))
+
+(peg:rule prolog::pEqExpr4 "Variable pUnifySame Variable"
+  (:destructure (v1 op v2)
+    (declare (ignore op))
+      `(prolog::op-unify-same ,v1 ,v2)))
 
 (peg:rule prolog::pEqExpr2 "Variable pSame Variable"
   (:destructure (v1 op v2)
     (declare (ignore op))
-      `(prolog::unify-same ,v1 ,v2)))
+      `(prolog::op-same ,v1 ,v2)))
+
+(peg:rule prolog::pEqExpr3 "Variable pNotSame Variable"
+  (:destructure (v1 op v2)
+    (declare (ignore op))
+      `(prolog::op-not-same ,v1 ,v2)))
 
 
 (peg:rule prolog::pAssignClause "pGAssign pLpar Identifier pComma Number pRpar"
