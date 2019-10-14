@@ -157,9 +157,11 @@
     `(prolog::retract ,clause)))
 
 (peg:rule prolog::pReadFBClause "pReadFB pLpar pUserInput pRpar"
+  ;; delete completely
   (:lambda (x) (declare (ignore x)) nil))
 	  
 (peg:rule prolog::pWriteFBClause "pWriteFB"
+  ;; delete completely
   (:lambda (x) (declare (ignore x)) nil))
 
 (peg:rule prolog::pForallClause "pForall pLpar pSimpleClause pComma pSimpleClause pRpar"
