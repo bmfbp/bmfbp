@@ -23,5 +23,5 @@
   (:lambda (x) x))
 
 
-(peg:rule prolog::pProgram "pClause pPeriod"
+(peg:rule prolog::pProgram "pClause"
   (:lambda (x) x))

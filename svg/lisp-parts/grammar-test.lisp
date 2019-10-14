@@ -10,7 +10,7 @@
   (esrap:parse 'prolog::pCommaSeparatedListOfExpr "true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F)"))
 
 (defun test4 ()
-  (esrap:parse 'prolog::pProgram "test (true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F) )."))
+  (esrap:parse 'prolog::pProgram "test(true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F) )."))
 
 (defun test13 ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
