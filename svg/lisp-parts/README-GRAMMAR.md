@@ -36,3 +36,13 @@ NEXT STEPS:
 (2) Then add :destructure operators to the code to build up valid Lisp sequences on successful matches.
 
 
+TRICKS:
+
+- When ESRAP gives an error, it provides a Position NNNN.  Use EMACS to see the line - position the cursor on the first char of the string (e.g.
+(defun test11 ()
+  (pprint (esrap:parse 'prolog::PrologProgram
+               " 
+                ^ here) and hit ^U NNNN ^F (NNNN forward-chars).
+
+
+
