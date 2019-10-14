@@ -91,6 +91,21 @@ conditionalEllipseCenters:-
 ")))
 
 (defun test12 ()
+  (esrap:trace-rule 'prolog::pReadClause :recursive nil)
+  (pprint (esrap:parse 'prolog::PrologProgram
+"
+    makeCenterPair(PortID,TextID) :-
+    makePairID(PortID,JoinPairID),
+    asserta(distance_xy(JoinPairID,DISTANCE)).
+
+makePairID(PortID,NewID) :-
+    g_read(counter,NewID),
+    asserta(join_centerPair(PortID,NewID)),
+    inc(counter,_).
+
+")))
+
+(defun test13 ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
   ;; NB - remove all double-quotes
   (pprint (esrap:parse 'prolog::PrologProgram
