@@ -28,7 +28,7 @@
 (peg:rule prolog::pProduct "pPrimary ((pAsterisk / pSlash) pPrimary)*"
   (:lambda (x) x))
 
-(peg:rule prolog::pClause "(Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pUnifyExpr / pIsExpr"
+(peg:rule prolog::pClause "(Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pUnifyExpr / pIsExpr / pExpr"
   (:lambda (x) x))
 
 (peg:rule prolog::pOpExpr "pNot pExpr"
