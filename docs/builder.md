@@ -49,6 +49,8 @@ We do guarantee that an event output on a wire reaches all destination inputs �
 
 In the least-efficient case, boxes can be implemented as O/S Processes[^fn5].  The system works like a bunch of communicating state machines,[^fn6] where an incoming event causes a state change[^fn7].  More cpu-efficient implementations can be constructed using closures, Duff’s devices, etc.[^fn8]
 
+A diagram can have a single rounded rectangle which contains a JSON array of 5-tuples describing each leaf part used on the diagram. Each 5-tuple is a JSON map of the form { “dir” : …, “file” : …, “kindName” : …, “ref” : …, “repo”: … }.  We use the word kind instead of type or class, to emphasize the difference between Arrowgrams Components and OOP classes. [tbd - more description of these fields]
+
 ## Builder ##
 
 The builder is given a top-level diagram, and does a tree-walk of all associated diagrams and sub-diagrams.
