@@ -39,11 +39,15 @@ Data travelling on a wire is called an event.  Events consist of a blob of data,
 
 Events and wires are currently not typed.  Think of a 1/4” guitar cord plug that plugs into any 1/4” jack, regardless of whether the wire carries an audio signal or +-5V (or whatever).
 
+Pins have textual names that are positioned near the beginning and/or arrowhead of lines.
+
+Offboard pins[^fn3] are signified with ellipses (and circles) with the pin names inside the ellipses.
+
 Boxes are completely concurrent.  Ordering of event data cannot be known.
 
-We do guarantee that an event output on a wire reaches all destination inputs “in the same order” (and appear in the input queues of all receivers “in the same order”).  Events on wires are atomic and not interruptible.[^fn3] 
+We do guarantee that an event output on a wire reaches all destination inputs “in the same order” (and appear in the input queues of all receivers “in the same order”).  Events on wires are atomic and not interruptible.[^fn4] 
 
-In the least-efficient case, boxes can be implemented as O/S Processes[^fn4].  The system works like a bunch of communicating state machines,[^fn5] where an incoming event causes a state change[^fn6].  More cpu-efficient implementations can be constructed using closures, Duff’s devices, etc.[^fn7]
+In the least-efficient case, boxes can be implemented as O/S Processes[^fn5].  The system works like a bunch of communicating state machines,[^fn6] where an incoming event causes a state change[^fn7].  More cpu-efficient implementations can be constructed using closures, Duff’s devices, etc.[^fn8]
 
 ## Builder ##
 
@@ -62,30 +66,32 @@ The Builder and the Kernel can co-exist and we often think of the two being inse
 
 The Kernel and the Dispatcher constitute the runtime library of an Arrowgrams system.
 
-The Kernel instantiates all components, wires them up[^fn8] and then it runs a dispatch loop.
+The Kernel instantiates all components, wires them up[^fn9] and then it runs a dispatch loop.
 
 The Dispatcher loop simply visits all components and CALLs any component which has anything in its input queue, i.e. is ready.  Once the CALLed component returns to the Dispatcher, the Dispatcher clears the output queue of the component and distributes the events to all receivers.
 
-Guarantee:[^fn9] a schematic is busy[^fn10] if any of its children[^fn11] are busy.  Corollary: a schematic consumes no more input events until all children have finished processing.
+Guarantee:[^fn10] a schematic is busy[^fn11] if any of its children[^fn12] are busy.  Corollary: a schematic consumes no more input events until all children have finished processing.
 
 [^fn1]: Well, cheating can be used, but is strongly discouraged.
 
 [^fn2]: Note that “output pins” are converted to “input pins” during the act of sending the event on a wire.
 
-[^fn3]: This matters if a wire splits from one output to multiple inputs in a multi-tasking environment.
+[^fn3]: Pins that belong to the enclosing schematic.
 
-[^fn4]: threads
+[^fn4]: This matters if a wire splits from one output to multiple inputs in a multi-tasking environment.
 
-[^fn5]: Full preemption is completely avoided.
+[^fn5]: threads
 
-[^fn6]: An event is processed to completion.  An event may linger for an unknown amount of time in an input queue, but once dequeued, the processing of the event must be done in a non-interruptible manner.
+[^fn6]: Full preemption is completely avoided.
 
-[^fn7]: None of the mentioned “more efficient” implementations provide memory management (MMUs) and, currently, the programmer is required to not share memory directly.
+[^fn7]: An event is processed to completion.  An event may linger for an unknown amount of time in an input queue, but once dequeued, the processing of the event must be done in a non-interruptible manner.
 
-[^fn8]: According to the wiring specified on the original diagram(s).
+[^fn8]: None of the mentioned “more efficient” implementations provide memory management (MMUs) and, currently, the programmer is required to not share memory directly.
 
-[^fn9]: This guarantee might affect the dispatcher and any of its data structures (queues, stacks, etc.)
+[^fn9]: According to the wiring specified on the original diagram(s).
 
-[^fn10]: Busy means non-dispatchable.  Not ready.
+[^fn10]: This guarantee might affect the dispatcher and any of its data structures (queues, stacks, etc.)
 
-[^fn11]: Schematic nodes or Leaf nodes.
+[^fn11]: Busy means non-dispatchable.  Not ready.
+
+[^fn12]: Schematic nodes or Leaf nodes.
