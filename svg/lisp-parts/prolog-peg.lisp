@@ -16,7 +16,10 @@
 (peg:rule prolog::pNonFunctorID "Identifier !pLpar"
   (:lambda (x) x))
 
-(peg:rule prolog::pExpr "pSum"
+(peg:rule prolog::pExpr "pBoolean"
+  (:lambda (x) x))
+
+(peg:rule prolog::pBoolean "pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*"
   (:lambda (x) x))
 
 (peg:rule prolog::pSum "pProduct ((pPlus / pMinus) pProduct)*"
@@ -25,13 +28,16 @@
 (peg:rule prolog::pProduct "pPrimary ((pAsterisk / pSlash) pPrimary)*"
   (:lambda (x) x))
 
-(peg:rule prolog::pClause "pTrue / pFail / (Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pVarOpExpr"
+(peg:rule prolog::pClause "(Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pEqOp"
   (:lambda (x) x))
 
 (peg:rule prolog::pOpExpr "pNot pExpr"
   (:lambda (x) x))
 
-(peg:rule prolog::pVarOpExpr "Variable pBinaryOp pExpr"
+(peg:rule prolog::pEqOp "pIs / pNotSame / pSame / pUnifySame / pNotUnifySame "
+  (:lambda (x) x))
+
+(peg:rule prolog::pEqExpr "pPrimary pEqOp pPrimary"
   (:lambda (x) x))
 
 (peg:rule prolog::pBinaryOp "pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual"
