@@ -28,16 +28,19 @@
 (peg:rule prolog::pProduct "pPrimary ((pAsterisk / pSlash) pPrimary)*"
   (:lambda (x) x))
 
-(peg:rule prolog::pClause "(Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pEqOp"
+(peg:rule prolog::pClause "(Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pUnifyExpr / pIsExpr"
   (:lambda (x) x))
 
 (peg:rule prolog::pOpExpr "pNot pExpr"
   (:lambda (x) x))
 
-(peg:rule prolog::pEqOp "pIs / pNotSame / pSame / pUnifySame / pNotUnifySame "
+(peg:rule prolog::pUnifyOp "pUnifySame / pNotUnifySame "
   (:lambda (x) x))
 
-(peg:rule prolog::pEqExpr "pPrimary pEqOp pPrimary"
+(peg:rule prolog::pUnifyExpr "pPrimary pUnifyOp pPrimary"
+  (:lambda (x) x))
+
+(peg:rule prolog::pIsExpr "Variable pIs pExpr"
   (:lambda (x) x))
 
 (peg:rule prolog::pBinaryOp "pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual"
