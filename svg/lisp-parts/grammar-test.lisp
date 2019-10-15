@@ -12,10 +12,38 @@
 (defun test4 ()
   (esrap:parse 'prolog::pProgram "test(def, true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F) )."))
 
+(defun test5 ()
+  (esrap:parse 'prolog::pProgram "rule1(A) :- test(A,def)."))
+
+(defun test6 ()
+  (esrap:parse 'prolog::pProgram "rule1(A) :- test1(A,def) , test2(abc, A)."))
+
+(defun test7 ()
+  (esrap:parse 'prolog::pProgram
+               "
+:- include('head').
+:- initialization(main).
+fact(1).
+rule1(A) :- test1(A,def) , test2(abc, A).
+"))
+
+(defun test8 ()
+  (esrap:parse 'prolog::pProgram
+               "
+:- include('head').
+:- initialization(main).
+fact(1).
+rule1(A) :- test1(A,def) , test2(abc, A).
+rule2 :- test1(A,def) , test2(abc, A).
+"))
+
+(defun test9 ()
+  (esrap:parse 'prolog::pProgram "rule1(A) :- forall(rect(A),test2(abc, A))."))
+
 (defun test13 ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
   ;; NB - remove all double-quotes
-  (pprint (esrap:parse 'prolog::PrologProgram
+  (pprint (esrap:parse 'prolog::pProgram
                "
 :- initialization(main).
 :- include('head').
