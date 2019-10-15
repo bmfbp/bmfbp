@@ -19,9 +19,11 @@
 (peg:rule prolog::pProduct "pPrimary ((pAsterisk / pSlash) pPrimary)*"
   (:lambda (x) x))
 
-(peg:rule prolog::pClause "Identifier / (Identifier pLpar pCommaSeparatedListOfExpr rPar)"
+(peg:rule prolog::pClause "Identifier pLpar pCommaSeparatedListOfExpr pRpar"
   (:lambda (x) x))
 
+(peg:rule prolog::pFact "pClause"
+  (:lambda (x) x))
 
-(peg:rule prolog::pProgram "pClause"
+(peg:rule prolog::pProgram "pFact pPeriod"
   (:lambda (x) x))
