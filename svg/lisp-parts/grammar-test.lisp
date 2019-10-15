@@ -40,6 +40,9 @@ rule2 :- test1(A,def) , test2(abc, A).
 (defun test9 ()
   (esrap:parse 'prolog::pProgram "rule1(A) :- forall(rect(A),test2(abc, A))."))
 
+(defun test10 ()
+  (esrap:parse 'prolog::pProgram "rule1(A) :- Right is X + Width."))               
+
 (defun test13 ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
   ;; NB - remove all double-quotes

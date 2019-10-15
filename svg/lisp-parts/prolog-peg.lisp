@@ -1,7 +1,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
-(peg:rule prolog::pPrimary "pTrue / pFail / pCut / Number / pNonFunctorID / Variable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)"
+(peg:rule prolog::pPrimary "pCut / Number / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)"
   (:lambda (x) x))
 
 (peg:rule prolog::pList "pLBrack pCommaSeparatedListOfExpr? pRBrack"
@@ -25,7 +25,19 @@
 (peg:rule prolog::pProduct "pPrimary ((pAsterisk / pSlash) pPrimary)*"
   (:lambda (x) x))
 
-(peg:rule prolog::pClause "Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?"
+(peg:rule prolog::pClause "pTrue / pFail / (Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pVarOpExpr"
+  (:lambda (x) x))
+
+(peg:rule prolog::pOpExpr "pNot pExpr"
+  (:lambda (x) x))
+
+(peg:rule prolog::pVarOpExpr "Variable pBinaryOp pExpr"
+  (:lambda (x) x))
+
+(peg:rule prolog::pBinaryOp "pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual"
+  (:lambda (x) x))
+
+(peg:rule prolog::pVariable "Variable !pBinaryOp"
   (:lambda (x) x))
 
 (peg:rule prolog::pFact "pClause !pColonDash Spacing pPeriod"
