@@ -39,7 +39,7 @@
 (peg:rule prolog::pNotUnifySame "! pNotSame '\\\\' '=' Spacing"
   (:lambda (x) (declare (ignore x))))
 
-(peg:rule prolog::pUnifySame "! pSame '=' Spacing"
+(peg:rule prolog::pUnifySame "!pSame !pLessEqual '=' Spacing"
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pColonDash "':-' Spacing"
