@@ -44,7 +44,7 @@ TRICKS:
 
 - When ESRAP gives an error, it provides a Position NNNN.  Use EMACS to see the line - position the cursor on the first char of the string (e.g.
 (defun test11 ()
-  (pprint (esrap:parse 'prolog::PrologProgram
+  (pprint (esrap:parse 'prolog::pProgram
                " 
                 ^ here) and hit ^U NNNN ^F (NNNN forward-chars).
 
