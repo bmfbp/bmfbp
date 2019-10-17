@@ -43,6 +43,20 @@
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))
 
+(defsystem arrowgram/esrap-error
+  :depends-on (arrowgram esrap cl-peg arrowgram/grammar-tests)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./"
+			:components ((:file "spacing-peg")
+				     )))
+  :perform (asdf:load-op :before (op c)
+              (funcall (uiop/package:find-symbol* :clear-db :paip))))
+
 (defsystem arrowgram/prolog-grammar
   :depends-on (arrowgram esrap cl-peg arrowgram/grammar-tests)
   :around-compile (lambda (next)
