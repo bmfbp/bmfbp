@@ -1,6 +1,34 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
+
+(peg:fullpeg
+"
+pPrimary <- pCut / Number / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)
+pList <- pLBrack pCommaSeparatedListOfExpr? pRBrack
+pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
+pFunctor <- Identifier pLpar pCommaSeparatedListOfExpr pRpar
+pNonFunctorID <- Identifier !pLpar
+pExpr <- pBoolean
+pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
+pSum <- pProduct ((pPlus / pMinus) pProduct)*
+pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
+pClause <- pFunctor / pPrimary / pOpExpr / pUnifyExpr / pIsExpr / pExpr
+pOpExpr <- pNot pExpr
+pUnifyOp <- pUnifySame / pNotUnifySame <- 
+pUnifyExpr <- pPrimary pUnifyOp pPrimary
+pIsExpr <- Variable pIs pExpr
+pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
+pVariable <- Variable
+pFact <- pClause !pColonDash Spacing pPeriod
+pCommaSeparatedClauses <- (pClause pComma)* pClause
+pRule <- pClause pColonDash pCommaSeparatedClauses Spacing pPeriod
+pDirective <- pColonDash CommentStuff* EndOfLine
+pTopLevel <- Spacing (pFact / pRule / pDirective)
+pProgram <- pTopLevel+
+")
+
+#|
 (peg:rule prolog::pPrimary "pCut / Number / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)"
   (:lambda (x) x))
 
@@ -28,7 +56,7 @@
 (peg:rule prolog::pProduct "pPrimary ((pAsterisk / pSlash) pPrimary)*"
   (:lambda (x) x))
 
-(peg:rule prolog::pClause "(Identifier (pLpar pCommaSeparatedListOfExpr pRpar)?) / pPrimary / pOpExpr / pUnifyExpr / pIsExpr / pExpr"
+(peg:rule prolog::pClause "pFunctor / pPrimary / pOpExpr / pUnifyExpr / pIsExpr / pExpr"
   (:lambda (x) x))
 
 (peg:rule prolog::pOpExpr "pNot pExpr"
@@ -46,7 +74,7 @@
 (peg:rule prolog::pBinaryOp "pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual"
   (:lambda (x) x))
 
-(peg:rule prolog::pVariable "Variable !pBinaryOp"
+(peg:rule prolog::pVariable "Variable"
   (:lambda (x) x))
 
 (peg:rule prolog::pFact "pClause !pColonDash Spacing pPeriod"
@@ -67,3 +95,4 @@
 
 (peg:rule prolog::pProgram "pTopLevel+"
   (:lambda (x) x))
+|#
