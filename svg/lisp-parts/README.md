@@ -1,3 +1,13 @@
+update: this branch demonstrates the LW error message during loading of spacing-peg
+  - do: (ql:quickload :arrowgram/esrap-error) in LW
+  - as far as I can see, ESRAP tries to assign NIL to FUN, but FUN is declared to be a FUNCTION
+    in Https://github.com/scymtym/esrap/blob/master/src/evaluator.lisp#L537
+  - commenting out the line makes the error go away.
+
+
+
+
+
 (update: working up to assign-parents-to-ellipses)
 
 current usage:
