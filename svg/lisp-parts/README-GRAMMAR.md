@@ -1,16 +1,16 @@
-working on (prolog::test4)
+# working on (prolog::test4)
 
 
 
 current usage (while debugging)
 
-lisp> (ql:quickload :arrowgram/prolog-grammar)
-lisp> (in-package :prolog)
-lisp> (esrap:trace-rule 'prolog::PrologProgram :recursive t) ;; this line shows what the parser is thinking
-;; pperiod 39? says that the parser is trying the rule pPeriod at position 39
-;; pperiod -|  says that the parser failed to find a pPeriod here
-;; pcall 33-38 -> (TRUE) says that the parser found a pCall in positions 33-39 and show what is being returned
-lisp> (test8)
+    lisp> (ql:quickload :arrowgram/prolog-grammar)
+    lisp> (in-package :prolog)
+    lisp> (esrap:trace-rule 'prolog::PrologProgram :recursive t) ;; this line shows what the parser is thinking
+    ;; pperiod 39? says that the parser is trying the rule pPeriod at position 39
+    ;; pperiod -|  says that the parser failed to find a pPeriod here
+    ;; pcall 33-38 -> (TRUE) says that the parser found a pCall in positions 33-39 and show what is being returned
+    lisp> (test8)
 
 working up to test8 (meaning that test8 appears to produce valid Lisp given the Prolog clauses that it parses)
 
@@ -50,3 +50,8 @@ TRICKS:
 
 
 
+# Dependencies
+Things not in Quicklisp, but referred to in ASDF files. 
+## CL-PEG
+
+<git+https://github.com/guitarvydas/cl-peg>
