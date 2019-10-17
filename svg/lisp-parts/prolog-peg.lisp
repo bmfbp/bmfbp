@@ -1,7 +1,6 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
-
 (peg:fullpeg
 "
 pPrimary <- pCut / Number / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)
