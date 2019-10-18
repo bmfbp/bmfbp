@@ -16,17 +16,17 @@
      (declare (ignore nq))
      ch))
 
-(peg:rule prolog::Identifier1 "! Keyword FirstIdentCharacter FollowingIdentCharacter*"
+(peg:rule prolog::Identifier1 "! pKeyword FirstIdentCharacter FollowingIdentCharacter*"
   (:destructure (nothing firstChar followChars)
    (declare (ignore nothing))
    (intern (string-upcase (esrap:text firstChar followChars)) "PROLOG")))
 
-(peg:rule prolog::Variable "(Variable1a / Variable1b) Spacing"
+(peg:rule prolog::pVariable "(Variable1a / Variable1b) Spacing"
   (:destructure (id spc)
    (declare (ignore spc))
    id))
 
-(peg:rule prolog::Variable1a "! Keyword FirstVariableCharacter FollowingIdentCharacter*"
+(peg:rule prolog::Variable1a "! pKeyword FirstVariableCharacter FollowingIdentCharacter*"
   (:destructure (nothing firstChar followChars)
    (declare (ignore nothing))
    (intern (concatenate 'string "?"

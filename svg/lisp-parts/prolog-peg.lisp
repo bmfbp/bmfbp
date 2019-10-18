@@ -3,7 +3,7 @@
 
 (peg:fullpeg
 "
-pPrimary <- pCut / pNumber / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)
+pPrimary <- pCut / pNumber / pNonFunctorID / ppVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
 pList <- pLBrack pCommaSeparatedListOfExpr? pRBrack
 pFunctor <- Identifier pLpar pCommaSeparatedListOfExpr pRpar
@@ -16,9 +16,9 @@ pClause <- pFunctor / pPrimary / pOpExpr / pUnifyExpr / pIsExpr / pExpr
 pOpExpr <- pNot pExpr
 pUnifyOp <- pUnifySame / pNotUnifySame <- 
 pUnifyExpr <- pPrimary pUnifyOp pPrimary
-pIsExpr <- Variable pIs pExpr
+pIsExpr <- pVariable pIs pExpr
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
-pVariable <- Variable
+ppVariable <- pVariable
 pFact <- pClause !pColonDash Spacing pPeriod
 pCommaSeparatedClauses <- (pClause pComma)* pClause
 pRule <- pClause pColonDash pCommaSeparatedClauses Spacing pPeriod
