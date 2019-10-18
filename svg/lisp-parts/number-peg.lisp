@@ -2,7 +2,7 @@
   (peg:into-package "PROLOG"))
 
 ;; no floats in the prolog we're working with
-(peg:rule prolog::Number "[0-9] IntegerFollow* Spacing"
+(peg:rule prolog::pNumber "[0-9] pIntegerFollow* Spacing"
   (:destructure (firstNumber rest-list spc)
    (declare (ignore spc))
    (let ((str (esrap:text firstNumber rest-list)))
@@ -14,7 +14,7 @@
          n)))))
 
 ;; no floats, hence we parse only integers
-(peg:rule prolog::IntegerFollow "[0-9]"
+(peg:rule prolog::pIntegerFollow "[0-9]"
   (:lambda (x)
     x))
 

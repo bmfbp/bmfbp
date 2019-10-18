@@ -3,9 +3,9 @@
 
 (peg:fullpeg
 "
-pPrimary <- pCut / Number / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)
-pList <- pLBrack pCommaSeparatedListOfExpr? pRBrack
+pPrimary <- pCut / pNumber / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
+pList <- pLBrack pCommaSeparatedListOfExpr? pRBrack
 pFunctor <- Identifier pLpar pCommaSeparatedListOfExpr pRpar
 pNonFunctorID <- Identifier !pLpar
 pExpr <- pBoolean
