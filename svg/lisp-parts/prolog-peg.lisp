@@ -8,7 +8,10 @@
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
 pParenthesizedExp <- pLpar pExpr pRpar
-pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
+pList <- pEmptyList / pCarOnlyList / pOrList
+pEmptyfList <- pLBrack pRBrack
+pCarOnlyList <- pLBrack pCommaSeparatedListOfExpr pRBrack
+pOrList <- pLBrack pCommaSeparatedListOfExpr pOrBar pCommaSeparatedListOfExpr pRBrack
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
 pExpr <- pBoolean
