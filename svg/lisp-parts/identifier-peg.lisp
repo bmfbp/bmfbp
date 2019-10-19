@@ -29,14 +29,21 @@
 (peg:rule prolog::Variable1a "! pKeyword FirstVariableCharacter FollowingIdentCharacter*"
   (:destructure (nothing firstChar followChars)
    (declare (ignore nothing))
-   (intern (concatenate 'string "?"
-                        (string-upcase (esrap:text firstChar followChars)))
-           "PROLOG")))
+   (multiple-value-bind (sym status)
+       (intern (concatenate 'string "?"
+                            (string-upcase (esrap:text firstChar followChars)))
+               "PROLOG")
+     (declare (ignore status))
+     sym)))
 
 (peg:rule prolog::Variable1b "'_'"
    (:lambda (c)
      (declare (ignore c))
-     (intern "?" "PROLOG")))
+     (multiple-value-bind (sym status)
+         (intern "?" "PROLOG")
+       (declare (ignore status))
+       sym)))
+                
 
 (peg:rule prolog::FirstVariableCharacter "[A-Z]"
    (:lambda (c) c))

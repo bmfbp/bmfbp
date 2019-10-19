@@ -12,13 +12,39 @@ pEmptyList <- pLBrack pRBrack
 pCarOnlyList <- pLBrack pCommaSeparatedListOfExpr pRBrack
 pOrList <- pLBrack pCommaSeparatedListOfExpr pOrBar pCommaSeparatedListOfExpr pRBrack
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
+  { (:destructure (id lp lis rp)
+     (declare (ignore lp rp))
+     `(,id ,@lis)) }
 pExpr <- pBoolean
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
   { (:destructure (lis e)
      `(,(mapcar #'(lambda (pair) (first pair)) lis) ,e)) }
+
 pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
+  { (:destructure (s lis)
+     (if lis
+         (let ((op (first lis))
+               (s2 (second lis)))
+           `(,op ,s ,s2))
+       s)) }
+
 pSum <- pProduct ((pPlus / pMinus) pProduct)*
+  { (:destructure (p lis)
+     (if lis
+         (let ((op (first lis))
+               (p2 (second lis)))
+           `(,op ,p ,p2))
+       p)) }
+
 pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
+  { (:destructure (p lis)
+     (if lis
+         (let ((op (first lis))
+               (p2 (second lis)))
+           `(,op ,p ,p2))
+       p)) }
+
+
 pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
 pOpExpr <- pNot pExpr
 pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
