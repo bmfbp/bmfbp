@@ -9,7 +9,7 @@
 (peg:rule prolog::QuotedAtom "['] NoQuotes+ [']"
   (:destructure (q1 chars q2)
      (declare (ignore q1 q2))
-     chars))
+     (esrap:text chars)))
 
 (peg:rule prolog::NoQuotes "! ['] ."
   (:destructure (nq ch)

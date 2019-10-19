@@ -4,6 +4,7 @@
 (defparameter *first-time* t)
 
 (defparameter *peg-rules*
+;; generic grammar, not PAIP specific
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
 
@@ -94,7 +95,7 @@ pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
                          ,@clause-list)) }
 
 pDirective <- pColonDash CommentStuff* EndOfLine
-  { (:lambda (x) (declare (ignore x)) 'prolog:directive) }
+  { (:lambda (x) (declare (ignore x)) '(prolog:directive)) }
 pTopLevel <- Spacing (pFact / pRule / pDirective)
   { (:destructure (spc thing)
      (declare (ignore spc))
