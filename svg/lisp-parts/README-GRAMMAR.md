@@ -4,7 +4,7 @@ working on (prolog::test4)
 
 current usage (while debugging)
 
-lisp> (ql:quickload :arrowgram/prolog-grammar)
+lisp> (ql:quickload :arrowgram/prolog-peg)
 lisp> (in-package :prolog)
 lisp> (esrap:trace-rule 'prolog::PrologProgram :recursive t) ;; this line shows what the parser is thinking
 ;; pperiod 39? says that the parser is trying the rule pPeriod at position 39

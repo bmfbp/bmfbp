@@ -1,20 +1,25 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
-(peg:fullpeg
+(defparameter *first-time* t)
+
+(defun init ()
+  (when *first-time*
+    (setf *first-time* nil)
+    (let ((g (peg:fullpeg
 "
 pPrimary <- pCut / pNumber / pNonFunctorID / ppVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)
-pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
 pList <- pLBrack pCommaSeparatedListOfExpr? pRBrack
-pFunctor <- Identifier pLpar pCommaSeparatedListOfExpr pRpar
-pNonFunctorID <- Identifier !pLpar
+pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
+pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
+pNonFunctorID <- pIdentifier !pLpar
 pExpr <- pBoolean
 pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
 pSum <- pProduct ((pPlus / pMinus) pProduct)*
 pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
 pClause <- pFunctor / pPrimary / pOpExpr / pUnifyExpr / pIsExpr / pExpr
 pOpExpr <- pNot pExpr
-pUnifyOp <- pUnifySame / pNotUnifySame <- 
+pUnifyOp <- pUnifySame / pNotUnifySame 
 pUnifyExpr <- pPrimary pUnifyOp pPrimary
 pIsExpr <- pVariable pIs pExpr
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
@@ -25,7 +30,10 @@ pRule <- pClause pColonDash pCommaSeparatedClauses Spacing pPeriod
 pDirective <- pColonDash CommentStuff* EndOfLine
 pTopLevel <- Spacing (pFact / pRule / pDirective)
 pProgram <- pTopLevel+
-")
+"
+)))
+      (mapc #'(lambda (r) (eval r)) (cdr g)))))
+
 
 #|
 (peg:rule prolog::pPrimary "pCut / Number / pNonFunctorID / pVariable / pFunctor / pKWID / pList / (pLpar pExpr pRpar)"

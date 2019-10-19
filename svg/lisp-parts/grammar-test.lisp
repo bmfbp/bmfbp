@@ -1,24 +1,31 @@
 (in-package :prolog)
 
 (defun test1 ()
+  (init)
   (esrap:parse 'prolog::pCommaSeparatedListOfExpr "true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B)"))
 
 (defun test2 ()
+  (init)
   (esrap:parse 'prolog::pCommaSeparatedListOfExpr "true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C)"))
 
 (defun test3 ()
+  (init)
   (esrap:parse 'prolog::pCommaSeparatedListOfExpr "true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F)"))
 
 (defun test4 ()
+  (init)
   (esrap:parse 'prolog::pProgram "test(def, true , fail , ! , 123 , abc , ABC , [] , [A,B,C] , (A) , (A + B) , A + (B * C) - (D / F) )."))
 
 (defun test5 ()
+  (init)
   (esrap:parse 'prolog::pProgram "rule1(A) :- test(A,def)."))
 
 (defun test6 ()
+  (init)
   (esrap:parse 'prolog::pProgram "rule1(A) :- test1(A,def) , test2(abc, A)."))
 
 (defun test7 ()
+  (init)
   (esrap:parse 'prolog::pProgram
                "
 :- include('head').
@@ -28,6 +35,7 @@ rule1(A) :- test1(A,def) , test2(abc, A).
 "))
 
 (defun test8 ()
+  (init)
   (esrap:parse 'prolog::pProgram
                "
 :- include('head').
@@ -38,12 +46,15 @@ rule2 :- test1(A,def) , test2(abc, A).
 "))
 
 (defun test9 ()
+  (init)
   (esrap:parse 'prolog::pProgram "rule1(A) :- forall(rect(A),test2(abc, A))."))
 
 (defun test10 ()
+  (init)
   (esrap:parse 'prolog::pProgram "rule1(A) :- Right is X + Width."))               
 
 (defun test11 ()
+  (init)
   (esrap:parse 'prolog::pProgram "rule1(A) :- PortX =< ELeftX."))
 
 (defun test-all ()

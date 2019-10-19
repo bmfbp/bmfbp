@@ -43,7 +43,7 @@
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))
 
-(defsystem arrowgram/prolog-grammar
+(defsystem arrowgram/prolog-peg
   :depends-on (arrowgram esrap cl-peg arrowgram/grammar-tests)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
