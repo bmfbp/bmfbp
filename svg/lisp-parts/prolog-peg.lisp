@@ -90,7 +90,8 @@ pPrimaryComma <- pPrimary pComma
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
   { (:destructure (prim cd clause-list spc p)
      (declare (ignore cd spc p))
-     `(prolog:colon-dash ,prim ,@clause-list)) }
+     `(prolog:colon-dash ,(if (listp prim) prim (list prim))
+                         ,@clause-list)) }
 
 pDirective <- pColonDash CommentStuff* EndOfLine
   { (:lambda (x) (declare (ignore x)) 'prolog:directive) }
