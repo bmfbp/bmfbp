@@ -4,6 +4,8 @@
 (defpackage :prolog
   (:use :cl :paip)
   (:export
+   #:directive
+   #:list
    #:minus
    #:plus
    #:mul
