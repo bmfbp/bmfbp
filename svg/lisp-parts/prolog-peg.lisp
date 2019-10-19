@@ -3,75 +3,135 @@
 
 (defparameter *first-time* t)
 
-(defun init ()
-  (when *first-time*
-    (setf *first-time* nil)
-    ;(peg:delete-rules "PROLOG")
-    (let ((g (peg:fullpeg
+(defparameter *peg-rules*
+  #|
 "
-pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar)
-  { (:lambda (x) x) }
-
+pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
+pParenthesizedExp <- pLpar pExpr pRpar
 pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
-  { (:lambda (x) x) }
-
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
-  { (:lambda (x) x) }
-
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
-  { (:lambda (x) x) }
-
 pExpr <- pBoolean
-  { (:lambda (x) x) }
-
 pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
-  { (:lambda (x) x) }
-
 pSum <- pProduct ((pPlus / pMinus) pProduct)*
-  { (:lambda (x) x) }
-
 pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
-  { (:lambda (x) x) }
-
 pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
-  { (:lambda (x) x) }
-
 pOpExpr <- pNot pExpr
-  { (:lambda (x) x) }
-
-pUnifyOp <- pUnifySame / pNotUnifySame 
-  { (:lambda (x) x) }
-
-pUnifyExpr <- pPrimary pUnifyOp pPrimary
-  { (:lambda (x) x) }
-
+pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
+pUnifyExprEQ <- pPrimary pUnifySame pPrimary
+pUnifyExprNEQ <- pPrimary pNoUnifySame pPrimary
 pIsExpr <- pVariable pIs pExpr
-  { (:lambda (x) x) }
-
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
-  { (:lambda (x) x) }
-
 pFact <- pFunctor Spacing pPeriod
-  { (:lambda (x) x) }
-
-pCommaSeparatedClauses <- (pPrimary pComma)* pPrimary
-  { (:lambda (x) x) }
-
+pCommaSeparatedClauses <- pPrimaryComma* pPrimary
+pPrimaryComma <- pPrimary pComma
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
-  { (:lambda (x) x) }
-
 pDirective <- pColonDash CommentStuff* EndOfLine
-  { (:lambda (x) x) }
-
 pTopLevel <- Spacing (pFact / pRule / pDirective)
-  { (:lambda (x) x) }
-
 pProgram <- pTopLevel+
-  { (:lambda (x) x) }
 
 "
 #|
 "
+pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
+  { (:lambda (x) x) }
+
+pParenthesizedExp <- pLpar pExpr pRpar
+  { (:destructure (lp e rp)
+     (declare (ignore lp rp))
+     e) }
+
+pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
+  { (:destructure (lb e or-e rb)
+     (declare (ignore lb rb))
+     (let ((e2 (second or-e)))
+       (if e
+           (cons e e2)
+         e2))) }
+
+pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
+  { (:desctructure (lis e)
+     (let ((es (mapcar #'car lis)))
+       `(,@es ,e))) }
+
+pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
+  { (:destructure (id lp lis rp)
+     (declare (ignore lp rp))
+     `(,id ,@lis)) }
+
+pExpr <- pBoolean
+  { (:lambda (x) x) }
+
+pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
+  { (:lambda (x) (fixops x)) }
+
+pSum <- pProduct ((pPlus / pMinus) pProduct)*
+  { (:lambda (x) (prolog:fixops x)) }
+
+pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
+  { (:lambda (x) (prolog:fixops x)) }
+
+
+pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
+  { (:lambda (x) x) }
+
+pOpExpr <- pNot pExpr
+  { (:lambda (x) `(prolog:not ,x) }
+
+pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
+  { (:lambda (x) x) }
+
+pUnifyExprEQ <- pPrimary pUnifySame pPrimary
+  { (:destructure (v op e)
+     (declare (ignore op))
+     `(prolog:unify ,v ,e)) }
+
+pUnifyExprNEQ <- pPrimary pNoUnifySame pPrimary
+  { (:destructure (v op e)
+     (declare (ignore op))
+     `(prolog:not-unify ,v ,e)) }
+
+pIsExpr <- pVariable pIs pExpr
+  { (:destructure (v op e)
+     (declare (ignore op))
+     `(prolog:is ,v ,e)) }
+
+pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
+  { (:lambda (x) x) }
+
+pFact <- pFunctor Spacing pPeriod
+  { (:desctructure (f spc p)
+     (declare (ignore spc p))
+     f) }
+
+pCommaSeparatedClauses <- pPrimaryComma* pPrimary
+  { (:destructure (pc-list p)
+     `(,@pc-list ,p)) }
+
+pPrimaryComma <- pPrimary pComma
+  { (:destructure (p c)
+     (declare (ignore c))
+     p) }
+
+pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
+  { (:destructure (prim cd clause-list spc p)
+     (declare (ignore cd spc p))
+     `(prolog:defrule ,prim ,@clause-list)) }
+
+pDirective <- pColonDash CommentStuff* EndOfLine
+  { (:lambda (x) (declare (ignore x)) nil) }
+
+pTopLevel <- Spacing (pFact / pRule / pDirective)
+  { (:lambda (x) (second x)) ;; discard Spacing (first x) }
+
+pProgram <- pTopLevel+
+  { (:lambda (x) x) }
+
+"
+|#
+|#
+;; this is the full grammar w/o code emission - when it succeeds parsing test13, then we can move on to code emission
+"
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar)
 pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
@@ -92,10 +152,20 @@ pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
 pDirective <- pColonDash CommentStuff* EndOfLine
 pTopLevel <- Spacing (pFact / pRule / pDirective)
 pProgram <- pTopLevel+
-"
-|#
-)))
-    (mapc #'(lambda (r) (eval r)) (cdr g)))))
+")
+
+(defun init ()
+  (flet ((prinr ()
+           (let ((r1 (gethash 'prolog::pFunctor esrap::*rules*))
+                 (r2 (gethash 'prolog::pCommaSeparatedListOfExpr esrap::*rules*)))
+             (format *standard-output* "~&pFunctor ~S~%pCommaSeparatedListOfExpr ~S~%" r1 r2))))
+    (when *first-time*
+      (setf *first-time* nil)
+      (prinr)
+      ;(peg:delete-rules "PROLOG") ;; TODO: don't call this, esrap==>undefined rule pCommaSeparatedListOfExpr
+      (let ((g (peg:fullpeg *peg-rules*)))
+        (mapc #'(lambda (r) (eval r)) (cdr g))
+        (prinr)))))
 
 
 #|

@@ -86,6 +86,7 @@ rule2 :- test1(A,def) , test2(abc, A).
 (defun test13 ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
   ;; NB - remove all double-quotes
+  (init)
   (pprint (esrap:parse 'prolog::pProgram
                "
 :- initialization(main).

@@ -31,10 +31,10 @@
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pNotSame "[\\\\] '==' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:not-same))
 
 (peg:rule prolog::pSame " '==' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:same))
 
 (peg:rule prolog::pNotUnifySame "! pNotSame '\\\\' '=' Spacing"
   (:lambda (x) (declare (ignore x))))
@@ -46,10 +46,10 @@
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pGreaterEqual "'>=' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:greater-equal))
 
 (peg:rule prolog::pLessEqual "'=<' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:less-equal))
 
 (peg:rule prolog::pCut "'!' Spacing"
   (:lambda (x) (declare (ignore x))))
@@ -73,16 +73,16 @@
   (:lambda (x) (declare (ignore x))))
 
 (peg:rule prolog::pMinus "'-' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:minus))
 
 (peg:rule prolog::pPlus "'+' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:plus))
 
 (peg:rule prolog::pAsterisk "'*' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:mul))
 
 (peg:rule prolog::pSlash "'/' Spacing"
-  (:lambda (x) (declare (ignore x))))
+  (:lambda (x) (declare (ignore x)) 'prolog:div))
 
 (peg:rule prolog::pOrBar "'|' Spacing"
   (:lambda (x) (declare (ignore x))))
