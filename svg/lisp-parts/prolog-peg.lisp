@@ -6,18 +6,17 @@
 (defparameter *peg-rules*
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
+
 pParenthesizedExpr <- pLpar pExpr pRpar
   { (:destructure (lp e rp) (declare (ignore lp rp)) e) }
 
 pList <- pEmptyList / pCarOnlyList / pOrList
 pEmptyList <- pLBrack pRBrack
   { (:lambda (x) (declare (ignore x)) `(prolog:list)) }
-
 pCarOnlyList <- pLBrack pCommaSeparatedListOfExpr pRBrack
   { (:destructure (lb lis rb)
      (declare (ignore lb rb))
      `(prolog:list ,lis)) }
-
 pOrList <- pLBrack pCommaSeparatedListOfExpr pOrBar pCommaSeparatedListOfExpr pRBrack
   { (:destructure (lb lis orb lis2 rb)
      (declare (ignore lb rb orb))
@@ -81,7 +80,7 @@ pCommaSeparatedClauses <- pPrimaryComma* pPrimary
   { (:destructure (lis p)
      (if lis
          `(,(first lis) ,p)
-       p)) }
+       (list p))) }
 
 pPrimaryComma <- pPrimary pComma
  { (:destructure (p c)
@@ -91,7 +90,7 @@ pPrimaryComma <- pPrimary pComma
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
   { (:destructure (prim cd clause-list spc p)
      (declare (ignore cd spc p))
-     `(prolog:colon-dash ,prim ,clause-list)) }
+     `(prolog:colon-dash ,prim ,@clause-list)) }
 
 pDirective <- pColonDash CommentStuff* EndOfLine
   { (:lambda (x) (declare (ignore x)) 'prolog:directive) }
