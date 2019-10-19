@@ -10,6 +10,69 @@
     (let ((g (peg:fullpeg
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar)
+  { (:lambda (x) x) }
+
+pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
+  { (:lambda (x) x) }
+
+pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
+  { (:lambda (x) x) }
+
+pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
+  { (:lambda (x) x) }
+
+pExpr <- pBoolean
+  { (:lambda (x) x) }
+
+pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
+  { (:lambda (x) x) }
+
+pSum <- pProduct ((pPlus / pMinus) pProduct)*
+  { (:lambda (x) x) }
+
+pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
+  { (:lambda (x) x) }
+
+pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
+  { (:lambda (x) x) }
+
+pOpExpr <- pNot pExpr
+  { (:lambda (x) x) }
+
+pUnifyOp <- pUnifySame / pNotUnifySame 
+  { (:lambda (x) x) }
+
+pUnifyExpr <- pPrimary pUnifyOp pPrimary
+  { (:lambda (x) x) }
+
+pIsExpr <- pVariable pIs pExpr
+  { (:lambda (x) x) }
+
+pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
+  { (:lambda (x) x) }
+
+pFact <- pFunctor Spacing pPeriod
+  { (:lambda (x) x) }
+
+pCommaSeparatedClauses <- (pPrimary pComma)* pPrimary
+  { (:lambda (x) x) }
+
+pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
+  { (:lambda (x) x) }
+
+pDirective <- pColonDash CommentStuff* EndOfLine
+  { (:lambda (x) x) }
+
+pTopLevel <- Spacing (pFact / pRule / pDirective)
+  { (:lambda (x) x) }
+
+pProgram <- pTopLevel+
+  { (:lambda (x) x) }
+
+"
+#|
+"
+pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar)
 pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
@@ -30,6 +93,7 @@ pDirective <- pColonDash CommentStuff* EndOfLine
 pTopLevel <- Spacing (pFact / pRule / pDirective)
 pProgram <- pTopLevel+
 "
+|#
 )))
     (mapc #'(lambda (r) (eval r)) (cdr g)))))
 
