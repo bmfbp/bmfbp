@@ -34,7 +34,7 @@ pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
      (if lis
          `(,@(mapcar #'(lambda (pair) (first pair)) lis)
            ,e)
-       `(e))) }
+       `(,e))) }
 
 pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
   { (:destructure (s lis)
