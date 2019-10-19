@@ -14,11 +14,51 @@ pOrList <- pLBrack pCommaSeparatedListOfExpr pOrBar pCommaSeparatedListOfExpr pR
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
 pExpr <- pBoolean
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
-
+  { (:destructure (lis e)
+     `(,(mapcar #'(lambda (pair) (first pair)) lis) ,e)) }
 pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
 pSum <- pProduct ((pPlus / pMinus) pProduct)*
 pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
-
+pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
+pOpExpr <- pNot pExpr
+pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
+pUnifyExprEQ <- pPrimary pUnifySame pPrimary
+pUnifyExprNEQ <- pPrimary pNotUnifySame pPrimary
+pIsExpr <- pVariable pIs pExpr
+pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
+pFact <- pFunctor Spacing pPeriod
+  { (:destructure (f spc p)
+     (declare (ignore spc p))
+     f) }
+pCommaSeparatedClauses <- pPrimaryComma* pPrimary
+pPrimaryComma <- pPrimary pComma
+pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
+  { (:destructure (prim cd clause-list spc p)
+     (declare (ignore cd spc p))
+     `(,prim ,@clause-list)) }
+pDirective <- pColonDash CommentStuff* EndOfLine
+pTopLevel <- Spacing (pFact / pRule / pDirective)
+  { (:destructure (spc thing)
+     (declare (ignore spc))
+     thing) }
+pProgram <- pTopLevel+
+  { (:lambda (x) x) }
+"
+#|
+;; refactored grammar
+"
+pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
+pParenthesizedExpr <- pLpar pExpr pRpar
+pList <- pEmptyList / pCarOnlyList / pOrList
+pEmptyList <- pLBrack pRBrack
+pCarOnlyList <- pLBrack pCommaSeparatedListOfExpr pRBrack
+pOrList <- pLBrack pCommaSeparatedListOfExpr pOrBar pCommaSeparatedListOfExpr pRBrack
+pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
+pExpr <- pBoolean
+pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
+pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
+pSum <- pProduct ((pPlus / pMinus) pProduct)*
+pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
 pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
 pOpExpr <- pNot pExpr
 pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
@@ -34,9 +74,11 @@ pDirective <- pColonDash CommentStuff* EndOfLine
 pTopLevel <- Spacing (pFact / pRule / pDirective)
 pProgram <- pTopLevel+
 "
+|#
 
 #|
 ;; this is the full grammar w/o code emission - when it succeeds parsing test13, then we can move on to code emission
+;;  before refactoring
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar)
 pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
@@ -64,7 +106,7 @@ pProgram <- pTopLevel+
 
 (defun init ()
   (flet ((prinr ()
-           (let ((r1 (gethash 'prolog::pFunctor esrap::*rules*))
+           #+nil(let ((r1 (gethash 'prolog::pFunctor esrap::*rules*))
                  (r2 (gethash 'prolog::pCommaSeparatedListOfExpr esrap::*rules*)))
              (format *standard-output* "~&pFunctor ~S~%pCommaSeparatedListOfExpr ~S~%" r1 r2))))
     (when *first-time*
