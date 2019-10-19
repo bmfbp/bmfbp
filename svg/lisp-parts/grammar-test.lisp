@@ -1039,9 +1039,9 @@ we(X) :- write(user_error,X).
 
 wen(X):- we(X),nle.
 
-#readFB(Str) :-
-#    read_term(Str,T0,[]),
-#    element(T0,Str).
+%readFB(Str) :-
+%    read_term(Str,T0,[]),
+%    element(T0,Str).
 
 element(end_of_file, _) :- !.
 element(eltype(X,Y), Str) :- !,
