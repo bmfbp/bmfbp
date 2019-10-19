@@ -83,3 +83,7 @@
 
 (peg:rule prolog::pSlash "'/' Spacing"
   (:lambda (x) (declare (ignore x))))
+
+(peg:rule prolog::pOrBar "'|' Spacing"
+  (:lambda (x) (declare (ignore x))))
+

@@ -10,7 +10,7 @@
     (let ((g (peg:fullpeg
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar)
-pList <- pLBrack pCommaSeparatedListOfExpr? pRBrack
+pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExp)? pRBrack
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
 pExpr <- pBoolean
