@@ -1624,3 +1624,12 @@ createBoundingBoxes :-
 rule :- a(1), f, b(2), g, c(3), h, d(4), e(5), i.
 "
 )))
+
+(defun test17 (&optional (index 2))
+  ;; rewrite calc_bounds.pl
+  (init index)
+  (pprint (esrap:parse 'prolog::pProgram
+"
+    r :- X is (CX - HalfWidth).
+")))
+
