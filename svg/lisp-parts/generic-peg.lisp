@@ -68,6 +68,7 @@ pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
 pUnifyExprEQ <- pPrimary pUnifySame pPrimary
 pUnifyExprNEQ <- pPrimary pNotUnifySame pPrimary
 pIsExpr <- pVariable pIs pExpr
+
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
 
 pFact <- pFunctor Spacing pPeriod
@@ -75,15 +76,17 @@ pFact <- pFunctor Spacing pPeriod
      (declare (ignore spc p))
      f) }
 
-pCommaSeparatedClauses <- pPrimaryComma* pPrimary
+pCommaSeparatedClauses <- pPrimaryCommaUsedOnlyByCommaSeparatedClauses* pPrimary
   { (:destructure (lis p)
+     (when (atom p) (setf p (list p)))
      (if lis
-         `(,(first lis) ,p)
+         `(,@lis ,p)
        (list p))) }
 
-pPrimaryComma <- pPrimary pComma
+pPrimaryCommaUsedOnlyByCommaSeparatedClauses <- pPrimary pComma
  { (:destructure (p c)
     (declare (ignore c))
+    (when (atom p) (setf p (list p)))
     p) }
 
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod

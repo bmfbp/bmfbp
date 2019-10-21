@@ -1,20 +1,22 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
-(defparameter *first-time* t)
+(defparameter *grammars* (list
+                          *peg-rules-original*
+                          *peg-rules-refactored*
+                          *peg-rules-generic*
+                          *peg-rules-paip*))
 
-(defun init ()
+(defun init (&optional (index 2))
   (flet ((prinr ()
            #+nil(let ((r1 (gethash 'prolog::pFunctor esrap::*rules*))
                  (r2 (gethash 'prolog::pCommaSeparatedListOfExpr esrap::*rules*)))
              (format *standard-output* "~&pFunctor ~S~%pCommaSeparatedListOfExpr ~S~%" r1 r2))))
-    (when *first-time*
-      (setf *first-time* nil)
-      (prinr)
+    (prinr)
       ;(peg:delete-rules "PROLOG") ;; TODO: don't call this, esrap==>undefined rule pCommaSeparatedListOfExpr
-      (let ((g (peg:fullpeg *peg-rules-generic*)))
-        (mapc #'(lambda (r) (eval r)) (cdr g))
-        (prinr)))))
+    (let ((g (peg:fullpeg (nth index *grammars*))))
+      (mapc #'(lambda (r) (eval r)) (cdr g))
+      (prinr))))
 
 
 #|

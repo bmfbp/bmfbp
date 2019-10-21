@@ -1517,7 +1517,7 @@ dumplog(_,_,_,_,_,_,_,_,_) :- true.
 :- initialization(main).
 :- include('head').
 
-main :-
+calc_bounds_main :-
     readFB(user_input), 
     createBoundingBoxes,
     writeFB,
@@ -1594,15 +1594,15 @@ createEllipseBoundingBox(ID) :-
 "
 )))
 
-(defun test15 ()
+(defun test15 (&optional (index 2))
   ;; rewrite calc_bounds.pl
-  (init)
+  (init index)
   (pprint (esrap:parse 'prolog::pProgram
 "
 :- initialization(main).
 :- include('head').
 
-main :-
+calc_bounds_main :-
     readFB(user_input), 
     createBoundingBoxes,
     writeFB,
@@ -1613,5 +1613,14 @@ createBoundingBoxes :-
     condRect,
     condSpeech,
     condText.
+"
+)))
+
+(defun test16 (&optional (index 2))
+  ;; rewrite calc_bounds.pl
+  (init index)
+  (pprint (esrap:parse 'prolog::pProgram
+"
+rule :- a(1), f, b(2), g, c(3), h, d(4), e(5), i.
 "
 )))
