@@ -1,6 +1,9 @@
 (defpackage :arrowgram
   (:use :cl :paip))
 
+(defpackage :paip-extension
+  (:use :cl :paip))
+
 (defpackage :prolog
   (:use :cl :paip)
   (:export

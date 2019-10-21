@@ -172,7 +172,7 @@ createEllipseBoundingBox(ID) :-
 :- initialization(main).
 :- include('head').
 
-main :-
+assign_parents_to_ellispses_main :-
     readFB(user_input),
     forall(ellipse(EllipseID),makeParentForEllipse(EllipseID)),
     writeFB,
@@ -1509,3 +1509,109 @@ dumplog(_,_,_,_,_,_,_,_,_) :- true.
 ")))
 
 
+(defun test14 ()
+  ;; rewrite calc_bounds.pl
+  (init)
+  (pprint (esrap:parse 'prolog::pProgram
+"
+:- initialization(main).
+:- include('head').
+
+main :-
+    readFB(user_input), 
+    createBoundingBoxes,
+    writeFB,
+    halt.
+
+createBoundingBoxes :-
+    conditionalCreateEllipseBB,
+    condRect,
+    condSpeech,
+    condText.
+
+condRect :-
+    forall(rect(ID), createRectBoundingBox(ID)).
+condRect :-
+    true.
+
+condSpeech :-
+    forall(speechbubble(ID), createRectBoundingBox(ID)).
+condSpeech :-
+    true.
+
+condText :-
+    forall(text(ID,_), createTextBoundingBox(ID)).
+condText :-
+    true.
+
+conditionalCreateEllipseBB:-
+    ellipse(_),
+    forall(ellipse(ID), createEllipseBoundingBox(ID)).
+
+conditionalCreateEllipseBB :- % for pre-ellipse code  
+    true.
+
+createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X),
+    geometry_top_y(ID, Y),
+    geometry_w(ID, Width),
+    geometry_h(ID, Height),
+    asserta(bounding_box_left(ID,X)),
+    asserta(bounding_box_top(ID,Y)),
+    Right is X + Width,
+    Bottom is Y + Height,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom)).
+
+createTextBoundingBox(ID) :-
+    geometry_center_x(ID,CX),
+    geometry_top_y(ID, Y),
+    geometry_w(ID, HalfWidth),
+    geometry_h(ID, Height),
+    X is (CX - HalfWidth),
+    asserta(bounding_box_left(ID,X)),
+    asserta(bounding_box_top(ID,Y)),
+    Right is CX + HalfWidth,
+    Bottom is Y + Height,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom)).
+
+createEllipseBoundingBox(ID) :-
+    geometry_center_x(ID,CX),
+    geometry_center_y(ID,CY),
+    geometry_w(ID,HalfWidth),
+    geometry_h(ID,HalfHeight),
+    Left is CX - HalfWidth,
+    Top is CY - HalfHeight,
+    asserta(bounding_box_left(ID,Left)),
+    asserta(bounding_box_top(ID,Top)),
+    Right is CX + HalfWidth,
+    Bottom is CY + HalfHeight,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom)).
+
+:- include('tail').
+"
+)))
+
+(defun test15 ()
+  ;; rewrite calc_bounds.pl
+  (init)
+  (pprint (esrap:parse 'prolog::pProgram
+"
+:- initialization(main).
+:- include('head').
+
+main :-
+    readFB(user_input), 
+    createBoundingBoxes,
+    writeFB,
+    halt.
+
+createBoundingBoxes :-
+    conditionalCreateEllipseBB,
+    condRect,
+    condSpeech,
+    condText.
+"
+)))
