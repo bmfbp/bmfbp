@@ -83,7 +83,7 @@ rule2 :- test1(A,def) , test2(abc, A).
   (format *standard-output* "done~%")
 )
 
-(defun test13 ()
+(defun all-pl ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
   ;; NB - remove all double-quotes
   (init)
@@ -1509,7 +1509,7 @@ dumplog(_,_,_,_,_,_,_,_,_) :- true.
 ")))
 
 
-(defun test14 ()
+(defun calc-bounds-pl ()
   ;; rewrite calc_bounds.pl
   (init)
   (pprint (esrap:parse 'prolog::pProgram
