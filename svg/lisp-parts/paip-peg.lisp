@@ -2,37 +2,31 @@
   (peg:into-package "PROLOG"))
 
 (defparameter *peg-rules-paip*
-;; generic grammar, not PAIP specific
+;; PAIP-specific code generation
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
-  { (:lambda (x)
-      (case x
-        (prolog:cut 'paip::!)
-        (prolog::true '(paip-extension::true))
-        (prolog::halt '(paip-extension::halt))
-        (otherwise x))) }
 
 pParenthesizedExpr <- pLpar pExpr pRpar
   { (:destructure (lp e rp) (declare (ignore lp rp)) e) }
 
 pList <- pEmptyList / pCarOnlyList / pOrList
 pEmptyList <- pLBrack pRBrack
-  { (:lambda (x) (declare (ignore x)) `(prolog:list)) }
+  { (:lambda (x) (declare (ignore x)) `(prolog:pl-list)) }
 pCarOnlyList <- pLBrack pCommaSeparatedListOfExpr pRBrack
   { (:destructure (lb lis rb)
      (declare (ignore lb rb))
-     `(prolog:list ,lis)) }
+     `(prolog:pl-list ,lis)) }
 pOrList <- pLBrack pCommaSeparatedListOfExpr pOrBar pCommaSeparatedListOfExpr pRBrack
   { (:destructure (lb lis orb lis2 rb)
      (declare (ignore lb rb orb))
-     `(prolog:list ,lis ,@lis2)) }
+     `(prolog:pl-list ,lis ,@lis2)) }
 
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
   { (:destructure (id lp lis rp)
      (declare (ignore lp rp))
      `(,id ,@lis)) }
 
-pExpr <- pBoolean
+pExpr <- pBooleanExpr
 
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
   { (:destructure (lis e)
@@ -41,39 +35,52 @@ pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
            ,e)
        `(,e))) }
 
-pBoolean <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
+pBooleanExpr <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
   { (:destructure (s lis)
+     #+nil(format *standard-output* \"booleanExpr s=~S lis=~S~%\" s lis)
+     (assert (or (null lis)
+                 (and (listp lis) (= 1 (length lis)) (listp (first lis)))))
      (if lis
-         (let ((op (first lis))
-               (s2 (second lis)))
+         (let ((op (first (first lis)))
+               (s2 (second (first lis))))
            `(,op ,s ,s2))
        s)) }
 
 pSum <- pProduct ((pPlus / pMinus) pProduct)*
   { (:destructure (p lis)
+     #+nil(format *standard-output* \"sum p=~S lis=~S~%\" p lis)
+     (assert (or (null lis)
+                 (and (listp lis) (= 1 (length lis)) (listp (first lis)))))
      (if lis
-         (let ((op (first lis))
-               (p2 (second lis)))
+         (let ((op (first (first lis)))
+               (p2 (second (first lis))))
            `(,op ,p ,p2))
        p)) }
 
 pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
   { (:destructure (p lis)
+     #+nil(format *standard-output* \"product p=~S lis=~S~%\" p lis)
+     (assert (or (null lis)
+                 (and (listp lis) (= 1 (length lis)) (listp (first lis)))))
      (if lis
-         (let ((op (first lis))
-               (p2 (second lis)))
+         (let ((op (first (first lis)))
+               (p2 (second (first lis))))
            `(,op ,p ,p2))
        p)) }
 
 
 pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
 pOpExpr <- pNot pExpr
-  { (:destructure (n e) (declare (ignore n)) `(prolog:not ,e)) }
+  { (:destructure (n e) (declare (ignore n)) `(prolog:pl-not ,e)) }
 
 pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
 pUnifyExprEQ <- pPrimary pUnifySame pPrimary
 pUnifyExprNEQ <- pPrimary pNotUnifySame pPrimary
 pIsExpr <- pVariable pIs pExpr
+  { (:destructure (v op e)
+     #+nil(format *standard-output* \"~&pIsExpr v=~S e=~S~%\" v e)
+     `(prolog:pl-is ,v ,e)) }
+
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
 
 pFact <- pFunctor Spacing pPeriod
@@ -81,15 +88,17 @@ pFact <- pFunctor Spacing pPeriod
      (declare (ignore spc p))
      f) }
 
-pCommaSeparatedClauses <- pPrimaryComma* pPrimary
+pCommaSeparatedClauses <- pPrimaryCommaUsedOnlyByCommaSeparatedClauses* pPrimary
   { (:destructure (lis p)
+     (when (atom p) (setf p (list p)))
      (if lis
-         `(,(first lis) ,p)
+         `(,@lis ,p)
        (list p))) }
 
-pPrimaryComma <- pPrimary pComma
+pPrimaryCommaUsedOnlyByCommaSeparatedClauses <- pPrimary pComma
  { (:destructure (p c)
     (declare (ignore c))
+    (when (atom p) (setf p (list p)))
     p) }
 
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod

@@ -86,7 +86,7 @@ rule2 :- test1(A,def) , test2(abc, A).
 (defun all-pl ()
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
   ;; NB - remove all double-quotes
-  (init)
+  (init 2)
   (pprint (esrap:parse 'prolog::pProgram
                "
 :- initialization(main).
@@ -1511,7 +1511,7 @@ dumplog(_,_,_,_,_,_,_,_,_) :- true.
 
 (defun calc-bounds-pl ()
   ;; rewrite calc_bounds.pl
-  (init)
+  (init 2)
   (pprint (esrap:parse 'prolog::pProgram
 "
 :- initialization(main).

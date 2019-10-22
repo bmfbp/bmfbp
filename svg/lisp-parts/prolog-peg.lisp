@@ -7,7 +7,7 @@
                           *peg-rules-generic*
                           *peg-rules-paip*))
 
-(defun init (&optional (index 2))
+(defun init (&optional (index 3))
   (flet ((prinr ()
            #+nil(let ((r1 (gethash 'prolog::pFunctor esrap::*rules*))
                  (r2 (gethash 'prolog::pCommaSeparatedListOfExpr esrap::*rules*)))
