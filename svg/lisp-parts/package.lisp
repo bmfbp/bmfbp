@@ -8,7 +8,7 @@
   (:use :cl :paip)
   (:export
    #:directive
-   #:list
+   #:pl-list
    #:minus
    #:plus
    #:mul
@@ -17,18 +17,18 @@
    #:not-same
    #:greater-equal
    #:less-equal
-   #:not
+   #:pl-not
    #:not-unify
    #:unify
    #:not-unify-same
    #:unify-same
-   #:is
+   #:pl-is
    #:defrule
    #:user-error
    #:current-input
    #:user-input
-   #:true
-   #:fail
+   #:pl-true
+   #:pl-fail
    #:colon-dash
    #:cut
    #:dot

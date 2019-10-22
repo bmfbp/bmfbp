@@ -16,19 +16,19 @@
   (:lambda (x) (declare (ignore x)) 'prolog:user-input))
 
 (peg:rule prolog::pFail "'fail' Spacing"
-  (:lambda (x) (declare (ignore x)) 'prolog:fail))
+  (:lambda (x) (declare (ignore x)) 'prolog:pl-fail))
 
 (peg:rule prolog::pTrue "'true' Spacing"
-  (:lambda (x) (declare (ignore x)) 'prolog::true))
+  (:lambda (x) (declare (ignore x)) 'prolog:pl-true))
 
 (peg:rule prolog::pKWID "pTrue / pFail / pUserError / pCurrentInput / pUserInput"
   (:lambda (x) x))
 
 (peg:rule prolog::pIs "'is' Spacing"
-  (:lambda (x) (declare (ignore x)) 'prolog:is))
+  (:lambda (x) (declare (ignore x)) 'prolog:pl-is))
 
 (peg:rule prolog::pNot "'\\\\\+' Spacing"
-  (:lambda (x) (declare (ignore x)) 'prolog:not))
+  (:lambda (x) (declare (ignore x)) 'prolog:pl-not))
 
 (peg:rule prolog::pNotSame "[\\\\] '==' Spacing"
   (:lambda (x) (declare (ignore x)) 'prolog:not-same))

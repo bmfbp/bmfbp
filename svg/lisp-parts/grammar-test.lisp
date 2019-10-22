@@ -506,7 +506,7 @@ splitLists([[N1,ID1]|Tail],Ns,IDs):-
 :- include('head').
 :- include('tail').
 
-marIndexedPorts_main :-
+markIndexedPorts_main :-
     readFB(user_input), 
     forall(portName(P,_),markNamed(P)),
     writeFB,
