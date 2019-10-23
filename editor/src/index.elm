@@ -25,7 +25,9 @@ type Msg
   | MouseMove Coordinates
   | KeyPress String
   | KeyUp String
-  | ToggleSelect CanvasItemInstance
+  | SelectItem CanvasItemInstance
+  | ResizeItem CanvasItemInstance Coordinates Corner
+  | ClearSelection
   | Point Coordinates
   | Mark Coordinates
   | Roll
@@ -51,9 +53,10 @@ type alias Coordinates = { x : Int, y : Int }
 -- This captures the state of some task that the user wants to
 -- do in multiple steps.
 type Intent
-  -- e.g. Moving the mouse around
+  -- Moving the mouse around
   = Explore
   | MoveSelectedCanvasItemInstances
+  | ResizeCanvasItemInstance CanvasItemInstance Coordinates Corner
   | CreateCanvasItemInstance CanvasItemInstance
 
 type CursorMode
@@ -62,6 +65,9 @@ type CursorMode
   -- Parameter is the starting coordinates
   | PointAndMarkCursor Coordinates
   | RollAndHitCursor
+  -- This is needed to deal with all the events being fired
+  -- when the user triggers a mousedown event.
+  | SelectionInProgress
 
 type alias CanvasItemInstance = { id : Int, item : CanvasItem }
 
@@ -72,6 +78,11 @@ type CanvasItem
   | Text Coordinates String
   --| Comment Coordinates Coordinates Coordinates
 
+type Corner
+  = UpperLeft
+  | UpperRight
+  | LowerLeft
+  | LowerRight
 
 -- *** Application logic ***
 
@@ -104,18 +115,37 @@ update message model =
   case message of
     NoOp -> updateModelOnly model
     MouseMove coords ->
-      updateModelOnly { model | cursorCoords = coords }
+      let
+        newModel =
+          case model.intent of
+            ResizeCanvasItemInstance { id, item } startingCoords corner ->
+              let
+                newItem = resizeCanvasItem item startingCoords model.cursorCoords corner
+                updatedItems = replaceCanvasItemInstanceById model.instantiatedItems id newItem
+              in
+                { model
+                | instantiatedItems = updatedItems
+                -- Resizing means we're not selecting anything.
+                , selectedItems = []
+                }
+            _ -> model
+      in
+        updateModelOnly { newModel | cursorCoords = coords }
     KeyPress key -> handleKey model key |> updateModelOnly
     KeyUp key -> handleKeyUp model key |> updateModelOnly
-    ToggleSelect item ->
+    SelectItem item ->
       case model.selectionMode of
         SingleSelect ->
-          updateModelOnly { model | selectedItems = [item] }
+          updateModelOnly
+            { model
+            | selectedItems = [item]
+            , cursorMode = SelectionInProgress
+            }
         MultipleSelect ->
           let
             selected =
               if isSelectedCanvasItemInstance model item
-              then List.filter ((/=) item) model.selectedItems
+              then model.selectedItems
               else item :: model.selectedItems
             newSelectionMode =
               if List.length selected == 0
@@ -123,21 +153,40 @@ update message model =
               else model.selectionMode
           in
             updateModelOnly
-              { model |
-                  selectedItems = selected,
-                  selectionMode = newSelectionMode
+              { model
+              | selectedItems = selected
+              , selectionMode = newSelectionMode
+              , cursorMode = SelectionInProgress
               }
-    -- TODO: To rename
+    ResizeItem item startingCursorCoords corner ->
+      updateModelOnly
+        { model |
+            intent = ResizeCanvasItemInstance item startingCursorCoords corner
+        }
+    ClearSelection ->
+      case model.cursorMode of
+        SelectionInProgress -> (model, Cmd.none)
+        _ ->
+          updateModelOnly
+            { model
+            | selectedItems = []
+            , selectionMode = SingleSelect
+            }
+    -- TODO: To rename to MouseDown
     Point coords ->
-      updateModelOnly { model | cursorMode = PointAndMarkCursor coords }
-    -- TODO: To rename
+      updateModelOnly
+        { model
+        | cursorMode = PointAndMarkCursor coords
+        }
+    -- TODO: To rename to MouseUp
     Mark ending ->
       case (model.cursorMode, model.intent) of
+        (_, ResizeCanvasItemInstance _ _ _) ->
+          updateModelOnly { model | intent = Explore }
         (PointAndMarkCursor starting, CreateCanvasItemInstance item) ->
           updateModelOnly
-            { model |
-                instantiatedItems =
-                  item :: model.instantiatedItems
+            { model
+            | instantiatedItems = item :: model.instantiatedItems
             }
         (PointAndMarkCursor starting, _) ->
           let
@@ -268,6 +317,58 @@ updateSelectedItemCoordinates model starting ending =
   in
     { model | instantiatedItems = updatedItems, selectedItems = selectedItems }
 
+resizeCanvasItem : CanvasItem -> Coordinates -> Coordinates -> Corner -> CanvasItem
+resizeCanvasItem originalItem startingCoords currentCoords corner =
+  let
+    deltaX = currentCoords.x - startingCoords.x
+    deltaY = currentCoords.y - startingCoords.y
+    threshold = 25
+  in
+    case originalItem of
+      Part upperLeft lowerRight ->
+        case corner of
+          UpperLeft ->
+            Part
+              { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
+              , y = min (lowerRight.y - threshold) (upperLeft.y + deltaY)
+              }
+              lowerRight
+          UpperRight ->
+            Part
+              { x = upperLeft.x
+              , y = min (lowerRight.y - threshold) (upperLeft.y + deltaY)
+              }
+              { x = max (upperLeft.x + threshold) (lowerRight.x + deltaX)
+              , y = lowerRight.y
+              }
+          LowerLeft ->
+            Part
+              { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
+              , y = upperLeft.y
+              }
+              { x = lowerRight.x
+              , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
+              }
+          LowerRight ->
+            Part
+              upperLeft
+              { x = max (upperLeft.x + threshold) (lowerRight.x + deltaX)
+              , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
+              }
+      -- TODO: Implement resizing the rest of the item types
+      _ ->
+        originalItem
+
+replaceCanvasItemInstanceById : List CanvasItemInstance -> Int -> CanvasItem -> List CanvasItemInstance
+replaceCanvasItemInstanceById allItems id newItem =
+  let
+    replaceItem item =
+      if item.id == id
+      then { item | item = newItem }
+      else item
+  in
+    List.map replaceItem allItems
+
 
 -- *** UI ***
 
@@ -302,7 +403,58 @@ canvas model =
           ]
       ]
   in
-    Svg.svg [ SA.height "700" ] (definitions ++ canvasItems)
+    Svg.svg
+      [ SA.height "700"
+      , SE.onMouseDown ClearSelection
+      ]
+      (definitions ++ canvasItems)
+
+-- Selection circle around visual elements for resizing.
+makeResizeCircle : Coordinates -> CanvasItemInstance -> Int -> Int -> Corner -> Svg.Svg Msg
+makeResizeCircle cursorCoords item width height corner =
+  let
+    (offsetX, offsetY) =
+      case corner of
+        UpperLeft -> (0, 0)
+        UpperRight -> (width, 0)
+        LowerLeft -> (0, height)
+        LowerRight -> (width, height)
+    x = String.fromInt (offsetX - 5)
+    y = String.fromInt (offsetY - 5)
+  in
+    Svg.path
+      [ SA.d "M 5, 5 m -2, 0 a 2,2 0 1,0 5,0 a 2,2 0 1,0 -5,0"
+      , SA.fill "white"
+      , SA.stroke "black"
+      , SA.transform ("translate(" ++ x ++ "," ++ y ++ ")")
+      , SE.onMouseDown (ResizeItem item cursorCoords corner)
+      ]
+      []
+
+displayResizeOption : Intent -> CanvasItemInstance -> Coordinates -> Coordinates -> Coordinates -> List (Svg.Svg Msg)
+displayResizeOption intent item cursorCoords upperLeft lowerRight =
+  let
+    isResizing =
+      case intent of
+        ResizeCanvasItemInstance _ _ _ -> True
+        _ -> False
+    width = lowerRight.x - upperLeft.x
+    height = lowerRight.y - upperLeft.y
+    makeCircle = makeResizeCircle cursorCoords item width height
+  in
+    if isResizing || withinView cursorCoords upperLeft lowerRight
+    then
+      [ makeCircle UpperLeft
+      , makeCircle UpperRight
+      , makeCircle LowerLeft
+      , makeCircle LowerRight
+      ]
+    else []
+
+withinView : Coordinates -> Coordinates -> Coordinates -> Bool
+withinView point upperLeft lowerRight =
+  point.x >= upperLeft.x && point.y >= upperLeft.y &&
+  point.x <= lowerRight.x && point.y <= lowerRight.y
 
 moveSelectedItems : Model -> CanvasItemInstance -> CanvasItemInstance
 moveSelectedItems model item =
@@ -322,23 +474,35 @@ displayCanvasItemInstance model item =
   in
     case itemToDisplay.item of
       Part upperLeft lowerRight ->
-        Svg.rect
-          [ SA.fill "white"
-          , SA.stroke (if isSelected then "blue" else "black")
-          , SE.onClick (ToggleSelect item)
-          , SA.x (String.fromInt upperLeft.x)
-          , SA.y (String.fromInt upperLeft.y)
-          , SA.width (String.fromInt (lowerRight.x - upperLeft.x))
-          , SA.height (String.fromInt (lowerRight.y - upperLeft.y))
-          ]
-          []
+        let
+          x = String.fromInt upperLeft.x
+          y = String.fromInt upperLeft.y
+          width = String.fromInt (lowerRight.x - upperLeft.x)
+          height = String.fromInt (lowerRight.y - upperLeft.y)
+          resizeOption = displayResizeOption model.intent itemToDisplay model.cursorCoords upperLeft lowerRight
+        in
+          Svg.g
+            [ SE.onMouseDown (SelectItem item)
+            , SA.transform ("translate(" ++ x ++ "," ++ y ++ ")")
+            ]
+            (
+              [
+                Svg.rect
+                  [ SA.fill "white"
+                  , SA.stroke (if isSelected then "blue" else "black")
+                  , SA.width width
+                  , SA.height height
+                  ]
+                  []
+              ] ++ resizeOption
+            )
       Wire points ->
         let
           coordsToString { x, y } = String.fromInt x ++ "," ++ String.fromInt y
           pointsString = List.map coordsToString points |> String.join " "
         in
           Svg.g
-            [ SE.onClick (ToggleSelect item)
+            [ SE.onMouseDown (SelectItem item)
             ]
             [
               -- This is the wire visible to the user.
@@ -370,7 +534,7 @@ displayCanvasItemInstance model item =
         Svg.ellipse
           [ SA.fill "white"
           , SA.stroke (if isSelected then "blue" else "black")
-          , SE.onClick (ToggleSelect item)
+          , SE.onMouseDown (SelectItem item)
           , SA.cx (String.fromInt center.x)
           , SA.cy (String.fromInt center.y)
           , SA.rx (String.fromInt longRadius)
@@ -383,7 +547,7 @@ displayCanvasItemInstance model item =
           , SA.x (String.fromInt center.x)
           , SA.y (String.fromInt center.y)
           , SA.stroke (if isSelected then "blue" else "black")
-          , SE.onClick (ToggleSelect item)
+          , SE.onMouseDown (SelectItem item)
           ]
           [ Svg.text label ]
 
