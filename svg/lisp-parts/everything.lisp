@@ -10,7 +10,7 @@
 
 (defun function-all-solutions (goals)
   (setf *all-bindings* nil)
-  (let ((replaced (list (paip::replace-?-vars goals))))
+  (let ((replaced (paip::replace-?-vars goals)))
     (top-level-everything replaced)
     *all-bindings*))
 
