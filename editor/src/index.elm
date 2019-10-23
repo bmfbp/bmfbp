@@ -28,10 +28,8 @@ type Msg
   | SelectItem CanvasItemInstance
   | ResizeItem CanvasItemInstance Coordinates Corner
   | ClearSelection
-  | Point Coordinates
-  | Mark Coordinates
-  | Roll
-  | Hit
+  | MouseDown Coordinates
+  | MouseUp Coordinates
 
 type SelectionMode = SingleSelect | MultipleSelect
 
@@ -61,10 +59,8 @@ type Intent
 
 type CursorMode
   = FreeFormCursor
-  | DragCursor
   -- Parameter is the starting coordinates
-  | PointAndMarkCursor Coordinates
-  | RollAndHitCursor
+  | DragCursor Coordinates
   -- This is needed to deal with all the events being fired
   -- when the user triggers a mousedown event.
   | SelectionInProgress
@@ -172,32 +168,26 @@ update message model =
             | selectedItems = []
             , selectionMode = SingleSelect
             }
-    -- TODO: To rename to MouseDown
-    Point coords ->
+    MouseDown coords ->
       updateModelOnly
         { model
-        | cursorMode = PointAndMarkCursor coords
+        | cursorMode = DragCursor coords
         }
-    -- TODO: To rename to MouseUp
-    Mark ending ->
+    MouseUp ending ->
       case (model.cursorMode, model.intent) of
         (_, ResizeCanvasItemInstance _ _ _) ->
           updateModelOnly { model | intent = Explore }
-        (PointAndMarkCursor starting, CreateCanvasItemInstance item) ->
+        (DragCursor starting, CreateCanvasItemInstance item) ->
           updateModelOnly
             { model
             | instantiatedItems = item :: model.instantiatedItems
             }
-        (PointAndMarkCursor starting, _) ->
+        (DragCursor starting, _) ->
           let
             updatedModel = updateSelectedItemCoordinates model starting ending
           in
             updateModelOnly { updatedModel | cursorMode = FreeFormCursor }
         _ -> updateModelOnly { model | cursorMode = FreeFormCursor }
-    -- TODO: To implement
-    Roll -> updateModelOnly model
-    -- TODO: To implement
-    Hit -> updateModelOnly model
 
 handleKey : Model -> String -> Model
 handleKey model key =
@@ -265,8 +255,8 @@ isSelectedCanvasItemInstance model match = List.any (\i -> i.id == match.id) mod
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
-    [ BE.onMouseDown (JD.map Point mouseDecoder)
-    , BE.onMouseUp (JD.map Mark mouseDecoder)
+    [ BE.onMouseDown (JD.map MouseDown mouseDecoder)
+    , BE.onMouseUp (JD.map MouseUp mouseDecoder)
     , BE.onMouseMove (JD.map MouseMove mouseDecoder)
     , BE.onKeyDown (JD.map KeyPress keyDecoder)
     , BE.onKeyUp (JD.map KeyUp keyDecoder)
@@ -459,7 +449,7 @@ withinView point upperLeft lowerRight =
 moveSelectedItems : Model -> CanvasItemInstance -> CanvasItemInstance
 moveSelectedItems model item =
   case (model.cursorMode, model.cursorCoords) of
-    (PointAndMarkCursor starting, current) ->
+    (DragCursor starting, current) ->
       updateItemCoordinates starting current item
     _ -> item
 
@@ -469,7 +459,7 @@ displayCanvasItemInstance model item =
     isSelected = isSelectedCanvasItemInstance model item
     itemToDisplay =
       case (isSelected, model.cursorMode) of
-        (True, PointAndMarkCursor _) -> moveSelectedItems model item
+        (True, DragCursor _) -> moveSelectedItems model item
         _ -> item
   in
     case itemToDisplay.item of
