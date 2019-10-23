@@ -62,11 +62,13 @@
 				     (:file "generic-peg")
 				     (:file "paip-peg")
 				     (:file "prolog-peg")
+				     (:file "prolog-extension")
+				     (:file "paip-extension")
 				     )))
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))
 
-(defsystem arrowgram/database
+(defsystem arrowgram/extensions
   :depends-on (arrowgram)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
@@ -75,14 +77,26 @@
                     (funcall next))
   :components ((:module contents
 			:pathname "./"
-			:components ((:file "common-queries")
-                                     (:file "find-comments")
-                                     (:file "assign-parents-to-ellipses")
-				     (:file "bounding-boxes"))))
+			:components ((:file "prolog-extension")
+                                     (:file "paip-extension"))))
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))
 
-(defsystem arrowgram/lwpasses
+(defsystem arrowgram/database
+  :depends-on (arrowgram/extensions)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./"
+			:components ((:file "calc-bounds")))))
+  ;; do not clear db here
+  ;; :perform (asdf:load-op :before (op c)
+  ;;            (funcall (uiop/package:find-symbol* :clear-db :paip))))
+
+(defsystem arrowgram/lwpasses ;; old - to be removed once we see life in arrowgram/try
   :depends-on (arrowgram/database)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
@@ -90,4 +104,13 @@
                                          (speed 0)))
                     (funcall next))
   :components ((:file "lwpasses")))
+
+(defsystem arrowgram/try
+  :depends-on (arrowgram/database)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:file "try")))
 

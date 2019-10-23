@@ -122,6 +122,6 @@ pTopLevel <- Spacing (pFact / pRule / pDirective)
      (declare (ignore spc))
      thing) }
 pProgram <- pTopLevel+
-  { (:lambda (x) `(progn ,x)) }
+  { (:lambda (x) `(progn ,@x)) }
 "
 )
