@@ -26,7 +26,10 @@ type Msg
   | KeyPress String
   | KeyUp String
   | SelectItem CanvasItemInstance
-  | ResizeItem CanvasItemInstance Coordinates Corner
+  | ResizeItem CanvasItemInstance Coordinates AnchorPosition
+  | HoveredItem CanvasItemInstance
+  | MovePath CanvasItemInstance Int Coordinates
+  | UnhoveredItem
   | ClearSelection
   | MouseDown Coordinates
   | MouseUp Coordinates
@@ -44,6 +47,7 @@ type alias Model =
   , intent : Intent
   , canvasItemCount : Int
   , selectionMode : SelectionMode
+  , hoveredItem : Maybe CanvasItemInstance
   }
 
 type alias Coordinates = { x : Int, y : Int }
@@ -54,8 +58,9 @@ type Intent
   -- Moving the mouse around
   = Explore
   | MoveSelectedCanvasItemInstances
-  | ResizeCanvasItemInstance CanvasItemInstance Coordinates Corner
+  | ResizeCanvasItemInstance CanvasItemInstance Coordinates AnchorPosition
   | CreateCanvasItemInstance CanvasItemInstance
+  | ToMovePath CanvasItemInstance Int Coordinates
 
 type CursorMode
   = FreeFormCursor
@@ -72,9 +77,8 @@ type CanvasItem
   | Wire (List Coordinates)
   | SourceSink Coordinates Int
   | Text Coordinates String
-  --| Comment Coordinates Coordinates Coordinates
 
-type Corner
+type AnchorPosition
   = UpperLeft
   | UpperRight
   | LowerLeft
@@ -104,6 +108,7 @@ initialModel =
   , intent = Explore
   , canvasItemCount = List.length initialCanvasItemInstances
   , selectionMode = SingleSelect
+  , hoveredItem = Nothing
   }
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -112,21 +117,32 @@ update message model =
     NoOp -> updateModelOnly model
     MouseMove coords ->
       let
+        updatedModel = { model | cursorCoords = coords }
         newModel =
-          case model.intent of
-            ResizeCanvasItemInstance { id, item } startingCoords corner ->
+          case (updatedModel.cursorMode, updatedModel.intent) of
+            (_, ToMovePath { id, item } index point) ->
+              case item of
+                Wire points ->
+                  let
+                    updatePoint i pt = if i == index then coords else pt
+                    newPoints = List.indexedMap updatePoint points
+                    updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id (Wire newPoints)
+                  in
+                    { updatedModel | instantiatedItems = updatedItems }
+                _ -> updatedModel
+            (_, ResizeCanvasItemInstance { id, item } startingCoords anchor) ->
               let
-                newItem = resizeCanvasItem item startingCoords model.cursorCoords corner
-                updatedItems = replaceCanvasItemInstanceById model.instantiatedItems id newItem
+                newItem = resizeCanvasItem item startingCoords updatedModel.cursorCoords anchor
+                updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id newItem
               in
-                { model
+                { updatedModel
                 | instantiatedItems = updatedItems
                 -- Resizing means we're not selecting anything.
                 , selectedItems = []
                 }
-            _ -> model
+            _ -> updatedModel
       in
-        updateModelOnly { newModel | cursorCoords = coords }
+        updateModelOnly newModel
     KeyPress key -> handleKey model key |> updateModelOnly
     KeyUp key -> handleKeyUp model key |> updateModelOnly
     SelectItem item ->
@@ -154,11 +170,14 @@ update message model =
               , selectionMode = newSelectionMode
               , cursorMode = SelectionInProgress
               }
-    ResizeItem item startingCursorCoords corner ->
+    ResizeItem item startingCursorCoords anchor ->
       updateModelOnly
         { model |
-            intent = ResizeCanvasItemInstance item startingCursorCoords corner
+            intent = ResizeCanvasItemInstance item startingCursorCoords anchor
         }
+    HoveredItem item -> updateModelOnly { model | hoveredItem = Just item }
+    UnhoveredItem -> updateModelOnly { model | hoveredItem = Nothing }
+    MovePath path index point ->  updateModelOnly { model | intent = ToMovePath path index point }
     ClearSelection ->
       case model.cursorMode of
         SelectionInProgress -> (model, Cmd.none)
@@ -169,12 +188,17 @@ update message model =
             , selectionMode = SingleSelect
             }
     MouseDown coords ->
-      updateModelOnly
-        { model
-        | cursorMode = DragCursor coords
-        }
+      case (model.cursorMode, model.intent) of
+        (_, ToMovePath _ _ _) -> (model, Cmd.none)
+        _ -> 
+          updateModelOnly
+            { model
+            | cursorMode = DragCursor coords
+            }
     MouseUp ending ->
       case (model.cursorMode, model.intent) of
+        (_, ToMovePath _ _ _) ->
+          updateModelOnly { model | intent = Explore }
         (_, ResizeCanvasItemInstance _ _ _) ->
           updateModelOnly { model | intent = Explore }
         (DragCursor starting, CreateCanvasItemInstance item) ->
@@ -307,8 +331,8 @@ updateSelectedItemCoordinates model starting ending =
   in
     { model | instantiatedItems = updatedItems, selectedItems = selectedItems }
 
-resizeCanvasItem : CanvasItem -> Coordinates -> Coordinates -> Corner -> CanvasItem
-resizeCanvasItem originalItem startingCoords currentCoords corner =
+resizeCanvasItem : CanvasItem -> Coordinates -> Coordinates -> AnchorPosition -> CanvasItem
+resizeCanvasItem originalItem startingCoords currentCoords anchor =
   let
     deltaX = currentCoords.x - startingCoords.x
     deltaY = currentCoords.y - startingCoords.y
@@ -316,7 +340,7 @@ resizeCanvasItem originalItem startingCoords currentCoords corner =
   in
     case originalItem of
       Part upperLeft lowerRight ->
-        case corner of
+        case anchor of
           UpperLeft ->
             Part
               { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
@@ -345,9 +369,60 @@ resizeCanvasItem originalItem startingCoords currentCoords corner =
               { x = max (upperLeft.x + threshold) (lowerRight.x + deltaX)
               , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
               }
-      -- TODO: Implement resizing the rest of the item types
-      _ ->
-        originalItem
+      SourceSink center longRadius ->
+        let
+          shortRadius = toFloat longRadius * 0.8 |> round
+          (upperLeft, lowerRight) = ovalToBoundingBox center longRadius shortRadius
+          (newBoundingBoxUpperLeft, newBoundingBoxLowerRight) =
+            case anchor of
+              UpperLeft ->
+                ( { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
+                  , y = min (lowerRight.y - threshold) (upperLeft.y + deltaY)
+                  }
+                , lowerRight
+                )
+              UpperRight ->
+                ( { x = upperLeft.x
+                  , y = min (lowerRight.y - threshold) (upperLeft.y + deltaY)
+                  }
+                , { x = max (upperLeft.x + threshold) (lowerRight.x + deltaX)
+                  , y = lowerRight.y
+                  }
+                )
+              LowerLeft ->
+                ( { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
+                  , y = upperLeft.y
+                  }
+                , { x = lowerRight.x
+                  , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
+                  }
+                )
+              LowerRight ->
+                ( upperLeft
+                , { x = max (upperLeft.x + threshold) (lowerRight.x + deltaX)
+                  , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
+                  }
+                )
+          (newCenter, newLongRadius, _) = boundingBoxToOval newBoundingBoxUpperLeft newBoundingBoxLowerRight
+        in
+          SourceSink newCenter newLongRadius
+      _ -> originalItem
+
+ovalToBoundingBox : Coordinates -> Int -> Int -> (Coordinates, Coordinates)
+ovalToBoundingBox center longRadius shortRadius =
+  ( { x = center.x - longRadius, y = center.y - shortRadius }
+  , { x = center.x + longRadius, y = center.y + shortRadius }
+  )
+
+boundingBoxToOval : Coordinates -> Coordinates -> (Coordinates, Int, Int)
+boundingBoxToOval upperLeft lowerRight =
+  let
+    longRadius = (lowerRight.x - upperLeft.x) // 2
+    shortRadius = (lowerRight.y - upperLeft.y) // 2
+    centerX = upperLeft.x + longRadius
+    centerY = upperLeft.y + shortRadius
+  in
+    ({ x = centerX, y = centerY }, longRadius, shortRadius)
 
 replaceCanvasItemInstanceById : List CanvasItemInstance -> Int -> CanvasItem -> List CanvasItemInstance
 replaceCanvasItemInstanceById allItems id newItem =
@@ -399,12 +474,34 @@ canvas model =
       ]
       (definitions ++ canvasItems)
 
+movementCircleAttributes : Bool -> List (Svg.Attribute Msg)
+movementCircleAttributes toDisplay =
+  [ SA.d "M 5, 5 m -2, 0 a 2,2 0 1,0 5,0 a 2,2 0 1,0 -5,0"
+  , SA.fill "white"
+  , SA.stroke "black"
+  , SA.visibility (if toDisplay then "visible" else "hidden")
+  ]
+
+makeMovementCirlces : CanvasItemInstance -> Bool -> List Coordinates -> List (Svg.Svg Msg)
+makeMovementCirlces item toDisplay points =
+  let
+    makeCircle i { x, y } =
+      Svg.path
+        ( movementCircleAttributes toDisplay ++
+          [ SA.transform ("translate(" ++ String.fromInt (x - 5) ++ "," ++ String.fromInt (y - 5) ++ ")")
+          , SE.onMouseDown (MovePath item i { x = x, y = y})
+          ]
+        )
+        []
+  in
+    List.indexedMap makeCircle points
+
 -- Selection circle around visual elements for resizing.
-makeResizeCircle : Coordinates -> CanvasItemInstance -> Int -> Int -> Corner -> Svg.Svg Msg
-makeResizeCircle cursorCoords item width height corner =
+makeResizeCircles : Coordinates -> CanvasItemInstance -> Int -> Int -> Bool -> AnchorPosition -> Svg.Svg Msg
+makeResizeCircles cursorCoords item width height toDisplay anchor =
   let
     (offsetX, offsetY) =
-      case corner of
+      case anchor of
         UpperLeft -> (0, 0)
         UpperRight -> (width, 0)
         LowerLeft -> (0, height)
@@ -413,12 +510,12 @@ makeResizeCircle cursorCoords item width height corner =
     y = String.fromInt (offsetY - 5)
   in
     Svg.path
-      [ SA.d "M 5, 5 m -2, 0 a 2,2 0 1,0 5,0 a 2,2 0 1,0 -5,0"
-      , SA.fill "white"
-      , SA.stroke "black"
-      , SA.transform ("translate(" ++ x ++ "," ++ y ++ ")")
-      , SE.onMouseDown (ResizeItem item cursorCoords corner)
-      ]
+      (
+        movementCircleAttributes toDisplay ++
+          [ SA.transform ("translate(" ++ x ++ "," ++ y ++ ")")
+          , SE.onMouseDown (ResizeItem item cursorCoords anchor)
+          ]
+      )
       []
 
 displayResizeOption : Intent -> CanvasItemInstance -> Coordinates -> Coordinates -> Coordinates -> List (Svg.Svg Msg)
@@ -430,16 +527,14 @@ displayResizeOption intent item cursorCoords upperLeft lowerRight =
         _ -> False
     width = lowerRight.x - upperLeft.x
     height = lowerRight.y - upperLeft.y
-    makeCircle = makeResizeCircle cursorCoords item width height
+    toDisplay = isResizing || withinView cursorCoords upperLeft lowerRight
+    makeCircle = makeResizeCircles cursorCoords item width height toDisplay
   in
-    if isResizing || withinView cursorCoords upperLeft lowerRight
-    then
-      [ makeCircle UpperLeft
-      , makeCircle UpperRight
-      , makeCircle LowerLeft
-      , makeCircle LowerRight
-      ]
-    else []
+    [ makeCircle UpperLeft
+    , makeCircle UpperRight
+    , makeCircle LowerLeft
+    , makeCircle LowerRight
+    ]
 
 withinView : Coordinates -> Coordinates -> Coordinates -> Bool
 withinView point upperLeft lowerRight =
@@ -490,47 +585,67 @@ displayCanvasItemInstance model item =
         let
           coordsToString { x, y } = String.fromInt x ++ "," ++ String.fromInt y
           pointsString = List.map coordsToString points |> String.join " "
+          toDisplayMovementCircles =
+            case model.hoveredItem of
+              Just hovered -> hovered == item
+              Nothing -> False
+          movementCircles = makeMovementCirlces itemToDisplay toDisplayMovementCircles points
         in
           Svg.g
             [ SE.onMouseDown (SelectItem item)
+            , SE.onMouseOver (HoveredItem item)
+            , SE.onMouseOut UnhoveredItem
             ]
-            [
-              -- This is the wire visible to the user.
-              (
-                Svg.polyline
+            (
+              [
+                -- This is the wire visible to the user.
+                (
+                  Svg.polyline
+                    [ SA.fill "white"
+                    , SA.stroke (if isSelected then "blue" else "black")
+                    , SA.points pointsString
+                    , SA.strokeWidth "1"
+                    , SA.markerEnd "url(#arrowhead)"
+                    ]
+                    []
+                ),
+                -- This is the wire hidden to the user but of a wider stroke so
+                -- that the user can click on the wire more easily.
+                (
+                  Svg.polyline
+                    [ SA.fill "white"
+                    , SA.stroke "black"
+                    , SA.points pointsString
+                    , SA.fillOpacity "0.0"
+                    , SA.strokeOpacity "0.0"
+                    , SA.strokeWidth "20"
+                    ]
+                    []
+                )
+              ] ++ movementCircles
+            )
+      SourceSink center longRadius ->
+        let
+          shortRadius = toFloat longRadius * 0.80 |> round
+          (upperLeft, lowerRight) = ovalToBoundingBox center longRadius shortRadius
+          resizeOption = displayResizeOption model.intent itemToDisplay model.cursorCoords upperLeft lowerRight
+        in
+          Svg.g
+            [ SE.onMouseDown (SelectItem item)
+            , SA.transform ("translate(" ++ String.fromInt upperLeft.x ++ "," ++ String.fromInt upperLeft.y ++ ")")
+            ]
+            (
+              [ Svg.ellipse
                   [ SA.fill "white"
                   , SA.stroke (if isSelected then "blue" else "black")
-                  , SA.points pointsString
-                  , SA.strokeWidth "1"
-                  , SA.markerEnd "url(#arrowhead)"
+                  , SA.cx (String.fromInt longRadius)
+                  , SA.cy (String.fromInt shortRadius)
+                  , SA.rx (String.fromInt longRadius)
+                  , SA.ry (String.fromInt shortRadius)
                   ]
                   []
-              ),
-              -- This is the wire hidden to the user but of a wider stroke so
-              -- that the user can click on the wire more easily.
-              (
-                Svg.polyline
-                  [ SA.fill "white"
-                  , SA.stroke "black"
-                  , SA.points pointsString
-                  , SA.fillOpacity "0.0"
-                  , SA.strokeOpacity "0.0"
-                  , SA.strokeWidth "20"
-                  ]
-                  []
-              )
-            ]
-      SourceSink center longRadius ->
-        Svg.ellipse
-          [ SA.fill "white"
-          , SA.stroke (if isSelected then "blue" else "black")
-          , SE.onMouseDown (SelectItem item)
-          , SA.cx (String.fromInt center.x)
-          , SA.cy (String.fromInt center.y)
-          , SA.rx (String.fromInt longRadius)
-          , SA.ry (toFloat longRadius * 0.80 |> round |> String.fromInt)
-          ]
-          []
+              ] ++ resizeOption
+            )
       Text center label ->
         Svg.text_
           [ SA.fill "black"
