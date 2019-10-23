@@ -13,6 +13,8 @@ import Svg.Events as SE
 import Html
 import Json.Decode as JD
 
+import Debug
+
 
 -- *** Application model ***
 
@@ -22,11 +24,14 @@ type Msg
   = NoOp
   | MouseMove Coordinates
   | KeyPress String
+  | KeyUp String
   | ToggleSelect CanvasItemInstance
   | Point Coordinates
   | Mark Coordinates
   | Roll
   | Hit
+
+type SelectionMode = SingleSelect | MultipleSelect
 
 type alias Model =
   { cursorCoords : Coordinates
@@ -38,6 +43,7 @@ type alias Model =
   , cursorMode : CursorMode
   , intent : Intent
   , canvasItemCount : Int
+  , selectionMode : SelectionMode
   }
 
 type alias Coordinates = { x : Int, y : Int }
@@ -90,6 +96,7 @@ initialModel =
   , cursorMode = FreeFormCursor
   , intent = Explore
   , canvasItemCount = List.length initialCanvasItemInstances
+  , selectionMode = SingleSelect
   }
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -99,16 +106,31 @@ update message model =
     MouseMove coords ->
       updateModelOnly { model | cursorCoords = coords }
     KeyPress key -> handleKey model key |> updateModelOnly
+    KeyUp key -> handleKeyUp model key |> updateModelOnly
     ToggleSelect item ->
-      let
-        selected =
-          if isSelectedCanvasItemInstance model item
-          then List.filter ((/=) item) model.selectedItems
-          else item :: model.selectedItems
-      in
-        updateModelOnly { model | selectedItems = selected }
+      case model.selectionMode of
+        SingleSelect ->
+          updateModelOnly { model | selectedItems = [item] }
+        MultipleSelect ->
+          let
+            selected =
+              if isSelectedCanvasItemInstance model item
+              then List.filter ((/=) item) model.selectedItems
+              else item :: model.selectedItems
+            newSelectionMode =
+              if List.length selected == 0
+              then SingleSelect
+              else model.selectionMode
+          in
+            updateModelOnly
+              { model |
+                  selectedItems = selected,
+                  selectionMode = newSelectionMode
+              }
+    -- TODO: To rename
     Point coords ->
       updateModelOnly { model | cursorMode = PointAndMarkCursor coords }
+    -- TODO: To rename
     Mark ending ->
       case (model.cursorMode, model.intent) of
         (PointAndMarkCursor starting, CreateCanvasItemInstance item) ->
@@ -134,6 +156,7 @@ handleKey model key =
     createInstance = createNewCanvasItemInstance model
   in
     case key of
+      "Shift" -> { model | selectionMode = MultipleSelect }
       "c" -> copySelectedCanvasItemInstances model
       "Backspace" -> deleteSelectedCanvasItemInstances model
       "1" -> createInstance <| Part { x = 100, y = 100 } { x = 200, y = 200 }
@@ -141,6 +164,9 @@ handleKey model key =
       "3" -> createInstance <| SourceSink { x = 100, y = 100 } 50
       "4" -> createInstance <| Text { x = 100, y = 100 } "Text"
       _ -> model
+
+handleKeyUp : Model -> String -> Model
+handleKeyUp model key = model
 
 createNewCanvasItemInstance : Model -> CanvasItem -> Model
 createNewCanvasItemInstance model canvasItem =
@@ -194,6 +220,7 @@ subscriptions model =
     , BE.onMouseUp (JD.map Mark mouseDecoder)
     , BE.onMouseMove (JD.map MouseMove mouseDecoder)
     , BE.onKeyDown (JD.map KeyPress keyDecoder)
+    , BE.onKeyUp (JD.map KeyUp keyDecoder)
     ]
 
 mouseDecoder : JD.Decoder Coordinates
@@ -230,7 +257,7 @@ updateSelectedItemCoordinates model starting ending =
   let
     updateCoordinates = updateItemCoordinates starting ending
     process item =
-      if List.member item model.selectedItems
+      if isSelectedCanvasItemInstance model item
       then
         let updatedItem = updateCoordinates item
         in  (updatedItem, Just updatedItem)
