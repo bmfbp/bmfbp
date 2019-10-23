@@ -1509,7 +1509,7 @@ dumplog(_,_,_,_,_,_,_,_,_) :- true.
 ")))
 
 
-(defun calc-bounds-pl (&optional (index 3)
+(defun calc-bounds-pl (&optional (index 3))
   ;; rewrite calc_bounds.pl
   (init index)
   (pprint (esrap:parse 'prolog::pProgram
@@ -1631,5 +1631,16 @@ rule :- a(1), f, b(2), g, c(3), h, d(4), e(5), i.
   (pprint (esrap:parse 'prolog::pProgram
 "
     r :- X is (CX - HalfWidth).
+")))
+
+(defun test18 (&optional (index 3))
+  (init index)
+  (pprint (esrap:parse 'prolog::pProgram
+"
+    r :-
+    Cx >= (L2 - 5),
+    Cx =< R2,
+    Cy >= T2,
+    Cy =< B2.
 ")))
 
