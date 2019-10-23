@@ -1,4 +1,4 @@
-(in-package :arrowgram)
+(in-package :prolog)
 
 (defparameter *all-bindings* nil)
 
@@ -7,6 +7,12 @@
      (setf *all-bindings* nil)
      (top-level-everything ',(paip::replace-?-vars goals))
      *all-bindings*))
+
+(defun function-all-solutions (goals)
+  (setf *all-bindings* nil)
+  (let ((replaced (list (paip::replace-?-vars goals))))
+    (top-level-everything replaced)
+    *all-bindings*))
 
 (defun top-level-everything (goals)
   (paip::prove-all `(,@goals (everything ,@(paip::variables-in goals)))

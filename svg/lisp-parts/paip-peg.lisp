@@ -85,7 +85,7 @@ pUnifyExprNEQ <- pPrimary pNotUnifySame pPrimary
 pIsExpr <- pVariable pIs pExpr
   { (:destructure (v op e)
      #+nil(format *standard-output* \"~&pIsExpr v=~S e=~S~%\" v e)
-     `(prolog:pl-is ,v ,e)) }
+     `(paip::is ,v ,e)) }
 
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
 

@@ -62,8 +62,6 @@
 				     (:file "generic-peg")
 				     (:file "paip-peg")
 				     (:file "prolog-peg")
-				     (:file "prolog-extension")
-				     (:file "paip-extension")
 				     )))
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))
@@ -77,7 +75,8 @@
                     (funcall next))
   :components ((:module contents
 			:pathname "./"
-			:components ((:file "prolog-extension")
+			:components ((:file "everything")
+                                     (:file "prolog-extension")
                                      (:file "paip-extension"))))
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))

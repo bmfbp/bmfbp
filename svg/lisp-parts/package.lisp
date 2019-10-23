@@ -39,7 +39,7 @@
    #:r-bracket
    #:or-bar
 
-   #:fixops
+   #:function-all-solutions
    ))
 
 
