@@ -1,10 +1,16 @@
+;; specific code emission for PAIP prolog
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (peg:into-package "PROLOG"))
 
 (defparameter *peg-rules-paip*
-;; PAIP-specific code generation
+;; generic grammar, not PAIP specific
 "
 pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
+  { (:lambda (x)
+      (case x
+        (prolog:cut paip::!)
+        (otherwise x))) }
 
 pParenthesizedExpr <- pLpar pExpr pRpar
   { (:destructure (lp e rp) (declare (ignore lp rp)) e) }
@@ -114,6 +120,6 @@ pTopLevel <- Spacing (pFact / pRule / pDirective)
      (declare (ignore spc))
      thing) }
 pProgram <- pTopLevel+
-  { (:lambda (x) x) }
+  { (:lambda (x) `(progn ,x)) }
 "
 )

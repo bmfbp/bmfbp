@@ -78,7 +78,7 @@ pUnifyExprEQ <- pPrimary pUnifySame pPrimary
 pUnifyExprNEQ <- pPrimary pNotUnifySame pPrimary
 pIsExpr <- pVariable pIs pExpr
   { (:destructure (v op e)
-     (format *standard-output* \"~&pIsExpr v=~S e=~S~%\" v e)
+     #+nil(format *standard-output* \"~&pIsExpr v=~S e=~S~%\" v e)
      `(prolog:pl-is ,v ,e)) }
 
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
@@ -114,6 +114,6 @@ pTopLevel <- Spacing (pFact / pRule / pDirective)
      (declare (ignore spc))
      thing) }
 pProgram <- pTopLevel+
-  { (:lambda (x) `(progn x)) }
+  { (:lambda (x) `(progn ,x)) }
 "
 )

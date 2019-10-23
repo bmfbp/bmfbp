@@ -83,10 +83,10 @@ rule2 :- test1(A,def) , test2(abc, A).
   (format *standard-output* "done~%")
 )
 
-(defun all-pl ()
+(defun all-pl (&optional (index 3))
   ;; NB - escape all backslashes!!! i.e. \ becomes \\
   ;; NB - remove all double-quotes
-  (init 2)
+  (init index)
   (pprint (esrap:parse 'prolog::pProgram
                "
 :- initialization(main).
@@ -1509,9 +1509,9 @@ dumplog(_,_,_,_,_,_,_,_,_) :- true.
 ")))
 
 
-(defun calc-bounds-pl ()
+(defun calc-bounds-pl (&optional (index 3)
   ;; rewrite calc_bounds.pl
-  (init 2)
+  (init index)
   (pprint (esrap:parse 'prolog::pProgram
 "
 :- initialization(main).
@@ -1594,7 +1594,7 @@ createEllipseBoundingBox(ID) :-
 "
 )))
 
-(defun test15 (&optional (index 2))
+(defun test15 (&optional (index 3))
   ;; rewrite calc_bounds.pl
   (init index)
   (pprint (esrap:parse 'prolog::pProgram
@@ -1616,7 +1616,7 @@ createBoundingBoxes :-
 "
 )))
 
-(defun test16 (&optional (index 2))
+(defun test16 (&optional (index 3))
   ;; rewrite calc_bounds.pl
   (init index)
   (pprint (esrap:parse 'prolog::pProgram
@@ -1625,7 +1625,7 @@ rule :- a(1), f, b(2), g, c(3), h, d(4), e(5), i.
 "
 )))
 
-(defun test17 (&optional (index 2))
+(defun test17 (&optional (index 3))
   ;; rewrite calc_bounds.pl
   (init index)
   (pprint (esrap:parse 'prolog::pProgram
