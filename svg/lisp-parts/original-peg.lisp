@@ -20,7 +20,8 @@ pUnifyExpr <- pPrimary pUnifyOp pPrimary
 pIsExpr <- pVariable pIs pExpr
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
 pFact <- pFunctor Spacing pPeriod
-pCommaSeparatedClauses <- (pPrimary pComma)* pPrimary
+pClause <- pPrimary
+pCommaSeparatedClauses <- (pClause pComma)* pClause
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
 pDirective <- pColonDash CommentStuff* EndOfLine
 pTopLevel <- Spacing (pFact / pRule / pDirective)
