@@ -94,14 +94,16 @@ pFact <- pFunctor Spacing pPeriod
      (declare (ignore spc p))
      f) }
 
-pCommaSeparatedClauses <- pPrimaryCommaUsedOnlyByCommaSeparatedClauses* pPrimary
+pClause <- pPrimary
+
+pCommaSeparatedClauses <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pPrimary
   { (:destructure (lis p)
      (when (atom p) (setf p (list p)))
      (if lis
          `(,@lis ,p)
        (list p))) }
 
-pPrimaryCommaUsedOnlyByCommaSeparatedClauses <- pPrimary pComma
+pClauseCommaUsedOnlyByCommaSeparatedClauses <- pClause pComma
  { (:destructure (p c)
     (declare (ignore c))
     (when (atom p) (setf p (list p)))
