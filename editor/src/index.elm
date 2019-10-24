@@ -248,12 +248,33 @@ deleteSelectedCanvasItemInstances model =
 copySelectedCanvasItemInstances : Model -> Model
 copySelectedCanvasItemInstances model =
   let
-    (newModel, newItems) = List.foldl foldCopy (model, []) model.selectedItems
+    (newModel, copiedItems) = List.foldl foldCopy (model, []) model.selectedItems
+    move instance = { instance | item = moveItem 20 20 instance.item }
+    newItems = List.map move copiedItems
   in
     { newModel
         | instantiatedItems = List.append newItems model.instantiatedItems
         , selectedItems = newItems
     }
+
+moveItem : Int -> Int -> CanvasItem -> CanvasItem
+moveItem deltaX deltaY item =
+  let
+    move = moveCoordinates deltaX deltaY
+  in
+    case item of
+      Part upperLeft lowerRight ->
+        Part (move upperLeft) (move lowerRight)
+      Wire points ->
+        Wire <| List.map move points
+      SourceSink center longRadius ->
+        SourceSink (move center) longRadius
+      Text center label ->
+        Text (move center) label
+
+moveCoordinates : Int -> Int -> Coordinates -> Coordinates
+moveCoordinates deltaX deltaY coords =
+  { coords | x = coords.x + deltaX, y = coords.y + deltaY }
 
 foldCopy : CanvasItemInstance -> (Model, List CanvasItemInstance) -> (Model, List CanvasItemInstance)
 foldCopy item (model, newItems) =
