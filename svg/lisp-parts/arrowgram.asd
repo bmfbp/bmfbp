@@ -90,19 +90,11 @@
                     (funcall next))
   :components ((:module contents
 			:pathname "./"
-			:components ((:file "calc-bounds")))))
+			:components ((:file "fb")
+                                     (:file "calc-bounds")))))
   ;; do not clear db here
   ;; :perform (asdf:load-op :before (op c)
   ;;            (funcall (uiop/package:find-symbol* :clear-db :paip))))
-
-(defsystem arrowgram/lwpasses ;; old - to be removed once we see life in arrowgram/try
-  :depends-on (arrowgram/database)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3)
-                                         (safety 3)
-                                         (speed 0)))
-                    (funcall next))
-  :components ((:file "lwpasses")))
 
 (defsystem arrowgram/try
   :depends-on (arrowgram/database)

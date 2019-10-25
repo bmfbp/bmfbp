@@ -1,4 +1,5 @@
-(in-package :prolog)
+;(in-package :prolog)
+(in-package :paip)
 
 (defparameter *all-bindings* nil)
 
@@ -9,6 +10,8 @@
      *all-bindings*))
 
 (defun function-all-solutions (goals)
+  (paip::prolog-compile-symbols)
+  (format *standard-output* "~&function-all-solutions goals=/~S/~%" goals)
   (setf *all-bindings* nil)
   (let ((replaced (paip::replace-?-vars goals)))
     (top-level-everything replaced)
