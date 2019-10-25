@@ -1,5 +1,7 @@
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (peg:into-package "PROLOG"))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PROLOG"))
+  (peg:into-package "PAIP"))
 
 ;; this is the full grammar w/o code emission - when it succeeds parsing test13, then we can move on to code emission
 ;;  before refactoring

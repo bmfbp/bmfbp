@@ -1,5 +1,7 @@
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (peg:into-package "PROLOG"))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PROLOG"))
+  (peg:into-package "PAIP"))
 
 (defparameter *peg-rules-generic*
 ;; generic grammar, not PAIP specific

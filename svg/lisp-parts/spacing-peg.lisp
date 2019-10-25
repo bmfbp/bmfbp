@@ -1,5 +1,8 @@
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (peg:into-package "PROLOG"))
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PROLOG"))
+  (peg:into-package "PAIP"))
 
 (peg:rule prolog::Spacing "(pSpace / Comment)*"
  (:lambda (list)

@@ -1,5 +1,7 @@
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (peg:into-package "PROLOG"))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PROLOG"))
+  (peg:into-package "PAIP"))
 
 ;; no floats in the prolog we're working with
 (peg:rule prolog::pNumber "[0-9] pIntegerFollow* Spacing"

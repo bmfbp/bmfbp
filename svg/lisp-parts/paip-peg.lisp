@@ -1,7 +1,9 @@
 ;; specific code emission for PAIP prolog
 
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (peg:into-package "PROLOG"))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PROLOG"))
+  (peg:into-package "PAIP"))
 
 (defparameter *peg-rules-paip*
 ;; generic grammar, not PAIP specific

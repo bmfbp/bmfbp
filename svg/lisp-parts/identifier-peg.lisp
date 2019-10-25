@@ -1,5 +1,7 @@
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (peg:into-package "PROLOG"))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PROLOG"))
+  (peg:into-package "PAIP"))
 
 (peg:rule prolog::pIdentifier "(QuotedAtom / Identifier1) Spacing"
   (:destructure (id spc)

@@ -1,4 +1,5 @@
-(in-package :prolog)
+;(in-package :prolog)
+(in-package :paip)
 
 (defun test1 ()
   (init)
