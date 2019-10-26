@@ -75,9 +75,7 @@
                     (funcall next))
   :components ((:module contents
 			:pathname "./"
-			:components ((:file "everything")
-                                     (:file "prolog-extension")
-                                     (:file "paip-extension"))))
+			:components ((:file "everything"))))
   :perform (asdf:load-op :before (op c)
               (funcall (uiop/package:find-symbol* :clear-db :paip))))
 
@@ -88,16 +86,30 @@
                                          (safety 3)
                                          (speed 0)))
                     (funcall next))
+  ;; do not clear the db here
   :components ((:module contents
 			:pathname "./"
 			:components ((:file "fb")
+                                     (:file "prolog-extension")
+                                     (:file "paip-extension")))))
+
+(defsystem arrowgram/rules
+  :depends-on (arrowgram/database)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  ;; do not clear the db here
+  :components ((:module contents
+			:pathname "./"
+			:components ((:file "calc-bounds1")
+                                     (:file "calc-bounds2")
                                      (:file "calc-bounds")))))
-  ;; do not clear db here
-  ;; :perform (asdf:load-op :before (op c)
-  ;;            (funcall (uiop/package:find-symbol* :clear-db :paip))))
+
 
 (defsystem arrowgram/try
-  :depends-on (arrowgram/database)
+  :depends-on (arrowgram/rules)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
                                          (safety 3)

@@ -8,5 +8,10 @@
 ;;;         (@:exit-when (eq 'EOF clause))
 ;;;         (paip::add-clause (list clause))))
 
-  (paip::prolog-compile-symbols)  ;; compile of TOP_LEVEL_PROVE fails if calc_bounds/0 has not been compiled
-  (paip::?- (calc_bounds_main)))
+ ;; forward refs - need to compile some functions before others  (paip::prolog-compile-symbols '(ConditionalCreateEllispBB))
+ (paip::prolog-compile-symbols '(condrect condspeech condtext))
+ (paip::prolog-compile-symbols '(createboundingboxes))
+
+ (paip::prolog-compile-symbols)
+  ;(paip::?- (calc_bounds_main))
+ (calc_bounds_main/0 #'paip::ignore))
