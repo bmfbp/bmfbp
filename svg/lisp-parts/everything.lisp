@@ -7,6 +7,7 @@
   `(progn
      (setf *all-bindings* nil)
      (top-level-everything ',(paip::replace-?-vars goals))
+     (format *standard-output* "~&function-all-solutions final bindings=/~S/~%" *all-bindings*)
      *all-bindings*))
 
 (defun function-all-solutions (goals)
@@ -15,6 +16,7 @@
   (setf *all-bindings* nil)
   (let ((replaced (paip::replace-?-vars goals)))
     (top-level-everything replaced)
+     (format *standard-output* "~&function-all-solutions final bindings=/~S/~%" *all-bindings*)
     *all-bindings*))
 
 (defun top-level-everything (goals)
