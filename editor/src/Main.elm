@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Url
 import Browser.Navigation
@@ -12,8 +12,10 @@ import Svg.Attributes as SA
 import Svg.Events as SE
 import Html
 import Json.Decode as JD
+import Json.Encode as JE
+import String.Interpolate as SI
 
-import Debug
+port saveSvg : JE.Value -> Cmd msg
 
 
 -- *** Application model ***
@@ -73,9 +75,13 @@ type CursorMode
 type alias CanvasItemInstance = { id : Int, item : CanvasItem }
 
 type CanvasItem
-  = Part Coordinates Coordinates
-  | Wire (List Coordinates)
-  | SourceSink Coordinates Int
+  -- A rectangle is defined by the upper-left and the lower-right coordinates.
+  = Rect Coordinates Coordinates
+  | Polyline (List Coordinates)
+  -- Ellipse is constructed using the upper-left and the lower-right corners of
+  -- the bounding box of the ellipse.
+  | Ellipse Coordinates Coordinates
+  -- A text is defined by upper-left coordinates and the text to display.
   | Text Coordinates String
 
 type AnchorPosition
@@ -89,12 +95,11 @@ type AnchorPosition
 -- MOCK: This will be removed once we have the ability to create new canvas items.
 initialCanvasItemInstances : List CanvasItemInstance
 initialCanvasItemInstances =
-  [
-    { id = 0, item = SourceSink { x = 500, y = 200 } 50 },
-    { id = 1, item = Part { x = 24, y = 73 } { x = 73, y = 108 } },
-    { id = 2, item = Part { x = 284, y = 73 } { x = 333, y = 108 } },
-    { id = 3, item = Wire [{ x = 73, y = 83 }, { x = 284, y = 83 }] },
-    { id = 4, item = Text { x = 500, y = 200 } "Sink" }
+  [ { id = 0, item = Ellipse { x = 50, y = 60 } { x = 150, y = 140 } }
+  , { id = 1, item = Text { x = 59, y = 103 } "top-level svg" }
+  , { id = 2, item = Rect { x = 358, y = 67 } { x = 438, y = 136 } }
+  , { id = 3, item = Text { x = 370, y = 104 } "compile composite" }
+  , { id = 4, item = Polyline [{ x = 150, y = 105}, { x = 356, y = 103 }] }
   ]
 
 initialModel : Model
@@ -122,11 +127,11 @@ update message model =
           case (updatedModel.cursorMode, updatedModel.intent) of
             (_, ToMovePath { id, item } index point) ->
               case item of
-                Wire points ->
+                Polyline points ->
                   let
                     updatePoint i pt = if i == index then coords else pt
                     newPoints = List.indexedMap updatePoint points
-                    updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id (Wire newPoints)
+                    updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id (Polyline newPoints)
                   in
                     { updatedModel | instantiatedItems = updatedItems }
                 _ -> updatedModel
@@ -143,7 +148,7 @@ update message model =
             _ -> updatedModel
       in
         updateModelOnly newModel
-    KeyPress key -> handleKey model key |> updateModelOnly
+    KeyPress key -> handleKeyDown model key
     KeyUp key -> handleKeyUp model key |> updateModelOnly
     SelectItem item ->
       case model.selectionMode of
@@ -213,20 +218,70 @@ update message model =
             updateModelOnly { updatedModel | cursorMode = FreeFormCursor }
         _ -> updateModelOnly { model | cursorMode = FreeFormCursor }
 
-handleKey : Model -> String -> Model
-handleKey model key =
+itemsToSvg : List CanvasItem -> JE.Value
+itemsToSvg items =
+  let
+    transformedItems = List.map transform items
+    transform item =
+      case item of
+        Rect upperLeft lowerRight ->
+          let
+            left = upperLeft.x |> String.fromInt
+            top = upperLeft.y |> String.fromInt
+            width = lowerRight.x - upperLeft.x |> String.fromInt
+            height = lowerRight.y - upperLeft.y |> String.fromInt
+          in
+            SI.interpolate
+              "<g transform=\"translate({0}, {1})\"><rect width=\"{2}\" height=\"{3}\"></rect></g>"
+              [left, top, width, height]
+        Polyline points ->
+          let
+            firstPoint = List.head points |> Maybe.withDefault { x = 0, y = 0 }
+            (left, top) = (firstPoint.x, firstPoint.y)
+            translatedPoints = List.map translate points
+            translate point = String.fromInt (point.x - left) ++ "," ++ String.fromInt (point.y - top)
+          in
+            SI.interpolate
+              "<g transform=\"translate({0}, {1})\"><polyline points=\"{2}\"></polyline></g>"
+              [String.fromInt left, String.fromInt top, String.join " " translatedPoints]
+        Ellipse upperLeft lowerRight ->
+          let
+            (center, longRadius, shortRadius) = boundingBoxToEllipse upperLeft lowerRight
+            left = upperLeft.x
+            top = upperLeft.y
+            centerRelativeLeft = center.x - left
+            centerRelativeTop = center.y - top
+          in
+            SI.interpolate
+              "<g transform=\"translate({0}, {1})\"><ellipse cx=\"{2}\" cy=\"{3}\" rx=\"{4}\" ry=\"{5}\"></ellipse></g>"
+              (List.map String.fromInt [left, top, centerRelativeLeft, centerRelativeTop, longRadius, shortRadius])
+        Text upperLeft text ->
+          SI.interpolate
+            "<g transform=\"translate({0}, {1})\"><text>{2}</text></g>"
+            [String.fromInt upperLeft.x, String.fromInt upperLeft.y, text]
+  in
+    JE.string ("<svg>" ++ String.join "" transformedItems ++ "</svg>")
+
+handleKeyDown : Model -> String -> (Model, Cmd Msg)
+handleKeyDown model key =
   let
     createInstance = createNewCanvasItemInstance model
+    defaultCmd = Cmd.none
   in
     case key of
-      "Shift" -> { model | selectionMode = MultipleSelect }
-      "c" -> copySelectedCanvasItemInstances model
-      "Backspace" -> deleteSelectedCanvasItemInstances model
-      "1" -> createInstance <| Part { x = 100, y = 100 } { x = 200, y = 200 }
-      "2" -> createInstance <| Wire [{ x = 100, y = 100 }, { x = 300, y = 100}]
-      "3" -> createInstance <| SourceSink { x = 100, y = 100 } 50
-      "4" -> createInstance <| Text { x = 100, y = 100 } "Text"
-      _ -> model
+      -- Multiple select
+      "Shift" -> ({ model | selectionMode = MultipleSelect }, defaultCmd)
+      -- Delete
+      "Backspace" -> (deleteSelectedCanvasItemInstances model, defaultCmd)
+      -- Copy
+      "c" -> (copySelectedCanvasItemInstances model, defaultCmd)
+      -- Save
+      "s" -> (model, List.map .item model.instantiatedItems |> itemsToSvg |> saveSvg)
+      "1" -> (createInstance <| Rect { x = 100, y = 100 } { x = 200, y = 200 }, defaultCmd)
+      "2" -> (createInstance <| Polyline [{ x = 100, y = 100 }, { x = 300, y = 100 }], defaultCmd)
+      "3" -> (createInstance <| Ellipse { x = 100, y = 100 } { x = 150, y = 140 }, defaultCmd)
+      "4" -> (createInstance <| Text { x = 100, y = 100 } "Text", defaultCmd)
+      _ -> (model, defaultCmd)
 
 handleKeyUp : Model -> String -> Model
 handleKeyUp model key = model
@@ -263,14 +318,14 @@ moveItem deltaX deltaY item =
     move = moveCoordinates deltaX deltaY
   in
     case item of
-      Part upperLeft lowerRight ->
-        Part (move upperLeft) (move lowerRight)
-      Wire points ->
-        Wire <| List.map move points
-      SourceSink center longRadius ->
-        SourceSink (move center) longRadius
-      Text center label ->
-        Text (move center) label
+      Rect upperLeft lowerRight ->
+        Rect (move upperLeft) (move lowerRight)
+      Polyline points ->
+        Polyline <| List.map move points
+      Ellipse upperLeft lowerRight ->
+        Ellipse (move upperLeft) (move lowerRight)
+      Text upperLeft label ->
+        Text (move upperLeft) label
 
 moveCoordinates : Int -> Int -> Coordinates -> Coordinates
 moveCoordinates deltaX deltaY coords =
@@ -321,18 +376,17 @@ updateItemCoordinates starting ending canvasItem =
   let
     dx = ending.x - starting.x
     dy = ending.y - starting.y
+    move = moveCoordinates dx dy
     item =
       case canvasItem.item of
-        Part upperLeft lowerRight ->
-          Part
-            { x = upperLeft.x + dx, y = upperLeft.y + dy }
-            { x = lowerRight.x + dx, y = lowerRight.y + dy }
-        Wire points ->
-          Wire (List.map (\{ x, y } -> { x = x + dx, y = y + dy }) points)
-        SourceSink center radius ->
-          SourceSink { x = center.x + dx, y = center.y + dy } radius
-        Text center label ->
-          Text { x = center.x + dx, y = center.y + dy } label
+        Rect upperLeft lowerRight ->
+          Rect (move upperLeft) (move lowerRight)
+        Polyline points ->
+          Polyline (List.map move points)
+        Ellipse upperLeft lowerRight ->
+          Ellipse (move upperLeft) (move lowerRight)
+        Text upperLeft label ->
+          Text (move upperLeft) label
   in
     { canvasItem | item = item }
 
@@ -360,16 +414,16 @@ resizeCanvasItem originalItem startingCoords currentCoords anchor =
     threshold = 25
   in
     case originalItem of
-      Part upperLeft lowerRight ->
+      Rect upperLeft lowerRight ->
         case anchor of
           UpperLeft ->
-            Part
+            Rect
               { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
               , y = min (lowerRight.y - threshold) (upperLeft.y + deltaY)
               }
               lowerRight
           UpperRight ->
-            Part
+            Rect
               { x = upperLeft.x
               , y = min (lowerRight.y - threshold) (upperLeft.y + deltaY)
               }
@@ -377,7 +431,7 @@ resizeCanvasItem originalItem startingCoords currentCoords anchor =
               , y = lowerRight.y
               }
           LowerLeft ->
-            Part
+            Rect
               { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
               , y = upperLeft.y
               }
@@ -385,16 +439,14 @@ resizeCanvasItem originalItem startingCoords currentCoords anchor =
               , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
               }
           LowerRight ->
-            Part
+            Rect
               upperLeft
               { x = max (upperLeft.x + threshold) (lowerRight.x + deltaX)
               , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
               }
-      SourceSink center longRadius ->
+      Ellipse upperLeft lowerRight ->
         let
-          shortRadius = toFloat longRadius * 0.8 |> round
-          (upperLeft, lowerRight) = ovalToBoundingBox center longRadius shortRadius
-          (newBoundingBoxUpperLeft, newBoundingBoxLowerRight) =
+          (newUpperLeft, newLowerRight) =
             case anchor of
               UpperLeft ->
                 ( { x = min (lowerRight.x - threshold) (upperLeft.x + deltaX)
@@ -424,26 +476,19 @@ resizeCanvasItem originalItem startingCoords currentCoords anchor =
                   , y = max (upperLeft.y + threshold) (lowerRight.y + deltaY)
                   }
                 )
-          (newCenter, newLongRadius, _) = boundingBoxToOval newBoundingBoxUpperLeft newBoundingBoxLowerRight
         in
-          SourceSink newCenter newLongRadius
+          Ellipse newUpperLeft newLowerRight
       _ -> originalItem
 
-ovalToBoundingBox : Coordinates -> Int -> Int -> (Coordinates, Coordinates)
-ovalToBoundingBox center longRadius shortRadius =
-  ( { x = center.x - longRadius, y = center.y - shortRadius }
-  , { x = center.x + longRadius, y = center.y + shortRadius }
-  )
-
-boundingBoxToOval : Coordinates -> Coordinates -> (Coordinates, Int, Int)
-boundingBoxToOval upperLeft lowerRight =
+boundingBoxToEllipse : Coordinates -> Coordinates -> (Coordinates, Int, Int)
+boundingBoxToEllipse upperLeft lowerRight =
   let
-    longRadius = (lowerRight.x - upperLeft.x) // 2
-    shortRadius = (lowerRight.y - upperLeft.y) // 2
-    centerX = upperLeft.x + longRadius
-    centerY = upperLeft.y + shortRadius
+    radiusX = (lowerRight.x - upperLeft.x) // 2
+    radiusY = (lowerRight.y - upperLeft.y) // 2
+    centerX = upperLeft.x + radiusX
+    centerY = upperLeft.y + radiusY
   in
-    ({ x = centerX, y = centerY }, longRadius, shortRadius)
+    ({ x = centerX, y = centerY }, radiusX, radiusY)
 
 replaceCanvasItemInstanceById : List CanvasItemInstance -> Int -> CanvasItem -> List CanvasItemInstance
 replaceCanvasItemInstanceById allItems id newItem =
@@ -579,7 +624,7 @@ displayCanvasItemInstance model item =
         _ -> item
   in
     case itemToDisplay.item of
-      Part upperLeft lowerRight ->
+      Rect upperLeft lowerRight ->
         let
           x = String.fromInt upperLeft.x
           y = String.fromInt upperLeft.y
@@ -602,7 +647,7 @@ displayCanvasItemInstance model item =
                   []
               ] ++ resizeOption
             )
-      Wire points ->
+      Polyline points ->
         let
           coordsToString { x, y } = String.fromInt x ++ "," ++ String.fromInt y
           pointsString = List.map coordsToString points |> String.join " "
@@ -645,10 +690,9 @@ displayCanvasItemInstance model item =
                 )
               ] ++ movementCircles
             )
-      SourceSink center longRadius ->
+      Ellipse upperLeft lowerRight ->
         let
-          shortRadius = toFloat longRadius * 0.80 |> round
-          (upperLeft, lowerRight) = ovalToBoundingBox center longRadius shortRadius
+          (center, longRadius, shortRadius) = boundingBoxToEllipse upperLeft lowerRight
           resizeOption = displayResizeOption model.intent itemToDisplay model.cursorCoords upperLeft lowerRight
         in
           Svg.g
@@ -667,11 +711,12 @@ displayCanvasItemInstance model item =
                   []
               ] ++ resizeOption
             )
-      Text center label ->
+      Text upperLeft label ->
         Svg.text_
           [ SA.fill "black"
-          , SA.x (String.fromInt center.x)
-          , SA.y (String.fromInt center.y)
+          , SA.fontSize "8pt"
+          , SA.x (String.fromInt upperLeft.x)
+          , SA.y (String.fromInt upperLeft.y)
           , SA.stroke (if isSelected then "blue" else "black")
           , SE.onMouseDown (SelectItem item)
           ]
