@@ -19,6 +19,13 @@
       const filename = 'diagram.svg';
       saveAs(new Blob([data], { type: filetype }), filename);
     });
+
+    function windowHasResized() {
+      app.ports.viewPortHasResized.send([window.innerWidth, window.innerHeight]);
+    }
+
+    window.onresize = windowHasResized;
+    window.onload = windowHasResized;
   </script>
 </body>
 </html>

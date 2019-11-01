@@ -15,7 +15,18 @@ import Json.Decode as JD
 import Json.Encode as JE
 import String.Interpolate as SI
 
+import Debug
+
+
+-- *** Interop ***
+
 port saveSvg : JE.Value -> Cmd msg
+port viewPortHasResized : (JE.Value -> msg) -> Sub msg
+
+
+-- *** Constants ***
+
+zoomStepSize = 0.1
 
 
 -- *** Application model ***
@@ -35,6 +46,7 @@ type Msg
   | ClearSelection
   | MouseDown Coordinates
   | MouseUp Coordinates
+  | ViewPortHasResized (Result JD.Error (Int, Int))
 
 type SelectionMode = SingleSelect | MultipleSelect
 
@@ -50,6 +62,9 @@ type alias Model =
   , canvasItemCount : Int
   , selectionMode : SelectionMode
   , hoveredItem : Maybe CanvasItemInstance
+  , zoomFactor : Float
+  , panCoords : Coordinates
+  , viewPortSize : (Int, Int)
   }
 
 type alias Coordinates = { x : Int, y : Int }
@@ -64,6 +79,9 @@ type Intent
   | ToCreateCanvasItemInstance CanvasItemInstance
   | ToMovePath CanvasItemInstance Int Coordinates
   | ToCreatePolyline (List Coordinates)
+  -- Parameters are the starting pan coordinates and starting cursor
+  -- coordinates.
+  | ToPanViewBox Coordinates Coordinates
 
 type CursorMode
   = FreeFormCursor
@@ -91,6 +109,7 @@ type AnchorPosition
   | LowerLeft
   | LowerRight
 
+
 -- *** Application logic ***
 
 -- MOCK: This will be removed once we have the ability to create new canvas items.
@@ -115,6 +134,15 @@ initialModel =
   , canvasItemCount = List.length initialCanvasItemInstances
   , selectionMode = SingleSelect
   , hoveredItem = Nothing
+  , zoomFactor = 1.0
+  , panCoords = { x = 0, y = 0 }
+  , viewPortSize = (1000, 1000)
+  }
+
+calculateActualCoords : Model -> Coordinates -> Coordinates
+calculateActualCoords model coords =
+  { x = (toFloat coords.x * model.zoomFactor |> round) + model.panCoords.x
+  , y = (toFloat coords.y * model.zoomFactor |> round) + model.panCoords.y
   }
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -126,11 +154,13 @@ update message model =
         updatedModel = { model | cursorCoords = coords }
         newModel =
           case (updatedModel.cursorMode, updatedModel.intent) of
+            -- Moving paths is handled differently than the rest because it
+            -- doesn't have an anchor point.
             (_, ToMovePath { id, item } index point) ->
               case item of
                 Polyline points ->
                   let
-                    updatePoint i pt = if i == index then coords else pt
+                    updatePoint i pt = if i == index then calculateActualCoords model coords else pt
                     newPoints = List.indexedMap updatePoint points
                     updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id (Polyline newPoints)
                   in
@@ -138,7 +168,7 @@ update message model =
                 _ -> updatedModel
             (_, ToResizeCanvasItemInstance { id, item } startingCoords anchor) ->
               let
-                newItem = resizeCanvasItem item startingCoords updatedModel.cursorCoords anchor
+                newItem = resizeCanvasItem model.zoomFactor item startingCoords updatedModel.cursorCoords anchor
                 updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id newItem
               in
                 { updatedModel
@@ -146,6 +176,13 @@ update message model =
                 -- Resizing means we're not selecting anything.
                 , selectedItems = []
                 }
+            (_, ToPanViewBox startingPanCoords startingCoords) ->
+              { updatedModel
+              | panCoords =
+                  { x = startingPanCoords.x - (coords.x - startingCoords.x)
+                  , y = startingPanCoords.y - (coords.y - startingCoords.y)
+                  }
+              }
             _ -> updatedModel
       in
         updateModelOnly newModel
@@ -178,8 +215,8 @@ update message model =
               }
     ResizeItem item startingCursorCoords anchor ->
       updateModelOnly
-        { model |
-            intent = ToResizeCanvasItemInstance item startingCursorCoords anchor
+        { model
+        | intent = ToResizeCanvasItemInstance item startingCursorCoords anchor
         }
     HoveredItem item -> updateModelOnly { model | hoveredItem = Just item }
     UnhoveredItem -> updateModelOnly { model | hoveredItem = Nothing }
@@ -194,22 +231,25 @@ update message model =
             , selectionMode = SingleSelect
             }
     MouseDown coords ->
-      case (model.cursorMode, model.intent) of
-        (_, ToMovePath _ _ _) -> (model, Cmd.none)
-        (_, ToCreatePolyline points) ->
-          ( { model | intent = ToCreatePolyline (points ++ [coords]) }
-          , Cmd.none
-          )
+      case (model.cursorMode, model.intent, model.selectedItems) of
+        (_, ToMovePath _ _ _, _) ->
+          (model, Cmd.none)
+        (_, ToCreatePolyline points, _) ->
+          ( { model | intent = ToCreatePolyline (points ++ [calculateActualCoords model coords]) }, Cmd.none )
+        -- The user wants to pan if there is no selected items.
+        (_, _, []) ->
+          updateModelOnly
+            { model | intent = ToPanViewBox model.panCoords model.cursorCoords }
         _ ->
           updateModelOnly
-            { model
-            | cursorMode = DragCursor coords
-            }
+            { model | cursorMode = DragCursor coords }
     MouseUp ending ->
       case (model.cursorMode, model.intent) of
         (_, ToMovePath _ _ _) ->
           updateModelOnly { model | intent = ToExplore }
         (_, ToResizeCanvasItemInstance _ _ _) ->
+          updateModelOnly { model | intent = ToExplore }
+        (_, ToPanViewBox _ _) ->
           updateModelOnly { model | intent = ToExplore }
         (DragCursor starting, ToCreateCanvasItemInstance item) ->
           updateModelOnly
@@ -222,6 +262,10 @@ update message model =
           in
             updateModelOnly { updatedModel | cursorMode = FreeFormCursor }
         _ -> updateModelOnly { model | cursorMode = FreeFormCursor }
+    ViewPortHasResized result ->
+      case result of
+        Ok (width, height) -> updateModelOnly { model | viewPortSize = (width, height) }
+        _ -> updateModelOnly model
 
 itemsToSvg : List CanvasItem -> JE.Value
 itemsToSvg items =
@@ -251,7 +295,7 @@ itemsToSvg items =
               [String.fromInt left, String.fromInt top, String.join " " translatedPoints]
         Ellipse upperLeft lowerRight ->
           let
-            (center, longRadius, shortRadius) = boundingBoxToEllipse upperLeft lowerRight
+            (center, radiusX, radiusY) = boundingBoxToEllipse upperLeft lowerRight
             left = upperLeft.x
             top = upperLeft.y
             centerRelativeLeft = center.x - left
@@ -259,13 +303,16 @@ itemsToSvg items =
           in
             SI.interpolate
               "<g transform=\"translate({0}, {1})\"><ellipse cx=\"{2}\" cy=\"{3}\" rx=\"{4}\" ry=\"{5}\"></ellipse></g>"
-              (List.map String.fromInt [left, top, centerRelativeLeft, centerRelativeTop, longRadius, shortRadius])
+              (List.map String.fromInt [left, top, centerRelativeLeft, centerRelativeTop, radiusX, radiusY])
         Text upperLeft text ->
           SI.interpolate
             "<g transform=\"translate({0}, {1})\"><text>{2}</text></g>"
             [String.fromInt upperLeft.x, String.fromInt upperLeft.y, text]
   in
     JE.string ("<svg>" ++ String.join "" transformedItems ++ "</svg>")
+
+zoom : Model -> Float -> (Model, Cmd Msg)
+zoom model zoomBy = ({ model | zoomFactor = model.zoomFactor * zoomBy }, Cmd.none)
 
 handleKeyDown : Model -> String -> (Model, Cmd Msg)
 handleKeyDown model key =
@@ -282,7 +329,14 @@ handleKeyDown model key =
       "c" -> (copySelectedCanvasItemInstances model, defaultCmd)
       -- Save
       "s" -> (model, List.map .item model.instantiatedItems |> itemsToSvg |> saveSvg)
+      -- Zoom in
+      "=" -> zoom model (1.0 - zoomStepSize)
+      "+" -> zoom model (1.0 - zoomStepSize)
+      -- Zoom out
+      "-" -> zoom model (1.0 + zoomStepSize)
+      -- Create a rectangle
       "r" -> (createInstance <| Rect { x = 100, y = 100 } { x = 200, y = 200 }, defaultCmd)
+      -- Create a polyline
       "p" ->
         case model.intent of
           ToCreatePolyline points ->
@@ -292,8 +346,11 @@ handleKeyDown model key =
               ({ model2 | intent = ToExplore }, defaultCmd)
           _ ->
             ({ model | intent = ToCreatePolyline [] }, defaultCmd)
+      -- Create an ellipse
       "e" -> (createInstance <| Ellipse { x = 100, y = 100 } { x = 150, y = 140 }, defaultCmd)
+      -- Create a text
       "t" -> (createInstance <| Text { x = 100, y = 100 } "Text", defaultCmd)
+      -- No-op
       _ -> (model, defaultCmd)
 
 handleKeyUp : Model -> String -> Model
@@ -373,7 +430,14 @@ subscriptions model =
     , BE.onMouseMove (JD.map MouseMove mouseDecoder)
     , BE.onKeyDown (JD.map KeyPress keyDecoder)
     , BE.onKeyUp (JD.map KeyUp keyDecoder)
+    , viewPortHasResized (JD.decodeValue viewPortDecoder >> ViewPortHasResized)
     ]
+
+viewPortDecoder : JD.Decoder (Int, Int)
+viewPortDecoder =
+  JD.map2 Tuple.pair
+    (JD.index 0 JD.int)
+    (JD.index 1 JD.int)
 
 mouseDecoder : JD.Decoder Coordinates
 mouseDecoder =
@@ -384,11 +448,11 @@ mouseDecoder =
 keyDecoder : JD.Decoder String
 keyDecoder = JD.field "key" JD.string
 
-updateItemCoordinates : Coordinates -> Coordinates -> CanvasItemInstance -> CanvasItemInstance
-updateItemCoordinates starting ending canvasItem =
+updateItemCoordinates : Float -> Coordinates -> Coordinates -> CanvasItemInstance -> CanvasItemInstance
+updateItemCoordinates zoomFactor starting ending canvasItem =
   let
-    dx = ending.x - starting.x
-    dy = ending.y - starting.y
+    dx = toFloat (ending.x - starting.x) * zoomFactor |> round
+    dy = toFloat (ending.y - starting.y) * zoomFactor |> round
     move = moveCoordinates dx dy
     item =
       case canvasItem.item of
@@ -406,7 +470,7 @@ updateItemCoordinates starting ending canvasItem =
 updateSelectedItemCoordinates : Model -> Coordinates -> Coordinates -> Model
 updateSelectedItemCoordinates model starting ending =
   let
-    updateCoordinates = updateItemCoordinates starting ending
+    updateCoordinates = updateItemCoordinates model.zoomFactor starting ending
     process item =
       if isSelectedCanvasItemInstance model item
       then
@@ -419,11 +483,11 @@ updateSelectedItemCoordinates model starting ending =
   in
     { model | instantiatedItems = updatedItems, selectedItems = selectedItems }
 
-resizeCanvasItem : CanvasItem -> Coordinates -> Coordinates -> AnchorPosition -> CanvasItem
-resizeCanvasItem originalItem startingCoords currentCoords anchor =
+resizeCanvasItem : Float -> CanvasItem -> Coordinates -> Coordinates -> AnchorPosition -> CanvasItem
+resizeCanvasItem zoomFactor originalItem startingCoords currentCoords anchor =
   let
-    deltaX = currentCoords.x - startingCoords.x
-    deltaY = currentCoords.y - startingCoords.y
+    deltaX = toFloat (currentCoords.x - startingCoords.x) * zoomFactor |> round
+    deltaY = toFloat (currentCoords.y - startingCoords.y) * zoomFactor |> round
     threshold = 25
   in
     case originalItem of
@@ -551,6 +615,7 @@ canvas model =
           ]
       , Svg.polyline
           [ SA.fill "white"
+          , SA.fillOpacity "0.0"
           , SA.stroke "black"
           , SA.points polylineUnderConstruction
           , SA.strokeWidth "1"
@@ -558,10 +623,20 @@ canvas model =
           ]
           []
       ]
+    (viewPortWidth, viewPortHeight) = model.viewPortSize
+    viewBoxDims =
+      SI.interpolate "{0} {1} {2} {3}"
+        [ String.fromInt model.panCoords.x
+        , String.fromInt model.panCoords.y
+        , String.fromFloat (toFloat viewPortWidth * model.zoomFactor)
+        , String.fromFloat (toFloat viewPortHeight * model.zoomFactor)
+        ]
   in
     Svg.svg
-      [ SA.height "700"
+      [ SA.width (String.fromInt viewPortWidth)
+      , SA.height (String.fromInt viewPortHeight)
       , SE.onMouseDown ClearSelection
+      , SA.viewBox viewBoxDims
       ]
       (specialItems ++ canvasItems)
 
@@ -609,8 +684,8 @@ makeResizeCircles cursorCoords item width height toDisplay anchor =
       )
       []
 
-displayResizeOption : Intent -> CanvasItemInstance -> Coordinates -> Coordinates -> Coordinates -> List (Svg.Svg Msg)
-displayResizeOption intent item cursorCoords upperLeft lowerRight =
+displayResizeOption : Bool -> Intent -> CanvasItemInstance -> Coordinates -> Coordinates -> Coordinates -> List (Svg.Svg Msg)
+displayResizeOption isItemHovered intent item cursorCoords upperLeft lowerRight =
   let
     isResizing =
       case intent of
@@ -618,7 +693,7 @@ displayResizeOption intent item cursorCoords upperLeft lowerRight =
         _ -> False
     width = lowerRight.x - upperLeft.x
     height = lowerRight.y - upperLeft.y
-    toDisplay = isResizing || withinView cursorCoords upperLeft lowerRight
+    toDisplay = isResizing || isItemHovered
     makeCircle = makeResizeCircles cursorCoords item width height toDisplay
   in
     [ makeCircle UpperLeft
@@ -636,7 +711,7 @@ moveSelectedItems : Model -> CanvasItemInstance -> CanvasItemInstance
 moveSelectedItems model item =
   case (model.cursorMode, model.cursorCoords) of
     (DragCursor starting, current) ->
-      updateItemCoordinates starting current item
+      updateItemCoordinates model.zoomFactor starting current item
     _ -> item
 
 displayCanvasItemInstance : Model -> CanvasItemInstance -> Svg.Svg Msg
@@ -647,6 +722,11 @@ displayCanvasItemInstance model item =
       case (isSelected, model.cursorMode) of
         (True, DragCursor _) -> moveSelectedItems model item
         _ -> item
+    isItemHovered =
+      case model.hoveredItem of
+        Just hovered -> hovered == item
+        Nothing -> False
+    toDisplayResizeOption = displayResizeOption isItemHovered model.intent itemToDisplay model.cursorCoords
   in
     case itemToDisplay.item of
       Rect upperLeft lowerRight ->
@@ -655,16 +735,18 @@ displayCanvasItemInstance model item =
           y = String.fromInt upperLeft.y
           width = String.fromInt (lowerRight.x - upperLeft.x)
           height = String.fromInt (lowerRight.y - upperLeft.y)
-          resizeOption = displayResizeOption model.intent itemToDisplay model.cursorCoords upperLeft lowerRight
+          resizeOption = toDisplayResizeOption upperLeft lowerRight
         in
           Svg.g
             [ SE.onMouseDown (SelectItem item)
+            , SE.onMouseOver (HoveredItem item)
+            , SE.onMouseOut UnhoveredItem
             , SA.transform ("translate(" ++ x ++ "," ++ y ++ ")")
             ]
             (
-              [
-                Svg.rect
+              [ Svg.rect
                   [ SA.fill "white"
+                  , SA.fillOpacity "0.0"
                   , SA.stroke (if isSelected then "blue" else "black")
                   , SA.width width
                   , SA.height height
@@ -675,11 +757,7 @@ displayCanvasItemInstance model item =
       Polyline points ->
         let
           pointsString = pointsToString points
-          toDisplayMovementCircles =
-            case model.hoveredItem of
-              Just hovered -> hovered == item
-              Nothing -> False
-          movementCircles = makeMovementCirlces itemToDisplay toDisplayMovementCircles points
+          movementCircles = makeMovementCirlces itemToDisplay isItemHovered points
         in
           Svg.g
             [ SE.onMouseDown (SelectItem item)
@@ -692,6 +770,7 @@ displayCanvasItemInstance model item =
                 (
                   Svg.polyline
                     [ SA.fill "white"
+                    , SA.fillOpacity "0.0"
                     , SA.stroke (if isSelected then "blue" else "black")
                     , SA.points pointsString
                     , SA.strokeWidth "1"
@@ -716,21 +795,36 @@ displayCanvasItemInstance model item =
             )
       Ellipse upperLeft lowerRight ->
         let
-          (center, longRadius, shortRadius) = boundingBoxToEllipse upperLeft lowerRight
-          resizeOption = displayResizeOption model.intent itemToDisplay model.cursorCoords upperLeft lowerRight
+          (center, radiusX, radiusY) = boundingBoxToEllipse upperLeft lowerRight
+          resizeOption = toDisplayResizeOption upperLeft lowerRight
         in
           Svg.g
             [ SE.onMouseDown (SelectItem item)
+            , SE.onMouseOver (HoveredItem item)
+            , SE.onMouseOut UnhoveredItem
             , SA.transform ("translate(" ++ String.fromInt upperLeft.x ++ "," ++ String.fromInt upperLeft.y ++ ")")
             ]
             (
+              -- This is the ellipse visible to the user.
               [ Svg.ellipse
                   [ SA.fill "white"
+                  , SA.fillOpacity "0.0"
                   , SA.stroke (if isSelected then "blue" else "black")
-                  , SA.cx (String.fromInt longRadius)
-                  , SA.cy (String.fromInt shortRadius)
-                  , SA.rx (String.fromInt longRadius)
-                  , SA.ry (String.fromInt shortRadius)
+                  , SA.cx (String.fromInt radiusX)
+                  , SA.cy (String.fromInt radiusY)
+                  , SA.rx (String.fromInt radiusX)
+                  , SA.ry (String.fromInt radiusY)
+                  ]
+                  []
+              -- This is the bounding box hidden to the user so that the user
+              -- can select the resize circles.
+              , Svg.rect
+                  [ SA.fill "white"
+                  , SA.stroke (if isSelected then "blue" else "black")
+                  , SA.width (lowerRight.x - upperLeft.x |> String.fromInt)
+                  , SA.height (lowerRight.y - upperLeft.y |> String.fromInt)
+                  , SA.fillOpacity "0.0"
+                  , SA.strokeOpacity "0.0"
                   ]
                   []
               ] ++ resizeOption
