@@ -16,14 +16,16 @@
 
 ;    <polyline points="0,0 206,-2">
 ;    </polyline>
+; Test <- StartSVG Ellipse Rect Text Polyline EndSVG
 
 (defparameter *svg-grammar* "
-Test <- StartSVG Ellipse Rect Text Polyline EndSVG
+Test <- StartSVG Shape* EndSvg
 
+Shape <- Ellipse / Rect / Text / Polyline
 
 Ellipse <- Transform EllipseTag EndEllipseTag EndTransform
 Rect <- Transform RectTag EndRectTag EndTransform
-Text <- Transform TextTag TextBody EndText EndTransform
+Text <- Transform TextTag TextBody EndTextSpacing EndTransform
 Polyline <- Transform PolylineTag EndPolyline EndTransform
 
 TextTag <- '<text>' Spacing
@@ -37,7 +39,7 @@ EndPolyline <- '</polyline>' Spacing
 
 Point <- Num ',' Num
 
-StartSVG <- '<svg>' Spacing
+StartSVG <- Spacing '<svg>' Spacing
 EndSVG <- '</svg>' Spacing
 Transform <- '<g transform=' '\"translate(' TwoNumbers ')\">' Spacing
 EndTransform <- '</g>' Spacing
@@ -57,11 +59,29 @@ EndOfLine <- '\\r\\n' / '\\n' / '\\r'
 (defun test ()
   (let ((test-as-esrap (peg:fullpeg *svg-grammar*)))
     (mapc #'(lambda (expr)
-	      (pprint expr)
+	      #+nil(pprint expr)
 	      (eval expr))
 	  (rest test-as-esrap))
-    (let ((svg-file "<svg> <g transform=\"translate(50.1, 60.23)\"> <ellipse cx=\"-50\" cy=\"-40\" rx=\"50\" ry=\"40\"> </ellipse></g><g transform=\"translate(50.1, 60.23)\"> <rect width=\"80\" height=\"69\"></rect></g><g transform=\"translate(50.1, 60.23)\"><text>hello</text></g> <g transform=\"translate(50.1, 60.23)\"><polyline points=\"0,0 206,-2\"></polyline></g></svg>"))
-      (esrap:trace-rule 'Test :recursive t)
+    (let ((svg-file "
+<svg> 
+<g transform=\"translate(50.1, 60.23)\"> 
+<ellipse cx=\"-50\" cy=\"-40\" rx=\"50\" ry=\"40\"> 
+</ellipse>
+</g>
+<g transform=\"translate(50.1, 60.23)\"> 
+<rect width=\"80\" height=\"69\">
+</rect>
+</g>
+<g transform=\"translate(50.1, 60.23)\">
+<text>hello
+</text>
+</g> 
+<g transform=\"translate(50.1, 60.23)\">
+<polyline points=\"0,0 206,-2\"></polyline>
+</g>
+</svg>"))
+    ;(let ((svg-file (alexandria:read-file-into-string (asdf:system-relative-pathname :diagram "diagram.svg"))))
+      #+nil(esrap:trace-rule 'Test :recursive t)
       (esrap:parse 'Test svg-file))))
 
 #|
