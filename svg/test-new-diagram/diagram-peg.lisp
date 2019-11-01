@@ -56,13 +56,57 @@ EndOfLine <- '\\r\\n' / '\\n' / '\\r'
 "
 )
 
+(defparameter *svg-translator* "
+Test <- StartSVG Shape* EndSvg
+  { (:destructure (start middle end)
+     (declare (ignore start end))
+     middle) }
+
+Shape <- Ellipse / Rect / Text / Polyline
+
+Ellipse <- Transform EllipseTag EndEllipseTag EndTransform
+Rect <- Transform RectTag EndRectTag EndTransform
+Text <- Transform TextTag TextBody EndTextSpacing EndTransform
+Polyline <- Transform PolylineTag EndPolyline EndTransform
+  { (:destructure (trans body e1 e2) (declare (ignore trans e1 e2)) `(line ,@body)) }
+
+TextTag <- '<text>' Spacing
+TextBody <- NotEndText+ { (:text t) }
+EndTextSpacing <- EndText Spacing
+EndText <- '</text>'
+NotEndText <- !EndText .
+
+PolylineTag <- '<polyline points=\"' Point+ '\">' Spacing
+  { (:destructure (poly points e1 spc) (declare (ignore poly e1 spc)) points) }
+EndPolyline <- '</polyline>' Spacing
+
+Point <- Num ',' Num { (:destructure (n1 c n2) (declare (ignore c)) (cons n1 n2)) }
+
+StartSVG <- Spacing '<svg>' Spacing { (:lambda (x) (declare (ignore x)) nil) }
+EndSVG <- '</svg>' Spacing
+Transform <- '<g transform=' '\"translate(' TwoNumbers ')\">' Spacing
+EndTransform <- '</g>' Spacing
+TwoNumbers <- Num ',' Spacing Num 
+Num <- NumNoSpacing Spacing { (:destructure (n spc) (declare (ignore spc)) (read-from-string n)) }
+NumNoSpacing <- NegativeSign* [0-9]+ ('.' [0-9]+)* Spacing { (:text t) }
+NegativeSign <- '-'
+EllipseTag <- '<ellipse cx=\"' Num '\" cy=\"' Num '\" rx=\"' Num '\" ry=\"' Num '\">' Spacing
+EndEllipseTag <- '</ellipse>' Spacing
+RectTag <- '<rect width=\"' Num '\" height=\"' Num '\">' Spacing
+EndRectTag <- '</rect>' Spacing
+Spacing <- (WhiteSpace / EndOfLine)* { (:lambda (x) (declare (ignore x)) nil) }
+WhiteSpace <- ' ' / '\\t'
+EndOfLine <- '\\r\\n' / '\\n' / '\\r'
+"
+)
+
 (defun test ()
-  (let ((test-as-esrap (peg:fullpeg *svg-grammar*)))
+  (let ((test-as-esrap (peg:fullpeg *svg-translator*)))
     (mapc #'(lambda (expr)
 	      #+nil(pprint expr)
 	      (eval expr))
 	  (rest test-as-esrap))
-    (let ((svg-file "
+    (let #+nil((svg-file "
 <svg> 
 <g transform=\"translate(50.1, 60.23)\"> 
 <ellipse cx=\"-50\" cy=\"-40\" rx=\"50\" ry=\"40\"> 
@@ -80,7 +124,7 @@ EndOfLine <- '\\r\\n' / '\\n' / '\\r'
 <polyline points=\"0,0 206,-2\"></polyline>
 </g>
 </svg>"))
-    ;(let ((svg-file (alexandria:read-file-into-string (asdf:system-relative-pathname :diagram "diagram.svg"))))
+    ((svg-file (alexandria:read-file-into-string (asdf:system-relative-pathname :diagram "diagram.svg"))))
       #+nil(esrap:trace-rule 'Test :recursive t)
       (esrap:parse 'Test svg-file))))
 
