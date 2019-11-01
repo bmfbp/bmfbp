@@ -57,12 +57,13 @@ type alias Coordinates = { x : Int, y : Int }
 -- This captures the state of some task that the user wants to
 -- do in multiple steps.
 type Intent
-  -- Moving the mouse around
-  = Explore
-  | MoveSelectedCanvasItemInstances
-  | ResizeCanvasItemInstance CanvasItemInstance Coordinates AnchorPosition
-  | CreateCanvasItemInstance CanvasItemInstance
+  -- Default state: Moving the mouse around
+  = ToExplore
+  | ToMoveSelectedCanvasItemInstances
+  | ToResizeCanvasItemInstance CanvasItemInstance Coordinates AnchorPosition
+  | ToCreateCanvasItemInstance CanvasItemInstance
   | ToMovePath CanvasItemInstance Int Coordinates
+  | ToCreatePolyline (List Coordinates)
 
 type CursorMode
   = FreeFormCursor
@@ -110,7 +111,7 @@ initialModel =
   , itemsUnderCursor = []
   , currentItemUnderCursor = Nothing
   , cursorMode = FreeFormCursor
-  , intent = Explore
+  , intent = ToExplore
   , canvasItemCount = List.length initialCanvasItemInstances
   , selectionMode = SingleSelect
   , hoveredItem = Nothing
@@ -135,7 +136,7 @@ update message model =
                   in
                     { updatedModel | instantiatedItems = updatedItems }
                 _ -> updatedModel
-            (_, ResizeCanvasItemInstance { id, item } startingCoords anchor) ->
+            (_, ToResizeCanvasItemInstance { id, item } startingCoords anchor) ->
               let
                 newItem = resizeCanvasItem item startingCoords updatedModel.cursorCoords anchor
                 updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id newItem
@@ -178,7 +179,7 @@ update message model =
     ResizeItem item startingCursorCoords anchor ->
       updateModelOnly
         { model |
-            intent = ResizeCanvasItemInstance item startingCursorCoords anchor
+            intent = ToResizeCanvasItemInstance item startingCursorCoords anchor
         }
     HoveredItem item -> updateModelOnly { model | hoveredItem = Just item }
     UnhoveredItem -> updateModelOnly { model | hoveredItem = Nothing }
@@ -195,7 +196,11 @@ update message model =
     MouseDown coords ->
       case (model.cursorMode, model.intent) of
         (_, ToMovePath _ _ _) -> (model, Cmd.none)
-        _ -> 
+        (_, ToCreatePolyline points) ->
+          ( { model | intent = ToCreatePolyline (points ++ [coords]) }
+          , Cmd.none
+          )
+        _ ->
           updateModelOnly
             { model
             | cursorMode = DragCursor coords
@@ -203,10 +208,10 @@ update message model =
     MouseUp ending ->
       case (model.cursorMode, model.intent) of
         (_, ToMovePath _ _ _) ->
-          updateModelOnly { model | intent = Explore }
-        (_, ResizeCanvasItemInstance _ _ _) ->
-          updateModelOnly { model | intent = Explore }
-        (DragCursor starting, CreateCanvasItemInstance item) ->
+          updateModelOnly { model | intent = ToExplore }
+        (_, ToResizeCanvasItemInstance _ _ _) ->
+          updateModelOnly { model | intent = ToExplore }
+        (DragCursor starting, ToCreateCanvasItemInstance item) ->
           updateModelOnly
             { model
             | instantiatedItems = item :: model.instantiatedItems
@@ -277,10 +282,18 @@ handleKeyDown model key =
       "c" -> (copySelectedCanvasItemInstances model, defaultCmd)
       -- Save
       "s" -> (model, List.map .item model.instantiatedItems |> itemsToSvg |> saveSvg)
-      "1" -> (createInstance <| Rect { x = 100, y = 100 } { x = 200, y = 200 }, defaultCmd)
-      "2" -> (createInstance <| Polyline [{ x = 100, y = 100 }, { x = 300, y = 100 }], defaultCmd)
-      "3" -> (createInstance <| Ellipse { x = 100, y = 100 } { x = 150, y = 140 }, defaultCmd)
-      "4" -> (createInstance <| Text { x = 100, y = 100 } "Text", defaultCmd)
+      "r" -> (createInstance <| Rect { x = 100, y = 100 } { x = 200, y = 200 }, defaultCmd)
+      "p" ->
+        case model.intent of
+          ToCreatePolyline points ->
+            let
+              model2 = createInstance <| Polyline points
+            in
+              ({ model2 | intent = ToExplore }, defaultCmd)
+          _ ->
+            ({ model | intent = ToCreatePolyline [] }, defaultCmd)
+      "e" -> (createInstance <| Ellipse { x = 100, y = 100 } { x = 150, y = 140 }, defaultCmd)
+      "t" -> (createInstance <| Text { x = 100, y = 100 } "Text", defaultCmd)
       _ -> (model, defaultCmd)
 
 handleKeyUp : Model -> String -> Model
@@ -519,7 +532,11 @@ canvas : Model -> Html.Html Msg
 canvas model =
   let
     canvasItems = List.map (displayCanvasItemInstance model) model.instantiatedItems
-    definitions =
+    polylineUnderConstruction =
+      case model.intent of
+        ToCreatePolyline points -> pointsToString points
+        _ -> ""
+    specialItems =
       -- Arrowhead. Taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker.
       [ Svg.marker
           [ SA.id "arrowhead"
@@ -532,13 +549,21 @@ canvas model =
           ]
           [ Svg.path [ SA.d "M 0 0 L 10 5 L 0 10 z" ] []
           ]
+      , Svg.polyline
+          [ SA.fill "white"
+          , SA.stroke "black"
+          , SA.points polylineUnderConstruction
+          , SA.strokeWidth "1"
+          , SA.markerEnd "url(#arrowhead)"
+          ]
+          []
       ]
   in
     Svg.svg
       [ SA.height "700"
       , SE.onMouseDown ClearSelection
       ]
-      (definitions ++ canvasItems)
+      (specialItems ++ canvasItems)
 
 movementCircleAttributes : Bool -> List (Svg.Attribute Msg)
 movementCircleAttributes toDisplay =
@@ -589,7 +614,7 @@ displayResizeOption intent item cursorCoords upperLeft lowerRight =
   let
     isResizing =
       case intent of
-        ResizeCanvasItemInstance _ _ _ -> True
+        ToResizeCanvasItemInstance _ _ _ -> True
         _ -> False
     width = lowerRight.x - upperLeft.x
     height = lowerRight.y - upperLeft.y
@@ -649,8 +674,7 @@ displayCanvasItemInstance model item =
             )
       Polyline points ->
         let
-          coordsToString { x, y } = String.fromInt x ++ "," ++ String.fromInt y
-          pointsString = List.map coordsToString points |> String.join " "
+          pointsString = pointsToString points
           toDisplayMovementCircles =
             case model.hoveredItem of
               Just hovered -> hovered == item
@@ -721,6 +745,13 @@ displayCanvasItemInstance model item =
           , SE.onMouseDown (SelectItem item)
           ]
           [ Svg.text label ]
+
+pointsToString : List Coordinates -> String
+pointsToString points =
+  let
+    coordsToString { x, y } = String.fromInt x ++ "," ++ String.fromInt y
+  in
+    List.map coordsToString points |> String.join " "
 
 
 -- *** Entry point ***
