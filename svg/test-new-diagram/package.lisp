@@ -1,0 +1,3 @@
+(defpackage :diagram
+  (:use :cl))
+

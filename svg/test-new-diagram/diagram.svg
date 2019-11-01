@@ -1,0 +1,22 @@
+<svg>
+  <g transform="translate(50, 60)">
+    <ellipse cx="50" cy="40" rx="50" ry="40">
+    </ellipse>
+  </g>
+  <g transform="translate(59, 103)">
+    <text>top-level svg
+    </text>
+  </g>
+  <g transform="translate(358, 67)">
+    <rect width="80" height="69">
+    </rect>
+  </g>
+  <g transform="translate(370, 104)">
+    <text>compile composite
+    </text>
+  </g>
+  <g transform="translate(150, 105)">
+    <polyline points="0,0 206,-2">
+    </polyline>
+  </g>
+</svg>
