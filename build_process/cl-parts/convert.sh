@@ -1,0 +1,14 @@
+./json-to-cl.sh build_process.json >build_process.json.lisp
+./json-to-cl.sh collector.json >collector.json.lisp
+./json-to-cl.sh compile_composite.json >compile_composite.json.lisp
+./json-to-cl.sh compile_one_diagram.json >compile_one_diagram.json.lisp
+./json-to-cl.sh determine_kind_type.json >determine_kind_type.json.lisp
+./json-to-cl.sh fetch_git_repo.json >fetch_git_repo.json.lisp
+./json-to-cl.sh get_file_content_in_repo.json >get_file_content.json.lisp
+./json-to-cl.sh ide.json >ide.json.lisp
+./json-to-cl.sh iterator.json >iterator.json.lisp
+./json-to-cl.sh javascript_builder.json >javascript.json.lisp
+./json-to-cl.sh ./json_array_splitter.json >json_array_splitter.json.lisp
+./json-to-cl.sh ./json_object_stacker.json >json_object_stacker.json.lisp
+./json-to-cl.sh prepare_temp_directory.json >prepare_temp_directory.json.lisp
+./json-to-cl.sh split_diagram.json >split_diagram.json.lisp
