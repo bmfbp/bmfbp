@@ -1,7 +1,7 @@
 ;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;  (peg:into-package "PROLOG"))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PAIP))
+  (peg:into-package "PAIP"))
 
 (defparameter *grammars* (list
                           *peg-rules-original*
