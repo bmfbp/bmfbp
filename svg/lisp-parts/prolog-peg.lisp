@@ -1,7 +1,7 @@
 ;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;  (peg:into-package "PROLOG"))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (peg:into-package "PAIP))
+  (peg:into-package "PAIP"))
 
 (defparameter *grammars* (list
                           *peg-rules-original*
@@ -14,11 +14,16 @@
            #+nil(let ((r1 (gethash 'prolog::pFunctor esrap::*rules*))
                  (r2 (gethash 'prolog::pCommaSeparatedListOfExpr esrap::*rules*)))
              (format *standard-output* "~&pFunctor ~S~%pCommaSeparatedListOfExpr ~S~%" r1 r2))))
-    (prinr)
+    #+nil(prinr)
       ;(peg:delete-rules "PROLOG") ;; TODO: don't call this, esrap==>undefined rule pCommaSeparatedListOfExpr
     (let ((g (peg:fullpeg (nth index *grammars*))))
-      (mapc #'(lambda (r) (eval r)) (cdr g))
-      (prinr))))
+      (format *standard-output* "~&paip::*uncompiled* /~S/~%" paip::*uncompiled*)
+      (mapc #'(lambda (r) 
+		(eval r)) 
+	    (cdr g))
+      (format *standard-output* "~&paip::*db-predicates* /~S/~%" paip::*db-predicates*)
+      (format *standard-output* "~&paip::*uncompiled* /~S/~%" paip::*uncompiled*)
+      #+nil(prinr))))
 
 
 #|

@@ -86,6 +86,7 @@ pUnifyExprEQ <- pPrimary pUnifySame pPrimary
 pUnifyExprNEQ <- pPrimary pNotUnifySame pPrimary
 pIsExpr <- pVariable pIs pExpr
   { (:destructure (v op e)
+     (declare (ignore op))
      #+nil(format *standard-output* \"~&pIsExpr v=~S e=~S~%\" v e)
      `(paip::is ,v ,e)) }
 
