@@ -1,0 +1,50 @@
+* status
+** (ql:quickload :arrowgram/prolog-peg) then (paip::test-all) no longer works
+*** "Error: Undefined rule: PROLOG::PCOMMASEPARATEDLISTOFEXPR"
+*** prolog-peg.lisp/init() prints each rule that it is evaluating, and pCommaSeparatedListOfExpr is printed
+*** sbcl says "; compilation unit finished ;   Undefined variable: ;     PAIP::!"
+
+** explanation: 
+*** look in prolog-peg.lisp/init(), it uses index 3 by default (for PAIP parser/emitter) (2 is for the generic parser/emitter)
+*** peg:fullpeg returns a (progn ...) list of ESRAP:DEFRULES
+*** the DEFRULEs are EVALed to create DEFUNs
+*** the missing rule, PROLOG::PCOMMASEPARATEDLISTOFEXPR, appears in the list of DEFRULES
+*** init prints the list of paip::*uncompiled* rules, PROLOG::PCOMMASEPARATEDLISTOFEXPR should appear in that list (but doesn't)
+*** problem 1: SBCL complains that PAIP::! is undefined
+*** problem 2: LW doesn't complain about this and proceeds, then gives "Error: Undefined rule: PROLOG::PCOMMASEPARATEDLISTOFEXPR"
+*** my guess:
+**** problem 1: I don't know
+**** problem 2: prolog-peg.lisp/init() doesn't do enough EVALs and/or doesn't call the final prolog parser, 
+**** there should be a call to esrap:parse with the new grammar (the above DEFUNs) against a string, e.g. the string in grammar-test.lisp/calc-bounds()
+**** I expect to see PROLOG::PCOMMASEPARATEDLISTOFEXPR in the paip::*db-predicates* list
+**** I expect to see PROLOG::PCOMMASEPARATEDLISTOFEXPR in the paip::*uncompiled* list (the 2nd time),
+**** after that I should call PAIP::prolog-compile-symbols
+**** once compiled, PCOMMASEPARATEDLISTOFEXPR, should disappear from the list of paip::*uncompiled* but should remain on *db-predicates* (I think)
+
+
+* next
+** (ql:quickload :arrowgram/try) skips the PEG parser and tries to compile calc_bounds
+** working on converting calc_bounds (see grammar-test.lisp/calc-bounds())
+
+* file "prolog-extension.lisp" contains lisp functions that form a support library for PAIP
+** stuck on forall()
+
+* run `os> jsarrowgrams.sh` to generate the file "temp.lisp"
+** this compiles the diagram bmfbp/build_process/kk/build_process.svg
+**** tidbit: "kk" stands for Ken Kan 
+*** I needed to re-export the SVG files from diagram bmfbp/build_process/build_process.drawio because the SVG files were not readable by DRAWIO after being pulled from github
+*** build_process.svg is the most intense "test" for the compiler and friends
+
+* lisp> (in-package :paip)
+* lisp> (build-temp) 
+
+* history - 4 versions of the grammar
+** file original-peg.lisp contains a PEG grammar that (only) parses the full input "all.pl"
+
+** file refactored-peg.lisp contains a PEG grammar that (only) parses the full input "all.pl"
+*** the grammar was slightly modified to make it easier to hand code emission into it
+  
+** file generic-peg.lisp contains a PEG grammar that parses and performs code emission
+***the emitted code is ficticious, but lisp-like and self-explanatory
+
+** file paip-peg.lisp contains a PEG grammar that parses and emits PAIP specific code
