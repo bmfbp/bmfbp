@@ -25,5 +25,5 @@
     (convert-JSON-to-Lisp-network in *standard-output*)))
 
 (defun cat (lisp-obj)
-  (format nil "count=~a code=0x~x char=~S~%" (length (string lisp-obj)) (char-code lisp-obj) lisp-obj))
+  (format nil "count=~a code=0x~x char=~S" (length (string lisp-obj)) (char-code lisp-obj) lisp-obj))
 
