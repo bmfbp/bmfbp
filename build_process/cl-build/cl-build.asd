@@ -1,5 +1,5 @@
 (defsystem "cl-build"
-  :depends-on (:loops :cl-event-passing)
+  :depends-on (:loops :cl-event-passing :cl-peg)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
                                          (safety 3)
@@ -7,4 +7,5 @@
                     (funcall next))
   :components ((:module "source"
                         :pathname "./"
-                        :components ((:file "convert")))))
+                        :components ((:file "package")
+                                     (:file "convert")))))
