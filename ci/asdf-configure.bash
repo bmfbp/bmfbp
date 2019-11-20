@@ -10,5 +10,5 @@ mkdir -p $dest
 bmfbp=${TRAVIS_BUILD_DIR}
 
 # TODO figure out how to sanely address paths
-echo '(:tree "${bmfbp}")' > ${dest}/bmfpb.conf
+echo "(:tree \"${bmfbp}\")" > ${dest}/bmfpb.conf
 
