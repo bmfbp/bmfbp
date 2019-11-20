@@ -1,24 +1,41 @@
 os:
   - linux
+  - osx
 
-dist: xenial
+# Linux system
+# 'bionic' is latest Ubuntu LTS available on Travis
+dist: bionic
+
+# macOS system
+# 'xcode11.2' is macOS 10.14 xcode 11B41
+osx_image: xcode11.2
+  
+language: minimal
 
 addons:
   apt:
-    sources:
+    packages:
       - sbcl
-      - haskell-stack
-
+  homebrew:
+    update: true
+    packages:
+      - sbcl
+      
 install:
   - echo $(pwd)
-  - ./ci/asdf-configure.bash
-  - ./ci/quicklisp-install.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/asdf-configure.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/quicklisp-install.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/non-quicklisp-dependencies.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/install-gnu-prolog.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/install-buildapp.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/install-haskell-stack.bash
 
 # Plan  
 # 1. Tickle the build mechanism
-# 2. Test from Lisp
-
+# 2. Test Quickload from Lisp
+# 3. Test Lisp compilation (currently redundant with #2)
 script:
   - pushd svg && make && popd
-  - sbcl --eval '(asdf:load-system :arrowgram)'
+  - sbcl --eval '(ql:quickload :arrowgram)' --eval '(exit :code 0)'
+  - sbcl --eval '(asdf:load-system :arrowgram)' --eval '(exit :code 0)'
 

@@ -9,7 +9,10 @@ wget https://beta.quicklisp.org/quicklisp.lisp --output-document ${quicklisp}
 sbcl \
     --load ${quicklisp} \
     --eval '(quicklisp-quickstart:install)'  \
-    --eval '(setf ql-util::*do-not-prompt* t)(ql:add-to-init-file)'
+    --eval '(progn (setf ql-util::*do-not-prompt* t)(ql:add-to-init-file))' \
+    --eval '(exit :code 0)'
+
+  
 
 
 
