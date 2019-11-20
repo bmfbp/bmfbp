@@ -27,9 +27,7 @@ function haskell_stack_nonce_install () {
     tmpdir=/tmp/$$
     mkdir $tmpdir
     pushd $tmpdir
-    stack new foo && cd foo && stack install
-    popd
-    popd
+    stack new foo && pushd foo && stack install
 }
 
 haskell_stack_nonce_install
