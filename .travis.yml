@@ -1,8 +1,14 @@
 os:
   - linux
-  # - osx
+  - osx
 
+# Linux system
+# 'bionic' is latest Ubuntu LTS available on Travis
 dist: bionic
+
+# macOS system
+# 'xcode11.2' is macOS 10.14 xcode 11B41
+osx_image: xcode11.2
   
 language: minimal
 
