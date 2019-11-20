@@ -5,8 +5,8 @@ local_projects=$HOME/quicklisp/local-projects
 mkdir -p ${local_projects}
 
 repos=""
-repos += "https://github.com/norvig/paip-lisp "
-repos += "https://github.com/guitarvydas/loops "
+repos+="https://github.com/norvig/paip-lisp "
+repos+="https://github.com/guitarvydas/loops "
 
 
 cd ${local_projects}
