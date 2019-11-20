@@ -1,8 +1,9 @@
 os:
-  - linux
+  - osx
 
-dist: xenial
-
+  
+# - linux
+  
 language: minimal
 
 addons:
@@ -10,6 +11,11 @@ addons:
     packages:
       - sbcl
       - haskell-stack
+  homebrew:
+    packages:
+      - sbcl
+      - haskell-stack
+      
 
 install:
   - echo $(pwd)
