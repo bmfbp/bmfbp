@@ -3,6 +3,8 @@ os:
 
 dist: xenial
 
+language: minimal
+
 addons:
   apt:
     packages:
