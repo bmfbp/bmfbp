@@ -16,12 +16,10 @@ addons:
   apt:
     packages:
       - sbcl
-      - haskell-stack
   homebrew:
     update: true
     packages:
       - sbcl
-      - haskell-stack
       
 install:
   - echo $(pwd)

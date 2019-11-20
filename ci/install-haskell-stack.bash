@@ -8,24 +8,32 @@ DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #stack install
 #stack upgrade
 
-case $(uname) in
-    Darwin)
-        stack upgrade
-    ;;
-    Linux)
-        stack upgrade --binary-only
-    ;;
-    *)
-esac
+# FIXME get away from privilege escalation?
+sudo sh -x $DIR/get.haskellstack.org.sh
 
-tmpdir=/tmp/$$
-mkdir $tmpdir
-pushd $tmpdir
-stack new foo && cd foo && stack install
-popd
-popd
+function haskell_stack_upgrade () {
+    case $(uname) in
+        Darwin)
+            stack upgrade
+            ;;
+        Linux)
+            stack upgrade --binary-only
+            ;;
+        *)
+    esac
+}
+
+function haskell_stack_nonce_install () {
+    tmpdir=/tmp/$$
+    mkdir $tmpdir
+    pushd $tmpdir
+    stack new foo && cd foo && stack install
+    popd
+    popd
+}
+
+haskell_stack_nonce_install
+
         
-# FIXME do we need privilege escalation?
-#sudo sh -x $DIR/get.haskellstack.org.sh
 
 
