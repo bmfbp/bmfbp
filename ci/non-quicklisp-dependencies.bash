@@ -10,7 +10,7 @@ repos+="https://github.com/guitarvydas/loops "
 
 
 cd ${local_projects}
-for repo in repos; do
+for repo in $repos; do
     git clone ${repo}
 done
     
