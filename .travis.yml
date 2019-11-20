@@ -19,9 +19,10 @@ install:
 
 # Plan  
 # 1. Tickle the build mechanism
-# 2. Test from Lisp
-
+# 2. Test Quickload from Lisp
+# 3. Test Lisp compilation (currently redundant with #2)
 script:
   - pushd svg && make && popd
+  - sbcl --eval '(ql:quickload :arrowgram)'
   - sbcl --eval '(asdf:load-system :arrowgram)'
 
