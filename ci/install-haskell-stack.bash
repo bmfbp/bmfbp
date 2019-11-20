@@ -8,8 +8,6 @@ DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #stack install
 #stack upgrade
 
-stack install
-
 case $(uname) in
     Darwin)
         stack upgrade
@@ -19,6 +17,15 @@ case $(uname) in
         stack upgrade --no-binary
     ;;
     *)
+esac
+
+tmpdir=/tmp/$$
+mkdir $tmpdir
+pushd $tmpdir
+stack init
+stack install
+popd
+        
         
 # FIXME do we need privilege escalation?
 #sudo sh -x $DIR/get.haskellstack.org.sh
