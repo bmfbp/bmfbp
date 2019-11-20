@@ -30,14 +30,10 @@ install:
   - bash -x ${TRAVIS_BUILD_DIR}/ci/install-buildapp.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/install-haskell-stack.bash
 
-# Plan  
-# 1. Tickle the build mechanism
-# 2. Test Quickload from Lisp
-# 3. Test Lisp compilation (currently redundant with #2)
 script:
   - sbcl --eval '(ql:quickload :arrowgram)' --eval '(exit :code 0)'
   - sbcl --eval '(asdf:load-system :arrowgram)' --eval '(exit :code 0)'
   - cd ${TRAVIS_BUILD_DIR}/svg && make 
-  - cd ${TRAVIS_BUILD_DIR}/js-compiler && make
+  - cd ${TRAVIS_BUILD_DIR}/svg/js-compiler && make
   
 
