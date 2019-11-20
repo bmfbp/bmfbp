@@ -5,7 +5,7 @@ dist: xenial
 
 addons:
   apt:
-    sources:
+    packages:
       - sbcl
       - haskell-stack
 
