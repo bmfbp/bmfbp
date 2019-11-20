@@ -29,8 +29,12 @@ dependencies:
 # need already-built flat compiler in ~/bin	
 	cp svg.gsh-notignored $(BINDIR)/svg.gsh
 # script to build an svg file using the already-built svg.gsh
-	cp flatbmfbp.sh $(FLATBMFBP)
+# HACK -- brutalize the installed image to include a PATH                                
+	echo "#!/usr/bin/env bash" > $(FLATBMFBP)                                         
+	echo "export PATH=$(PATH):$(BINDIR)" >> $(FLATBMFBP)                              
+	cat flatbmfbp.sh >> $(FLATBMFBP)                                                  
 	chmod a+x $(FLATBMFBP)
+
 # script to compare regression files (using sed to normalize them)
 	cp comparegsh.sh $(BINDIR)/comparegsh.sh
 	chmod a+x $(BINDIR)/comparegsh.sh
