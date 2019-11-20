@@ -1,3 +1,5 @@
+all: hs_vsh_drawio_to_fb
+
 hs_vsh_drawio_to_fb:
 	stack install
 	cp ~/.local/bin/hs_vsh_drawio_to_fb ~/bin
