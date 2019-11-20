@@ -11,8 +11,8 @@ addons:
 
 install:
   - echo $(pwd)
-  - ./ci/asdf-configure.bash
-  - ./ci/quicklisp-install.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/asdf-configure.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/quicklisp-install.bash
 
 # Plan  
 # 1. Tickle the build mechanism
