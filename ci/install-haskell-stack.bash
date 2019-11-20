@@ -13,8 +13,7 @@ case $(uname) in
         stack upgrade
     ;;
     Linux)
-
-        stack upgrade --no-binary
+        stack upgrade --binary-only
     ;;
     *)
 esac
