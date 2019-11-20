@@ -1,7 +1,8 @@
 os:
-  - osx
-  
-# - linux
+  - linux
+  # - osx
+
+dist: bionic
   
 language: minimal
 
@@ -16,13 +17,12 @@ addons:
       - sbcl
       - haskell-stack
       
-
 install:
   - echo $(pwd)
   - bash -x ${TRAVIS_BUILD_DIR}/ci/asdf-configure.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/quicklisp-install.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/non-quicklisp-dependencies.bash
-  - stack upgrade
+  - stack install
 
 # Plan  
 # 1. Tickle the build mechanism
