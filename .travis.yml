@@ -16,6 +16,7 @@ install:
   - bash -x ${TRAVIS_BUILD_DIR}/ci/asdf-configure.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/quicklisp-install.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/non-quicklisp-dependencies.bash
+  - stack upgrade
 
 # Plan  
 # 1. Tickle the build mechanism
@@ -23,6 +24,6 @@ install:
 # 3. Test Lisp compilation (currently redundant with #2)
 script:
   - pushd svg && make && popd
-  - sbcl --eval '(ql:quickload :arrowgram)'
-  - sbcl --eval '(asdf:load-system :arrowgram)'
+  - sbcl --eval '(ql:quickload :arrowgram)' --eval '(exit :code 0)'
+  - sbcl --eval '(asdf:load-system :arrowgram)' --eval '(exit :code 0)'
 
