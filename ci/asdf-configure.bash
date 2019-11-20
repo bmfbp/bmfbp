@@ -4,7 +4,7 @@ DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 dest=$HOME/.config/common-lisp/source-registry.conf.d
 
-mkdir -p $HOME
+mkdir -p $dest
 
 # Locate the root of the source repository
 bmfbp=${TRAVIS_BUILD_DIR}
