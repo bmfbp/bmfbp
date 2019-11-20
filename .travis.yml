@@ -22,7 +22,8 @@ install:
   - bash -x ${TRAVIS_BUILD_DIR}/ci/asdf-configure.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/quicklisp-install.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/non-quicklisp-dependencies.bash
-  - stack install
+  # Following <https://docs.haskellstack.org/en/stable/install_and_upgrade/>
+  - stack upgrade --binary-only 
 
 # Plan  
 # 1. Tickle the build mechanism
