@@ -22,10 +22,9 @@ esac
 tmpdir=/tmp/$$
 mkdir $tmpdir
 pushd $tmpdir
-stack init
-stack install
+stack new foo && cd foo && stack install
 popd
-        
+popd
         
 # FIXME do we need privilege escalation?
 #sudo sh -x $DIR/get.haskellstack.org.sh
