@@ -31,7 +31,8 @@ install:
   - bash -x ${TRAVIS_BUILD_DIR}/ci/install-gnu-prolog.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/install-buildapp.bash
   # Following <https://docs.haskellstack.org/en/stable/install_and_upgrade/>
-  - stack upgrade --binary-only 
+  # fails "sometimes"; can be very expensive
+  # - stack upgrade --binary-only 
 
 # Plan  
 # 1. Tickle the build mechanism
