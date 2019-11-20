@@ -8,7 +8,7 @@ dist_version="1.5.6"
 
 wget ${dist_uri}
 tar xfvz ${dist_file}
-pushd ${dist_name}-${dist_version} && ./configure && make && sudo make install
+pushd ${dist_name}-${dist_version} && make && sudo make install
 popd
 
 
