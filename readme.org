@@ -1,0 +1,5 @@
+* branches
+** master consolidate Oct 16
+** pt-20191115a-cl-parts, uses Oct 16 & tried to build cl-parts using prolog-to-lisp PEG
+** easye/travis - pt's latest stuff, Travis working
+** pt-20191121a-feedback - adding new schematic in bmfbp/clsvg, hope to compile schematic to JSON then xlate to CL then compile with clsvg.asd (system :clsvg/arrowgrams)
