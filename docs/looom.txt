@@ -1,0 +1,42 @@
+Looom: https://iorama.studio/looom
+
+Watch the video labelled "Wonderfully Musical" (3rd screen down).  Notice to the far left an image of a ViewMaster disk https://www.amazon.ca/View-Master-3D-Discovery-Kids-Dinosaurs/dp/B00O1APUJQ/ref=asc_df_B00O1APUJQ/?tag=googleshopc0c-20&linkCode=df0&hvadid=292962354449&hvpos=1o4&hvnetw=g&hvrand=1296078512539425694&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9000985&hvtargid=pla-524843701918&psc=1.
+
+Each frame is stored in a new slot (window) of the ViewMaster disk.
+
+Watch the gesture of the left-hand finger.  A new frame is selected every time the left-index-finger pulls "down".
+
+It has a preview mode, where the right hand is used to turn a crank.
+
+Animation mode is turned on and the ViewMaster disk cycles automatically (at different speeds? - watch the left side).
+
+They gray-out the previous X frames (each successively more grayed out until invisible) to allow the artist to sketch relative to the previous frame.
+
+The blobs begin to animate in black-and-white, then the artist selects a color using the pen and a color picker.
+
+The artist draws a red line during the automatic animation (looks like bullet / tracer fire).  Red over cyan blobs.
+
+The red strokes are "captured" by the then-current frame and appear to animate along with the cyan blobs.
+
+
+This looks like Disney cel drawing, using a timer to flip the cels and watch the animation. https://www.google.com/search?q=disney+cel+animation&oq=disney+cel+&aqs=chrome.1.69i57j0l7.6351j0j8&sourceid=chrome&ie=UTF-8
+
+
+In Arrowgrams, imagine a Scribbler Part, the main part.  It stores some fixed number of frames.  It has an input that selects the frame (or the "next" frame).  All scribbles with the pen (mouse) are recorded in the "current" frame.
+
+Add a Timer Part that injects frame# pulses into the Scribbler Part.  Now, the whole thing appears to animate.
+
+Scribbling, while automated animation happens, captures the scribble in the then-current frame (the red line over cyan blobs).  These further scribbles appear in the animation when the frames cycle around again.  This is the Scribbler Part doing its job - capturing scribbles from the pen (mouse) and saving them into the "current frame".
+
+
+Timers in arrowgrams are just Parts.
+
+Plug a Timer Part into the input of a drawing Part, then the drawing Part starts getting clock signals.
+
+Then, to animate the thing and make it "live", one would simply start the Timer Part - it sends ticks to the :next-frame input.
+
+So, the main Part is something that allows scribbling (with mouse or pen) on the current Frame.
+
+A button Part pulses the input of the Scribbling Part and advances the frame.  The next scribble will affect only the newly-set current frame.  This is how they draw each frame (without animation).
+
+When done, we automate the pulses and send pulses every N seconds to the Scribbling Part.  It shows frame after frame (a new frame for each pulse) and appears to anitmate the result.  Scribbles DURING the automated frame advance are captured by the then-current frame (we see them doing this by drawing a red line while the thing is animating).
