@@ -1,7 +1,6 @@
 (in-package :arrowgrams)
 
 (defun parser-builder ()
-  #+nil(cl-event-passing-user::@enable-logging)
   (cl-event-passing-user::@defnetwork arrowgrams::main
                                       (:code readfile (:filename) (:out :fatal) #'readfileintostring)
                                       (:code pegp (:peg-in) (:lisp-list-out :fatal) #'pegtolisp)

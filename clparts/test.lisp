@@ -1,7 +1,7 @@
 (in-package :arrowgrams)
 
 (defun test ()
-  #+nil(cl-event-passing-user::@enable-logging)
+  (cl-event-passing-user::@enable-logging)
   (let ((net (parser-builder)))
     (let ((ap e/dispatch::*all-parts*)) ;; testing only
       (assert (= 4 (length ap)))        ;; testing only
