@@ -17,5 +17,15 @@
                                      (:file "readfileintostring" :depends-on ("package"))
                                      (:file "pegtolisp" :depends-on ("package"))
                                      (:file "stripquotes" :depends-on ("package"))
-                                     (:file "pegparser" :depends-on ("package" "readfileintostring" "pegtolisp" "stripquotes"))))))
+                                     (:file "parser-builder" :depends-on ("package" "readfileintostring" "pegtolisp" "stripquotes"))))))
+
+(defsystem :arrowgrams/test
+  :depends-on (:arrowgrams/clparts)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "tester"
+                        :pathname "./clparts"
+                        :components ((:file "test")))))
+
 
