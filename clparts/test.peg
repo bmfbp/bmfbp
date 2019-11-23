@@ -1,0 +1,9 @@
+json <- json-String / json-Integer / json-Object
+json-Object <- '{' json-Pair '}' / json-Array
+json-Pair <- json-Object ':' json-Object
+json-Array <- '[' json-Array-Element-Comma* json-Array-Element ']'
+json-Array-Element <- json-Object
+json-Array-Element-Comma <- json-Array-Element ','
+json-Integer <- [0-9]+
+json-String <- '\"' json-NotDquote* '\"'
+json-NotDquote <- ! '\"' .
