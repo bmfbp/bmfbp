@@ -14,3 +14,4 @@ temp*
 *.gsh
 .DS_Store
 *.sed
+*.json.lisp
