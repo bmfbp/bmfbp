@@ -19,7 +19,7 @@
                                      (:file "stripquotes" :depends-on ("package"))
                                      (:file "parser-builder" :depends-on ("package" "readfileintostring" "pegtolisp" "stripquotes"))))))
 
-(defsystem :arrowgrams/test
+(defsystem :arrowgrams/clparts/test
   :depends-on (:arrowgrams/clparts)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
