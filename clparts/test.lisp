@@ -23,6 +23,7 @@
            ;; wiring
            ((((:self :peg-source-file-name)) ((pbuilder :peg-source-file-name)))
             (((pbuilder :lisp-souce-out)) ((:self :lisp-source-out))))))))
+    (e/dispatch::ensure-correct-number-of-parts (+ 2 4))
     (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/clparts "clparts/test.peg"))
           (in-pin (e/part::get-input-pin net :peg-source-file-name)))
       (cl-event-passing-user::@send net in-pin peg-filename))))
@@ -32,7 +33,7 @@
   (test)
   (format *standard-output* "~&running test-macro~%")
   (test-macro)
-  (cl-event-passing-user::@history))
+  #+nil(cl-event-passing-user::@history))
 
       
      
