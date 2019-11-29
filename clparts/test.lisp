@@ -12,7 +12,24 @@
       (cl-event-passing-user::@history))
     (setf arrowgrams/clparts::*parser-builder-net* net)))
 
-(defun test-macro ()
+(defun test-macro-with-global ()
+  (cl-event-passing-user::@enable-logging)
+  (let ((net
+         (cl-event-passing-user::@defnetwork 
+          XXX ;; TODO: is this ALWAYS the same as the last declaration?
+          (:part *parser-builder-net* pbuilder (:peg-source-file-name) (:lisp-source-out :fatal-error))
+          (:schem XXX (:peg-source-file-name) (:lisp-source-out)
+           (pbuilder) ;; internal parts
+           ;; wiring
+           ((((:self :peg-source-file-name)) ((pbuilder :peg-source-file-name)))
+            (((pbuilder :lisp-souce-out)) ((:self :lisp-source-out))))))))
+    (e/dispatch::ensure-correct-number-of-parts (+ 1 4))
+    (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/clparts "clparts/test.peg"))
+          (in-pin (e/part::get-input-pin net :peg-source-file-name)))
+      (cl-event-passing-user::@send net in-pin peg-filename))))
+
+(defun test-macro-with-call ()
+  ;; the only difference from above it "(parser-builder)" instead of "*parser-builder-net*"
   (cl-event-passing-user::@enable-logging)
   (let ((net
          (cl-event-passing-user::@defnetwork 
@@ -23,7 +40,7 @@
            ;; wiring
            ((((:self :peg-source-file-name)) ((pbuilder :peg-source-file-name)))
             (((pbuilder :lisp-souce-out)) ((:self :lisp-source-out))))))))
-    (e/dispatch::ensure-correct-number-of-parts (+ 2 4))
+    (e/dispatch::ensure-correct-number-of-parts (+ 1 4))
     (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/clparts "clparts/test.peg"))
           (in-pin (e/part::get-input-pin net :peg-source-file-name)))
       (cl-event-passing-user::@send net in-pin peg-filename))))
@@ -32,7 +49,7 @@
   (format *standard-output* "~&running test~%")
   (test)
   (format *standard-output* "~&running test-macro~%")
-  (test-macro)
+  (test-macro-with-global)
   #+nil(cl-event-passing-user::@history))
 
       
