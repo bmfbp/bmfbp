@@ -2,6 +2,8 @@
 ** got reuse working in cl-event-passing
 ** (some days ago) built PEG parser part in bmfbp/clparts
 ** try to reuse PEG parser part to build JSON parser
+** working on bmfbp/build-process/cl-build/convert.lisp
+** check that bmfbp/clparts/parser-builder works
 
 * todo
 ** cut loops over to bmfbp

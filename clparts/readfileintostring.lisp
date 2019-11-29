@@ -8,7 +8,7 @@
 
 
 
-(in-package :arrowgrams)
+(in-package :arrowgrams/clparts)
 
 (defmethod readfileintostring ((self e/part:part) (e e/event:event))
   (let ((data (e/event:data e))

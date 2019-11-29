@@ -6,9 +6,9 @@
 ;; (:fatal object)       some fatal error, "object" specifies error details
 ;;
 
-(in-package :arrowgrams)
+(in-package :arrowgrams/clparts)
 
-(cl-peg:into-package :arrowgrams)
+(cl-peg:into-package :arrowgrams/clparts)
 
 (defmethod pegtolisp ((self e/part:part) (e e/event:event))
   (let ((data (e/event:data e))

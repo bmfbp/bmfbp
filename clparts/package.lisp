@@ -1,3 +1,3 @@
-(defpackage arrowgrams
+(defpackage arrowgrams/clparts
   (:use :cl))
 

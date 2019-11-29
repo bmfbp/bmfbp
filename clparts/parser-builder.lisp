@@ -1,4 +1,4 @@
-(in-package :arrowgrams)
+(in-package :arrowgrams/clparts)
 
 (defun parser-builder ()
   (cl-event-passing-user::@defnetwork arrowgrams::main
