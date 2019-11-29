@@ -8,6 +8,7 @@
 * todo
 ** cut loops over to bmfbp
 ** cut cl-event-passing over to bmfbp
+** should @defnetwork macro use the last declaration as the top level?
 
 * git branches
 ** master
