@@ -1,0 +1,12 @@
+* status
+** got reuse working in cl-event-passing
+** (some days ago) built PEG parser part in bmfbp/clparts
+** try to reuse PEG parser part to build JSON parser
+
+* todo
+** cut loops over to bmfbp
+** cut cl-event-passing over to bmfbp
+
+* git branches
+** master
+** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
