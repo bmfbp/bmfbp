@@ -1,7 +1,13 @@
-(in-package :cl-event-passing-user)
+(in-package :cl-build)
 
 (defun convert-JSON-to-Lisp-network (input-stream output-stream)
-  (cl-event-passing-user:@initialize)
+  (cl-event-passing-user::@initialize)
+  (let ((net
+         (cl-event-passing-user::@defnetwork main
+              (:part 
+
+
+
   (let ((top-level (cl-event-passing-user:@new-schematic :input-pins '(:in) :output-pins '(:out)))
         (cat (cl-event-passing-user:@new-code :input-handler #'cat :input-pins '(:in) :output-pins '(:out)))
         (wire-in (cl-event-passing-user:@new-wire))
