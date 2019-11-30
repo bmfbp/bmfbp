@@ -20,3 +20,6 @@
 * git kraken
 ** merge, drag one branch and drop it onto another
    https://support.gitkraken.com/working-with-repositories/branching-and-merging/
+
+* json grammar
+** https://www.json.org/json-en.html
