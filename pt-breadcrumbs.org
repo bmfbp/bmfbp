@@ -15,3 +15,7 @@
 * git branches
 ** master
 ** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
+
+* git kraken
+** merge, drag one branch and drop it onto another
+   https://support.gitkraken.com/working-with-repositories/branching-and-merging/
