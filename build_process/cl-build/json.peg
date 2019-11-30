@@ -1,0 +1,29 @@
+json <- element
+value <- object / array / string / number / 'true' / 'false' / 'null'
+object <- '{' ws '}' / '{' members '}'
+members <- member / member ',' member
+member <- ws string ws ':' element
+array <- '[' ws ']' / '[' elements ']'
+elements <- element / element ',' element
+element <- ws value ws
+string <- '"' not-dquote* '"'
+not-dquote <- !'"' .
+characters <- (character characters)*
+escape <- '"' / [\] / '/' / 'b' / 'f' / 'n' / 'r'/ 't' / 'i' hex hex hex hex
+hex <- zero / onenine / [A-F] / [a-f]
+number <- integer fraction exponent
+integer <- digit / onenine digits / dash digit / dash onenine digits
+digits <- digit / digit digits
+digit <- zero / onenine
+onenine <- [1-9]
+fraction <- ('.' digits)*
+exponent <- ('E' sign digits / 'e' sign digits)*
+sign <- ('+' / dash)*
+ws <- (space / newline / carriage-return / tab) ws
+dash <- '-'
+zero <- '0'
+space <- ' '
+newline <- '\n'
+tab <- '\t'
+carriage-return <- '\r'
+character <- !'\' !'"' . / '\' escape
