@@ -44,7 +44,7 @@
       (let ((peg-in-pin (e/part::get-input-pin net :peg-source-file-name))
             (json-in-pin (e/part::get-input-pin net :json-source-file-name))
             (debug-pin (e/part::get-input-pin net :debug-grammar)))
-        (cl-event-passing-user::@send net debug-pin t)
+        #+nil(cl-event-passing-user::@send net debug-pin t)
         (cl-event-passing-user::@send net peg-in-pin peg-filename)
         (cl-event-passing-user::@send net json-in-pin json-filename)))))
   

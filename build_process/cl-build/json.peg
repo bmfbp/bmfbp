@@ -6,10 +6,9 @@ member <- ws string ws ':' element
 array <- '[' ws ']' / '[' elements ']'
 elements <- element / element ',' element
 element <- ws value ws
-string <- '"' not-dquote* '"'
-not-dquote <- !'"' .
-characters <- (character characters)*
-escape <- '"' / [\] / '/' / 'b' / 'f' / 'n' / 'r'/ 't' / 'i' hex hex hex hex
+string <- '"' string-char* '"'
+string-char <- !'"' . / escape
+escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
 hex <- zero / onenine / [A-F] / [a-f]
 number <- integer fraction exponent
 integer <- digit / onenine digits / dash digit / dash onenine digits
@@ -26,4 +25,5 @@ space <- ' '
 newline <- '\n'
 tab <- '\t'
 carriage-return <- '\r'
-character <- !'\' !'"' . / '\' escape
+rs <- reverse-solidus
+reverse-solidus <- '\\'
