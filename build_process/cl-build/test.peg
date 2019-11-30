@@ -1,5 +1,7 @@
 json <- json-String / json-Integer / json-Object
-json-Object <- '{' json-Pair '}' / json-Array
+json-Object <- json-String / json-Integer / json-Map / json-Array
+json-Map <- '{' json-Pair-Comma* json-Pair '}'
+json-Pair-Comma <- json-Object ':' json-Object ','
 json-Pair <- json-Object ':' json-Object
 json-Array <- '[' json-Array-Element-Comma* json-Array-Element ']'
 json-Array-Element <- json-Object
