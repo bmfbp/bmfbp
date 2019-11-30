@@ -1,4 +1,4 @@
-(in-package :arrowgrams/builder/cl-build)
+(in-package :arrowgrams/build/cl-build)
 
 (defun json-parser ()
   ;; the only difference from above it "(parser-builder)" instead of "*parser-builder-net*"
