@@ -64,15 +64,21 @@
        (try-to-parse self))
       
       (:debug-grammar
-       (setf arrowgrams/build/cl-build/globals::*debug-grammar* (e/event::data e))))))
+       (setf arrowgrams/build/cl-build/globals::*debug-grammar* (e/event::data e))))))
 
 (defmethod try-to-parse ((self e/part:code))
   ;; parses IFF both inputs have arrived, otherwise does nothing (a standard pattern for state machines)
   (when (and
          arrowgrams/build/cl-build/globals::*peg-parser*
          arrowgrams/build/cl-build/globals::*json-source*)
-    (when arrowgrams/build/cl-build/globals::*debug-grammar*
-      (esrap:trace-rule 'arrowgrams/build/cl-build::json :recursive t)) ;; debug
+
+    (when (and
+           arrowgrams/build/cl-build/globals::*debug-grammar*
+           (listp arrowgrams/build/cl-build/globals::*debug-grammar*))
+      (mapc #'(lambda (rule)
+                (esrap:trace-rule rule))
+            arrowgrams/build/cl-build/globals::*debug-grammar*))
+
     (let ((resulting-lisp (esrap:parse 'arrowgrams/build/cl-build::json
                                        arrowgrams/build/cl-build/globals::*json-source*)))
       ;; peg parser is esrap-lisp that parses JSON and creates lisp code that mimics the JSON
