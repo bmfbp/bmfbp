@@ -10,6 +10,8 @@
 ** cut cl-event-passing over to bmfbp
 ** should @defnetwork macro use the last declaration as the top level?
 
+** fixed: why is (pbuilder :souce-out) not erroring out?  It's a typo.
+
 * git branches
 ** master
 ** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
