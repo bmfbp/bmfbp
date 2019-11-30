@@ -4,7 +4,7 @@
   (format *standard-output* "~&running json parser~%")
   (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/json.peg"))
         (json-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/test.json")))
-    (json-parser peg-filename json-filename)))
+    (json-parser peg-filename json-filename :debug t)))
 
 #|
 first time:

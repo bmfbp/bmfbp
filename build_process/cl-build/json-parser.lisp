@@ -6,7 +6,7 @@
 (defparameter arrowgrams/build/cl-build/globals::*json-source* nil)
 (defparameter arrowgrams/build/cl-build/globals::*debug-grammar* nil)
 
-(defun json-parser (peg-filename json-filename)
+(defun json-parser (peg-filename json-filename &key (debug nil))
   ;; the only difference from above it "(parser-builder)" instead of "*parser-builder-net*"
   (let ((parser-builder-net (arrowgrams/clparts::parser-builder))) ;; this call add parts to the dispatcher list
     (cl-event-passing-user::@initialize)       ;; this clears the dispatcher list
@@ -44,7 +44,7 @@
       (let ((peg-in-pin (e/part::get-input-pin net :peg-source-file-name))
             (json-in-pin (e/part::get-input-pin net :json-source-file-name))
             (debug-pin (e/part::get-input-pin net :debug-grammar)))
-        #+nil(cl-event-passing-user::@send net debug-pin t)
+        (cl-event-passing-user::@send net debug-pin debug)
         (cl-event-passing-user::@send net peg-in-pin peg-filename)
         (cl-event-passing-user::@send net json-in-pin json-filename)))))
   
