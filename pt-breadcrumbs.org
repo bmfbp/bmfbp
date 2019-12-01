@@ -23,3 +23,6 @@
 
 * json grammar
 ** https://www.json.org/json-en.html
+
+* peg bugs
+** #\} breaks peg
