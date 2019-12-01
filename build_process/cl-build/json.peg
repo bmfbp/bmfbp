@@ -1,19 +1,19 @@
 json <- element
-value <- object / array / string / number / 'true' / 'false' / 'null'
-object <- '{' ws '}' / '{' members '}'
-members <- member / member ',' member
-member <- ws string ws ':' element
-array <- '[' ws ']' / '[' elements ']'
-elements <- element / element ',' element
+value <- j-object / j-array / j-string / j-number / 'true' / 'false' / 'null'
+j-object <- LBRACE members* RBRACE
+members <- (member COMMA)* member
+member <- ws j-string ws COLON element ws
+j-array <- LBRACK RBRACK / LBRACK elements RBRACK
+elements <- (element COMMA)* element
 element <- ws value ws
-string <- '"' string-char* '"'
+j-string <- '"' j-string-char* '"'
 
-string-char <- !'"' . / escape
+j-string-char <- !'"' . / escape
 escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
 hex <- zero / onenine / [A-F] / [a-f]
-number <- integer fraction exponent
+j-number <- integer fraction exponent
 integer <- digit / onenine digits / dash digit / dash onenine digits
-digits <- digit / digit digits
+digits <- digit+
 digit <- zero / onenine
 onenine <- [1-9]
 fraction <- ('.' digits)*
@@ -28,3 +28,10 @@ tab <- '\t'
 carriage-return <- '\r'
 rs <- reverse-solidus
 reverse-solidus <- '\\'
+
+LBRACE <- '{' ws
+RBRACE <- '}' ws
+LBRACK <- '[' ws
+RBRACK <- ']' ws
+COMMA <- ',' ws
+COLON <- ':' ws
