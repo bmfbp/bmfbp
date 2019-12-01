@@ -7,6 +7,9 @@ j-object <- LBRACE members* RBRACE
 
 members <- member-comma* member
 member-comma <- member COMMA
+{ (:destructure (m c)
+   (declare (ignore c))
+   m) }
 member <- ws j-string ws COLON element ws
 { (:destructure (ws1 s ws2 c e ws3)
    (declare (ignore ws1 ws2 ws3 c ))
@@ -25,6 +28,9 @@ array-with-elements <- LBRACK elements RBRACK
 
 elements <- element-comma* element
 element-comma <- element COMMA
+{ (:destructure (e c)
+   (declare (ignore c))
+   e) }
 element <- ws value ws
 { (:destructure (ws1 v ws2)
    (declare (ignore ws1 ws2))
