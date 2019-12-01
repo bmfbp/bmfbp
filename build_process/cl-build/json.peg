@@ -1,6 +1,6 @@
 json <- element
 value <- j-object / j-array / j-string / j-number / 'true' / 'false' / 'null'
-j-object <- LBRACE members* RBRACE
+j-object <- LBRACE members* RBRACE { (:destructure (lb mstar rb) (declare (ignore lb rb)) mstar) }
 members <- (member COMMA)* member
 member <- ws j-string ws COLON element ws { (:destructure (ws1 s ws2 c e ws3) (declare (ignore ws1 ws2 ws3 c )) (list s e)) } 
 j-array <- LBRACK RBRACK / LBRACK elements RBRACK
@@ -16,9 +16,9 @@ int1 <- digit { (:text t) }
 int2 <- onenine digits { (:text t) }
 int3 <- dash digit { (:text t) }
 int4 <- dash onenine digits { (:text t) }
-digits <- digit+ { (:text t) }
+digits <- digit+
 digit <- zero / onenine
-onenine <- [1-9] { (:text t) }
+onenine <- [1-9]
 fraction <- ('.' digits)*
 exponent <- ('E' sign digits / 'e' sign digits)*
 sign <- ('+' / dash)*
