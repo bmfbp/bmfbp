@@ -1,18 +1,30 @@
 json <- element
 value <- j-object / j-array / j-string / j-number / 'true' / 'false' / 'null'
-j-object <- LBRACE members* RBRACE { (:destructure (lb mstar rb) (declare (ignore lb rb)) `(hashmap ,mstar)) }
-members <- (member COMMA)* member
-member <- ws j-string ws COLON element ws { (:destructure (ws1 s ws2 c e ws3) (declare (ignore ws1 ws2 ws3 c )) (list s e)) } 
+j-object <- LBRACE members* RBRACE
+{ (:destructure (lb mstar rb)
+   (declare (ignore lb rb))
+   `(hashmap ,mstar)) }
+
+members <- member-comma* member
+member-comma <- member COMMA
+member <- ws j-string ws COLON element ws
+{ (:destructure (ws1 s ws2 c e ws3)
+   (declare (ignore ws1 ws2 ws3 c ))
+   (list s e)) }
+
 j-array <- empty-array / array-with-elements
 empty-array <- LBRACK RBRACK
 { (:lambda (x)
     (declare (ignore x))
     `(empty-array)) }
+
 array-with-elements <- LBRACK elements RBRACK
 { (:destructure (lb e rb)
    (declare (ignore lb rb))
    `(array ,e)) }
-elements <- (element COMMA)* element
+
+elements <- element-comma* element
+element-comma <- element COMMA
 element <- ws value ws
 { (:destructure (ws1 v ws2)
    (declare (ignore ws1 ws2))
