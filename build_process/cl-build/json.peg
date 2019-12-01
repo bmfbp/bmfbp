@@ -2,24 +2,28 @@ json <- element
 value <- j-object / j-array / j-string / j-number / 'true' / 'false' / 'null'
 j-object <- LBRACE members* RBRACE
 members <- (member COMMA)* member
-member <- ws j-string ws COLON element ws
+member <- ws j-string ws COLON element ws { (:destructure (ws1 s ws2 c e ws3) (declare (ignore ws1 ws2 ws3 c )) (list s e)) } 
 j-array <- LBRACK RBRACK / LBRACK elements RBRACK
 elements <- (element COMMA)* element
-element <- ws value ws
+element <- ws value ws { (:destructure (ws1 v ws2) (declare (ignore ws1 ws2)) v) }
 j-string <- '"' j-string-char* '"' { (:text t) }
 
 j-string-char <- !'"' . / escape
 escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
 hex <- zero / onenine / [A-F] / [a-f]
 j-number <- integer fraction exponent
-integer <- digit / onenine digits / dash digit / dash onenine digits
-digits <- digit+
+integer <- int1 / int2 / int3 / int4
+int1 <- digit
+int2 <- onenine digits
+int3 <- dash digit
+int4 <- dash onenine digits
+digits <- digit+ { (:text t) }
 digit <- zero / onenine
 onenine <- [1-9]
 fraction <- ('.' digits)*
 exponent <- ('E' sign digits / 'e' sign digits)*
 sign <- ('+' / dash)*
-ws <- (space / newline / carriage-return / tab)*
+ws <- (space / newline / carriage-return / tab)* { (:text t) }
 dash <- '-'
 zero <- '0'
 space <- ' '
