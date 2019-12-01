@@ -64,7 +64,7 @@
        (try-to-parse self))
       
       (:debug-grammar
-       (setf arrowgrams/build/cl-build/globals::*debug-grammar* (e/event::data e))))))
+       (setf arrowgrams/build/cl-build/globals::*debug-grammar* (e/event::data e))))))
 
 (defmethod try-to-parse ((self e/part:code))
   ;; parses IFF both inputs have arrived, otherwise does nothing (a standard pattern for state machines)
