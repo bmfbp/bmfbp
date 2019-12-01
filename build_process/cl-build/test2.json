@@ -6,5 +6,55 @@
 "self" : {
 },
 "parts" : [
+  {
+    "kindName" : "top-level name",
+    "partName" : "ID402",
+    "inCount" : 0,
+    "outCount" : 1,
+    "inMap" : {  },
+    "outMap" : { "name" : 0 },
+    "inPins" : [],
+    "outPins" : [[0]]
+  },
+  {
+    "kindName" : "build process",
+    "partName" : "ID382",
+    "inCount" : 2,
+    "outCount" : 1,
+    "inMap" : { "top-level name" : 0, "top-level svg" : 1 },
+    "outMap" : { "javascript source code" : 0 },
+    "inPins" : [[0],[2]],
+    "outPins" : [[1]]
+  },
+  {
+    "kindName" : "build process",
+    "partName" : "ID382",
+    "inCount" : 2,
+    "outCount" : 1,
+    "inMap" : { "top-level name" : 0, "top-level svg" : 1 },
+    "outMap" : { "javascript source code" : 0 },
+    "inPins" : [[0],[2]],
+    "outPins" : [[1]]
+  },
+  {
+    "kindName" : "run",
+    "partName" : "ID394",
+    "inCount" : 1,
+    "outCount" : 0,
+    "inMap" : { "in" : 0 },
+    "outMap" : {  },
+    "inPins" : [[1]],
+    "outPins" : []
+  },
+  {
+    "kindName" : "svg input",
+    "partName" : "ID374",
+    "inCount" : 0,
+    "outCount" : 1,
+    "inMap" : {  },
+    "outMap" : { "svg content" : 0 },
+    "inPins" : [],
+    "outPins" : [[2]]
+  }
 ]
 }
