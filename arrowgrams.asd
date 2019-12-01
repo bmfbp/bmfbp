@@ -42,6 +42,7 @@
   :components ((:module "cl-build"
                         :pathname "./build_process/cl-build/"
                         :components ((:file "package")
+                                     (:file "util")
                                      (:file "json-parser" :depends-on ("package"))))))
 
 (defsystem :arrowgrams/build/cl-build/test
