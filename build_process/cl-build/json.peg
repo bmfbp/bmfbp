@@ -6,8 +6,7 @@ member <- ws j-string ws COLON element ws { (:destructure (ws1 s ws2 c e ws3) (d
 j-array <- LBRACK RBRACK / LBRACK elements RBRACK
 elements <- (element COMMA)* element
 element <- ws value ws { (:destructure (ws1 v ws2) (declare (ignore ws1 ws2)) v) }
-j-string <- '"' j-string-char* '"' { (:lambda(x) (esrap:text x)) }
-
+j-string <- '"' j-string-char* '"'
 j-string-char <- !'"' . / escape
 escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
 hex <- zero / onenine / [A-F] / [a-f]
@@ -33,7 +32,7 @@ carriage-return <- '\r'
 rs <- reverse-solidus
 reverse-solidus <- '\\'
 
-RBRACE <- '}' ws { (:lambda (x) (declare (ignore x)) "}") }
+RBRACE <- '}' ws { (:lambda (x) (declare (ignore x)) #\.) }
 LBRACK <- '[' ws { (:lambda (x) (declare (ignore x)) #\[) }
 RBRACK <- ']' ws { (:lambda (x) (declare (ignore x)) #\]) }
 COMMA <- ',' ws { (:lambda (x) (declare (ignore x)) #\,) }
