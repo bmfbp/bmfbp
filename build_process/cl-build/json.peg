@@ -29,9 +29,9 @@ carriage-return <- '\r'
 rs <- reverse-solidus
 reverse-solidus <- '\\'
 
-LBRACE <- '{' ws
-RBRACE <- '}' ws
-LBRACK <- '[' ws
-RBRACK <- ']' ws
-COMMA <- ',' ws
-COLON <- ':' ws
+RBRACE <- '}' ws { (:lambda (x) (declare (ignore x)) "}") }
+LBRACK <- '[' ws { (:lambda (x) (declare (ignore x)) #\[) }
+RBRACK <- ']' ws { (:lambda (x) (declare (ignore x)) #\]) }
+COMMA <- ',' ws { (:lambda (x) (declare (ignore x)) #\,) }
+COLON <- ':' ws { (:lambda (x) (declare (ignore x)) #\:) }
+LBRACE <- '{' ws { (:lambda (x) (declare (ignore x)) #\{) }
