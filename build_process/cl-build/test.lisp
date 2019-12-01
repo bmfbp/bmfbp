@@ -2,10 +2,10 @@
 
 (defun arrowgrams/build/cl-build::test-all ()
   (format *standard-output* "~&running json parser~%")
-  (let ((debug-rules '(json value object members member arry elements element string)))
+  (let ((debug-rules '(json value object members member array elements element string)))
     (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/json.peg"))
-          (json-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/test.json")))
-      (json-parser peg-filename json-filename :debug debug-rules)))
+          (json-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/test1.json")))
+      (json-parser peg-filename json-filename :debug debug-rules))))
 
 #|
 first time:
