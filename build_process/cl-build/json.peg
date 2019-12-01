@@ -6,7 +6,7 @@ member <- ws j-string ws COLON element ws
 j-array <- LBRACK RBRACK / LBRACK elements RBRACK
 elements <- (element COMMA)* element
 element <- ws value ws
-j-string <- '"' j-string-char* '"'
+j-string <- '"' j-string-char* '"' { (:text t) }
 
 j-string-char <- !'"' . / escape
 escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
