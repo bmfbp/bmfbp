@@ -6,26 +6,26 @@ member <- ws j-string ws COLON element ws { (:destructure (ws1 s ws2 c e ws3) (d
 j-array <- LBRACK RBRACK / LBRACK elements RBRACK
 elements <- (element COMMA)* element
 element <- ws value ws { (:destructure (ws1 v ws2) (declare (ignore ws1 ws2)) v) }
-j-string <- '"' j-string-char* '"' { (:text t) }
+j-string <- '"' j-string-char* '"' { (:lambda(x) (esrap:text x)) }
 
 j-string-char <- !'"' . / escape
 escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
 hex <- zero / onenine / [A-F] / [a-f]
 j-number <- integer fraction exponent
 integer <- int1 / int2 / int3 / int4
-int1 <- digit
-int2 <- onenine digits
-int3 <- dash digit
-int4 <- dash onenine digits
+int1 <- digit { (:text t) }
+int2 <- onenine digits { (:text t) }
+int3 <- dash digit { (:text t) }
+int4 <- dash onenine digits { (:text t) }
 digits <- digit+ { (:text t) }
 digit <- zero / onenine
-onenine <- [1-9]
+onenine <- [1-9] { (:text t) }
 fraction <- ('.' digits)*
 exponent <- ('E' sign digits / 'e' sign digits)*
 sign <- ('+' / dash)*
 ws <- (space / newline / carriage-return / tab)* { (:text t) }
 dash <- '-'
-zero <- '0'
+zero <- '0' { (:text t) }
 space <- ' '
 newline <- '\n'
 tab <- '\t'
