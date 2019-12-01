@@ -5,7 +5,7 @@ members <- member / member ',' member
 member <- ws string ws ':' element
 array <- '[' ws ']' / '[' elements ']'
 elements <- element / element ',' element
-element <- ws* value ws*
+element <- ws value ws
 string <- '"' string-char* '"'
 
 string-char <- !'"' . / escape
@@ -19,7 +19,7 @@ onenine <- [1-9]
 fraction <- ('.' digits)*
 exponent <- ('E' sign digits / 'e' sign digits)*
 sign <- ('+' / dash)*
-ws <- (space / newline / carriage-return / tab) ws
+ws <- (space / newline / carriage-return / tab)*
 dash <- '-'
 zero <- '0'
 space <- ' '
