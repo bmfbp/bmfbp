@@ -1,0 +1,37 @@
+json <- element
+value <- j-object / j-array / j-string / j-number / 'true' / 'false' / 'null'
+j-object <- LBRACE members* RBRACE
+members <- (member COMMA)* member
+member <- ws j-string ws COLON element ws
+j-array <- LBRACK RBRACK / LBRACK elements RBRACK
+elements <- (element COMMA)* element
+element <- ws value ws
+j-string <- '"' j-string-char* '"'
+
+j-string-char <- !'"' . / escape
+escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
+hex <- zero / onenine / [A-F] / [a-f]
+j-number <- integer fraction exponent
+integer <- digit / onenine digits / dash digit / dash onenine digits
+digits <- digit+
+digit <- zero / onenine
+onenine <- [1-9]
+fraction <- ('.' digits)*
+exponent <- ('E' sign digits / 'e' sign digits)*
+sign <- ('+' / dash)*
+ws <- (space / newline / carriage-return / tab)*
+dash <- '-'
+zero <- '0'
+space <- ' '
+newline <- '\n'
+tab <- '\t'
+carriage-return <- '\r'
+rs <- reverse-solidus
+reverse-solidus <- '\\'
+
+LBRACE <- '{' ws
+RBRACE <- '}' ws
+LBRACK <- '[' ws
+RBRACK <- ']' ws
+COMMA <- ',' ws
+COLON <- ':' ws
