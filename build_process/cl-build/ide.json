@@ -1,7 +1,7 @@
 {
   "kindName" : "ide",
   "wireCount" : 3,
-  "metaData" : "[{\"dir\":\"build_process/\",\"kindName\":\"svg input\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/svg_input.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"run\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/run.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"build process\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/build_process.json\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"top-level name\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/top_level_name.json\",\"ref\":\"master\"}]",
+  "metaData" : "[{dir:build_process/,kindName:svg input,repo:https://github.com/bmfbp/bmfbp.git,file:parts/svg_input.json,ref:master},{dir:build_process/,kindName:run,repo:https://github.com/bmfbp/bmfbp.git,file:parts/run.json,ref:master},{dir:build_process/,kindName:build process,repo:https://github.com/bmfbp/bmfbp.git,file:parts/build_process.json,ref:master},{dir:build_process/,kindName:top-level name,repo:https://github.com/bmfbp/bmfbp.git,file:parts/top_level_name.json,ref:master}]",
   "self" : {
   },
   "parts" : [
