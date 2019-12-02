@@ -26,3 +26,13 @@
 
 * peg bugs
 ** #\} breaks peg
+
+* thinking...
+** git branch 16f82ddc0f240696403fe0a8ecde169b3d1a20df 
+   run (ql:quickload :arrowgrams/build/cl-build/test)
+   run (arrowgrams/build/cl-build::test-all))
+   the output is a CST (a Concrete Syntax Tree derived from the AST Abstract Syntax Tree) of test.json
+   for example, see test.json, e.g. "kindname "build process", "partName" "ID382"
+   what is needed is a graph, like that given by test.json, but in CL
+   I'm thinking about what needs to be done next
+   
