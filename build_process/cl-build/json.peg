@@ -3,9 +3,16 @@ value <- j-object / j-array / j-string / j-number / 'true' / 'false' / 'null'
 j-object <- LBRACE members* RBRACE
 { (:destructure (lb mstar rb)
    (declare (ignore lb rb))
-   `(hashmap ,mstar)) }
+   (if (null mstar)
+       `(empty-hashmap)
+     `(hashmap ,mstar))) }
 
 members <- member-comma* member
+{ (:destructure (mc m)
+   (if (null mc)
+       m
+     (list mc m))) }
+
 member-comma <- member COMMA
 { (:destructure (m c)
    (declare (ignore c))
@@ -27,10 +34,14 @@ array-with-elements <- LBRACK elements RBRACK
    `(array ,e)) }
 
 elements <- element-comma* element
+{ (:destructure (ec e)
+   (if (null ec)
+       e
+     (list ec e))) }
 element-comma <- element COMMA
-{ (:destructure (e c)
-   (declare (ignore c))
-   e) }
+{ (:destructure (el cm)
+   (declare (ignore cm))
+   el) }
 element <- ws value ws
 { (:destructure (ws1 v ws2)
    (declare (ignore ws1 ws2))
