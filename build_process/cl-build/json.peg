@@ -42,12 +42,18 @@ j-string-char <- !'"' . / escape
 escape <- rs ["] / rs rs / rs '/' / rs 'b' / rs 'f' / rs 'n' / rs 'r'/ rs 't' / rs 'u' hex hex hex hex
 hex <- zero / onenine / [A-F] / [a-f]
 j-number <- integer fraction exponent
+{ (:destructure (int frac exp)
+   (if (and (null frac)
+            (null exp))
+       (parse-integer int :junk-allowed nil)
+     (list int frac exp))) }
+
 integer <- int1 / int2 / int3 / int4
-int1 <- digits { (:text t) }
-int2 <- onenine digits { (:text t) }
-int3 <- dash digit { (:text t) }
-int4 <- dash onenine digits { (:text t) }
-digits <- digit+
+int1 <- digits
+int2 <- onenine digits
+int3 <- dash digit
+int4 <- dash onenine digits
+digits <- digit+ { (:text t) }
 digit <- zero / onenine
 onenine <- [1-9]
 fraction <- ('.' digits)*
@@ -55,7 +61,7 @@ exponent <- ('E' sign digits / 'e' sign digits)*
 sign <- ('+' / dash)*
 ws <- (space / newline / carriage-return / tab)* { (:text t) }
 dash <- '-'
-zero <- '0' { (:text t) }
+zero <- '0'
 space <- ' '
 newline <- '\n'
 tab <- '\t'
