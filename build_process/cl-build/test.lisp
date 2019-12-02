@@ -4,7 +4,9 @@
   (format *standard-output* "~&running json parser~%")
   (let ((debug-rules '(json value j-object members member j-array elements element j-string)))
     (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/json.peg"))
-          (json-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/test.json")))
+          ;(json-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/ide.json")))
+          ;(json-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/build_process.json")))
+          (json-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/compile_composites.json")))
       ;(json-parser peg-filename json-filename :debug debug-rules))))
       (json-parser peg-filename json-filename))))
 
