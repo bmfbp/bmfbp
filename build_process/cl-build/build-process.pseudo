@@ -1,0 +1,113 @@
+% I the following, I will try to explain how I hand-compiled the build_process diagram for arrowgrams.  
+% 
+% Note that I am using Draw.IO as an intermediate drawing tool.  This will be superceded by
+% a drawing tool that is more amenable to drawing bits of code.  Draw.IO is not a tool for editing
+% code...
+% 
+% The main diagram is bmfbp/build_process/build_process.drawio.
+% 
+% The main diagram has 3 TABs - ide.svg, build_process.svg, compile_composite.svg.
+% 
+% Currently, we "export" the 3 diagrams as SVG files from Draw.IO.  Draw.IO supports features
+% that are not found in SVG, such as wrapped text.  These kinds of things must be fixed up by
+% hand.
+% 
+% The SVG files are compiled by the current diagrams compiler "jsbmfbp.sh" (built mostly in gprolog,
+% but uses components built in Haskell and Common Lisp).
+% 
+% 
+% Firstly, I will concentrate on the sub-diagram TAB "build_process.svg".  I will describe the
+% diagrams in pseudo-code, then in Common Lisp
+% 
+% The diagram contains 10 components (rectangles) and 3 external pins (ellipses / circles).
+% 
+% The component called "compile composite" is a Schematic whose diagram is found in the TAB "compile_composite".
+% 
+% All 9 other components are "code" (leaf) nodes.  They are implemented directly in the substrate 
+% language (Common Lisp, later JS).
+% 
+% Each rectangle contains a single piece of text - the name of the "kind" (aka Class) of the component.
+% 
+% Rectangles have input and output pins (aka ports), signified by text (see below, discusson on wires).
+% 
+% Each external pin (circle/ellipse) contains a single piece of text - the name of the pin.
+% 
+% The components and external pins are "wired" up using arrows. 
+% 
+% The end of a wire with an arrowhead points at the "input pin" of a component, or, to an external output pin
+% of the diagram on TAB "build_process.svg".  These pins are "receivers" (they receive events).
+% 
+% The end of a wires without arrowheads emanate from output pins of rectangles, or, from external input pins
+% of the diagram on TAB "build_process.svg".
+% 
+% pseudo-code:
+
+% description of the "self" part
+
+schematic [build_process.svg] % is [self]
+  input pins { [top-level svg],
+               [top-level name] },
+  output pins { [javascript source code] }
+
+% description of all parts within this diagram - a part consists of a 4-tuple { kind, finality, input pins, output pins }
+% where "finality" is one of {schematic, code, part} where "schematic" means that we KNOW that the part is a schematic, "code" means that we KNOW
+% that the part is a piece of code in the sub-strate language and "part" means "black box" (we only know it's kind, and its input and output pins)
+% "kind" is like Class, but more specific (a kind can have only one method - "react" - the rest of the "methods" of the class might appear as
+% input pins)
+
+  part declarations {
+	              [get file content in repo] : code, input pins { [git report metadata], [temp directory] }, output pins { [file content] }
+                      [iterator] : code, input pins { [start], [continue], [done] }, output pins { [get a part] }
+                      [compile composite] : part, input pins { [svg] }, output pins { [graph as json], parts as json objects] }
+                      [json object stacker] : code, input pins { [push object], [get a part] }, output pins { [no more], [part metadata] }
+                      [fetch git repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata] }
+                      [get file content in repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata], [file content] }
+                      [determine kindType] : code, input pins { [part metadata], [file content] }, output pins { [schematic metadata], leaf metadata] }
+                      [prepare temp directory] : code, output pins { [directory] }
+                      [collector] : code, input pins { [composite], [done], [leaf] }, output pins { [intermdiate code] }
+                      [javascript builder] : code, input pins { [top-level name], [intermdiate code], [temp directory] }, output pins { [javascript source code] }
+                    }
+
+  % internal parts creates instances of the above parts, more than one instance of a given kind is allowed, 
+  % each instance is given a unique name.  In this case, for illustrative purposes, we use long names that
+  % remind us of the part kinds (this is not necessary in general)
+  internal parts {
+                  [get file content in repo instance] : [get file content in repo],
+                  [iterator instance] : [iterator],
+                  [compile composite instance] : [compile composite],
+                  [json object stacker instance] : [json object stacker],
+                  [fetch git repo instance] : [fetch git repo],
+                  [get file content in repo instance] : [get file content in repo],
+                  [determine kindType instance] : [determine kindType],
+                  [prepare temp directory instance] : [prepare temp directory],
+                  [collector instance] : [collector],
+                  [javascript builder instance] : [javascript builder],
+                 }
+
+  % wiring
+  % FROM : TO  (all FROMs (sources) on the same wire must be grouped together)
+  wiring {
+    [self/top-level svg], [get file content in repo/file content] : [iterator instance/start], [compile composite/svg]
+
+    [iterator instance/got a part]             : [json object stacker instance/got a part]
+
+    [compile composite instance/graph as json] : [collector instance/composite]
+    [compile composite instance/parts as json objects] : [json object stacker instance/push object]
+
+    [json object stacker instance/no more] : [iterator instance/done], [collector/done]
+    [json object stacker instance/part metadata] : [fetch git repo instance/git repo metadata], [iterator instance/continue]
+
+    [fetch git repo instance/metadata] : [get file content in repo instance/git repo metadata]
+
+    [get file content in repo instance/metadata] : [determine kindType instance/part metadata]
+    [get file content in repo instance/file content] : [determine kindType instance/file content]
+
+    [determine kindType instance/schematic metadata] : [get file content in repo instance/git repo metadata]
+    [determine kindType instance/leaf metadata] : [collector instance/leaf]
+
+    [collector instance/intermediate code] : [javascript builder instance/intermediate code]
+
+    [javascript builder instance/javascript source code] : [self/javascript source code]
+
+    [prepare temp directory instance/directory] : [javascript builder instance/temp directory], [get file content in repo instance/temp direcotry], [fetch git repo instance/temp directory], [get file content in repo instance/temp directory]
+  }
