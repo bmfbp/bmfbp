@@ -5,6 +5,11 @@
 ** working on bmfbp/build-process/cl-build/convert.lisp
 ** check that bmfbp/clparts/parser-builder works
 
+
+** working on pseudo-code parser atest()
+   (ql:quickload :arrowgrams/build/cl-build/atest)
+   (arrowgrams/build/cl-build::atest)
+
 * todo
 ** cut loops over to bmfbp
 ** cut cl-event-passing over to bmfbp
