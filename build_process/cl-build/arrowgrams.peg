@@ -1,0 +1,37 @@
+ag-diagram <- top-level-description part-declarations internal-parts wiring
+
+top-level-description <- 'schematic' input-pins COMMA output-pins
+input-pins <- 'input' ws* 'pins' ws* LBRACE id-list RBRACE
+output-pins <- 'output' ws* 'pins' ws* LBRACE id-list RBRACE
+id-list <- (pin-id COMMA)* pin-id
+
+part-declarations <- 'part' ws* 'declarations' ws* LBRACE 
+
+pin-id <- id-no-slash-pin 
+
+id-no-slash-pin <- LBRACKET notSlash* RBRACKET
+id-with-slash-pin <- LBRACKET notSlash* '/' notSlash* RBRACKET
+
+notSlash <- ! '/' .
+
+% boring details
+
+ag-comment <- '%' (!newline .)* newline
+COMMA <- ',' ws*
+LBRACE <- '{' ws*
+RBRACE <- '}' ws*
+LBRACKET <- '[' ws*
+RBRACKET <- ']' ws*
+
+
+
+
+
+% boiler place stuff
+
+ws <- (space / newline / carriage-return / tab)* { (:text t) }
+space <- ' '
+newline <- '\n'
+tab <- '\t'
+carriage-return <- '\r'
+
