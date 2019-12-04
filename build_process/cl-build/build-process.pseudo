@@ -47,7 +47,7 @@
 schematic [build process] % "build_process.svg" is [self]
   input pins { [top-level svg],
                [top-level name] },
-  output pins { [javascript source code] }
+  output pins { [javascript source code] },
 
 % description of all parts within this diagram - a part consists of a 4-tuple { kind, finality, input pins, output pins }
 % where "finality" is one of {schematic, code, part} where "schematic" means that we KNOW that the part is a schematic, "code" means that we KNOW
@@ -66,7 +66,7 @@ schematic [build process] % "build_process.svg" is [self]
                       [prepare temp directory] : code, output pins { [directory] },
                       [collector] : code, input pins { [composite], [done], [leaf] }, output pins { [intermdiate code] },
                       [javascript builder] : code, input pins { [top-level name], [intermediate code], [temp directory] }, output pins { [javascript source code] }
-                    }
+                    },
 
   % internal parts creates instances of the above parts, more than one instance of a given kind is allowed, 
   % each instance is given a unique name.  In this case, for illustrative purposes, we use long names that
@@ -82,7 +82,7 @@ schematic [build process] % "build_process.svg" is [self]
                   [prepare temp directory instance] : [prepare temp directory],
                   [collector instance] : [collector],
                   [javascript builder instance] : [javascript builder],
-                 }
+                 },
 
   % wiring
   % FROM : TO  (all FROMs (sources) on the same wire must be grouped together)
