@@ -21,7 +21,7 @@ id-list <- (pin-id COMMA)* pin-id
 
 internal-parts <- ws* 'internal' ws* 'parts' ws* LBRACE instance-decls RBRACE
 
-instance-decls <- (instance-decl COMMA)* instance-decl
+instance-decls <- instance-decl*
 instance-decl <- instance-id ws* COLON kind-id
 
 wiring <- ws* 'wiring' ws* LBRACE wires RBRACE

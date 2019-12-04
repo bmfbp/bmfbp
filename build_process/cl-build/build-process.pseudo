@@ -56,15 +56,15 @@ schematic [build process] % "build_process.svg" is [self]
 % input pins)
 
   part declarations {
-                      [compile composite] : part, input pins { [svg] }, output pins { [graph as json], [parts as json objects] },
-	              [get file content in repo] : code, input pins { [git report metadata], [temp directory] }, output pins { [file content] },
-                      [iterator] : code, input pins { [start], [continue], [done] }, output pins { [get a part] },
-                      [json object stacker] : code, input pins { [push object], [get a part] }, output pins { [no more], [part metadata] },
-                      [fetch git repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata] },
-                      [get file content in repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata], [file content] },
-                      [determine kindType] : code, input pins { [part metadata], [file content] }, output pins { [schematic metadata], [leaf metadata] },
-                      [prepare temp directory] : code, output pins { [directory] },
-                      [collector] : code, input pins { [composite], [done], [leaf] }, output pins { [intermdiate code] },
+                      [compile composite] : part, input pins { [svg] }, output pins { [graph as json], [parts as json objects] }
+	              [get file content in repo] : code, input pins { [git report metadata], [temp directory] }, output pins { [file content] }
+                      [iterator] : code, input pins { [start], [continue], [done] }, output pins { [get a part] }
+                      [json object stacker] : code, input pins { [push object], [get a part] }, output pins { [no more], [part metadata] }
+                      [fetch git repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata] }
+                      [get file content in repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata], [file content] }
+                      [determine kindType] : code, input pins { [part metadata], [file content] }, output pins { [schematic metadata], [leaf metadata] }
+                      [prepare temp directory] : code, output pins { [directory] }
+                      [collector] : code, input pins { [composite], [done], [leaf] }, output pins { [intermdiate code] }
                       [javascript builder] : code, input pins { [top-level name], [intermediate code], [temp directory] }, output pins { [javascript source code] }
                     },
 
