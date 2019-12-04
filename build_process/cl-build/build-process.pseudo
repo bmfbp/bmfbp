@@ -81,7 +81,7 @@ schematic [build process] % "build_process.svg" is [self]
                   [determine kindType instance] : [determine kindType],
                   [prepare temp directory instance] : [prepare temp directory],
                   [collector instance] : [collector],
-                  [javascript builder instance] : [javascript builder],
+                  [javascript builder instance] : [javascript builder]
                  },
 
   % wiring

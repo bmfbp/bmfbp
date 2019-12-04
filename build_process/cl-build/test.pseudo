@@ -15,7 +15,16 @@ schematic [build process]
                       [javascript builder] : code, input pins { [top-level name], [intermediate code], [temp directory] }, output pins { [javascript source code] }
                     },
   internal parts {
-                  [get file content in repo instance] : [get file content in repo]
+                  [get file content in repo instance] : [get file content in repo],
+                  [iterator instance] : [iterator],
+                  [compile composite instance] : [compile composite],
+                  [json object stacker instance] : [json object stacker],
+                  [fetch git repo instance] : [fetch git repo],
+                  [get file content in repo instance] : [get file content in repo],
+                  [determine kindType instance] : [determine kindType],
+                  [prepare temp directory instance] : [prepare temp directory],
+                  [collector instance] : [collector],
+                  [javascript builder instance] : [javascript builder]
                  },
   wiring {
     [javascript builder instance/javascript source code] : [self/javascript source code]
