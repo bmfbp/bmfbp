@@ -2,7 +2,7 @@ pseudo-grammar <- top-level-description part-declarations internal-parts wiring
 
 top-level-description <- ws* 'schematic' ws* top-level-id pin-decl
 
-pin-decl <- input-pin-decl / output-pin-decl / input-pin-decl COMMA output-pin-decl
+pin-decl <- input-pin-decl COMMA output-pin-decl / output-pin-decl / input-pin-decl
 
 part-declarations <- ws* 'part' ws* 'declarations' ws* LBRACE part-decls RBRACE
 part-decls <- (part-decl COMMA)* part-decl
@@ -41,8 +41,8 @@ kind-id <- id-no-slash
 
 pin-id <- id-no-slash 
 
-id-no-slash <- LBRACKET notSlashOrRbracket* RBRACKET ws*  { (:text t) }
-id-with-slash <- LBRACKET notSlashOrRbracket* '/' notSlashOrRbracket* RBRACKET ws* { (:text t) }
+id-no-slash <- LBRACKET notSlashOrRbracket+ RBRACKET ws*  { (:destructure (lb id rb ws) (declare (ignore (lb rb ws) (esrap:text id)))) }
+id-with-slash <- LBRACKET notSlashOrRbracket+ '/' notSlashOrRbracket+ RBRACKET ws* { (:text t) }
 
 notSlashOrRbracket <- !'/' !']' .
 
@@ -62,7 +62,7 @@ RBRACKET <- ']' ws*
 
 # boiler place stuff
 
-ws <- (pseudo-comment / space / newline / carriage-return / tab) { (:text t) }
+ws <- (pseudo-comment / space / newline / carriage-return / tab) { (:lambda (x) (declare (ignore x)) " ") }
 space <- ' '
 newline <- '\n'
 tab <- '\t'
