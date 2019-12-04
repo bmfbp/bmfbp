@@ -3,7 +3,8 @@ schematic [build process]
                [top-level name] },
   output pins { [javascript source code] },
   part declarations {
-	              [get file content in repo] : blackbox, input pins { [git report metadata], [temp directory] }, output pins { [file content] },
+                      [compile composite] : part, input pins { [svg] }, output pins { [graph as json], [parts as json objects] },
+	              [get file content in repo] : part, input pins { [svg] }, output pins { [file content] },
 	              [get file content in repo] : code, input pins { [git report metadata], [temp directory] }, output pins { [file content] }
                     },
   internal parts {

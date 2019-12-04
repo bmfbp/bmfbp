@@ -8,7 +8,7 @@ part-declarations <- ws* 'part' ws* 'declarations' ws* LBRACE part-decls RBRACE
 part-decls <- (part-decl COMMA)* part-decl
 part-decl <- part-id ws* COLON finality WC pin-decl
 
-finality <- 'schematic' / 'code' / 'blackbox'
+finality <- 'schematic' / 'code' / 'part'
 
 top-level-id <- id-no-slash
 part-id <- id-no-slash     
