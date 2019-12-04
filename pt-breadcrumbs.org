@@ -47,3 +47,6 @@
    what is needed is a graph, like that given by test.json, but in CL
    I'm thinking about what needs to be done next
    
+
+* esrap
+** need better error messages / furthest point of advance?
