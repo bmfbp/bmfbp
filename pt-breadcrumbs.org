@@ -21,6 +21,7 @@
 ** see Q: in pseudo-parser.lisp
 ** rename "finality" in pseudo.peg
 ** esrap:trace-rule ... :recursive t dies if rule is not defined (typo)
+** revert back to new esrap
 
 * git branches
 ** master
