@@ -109,5 +109,5 @@ schematic [build process] % "build_process.svg" is [self]
 
     [javascript builder instance/javascript source code] : [self/javascript source code]
 
-    [prepare temp directory instance/directory] : [javascript builder instance/temp directory], [get file content in repo instance/temp direcotry], [fetch git repo instance/temp directory], [get file content in repo instance/temp directory]
+    [prepare temp directory instance/directory] : [javascript builder instance/temp directory], [get file content in repo instance/temp directory], [fetch git repo instance/temp directory], [get file content in repo instance/temp directory]
   }
