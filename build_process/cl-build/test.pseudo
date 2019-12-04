@@ -31,4 +31,24 @@ schematic [build process]
 
     [iterator instance/got a part]             : [json object stacker instance/got a part]
 
+    [compile composite instance/graph as json] : [collector instance/composite]
+    [compile composite instance/parts as json objects] : [json object stacker instance/push object]
+
+    [json object stacker instance/no more] : [iterator instance/done], [collector/done]
+    [json object stacker instance/part metadata] : [fetch git repo instance/git repo metadata], [iterator instance/continue]
+
+    [fetch git repo instance/metadata] : [get file content in repo instance/git repo metadata]
+
+    [get file content in repo instance/metadata] : [determine kindType instance/part metadata]
+    [get file content in repo instance/file content] : [determine kindType instance/file content]
+
+    [determine kindType instance/schematic metadata] : [get file content in repo instance/git repo metadata]
+    [determine kindType instance/leaf metadata] : [collector instance/leaf]
+
+    [collector instance/intermediate code] : [javascript builder instance/intermediate code]
+
+    [javascript builder instance/javascript source code] : [self/javascript source code]
+
+    [prepare temp directory instance/directory] : [javascript builder instance/temp directory], [get file content in repo instance/temp direcotry], [fetch git repo instance/temp directory], [get file content in repo instance/temp directory]
   }
+
