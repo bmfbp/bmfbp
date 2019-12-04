@@ -2,7 +2,8 @@
 
 (defun arrowgrams/build/cl-build::atest ()
   (format *standard-output* "~&running pseudo code parser~%")
-  (let ((debug-rules '(pseudo-grammar top-level-description part-declarations internal-parts wiring)))
+  (let ((debug-rules '(pseudo-grammar top-level-description part-declarations internal-parts wiring
+                                      input-pin-decl output-pin-decl)))
     (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/pseudo.peg"))
           (pseudo-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/build-process.pseudo"))
           (grammar-name 'arrowgrams/build/cl-build::pseudo-grammar))
