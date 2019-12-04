@@ -72,15 +72,15 @@ schematic [build process] % "build_process.svg" is [self]
   % each instance is given a unique name.  In this case, for illustrative purposes, we use long names that
   % remind us of the part kinds (this is not necessary in general)
   internal parts {
-                  [get file content in repo instance] : [get file content in repo],
-                  [iterator instance] : [iterator],
-                  [compile composite instance] : [compile composite],
-                  [json object stacker instance] : [json object stacker],
-                  [fetch git repo instance] : [fetch git repo],
-                  [get file content in repo instance] : [get file content in repo],
-                  [determine kindType instance] : [determine kindType],
-                  [prepare temp directory instance] : [prepare temp directory],
-                  [collector instance] : [collector],
+                  [get file content in repo instance] : [get file content in repo]
+                  [iterator instance] : [iterator]
+                  [compile composite instance] : [compile composite]
+                  [json object stacker instance] : [json object stacker]
+                  [fetch git repo instance] : [fetch git repo]
+                  [get file content in repo instance] : [get file content in repo]
+                  [determine kindType instance] : [determine kindType]
+                  [prepare temp directory instance] : [prepare temp directory]
+                  [collector instance] : [collector]
                   [javascript builder instance] : [javascript builder]
                  },
 

@@ -5,7 +5,7 @@ top-level-description <- ws* 'schematic' ws* top-level-id pin-decl
 pin-decl <- input-pin-decl WC output-pin-decl / output-pin-decl / input-pin-decl
 
 part-declarations <- ws* 'part' ws* 'declarations' ws* LBRACE part-decls RBRACE
-part-decls <- (part-decl COMMA)* part-decl
+part-decls <- part-decl+
 part-decl <- part-id ws* COLON finality WC pin-decl
 
 finality <- 'schematic' / 'code' / 'part'
