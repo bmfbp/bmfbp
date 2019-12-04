@@ -7,7 +7,7 @@
     (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/pseudo.peg"))
           (pseudo-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/test.pseudo"))
           (grammar-name 'arrowgrams/build/cl-build::pseudo-grammar))
-    (pseudo-parser grammar-name peg-filename pseudo-filename :debug debug-rules))))
+    (pseudo-parser grammar-name peg-filename pseudo-filename))))
 
 #|
 first time (mostly to load package.lisp):
