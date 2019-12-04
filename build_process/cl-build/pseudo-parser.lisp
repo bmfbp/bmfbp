@@ -85,7 +85,7 @@
            arrowgrams/build/cl-build/globals::*debug-grammar*
            (listp arrowgrams/build/cl-build/globals::*debug-grammar*))
       (mapc #'(lambda (rule)
-                (esrap:trace-rule rule :recursive t))
+                (esrap:trace-rule rule))
             arrowgrams/build/cl-build/globals::*debug-grammar*))
 
     (let ((resulting-lisp (esrap:parse arrowgrams/build/cl-build/globals::*grammar-name*
