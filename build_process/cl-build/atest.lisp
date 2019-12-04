@@ -2,13 +2,14 @@
 
 (defun arrowgrams/build/cl-build::atest ()
   (format *standard-output* "~&running pseudo code parser~%")
-  (let ((debug-rules '(pseudo value j-object members member j-array elements element j-string)))
+  (let ((debug-rules '(pseudo-grammar)))
     (let ((peg-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/pseudo.peg"))
-          (pseudo-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/build-process.pseudo")))
-      (pseudo-parser peg-filename pseudo-filename))))
+          (pseudo-filename (asdf:system-relative-pathname :arrowgrams/build/cl-build "build_process/cl-build/build-process.pseudo"))
+          (grammar-name 'arrowgrams/build/cl-build::pseudo-grammar))
+    (pseudo-parser grammar-name peg-filename pseudo-filename :debug debug-rules))))
 
 #|
-first time:
+first time (mostly to load package.lisp):
   (ql:quickload :arrowgrams/build/cl-build/atest)
 
 subsequent times:
