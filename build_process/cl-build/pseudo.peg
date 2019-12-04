@@ -1,6 +1,6 @@
 pseudo-grammar <- top-level-description part-declarations internal-parts wiring
 
-top-level-description <- ws* 'schematic' ws* top-level-id pin-decl part-declarations internal-parts wiring
+top-level-description <- ws* 'schematic' ws* top-level-id pin-decl
 
 pin-decl <- input-pin-decl / output-pin-decl / input-pin-decl COMMA output-pin-decl
 
