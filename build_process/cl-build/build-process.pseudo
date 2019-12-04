@@ -1,4 +1,4 @@
-% I the following, I will try to explain how I hand-compiled the build_process diagram for arrowgrams.  
+% In the following, I will try to explain how I hand-compiled the build_process diagram for arrowgrams.  
 % 
 % Note that I am using Draw.IO as an intermediate drawing tool.  This will be superceded by
 % a drawing tool that is more amenable to drawing bits of code.  Draw.IO is not a tool for editing
@@ -56,16 +56,16 @@ schematic [build process] % "build_process.svg" is [self]
 % input pins)
 
   part declarations {
+                      [compile composite] : part, input pins { [svg] }, output pins { [graph as json], parts as json objects] },
 	              [get file content in repo] : code, input pins { [git report metadata], [temp directory] }, output pins { [file content] },
                       [iterator] : code, input pins { [start], [continue], [done] }, output pins { [get a part] },
-                      [compile composite] : part, input pins { [svg] }, output pins { [graph as json], parts as json objects] },
                       [json object stacker] : code, input pins { [push object], [get a part] }, output pins { [no more], [part metadata] },
                       [fetch git repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata] },
                       [get file content in repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata], [file content] },
                       [determine kindType] : code, input pins { [part metadata], [file content] }, output pins { [schematic metadata], leaf metadata] },
                       [prepare temp directory] : code, output pins { [directory] },
                       [collector] : code, input pins { [composite], [done], [leaf] }, output pins { [intermdiate code] },
-                      [javascript builder] : code, input pins { [top-level name], [intermdiate code], [temp directory] }, output pins { [javascript source code] }
+                      [javascript builder] : code, input pins { [top-level name], [intermediate code], [temp directory] }, output pins { [javascript source code] }
                     }
 
   % internal parts creates instances of the above parts, more than one instance of a given kind is allowed, 
