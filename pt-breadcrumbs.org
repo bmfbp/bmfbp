@@ -11,11 +11,16 @@
    (arrowgrams/build/cl-build::atest)
 
 * todo
-** cut loops over to bmfbp
-** cut cl-event-passing over to bmfbp
+** cut loops system over to bmfbp
+** cut cl-event-passing system over to bmfbp
 ** should @defnetwork macro use the last declaration as the top level?
 
 ** fixed: why is (pbuilder :souce-out) not erroring out?  It's a typo.
+
+** /globals should be instance variables, part of e/part
+** see Q: in pseudo-parser.lisp
+** rename "finality" in pseudo.peg
+** esrap:trace-rule ... :recursive t dies if rule is not defined (typo)
 
 * git branches
 ** master
