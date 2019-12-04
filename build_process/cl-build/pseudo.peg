@@ -26,7 +26,7 @@ instance-decl <- instance-id ws* COLON kind-id
 
 wiring <- ws* 'wiring' ws* LBRACE wires RBRACE
 
-wires <- (wire COMMA)* wire
+wires <- wire*
 wire <- sources ws* COLON receivers
 
 sources <- (source COMMA)* source

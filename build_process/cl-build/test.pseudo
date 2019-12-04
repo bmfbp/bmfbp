@@ -28,4 +28,7 @@ schematic [build process]
                  },
   wiring {
     [self/top-level svg], [get file content in repo/file content] : [iterator instance/start], [compile composite/svg]
+
+    [iterator instance/got a part]             : [json object stacker instance/got a part]
+
   }
