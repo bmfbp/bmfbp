@@ -1,15 +1,18 @@
-pseudo-diagram <- top-level-description part-declarations internal-parts wiring
+pseudo-grammar <- top-level-description part-declarations internal-parts wiring
 
-top-level-description <- 'schematic' input-pins COMMA output-pins
+top-level-description <- ws* 'schematic' ws* top-level-id ws* input-pins COMMA output-pins
 input-pins <- 'input' ws* 'pins' ws* LBRACE id-list RBRACE
 output-pins <- 'output' ws* 'pins' ws* LBRACE id-list RBRACE
 id-list <- (pin-id COMMA)* pin-id
 
-part-declarations <- 'part' ws* 'declarations' ws* LBRACE part-decls RBRACE
+part-declarations <- ws* 'part' ws* 'declarations' ws* LBRACE part-decls RBRACE
 part-decls <- (part-decl COMMA)* part-decl
-part-decl <- part-id ws* COLON finality COMMA pin-decl
+part-decl <- part-id ws* COLON finality ws* COMMA pin-decl
 
 finality <- 'schematic' / 'code' / 'part'
+
+top-level-id <- id-no-slash { (:text t) }
+part-id <- id-no-slash      { (:text t) }
 
 pin-decl <- input-pin-decl* COMMA output-pin-decl*
 
@@ -38,14 +41,14 @@ kind-id <- id-no-slash
 
 pin-id <- id-no-slash 
 
-id-no-slash <- LBRACKET notSlash* RBRACKET
-id-with-slash <- LBRACKET notSlash* '/' notSlash* RBRACKET
+id-no-slash <- LBRACKET notSlashOrRbracket* RBRACKET ws*
+id-with-slash <- LBRACKET notSlashOrRbracket* '/' notSlashOrRbracket* RBRACKET ws*
 
-notSlash <- ! '/' .
+notSlashOrRbracket <- !'/' !']' .
 
-% boring details
+# boring details
 
-ag-comment <- '%' (!newline .)* newline
+pseudo-comment <- '%' (!newline .)* newline
 COMMA <- ',' ws*
 COLON <- ':' ws*
 LBRACE <- '{' ws*
@@ -57,9 +60,9 @@ RBRACKET <- ']' ws*
 
 
 
-% boiler place stuff
+# boiler place stuff
 
-ws <- (space / newline / carriage-return / tab)* { (:text t) }
+ws <- (pseudo-comment / space / newline / carriage-return / tab) { (:text t) }
 space <- ' '
 newline <- '\n'
 tab <- '\t'
