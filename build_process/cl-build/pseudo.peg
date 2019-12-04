@@ -1,9 +1,8 @@
 pseudo-grammar <- top-level-description part-declarations internal-parts wiring
 
-top-level-description <- ws* 'schematic' ws* top-level-id ws* input-pins COMMA output-pins
-input-pins <- 'input' ws* 'pins' ws* LBRACE id-list RBRACE
-output-pins <- 'output' ws* 'pins' ws* LBRACE id-list RBRACE
-id-list <- (pin-id COMMA)* pin-id
+top-level-description <- ws* 'schematic' ws* top-level-id pin-decl part-declarations internal-parts wiring
+
+pin-decl <- input-pin-decl / output-pin-decl / input-pin-decl COMMA output-pin-decl
 
 part-declarations <- ws* 'part' ws* 'declarations' ws* LBRACE part-decls RBRACE
 part-decls <- (part-decl COMMA)* part-decl
@@ -11,20 +10,21 @@ part-decl <- part-id ws* COLON finality ws* COMMA pin-decl
 
 finality <- 'schematic' / 'code' / 'part'
 
-top-level-id <- id-no-slash { (:text t) }
-part-id <- id-no-slash      { (:text t) }
+top-level-id <- id-no-slash
+part-id <- id-no-slash     
 
-pin-decl <- input-pin-decl* COMMA output-pin-decl*
 
-input-pin-decl <- 'input' ws* 'pins' ws* LBRACE id-list RBRACE
-output-pin-decl <- 'output' ws* 'pins' ws* LBRACE id-list RBRACE
+input-pin-decl <- ws* 'input' ws* 'pins' ws* LBRACE id-list RBRACE
+output-pin-decl <- ws* 'output' ws* 'pins' ws* LBRACE id-list RBRACE
+id-list <- (pin-id COMMA)* pin-id
 
-internal-parts <- 'internal' ws* 'parts' ws* LBRACE instance-decls RBRACE
+
+internal-parts <- ws* 'internal' ws* 'parts' ws* LBRACE instance-decls RBRACE
 
 instance-decls <- (instance-decl COMMA)* instance-decl
 instance-decl <- instance-id ws* COLON kind-id
 
-wiring <- LBRACE wires RBRACE
+wiring <- ws* LBRACE wires RBRACE
 
 wires <- (wire COMMA)* wire
 wire <- sources ws* COLON receivers
@@ -41,8 +41,8 @@ kind-id <- id-no-slash
 
 pin-id <- id-no-slash 
 
-id-no-slash <- LBRACKET notSlashOrRbracket* RBRACKET ws*
-id-with-slash <- LBRACKET notSlashOrRbracket* '/' notSlashOrRbracket* RBRACKET ws*
+id-no-slash <- LBRACKET notSlashOrRbracket* RBRACKET ws*  { (:text t) }
+id-with-slash <- LBRACKET notSlashOrRbracket* '/' notSlashOrRbracket* RBRACKET ws* { (:text t) }
 
 notSlashOrRbracket <- !'/' !']' .
 
