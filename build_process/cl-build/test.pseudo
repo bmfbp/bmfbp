@@ -1,0 +1,53 @@
+schematic [build process] % "build_process.svg" is [self]
+  input pins { [top-level svg],
+               [top-level name] },
+  output pins { [javascript source code] },
+  part declarations {
+                      [compile composite] : part, input pins { [svg] }, output pins { [graph as json], parts as json objects] },
+	              [get file content in repo] : code, input pins { [git report metadata], [temp directory] }, output pins { [file content] },
+                      [iterator] : code, input pins { [start], [continue], [done] }, output pins { [get a part] },
+                      [json object stacker] : code, input pins { [push object], [get a part] }, output pins { [no more], [part metadata] },
+                      [fetch git repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata] },
+                      [get file content in repo] : code, input pins { [git repo metadata], [temp directory] }, output pins { [metadata], [file content] },
+                      [determine kindType] : code, input pins { [part metadata], [file content] }, output pins { [schematic metadata], leaf metadata] },
+                      [prepare temp directory] : code, output pins { [directory] },
+                      [collector] : code, input pins { [composite], [done], [leaf] }, output pins { [intermdiate code] },
+                      [javascript builder] : code, input pins { [top-level name], [intermediate code], [temp directory] }, output pins { [javascript source code] }
+                    },
+  internal parts {
+                  [get file content in repo instance] : [get file content in repo],
+                  [iterator instance] : [iterator],
+                  [compile composite instance] : [compile composite],
+                  [json object stacker instance] : [json object stacker],
+                  [fetch git repo instance] : [fetch git repo],
+                  [get file content in repo instance] : [get file content in repo],
+                  [determine kindType instance] : [determine kindType],
+                  [prepare temp directory instance] : [prepare temp directory],
+                  [collector instance] : [collector],
+                  [javascript builder instance] : [javascript builder],
+                 },
+  wiring {
+    [self/top-level svg], [get file content in repo/file content] : [iterator instance/start], [compile composite/svg]
+
+    [iterator instance/got a part]             : [json object stacker instance/got a part]
+
+    [compile composite instance/graph as json] : [collector instance/composite]
+    [compile composite instance/parts as json objects] : [json object stacker instance/push object]
+
+    [json object stacker instance/no more] : [iterator instance/done], [collector/done]
+    [json object stacker instance/part metadata] : [fetch git repo instance/git repo metadata], [iterator instance/continue]
+
+    [fetch git repo instance/metadata] : [get file content in repo instance/git repo metadata]
+
+    [get file content in repo instance/metadata] : [determine kindType instance/part metadata]
+    [get file content in repo instance/file content] : [determine kindType instance/file content]
+
+    [determine kindType instance/schematic metadata] : [get file content in repo instance/git repo metadata]
+    [determine kindType instance/leaf metadata] : [collector instance/leaf]
+
+    [collector instance/intermediate code] : [javascript builder instance/intermediate code]
+
+    [javascript builder instance/javascript source code] : [self/javascript source code]
+
+    [prepare temp directory instance/directory] : [javascript builder instance/temp directory], [get file content in repo instance/temp direcotry], [fetch git repo instance/temp directory], [get file content in repo instance/temp directory]
+  }
