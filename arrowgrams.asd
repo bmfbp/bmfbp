@@ -27,8 +27,7 @@
                     (funcall next))
   :components ((:module "tester"
                         :pathname "./clparts"
-                        :components ((:file "pseudo-parser")
-                                     (:file "atest")))))
+                        :components ((:file "test")))))
 
 ;;;; 
 ;;;; builder
@@ -57,14 +56,15 @@
                                      (:file "test" :depends-on ("package"))))))
 
 (defsystem :arrowgrams/build/cl-build/atest
-  :depends-on (:cl-event-passing :cl-peg :loops)
+  :depends-on (:cl-event-passing :cl-peg :loops :arrowgrams/clparts)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
   :components ((:module "build-pseudo"
                         :pathname "./build_process/cl-build/"
                         :components ((:file "package")
-                                     (:file "atest" :depends-on ("package"))))))
+                                     (:file "pseudo-parser" :depends-on ("package"))
+                                     (:file "atest" :depends-on ("package" "pseudo-parser"))))))
 
 
 
