@@ -92,4 +92,4 @@
                                        arrowgrams/build/cl-build/globals::*pseudo-source*)))
       ;; peg parser is esrap-lisp that parses pseudo-code and creates lisp code that mimics the pseudo-code
       ;; send resulting lisp code to output pin
-      (cl-event-passing-user::@send self :lisp-source-out resulting-lisp))))
+      (cl-event-passing-user::@send self :pass2-source-out resulting-lisp))))
