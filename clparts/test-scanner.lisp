@@ -8,25 +8,30 @@
           (:code eol-comments (:in) (:out :fatal)
            #'arrowgrams/clparts/comments-to-end-of-line::react
            #'arrowgrams/clparts/comments-to-end-of-line::first-time)
+          (:code ws (:in) (:out :fatal)
+           #'arrowgrams/clparts/remove-ws-runs::react
+           #'arrowgrams/clparts/remove-ws-runs::first-time)
           (:schem scanner-tester (:in) (:out :fatal)
-           (eol-comments)
+           (eol-comments ws)
            ((((:self :in)) ((eol-comments :in)))
-            (((eol-comments :out)) ((:self :out)))
-            (((eol-comments :fatal)) ((:self :fatal))))))))
-    (e/dispatch::ensure-correct-number-of-parts 2) ;; early debug only
+            (((eol-comments :out)) ((ws :in)))
+            (((ws :out)) ((:self :out)))
+            (((ws :fatal) (eol-comments :fatal)) ((:self :fatal))))))))
+    (e/dispatch::ensure-correct-number-of-parts 3) ;; early debug only
     (cl-event-passing-user:@with-dispatch
-     (with-input-from-string (s
-                              "a b c
+      (let ((string1 "a    b    c
 % comment
 
-d e f % comment
+d e    f % comment
 
 g h i
 
 ")
-       (let ((c (read-char s nil nil)))
-         (@:loop
-          (@:exit-when (null c))
-          (cl-event-passing-user::@inject net (e/part::get-input-pin net :in) c)
-          (setf c (read-char s nil nil)))
-        (cl-event-passing-user::@inject net (e/part::get-input-pin net :in) :EOF))))))
+            (string2 "a b"))
+        (with-input-from-string (s string2)
+          (let ((c (read-char s nil nil)))
+            (@:loop
+              (@:exit-when (or (null c) (eq 'EOF c)))
+              (cl-event-passing-user::@inject net (e/part::get-input-pin net :in) c)
+              (setf c (read-char s nil 'EOF)))
+            (cl-event-passing-user::@inject net (e/part::get-input-pin net :in) :EOF)))))))
