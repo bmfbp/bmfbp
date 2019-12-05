@@ -40,7 +40,9 @@
         
         (:idle
          (if (eq :EOF data)
-             (@set-instance-var self :state :eof)
+             (progn
+               (@send self :out (cons :eof (@get-instance-var self :char-count)))
+               (@set-instance-var self :state :eof))
            (if (char= #\% data)
                (@set-instance-var self :state :slurping-comment)
              (progn
