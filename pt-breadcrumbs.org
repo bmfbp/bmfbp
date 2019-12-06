@@ -50,3 +50,9 @@
 
 * esrap
 ** need better error messages / furthest point of advance?
+* usage
+** (load "~/quicklisp/local-projects/bmfbp/clparts/package.lisp")
+   (defun stest ()
+    (ql:quickload :arrowgrams/clparts/test-scanner)
+    (arrowgrams/clparts::test-scanner))
+   (stest)
