@@ -4,7 +4,9 @@
 ;; :code remove-ws-runs '(:in) '(:out :fatal) #'arrowgram/clparts/remove-ws-runs::react #'arrogram/clparts/remove-ws-runs::first-time
 ;;
 
-;; a comment in arrowgrams/pseudo is "%.*$"  (%, any char until EOL or EOF)
+;; replace [ \t\n\t]+ by ' ', at EOF, send latest char/run the send (cons :EOF latest-char-count)
+;; each input is a (cons char count), outputs are the same, except ws runs are compressed to a single (cons #\space count)
+;;  where the count for a space is the first char index of a run
 
 (defmethod @get-pin ((self e/part:part) (e e/event:event))
   (cl-event-passing-user::@get-pin self e))
@@ -76,5 +78,5 @@
                  (@set-instance-var self :state :idle)))))
           
         (:eof
-         (@send self :fatal (format nil "end of file"))))))))
+         (@send self :fatal (format nil "FATAL in remove-ws-runs end of file"))))))))
   

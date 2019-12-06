@@ -11,20 +11,24 @@
           (:code ws (:in) (:out :fatal)
            #'arrowgrams/clparts/remove-ws-runs::react
            #'arrowgrams/clparts/remove-ws-runs::first-time)
+          (:code ident (:in) (:out :fatal)
+           #'arrowgrams/clparts/ident::react
+           #'arrowgrams/clparts/ident::first-time)
           (:schem scanner-tester (:in) (:out :fatal)
-           (eol-comments ws)
+           (eol-comments ws ident)
            ((((:self :in)) ((eol-comments :in)))
             (((eol-comments :out)) ((ws :in)))
-            (((ws :out)) ((:self :out)))
-            (((ws :fatal) (eol-comments :fatal)) ((:self :fatal))))))))
-    (e/dispatch::ensure-correct-number-of-parts 3) ;; early debug only
+            (((ws :out)) ((ident :in)))
+            (((ident :out)) ((:self :out)))
+            (((ident :fatal) (ws :fatal) (eol-comments :fatal)) ((:self :fatal))))))))
+    (e/dispatch::ensure-correct-number-of-parts 4) ;; early debug only
     (cl-event-passing-user:@with-dispatch
       (let ((string1 "a    b    c
 % comment
 
 d e    f % comment
 
-g h i
+[g h i]
 
 ")
             (string2 "ab")

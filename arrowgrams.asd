@@ -20,6 +20,7 @@
                                      (:file "stripquotes" :depends-on ("package"))
                                      (:file "parser-builder" :depends-on ("package" "readfileintostring" "pegtolisp" "stripquotes"))
                                      (:file "comments-to-end-of-line" :depends-on ("package"))
+                                     (:file "ident" :depends-on ("package"))
                                      (:file "remove-ws-runs" :depends-on ("package"))))))
 
 (defsystem :arrowgrams/clparts/test
