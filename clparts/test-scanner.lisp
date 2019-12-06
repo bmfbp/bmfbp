@@ -28,7 +28,7 @@
 
 d e    f % comment
 
-[g h i]
+[g h i] [jkl/m] [n o p / q ]
 
 ")
             (string2 "ab")

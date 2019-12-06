@@ -22,10 +22,6 @@
   (cl-event-passing-user::@send self sym data))
 
 
-(defmethod empty-pin-p ((self e/part:part))
-  (let ((pin-id (@get-instance-var self :pin-ident)))
-    (string= "" pin-id)))
-
 (defmethod clear-ident ((self e/part:part))
   (@set-instance-var self :start-pos nil)
   (@set-instance-var self :ident "")
@@ -36,11 +32,19 @@
   (@set-instance-var self :ident "")
   (@set-instance-var self :pin-ident  ""))
 
+(defmethod start-pin-ident ((self e/part:part) data)
+  (declare (ignore self data))
+  nil)
+
 (defmethod append-ident ((self e/part:part) ch)
   (let ((ident-thus-far (@get-instance-var self :ident)))
-    (let ((ident-string ident-thus-far))
-      (let ((new-ident (concatenate 'string ident-string (string ch))))
-        (@set-instance-var self :ident new-ident)))))
+    (let ((new-ident (concatenate 'string ident-thus-far (string ch))))
+      (@set-instance-var self :ident new-ident))))
+
+(defmethod append-pin-ident ((self e/part:part) ch)
+  (let ((pin-ident-thus-far (@get-instance-var self :pin-ident)))
+    (let ((new-ident (concatenate 'string pin-ident-thus-far (string ch))))
+      (@set-instance-var self :pin-ident new-ident))))
 
 (defun first-time (self)
   (@set-instance-var self :state :idle)
@@ -79,18 +83,41 @@
                    (let ((msg (format nil "EOF, but unfinished identifier ~S" (@get-instance-var self :ident))))
                      (@send self :fatal (format nil msg))))
                  (@send self :out (cons :eof pos)))
-             
-             (if (eq #\] ch)
-                 (let ((pin-ident (@get-instance-var self :pin-ident))
-                       (ident (@get-instance-var self :ident))
-                       (pos (@get-instance-var self :start-pos)))                   
-                   (if (empty-pin-p self)
-                         (@send self :out (cons :ident ident))
-                     (@send self :out (cons :ident-pin (cons ident (cons pin-ident pos)))))
-                   (clear-ident self)
-                   (@set-instance-var self :state :idle))
+
+             (if (eq #\/ ch)
+                 (progn
+                   (start-pin-ident self data)
+                   (@set-instance-var self :state :waiting-for-close-bracket-with-pin))
                
-               (append-ident self ch))))
+               (if (eq #\] ch)
+                   (let ((ident (@get-instance-var self :ident))
+                          (pos (@get-instance-var self :start-pos)))
+                     (@send self :out (cons :ident ident))
+                     (clear-ident self)
+                     (@set-instance-var self :state :idle))
+                 
+                 (append-ident self ch)))))
+
+          (:waiting-for-close-bracket-with-pin
+           (if (eq :EOF ch)
+               (progn
+                 (when (@get-instance-var self :ident)
+                   (let ((msg (format nil "EOF, but unfinished identifier ~S" (@get-instance-var self :ident))))
+                     (@send self :fatal (format nil msg))))
+                 (@send self :out (cons :eof pos)))
+
+             (if (eq #\/ ch)
+                 (@send self :fatal "FATAL in ident: expected only 0 or 1 slashes, got second slash on ident ~S" (@get-instance-var self :ident))
+               
+               (if (eq #\] ch)
+                   (let ((ident (@get-instance-var self :ident))
+                         (pin-ident (@get-instance-var self :pin-ident))
+                         (pos (@get-instance-var self :start-pos)))
+                     (@send self :out (cons :ident-with-pin (cons ident (cons pin-ident pos))))
+                     (clear-ident self)
+                     (@set-instance-var self :state :idle))
+                 
+                 (append-pin-ident self ch)))))
           
           (:eof
            (@send self :fatal (format nil "FATAL in ident: end of file, but received ~S ~S" pin-sym data))))))))
