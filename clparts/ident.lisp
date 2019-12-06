@@ -22,15 +22,25 @@
   (cl-event-passing-user::@send self sym data))
 
 
+(defmethod empty-pin-p ((self e/part:part))
+  (let ((pin-id (@get-instance-var self :pin-ident)))
+    (string= "" pin-id)))
+
+(defmethod clear-ident ((self e/part:part))
+  (@set-instance-var self :start-pos nil)
+  (@set-instance-var self :ident "")
+  (@set-instance-var self :pin-ident  ""))
+
 (defmethod start-ident ((self e/part:part) data)
-  (@set-instance-var self :ident (cons "" (cdr data))))
+  (@set-instance-var self :start-pos (cdr data))
+  (@set-instance-var self :ident "")
+  (@set-instance-var self :pin-ident  ""))
 
 (defmethod append-ident ((self e/part:part) ch)
   (let ((ident-thus-far (@get-instance-var self :ident)))
-    (let ((ident-string (car ident-thus-far))
-          (ident-start (cdr ident-thus-far)))
+    (let ((ident-string ident-thus-far))
       (let ((new-ident (concatenate 'string ident-string (string ch))))
-        (@set-instance-var self :ident (cons new-ident ident-start))))))
+        (@set-instance-var self :ident new-ident)))))
 
 (defun first-time (self)
   (@set-instance-var self :state :idle)
@@ -71,9 +81,13 @@
                  (@send self :out (cons :eof pos)))
              
              (if (eq #\] ch)
-                 (progn
-                   (@send self :out (cons :ident (@get-instance-var self :ident)))
-                   (@set-instance-var self :ident nil)
+                 (let ((pin-ident (@get-instance-var self :pin-ident))
+                       (ident (@get-instance-var self :ident))
+                       (pos (@get-instance-var self :start-pos)))                   
+                   (if (empty-pin-p self)
+                         (@send self :out (cons :ident ident))
+                     (@send self :out (cons :ident-pin (cons ident (cons pin-ident pos)))))
+                   (clear-ident self)
                    (@set-instance-var self :state :idle))
                
                (append-ident self ch))))
