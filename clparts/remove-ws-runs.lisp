@@ -31,7 +31,7 @@
 
 (defun first-time (self)
   (@set-instance-var self :state :idle)
-  (@set-instance-var self :first-char-of-run (cons nil 0)))
+  (@set-instance-var self :first-char-of-run nil))
 
 (defun react (self e)
   ;; an event, here, is a cons (char . position), output such conses again, but kill runs of ws
@@ -48,7 +48,8 @@
           (:idle
            (if (eq :EOF ch)
                (progn
-                 (@send self :out (@get-instance-var self :first-char-of-run))
+                 (when (@get-instance-var self :first-char-of-run)
+                   (@send self :out (@get-instance-var self :first-char-of-run)))
                  (@send self :out (cons :eof (cdr data)))
                  (@set-instance-var self :state :eof))
 
@@ -61,7 +62,11 @@
 
           (:run
            (if (eq :EOF ch)
-               (@set-instance-var self :state :eof)
+               (progn
+                 (when (@get-instance-var self :first-char-of-run)
+                   (@send self :out (@get-instance-var self :first-char-of-run)))
+                 (@send self :out (cons :eof (cdr data)))
+                 (@set-instance-var self :state :eof))
 
              (if (is-white-space-p ch)
                  nil

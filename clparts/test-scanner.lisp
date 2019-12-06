@@ -27,8 +27,10 @@ d e    f % comment
 g h i
 
 ")
-            (string2 "a b"))
-        (with-input-from-string (s string2)
+            (string2 "ab")
+            (string3 "a
+"))
+        (with-input-from-string (s string1)
           (let ((c (read-char s nil nil)))
             (@:loop
               (@:exit-when (or (null c) (eq 'EOF c)))
