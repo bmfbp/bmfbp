@@ -2,30 +2,14 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title></title>
-  <script src="main.js"></script>
-  <script src="filesaver.js"></script>
+  <title>Arrowgrams Editor</title>
+  <link href="index.css" rel="stylesheet" type="text/css"></style>
 </head>
-
 <body>
-  <div id="elm"></div>
+  <script src="app.js"></script>
   <script>
-    const app = Elm.Main.init({
-      node: document.getElementById('elm')
-    });
-
-    app.ports.saveSvg.subscribe(function(data) {
-      const filetype = 'text/plain;charset=utf-8';
-      const filename = 'diagram.svg';
-      saveAs(new Blob([data], { type: filetype }), filename);
-    });
-
-    function windowHasResized() {
-      app.ports.viewPortHasResized.send([window.innerWidth, window.innerHeight]);
-    }
-
-    window.onresize = windowHasResized;
-    window.onload = windowHasResized;
+    const app = Elm.Main.init();
   </script>
+  <script src="lib.js"></script>
 </body>
 </html>

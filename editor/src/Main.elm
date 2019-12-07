@@ -4,29 +4,39 @@ import Url
 import Browser.Navigation
 import Browser
 import Browser.Events as BE
-import Element
+import Element as El
 import Element.Font as Font
 import Element.Background as Background
 import Svg
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Html
+import Html.Attributes as HA
 import Json.Decode as JD
 import Json.Encode as JE
 import String.Interpolate as SI
+import Parser as P
+import Parser exposing ((|=), (|.))
 
 import Debug
 
 
 -- *** Interop ***
 
-port saveSvg : JE.Value -> Cmd msg
+port saveFile : JE.Value -> Cmd msg
+port loadFile : JE.Value -> Cmd msg
 port viewPortHasResized : (JE.Value -> msg) -> Sub msg
+port fileHasBeenRead : (JE.Value -> msg) -> Sub msg
 
 
 -- *** Constants ***
 
 zoomStepSize = 0.1
+defaultTextWidth = 7
+defaultTextHeight = 12
+-- TODO: Remove?
+textDefaultCharacterWidth = 10
+textDefaultCharacterHeight = 20
 
 
 -- *** Application model ***
@@ -41,12 +51,14 @@ type Msg
   | SelectItem CanvasItemInstance
   | ResizeItem CanvasItemInstance Coordinates AnchorPosition
   | HoveredItem CanvasItemInstance
+  | DoubleClick CanvasItemInstance
   | MovePath CanvasItemInstance Int Coordinates
   | UnhoveredItem
   | ClearSelection
   | MouseDown Coordinates
   | MouseUp Coordinates
   | ViewPortHasResized (Result JD.Error (Int, Int))
+  | FileHasBeenRead (Result JD.Error String)
 
 type SelectionMode = SingleSelect | MultipleSelect
 
@@ -82,6 +94,8 @@ type Intent
   -- Parameters are the starting pan coordinates and starting cursor
   -- coordinates.
   | ToPanViewBox Coordinates Coordinates
+  -- When the user is typing text to a particular item
+  | ToType CanvasItemInstance
 
 type CursorMode
   = FreeFormCursor
@@ -91,8 +105,18 @@ type CursorMode
   -- when the user triggers a mousedown event.
   | SelectionInProgress
 
-type alias CanvasItemInstance = { id : Int, item : CanvasItem }
+type alias CanvasItemId = Int
 
+-- These are the items actually displayed on the canvas.
+type alias CanvasItemInstance =
+  { id : CanvasItemId
+  , item : CanvasItem
+  -- Other canvas items may be associated with this item at particular
+  -- coordinates. These may be attached polylines, associated texts, etc.
+  , associatedItems : List CanvasItemId
+  }
+
+-- These are the elements that can be displayed on the canvas.
 type CanvasItem
   -- A rectangle is defined by the upper-left and the lower-right coordinates.
   = Rect Coordinates Coordinates
@@ -100,8 +124,9 @@ type CanvasItem
   -- Ellipse is constructed using the upper-left and the lower-right corners of
   -- the bounding box of the ellipse.
   | Ellipse Coordinates Coordinates
-  -- A text is defined by upper-left coordinates and the text to display.
-  | Text Coordinates String
+  -- A text is defined by upper-left corner, lower-right corner, and the text
+  -- to display.
+  | Text Coordinates Coordinates String
 
 type AnchorPosition
   = UpperLeft
@@ -109,29 +134,41 @@ type AnchorPosition
   | LowerLeft
   | LowerRight
 
+type Fact
+  = Single String
+  | Double String String
+  | Triple String String String
+
 
 -- *** Application logic ***
 
--- MOCK: This will be removed once we have the ability to create new canvas items.
-initialCanvasItemInstances : List CanvasItemInstance
-initialCanvasItemInstances =
-  [ { id = 0, item = Ellipse { x = 50, y = 60 } { x = 150, y = 140 } }
-  , { id = 1, item = Text { x = 59, y = 103 } "top-level svg" }
-  , { id = 2, item = Rect { x = 358, y = 67 } { x = 438, y = 136 } }
-  , { id = 3, item = Text { x = 370, y = 104 } "compile composite" }
-  , { id = 4, item = Polyline [{ x = 150, y = 105}, { x = 356, y = 103 }] }
-  ]
+factToProlog : Fact -> String
+factToProlog fact =
+  case fact of
+    Single x -> SI.interpolate "{0}()." [x]
+    Double x y -> SI.interpolate "{0}({1})." [x, y]
+    Triple x y z -> SI.interpolate "{0}({1}, {2})." [x, y, z]
+
+factToLisp : Fact -> String
+factToLisp fact =
+  case fact of
+    Single x -> SI.interpolate "({0})" [x]
+    Double x y -> SI.interpolate "({0} {1})" [x, y]
+    Triple x y z -> SI.interpolate "({0} {1} {2})" [x, y, z]
+
+serializeFacts : (Fact -> String) -> List Fact -> String
+serializeFacts serializer facts = List.map serializer facts |> String.join "\n"
 
 initialModel : Model
 initialModel =
   { cursorCoords = { x = 0, y = 0 }
-  , instantiatedItems = initialCanvasItemInstances
-  , selectedItems = List.take 1 initialCanvasItemInstances
+  , instantiatedItems = []
+  , selectedItems = []
   , itemsUnderCursor = []
   , currentItemUnderCursor = Nothing
   , cursorMode = FreeFormCursor
   , intent = ToExplore
-  , canvasItemCount = List.length initialCanvasItemInstances
+  , canvasItemCount = 0
   , selectionMode = SingleSelect
   , hoveredItem = Nothing
   , zoomFactor = 1.0
@@ -220,6 +257,14 @@ update message model =
         }
     HoveredItem item -> updateModelOnly { model | hoveredItem = Just item }
     UnhoveredItem -> updateModelOnly { model | hoveredItem = Nothing }
+    DoubleClick item ->
+      case item.item of
+        Text _ _ _ ->
+          updateModelOnly
+            { model
+            | intent = ToType item
+            }
+        _ -> (model, Cmd.none)
     MovePath path index point ->  updateModelOnly { model | intent = ToMovePath path index point }
     ClearSelection ->
       case model.cursorMode of
@@ -266,7 +311,231 @@ update message model =
       case result of
         Ok (width, height) -> updateModelOnly { model | viewPortSize = (width, height) }
         _ -> updateModelOnly model
+    FileHasBeenRead result ->
+      case result of
+        Ok content ->
+          case P.run lispParser content of
+            Ok lispExprs ->
+              removeCustomArrowHeads lispExprs
+                |> lispExprToCanvasItems
+                |> List.foldl createNewCanvasItemInstance2 { model | instantiatedItems = [] }
+                |> updateModelOnly
+            Err e ->
+              let
+                x = Debug.log "Error loading file: " e
+              in 
+                updateModelOnly model
+        _ -> updateModelOnly model
 
+type LispExpr
+  = LispComponent String
+  | LispRect Float Float Float Float
+  | LispEllipse Float Float Float Float
+  | LispTranslate Float Float LispExpr
+  | LispMetadata String
+  | LispString String
+  | LispLine (List LispLineExpr)
+
+type LispLineExpr
+  = LispLineAbsM Float Float
+  | LispLineAbsL Float Float
+  | LispLineZ
+
+lispParser : P.Parser (List LispExpr)
+lispParser =
+  P.sequence
+    { start = "("
+    , separator = ""
+    , end = ")"
+    , spaces = P.spaces
+    , item = lispExprParser
+    , trailing = P.Forbidden
+    }
+
+stringParser : P.Parser String
+stringParser =
+  P.succeed identity
+    |. P.token "\""
+    |= P.getChompedString (P.chompUntil "\"")
+    |. P.token "\""
+
+lispExprParser : P.Parser LispExpr
+lispExprParser =
+  P.oneOf
+    [ P.succeed LispComponent
+        |. P.token "(COMPONENT "
+        |. P.spaces
+        |= stringParser
+        |. P.spaces
+        |. P.symbol ")"
+    , P.succeed LispRect
+        |. P.token "(RECT "
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |. P.symbol ")"
+    , P.succeed LispEllipse
+        |. P.token "(ELLIPSE "
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |. P.symbol ")"
+    , P.succeed LispMetadata
+        |. P.keyword "((METADATA"
+        |. P.spaces
+        |= stringParser
+        |. P.spaces
+        |. P.symbol "))"
+    , P.succeed LispTranslate
+        |. P.token "(TRANSLATE"
+        |. P.spaces
+        |. P.symbol "("
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |. P.symbol ")"
+        |. P.spaces
+        |= P.lazy (\_ -> lispExprParser)
+        |. P.symbol ")"
+    , P.succeed LispLine
+        |= P.sequence
+             { start = "(LINE"
+             , separator = ""
+             , end = ")"
+             , spaces = P.spaces
+             , item = lispLineExprParser
+             , trailing = P.Optional
+             }
+    , P.succeed LispString
+        |. P.symbol "("
+        |. P.spaces
+        |= stringParser
+        |. P.spaces
+        |. P.symbol ")"
+    ]
+
+lispLineExprParser : P.Parser LispLineExpr
+lispLineExprParser =
+  P.oneOf
+    [ P.succeed LispLineAbsM
+        |. P.token "(ABSM"
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |. P.symbol ")"
+    , P.succeed LispLineAbsL
+        |. P.token "(ABSL"
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |= P.float
+        |. P.spaces
+        |. P.symbol ")"
+    , P.succeed LispLineZ
+        |. P.token "(Z)"
+    ]
+
+lispExprToCanvasItems : List LispExpr -> List CanvasItem
+lispExprToCanvasItems = List.filterMap lispExprToCanvasItem
+
+type alias LispLineWithHistory = (LispLineExpr, Maybe LispLineExpr)
+
+lispExprToCanvasItem : LispExpr -> Maybe CanvasItem
+lispExprToCanvasItem expr =
+  case expr of
+    LispComponent _ -> Nothing
+    LispRect x y width height ->
+      Just <| Rect
+                { x = round x, y = round y }
+                { x = round (x + width) , y = round (y + height) }
+    LispEllipse cX cY rX rY ->
+      let
+        (ul, lr) = ellipseToBoundingBox (round cX) (round cY) (round rX) (round rY)
+      in
+        Just <| Ellipse ul lr
+    LispTranslate x y e ->
+      case e of
+        LispString s ->
+          -- Draw.IO diagrams use the following convention for text:
+          --
+          --     {center-x, top-y, width/2, height}
+          let
+            width = String.length s * textDefaultCharacterWidth
+            topLeftX = round x - width // 2
+            lowerRightX = topLeftX + defaultTextWidth
+            lowerRightY = round (y + defaultTextHeight)
+          in
+            Just <| Text { x = topLeftX, y = round y } { x = lowerRightX, y = lowerRightY } s
+        LispMetadata _ -> Nothing
+        _ -> Nothing
+    LispLine lines ->
+      let
+        consWithPrevious : LispLineExpr -> List LispLineWithHistory -> List LispLineWithHistory
+        consWithPrevious x acc =
+          case List.head acc of
+            Just (y, _) -> (x, Just y) :: acc
+            _ -> (x, Nothing) :: acc
+        linesWithPrevious = List.foldl consWithPrevious [] lines
+        transform : LispLineWithHistory -> List Coordinates
+        transform lineWithPrev =
+          case lineWithPrev of
+            (LispLineAbsM x y, _) ->
+              [{ x = round x, y = round y }]
+            (LispLineAbsL x y, Just (LispLineAbsL x2 y2)) ->
+              calculateExtensionLine x y x2 y2 ++ [{ x = round x, y = round y }]
+            (LispLineAbsL x y, Just (LispLineAbsM x2 y2)) ->
+              calculateExtensionLine x y x2 y2 ++ [{ x = round x, y = round y }]
+            (LispLineAbsL x y, _) ->
+              [{ x = round x, y = round y }]
+            (LispLineZ, _) ->
+              []
+        calculateExtensionLine x1 y1 x2 y2 =
+          let
+            dx = x1 - x2
+            dy = y1 - y2
+            xDirection = if dx == 0 then 0 else dx / abs dx
+            yDirection = if dy == 0 then 0 else dy / abs dy
+            xEnd = x1 + xDirection * 6
+            yEnd = y1 + yDirection * 6
+          in
+            [{ x = round xEnd, y = round yEnd }]
+      in
+        linesWithPrevious
+          |> List.concatMap transform
+          |> List.reverse
+          |> Polyline
+          |> Just
+    _ -> Nothing
+
+-- This is needed for Draw.IO output only.
+removeCustomArrowHeads : List LispExpr -> List LispExpr
+removeCustomArrowHeads items =
+  let
+    remove item =
+      case item of
+        -- Draw.IO draws arrowheads with the following structure.
+        LispLine [LispLineAbsM _ _, LispLineAbsL _ _, LispLineAbsL _ _, LispLineAbsL _ _, LispLineZ] -> Nothing
+        _ -> Just item
+  in
+    List.filterMap remove items
+
+-- This is not used and is kept in case we need this in the future.
 itemsToSvg : List CanvasItem -> JE.Value
 itemsToSvg items =
   let
@@ -304,12 +573,214 @@ itemsToSvg items =
             SI.interpolate
               "<g transform=\"translate({0}, {1})\"><ellipse cx=\"{2}\" cy=\"{3}\" rx=\"{4}\" ry=\"{5}\"></ellipse></g>"
               (List.map String.fromInt [left, top, centerRelativeLeft, centerRelativeTop, radiusX, radiusY])
-        Text upperLeft text ->
+        Text upperLeft lowerRight text ->
           SI.interpolate
             "<g transform=\"translate({0}, {1})\"><text>{2}</text></g>"
             [String.fromInt upperLeft.x, String.fromInt upperLeft.y, text]
   in
     JE.string ("<svg>" ++ String.join "" transformedItems ++ "</svg>")
+
+-- TODO: Verify that it works with Paul.
+itemsToPrologFacts : String -> String -> List CanvasItem -> JE.Value
+itemsToPrologFacts componentName metadata items =
+  let
+    stringMap =
+      [ Double "struidG0" (SI.interpolate "\"{0}\"" [componentName])
+      , Double "struidG1" (SI.interpolate "\"{0}\"" [metadata])
+      ]
+    componentFact = Double "component" "struidG0"
+    metadataId = "id0"
+    metadataTextId = "id1"
+    metadataContainerId = "id2"
+    startingId = 3
+    metadataFacts =
+      -- Metadata container
+      [ Triple "metadata" metadataId metadataTextId
+      , Triple "eltype" metadataId "metadata"
+      , Double "used" metadataTextId
+      , Double "roundedrect" metadataContainerId
+      , Triple "eltype" metadataContainerId "roundedrect"
+      , Triple "geometry_left_x" metadataContainerId "-10000"
+      , Triple "geometry_top_y" metadataContainerId "-10000"
+      , Triple "geometry_w" metadataContainerId "9999"
+      , Triple "geometry_h" metadataContainerId "9999"
+      -- Metadata text
+      , Triple "text" metadataTextId "struidG1"
+      , Triple "geometry_center_x" metadataTextId "-5000"
+      , Triple "geometry_top_y" metadataTextId "-5000"
+      , Triple "geometry_w" metadataTextId "1000"
+      , Triple "geometry_h" metadataTextId "1000"
+      ]
+    transformItem : CanvasItem -> (Int, List Fact, List Fact) -> (Int, List Fact, List Fact)
+    transformItem item (id, strings, facts) =
+      let
+        idPlusOne = "id" ++ String.fromInt (id + 1)
+        (newId, newStrings, newFacts) =
+          case item of
+            Rect upperLeft lowerRight ->
+              let
+                left = upperLeft.x |> fromInt
+                top = upperLeft.y |> fromInt
+                width = lowerRight.x - upperLeft.x |> fromInt
+                height = lowerRight.y - upperLeft.y |> fromInt
+              in
+                ( id + 1
+                , []
+                , [ Double "rect" idPlusOne
+                  , Triple "eltype" idPlusOne "box"
+                  , Triple "geometry_left_x" idPlusOne left
+                  , Triple "geometry_top_y" idPlusOne top
+                  , Triple "geometry_w" idPlusOne width
+                  , Triple "geometry_h" idPlusOne height
+                  ]
+                )
+            Polyline points ->
+              let
+                firstPoint = List.head points |> Maybe.withDefault { x = 0, y = 0 }
+                lastPoint = List.drop (List.length points - 1) points |> List.head |> Maybe.withDefault { x = 0, y = 0 }
+                edgeId = "id" ++ String.fromInt id
+                beginId = "id" ++ String.fromInt (id + 1)
+                endId = "id" ++ String.fromInt (id + 2)
+                -- Tolerance in pixels for port's bounding box
+                portTol = 5
+              in
+                ( id + 2
+                , []
+                , [ Double "line" edgeId
+                  , Double "edge" edgeId
+                  , Triple "source" edgeId beginId 
+                  , Triple "eltype" beginId "port"
+                  , Double "port" beginId
+                  , Triple "bounding_box_left" beginId (fromInt <| firstPoint.x - portTol)
+                  , Triple "bounding_box_top" beginId (fromInt <| firstPoint.y - portTol)
+                  , Triple "bounding_box_right" beginId (fromInt <| firstPoint.x + portTol)
+                  , Triple "bounding_box_bottom" beginId (fromInt <| firstPoint.y + portTol)
+                  , Triple "sink" edgeId endId
+                  , Triple "eltype" endId "port"
+                  , Double "port" endId
+                  , Triple "bounding_box_left" endId (String.fromInt <| lastPoint.x - portTol)
+                  , Triple "bounding_box_top" endId (String.fromInt <| lastPoint.y - portTol)
+                  , Triple "bounding_box_right" endId (String.fromInt <| lastPoint.x + portTol)
+                  , Triple "bounding_box_bottom" endId (String.fromInt <| lastPoint.y + portTol)
+                  ]
+                )
+            Ellipse upperLeft lowerRight ->
+              let
+                (center, radiusX, radiusY) = boundingBoxToEllipse upperLeft lowerRight
+              in
+                ( id + 1
+                , []
+                , [ Double "ellipse" idPlusOne
+                  , Triple "eltype" idPlusOne "ellipse"
+                  , Triple "geometry_center_x" idPlusOne (fromInt center.x)
+                  , Triple "geometry_center_y" idPlusOne (fromInt center.y)
+                  , Triple "geometry_w" idPlusOne (fromInt <| radiusX * 2)
+                  , Triple "geometry_h" idPlusOne (fromInt <| radiusY * 2)
+                  ]
+                )
+            Text upperLeft lowerRight text ->
+              let
+                stringId = SI.interpolate "struidG{0}" [String.fromInt <| id + 1]
+                -- TODO: Fake
+                halfWidth = 12
+                height = 12
+                --halfWidth = (lowerRight.x - upperLeft.x) // 2
+                --height = lowerRight.y - upperLeft.y
+              in
+                ( id + 1
+                , [ Double stringId (SI.interpolate "\"{0}\"" [text])
+                  ]
+                , [ Triple "text" idPlusOne stringId
+                  -- Draw.IO convention uses center X.
+                  , Triple "geometry_center_x" idPlusOne <| fromInt <| upperLeft.x + halfWidth
+                  , Triple "geometry_top_y" idPlusOne <| fromInt upperLeft.y
+                  -- Draw.IO convention uses half width.
+                  , Triple "geometry_w" idPlusOne <| fromInt halfWidth
+                  , Triple "geometry_h" idPlusOne <| fromInt height
+                  ]
+                )
+      in
+        (newId, newStrings ++ strings, newFacts ++ facts)
+    (_, stringsFromItems, itemFacts) = List.foldl transformItem (startingId, [], []) items
+    serializedStringMap = serializeFacts factToLisp (stringMap ++ stringsFromItems)
+    serializedProlog =
+      [componentFact] ++ metadataFacts ++ itemFacts
+        |> serializeFacts factToProlog
+  in
+    JE.string (serializedStringMap ++ "\n\n" ++ serializedProlog)
+
+-- We convert to float because of legacy reason with the compiler.
+fromInt x = String.fromInt x ++ ".0"
+fromFloat x = String.fromInt (round x) ++ ".0"
+
+-- TODO: Remove this once we have the prolog emitter.
+itemsToLisp : String -> String -> List CanvasItem -> JE.Value
+itemsToLisp componentName metadata items =
+  let
+    componentFact = SI.interpolate "(COMPONENT \"{0}\")" [componentName]
+    metadataFact =
+      SI.interpolate
+        "(RECT 99997.0 99997.0 2.0 2.0) (TRANSLATE (99998.0 99998.0) ((METADATA \"{0}\")))"
+        [metadata]
+    -- We need to create the arrowheads for compiler compatibility.
+    addedArrowHeads = List.filterMap toArrowHead items
+    toArrowHead item =
+      case item of
+        Polyline points ->
+          case List.drop (List.length points - 1) points |> List.head of
+            Just point ->
+              Just <| SI.interpolate
+                "(LINE (ABSM {2} {1}) (ABSL {3} {4}) (ABSL {0} {1}) (ABSL {3} {5}) (Z))"
+                [ point.x |> fromInt
+                , point.y |> fromInt
+                , toFloat point.x - 5.25 |> fromFloat
+                , toFloat point.x - 1.75 |> fromFloat
+                , toFloat point.y - 3.5 |> fromFloat
+                , toFloat point.y + 3.5 |> fromFloat
+                ]
+            Nothing -> Nothing
+        _ -> Nothing
+    transformedItems = List.map transform items
+    transform item =
+      case item of
+        Rect upperLeft lowerRight ->
+          let
+            left = upperLeft.x |> fromInt
+            top = upperLeft.y |> fromInt
+            width = lowerRight.x - upperLeft.x |> fromInt
+            height = lowerRight.y - upperLeft.y |> fromInt
+          in
+            SI.interpolate
+              "(RECT {0} {1} {2} {3})"
+              [left, top, width, height]
+        Polyline points ->
+          let
+            firstPoint = List.head points |> Maybe.withDefault { x = 0, y = 0 }
+            remainingPoints = List.tail points |> Maybe.withDefault []
+            pointToCmd cmd point =
+              SI.interpolate
+                "({0} {1} {2})"
+                [cmd, (fromInt point.x), (fromInt point.y)]
+          in
+            SI.interpolate
+              "(LINE {0} {1} (Z))"
+              [ pointToCmd "ABSM" firstPoint
+              , List.map (pointToCmd "ABSL") remainingPoints |> String.join " "
+              ]
+        Ellipse upperLeft lowerRight ->
+          let
+            (center, radiusX, radiusY) = boundingBoxToEllipse upperLeft lowerRight
+          in
+            SI.interpolate
+              "(ELLIPSE {0} {1} {2} {3})"
+              [fromInt center.x, fromInt center.y, fromInt radiusX, fromInt radiusY]
+        Text upperLeft lowerRight text ->
+          SI.interpolate
+            "(TRANSLATE ({0} {1}) (\"{2}\"))"
+            [fromInt upperLeft.x, fromInt upperLeft.y, text]
+    allItems = addedArrowHeads ++ transformedItems
+  in
+    JE.string ("(" ++ componentFact ++ " " ++ metadataFact ++ " " ++ String.join " " allItems ++ ")")
 
 zoom : Model -> Float -> (Model, Cmd Msg)
 zoom model zoomBy = ({ model | zoomFactor = model.zoomFactor * zoomBy }, Cmd.none)
@@ -328,7 +799,17 @@ handleKeyDown model key =
       -- Copy
       "c" -> (copySelectedCanvasItemInstances model, defaultCmd)
       -- Save
-      "s" -> (model, List.map .item model.instantiatedItems |> itemsToSvg |> saveSvg)
+      "s" ->
+        -- TODO: Replace all this.
+        let
+          -- In the future, get the component name from somewhere.
+          componentName = "default-component-name"
+          -- In the future, get the metadata from somewhere.
+          metadata = "dir,file,kindName,ref;"
+        in
+          (model, List.map .item model.instantiatedItems |> itemsToPrologFacts componentName metadata |> saveFile)
+      -- Load
+      "l" -> (model, loadFile (JE.null))
       -- Zoom in
       "=" -> zoom model (1.0 - zoomStepSize)
       "+" -> zoom model (1.0 - zoomStepSize)
@@ -349,7 +830,7 @@ handleKeyDown model key =
       -- Create an ellipse
       "e" -> (createInstance <| Ellipse { x = 100, y = 100 } { x = 150, y = 140 }, defaultCmd)
       -- Create a text
-      "t" -> (createInstance <| Text { x = 100, y = 100 } "Text", defaultCmd)
+      "t" -> (createInstance <| Text { x = 100, y = 100 } { x = 200, y = 200 } "name", defaultCmd)
       -- No-op
       _ -> (model, defaultCmd)
 
@@ -359,9 +840,26 @@ handleKeyUp model key = model
 createNewCanvasItemInstance : Model -> CanvasItem -> Model
 createNewCanvasItemInstance model canvasItem =
   let
-    (newModel, newItem) = copyCanvasItemInstance model { id = -1, item = canvasItem }
+    (model3, newItems, associated) =
+      case canvasItem of
+        Rect topLeft _ ->
+          let
+            text = Text
+                     { x = topLeft.x + 6, y = topLeft.y + 6 }
+                     { x = topLeft.x + 6 + defaultTextWidth, y = topLeft.y + 6 + defaultTextHeight }
+                     " "
+            boxText = { id = -1, item = text, associatedItems = [] }
+            (model2, textItem) = copyCanvasItemInstance model boxText
+          in
+            (model2, [textItem], [textItem.id])
+        _ -> (model, [], [])
+    (newModel, newItem) = copyCanvasItemInstance model3 { id = -1, item = canvasItem, associatedItems = associated }
+    -- TODO: Also put box as text's associated item.
   in
-    { newModel | instantiatedItems = newItem :: model.instantiatedItems }
+    { newModel | instantiatedItems = newItem :: (newItems ++ model.instantiatedItems) }
+
+createNewCanvasItemInstance2 : CanvasItem -> Model -> Model
+createNewCanvasItemInstance2 item model = createNewCanvasItemInstance model item
 
 deleteSelectedCanvasItemInstances : Model -> Model
 deleteSelectedCanvasItemInstances model =
@@ -394,8 +892,8 @@ moveItem deltaX deltaY item =
         Polyline <| List.map move points
       Ellipse upperLeft lowerRight ->
         Ellipse (move upperLeft) (move lowerRight)
-      Text upperLeft label ->
-        Text (move upperLeft) label
+      Text upperLeft lowerRight label ->
+        Text (move upperLeft) (move lowerRight) label
 
 moveCoordinates : Int -> Int -> Coordinates -> Coordinates
 moveCoordinates deltaX deltaY coords =
@@ -431,6 +929,7 @@ subscriptions model =
     , BE.onKeyDown (JD.map KeyPress keyDecoder)
     , BE.onKeyUp (JD.map KeyUp keyDecoder)
     , viewPortHasResized (JD.decodeValue viewPortDecoder >> ViewPortHasResized)
+    , fileHasBeenRead (JD.decodeValue JD.string >> FileHasBeenRead)
     ]
 
 viewPortDecoder : JD.Decoder (Int, Int)
@@ -462,8 +961,8 @@ updateItemCoordinates zoomFactor starting ending canvasItem =
           Polyline (List.map move points)
         Ellipse upperLeft lowerRight ->
           Ellipse (move upperLeft) (move lowerRight)
-        Text upperLeft label ->
-          Text (move upperLeft) label
+        Text upperLeft lowerRight label ->
+          Text (move upperLeft) (move lowerRight) label
   in
     { canvasItem | item = item }
 
@@ -567,6 +1066,12 @@ boundingBoxToEllipse upperLeft lowerRight =
   in
     ({ x = centerX, y = centerY }, radiusX, radiusY)
 
+ellipseToBoundingBox : Int -> Int -> Int -> Int -> (Coordinates, Coordinates)
+ellipseToBoundingBox cX cY rX rY =
+  ( { x = cX - rX, y = cY - rY }
+  , { x = cX + rX, y = cY + rY }
+  )
+
 replaceCanvasItemInstanceById : List CanvasItemInstance -> Int -> CanvasItem -> List CanvasItemInstance
 replaceCanvasItemInstanceById allItems id newItem =
   let
@@ -583,14 +1088,35 @@ replaceCanvasItemInstanceById allItems id newItem =
 view : Model -> Browser.Document Msg
 view model =
   { title = "Arrowgram Editor"
-  , body = [ Element.layout
-              [ Background.color (Element.rgb 255 255 255)
-              , Font.family [ Font.monospace ]
-              , Font.color (Element.rgb255 249 250 111)
-              ]
-              ( canvas model |> Element.html )
+  , body = [ El.layout
+               [ Background.color (El.rgb 255 255 255)
+               , Font.family [ Font.monospace ]
+               , Font.color (El.rgb255 249 250 111)
+               ]
+               (
+                 El.column
+                   []
+                   [ menu
+                   , El.row
+                       []
+                       [ El.html (canvas model)
+                       ]
+                   ]
+               )
            ]
   }
+
+menu : El.Element msg
+menu =
+  El.row
+    []
+    [ El.el [] (El.text "Save")
+    , El.el [] (El.text "Load")
+    ]
+
+-- TODO: Continue
+--palette : Html.Html Msg
+--palette =
 
 canvas : Model -> Html.Html Msg
 canvas model =
@@ -829,16 +1355,50 @@ displayCanvasItemInstance model item =
                   []
               ] ++ resizeOption
             )
-      Text upperLeft label ->
-        Svg.text_
-          [ SA.fill "black"
-          , SA.fontSize "8pt"
-          , SA.x (String.fromInt upperLeft.x)
-          , SA.y (String.fromInt upperLeft.y)
-          , SA.stroke (if isSelected then "blue" else "black")
-          , SE.onMouseDown (SelectItem item)
-          ]
-          [ Svg.text label ]
+      Text upperLeft lowerRight label ->
+        let
+          isEditing =
+            case model.intent of
+              ToType i -> i.id == item.id
+              _ -> False
+        in
+          Svg.g
+            [ SE.onMouseDown (SelectItem item)
+            , SE.on "dblclick" (JD.succeed <| DoubleClick item)
+            , SA.transform ("translate(" ++ String.fromInt upperLeft.x ++ "," ++ String.fromInt upperLeft.y ++ ")")
+            ]
+            -- This is the selection box.
+            [ Svg.rect
+                [ SA.fill "white"
+                , SA.stroke "black"
+                , SA.width <| String.fromInt <| lowerRight.x - upperLeft.x
+                , SA.height <| String.fromInt <| lowerRight.y - upperLeft.y
+                , SA.fillOpacity "0.0"
+                , SA.strokeOpacity "1.0"
+                , SA.strokeDasharray "4"
+                ]
+                []
+            , if isEditing
+              then
+                Svg.foreignObject
+                  [ SA.width "500"
+                  , SA.height "500"
+                  ]
+                  [ Html.input
+                      [ HA.type_ "text"
+                      , HA.size 35
+                      ]
+                      []
+                  ]
+              else
+                Svg.text_
+                  [ SA.fill "black"
+                  , SA.fontSize "8pt"
+                  , SA.stroke (if isSelected then "blue" else "black")
+                  , SA.id ("canvas-item-text-" ++ String.fromInt item.id)
+                  ]
+                  [ Svg.text label ]
+            ]
 
 pointsToString : List Coordinates -> String
 pointsToString points =
