@@ -26,6 +26,9 @@
   (@set-instance-var self :state :idle)
   (@set-instance-var self :char-count 0))
 
+(defun send-char-pos (self char pos)
+  (@send self :out `((:character . ,char) (:position . ,pos))))
+
 (defun react (self e)
   ;; an event, here, is a single character, we output a cons (char . position)
   (let ((pin-sym (@get-pin self e))
@@ -41,17 +44,16 @@
         (:idle
          (if (eq :EOF data)
              (progn
-               (@send self :out (cons :eof (@get-instance-var self :char-count)))
+               (send-char-pos self :eof (@get-instance-var self :char-count))
                (@set-instance-var self :state :eof))
            (if (char= #\% data)
                (@set-instance-var self :state :slurping-comment)
-             (progn
-               (@send self :out (cons data (@get-instance-var self :char-count)))))))
-        
+             (send-char-pos self data (@get-instance-var self :char-count)))))
+
         (:slurping-comment
          (if (char= #\Newline data)
              (progn
-               (@send self :out (cons #\Newline (@get-instance-var self :char-count)))
+               (send-char-pos self #\Newline (@get-instance-var self :char-count))
                (@set-instance-var self :state :idle))
            nil)) ;; no-op on any other char
         

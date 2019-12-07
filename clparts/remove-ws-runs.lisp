@@ -33,13 +33,17 @@
 
 (defun first-time (self)
   (@set-instance-var self :state :idle)
-  (@set-instance-var self :first-char-of-run nil))
+  (@set-instance-var self :first-char-of-run-pos nil))
+
+(defun send-char-pos (self char pos)
+  (@send self :out `((:character . ,char) (:position . ,pos))))
 
 (defun react (self e)
-  ;; an event, here, is a cons (char . position), output such conses again, but kill runs of ws
+  ;; an event, here, is an alis ((:char . char) (:pos . position)), output such alists again, but kill runs of ws
   (let ((pin-sym (@get-pin self e))
 	(data (@get-data self e)))
-    (let ((ch (first data)))
+    (let ((ch (cdr (assoc :character data)))
+          (current-pos (cdr (assoc :position data))))
       
 
       (if (not (eq :in pin-sym))
@@ -51,30 +55,30 @@
            (if (eq :EOF ch)
                (progn
                  (when (@get-instance-var self :first-char-of-run)
-                   (@send self :out (@get-instance-var self :first-char-of-run)))
-                 (@send self :out (cons :eof (cdr data)))
+                   (send-char-pos self :eof (@get-instance-var self :first-char-of-run-pos)))
+                 (send-char-pos self :eof current-pos)
                  (@set-instance-var self :state :eof))
 
              (if (is-white-space-p ch)
                  (progn
-                   (@set-instance-var self :first-char-of-run data)
+                   (@set-instance-var self :first-char-of-run-pos current-pos)
                    (@set-instance-var self :state :run))
                
-               (@send self :out data))))
+               (send-char-pos self ch current-pos))))
 
           (:run
            (if (eq :EOF ch)
                (progn
-                 (when (@get-instance-var self :first-char-of-run)
-                   (@send self :out (@get-instance-var self :first-char-of-run)))
-                 (@send self :out (cons :eof (cdr data)))
+                 (when (@get-instance-var self :first-char-of-run-pos)
+                   (send-char-pos self #\Space (@get-instance-var self :first-char-of-run-pos)))
+                 (send-char-pos self :eof current-pos)
                  (@set-instance-var self :state :eof))
 
              (if (is-white-space-p ch)
                  nil
                (progn
-                 (@send self :out (@get-instance-var self :first-char-of-run))
-                 (@send self :out data)
+                 (send-char-pos self #\Space (@get-instance-var self :first-char-of-run-pos))
+                 (send-char-pos self ch current-pos)
                  (@set-instance-var self :state :idle)))))
           
         (:eof
