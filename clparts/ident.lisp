@@ -116,7 +116,7 @@
                    (let ((ident (@get-instance-var self :ident))
                          (pin-ident (@get-instance-var self :pin-ident))
                          (pos (@get-instance-var self :start-pos)))
-                     (@send self :out `((:type :ident-with-pin) (:text ,ident) (:pin-text ,pin-ident) (:position ,pos)))
+                     (@send self :out `((:type . :ident-with-pin) (:text . ,ident) (:pin-text . ,pin-ident) (:position . ,pos)))
                      (clear-ident self)
                      (@set-instance-var self :state :idle))
                  

@@ -49,9 +49,33 @@
             (((ws :out)) ((ident :in)))
             (((ident :out)) ((:self :out)))
             (((ident :fatal) (ws :fatal) (eol-comments :fatal)) ((:self :fatal)))))))
-        (net2-nparts 4))
-    (let ((net-under-test net2)
-          (net-under-test-nparts net2-nparts))
+        (net2-nparts 4)
+        (net3
+         (cl-event-passing-user:@defnetwork
+          scanner-tester
+          (:code eol-comments (:in) (:out :fatal)
+           #'arrowgrams/clparts/comments-to-end-of-line::react
+           #'arrowgrams/clparts/comments-to-end-of-line::first-time)
+          (:code ws (:in) (:out :fatal)
+           #'arrowgrams/clparts/remove-ws-runs::react
+           #'arrowgrams/clparts/remove-ws-runs::first-time)
+          (:code ident (:in) (:out :fatal)
+           #'arrowgrams/clparts/ident::react
+           #'arrowgrams/clparts/ident::first-time)
+          (:code word (:in) (:out :fatal)
+           #'arrowgrams/clparts/word::react
+           #'arrowgrams/clparts/word::first-time)
+          (:schem scanner-tester (:in) (:out :fatal)
+           (eol-comments ws ident word)
+           ((((:self :in)) ((eol-comments :in)))
+            (((eol-comments :out)) ((ws :in)))
+            (((ws :out)) ((ident :in)))
+            (((ident :out)) ((word :in)))
+            (((word :out))  ((:self :out)))
+            (((word :fatal) (ident :fatal) (ws :fatal) (eol-comments :fatal)) ((:self :fatal)))))))
+        (net3-nparts 5))
+    (let ((net-under-test net3)
+          (net-under-test-nparts net3-nparts))
       (e/dispatch::ensure-correct-number-of-parts net-under-test-nparts) ;; early debug only
       (cl-event-passing-user:@with-dispatch
         (let ((string1 "a    b    c
@@ -59,7 +83,9 @@
 
 d e    f % comment
 
-[g h i] [jkl/m] [n o p / q ]
+[g h i] [jkl/m] [n o p / q ] stuv
+
+wxyz
 
 ")
               (string2 "ab")
