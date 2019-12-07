@@ -1,0 +1,39 @@
+os:
+  - linux
+  - osx
+
+# Linux system
+# 'bionic' is latest Ubuntu LTS available on Travis
+dist: bionic
+
+# macOS system
+# 'xcode11.2' is macOS 10.14 xcode 11B41
+osx_image: xcode11.2
+  
+language: minimal
+
+addons:
+  apt:
+    packages:
+      - sbcl
+  homebrew:
+    update: true
+    packages:
+      - sbcl
+      
+install:
+  - echo $(pwd)
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/asdf-configure.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/quicklisp-install.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/non-quicklisp-dependencies.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/install-gnu-prolog.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/install-buildapp.bash
+  - bash -x ${TRAVIS_BUILD_DIR}/ci/install-haskell-stack.bash
+
+script:
+  - sbcl --eval '(ql:quickload :arrowgram)' --eval '(exit :code 0)'
+  - sbcl --eval '(asdf:load-system :arrowgram)' --eval '(exit :code 0)'
+  - cd ${TRAVIS_BUILD_DIR}/svg && make 
+  - cd ${TRAVIS_BUILD_DIR}/svg/js-compiler && make
+  
+
