@@ -36,13 +36,13 @@
   (@set-instance-var self :first-char-of-run-pos nil))
 
 (defun send-char-pos (self char pos)
-  (@send self :out `((:character . ,char) (:position . ,pos))))
+  (@send self :out `((:type . :character) (:text . ,char) (:position . ,pos))))
 
 (defun react (self e)
   ;; an event, here, is an alis ((:char . char) (:pos . position)), output such alists again, but kill runs of ws
   (let ((pin-sym (@get-pin self e))
 	(data (@get-data self e)))
-    (let ((ch (cdr (assoc :character data)))
+    (let ((ch (cdr (assoc :text data)))
           (current-pos (cdr (assoc :position data))))
       
 

@@ -20,7 +20,7 @@
                                      (:file "stripquotes" :depends-on ("package"))
                                      (:file "parser-builder" :depends-on ("package" "readfileintostring" "pegtolisp" "stripquotes"))
                                      (:file "comments-to-end-of-line" :depends-on ("package"))
-                                     #+nil(:file "ident" :depends-on ("package"))
+                                     (:file "ident" :depends-on ("package"))
                                      #+nil(:file "words" :depends-on ("package"))
                                      (:file "remove-ws-runs" :depends-on ("package"))))))
 

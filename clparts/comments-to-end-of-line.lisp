@@ -27,7 +27,7 @@
   (@set-instance-var self :char-count 0))
 
 (defun send-char-pos (self char pos)
-  (@send self :out `((:character . ,char) (:position . ,pos))))
+  (@send self :out `((:type . :character) (:text . ,char) (:position . ,pos))))
 
 (defun react (self e)
   ;; an event, here, is a single character, we output a cons (char . position)

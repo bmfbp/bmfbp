@@ -30,7 +30,7 @@
             (((ws :out)) ((:self :out)))
             (((ws :fatal) (eol-comments :fatal)) ((:self :fatal)))))))
         (net1-nparts 3)
-#+nil(net
+        (net2
          (cl-event-passing-user:@defnetwork
           scanner-tester
           (:code eol-comments (:in) (:out :fatal)
@@ -49,9 +49,9 @@
             (((ws :out)) ((ident :in)))
             (((ident :out)) ((:self :out)))
             (((ident :fatal) (ws :fatal) (eol-comments :fatal)) ((:self :fatal)))))))
-        (net-nparts 4))
-    (let ((net-under-test net1)
-          (net-under-test-nparts net1-nparts))
+        (net2-nparts 4))
+    (let ((net-under-test net2)
+          (net-under-test-nparts net2-nparts))
       (e/dispatch::ensure-correct-number-of-parts net-under-test-nparts) ;; early debug only
       (cl-event-passing-user:@with-dispatch
         (let ((string1 "a    b    c
