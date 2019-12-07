@@ -48,7 +48,7 @@
 
 (defun first-time (self)
   (@set-instance-var self :state :idle)
-  (@set-instance-var self :ident nil))
+  (clear-ident))
 
 (defun react (self e)
   ;; an event, here, is a cons (char . position), output such conses again, or, (:ident . ("string" . position))
