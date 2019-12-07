@@ -13,3 +13,6 @@
 (defpackage arrowgrams/clparts/ident
   (:use :cl))
 
+(defpackage arrowgrams/clparts/words
+  (:use :cl))
+
