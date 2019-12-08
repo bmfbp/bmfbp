@@ -65,5 +65,5 @@
 ** working on scanner
 ** (no longer working on holm's prolog-6, works as well as needed, with tail-call optimization)
 ** spec kernel in pseudo code / JS
-** create new branch pt-20191208-compiler, new subdir bmfbp/svg/cl-parts, used cl-event-passing and cl-holm-prolog to rebuild compiler
+** create new branch pt-20191208-compiler, new subdir bmfbp/svg/cl-compiler, used cl-event-passing and cl-holm-prolog to rebuild compiler
 
