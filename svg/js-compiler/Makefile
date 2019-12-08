@@ -12,6 +12,8 @@ dependencies:
 	chmod a+x $(BINDIR)/jsbmfbp
 	cp ./jsbmfbp2.sh $(BINDIR)/jsbmfbp2
 	chmod a+x $(BINDIR)/jsbmfbp2
+	cp ./jsbmfbp3.sh $(BINDIR)/jsbmfbp3
+	chmod a+x $(BINDIR)/jsbmfbp3
 	cp ./part_compile.sh $(BINDIR)/part_compile
 	chmod a+x $(BINDIR)/part_compile
 	cp ./compare-graph.sh $(BINDIR)/compare-graph

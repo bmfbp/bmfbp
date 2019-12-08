@@ -1,28 +1,33 @@
 #!/bin/bash
-NAME=$(basename $1 .svg)
 
-if grep -q "Not supported by viewer" $1 ; then
-   echo "BAD svg (contains Not supported by viewer)"
-   exit 1
+NAME="$1"
+STRINGS_FILE_PATH="$2"
+FACTS_FILE_PATH="$3"
+
+# Force this file to run in the same directory as the file.
+#cd "$( dirname "${BASH_SOURCE[0]}" )"
+#cd /tmp
+
+if [ -z $NAME ]; then
+  >&2 echo "Missing name"
+  exit 3
+fi
+if [ -z $STRINGS_FILE_PATH ]; then
+  >&2 echo "Missing strings file"
+  exit 4
+fi
+if [ -z $FACTS_FILE_PATH ]; then
+  >&2 echo "Missing facts file"
+  exit 5
 fi
 
-# scanner
-# TODO: Comment this section out
-hs_vsh_drawio_to_fb <$1 >temp1.lisp
-lib_insert_part_name $NAME <temp1.lisp >temp2.lisp
-fb_to_prolog $NAME <temp2.lisp >temp3.pro
-sort <temp3.pro >temp4.pro
-check_input $NAME <temp4.pro >temp5.pro
+# Use provided string map file
+cat $STRINGS_FILE_PATH >temp-string-map.lisp
 
 # parser
-# TODO: Comment this out
-#sort <temp5.temp.pro >temp5.pro
-calc_bounds $NAME <temp5.pro >temp6a.pro
-assign_parents_to_ellipses <temp6a.pro >temp6.pro
+assign_parents_to_ellipses <$FACTS_FILE_PATH >temp6.pro
 find_comments $NAME <temp6.pro >temp7.pro
 find_metadata $NAME <temp7.pro >temp8.pro
-# TODO: Comment the line below out if the two lines above are not commented out
-#find_comments $NAME <temp6.pro >temp8.pro
 add_kinds $NAME <temp8.pro >temp9.pro
 add_selfPorts $NAME <temp9.pro >temp10.pro
 make_unknown_port_names $NAME <temp10.pro >temp11.pro
@@ -60,6 +65,5 @@ else
     new_emit_js $NAME <temp25.pro >temp26.lisp
     unmap-strings $NAME <temp26.lisp >temp27.lisp
     new_emit_js2 $NAME <temp27.lisp >temp28.json
-    # TODO: Comment this out
-    sed -f strings.sed <temp.log-unfixed.txt >temp.log.txt
+    #sed -f strings.sed <temp.log-unfixed.txt >temp.log.txt
 fi
