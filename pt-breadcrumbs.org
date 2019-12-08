@@ -28,6 +28,7 @@
 ** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
    no Spacing in test.peg --> first test is to remove all whitespace, when that works, we'll add Spacing rules
 
+** pt-20191208-compiler - compiler rewrite
 
 * git kraken
 ** merge, drag one branch and drop it onto another
@@ -64,4 +65,5 @@
 ** working on scanner
 ** (no longer working on holm's prolog-6, works as well as needed, with tail-call optimization)
 ** spec kernel in pseudo code / JS
+** create new branch pt-20191208-compiler, new subdir bmfbp/svg/cl-parts, used cl-event-passing and cl-holm-prolog to rebuild compiler
 
