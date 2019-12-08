@@ -3,7 +3,7 @@
 ** easye/travis - pt's latest stuff, Travis working
 ** pt-20191123-parser - offshoot of easye/travis ; working on JSON parser in cl-event-passing
 
-** abandoned or not PRed
+** abandoned or not PR'ed
 *** pt-20191115a-cl-parts, uses Oct 16 & tried to build cl-parts using prolog-to-lisp PEG
 *** pt-20191121a-feedback - not PR'ed - on top of easye/travis, adding new schematic in bmfbp/clsvg, hope to compile schematic to JSON then xlate to CL then compile with clsvg.asd (system :clsvg/arrowgrams)
 **** stashed

@@ -61,6 +61,8 @@
    (stest)
 
 * stack
-** working on scanner
-** working on bmfbp/build_process/cl-build/pseudo.peg
 ** working on bmfbp/build_process/cl-build/json-parse<...>
+** working on bmfbp/build_process/cl-build/pseudo.peg
+** working on scanner
+** working on holm's prolog-6
+** spec kernel in pseudo code
