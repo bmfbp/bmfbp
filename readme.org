@@ -1,5 +1,6 @@
 * branches
 ** master consolidate Oct 16
+** pt-20191129-json merged with master on Dec. 8 2019
 ** easye/travis - pt's latest stuff, Travis working
 ** pt-20191123-parser - offshoot of easye/travis ; working on JSON parser in cl-event-passing
 

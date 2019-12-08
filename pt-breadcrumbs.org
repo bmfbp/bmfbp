@@ -28,8 +28,6 @@
 ** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
    no Spacing in test.peg --> first test is to remove all whitespace, when that works, we'll add Spacing rules
 
-** pt 20191207 - convert internal format to alists (cljson should be able to handle these)
-
 
 * git kraken
 ** merge, drag one branch and drop it onto another
@@ -64,5 +62,6 @@
 ** working on bmfbp/build_process/cl-build/json-parse<...>
 ** working on bmfbp/build_process/cl-build/pseudo.peg
 ** working on scanner
-** working on holm's prolog-6
-** spec kernel in pseudo code
+** (no longer working on holm's prolog-6, works as well as needed, with tail-call optimization)
+** spec kernel in pseudo code / JS
+
