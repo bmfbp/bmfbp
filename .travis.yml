@@ -35,5 +35,4 @@ script:
   - sbcl --eval '(asdf:load-system :arrowgram)' --eval '(exit :code 0)'
   - cd ${TRAVIS_BUILD_DIR}/svg && make 
   - cd ${TRAVIS_BUILD_DIR}/svg/js-compiler && make
-  
-
+  - cd ${TRAVIS_BUILD_DIR}/editor && make
