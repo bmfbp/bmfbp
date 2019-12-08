@@ -1,0 +1,61 @@
+{
+    "kindName": "default-component-name",
+    "parts": [
+        {
+            "inCount": 1,
+            "inMap": {
+                "in": 0
+            },
+            "inPins": [
+                [
+                    1
+                ]
+            ],
+            "kindName": "part",
+            "outCount": 1,
+            "outMap": {
+                "out": 0
+            },
+            "outPins": [
+                [
+                    0
+                ]
+            ],
+            "partName": "ID12"
+        },
+        {
+            "inCount": 1,
+            "inMap": {
+                "source": 0
+            },
+            "inPins": [
+                [
+                    0
+                ]
+            ],
+            "kindName": "self",
+            "outCount": 0,
+            "outMap": {},
+            "outPins": [],
+            "partName": "ID11"
+        },
+        {
+            "inCount": 0,
+            "inMap": {},
+            "inPins": [],
+            "kindName": "self",
+            "outCount": 1,
+            "outMap": {
+                "sink": 0
+            },
+            "outPins": [
+                [
+                    1
+                ]
+            ],
+            "partName": "ID8"
+        }
+    ],
+    "self": {},
+    "wireCount": 2
+}
