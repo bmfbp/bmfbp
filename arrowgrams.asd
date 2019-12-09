@@ -80,4 +80,20 @@
                                      (:file "atest" :depends-on ("package" "pseudo-parser"))))))
 
 
+;;;; 
+;;;; compiler rev 2, in CL
+;;;;
+
+(defsystem :arrowgrams/compiler
+  :depends-on (:arrowgrams :arrowgrams/clparts :cl-holm-prolog :cl-ppcre)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "cl-compiler"
+                        :pathname "./svg/cl-compiler/"
+                        :components ((:file "package")
+                                     (:file "db" :depends-on ("package"))
+                                     (:file "reader" :depends-on ("package"))
+                                     ;(:file "writer" :depends-on ("package"))
+                                     (:file "compiler" :depends-on ("reader"))))))
 
