@@ -92,8 +92,8 @@
   :components ((:module "cl-compiler"
                         :pathname "./svg/cl-compiler/"
                         :components ((:file "package")
-                                     (:file "db" :depends-on ("package"))
+                                     (:file "fb" :depends-on ("package"))
                                      (:file "reader" :depends-on ("package"))
-                                     ;(:file "writer" :depends-on ("package"))
+                                     (:file "writer" :depends-on ("package"))
                                      (:file "compiler" :depends-on ("reader"))))))
 
