@@ -18,7 +18,7 @@
              (((:self :prolog-output-filename)) ((writer :filename)))
 
              (((reader :string-fact)) ((fb :string-fact)))
-             (((reader :eof)) ((fb :iterate) (writer :start)))
+             #+nil(((reader :eof)) ((fb :iterate) (writer :start)))
 
              (((fb :next)) ((writer :next)))
              (((fb :no-more)) ((writer :no-more)))

@@ -104,29 +104,43 @@ createEllipseBoundingBox(ID) :-
          (let ((newfb (create-bounding-boxes self oldfb))))))))
   )
            
+(defparameter testfb
+  '(((:roundedrect :id497))
+    ((:metadata :id495 :id498))
+    ((:ellipse :id568))
+    ((:ellipse :id491))
+    ((:ellipse :id476))))
+
 (defmethod create-bounding-boxes ((self e/part:part) fb)
   (let ((newfb (create-bounding-boxes-for-ellipses self fb)))
     newfb))
 
 (defmethod create-bounding-boxes-for-ellipses ((self e/part:part) fb)
   (assert nil)
-  #+nil(let ((goals '((ellipse (? ID))
-                      (geometry_center_x (? ID) (? CX))
-                      (geometry_center_y (? ID) (? CY))
-                      (geometry_w (? ID) (? HalfW))
-                      (geometry_h (? ID) (? HalfH)))))
-         (let ((matches (find-matches goals fb))))))
+  #+nil(let ((goals '((:ellipse (:? ID))
+                      (:geometry_center_x (:? ID) (:? CX))
+                      (:geometry_center_y (:? ID) (:? CY))
+                      (:geometry_w (:? ID) (:? HalfW))
+                      (:geometry_h (:? ID) (:? HalfH)))))
+         (let ((matches (find-matches goals fb)))))
+  )
 
 
 (defun find-matches (goals fb)
     (cl-holm-prolog::prove6 '() goals fb cl-holm-prolog::empty 1 '()))
   ;  (prove6 '() goals1 db1 empty 1 '()))
 
-(defun ftest ()
-  (let ((goals '((ellipse (? id))))
+(defun ftest-old ()
+  (let ((goals '((:ellipse (:? id))))
         (fb (aa::@get-instance-var
              (second (e/part::internal-parts arrowgrams/compiler::*top*))
              :factbase)))
+    (format *standard-output* "~%length of fb ~a~%" (length fb))
+    (find-matches goals fb)))
+
+(defun ftest ()
+  (let ((goals '((:ellipse (:? id))))
+        (fb testfb))
     (format *standard-output* "~%length of fb ~a~%" (length fb))
     (find-matches goals fb)))
 
