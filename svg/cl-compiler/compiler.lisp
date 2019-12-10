@@ -6,7 +6,7 @@
            (:code reader (:file-name) (:string-fact :eof :error)
             #'arrowgrams/compiler/reader::react #'arrowgrams/compiler/reader::first-time)
            (:code fb (:string-fact :lisp-fact :iterate :get-next) (:next :no-more :error)
-            #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+            #'arrowgrams/compiler/fb::react #'arrowgrams/compiler/fb::first-time)
            (:code writer (:filename :start :next :no-more) (:request :error)
             #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
 
