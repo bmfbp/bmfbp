@@ -20,23 +20,6 @@ If any kind of error occurs, an error event will be output on the :error pin.</T
             <Comments>Fully qualified.
 It sends a T value, but any value will do.</Comments>
         </Document>
-        <Document ID="34D56379-CDFE-405D-8DD5-52D5B15A7011">
-            <Title>Google Image Result for https://5.imimg.com/data5/CM/HH/MY-669417/integrated-circuits-500x500.jpg</Title>
-            <Text>images
-Website for this image
-Integrated Circuits, एकीकृत परिपथ at Rs 60 /piece ...
-indiamart.com
-Full-size image
-500 × 500 (Infinityx larger)
-
-More sizes
-Similar images
-Type:	JPG
-Images may be subject to copyright.
-
-
-</Text>
-        </Document>
         <Document ID="07A81336-44FC-4F81-B631-1C41E0B282EA">
             <Title>Op-Amp - TL082, Dual, Wide-Bandwidth, JFET Input, 8-Pin DIP | Amplified Parts</Title>
             <Text>Skip to main content
@@ -178,13 +161,30 @@ The FB must “clean up” its input, as exactly 0 or 1 :get-next triggers can b
             <Comments>We don’t need to know what the format is, as long as the FB and Writer parts agree on the format.  For the record, though, the V2 test-bed is going to use Lisp lists as facts.
 Converting the fact to internal format, if necessary.</Comments>
         </Document>
+        <Document ID="34D56379-CDFE-405D-8DD5-52D5B15A7011">
+            <Title>Google Image Result for https://5.imimg.com/data5/CM/HH/MY-669417/integrated-circuits-500x500.jpg</Title>
+            <Text>images
+Website for this image
+Integrated Circuits, एकीकृत परिपथ at Rs 60 /piece ...
+indiamart.com
+Full-size image
+500 × 500 (Infinityx larger)
+
+More sizes
+Similar images
+Type:	JPG
+Images may be subject to copyright.
+
+
+</Text>
+        </Document>
         <Document ID="DCF186D7-AF2C-47F8-87E9-AE50B7BF6787">
             <Title>Arrowgrams Overview</Title>
             <Text>Arrowgrams Overview
 
 Arrowgrams is a way of constructing software using Parts and Wires.  Parts can be Schematics, Code, or Parts.
 
-The idea of Arrowgrams is to mimic Electronics Hardware design.  Parts are like ICs (see &lt;$n#figure:Integrated Circuit&gt;).  Schematics are collections of Parts (see &lt;$n#figure:Schematic&gt;.  Wires look like lines on a diagram.  The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.
+The idea of Arrowgrams is to mimic Electronics Hardware design.  Parts are like ICs (see Figure &lt;$n:figure:IntegratedCircuit&gt;).  Schematics are collections of Parts (see Figure &lt;$n:figure:Schematic&gt;.  Wires look like lines on a diagram.  The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.
 #
 Figure &lt;$n:figure:IntegratedCircuit&gt;
 

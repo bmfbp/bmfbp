@@ -93,27 +93,25 @@
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">Arrowgrams is a way of constructing software using Parts and Wires.<span class="Apple-converted-space">  </span>Parts can be Schematics, Code, or Parts.</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p1"><span class="s1">The idea of Arrowgrams is to mimic Electronics Hardware design.<span class="Apple-converted-space">  </span>Parts are like ICs (see &lt;$n#figure:Integrated Circuit&gt;).<span class="Apple-converted-space">  </span>Schematics are collections of Parts (see &lt;$n#figure:Schematic&gt;.<span class="Apple-converted-space">  </span>Wires look like lines on a diagram.<span class="Apple-converted-space">  </span>The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The idea of Arrowgrams is to mimic Electronics Hardware design.<span class="Apple-converted-space">  </span>Parts are like ICs (see Figure &lt;$n:figure:IntegratedCircuit&gt;).<span class="Apple-converted-space">  </span>Schematics are collections of Parts (see Figure &lt;$n:figure:Schematic&gt;).<span class="Apple-converted-space">  </span>Wires look like lines on a diagram.<span class="Apple-converted-space">  </span>The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:IntegratedCircu...</p>
+<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:I...</p>
 </li>
 <li>
 <p class="topLevelItemTitle">The Problem</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">The Problem</span></p></p>
+<p class="itemText">The Problem</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">I have decided to rewrite the Arrowgrams compiler using Nils M. Holm’s prolog.</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">The first version of the compiler, V1, consists of 29 passes.<span class="Apple-converted-space">  </span>Each “pass” is extremely simple.<span class="Apple-converted-space">  </span>Most of the passes are implemented in gprolog and the passes are strung together with a *nix shell program.<span class="Apple-converted-space">  </span>Prolog is used, since a lot of the work done by the compiler consists of searching a factbase using backtracking.</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p1"><span class="s1">The new, V2, compiler will be built in Common Lisp and, initially will mimic the pass...</p>
+<p class="itemText"><p class="p1"><span class="s1">The new, V2, compiler will be built in Common Lisp and, initially will mimic the passe...</p>
 </li>
 <hr class="afterText"/>
 <ul>
 <li>
 <p class="itemTitle">Problem #1</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Problem #1</span></p></p>
+<p class="itemText">Problem #1</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">To set up a test bench where we can use the V1 compiler intermediate files to test parts of the V2 compiler as it evolves.</p>
 </li>
@@ -123,7 +121,9 @@
 <li>
 <p class="topLevelItemTitle">A Solution</p>
 <p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">A Solution</p>
+<p class="itemText"><p class="p1"><span class="s1">A Solution</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Note that there are many ways to solve this problem and that the following solution shows only one way to solve the problem.</p>
 </li>
 <hr class="afterText"/>
 <ul>
@@ -143,14 +143,13 @@
 <p class="itemText"><p class="p1"><span class="s1"><span class="Apple-converted-space"> </span>3) A writer.</span></p></p>
 <p class="itemText"><p class="p1"><span class="s1"><span class="Apple-converted-space"> </span>4) The Compiler.<span class="Apple-converted-space">  </span>The Compiler part is the test-bed for everything we will be building.</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p1"><span class="s1">The following sections describe my design of these four parts.<span class="Apple-converted-space">  </span>Note that there are many...</p>
+<p class="itemText"><p class="p1"><span class="s1">The following sections describe my design of these four parts.<span class="Apple-converted-space">  </span></p>
 </li>
 <li>
 <p class="itemTitle">Compiler</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Compiler</span></p></p>
+<p class="itemText">Compiler</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
 <p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Compiler&gt;<span class="Apple-converted-space"> </span></span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">At the moment, the test version of the V2 compiler is a part with two inputs and one output. <span class="Apple-converted-space"> </span></span></p></p>
@@ -165,10 +164,9 @@
 </li>
 <li>
 <p class="itemTitle">Compiler Internals</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Compiler Internals</span></p></p>
+<p class="itemText">Compiler Internals</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p1"><span class="s1">’</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#’</span></p></p>
 <p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:CompilerInternals&gt;<span class="Apple-converted-space"> </span></span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">The V2 compiler test-bed is a schematic that holds 3 parts - one reader, one writer and one factbase part.<span class="Apple-converted-space">  </span>The “Compiler” schematic is a parent that holds 3 part instances and wires them up.<span class="Apple-converted-space">  </span>The designer is responsible for placing the parts and wiring them up.</span></p></p>
@@ -179,10 +177,9 @@
 </li>
 <li>
 <p class="itemTitle">Reader</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Reader</span></p></p>
+<p class="itemText">Reader</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
 <p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Reader&gt;<span class="Apple-converted-space"> </span></span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">The reader Part has one input pin and three output pins.</span></p></p>
@@ -195,10 +192,9 @@
 </li>
 <li>
 <p class="itemTitle">Writer</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Writer</span></p></p>
+<p class="itemText">Writer</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
 <p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Writer&gt;<span class="Apple-converted-space"> </span></span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">The Writer has 4 input pins and 2 output pins.</span></p></p>
@@ -213,10 +209,9 @@
 </li>
 <li>
 <p class="itemTitle">FB (FactBase)</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Factbase</span></p></p>
+<p class="itemText">Factbase</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
-<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
 <p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Factbase&gt;<span class="Apple-converted-space"> </span></span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">The factbase part holds the factbase in internal format.</span></p></p>
@@ -231,8 +226,7 @@
 </li>
 <li>
 <p class="itemTitle">Naming Conventions</p>
-<p class="itemText"></span></p></p>
-<p class="itemText"><p class="p1"><span class="s1">Naming Conventions</span></p></p>
+<p class="itemText">Naming Conventions</span></p></p>
 <p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
 <p class="itemText"><p class="p1"><span class="s1">I’m using Common Lisp naming conventions.<span class="Apple-converted-space">  </span>A dash “-” is valid character in a name (it doesn’t mean “subtract” in this context, as it would in other languages).<span class="Apple-converted-space">  </span>And, a colon, “:” can be the first letter of a name (the meaning of a leading colon means something special in Common Lisp, but we don’t need to discuss that here).</p>
 </li>
