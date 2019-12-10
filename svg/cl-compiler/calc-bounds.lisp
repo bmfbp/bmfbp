@@ -127,8 +127,7 @@ createEllipseBoundingBox(ID) :-
 
 
 (defun find-matches (goals fb)
-    (cl-holm-prolog::prove6 '() goals fb cl-holm-prolog::empty 1 '()))
-  ;  (prove6 '() goals1 db1 empty 1 '()))
+    (cl-holm-prolog::prove7 '() goals fb cl-holm-prolog::empty 1 '() nil))
 
 (defun ftest-old ()
   (let ((goals '((:ellipse (:? id))))
