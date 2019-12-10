@@ -93,33 +93,37 @@ createEllipseBoundingBox(ID) :-
   )
 
 (defmethod react ((self e/part:part) (e e/event:event))
-  (let ((pin (e/event:sym e))
+  (assert nil)
+  #+nil(let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (let ((oldfb data))
       (e/part::ensure-valid-input-pin self pin)
       (ecase pin
         (:fb-as-list
          ;; when we get an fb, we are being told to process it, then output the result (a new fb) to :new-fb-as-list
-         (let ((newfb (create-bounding-boxes self oldfb)))
+         (let ((newfb (create-bounding-boxes self oldfb))))))))
+  )
            
 (defmethod create-bounding-boxes ((self e/part:part) fb)
   (let ((newfb (create-bounding-boxes-for-ellipses self fb)))
     newfb))
 
 (defmethod create-bounding-boxes-for-ellipses ((self e/part:part) fb)
-  (let ((goals '((ellipse (? ID))
-                 (geometry_center_x (? ID) (? CX))
-                 (geometry_center_y (? ID) (? CY))
-                 (geometry_w (? ID) (? HalfW))
-                 (geometry_h (? ID) (? HalfH)))))
-    (let ((matches (find-matches goals fb)))
+  (assert nil)
+  #+nil(let ((goals '((ellipse (? ID))
+                      (geometry_center_x (? ID) (? CX))
+                      (geometry_center_y (? ID) (? CY))
+                      (geometry_w (? ID) (? HalfW))
+                      (geometry_h (? ID) (? HalfH)))))
+         (let ((matches (find-matches goals fb))))))
 
 
 (defun find-matches (goals fb)
     (cl-holm-prolog::prove6 '() goals fb cl-holm-prolog::empty 1 '()))
   ;  (prove6 '() goals1 db1 empty 1 '()))
 
-(defun ftest (fb)
-  (let ((goals '((ellispe (? id)))))
+(defun ftest ()
+  (let ((goals '((ellispe (? id))))
+        (fb (aa::@get-instance-var (a::*top*) :factbase)))    
     (find-matches goals fb)))
 

@@ -29,6 +29,7 @@
 
     (e/dispatch::ensure-correct-number-of-parts 4) ;; not needed, except in early days of alpha debug, when everything is still in text form
     (e/util::enable-logging)
+    (setq arrowgrams/compiler::*top* compiler-net)
     (cl-event-passing-user::@with-dispatch
       (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/temp5.pro")))
         (cl-event-passing-user::@inject compiler-net
