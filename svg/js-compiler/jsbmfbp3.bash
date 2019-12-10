@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 NAME="$1"
 STRINGS_FILE_PATH="$2"
