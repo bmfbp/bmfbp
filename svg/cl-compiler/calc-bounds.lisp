@@ -368,7 +368,7 @@ createEllipseBoundingBox(ID) :-
     ((:geometry_center_x :id385 3624.5))
     ((:geometry_center_y :id568 40.0))
     ((:geometry_center_y :id491 300.0))
-    ((:geometry_center_y :id476 170.0)))
+    ((:geometry_center_y :id476 170.0))))
 
 (defmethod create-bounding-boxes ((self e/part:part) fb)
   (let ((newfb (create-bounding-boxes-for-ellipses self fb)))
