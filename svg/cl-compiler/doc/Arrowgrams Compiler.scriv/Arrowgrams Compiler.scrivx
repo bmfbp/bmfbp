@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ScrivenerProject Identifier="45535523-96EB-481D-A354-4AF968845058" Version="2.0" Creator="SCRMAC-3.1.4-12109" Device="Pauls-MacBook-Pro-279" Author="Paul Tarvydas" Modified="2019-12-09 19:28:02 -0500" ModID="43272329-2D34-4597-8CDF-BECEDD236D58">
+<ScrivenerProject Identifier="45535523-96EB-481D-A354-4AF968845058" Version="2.0" Creator="SCRMAC-3.1.4-12109" Device="Pauls-MacBook-Pro-279" Author="Paul Tarvydas" Modified="2019-12-10 07:38:43 -0500" ModID="0DFDF174-7BD1-4C5C-B33E-B40F4A8240B4">
     <Binder>
         <BinderItem UUID="1E5D96EC-EE64-4222-9AAF-8795E9724C1F" Type="DraftFolder" Created="2019-12-09 12:56:31 -0500" Modified="2019-12-09 12:56:31 -0500">
             <Title>Draft</Title>
@@ -10,7 +10,7 @@
                 <SelectedSubdocumentUUIDs>DCF186D7-AF2C-47F8-87E9-AE50B7BF6787</SelectedSubdocumentUUIDs>
             </CorkboardAndOutliner>
             <Children>
-                <BinderItem UUID="DCF186D7-AF2C-47F8-87E9-AE50B7BF6787" Type="Text" Created="2019-12-09 13:17:53 -0500" Modified="2019-12-09 19:26:18 -0500">
+                <BinderItem UUID="DCF186D7-AF2C-47F8-87E9-AE50B7BF6787" Type="Text" Created="2019-12-09 13:17:53 -0500" Modified="2019-12-10 07:34:36 -0500">
                     <Title>Arrowgrams Overview</Title>
                     <MetaData>
                         <IncludeInCompile>Yes</IncludeInCompile>
@@ -48,7 +48,7 @@
                         <IncludeInCompile>Yes</IncludeInCompile>
                     </MetaData>
                     <TextSettings>
-                        <TextSelection>1,0</TextSelection>
+                        <TextSelection>137,0</TextSelection>
                     </TextSettings>
                     <Children>
                         <BinderItem UUID="E4BBC87D-9D44-4637-A785-50B2A4C51593" Type="Text" Created="2019-12-09 13:10:23 -0500" Modified="2019-12-09 19:27:05 -0500">
@@ -392,12 +392,12 @@
     </StatusSettings>
     <ProjectTargets Notify="No">
         <DraftTarget Type="Words" CountIncludedOnly="Yes" CurrentCompileGroupOnly="No" Deadline="2019-12-09 12:56:30 -0500" IgnoreDeadline="Yes">0</DraftTarget>
-        <SessionTarget Type="Words" CountDraftOnly="Yes" AllowNegatives="Yes" NextResetDate="2019-12-10 00:00:00 -0500" ResetType="Time" ResetTime="00:00" DeterminedFromDeadline="No" WritingDays="" CanWriteOnDeadlineDate="No">0</SessionTarget>
-        <PreviousSession Words="1775" Characters="10209" Date="2019-12-09 19:22:22 -0500"/>
+        <SessionTarget Type="Words" CountDraftOnly="Yes" AllowNegatives="Yes" NextResetDate="2019-12-11 00:00:00 -0500" ResetType="Time" ResetTime="00:00" DeterminedFromDeadline="No" WritingDays="" CanWriteOnDeadlineDate="No">0</SessionTarget>
+        <PreviousSession Words="63" Characters="376" Date="2019-12-10 07:25:04 -0500"/>
     </ProjectTargets>
-    <RecentWritingHistory Date="2019-12-09 12:56:30 -0500">
-        <DraftWordCount>1775</DraftWordCount>
-        <DraftCharCount>10209</DraftCharCount>
+    <RecentWritingHistory Date="2019-12-10 00:00:00 -0500">
+        <DraftWordCount>63</DraftWordCount>
+        <DraftCharCount>376</DraftCharCount>
         <OtherWordCount>0</OtherWordCount>
         <OtherCharCount>0</OtherCharCount>
     </RecentWritingHistory>

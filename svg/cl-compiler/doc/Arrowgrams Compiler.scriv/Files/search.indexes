@@ -184,14 +184,14 @@ Images may be subject to copyright.
 
 Arrowgrams is a way of constructing software using Parts and Wires.  Parts can be Schematics, Code, or Parts.
 
-The idea of Arrowgrams is to mimic Electronics Hardware design.  Parts are like ICs (see Figure &lt;$n:figure:IntegratedCircuit&gt;).  Schematics are collections of Parts (see Figure &lt;$n:figure:Schematic&gt;.  Wires look like lines on a diagram.  The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.
+The idea of Arrowgrams is to mimic Electronics Hardware design.  Parts are like ICs (see Figure &lt;$n:figure:IntegratedCircuit&gt;).  Schematics are collections of Parts (see Figure &lt;$n:figure:Schematic&gt;).  Wires look like lines on a diagram.  The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.
 #
 Figure &lt;$n:figure:IntegratedCircuit&gt;
 
 #
 Figure &lt;$n:figure:Schematic&gt;
 
-In Arrowgram, diagrams make intuitive sense.  All pedantic issues are made to allow diagrams to make sense.
+In Arrowgram, diagrams make intuitive sense.  All pedantic issue design decisions are made to allow diagrams to make sense.
 
 A Part consists of 3 items:
 
@@ -216,6 +216,7 @@ Drawn on a diagram as a line.
 Hierarchical containers.
 In some base language, such as JavaScript.  In this V2 version of the compiler, I used Common Lisp as the base language.
 Black boxes imported into the project from some other project.
+At least to electronics engineers :-).  These kinds of diagrams have been proven by decades of use.
 For example.  OO uses inheritance as a way of constructing software.  With inheritance, a child can override the operation of a parent.  In Arrowgrams, this is not allowed - a parent always takes precedent, e.g. a child never overrides the operation of a parent.  In this manner, composition always works - there are no hidden gotchas when parts are glued together.
 If you’ve used other programming languages, Types and Classes are much like Arrowgram Kinds.
 Another diagram-based technology, called Flow-Based Programming (FBP) uses flows, which implies continuous streams of information.  Events are “shorter” than flows and are not sent continuously.  Events are like pulses / edges in digital electronics.
@@ -247,7 +248,10 @@ The input pin :prolog-output-filename tells the test-bed to write out the factba
         </Document>
         <Document ID="A038CFBB-E1DB-4403-8871-ABFAB35E3D47">
             <Title>A Solution</Title>
-            <Text>A Solution</Text>
+            <Text>A Solution
+
+Note that there are many ways to solve this problem and that the following solution shows only one way to solve the problem.</Text>
+            <Comments>In fact, how I choose to solve this problem.</Comments>
         </Document>
         <Document ID="32C0E6C4-C514-49FB-B4D8-564890614205">
             <Title>Compiler Internals</Title>
@@ -324,9 +328,8 @@ The above immediately points to 3 Parts, plus the Compiler (as it evolves)
 	3)	A writer.
 	4)	The Compiler.  The Compiler part is the test-bed for everything we will be building.
 
-The following sections describe my design of these four parts.  Note that there are many ways to solve this problem and that the following solution shows only one way to solve the problem.</Text>
-            <Comments>A “Part” is a software component.
-How I choose to solve this problem.</Comments>
+The following sections describe my design of these four parts.  </Text>
+            <Comments>A “Part” is a software component.</Comments>
         </Document>
         <Document ID="654CC77A-EC35-4D0C-92AC-86AAE84EA4B9">
             <Title>The Problem</Title>
