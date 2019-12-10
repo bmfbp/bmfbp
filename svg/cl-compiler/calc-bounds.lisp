@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/bounding-boxes)
+(in-package :arrowgrams/compiler/calc-bounds)
 
 ; (:code reader (:fb-as-list) (:new-fb-as-list :error)
 ;   #'arrowgrams/compiler/bounding-boxes::react
@@ -123,7 +123,8 @@ createEllipseBoundingBox(ID) :-
   ;  (prove6 '() goals1 db1 empty 1 '()))
 
 (defun ftest ()
-  (let ((goals '((ellispe (? id))))
-        (fb (aa::@get-instance-var (a::*top*) :factbase)))    
+  (let ((goals '((ellipse (? id))))
+        (fb (aa::@get-instance-var arrowgrams/compiler::*top* :factbase)))    
+    (format *standard-output* "~%length of fb ~a~%" (length fb))
     (find-matches goals fb)))
 

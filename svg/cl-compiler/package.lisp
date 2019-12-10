@@ -11,6 +11,6 @@
 (defpackage :arrowgrams/compiler/fb
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/bounding-boxes
+(defpackage :arrowgrams/compiler/calc-bounds
   (:use :cl))
 
