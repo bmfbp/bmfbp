@@ -125,7 +125,7 @@ createEllipseBoundingBox(ID) :-
 (defun ftest ()
   (let ((goals '((ellipse (? id))))
         (fb (aa::@get-instance-var
-             (second (aa::@get-instance-var arrowgrams/compiler::*top* :internal-parts))
+             (second (e/part::internal-parts arrowgrams/compiler::*top*))
              :factbase)))
     (format *standard-output* "~%length of fb ~a~%" (length fb))
     (find-matches goals fb)))
