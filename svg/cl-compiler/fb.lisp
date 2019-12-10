@@ -2,7 +2,7 @@
 
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
-; (:code fb (:string-fact :lisp-fact :iterate :get-next) (:no-more :next :fatal) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+; (:code fb (:string-fact :lisp-fact :iterate :get-next) (:no-more :next :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
@@ -20,7 +20,7 @@
                  (begin-iteration self)
                  (cl-event-passing-user::@set-instance-var self :state :iterating))
              (cl-event-passing-user:@send self
-                                          :fatal
+                                          :error
                                           (format nil "FB in state :idle expected :string-fact, :lisp-fact or :iterate, but got action ~S data ~S" action (e/event:data e))))))))
 
     (let ((action (e/event::sym e))
@@ -38,7 +38,7 @@
            (if (eq action :iterate) ;; restart iteration from beginning
                (begin-iteration self)
              (cl-event-passing-user:@send self
-                                          :fatal
+                                          :error
                                           (format nil "FB in state :iterating expected :get-next or :iterate, but got action ~S data ~S"
                                                   action (e/event:data e))))))))))
   
@@ -66,7 +66,7 @@
   (with-input-from-string (fact-stream fact-string)
     (let ((fact (read fact-stream nil :EOF)))
       (if (not (listp fact))
-          (cl-event-passing-user:@send self :fatal (format nil "db: expected a list, but got ~S" fact-string))
+          (cl-event-passing-user:@send self :error (format nil "db: expected a list, but got ~S" fact-string))
         (add-lisp-fact self fact)))))
 
 (defmethod add-lisp-fact ((self e/part:part) fact)

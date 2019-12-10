@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/writer)
 
-; (:code writer (:filename :start :next :no-more) (:request :fatal) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+; (:code writer (:filename :start :next :no-more) (:request :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
@@ -36,7 +36,7 @@
       (let ((stream (open filename :direction :output :if-exists :supersede)))
         (if stream
             (cl-event-passing-user::@set-instance-var self :stream stream)
-          (cl-event-passing-user::@send self :fatal (format nil "can't open file ~S" filename)))))))
+          (cl-event-passing-user::@send self :error (format nil "can't open file ~S" filename)))))))
 
 (defmethod close-stream ((self e/part:part))
   (let ((filename (cl-event-passing-user::@get-instance-var self :filename))
@@ -53,6 +53,6 @@
         (format stream "~a(~a).~%" (first fact) (second fact))
       (if (= 3 (length fact))
           (format stream "~a(~a,~a).~%" (first fact) (second fact) (third fact))
-        (cl-event-passing-user::@send self :fatal (format nil "facts must be length 2 or 3, but got ~S" fact))))))
+        (cl-event-passing-user::@send self :error (format nil "facts must be length 2 or 3, but got ~S" fact))))))
   
   

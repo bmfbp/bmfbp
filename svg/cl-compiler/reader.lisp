@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/reader)
 
-; (:code reader (:file-name) (:string-fact :eof :fatal) #'arrowgrams/compiler/reader::react)
+; (:code reader (:file-name) (:string-fact :eof :error) #'arrowgrams/compiler/reader::react)
 
 (defmethod first-time ((self e/part:part))
   ;; nothing

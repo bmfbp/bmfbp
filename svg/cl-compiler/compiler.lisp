@@ -3,14 +3,14 @@
 (defun compiler ()
   (let ((compiler-net
           (cl-event-passing-user::@defnetwork compiler
-           (:code reader (:file-name) (:string-fact :eof :fatal)
+           (:code reader (:file-name) (:string-fact :eof :error)
             #'arrowgrams/compiler/reader::react #'arrowgrams/compiler/reader::first-time)
-           (:code fb (:string-fact :lisp-fact :iterate :get-next) (:next :no-more :fatal)
+           (:code fb (:string-fact :lisp-fact :iterate :get-next) (:next :no-more :error)
             #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
-           (:code writer (:filename :start :next :no-more) (:request :fatal)
+           (:code writer (:filename :start :next :no-more) (:request :error)
             #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
 
-           (:schem compiler (:file-name :prolog-output-filename) (:fatal)
+           (:schem compiler (:file-name :prolog-output-filename) (:error)
             ;; parts
             (reader fb writer)
             ;; wiring
@@ -25,7 +25,7 @@
 
              (((writer :request)) ((fb :get-next)))
 
-             (((writer :fatal) (fb :fatal) (reader :fatal)) ((:self :fatal))))))))
+             (((writer :error) (fb :error) (reader :error)) ((:self :error))))))))
 
     (e/dispatch::ensure-correct-number-of-parts 4) ;; not needed, except in early days of alpha debug, when everything is still in text form
     (e/util::enable-logging)
