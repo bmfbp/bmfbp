@@ -8,6 +8,9 @@
 (defpackage :arrowgrams/compiler/writer
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/db
+(defpackage :arrowgrams/compiler/fb
+  (:use :cl))
+
+(defpackage :arrowgrams/compiler/bounding-boxes
   (:use :cl))
 

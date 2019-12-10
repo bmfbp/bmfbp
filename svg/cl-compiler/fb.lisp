@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/db)
+(in-package :arrowgrams/compiler/fb)
 
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
