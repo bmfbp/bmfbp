@@ -209,7 +209,11 @@ Pedantic Issues (not required reading)
 	◦	When a Part sends an output event, the event is not delivered to its destination(s) immediately, but is placed on the output queue of the part.  The Dispatcher delivers the queued-up output events only after the part has completed processing of a single event.
 	◦	Parts must always run to completion.  Parts must not employ infinite loops (nor infinite recursion).
 	◦	Input pins of a schematic can be directly connected to the output pins of that same schematic.
+	◦	Arrograms Parts differ from functions in other languages, in that Parts are fully concurrent - it is not possible to know in what order Parts are invoked.
 	◦	The astute reader will notice that our system resembles the ideas of mutual multi-tasking and event loops.  These ideas were tried only in operating systems before being discarded.  The ideas, though, remain valid for programming-language level systems such as Arrowgrams.
+	◦	Every kind specifies one or two operations - (1) an optional function that is called before the system starts and (2) a mandatory function that is called every time the Part is required to process one input event.
+	◦	Outputs from an output queue will be delivered in the order they were created.
+
 </Text>
             <Comments>Software components.
 Drawn on a diagram as a line.  
@@ -224,7 +228,10 @@ a.k.a. “Parent”
 And if that input pin is wired to some child’s input pin.
 The following is a very pedantic point: race conditions can exist in a particular design, but, they will never be caused by interleaving event delivery. This is simple “physics” as intuited by most people.  This pedantic issue is guaranteed only where efficiency permits, e.g. events sent on the same CPU or events sent on very fast wires.  When event delivery can take a long time, e.g. events sent by CPUs that are distributed and on slow wires, this pedantic guarantee is lifted and needs to be addressed explicitly in the design.  In fact, most opportunities  for race conditions disappear with the semantics of Arrowgrams.
 The Dispatcher follows the wiring list in a schematic during event delivery.
-This is the reason that operating systems use full preemption strategies.  Such strategies are expensive and are not needed by our language-level Arrowgrams system, but, the designer/programmer is entrusted to not create such infinite situations.  Infinite looping is a bug in every known programming language.  We tighten the definition to mean that long-lasting loops are also a bug.</Comments>
+This is the reason that operating systems use full preemption strategies.  Such strategies are expensive and are not needed by our language-level Arrowgrams system, but, the designer/programmer is entrusted to not create such infinite situations.  Infinite looping is a bug in every known programming language.  We tighten the definition to mean that long-lasting loops are also a bug.
+Concurrency is quite efficient in Arrowgrams, almost as efficient as function calls.  Concurrency in Arrowgrams does not rely on threading and multi-tasking at the operating systems level.
+first-time
+react</Comments>
         </Document>
         <Document ID="F82324C9-2952-48E5-BA69-BA4876251521">
             <Title>Compiler</Title>
