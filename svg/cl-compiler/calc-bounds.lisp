@@ -111,7 +111,7 @@ createEllipseBoundingBox(ID) :-
     ((:ellipse :id491))
     ((:ellipse :id476))))
 
-(defparameter testfb
+(defparameter testfb-3
   '(((:roundedrect :id497))
     ((:metadata :id495 :id498))
     ((:ellipse :id568))
@@ -370,6 +370,13 @@ createEllipseBoundingBox(ID) :-
     ((:geometry_center_y :id491 300.0))
     ((:geometry_center_y :id476 170.0))))
 
+(defparameter testfb
+  '(    ((:ellipse :id568))
+    ((:geometry_h :id568 40.0))
+    ((:geometry_w :id568 40.0))
+    ((:geometry_center_x :id568 4405.0))
+    ((:geometry_center_y :id568 40.0))))
+
 (defmethod create-bounding-boxes ((self e/part:part) fb)
   (let ((newfb (create-bounding-boxes-for-ellipses self fb)))
     newfb))
@@ -388,16 +395,12 @@ createEllipseBoundingBox(ID) :-
 (defun find-matches (goals fb)
     (cl-holm-prolog::prove7 '() goals fb cl-holm-prolog::empty 1 '() nil))
 
-(defun ftest-old ()
-  (let ((goals '((:ellipse (:? id))))
-        (fb (aa::@get-instance-var
-             (second (e/part::internal-parts arrowgrams/compiler::*top*))
-             :factbase)))
-    (format *standard-output* "~%length of fb ~a~%" (length fb))
-    (find-matches goals fb)))
-
 (defun ftest ()
-  (let ((goals '((:ellipse (:? id))))
+  (let ((goals '((:ellipse (:? ID))
+                 (:geometry_center_x (:? ID) (:? CX))
+                 (:geometry_center_y (:? ID) (:? CY))
+                 (:geometry_w (:? ID) (:? HalfW))
+                 (:geometry_h (:? ID) (:? HalfH))))
         (fb testfb))
     (format *standard-output* "~%length of fb ~a~%" (length fb))
     (find-matches goals fb)))
