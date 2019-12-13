@@ -1,0 +1,69 @@
+* status
+** got reuse working in cl-event-passing
+** (some days ago) built PEG parser part in bmfbp/clparts
+** try to reuse PEG parser part to build JSON parser
+** working on bmfbp/build-process/cl-build/convert.lisp
+** check that bmfbp/clparts/parser-builder works
+
+
+** working on pseudo-code parser atest()
+   (ql:quickload :arrowgrams/build/cl-build/atest)
+   (arrowgrams/build/cl-build::atest)
+
+* todo
+** cut loops system over to bmfbp
+** cut cl-event-passing system over to bmfbp
+** should @defnetwork macro use the last declaration as the top level?
+
+** fixed: why is (pbuilder :souce-out) not erroring out?  It's a typo.
+
+** /globals should be instance variables, part of e/part
+** see Q: in pseudo-parser.lisp
+** rename "finality" in pseudo.peg
+** esrap:trace-rule ... :recursive t dies if rule is not defined (typo)
+** revert back to new esrap
+
+* git branches
+** master
+** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
+   no Spacing in test.peg --> first test is to remove all whitespace, when that works, we'll add Spacing rules
+
+** pt-20191208-compiler - compiler rewrite
+
+* git kraken
+** merge, drag one branch and drop it onto another
+   https://support.gitkraken.com/working-with-repositories/branching-and-merging/
+
+* json grammar
+** https://www.json.org/json-en.html
+
+* peg bugs
+** #\} breaks peg
+
+* thinking...
+** git branch 16f82ddc0f240696403fe0a8ecde169b3d1a20df 
+   run (ql:quickload :arrowgrams/build/cl-build/test)
+   run (arrowgrams/build/cl-build::test-all))
+   the output is a CST (a Concrete Syntax Tree derived from the AST Abstract Syntax Tree) of test.json
+   for example, see test.json, e.g. "kindname "build process", "partName" "ID382"
+   what is needed is a graph, like that given by test.json, but in CL
+   I'm thinking about what needs to be done next
+   
+
+* esrap
+** need better error messages / furthest point of advance?
+* usage
+** (load "~/quicklisp/local-projects/bmfbp/clparts/package.lisp")
+   (defun stest ()
+    (ql:quickload :arrowgrams/clparts/test-scanner)
+    (arrowgrams/clparts::test-scanner))
+   (stest)
+
+* stack
+** working on bmfbp/build_process/cl-build/json-parse<...>
+** working on bmfbp/build_process/cl-build/pseudo.peg
+** working on scanner
+** (no longer working on holm's prolog-6, works as well as needed, with tail-call optimization)
+** spec kernel in pseudo code / JS
+** create new branch pt-20191208-compiler, new subdir bmfbp/svg/cl-compiler, used cl-event-passing and cl-holm-prolog to rebuild compiler
+** create new branch pt-20191209-compiler, based off master, new subdir bmfbp/svg/cl-compiler, used cl-event-passing and cl-holm-prolog to rebuild compiler

@@ -1,0 +1,251 @@
+<html>
+
+<head>
+<title>Arrowgrams Compiler</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- NOTE: margin property = top-right-bottom-left -->
+<style type="text/css">
+
+	body {background-color: #e2e2e2}
+    
+    p.topLevelItemTitle {
+    	margin: 30px 0px 5px 0px;
+    	font-family: Times, Times New Roman, Palatino, Cochin, Serif;
+    	font-size: 30px;
+    	}
+    	
+    p.folderTitle {
+    	margin: 30px 0px 5px 0px;
+    	font-family: Times, Times New Roman, Palatino, Cochin, Serif;
+    	font-size: 18px;
+    	}
+    
+    p.itemTitle {
+    	margin: 30px 0px 5px 0px;
+    	font-family: Helvetica, Arial, Sans-Serif;
+    	font-size: 12px;
+    	font-weight: bold;
+    	}
+    	
+    p.itemText {
+    	margin: 0px 0px 10px 0px;
+    	font-family: Helvetica, Arial, Sans-Serif;
+    	font-size: 12px;
+    	}
+    	
+    p.itemTextStart {
+    	margin: 30px 0px 10px 0px;
+    	font-family: Helvetica, Arial, Sans-Serif;
+    	font-size: 12px;
+    	}
+    
+    .page {border: 1px solid #c0c0c0; background: #fff}
+    
+    hr {
+        border: none;
+        height: 1px;
+        color: #d4d4d4;
+        background-color: #d4d4d4;
+      	}
+      	
+    hr.afterTitle {
+    	margin-top: -3px;
+    }
+      	
+    hr.afterText {
+    	margin-top: 30px;
+    }
+      	
+    ul {
+      	list-style-type: none;
+      	padding-left: 30px;
+      	}
+      	
+</style>
+
+</head>
+
+<body>
+
+<table border="0" width="100%" cellspacing="3">
+<tr>
+<td>
+
+<table class="page" width="100%" cellspacing="10" cellpadding="2">
+
+<!-- Top margin -->
+<!-- Not needed, because of the padding above titles. -->
+<!--<tr><td height="15px"></td></tr>-->
+
+<tr>
+
+<!-- 42 + 30 of list indent = 72 - one inch. -->
+<!-- Actually that ends up too much, so we do 25 + 30 = 55px. -->
+<td width="25px">
+
+<td valign="top">
+
+<ul>
+<li>
+<p class="topLevelItemTitle">Arrowgrams Overview</p>
+<p class="itemText">Arrowgrams Overview</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Arrowgrams is a way of constructing software using Parts and Wires.<span class="Apple-converted-space">  </span>Parts can be Schematics, Code, or Parts.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The idea of Arrowgrams is to mimic Electronics Hardware design.<span class="Apple-converted-space">  </span>Parts are like ICs (see Figure &lt;$n:figure:IntegratedCircuit&gt;).<span class="Apple-converted-space">  </span>Schematics are collections of Parts (see Figure &lt;$n:figure:Schematic&gt;).<span class="Apple-converted-space">  </span>Wires look like lines on a diagram.<span class="Apple-converted-space">  </span>The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:I...</p>
+</li>
+<li>
+<p class="topLevelItemTitle">The Problem</p>
+<p class="itemText">The Problem</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">I have decided to rewrite the Arrowgrams compiler using Nils M. Holm’s prolog.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The first version of the compiler, V1, consists of 29 passes.<span class="Apple-converted-space">  </span>Each “pass” is extremely simple.<span class="Apple-converted-space">  </span>Most of the passes are implemented in gprolog and the passes are strung together with a *nix shell program.<span class="Apple-converted-space">  </span>Prolog is used, since a lot of the work done by the compiler consists of searching a factbase using backtracking.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The new, V2, compiler will be built in Common Lisp and, initially will mimic the passe...</p>
+</li>
+<hr class="afterText"/>
+<ul>
+<li>
+<p class="itemTitle">Problem #1</p>
+<p class="itemText">Problem #1</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">To set up a test bench where we can use the V1 compiler intermediate files to test parts of the V2 compiler as it evolves.</p>
+</li>
+</ul>
+<hr class="afterText"/>
+
+<li>
+<p class="topLevelItemTitle">A Solution</p>
+<p class="itemText"></span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">A Solution</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Note that there are many ways to solve this problem and that the following solution shows only one way to solve the problem.</p>
+</li>
+<hr class="afterText"/>
+<ul>
+<li>
+<p class="itemTitle">A Solution to Problem #1</p>
+<p class="itemText"></span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">A Solution to Problem #1</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">We know that we need a factbase.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">To use the V1 intermediate files, we need a way to read Prolog facts, store them into a factbase, then write them back out as Prolog facts.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The above immediately points to 3 Parts, plus the Compiler (as it evolves)</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1"><span class="Apple-converted-space"> </span>1) A reader.</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1"><span class="Apple-converted-space"> </span>2) A factbase.</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1"><span class="Apple-converted-space"> </span>3) A writer.</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1"><span class="Apple-converted-space"> </span>4) The Compiler.<span class="Apple-converted-space">  </span>The Compiler part is the test-bed for everything we will be building.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The following sections describe my design of these four parts.<span class="Apple-converted-space">  </span></p>
+</li>
+<li>
+<p class="itemTitle">Compiler</p>
+<p class="itemText">Compiler</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Compiler&gt;<span class="Apple-converted-space"> </span></span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">At the moment, the test version of the V2 compiler is a part with two inputs and one output. <span class="Apple-converted-space"> </span></span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The inputs are called :prolog-factbase-filename and :prolog-output-filename respectively.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The output is called :error.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The intention of this (simple) design is that the V2 compiler test-bed accepts two filenames, as strings, on its inputs.<span class="Apple-converted-space">  </span>If there is any problem, some kind of error event will come out of the :error pin.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin :prolog-factbase-file...</p>
+</li>
+<li>
+<p class="itemTitle">Compiler Internals</p>
+<p class="itemText">Compiler Internals</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#’</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:CompilerInternals&gt;<span class="Apple-converted-space"> </span></span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The V2 compiler test-bed is a schematic that holds 3 parts - one reader, one writer and one factbase part.<span class="Apple-converted-space">  </span>The “Compiler” schematic is a parent that holds 3 part instances and wires them up.<span class="Apple-converted-space">  </span>The designer is responsible for placing the parts and wiring them up.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The wiring diagram of the V2 compiler test-bed is show in Figure &lt;$n:figure:CompilerInternals&gt;.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Several aspects that are uncommon in state-of-the-art software can be seen in...</p>
+</li>
+<li>
+<p class="itemTitle">Reader</p>
+<p class="itemText">Reader</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Reader&gt;<span class="Apple-converted-space"> </span></span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The reader Part has one input pin and three output pins.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin is called :file-name.<span class="Apple-converted-space">  </span>This is the string name of the file that the reader will read.<span class="Apple-converted-space">  </span>The reader knows that the file is formatted in Prolog format and will convert the facts to some internal format.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The reader output pin called :string-fact will emit a single fact as a string, as the fact is read from the file and converted.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The reader output pin called :eof will fire when the reader ...</p>
+</li>
+<li>
+<p class="itemTitle">Writer</p>
+<p class="itemText">Writer</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Writer&gt;<span class="Apple-converted-space"> </span></span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The Writer has 4 input pins and 2 output pins.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input called :filename gets a string filename that is the name of the file to be written.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin called “:start” tells the writer to request facts from the factbase and to write them to the given output file in Prolog format.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin called :next gets a single fact and causes the writer to convert it to Prolog format and write it out to the given output filename.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin called :no-mor...</p>
+</li>
+<li>
+<p class="itemTitle">FB (FactBase)</p>
+<p class="itemText">Factbase</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">#</span></p></p>
+<p class="itemText"><p class="p1"><span class="s1">Figure &lt;$n:figure:Factbase&gt;<span class="Apple-converted-space"> </span></span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The factbase part holds the factbase in internal format.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The FB part has 4 input pins and 3 output pins.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin :string-fact accepts a string which contains one fact.<span class="Apple-converted-space">  </span>The fact is converted to internal format and stored in the factbase.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin :lisp-fact accepts a fact in Lisp format and stores the fact in the factbase.</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">The input pin called :iterate is fired to request the FB part to set itself up for iteration through the factbase.<span class="Apple-converted-space">  </span>Th...</p>
+</li>
+<li>
+<p class="itemTitle">Naming Conventions</p>
+<p class="itemText">Naming Conventions</span></p></p>
+<p class="itemText"><p class="p2"><span class="s1"></span><br></p></p>
+<p class="itemText"><p class="p1"><span class="s1">I’m using Common Lisp naming conventions.<span class="Apple-converted-space">  </span>A dash “-” is valid character in a name (it doesn’t mean “subtract” in this context, as it would in other languages).<span class="Apple-converted-space">  </span>And, a colon, “:” can be the first letter of a name (the meaning of a leading colon means something special in Common Lisp, but we don’t need to discuss that here).</p>
+</li>
+</ul>
+</ul>
+
+</td>
+<td width="55px">
+</td>
+</tr>
+
+<!-- Bottom margin -->
+<tr><td height="15px"></td></tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="E3FA8730-EB06-4950-B5FD-0CD02B4B005A">
+            <Title>Reader</Title>
+            <Text>Reader
+
+#
+Figure &lt;$n:figure:Reader&gt; 
+
+The reader Part has one input pin and three output pins.
+
+The input pin is called :file-name.  This is the string name of the file that the reader will read.  The reader knows that the file is formatted in Prolog format and will convert the facts to some internal format.
+
+The reader output pin called :string-fact will emit a single fact as a string, as the fact is read from the file and converted.
+
+The reader output pin called :eof will fire when the reader has reached the end of the input file.
+
+If any kind of error occurs, an error event will be output on the :error pin.</Text>
+            <Comments>Fully qualified.
+It sends a T value, but any value will do.</Comments>
+        </Document>
+        <Document ID="07A81336-44FC-4F81-B631-1C41E0B282EA">
+            <Title>Op-Amp - TL082, Dual, Wide-Bandwidth, JFET Input, 8-Pin DIP | Amplified Parts</Title>
+            <Text>Skip to main content
+
+
+0Cart
+ Browse All Products
+Sign In / Register
+Home Products
+ 
+Click to zoom in
+Customer Images:
+No Images yet! Submit a product image below!
+Submit your own product image!
+Op-Amp - TL082, Dual, Wide-Bandwidth, JFET Input, 8-Pin DIP
+$0.19
+Save 10% Originally: $0.21
+Quantity * 
+ Add to cart
+In stock
+    
+Dual wide-bandwidth TL082 opamps in an 8-pin DIP package. The TL082 offers a high input impedance and 4MHz bandwidth.
+
+The TL08xx JFET-input operational amplifier family is designed to offer a wider selection than any previously developed operational amplifier family. Each of these JFET-input operational amplifiers incorporates well-matched, high-voltage JFET and bipolar transistors in a monolithic integrated circuit. The devices feature high slew rates, low input bias and offset currents, and low offset-voltage temperature coefficient.
+
+Product Data
+Measurements and Specifications
+Files
+SKU:	P-QTL082
+Item ID:	042766
+UPC/EAN:	841358112522
+Type:	Integrated CircuitsOp-amp
+My Project Lists
+You must be logged in to add items to a project list.
+Specifications, Files, and Documents
+Specification Sheet
+
+1.79 MB
+Questions and Answers
+No questions have been asked about this product.
+Have a question of your own? Ask us now!
+Terms and Conditions
+Add a review
+Product Reviews
+No product reviews yet! Be the first!
+Customers who purchased this item also bought
+
+Switch - Footswitch, 3PDT, LED Ring
+
+Transistor - 2N5088, Bipolar, General Purpose
+
+Op-Amp - TL062, Dual, Low-Power, JFET Input, 8-Pin DIP
+
+Op-Amp - TL072, Dual, Low-Noise, JFET Input, 8-Pin DIP
+
+Transistor - MPSA13, Darlington 500mA 30V NPN
+
+Heat Sink - dissipate heat during soldering
+Related Products
+
+Op-Amp - 4558, Dual, 8-Pin DIP
+
+Op-Amp - TL074, Quad, Low-Noise, JFET Input, 14-Pin DIP
+
+Op-Amp - TL072, Dual, Low-Noise, JFET Input, 8-Pin DIP
+
+Op-Amp - TL062, Dual, Low-Power, JFET Input, 8-Pin DIP
+
+Op-Amp - Orange, Dual Discrete, Low-Noise, 8-Pin DIP
+
+Op-Amp - NE5532, Dual, Low-Noise, 8-Pin DIP
+Don't see what you're looking for? Send us your product suggestions!
+
+Build Your Tone
+Questions? Contact us at info@amplifiedparts.com, or give us a call at 480-296-0890
+Pages
+Home
+Contact Us
+Advanced Search
+Tech Articles
+Customer Service
+About Us
+Store Policies
+Privacy and Security
+Shipping and Delivery
+Frequently Asked Questions
+Check Gift Certificate Balance
+My Account
+Cart
+My Projects
+My Invoices
+My Orders
+My Addresses
+Follow Us!
+Guitar Shows
+Facebook
+Instagram
+Snapchat
+Twitter
+YouTube
+ Subscribe to our mailing list
+
+Email Address  
+Copyright 2019 Amplified Parts. All rights reserved. Privacy
+Cookies &amp; Privacy
+This website uses cookies to ensure that you get the best experience. More Information More Information
+Accept Cookies Decline
+</Text>
+        </Document>
+        <Document ID="FBC1D095-3221-4EE4-A218-275D25E6BD20">
+            <Title>FB (FactBase)</Title>
+            <Text>Factbase
+
+#
+Figure &lt;$n:figure:Factbase&gt; 
+
+The factbase part holds the factbase in internal format.
+
+The FB part has 4 input pins and 3 output pins.
+
+The input pin :string-fact accepts a string which contains one fact.  The fact is converted to internal format and stored in the factbase.
+
+The input pin :lisp-fact accepts a fact in Lisp format and stores the fact in the factbase.
+
+The input pin called :iterate is fired to request the FB part to set itself up for iteration through the factbase.  The FB produces no output(s) when this pin is fired.
+
+The input pin called :get-next is fired to request the FB to send the next fact out of its :next output pin.  The FB, also, advances its iteration through the factbase when this pin fires.
+
+The output pin called :next sends out one fact every time the :get-next input is fired, if there are more facts in the iteration.
+
+The output pin called :no-more signals that a single iteration has finished and that there are no more facts to be sent to the :next output pin.
+
+If anything goes wrong, some kind of error event is sent to the output pin :error.
+
+The logic of the FB component can be expressed as a state machine in Fig. &lt;$n:figure:FBStateMachine&gt;.#
+Fig. &lt;$n:figure:FBStateMachine&gt;, FB State Machine
+
+The FB must “clean up” its input, as exactly 0 or 1 :get-next triggers can be queued up at the point that it changes state.</Text>
+            <Comments>We don’t need to know what the format is, as long as the FB and Writer parts agree on the format.  For the record, though, the V2 test-bed is going to use Lisp lists as facts.
+Converting the fact to internal format, if necessary.</Comments>
+        </Document>
+        <Document ID="34D56379-CDFE-405D-8DD5-52D5B15A7011">
+            <Title>Google Image Result for https://5.imimg.com/data5/CM/HH/MY-669417/integrated-circuits-500x500.jpg</Title>
+            <Text>images
+Website for this image
+Integrated Circuits, एकीकृत परिपथ at Rs 60 /piece ...
+indiamart.com
+Full-size image
+500 × 500 (Infinityx larger)
+
+More sizes
+Similar images
+Type:	JPG
+Images may be subject to copyright.
+
+
+</Text>
+        </Document>
+        <Document ID="DCF186D7-AF2C-47F8-87E9-AE50B7BF6787">
+            <Title>Arrowgrams Overview</Title>
+            <Text>Arrowgrams Overview
+
+Arrowgrams is a way of constructing software using Parts and Wires.  Parts can be Schematics, Code, or Parts.
+
+The idea of Arrowgrams is to mimic Electronics Hardware design.  Parts are like ICs (see Figure &lt;$n:figure:IntegratedCircuit&gt;).  Schematics are collections of Parts (see Figure &lt;$n:figure:Schematic&gt;.  Wires look like lines on a diagram.  The Arrowgrams editor is like a CAD system - it allows us to place parts on a Schematic and to wire them up.
+#
+Figure &lt;$n:figure:IntegratedCircuit&gt;
+
+#
+Figure &lt;$n:figure:Schematic&gt;
+
+In Arrowgram, diagrams make intuitive sense.  All pedantic issues are made to allow diagrams to make sense.
+
+A Part consists of 3 items:
+
+	1)	A Kind - the kind determines how the part works, but each Part is a unique instance of a given kind.
+	2)	A set of input pins.
+	3)	A set of output pins.
+
+Parts communicate with one another via events.  Events are messages that can come in bursts, with time in between events.
+
+Parts cannot communicate directly with each other - they can only send events up to their enclosing schematics.  The enclosing schematics contain wiring lists that specify what each output pin is connected to.  The designer can decide which output pins are wired to which input pins of parts on a schematic.  This encapsulates the flow of events within a system.  Events can come in “from the outside” if they arrive on an input pin of the schematic.  Events can flow out “to the outside” if they are wired/sent to the output pin(s) of a schematic.
+Pedantic Issues (not required reading)
+	◦	Every Part can process exactly one input event at any one time.  This includes Schematic parts, hence, a schematic is busy as long as any of it children parts are processing input events.
+	◦	Output pins can send an event to a number of input pins on the same wire.  The system guarantees that one event on one wire will reach all of its corresponding parts before any other event is delivered in the same schematic.  This property is a form of time ordering and guarantees that there are no system-created race conditions.
+	◦	Every part has a queue of input events and another queue for output events.  Input events are 2-tuples consisting of {pin, data}, where the pin is a valid input pin of the given part.  Output events are also 2-tuples {pin, data} where, in contrast to input events, the pin refers to a valid output pin of the part.  The dispatcher converts output pins to input pins when delivering events.
+	◦	When a Part sends an output event, the event is not delivered to its destination(s) immediately, but is placed on the output queue of the part.  The Dispatcher delivers the queued-up output events only after the part has completed processing of a single event.
+	◦	Parts must always run to completion.  Parts must not employ infinite loops (nor infinite recursion).
+	◦	Input pins of a schematic can be directly connected to the output pins of that same schematic.
+	◦	The astute reader will notice that our system resembles the ideas of mutual multi-tasking and event loops.  These ideas were tried only in operating systems before being discarded.  The ideas, though, remain valid for programming-language level systems such as Arrowgrams.
+</Text>
+            <Comments>Software components.
+Drawn on a diagram as a line.  
+Hierarchical containers.
+In some base language, such as JavaScript.  In this V2 version of the compiler, I used Common Lisp as the base language.
+Black boxes imported into the project from some other project.
+For example.  OO uses inheritance as a way of constructing software.  With inheritance, a child can override the operation of a parent.  In Arrowgrams, this is not allowed - a parent always takes precedent, e.g. a child never overrides the operation of a parent.  In this manner, composition always works - there are no hidden gotchas when parts are glued together.
+If you’ve used other programming languages, Types and Classes are much like Arrowgram Kinds.
+Another diagram-based technology, called Flow-Based Programming (FBP) uses flows, which implies continuous streams of information.  Events are “shorter” than flows and are not sent continuously.  Events are like pulses / edges in digital electronics.
+a.k.a. “Parent”
+And if that input pin is wired to some child’s input pin.
+The following is a very pedantic point: race conditions can exist in a particular design, but, they will never be caused by interleaving event delivery. This is simple “physics” as intuited by most people.  This pedantic issue is guaranteed only where efficiency permits, e.g. events sent on the same CPU or events sent on very fast wires.  When event delivery can take a long time, e.g. events sent by CPUs that are distributed and on slow wires, this pedantic guarantee is lifted and needs to be addressed explicitly in the design.  In fact, most opportunities  for race conditions disappear with the semantics of Arrowgrams.
+The Dispatcher follows the wiring list in a schematic during event delivery.
+This is the reason that operating systems use full preemption strategies.  Such strategies are expensive and are not needed by our language-level Arrowgrams system, but, the designer/programmer is entrusted to not create such infinite situations.  Infinite looping is a bug in every known programming language.  We tighten the definition to mean that long-lasting loops are also a bug.</Comments>
+        </Document>
+        <Document ID="F82324C9-2952-48E5-BA69-BA4876251521">
+            <Title>Compiler</Title>
+            <Text>Compiler
+
+#
+Figure &lt;$n:figure:Compiler&gt; 
+
+At the moment, the test version of the V2 compiler is a part with two inputs and one output.  
+
+The inputs are called :prolog-factbase-filename and :prolog-output-filename respectively.
+
+The output is called :error.
+
+The intention of this (simple) design is that the V2 compiler test-bed accepts two filenames, as strings, on its inputs.  If there is any problem, some kind of error event will come out of the :error pin.
+
+The input pin :prolog-factbase-filename tells the test-bed to read the file with that name and convert it to some internal format.
+
+The input pin :prolog-output-filename tells the test-bed to write out the factbase to the given file name, when the test has completed.  I remind myself that the output format of the factbase is “prolog”, since I want to tap into the V1 compiler using facts (prolog) that are compatible with the V1 internal format.</Text>
+            <Comments>See the section entitled “naming conventions” for the meaning of “-” and “:” in this context.  “-” and “:” are just letters here, like a-z and A-Z.</Comments>
+        </Document>
+        <Document ID="A038CFBB-E1DB-4403-8871-ABFAB35E3D47">
+            <Title>A Solution</Title>
+            <Text>A Solution</Text>
+        </Document>
+        <Document ID="32C0E6C4-C514-49FB-B4D8-564890614205">
+            <Title>Compiler Internals</Title>
+            <Text>Compiler Internals
+
+#’
+Figure &lt;$n:figure:CompilerInternals&gt; 
+
+The V2 compiler test-bed is a schematic that holds 3 parts - one reader, one writer and one factbase part.  The “Compiler” schematic is a parent that holds 3 part instances and wires them up.  The designer is responsible for placing the parts and wiring them up.
+
+The wiring diagram of the V2 compiler test-bed is show in Figure &lt;$n:figure:CompilerInternals&gt;.
+
+Several aspects that are uncommon in state-of-the-art software can be seen in this diagram:
+	•	A part (writer) sends and event “backwards” to another part (fb).  Feedback loops are common in electronics design and such feedback is allowed in Arrowgrams.  The feedback in this case is quite “light”.  In the future, we will see cases where a part will output an event to one of its own input pins.
+	•	One output pin is connected to two input pins.  The Reader part output pin called :eof is connected to the FB :iterate input pin and to the Writer :start input pin.
+	•	The Reader’s :eof signal is just a signal, with no inherent data structure.  I call it a trigger.  It is used to kick off iteration in the FB and to kick off writing in the Writer.  After being started, the Writer immediately sends a :request trigger to the FB part, but this causes no problems due to the event-sending semantics discussed in the Pedantic Issues section of the overview chapter.  In other words - the :iterate pin of FB and the :start pin of Writer get the trigger “at the same time”.  The Writer cannot send a :request that reaches the FB before the FB sees the trigger on its :iterate pin.
+</Text>
+            <Comments>Me, in this case.
+Just about any design involving Op-Amps uses feedback loops.
+Most software language allow for function calls that take many parameters, but very few allow multiple outputs and tend not to allow multiple outputs to be directed at multiple different routines.
+Again, the inspiration came from Triggers in digital circuits.</Comments>
+        </Document>
+        <Document ID="490928DD-A503-402F-ADCA-C9DB3616F6AF">
+            <Title>Writer</Title>
+            <Text>Writer
+
+#
+Figure &lt;$n:figure:Writer&gt; 
+
+The Writer has 4 input pins and 2 output pins.
+
+The input called :filename gets a string filename that is the name of the file to be written.
+
+The input pin called “:start” tells the writer to request facts from the factbase and to write them to the given output file in Prolog format.
+
+The input pin called :next gets a single fact and causes the writer to convert it to Prolog format and write it out to the given output filename.
+
+The input pin called :no-more is fired when there are no more facts to be had.
+
+The output pin called :request fires when the writer is ready to receive another fact for writing.  The intention is that the writer asks for each fact, one by one and receives responses on its input pin :next.
+
+As usual, the output pin :error outputs an error event if anything goes wrong.</Text>
+            <Comments>Fully qualified
+Any input value will do.  The fact that anything arrives on this input, starts the writer.
+In internal format
+Again, any input value will do here.
+Again, :request can output any value, but in this case outputs a T value.
+Or, it receives anything on its :no-more pin.</Comments>
+        </Document>
+        <Document ID="F8A1FDE7-34C7-4DA1-A9CB-98C303B05904">
+            <Title>Problem #1</Title>
+            <Text>Problem #1
+
+To set up a test bench where we can use the V1 compiler intermediate files to test parts of the V2 compiler as it evolves.</Text>
+        </Document>
+        <Document ID="0440DE59-9A39-4B72-ACCE-A899E753011D">
+            <Title>Naming Conventions</Title>
+            <Text>Naming Conventions
+
+I’m using Common Lisp naming conventions.  A dash “-” is valid character in a name (it doesn’t mean “subtract” in this context, as it would in other languages).  And, a colon, “:” can be the first letter of a name (the meaning of a leading colon means something special in Common Lisp, but we don’t need to discuss that here).</Text>
+        </Document>
+        <Document ID="E4BBC87D-9D44-4637-A785-50B2A4C51593">
+            <Title>A Solution to Problem #1</Title>
+            <Text>A Solution to Problem #1
+
+We know that we need a factbase.
+
+To use the V1 intermediate files, we need a way to read Prolog facts, store them into a factbase, then write them back out as Prolog facts.
+
+The above immediately points to 3 Parts, plus the Compiler (as it evolves)
+
+	1)	A reader.
+	2)	A factbase.
+	3)	A writer.
+	4)	The Compiler.  The Compiler part is the test-bed for everything we will be building.
+
+The following sections describe my design of these four parts.  Note that there are many ways to solve this problem and that the following solution shows only one way to solve the problem.</Text>
+            <Comments>A “Part” is a software component.
+How I choose to solve this problem.</Comments>
+        </Document>
+        <Document ID="654CC77A-EC35-4D0C-92AC-86AAE84EA4B9">
+            <Title>The Problem</Title>
+            <Text>The Problem
+
+I have decided to rewrite the Arrowgrams compiler using Nils M. Holm’s prolog.
+
+The first version of the compiler, V1, consists of 29 passes.  Each “pass” is extremely simple.  Most of the passes are implemented in gprolog and the passes are strung together with a *nix shell program.  Prolog is used, since a lot of the work done by the compiler consists of searching a factbase using backtracking.
+
+The new, V2, compiler will be built in Common Lisp and, initially will mimic the passes of the V1 compiler.
+</Text>
+            <Comments>http://www.t3x.org/bits/prolog6.html
+See the chapter on the V1 Compiler for more detail.</Comments>
+        </Document>
+    </Documents>
+</SearchIndexes>
