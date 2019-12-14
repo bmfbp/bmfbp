@@ -10,7 +10,8 @@ dist: bionic
 # 'xcode11.2' is macOS 10.14 xcode 11B41
 osx_image: xcode11.2
   
-language: minimal
+language: node_js
+node_js: 12.13.1
 
 addons:
   apt:
@@ -29,10 +30,15 @@ install:
   - bash -x ${TRAVIS_BUILD_DIR}/ci/install-gnu-prolog.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/install-buildapp.bash
   - bash -x ${TRAVIS_BUILD_DIR}/ci/install-haskell-stack.bash
+  # For the editor: shows up as <file:$HOME/.yarn/bin/elm> (or in
+  # earlier versions of Yarn as
+  # <file:$HOME/.config/yarn/global/node_modules/.bin/elm>)
+  - yarn global add elm@0.19.0
 
 script:
   - sbcl --eval '(ql:quickload :arrowgram)' --eval '(exit :code 0)'
   - sbcl --eval '(asdf:load-system :arrowgram)' --eval '(exit :code 0)'
   - cd ${TRAVIS_BUILD_DIR}/svg && make 
   - cd ${TRAVIS_BUILD_DIR}/svg/js-compiler && make
-  - cd ${TRAVIS_BUILD_DIR}/editor && make
+  - cd ${TRAVIS_BUILD_DIR}/editor && make ELM=$HOME/.config/yarn/global/node_modules/.bin/elm
+  
