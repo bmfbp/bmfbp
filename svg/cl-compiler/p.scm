@@ -13,34 +13,34 @@
   (set-car! (cddr x) '(())))
 
 
-(define (back6 l g r e n c)
+(define (back6 l g r e n c result)
   (cond
     ((and (pair? g)
           (pair? r))
-      (prove6 l g (cdr r) e n c))
+      (prove6 l g (cdr r) e n c result))
     ((pair? l)
       (prove6 (L_l l)
               (L_g l)
               (cdr (L_r l))
               (L_e l)
               (L_n l)
-              (L_c l)))))
+              (L_c l)
+	      result))))
 
 
-(define (prove6 l g r e n c)
+(define (prove6 l g r e n c result)
   (cond
     ((null? g)
-      (print-and-collect-frame e)
-      (back6 l g r e n c))
+      (back6 l g r e n c (print-and-collect-frame e)))
     ((eq? '! (car g))
       (clear_r c)
-      (prove6 c (cdr g) r e n c))
+      (prove6 c (cdr g) r e n c result))
     ((eq? 'r! (car g))
-      (prove6 l (cddr g) r e n (cadr g)))
+      (prove6 l (cddr g) r e n (cadr g) result))
     ((null? r)
       (if (null? l)
           #t
-          (back6 l g r e n c)))
+          (back6 l g r e n c result)))
     (else
       (let* ((a  (copy (car r) n))
              (e* (unify (car a) (car g) e)))
@@ -50,8 +50,9 @@
                     db
                     e*
                     (+ 1 n)
-                    l)
-            (back6 l g r e n c))))))
+                    l
+		    result)
+            (back6 l g r e n c result))))))
 
 
 (define empty '((bottom)))

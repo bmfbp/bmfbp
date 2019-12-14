@@ -273,6 +273,6 @@
 		      (? hh))))
 
 (define (calc)
-  (let ((r  (prove6 '() goals db empty 1 '() nil)))
+  (let ((r  (prove6 '() goals db empty 1 '() '())))
     r))
 	    
