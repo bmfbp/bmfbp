@@ -104,7 +104,8 @@ createEllipseBoundingBox(ID) :-
          (let ((newfb (create-bounding-boxes self oldfb))))))))
   )
            
-(defparameter fb
+
+(defparameter db
   '(((:roundedrect :id497))
     ((:metadata :id495 :id498))
     ((:ellipse :id568))
@@ -361,41 +362,53 @@ createEllipseBoundingBox(ID) :-
     ((:geometry_center_x :id385 3624.5))
     ((:geometry_center_y :id568 40.0))
     ((:geometry_center_y :id491 300.0))
-    ((:geometry_center_y :id476 170.0))))
+    ((:geometry_center_y :id476 170.0))
 
-(defparameter testfb
-  '(    ((:ellipse :id568))
-    ((:geometry_h :id568 40.0))
-    ((:geometry_w :id568 40.0))
-    ((:geometry_center_x :id568 4405.0))
-    ((:geometry_center_y :id568 40.0))))
+    ((:ellipse-geometry (:? id) (:? cx) (:? cy) (:? hw) (:? hh))
+     (:ellipse (:? id))
+     (:geometry_center_x (:? id) (:? cx))
+     (:geometry_center_y (:? id) (:? cy))
+     (:geometry_w (:? id) (:? hw))
+     (:geometry_h (:? id) (:? hh)))))
 
-(defmethod create-bounding-boxes ((self e/part:part) fb)
-  (let ((newfb (create-bounding-boxes-for-ellipses self fb)))
-    newfb))
+(defun create-bounding-boxes ()
+  (ellipse-bbs))
 
-(defmethod create-bounding-boxes-for-ellipses ((self e/part:part) fb)
-  (assert nil)
-  #+nil(let ((goals '((:ellipse (:? ID))
-                      (:geometry_center_x (:? ID) (:? CX))
-                      (:geometry_center_y (:? ID) (:? CY))
-                      (:geometry_w (:? ID) (:? HalfW))
-                      (:geometry_h (:? ID) (:? HalfH)))))
-         (let ((matches (find-matches goals fb)))))
-  )
+(defun ellipse-bbs ()
+  (let ((complete-db db)
+        (initial-db db)
+        (top-link nil)
+        (top-env *empty*)
+        (top-cut nil))
+    (let ((r (prove top-link
+                    '((:ellipse-geometry
+                       (:? eid)
+                       (:? cx)
+                       (:? cy)
+                       (:? hw)
+                       (:? hh)))
+                    initial-db
+                    top-env
+                    1
+                    top-cut
+                    complete-db
+                    nil)))
+      (let ((rr (mapcar #'(lambda (lis)
+                            (assert (= 5 (length lis)))
+                            (let ((id (cdr (first lis)))
+                                  (cx (cdr (second lis)))
+                                  (cy (cdr (third lis)))
+                                  (hw (cdr (fourth lis)))
+                                  (hh (cdr (fifth lis))))
+                              (list
+                               (list 'bounding_box_left id (- cx hw))
+                               (list 'bounding_box_top id (- cy hh))
+                               (list 'bounding_box_right id (+ cx hw))
+                               (list 'bounding_box_bottom id (+ cy hh)))))
+                        r)))
+        rr))))
+                  
 
 
-(defun find-matches (goals fb)
-    (cl-holm-prolog::prove7 '() goals fb cl-holm-prolog::empty 1 '() nil))
-
-(defun ftest ()
-  (let ((goals '((:ellipse (:? ID))
-                 (:geometry_center_x (:? ID) (:? CX))
-                 (:geometry_center_y (:? ID) (:? CY))
-                 (:geometry_w (:? ID) (:? HalfW))
-                 (:geometry_h (:? ID) (:? HalfH))))
-        (fb testfb))
-    (format *standard-output* "~%length of fb ~a~%" (length fb))
-    (find-matches goals fb)))
-
-1
+(defun htest () (cl-user::htest))
+(defun hteste () (cl-user::hteste))

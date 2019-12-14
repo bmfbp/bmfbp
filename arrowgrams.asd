@@ -44,5 +44,5 @@
                                      (:file "fb" :depends-on ("package"))
                                      (:file "reader" :depends-on ("package"))
                                      (:file "writer" :depends-on ("package"))
-                                     (:file "calc-bounds" :depends-on ("package"))
-                                     (:file "compiler" :depends-on ("reader"))))))
+                                     (:file "convert-to-keywords" :depends-on ("package"))
+                                     (:file "compiler" :depends-on ("reader" "fb" "writer" "convert-to-keywords"))))))

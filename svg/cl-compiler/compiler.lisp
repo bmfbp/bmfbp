@@ -9,6 +9,8 @@
             #'arrowgrams/compiler/fb::react #'arrowgrams/compiler/fb::first-time)
            (:code writer (:filename :start :next :no-more) (:request :error)
             #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
+           (:code converter (:flat-list) (:converted :error)
+            #'arrowgrams/compiler/convert-to-keywords::react #'arrowgrams/compiler/convert-to-keywords::first-time)
 
            (:schem compiler (:file-name :prolog-output-filename) (:error)
             ;; parts
@@ -18,16 +20,15 @@
              (((:self :prolog-output-filename)) ((writer :filename)))
 
              (((reader :string-fact)) ((fb :string-fact)))
-             #+nil(((reader :eof)) ((fb :iterate) (writer :start)))
 
              (((fb :next)) ((writer :next)))
              (((fb :no-more)) ((writer :no-more)))
 
              (((writer :request)) ((fb :get-next)))
 
-             (((writer :error) (fb :error) (reader :error)) ((:self :error))))))))
+             (((converter :error) (writer :error) (fb :error) (reader :error)) ((:self :error))))))))
 
-    (e/dispatch::ensure-correct-number-of-parts 4) ;; not needed, except in early days of alpha debug, when everything is still in text form
+    (e/dispatch::ensure-correct-number-of-parts 5) ;; not needed, except in early days of alpha debug, when everything is still in text form
     (e/util::enable-logging)
     (setq arrowgrams/compiler::*top* compiler-net)
     (cl-event-passing-user::@with-dispatch
