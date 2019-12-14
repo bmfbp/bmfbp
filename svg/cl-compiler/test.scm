@@ -1,3 +1,5 @@
+(load "p")
+
 (define db
   '(((roundedrect id497))
     ((metadata id495 id498))
@@ -273,6 +275,6 @@
 		      (? hh))))
 
 (define (calc)
-  (let ((r  (prove6 '() goals db empty 1 '() '())))
+  (let ((r (prove6 '() goals db empty 1 '() '())))
     r))
 	    

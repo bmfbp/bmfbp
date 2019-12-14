@@ -31,7 +31,7 @@
 (define (prove6 l g r e n c result)
   (cond
     ((null? g)
-      (back6 l g r e n c (print-and-collect-frame e)))
+      (back6 l g r e n c (cons (print-and-collect-frame e) result)))
     ((eq? '! (car g))
       (clear_r c)
       (prove6 c (cdr g) r e n c result))
@@ -39,7 +39,7 @@
       (prove6 l (cddr g) r e n (cadr g) result))
     ((null? r)
       (if (null? l)
-          #t
+          result
           (back6 l g r e n c result)))
     (else
       (let* ((a  (copy (car r) n))
@@ -135,8 +135,8 @@
 		    (set! result
 			  (cons
 			   (cons (cadaar ee) (resolve (caar ee) e))
-			   result))
-             (loop (cdr ee)))))))
+			   result))))
+	     (loop (cdr ee)))))
     result))
   
 
