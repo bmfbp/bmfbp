@@ -122,23 +122,6 @@
             (resolve (car x) e)
             (resolve (cdr x) e)))))
 
-(define (print-and-collect-frame e)
-  (let ((result '()))
-    (newline)
-    (let loop ((ee e))
-      (cond ((pair? (cdr ee))
-             (cond ((null? (time (caar ee)))
-                    (display (cadaar ee))
-                    (display " = ")
-                    (display (resolve (caar ee) e))
-                    (newline)
-		    (set! result
-			  (cons
-			   (cons (cadaar ee) (resolve (caar ee) e))
-			   result))))
-	     (loop (cdr ee)))))
-    result))
-  
 (define (collect-frame e)
   (let ((result '()))
     (let loop ((ee e))
