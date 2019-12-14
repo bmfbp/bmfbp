@@ -275,6 +275,21 @@
 		      (? hh))))
 
 (define (calc)
-  (let ((r (prove6 '() goals db empty 1 '() '())))
-    r))
-	    
+  (let ((r (prove6 '() goals db empty 1 '() '()))
+	(new-r '()))
+    (map 
+     (lambda (lis)
+       (let ((id (cdr (first lis)))
+	     (cx (cdr (second lis)))
+	     (cy (cdr (third lis)))
+	     (hw (cdr (fourth lis)))
+	     (hh (cdr (fifth lis))))
+	 (set! new-r (cons
+		      (list
+		       (list 'bounding_box_left id (- cx hw))
+		       (list 'bounding_box_top  id (- cy hh))
+		       (list 'bounding_box_right id (+ cx hw))
+		       (list 'bounding_box_bottom id (+ cy hh)))
+		      new-r))))
+     r)
+    new-r))
