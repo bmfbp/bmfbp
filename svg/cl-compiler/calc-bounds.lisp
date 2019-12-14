@@ -104,14 +104,7 @@ createEllipseBoundingBox(ID) :-
          (let ((newfb (create-bounding-boxes self oldfb))))))))
   )
            
-(defparameter testfb-old
-  '(((:roundedrect :id497))
-    ((:metadata :id495 :id498))
-    ((:ellipse :id568))
-    ((:ellipse :id491))
-    ((:ellipse :id476))))
-
-(defparameter testfb-3
+(defparameter fb
   '(((:roundedrect :id497))
     ((:metadata :id495 :id498))
     ((:ellipse :id568))
@@ -405,3 +398,4 @@ createEllipseBoundingBox(ID) :-
     (format *standard-output* "~%length of fb ~a~%" (length fb))
     (find-matches goals fb)))
 
+1
