@@ -1,6 +1,5 @@
 (defpackage :arrowgrams/compiler
-  (:use :cl)
-  (:nicknames :acomp))
+  (:use :cl))
 
 (defpackage :arrowgrams/compiler/reader
   (:use :cl))
@@ -14,6 +13,9 @@
 (defpackage :arrowgrams/compiler/fb
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/calc-bounds
+(defpackage :arrowgrams/compiler/sequencer
+  (:use :cl))
+
+(defpackage :arrowgrams/compiler/bounding-boxes
   (:use :cl))
 

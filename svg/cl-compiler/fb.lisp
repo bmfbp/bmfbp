@@ -2,7 +2,7 @@
 
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
-; (:code fb (:string-fact :lisp-fact :iterate :get-next) (:no-more :next :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+; (:code fb (:string-fact :lisp-fact :go :iterate :get-next) (:fb :no-more :next :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
@@ -10,25 +10,27 @@
   (cl-event-passing-user::@set-instance-var self :factbase nil))
 
 (defmethod react ((self e/part:part) e)
-  (flet ((idle-reaction (action state)
+  (flet ((idle-reaction (action state) (declare (ignorable state))
        (if (eq action :string-fact)
            (add-string-fact self (e/event:data e))
          (if (eq action :lisp-fact)
              (add-lisp-fact self (e/event:data e))
-           (if (eq action :iterate)
-               (progn
-                 (begin-iteration self)
-                 (cl-event-passing-user::@set-instance-var self :state :iterating))
-             (cl-event-passing-user:@send self
-                                          :error
-                                          (format nil "FB in state :idle expected :string-fact, :lisp-fact or :iterate, but got action ~S data ~S" action (e/event:data e))))))))
-
+           (if (eq action :go)
+               (cl-event-passing-user::@send self :fb (cl-event-passing-user::@get-instance-var self :fb-as-list))
+             (if (eq action :iterate)
+                 (progn
+                   (begin-iteration self)
+                   (cl-event-passing-user::@set-instance-var self :state :iterating))
+               (cl-event-passing-user:@send self
+                                            :error
+                                            (format nil "FB in state :idle expected :string-fact, :lisp-fact or :iterate, but got action ~S data ~S" action (e/event:data e)))))))))
+         
     (let ((action (e/event::sym e))
           (state (cl-event-passing-user::@get-instance-var self :state)))    
       (ecase state
         (:idle
          (idle-reaction action state))
-        (:idle-with-cleanup ;; might get one more request after going back to Lidle
+        (:idle-with-cleanup ;; might get one more request after going back to :idle
          (if (eq action :get-next)
              (cl-event-passing-user::@set-instance-var self :state :idle)
            (idle-reaction action state)))
@@ -71,3 +73,4 @@
 
 (defmethod add-lisp-fact ((self e/part:part) fact)
   (cl-event-passing-user::@set-instance-var self :factbase (cons fact (cl-event-passing-user::@get-instance-var self :factbase))))
+

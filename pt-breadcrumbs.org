@@ -10,6 +10,10 @@
    (ql:quickload :arrowgrams/build/cl-build/atest)
    (arrowgrams/build/cl-build::atest)
 
+
+** working on bmfbp/svg/cl-compiler
+   (ctest)
+
 * todo
 ** cut loops system over to bmfbp
 ** cut cl-event-passing system over to bmfbp
