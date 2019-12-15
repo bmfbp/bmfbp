@@ -9,17 +9,21 @@
             #'arrowgrams/compiler/fb::react #'arrowgrams/compiler/fb::first-time)
            (:code writer (:filename :start :next :no-more) (:request :error)
             #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
-           (:code converter (:flat-list) (:converted :error)
+           (:code converter (:string-fact :done) (:converted :go :error)
             #'arrowgrams/compiler/convert-to-keywords::react #'arrowgrams/compiler/convert-to-keywords::first-time)
 
            (:schem compiler (:file-name :prolog-output-filename) (:error)
             ;; parts
-            (reader fb writer)
+            (reader fb writer converter)
             ;; wiring
             ((((:self :file-name)) ((reader :file-name)))
              (((:self :prolog-output-filename)) ((writer :filename)))
 
-             (((reader :string-fact)) ((fb :string-fact)))
+             (((reader :string-fact)) ((converter :string-fact)))
+             (((reader :eof)) ((converter :done)))
+
+             (((converter :converted)) ((fb :lisp-fact)))
+             (((converter :go))  ((fb :iterate) (writer :start)))
 
              (((fb :next)) ((writer :next)))
              (((fb :no-more)) ((writer :no-more)))
