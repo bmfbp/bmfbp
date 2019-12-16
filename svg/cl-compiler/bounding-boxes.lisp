@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/bounding-boxes)
 
-; (:code bounding-boxes (:fb :go) (:add-fact :done :error) #'arrowgrams/compiler/bounding-boxes::react #'arrowgrams/compiler/bounding-boxes::first-time)
+; (:code bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/bounding-boxes::react #'arrowgrams/compiler/bounding-boxes::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
@@ -16,6 +16,7 @@
          (if (eq pin :go)
              (progn
                (send-rules self)
+               (cl-event-passing-user::@send self :request-fb t)
                (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
            (cl-event-passing-user::@send
             self
@@ -48,7 +49,7 @@
 
 (defmethod make-bounding-boxes ((self e/part:part))
     (let ((fb (cl-event-passing-user::@get-instance-var self :fb)))
-      (let ((r (hprolog:prove nil'((:ellipse-geometry (:? eid) (:? cx) (:? cy) (:? hw) (:? hh))) fb nil 1 nil fb nil)))
+      (let ((r (hprolog:prove nil '((:ellipse-geometry (:? eid) (:? cx) (:? cy) (:? hw) (:? hh))) fb hprolog:*empty* 1 nil fb nil)))
         (mapcar #'(lambda (lis)
                     (assert (= 5 (length lis)))
                     (let ((id (cdr (first lis)))
