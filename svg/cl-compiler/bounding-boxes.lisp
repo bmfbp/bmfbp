@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/bounding-boxes)
+(in-package :arrowgrams/compiler/ellipse-bounding-boxes)
 
 ; (:code bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/bounding-boxes::react #'arrowgrams/compiler/bounding-boxes::first-time)
 
