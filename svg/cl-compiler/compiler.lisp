@@ -14,7 +14,7 @@
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error)
             #'arrowgrams/compiler/sequencer::react #'arrowgrams/compiler/sequencer::first-time)
 
-           (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :done) (:fb :error)
+           (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :done) (:fb :go :error)
             ;; parts
             (reader fb writer converter sequencer)
             ;; wiring
@@ -46,7 +46,7 @@
 
            (:schem passes (:fb :go) (:request-fb :add-fact :done :error)
             ;; parts
-            (compiler-testbed ellipse-bounding-boxes)
+            (compiler-testbed ellipse-bb)
             ;; wiring
             ( (((:self :fb)) ((ellipse-bb :fb)))
               (((:self :go)) ((ellipse-bb :go)))
