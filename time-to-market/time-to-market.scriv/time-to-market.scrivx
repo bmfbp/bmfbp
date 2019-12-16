@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrivenerProject Identifier="75E0376A-E2C0-414B-8681-BB383C80B27A" Version="2.0" Creator="SCRMAC-3.1.4-12109" Device="Pauls-MacBook-Pro-279" Author="Paul Tarvydas" Modified="2019-12-16 07:31:13 -0500" ModID="508F20C8-98F0-4F85-B921-7C144F34186F">
+    <Binder>
+        <BinderItem UUID="8B4CA5A4-53B5-41EF-9BCE-CAEA309744D3" Type="DraftFolder" Created="2019-12-16 07:26:06 -0500" Modified="2019-12-16 07:26:06 -0500">
+            <Title>Draft</Title>
+            <MetaData>
+                <IncludeInCompile>Yes</IncludeInCompile>
+            </MetaData>
+            <Children>
+                <BinderItem UUID="433E02F4-FAE9-4A5B-A569-F0CEA3A54B0E" Type="Text" Created="2019-12-16 07:26:26 -0500" Modified="2019-12-16 07:26:42 -0500">
+                    <Title>Improving Time to Market for Software Projects</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+                <BinderItem UUID="4E23C7F4-F943-48D6-B784-8C1DF96E689A" Type="Text" Created="2019-12-16 07:26:44 -0500" Modified="2019-12-16 07:28:41 -0500">
+                    <Title>Decomposing Software Projects</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                    <Children>
+                        <BinderItem UUID="8E8F2837-EF81-4316-9D2F-B3C2CDBAFC68" Type="Text" Created="2019-12-16 07:29:07 -0500" Modified="2019-12-16 07:29:10 -0500">
+                            <Title>Top Down</Title>
+                            <MetaData>
+                                <IncludeInCompile>Yes</IncludeInCompile>
+                            </MetaData>
+                            <TextSettings>
+                                <TextSelection>0,0</TextSelection>
+                            </TextSettings>
+                        </BinderItem>
+                        <BinderItem UUID="5D3E2A33-6D7A-4AB2-A15E-5CF04F5C3D25" Type="Text" Created="2019-12-16 07:29:11 -0500" Modified="2019-12-16 07:29:15 -0500">
+                            <Title>Bottom Up</Title>
+                            <MetaData>
+                                <IncludeInCompile>Yes</IncludeInCompile>
+                            </MetaData>
+                            <TextSettings>
+                                <TextSelection>0,0</TextSelection>
+                            </TextSettings>
+                        </BinderItem>
+                        <BinderItem UUID="58CF4704-462E-467C-997F-730F2E2ADDD2" Type="Text" Created="2019-12-16 07:29:26 -0500" Modified="2019-12-16 07:29:38 -0500">
+                            <Title>Divide and Conquer</Title>
+                            <MetaData>
+                                <IncludeInCompile>Yes</IncludeInCompile>
+                            </MetaData>
+                            <TextSettings>
+                                <TextSelection>0,0</TextSelection>
+                            </TextSettings>
+                        </BinderItem>
+                    </Children>
+                </BinderItem>
+                <BinderItem UUID="25C3367A-FFB7-4EFB-9A05-F854E2D9082B" Type="Text" Created="2019-12-16 07:26:59 -0500" Modified="2019-12-16 07:27:05 -0500">
+                    <Title>Design and Communicate</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+                <BinderItem UUID="91729996-BF52-4CDF-84F3-5211D0F3A733" Type="Text" Created="2019-12-16 07:27:08 -0500" Modified="2019-12-16 07:27:13 -0500">
+                    <Title>Snap Together</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+                <BinderItem UUID="83A07568-F810-4BC1-A0D5-62BAA7229A78" Type="Text" Created="2019-12-16 07:27:18 -0500" Modified="2019-12-16 07:27:25 -0500">
+                    <Title>Eschew Dependencies</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+                <BinderItem UUID="F157A412-99D5-4BAE-B610-36747C717D05" Type="Text" Created="2019-12-16 07:27:26 -0500" Modified="2019-12-16 07:27:30 -0500">
+                    <Title>Encapsulate</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                    <Children>
+                        <BinderItem UUID="5C5EE91D-7E2F-4637-A09E-0A2239CB2FE1" Type="Text" Created="2019-12-16 07:29:51 -0500" Modified="2019-12-16 07:31:13 -0500">
+                            <Title>Encapsulate Everything, Not Just Data</Title>
+                            <MetaData>
+                                <IncludeInCompile>Yes</IncludeInCompile>
+                            </MetaData>
+                            <TextSettings>
+                                <TextSelection>0,0</TextSelection>
+                            </TextSettings>
+                        </BinderItem>
+                        <BinderItem UUID="DF3F4762-DFB9-40FD-B49E-7A5A4BFC9E75" Type="Text" Created="2019-12-16 07:30:04 -0500" Modified="2019-12-16 07:30:17 -0500">
+                            <Title>What Can Be Encapsulated</Title>
+                            <MetaData>
+                                <IncludeInCompile>Yes</IncludeInCompile>
+                            </MetaData>
+                            <TextSettings>
+                                <TextSelection>0,0</TextSelection>
+                            </TextSettings>
+                        </BinderItem>
+                    </Children>
+                </BinderItem>
+                <BinderItem UUID="CA2087FF-7D0C-4A85-8228-4001E9034125" Type="Text" Created="2019-12-16 07:27:34 -0500" Modified="2019-12-16 07:27:47 -0500">
+                    <Title>Incorporate Assets Developed by Contractors</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+                <BinderItem UUID="6C850017-6D4D-4ADF-B2EB-322165CE1979" Type="Text" Created="2019-12-16 07:27:56 -0500" Modified="2019-12-16 07:28:23 -0500">
+                    <Title>Up Front Integration</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+                <BinderItem UUID="3BB3571F-FEFB-4456-8DCB-5F1B402B8CA9" Type="Text" Created="2019-12-16 07:28:15 -0500" Modified="2019-12-16 07:28:21 -0500">
+                    <Title>Incoming Inspection</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+            </Children>
+        </BinderItem>
+        <BinderItem UUID="CE038DB1-93CF-4437-98CD-8500CCFE4F5A" Type="ResearchFolder" Created="2019-12-16 07:26:06 -0500" Modified="2019-12-16 07:26:06 -0500">
+            <Title>Research</Title>
+            <MetaData>
+                <IncludeInCompile>Yes</IncludeInCompile>
+            </MetaData>
+        </BinderItem>
+        <BinderItem UUID="28C27011-8A9F-41EA-8D0E-3530E6549DD4" Type="TrashFolder" Created="2019-12-16 07:26:06 -0500" Modified="2019-12-16 07:26:06 -0500">
+            <Title>Trash</Title>
+            <MetaData>
+                <IncludeInCompile>Yes</IncludeInCompile>
+            </MetaData>
+            <Children>
+                <BinderItem UUID="7A235714-A34F-4E44-B3B5-58898F4E2D72" Type="Text" Created="2019-12-16 07:26:06 -0500" Modified="2019-12-16 07:26:06 -0500">
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>0,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+            </Children>
+        </BinderItem>
+    </Binder>
+    <Collections>
+        <Collection Type="Binder" ID="D808C8BB-DBFD-4DE1-9AD9-730528CDA545" Color="0.150563 0.150563 0.150563">
+            <Title>Binder</Title>
+        </Collection>
+        <Collection Type="RecentSearch" ID="93123E62-6018-4D91-A50D-1CA5A454F650" Color="0.190667 0.172702 0.216529">
+            <Title>Search Results</Title>
+        </Collection>
+    </Collections>
+    <SectionTypes>
+        <TypeDefinitions>
+            <Type ID="09BC78F4-286D-4D70-B643-2395DDF06442">Heading</Type>
+            <Type ID="FABF8BC0-4603-4217-8977-8D12D2783987">Sub-Heading</Type>
+            <Type ID="E89AFE0B-7D3F-4A69-B82C-FACCDFDDF9B5">Section</Type>
+        </TypeDefinitions>
+        <LevelTypes>
+            <Folders>
+                <Type>09BC78F4-286D-4D70-B643-2395DDF06442</Type>
+            </Folders>
+            <Containers>
+                <Type>E89AFE0B-7D3F-4A69-B82C-FACCDFDDF9B5</Type>
+            </Containers>
+            <Files>
+                <Type>E89AFE0B-7D3F-4A69-B82C-FACCDFDDF9B5</Type>
+            </Files>
+        </LevelTypes>
+    </SectionTypes>
+    <LabelSettings>
+        <Title>Label</Title>
+        <DefaultLabelID>-1</DefaultLabelID>
+        <Labels>
+            <Label ID="-1">No Label</Label>
+            <Label ID="0" Color="0.993495 0.701207 0.732587">Red</Label>
+            <Label ID="1" Color="0.995418 0.790946 0.652385">Orange</Label>
+            <Label ID="2" Color="0.997722 0.89273 0.652569">Yellow</Label>
+            <Label ID="3" Color="0.715855 0.948712 0.697692">Green</Label>
+            <Label ID="4" Color="0.702319 0.888276 0.974252">Blue</Label>
+            <Label ID="5" Color="0.957566 0.766747 0.999616">Purple</Label>
+        </Labels>
+    </LabelSettings>
+    <StatusSettings>
+        <Title>Status</Title>
+        <DefaultStatusID>-1</DefaultStatusID>
+        <StatusItems>
+            <Status ID="-1">No Status</Status>
+            <Status ID="0">To Do</Status>
+            <Status ID="1">In Progress</Status>
+            <Status ID="2">First Draft</Status>
+            <Status ID="3">Revised Draft</Status>
+            <Status ID="4">Final Draft</Status>
+            <Status ID="5">Done</Status>
+        </StatusItems>
+    </StatusSettings>
+    <ProjectTargets Notify="No">
+        <DraftTarget Type="Words" CountIncludedOnly="Yes" CurrentCompileGroupOnly="No" Deadline="2019-12-16 07:26:06 -0500" IgnoreDeadline="Yes">0</DraftTarget>
+        <SessionTarget Type="Words" CountDraftOnly="Yes" AllowNegatives="Yes" NextResetDate="2019-12-17 00:00:00 -0500" ResetType="Time" ResetTime="00:00" DeterminedFromDeadline="No" WritingDays="" CanWriteOnDeadlineDate="No">0</SessionTarget>
+        <PreviousSession Words="0" Characters="0" Date="2019-12-16 07:26:06 -0500"/>
+    </ProjectTargets>
+    <RecentWritingHistory Date="2019-12-16 07:26:06 -0500">
+        <DraftWordCount>0</DraftWordCount>
+        <DraftCharCount>0</DraftCharCount>
+        <OtherWordCount>0</OtherWordCount>
+        <OtherCharCount>0</OtherCharCount>
+    </RecentWritingHistory>
+    <PrintSettings PaperSize="612.0,792.0" LeftMargin="72.0" RightMargin="72.0" TopMargin="90.0" BottomMargin="90.0" PaperType="na-letter" Orientation="Portrait" HorizontalPagination="Clip" VerticalPagination="Auto" ScaleFactor="1.0" HorizontallyCentered="Yes" VerticallyCentered="Yes" Collates="Yes" PagesAcross="1" PagesDown="1"/>
+</ScrivenerProject>
