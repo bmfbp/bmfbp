@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/ellipse-bounding-boxes)
 
-; (:code bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/bounding-boxes::react #'arrowgrams/compiler/bounding-boxes::first-time)
+; (:code ellipse-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/ellipse-bounding-boxes::react #'arrowgrams/compiler/ellipse-bounding-boxes::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
