@@ -44,9 +44,11 @@
         
            (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/ellipse-bounding-boxes::react #'arrowgrams/compiler/ellipse-bounding-boxes::first-time)
 
+           (:code rectangle-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/rectangle-bounding-boxes::react #'arrowgrams/compiler/rectangle-bounding-boxes::first-time)
+
            (:schem passes (:fb :go) (:request-fb :add-fact :done :error)
             ;; parts
-            (compiler-testbed ellipse-bb)
+            (ellipse-bb)
             ;; wiring
             ( (((:self :fb)) ((ellipse-bb :fb)))
               (((:self :go)) ((ellipse-bb :go)))
