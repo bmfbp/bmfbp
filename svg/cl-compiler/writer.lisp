@@ -47,12 +47,16 @@
       (close stream))))
   
 
-(defmethod write-fact ((self e/part:part) fact)
+(defmethod write-fact ((self e/part:part) lfact)
   (let ((stream (cl-event-passing-user::@get-instance-var self :stream)))
-    (if (= 2 (length fact))
-        (format stream "~a(~a).~%" (first fact) (second fact))
-      (if (= 3 (length fact))
-          (format stream "~a(~a,~a).~%" (first fact) (second fact) (third fact))
-        (cl-event-passing-user::@send self :error (format nil "facts must be length 2 or 3, but got ~S" fact))))))
+    (unless (listp lfact)
+      (cl-event-passing-user::@send self :error (format nil "facts must be a list, but got ~S" lfact)))
+    (let ((fact (car lfact)))
+      (if (not (or (= 3 (length fact)) (= 2 (length fact))))
+          (cl-event-passing-user::@send self :error (format nil "facts must be length 2 or 3, but got ~S" lfact))
+        (if (= 2 (length fact))
+            (format stream "~a(~a).~%" (first fact) (second fact))
+          (if (= 3 (length fact))
+              (format stream "~a(~a,~a).~%" (first fact) (second fact) (third fact))))))))
   
   

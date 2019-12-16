@@ -50,6 +50,7 @@
     (setq arrowgrams/compiler::*top* compiler-net)
     (cl-event-passing-user::@with-dispatch
       (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
+      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/test-fb1.pro")))
         (cl-event-passing-user::@inject compiler-net
                                         (e/part::get-input-pin compiler-net :prolog-factbase-filename)
                                         filename)))))

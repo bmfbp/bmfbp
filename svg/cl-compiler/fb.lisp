@@ -74,4 +74,4 @@
         (add-lisp-fact self fact)))))
 
 (defmethod add-lisp-fact ((self e/part:part) fact)
-  (cl-event-passing-user::@set-instance-var self :factbase (cons fact (cl-event-passing-user::@get-instance-var self :factbase))))
+  (cl-event-passing-user::@set-instance-var self :factbase (cons (cons fact nil) (cl-event-passing-user::@get-instance-var self :factbase))))
