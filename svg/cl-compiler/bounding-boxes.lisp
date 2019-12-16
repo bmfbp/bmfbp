@@ -36,7 +36,7 @@
           (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
              
          
-(defparameter *test-fb*
+#+nil(defparameter *test-fb*
   '(
     ((:ellipse :id575))
     ((:ellipse :id498))
@@ -295,7 +295,7 @@
     ((:geometry_center_y :id483 170.0))
     ))
 
-(defparameter *test-fb1*
+#+nil(defparameter *test-fb1*
   '(((:ellipse :id575))
     ((:geometry_h :id575 40.0))
     ((:geometry_w :id575 40.0))
@@ -315,11 +315,6 @@
                               (:geometry_w (:? cl-holm-prolog::id) (:? cl-holm-prolog::hw))
                               (:geometry_h (:? cl-holm-prolog::id) (:? cl-holm-prolog::hh)))))
     (let ((fb (cons bounding-box-rules (cl-event-passing-user::@get-instance-var self :fb))))
-      (let ((fbtest (cons bounding-box-rules *test-fb1*)))
-        (with-open-file (outf "~/junk1.lisp" :direction :output :if-does-not-exist :create :if-exists :supersede)
-          (pprint fb outf))
-        (with-open-file (outf "~/junk2.lisp" :direction :output :if-does-not-exist :create :if-exists :supersede)
-          (pprint fbtest outf))
         (let ((r (hprolog:prove nil '((:ellipse-geometry (:? cl-holm-prolog::eid) (:? cl-holm-prolog::cx) (:? cl-holm-prolog::cy) (:? cl-holm-prolog::hw) (:? cl-holm-prolog::hh))) fb hprolog:*empty* 1 nil fb nil)))
           (mapcar #'(lambda (lis)
                       (assert (= 5 (length lis)))
@@ -332,7 +327,7 @@
                         (cl-event-passing-user::@send self :add-fact (list 'bounding_box_top id (- cy hh)))
                         (cl-event-passing-user::@send self :add-fact (list 'bounding_box_right id (+ cx hw)))
                         (cl-event-passing-user::@send self :add-fact (list 'bounding_box_bottom id (+ cy hh)))
-                        (format *standard-output* "~&added bounding box for ~A ~A/~A/~A/~A~%"
+                        (format *standard-output* "~&added bounding box for ellipse ~A ~A/~A/~A/~A~%"
                                 id (- cx hw) (- cy hh) (+ cx hw) (+ cy hh))))
-                  r))))))
+                  r)))))
 
