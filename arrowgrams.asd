@@ -43,9 +43,9 @@
                         :components ((:file "package")
                                      (:file "fb" :depends-on ("package"))
                                      (:file "sequencer" :depends-on ("package"))
-                                     (:file "bounding-boxes" :depends-on ("package"))
+                                     (:file "ellipse-bounding-boxes" :depends-on ("package"))
                                      (:file "reader" :depends-on ("package"))
                                      (:file "writer" :depends-on ("package"))
                                      (:file "convert-to-keywords" :depends-on ("package"))
                                      (:file "compiler" :depends-on ("reader" "fb" "writer" "convert-to-keywords"
-                                                                    "sequencer" "bounding-boxes"))))))
+                                                                    "sequencer" "ellipse-bounding-boxes"))))))

@@ -16,6 +16,6 @@
 (defpackage :arrowgrams/compiler/sequencer
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/bounding-boxes
+(defpackage :arrowgrams/compiler/ellipse-bounding-boxes
   (:use :cl))
 
