@@ -5,8 +5,11 @@ import Browser.Navigation
 import Browser
 import Browser.Events as BE
 import Element as El
+import Element.Events as EE
 import Element.Font as Font
 import Element.Background as Background
+import Element.Border as Border
+import Element.Input as Input
 import Svg
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -45,6 +48,18 @@ type alias Flags = {}
 
 type Msg
   = NoOp
+  | SaveSchematic
+  | LoadSchematic
+  | AddRect
+  | AddEllipse
+  | AddArrow
+  | AddText
+  | UpdateItemName CanvasItemInstance String
+  | UpdateItemGitUrl CanvasItemInstance String
+  | UpdateItemGitRef CanvasItemInstance String
+  | UpdateItemManifestPath CanvasItemInstance String
+  | UserIsTyping CanvasItemInstance
+  | UserIsNotTyping CanvasItemInstance
   | MouseMove Coordinates
   | KeyPress String
   | KeyUp String
@@ -110,10 +125,12 @@ type alias CanvasItemId = Int
 -- These are the items actually displayed on the canvas.
 type alias CanvasItemInstance =
   { id : CanvasItemId
+  -- TODO: Rename CanvasItem to Shape
   , item : CanvasItem
-  -- Other canvas items may be associated with this item at particular
-  -- coordinates. These may be attached polylines, associated texts, etc.
-  , associatedItems : List CanvasItemId
+  , name : String
+  , gitUrl : String
+  , gitRef : String
+  , manifestPath : String
   }
 
 -- These are the elements that can be displayed on the canvas.
@@ -186,6 +203,52 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update message model =
   case message of
     NoOp -> updateModelOnly model
+    SaveSchematic ->
+      let
+        -- In the future, get the component name from somewhere.
+        componentName = "default-component-name"
+        -- In the future, get the metadata from somewhere.
+        metadata = "dir,file,kindName,ref;"
+      in
+        (model, List.map .item model.instantiatedItems |> itemsToPrologFacts componentName metadata |> saveFile)
+    LoadSchematic -> (model, loadFile (JE.null))
+    AddRect ->
+      (createNewCanvasItemInstance model (Rect { x = 100, y = 100 } { x = 200, y = 200 }), Cmd.none)
+    AddArrow ->
+      case model.intent of
+        ToCreatePolyline points ->
+          let
+            model2 = createNewCanvasItemInstance model <| Polyline points
+          in
+            ({ model2 | intent = ToExplore }, Cmd.none)
+        _ ->
+          ({ model | intent = ToCreatePolyline [] }, Cmd.none)
+    AddEllipse ->
+      (createNewCanvasItemInstance model (Ellipse { x = 100, y = 100 } { x = 150, y = 140 }), Cmd.none)
+    AddText ->
+      (createNewCanvasItemInstance model (Text { x = 100, y = 100 } { x = 200, y = 200 } "name"), Cmd.none)
+    UpdateItemName item newName ->
+      let
+        updateName i = { i | name = newName }
+      in
+        (updateCanvasItemInstance model item updateName, Cmd.none)
+    UpdateItemGitUrl item newGitUrl ->
+      let
+        updateGitUrl i = { i | gitUrl = newGitUrl }
+      in
+        (updateCanvasItemInstance model item updateGitUrl, Cmd.none)
+    UpdateItemGitRef item newGitRef ->
+      let
+        updateGitRef i = { i | gitRef = newGitRef }
+      in
+        (updateCanvasItemInstance model item updateGitRef, Cmd.none)
+    UpdateItemManifestPath item newManifestPath ->
+      let
+        updateManifestPath i = { i | manifestPath = newManifestPath }
+      in
+        (updateCanvasItemInstance model item updateManifestPath, Cmd.none)
+    UserIsTyping item -> updateModelOnly { model | intent = ToType item }
+    UserIsNotTyping item -> updateModelOnly { model | intent = ToExplore }
     MouseMove coords ->
       let
         updatedModel = { model | cursorCoords = coords }
@@ -223,8 +286,14 @@ update message model =
             _ -> updatedModel
       in
         updateModelOnly newModel
-    KeyPress key -> handleKeyDown model key
-    KeyUp key -> handleKeyUp model key |> updateModelOnly
+    KeyPress key ->
+      case model.intent of
+        ToType _ -> updateModelOnly model
+        _ -> handleKeyDown model key
+    KeyUp key ->
+      case model.intent of
+        ToType _ -> updateModelOnly model
+        _ -> (handleKeyUp model key |> updateModelOnly)
     SelectItem item ->
       case model.selectionMode of
         SingleSelect ->
@@ -798,39 +867,11 @@ handleKeyDown model key =
       "Backspace" -> (deleteSelectedCanvasItemInstances model, defaultCmd)
       -- Copy
       "c" -> (copySelectedCanvasItemInstances model, defaultCmd)
-      -- Save
-      "s" ->
-        -- TODO: Replace all this.
-        let
-          -- In the future, get the component name from somewhere.
-          componentName = "default-component-name"
-          -- In the future, get the metadata from somewhere.
-          metadata = "dir,file,kindName,ref;"
-        in
-          (model, List.map .item model.instantiatedItems |> itemsToPrologFacts componentName metadata |> saveFile)
-      -- Load
-      "l" -> (model, loadFile (JE.null))
       -- Zoom in
       "=" -> zoom model (1.0 - zoomStepSize)
       "+" -> zoom model (1.0 - zoomStepSize)
       -- Zoom out
       "-" -> zoom model (1.0 + zoomStepSize)
-      -- Create a rectangle
-      "r" -> (createInstance <| Rect { x = 100, y = 100 } { x = 200, y = 200 }, defaultCmd)
-      -- Create a polyline
-      "p" ->
-        case model.intent of
-          ToCreatePolyline points ->
-            let
-              model2 = createInstance <| Polyline points
-            in
-              ({ model2 | intent = ToExplore }, defaultCmd)
-          _ ->
-            ({ model | intent = ToCreatePolyline [] }, defaultCmd)
-      -- Create an ellipse
-      "e" -> (createInstance <| Ellipse { x = 100, y = 100 } { x = 150, y = 140 }, defaultCmd)
-      -- Create a text
-      "t" -> (createInstance <| Text { x = 100, y = 100 } { x = 200, y = 200 } "name", defaultCmd)
       -- No-op
       _ -> (model, defaultCmd)
 
@@ -840,23 +881,17 @@ handleKeyUp model key = model
 createNewCanvasItemInstance : Model -> CanvasItem -> Model
 createNewCanvasItemInstance model canvasItem =
   let
-    (model3, newItems, associated) =
-      case canvasItem of
-        Rect topLeft _ ->
-          let
-            text = Text
-                     { x = topLeft.x + 6, y = topLeft.y + 6 }
-                     { x = topLeft.x + 6 + defaultTextWidth, y = topLeft.y + 6 + defaultTextHeight }
-                     " "
-            boxText = { id = -1, item = text, associatedItems = [] }
-            (model2, textItem) = copyCanvasItemInstance model boxText
-          in
-            (model2, [textItem], [textItem.id])
-        _ -> (model, [], [])
-    (newModel, newItem) = copyCanvasItemInstance model3 { id = -1, item = canvasItem, associatedItems = associated }
-    -- TODO: Also put box as text's associated item.
+    (newModel, newItem) =
+      copyCanvasItemInstance model
+        { id = -1
+        , item = canvasItem
+        , name = ""
+        , gitUrl = ""
+        , gitRef = ""
+        , manifestPath = ""
+        }
   in
-    { newModel | instantiatedItems = newItem :: (newItems ++ model.instantiatedItems) }
+    { newModel | instantiatedItems = newItem :: model.instantiatedItems }
 
 createNewCanvasItemInstance2 : CanvasItem -> Model -> Model
 createNewCanvasItemInstance2 item model = createNewCanvasItemInstance model item
@@ -919,6 +954,19 @@ updateModelOnly model = (model, Cmd.none)
 
 isSelectedCanvasItemInstance : Model -> CanvasItemInstance -> Bool
 isSelectedCanvasItemInstance model match = List.any (\i -> i.id == match.id) model.selectedItems
+
+updateCanvasItemInstance : Model -> CanvasItemInstance -> (CanvasItemInstance -> CanvasItemInstance) -> Model
+updateCanvasItemInstance model target f =
+  let
+    process item =
+      if item.id == target.id
+      then f item
+      else item
+  in
+    { model
+        | instantiatedItems = List.map process model.instantiatedItems
+        , selectedItems = List.map process model.selectedItems
+    }
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -1085,38 +1133,217 @@ replaceCanvasItemInstanceById allItems id newItem =
 
 -- *** UI ***
 
+menuHeight = 30
+
 view : Model -> Browser.Document Msg
 view model =
-  { title = "Arrowgram Editor"
+  { title = "Arrowgrams"
   , body = [ El.layout
-               [ Background.color (El.rgb 255 255 255)
-               , Font.family [ Font.monospace ]
-               , Font.color (El.rgb255 249 250 111)
+               [ Background.color (El.rgb255 255 255 255)
+               , Font.family [ Font.sansSerif ]
                ]
                (
                  El.column
-                   []
+                   [ El.width El.fill
+                   , El.height El.fill
+                   ]
                    [ menu
                    , El.row
-                       []
-                       [ El.html (canvas model)
+                       [ El.width El.fill
+                       , El.height El.fill
+                       ]
+                       [ palette
+                       , El.el
+                           [ El.width El.fill
+                           , El.height (El.px <| Tuple.second model.viewPortSize - menuHeight)
+                           , El.scrollbars
+                           ]
+                           ( El.el
+                               -- TODO: Make the size adjust to schematic's content
+                               [ El.width (El.px 1000)
+                               , El.height (El.px 1000)
+                               , Font.family [ Font.monospace ]
+                               ]
+                               (El.html (canvas model))
+                           )
+                       , propertyPanel model
                        ]
                    ]
                )
            ]
   }
 
-menu : El.Element msg
+menu : El.Element Msg
 menu =
-  El.row
-    []
-    [ El.el [] (El.text "Save")
-    , El.el [] (El.text "Load")
-    ]
+  let
+    item attrs =
+      El.el <|
+        [ El.width El.shrink
+        , El.padding 7
+        , Font.center
+        , El.mouseOver [ Background.color (El.rgb255 224 224 224) ]
+        , El.pointer
+        ] ++ attrs
+  in
+    El.row
+      [ El.height (El.px menuHeight)
+      , El.width El.fill
+      , Font.size 14
+      , El.spacing 5
+      , El.padding 5
+      , Border.color (El.rgb255 192 192 192)
+      , Border.widthEach
+          { bottom = 1
+          , left = 0
+          , right = 0
+          , top = 0
+          }
+      ]
+      [ item [ EE.onClick SaveSchematic ] (El.text "Save")
+      , item [ EE.onClick LoadSchematic ] (El.text "Load")
+      ]
 
--- TODO: Continue
---palette : Html.Html Msg
---palette =
+palette : El.Element Msg
+palette =
+  let
+    item attrs svg =
+      El.el
+        ( [ El.width (El.px 40)
+          , El.height (El.px 40)
+          , El.spacing 5
+          , El.mouseOver [ Background.color (El.rgb255 224 224 224) ]
+          , El.pointer
+          ] ++ attrs
+        )
+        (Svg.svg [] [svg] |> El.html)
+  in
+    El.row
+      [ El.width (El.px 40)
+      , El.height El.fill
+      , Border.color (El.rgb255 192 192 192)
+      , Border.widthEach
+          { bottom = 0
+          , left = 0
+          , right = 1
+          , top = 0
+          }
+      , Background.color (El.rgb255 252 252 252)
+      ]
+      [ El.column
+          [ El.alignTop
+          ]
+          [ item
+              [ EE.onClick AddRect
+              ]
+              ( Svg.rect
+                  [ SA.fill "white"
+                  , SA.fillOpacity "0.0"
+                  , SA.stroke "rgb(64, 64, 64)"
+                  , SA.strokeWidth "3"
+                  , SA.x "13"
+                  , SA.y "13"
+                  , SA.width "14"
+                  , SA.height "14"
+                  ]
+                  []
+              )
+          , item
+              [ EE.onClick AddEllipse
+              ]
+              ( Svg.ellipse
+                  [ SA.fill "white"
+                  , SA.fillOpacity "0.0"
+                  , SA.stroke "rgb(64, 64, 64)"
+                  , SA.strokeWidth "3"
+                  , SA.cx "20"
+                  , SA.cy "20"
+                  , SA.rx "8"
+                  , SA.ry "8"
+                  ]
+                  []
+              )
+          , item
+              [ EE.onClick AddArrow
+              ]
+              ( Svg.polyline
+                  [ SA.fill "white"
+                  , SA.fillOpacity "0.0"
+                  , SA.stroke "rgb(64, 64, 64)"
+                  , SA.strokeWidth "3"
+                  , SA.points "12,28 28,12"
+                  , SA.markerEnd "url(#arrowhead-palette)"
+                  ]
+                  []
+              )
+          ]
+      ]
+
+propertyPanel : Model -> El.Element Msg
+propertyPanel model =
+  El.column
+    [ El.width (El.px 300)
+    , El.height El.fill
+    , Border.color (El.rgb255 192 192 192)
+    , Border.widthEach
+        { bottom = 0
+        , left = 1
+        , right = 0
+        , top = 0
+        }
+    , Background.color (El.rgb255 252 252 252)
+    , El.padding 20
+    , Font.color (El.rgb255 196 196 196)
+    ]
+    ( case model.selectedItems of
+        [] -> [ El.text "No item selected" ]
+        item :: [] -> itemPropertyPanel item
+        _ :: _ -> [ El.text "Multiple items selected" ]
+    )
+
+itemPropertyPanel : CanvasItemInstance -> List (El.Element Msg)
+itemPropertyPanel item =
+  let
+    fieldLabel label =
+      Input.labelAbove
+        []
+        (El.text label)
+    fieldPlaceholder label =
+      Just <|
+        Input.placeholder
+          [ Font.color (El.rgb255 196 196 196)
+          ]
+          (El.text label)
+    textField onChange text placeholder label =
+      Input.text
+        [ EE.onFocus (UserIsTyping item)
+        , EE.onLoseFocus (UserIsNotTyping item)
+        , Font.size 12
+        ]
+        { onChange = onChange item
+        , text = text
+        , placeholder = fieldPlaceholder placeholder
+        , label = fieldLabel label
+        }
+  in
+    [ El.column
+        [ Font.color (El.rgb255 0 0 0)
+        , El.spacing 25
+        , El.width El.fill
+        ]
+        ( case item.item of
+            Rect _ _ ->
+              [ textField UpdateItemName item.name "e.g. Compile composite" "Part name"
+              , textField UpdateItemGitUrl item.gitUrl "e.g. https://github.com/arrowgrams/arrowgrams.git" "Git URL"
+              , textField UpdateItemGitRef item.gitRef "e.g. 1b83cf3" "Git ref"
+              , textField UpdateItemManifestPath item.manifestPath "e.g. build_process/parts/compile_composite.json" "Manifest path"
+              ]
+            Ellipse _ _ ->
+              [ textField UpdateItemName item.name "Pin's name here" "Pin name"
+              ]
+-- TODO: Continue here: Add arrows with two text fields for the two ends
+            _ -> []
+        )
+    ]
 
 canvas : Model -> Html.Html Msg
 canvas model =
@@ -1127,11 +1354,22 @@ canvas model =
         ToCreatePolyline points -> pointsToString points
         _ -> ""
     specialItems =
-      -- Arrowhead. Taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker.
+      -- Arrowhead. Taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker
       [ Svg.marker
           [ SA.id "arrowhead"
           , SA.viewBox "0 0 10 10"
           , SA.refX "10"
+          , SA.refY "5"
+          , SA.markerWidth "6"
+          , SA.markerHeight "6"
+          , SA.orient "auto-start-reverse"
+          ]
+          [ Svg.path [ SA.d "M 0 0 L 10 5 L 0 10 z" ] []
+          ]
+      , Svg.marker
+          [ SA.id "arrowhead-palette"
+          , SA.viewBox "0 0 15 15"
+          , SA.refX "7"
           , SA.refY "5"
           , SA.markerWidth "6"
           , SA.markerHeight "6"
@@ -1148,21 +1386,46 @@ canvas model =
           , SA.markerEnd "url(#arrowhead)"
           ]
           []
+      -- Generated from http://www.heropatterns.com/
+      , Svg.pattern
+          [ SA.id "background-graph-paper"
+          , SA.patternUnits "userSpaceOnUse"
+          , SA.x "0"
+          , SA.y "0"
+          , SA.width "100"
+          , SA.height "100"
+          ]
+          [ Svg.path
+              [ SA.opacity "0.1"
+              , SA.d "M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z"
+              ] []
+          , Svg.path
+              [ SA.opacity "0.2"
+              , SA.d "M6 5V0H5v5H0v1h5v94h1V6h94V5H6z"
+              ]
+              []
+          ]
+      , Svg.rect
+          [ SA.fill "url(#background-graph-paper)"
+          , SA.width "100%"
+          , SA.height "100%"
+          ]
+          []
       ]
-    (viewPortWidth, viewPortHeight) = model.viewPortSize
     viewBoxDims =
       SI.interpolate "{0} {1} {2} {3}"
         [ String.fromInt model.panCoords.x
         , String.fromInt model.panCoords.y
-        , String.fromFloat (toFloat viewPortWidth * model.zoomFactor)
-        , String.fromFloat (toFloat viewPortHeight * model.zoomFactor)
+        , String.fromFloat model.zoomFactor
+        , String.fromFloat model.zoomFactor
         ]
   in
     Svg.svg
-      [ SA.width (String.fromInt viewPortWidth)
-      , SA.height (String.fromInt viewPortHeight)
+      [ SA.width "100%"
+      , SA.height "100%"
       , SE.onMouseDown ClearSelection
-      , SA.viewBox viewBoxDims
+      -- TODO: Fix
+      -- , SA.viewBox viewBoxDims
       ]
       (specialItems ++ canvasItems)
 
@@ -1261,6 +1524,8 @@ displayCanvasItemInstance model item =
           y = String.fromInt upperLeft.y
           width = String.fromInt (lowerRight.x - upperLeft.x)
           height = String.fromInt (lowerRight.y - upperLeft.y)
+          cx = String.fromInt <| (lowerRight.x - upperLeft.x) // 2
+          cy = String.fromInt <| (lowerRight.y - upperLeft.y) // 2
           resizeOption = toDisplayResizeOption upperLeft lowerRight
         in
           Svg.g
@@ -1272,12 +1537,21 @@ displayCanvasItemInstance model item =
             (
               [ Svg.rect
                   [ SA.fill "white"
-                  , SA.fillOpacity "0.0"
+                  , SA.fillOpacity "1.0"
                   , SA.stroke (if isSelected then "blue" else "black")
                   , SA.width width
                   , SA.height height
                   ]
                   []
+              , Svg.text_
+                  [ SA.transform ("translate(" ++ cx ++ "," ++ cy ++ ")")
+                  , SA.textAnchor "middle"
+                  , SA.alignmentBaseline "middle"
+                  , SA.width "200"
+                  , SA.height "50"
+                  ]
+                  [ Svg.text item.name
+                  ]
               ] ++ resizeOption
             )
       Polyline points ->
@@ -1334,7 +1608,7 @@ displayCanvasItemInstance model item =
               -- This is the ellipse visible to the user.
               [ Svg.ellipse
                   [ SA.fill "white"
-                  , SA.fillOpacity "0.0"
+                  , SA.fillOpacity "1.0"
                   , SA.stroke (if isSelected then "blue" else "black")
                   , SA.cx (String.fromInt radiusX)
                   , SA.cy (String.fromInt radiusY)
