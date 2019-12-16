@@ -45,9 +45,12 @@
                                      (:file "sequencer" :depends-on ("package"))
                                      (:file "ellipse-bounding-boxes" :depends-on ("package"))
                                      (:file "rectangle-bounding-boxes" :depends-on ("package"))
+                                     (:file "speechbubble-bounding-boxes" :depends-on ("package"))
+                                     (:file "text-bounding-boxes" :depends-on ("package"))
                                      (:file "reader" :depends-on ("package"))
                                      (:file "writer" :depends-on ("package"))
                                      (:file "convert-to-keywords" :depends-on ("package"))
                                      (:file "compiler"
                                       :depends-on ("reader" "fb" "writer" "convert-to-keywords" "sequencer"
-                                                   "ellipse-bounding-boxes" "rectangle-bounding-boxes"))))))
+                                                   "ellipse-bounding-boxes" "rectangle-bounding-boxes"
+                                                   "speechbubble-bounding-boxes" "text-bounding-boxes"))))))

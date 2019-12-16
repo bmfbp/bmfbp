@@ -22,3 +22,9 @@
 (defpackage :arrowgrams/compiler/rectangle-bounding-boxes
   (:use :cl))
 
+(defpackage :arrowgrams/compiler/speechbubble-bounding-boxes
+  (:use :cl))
+
+(defpackage :arrowgrams/compiler/text-bounding-boxes
+  (:use :cl))
+
