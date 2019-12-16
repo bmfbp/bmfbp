@@ -48,31 +48,47 @@
 
            (:schem passes (:fb :go) (:request-fb :add-fact :done :error)
             ;; parts
-            (ellipse-bb)
+            (ellipse-bb rectangle-bb)
             ;; wiring
-            ( (((:self :fb)) ((ellipse-bb :fb)))
+            (
+             (((:self :fb))
+              ((ellipse-bb :fb) (rectangle-bb :fb)))
+             
               (((:self :go)) ((ellipse-bb :go)))
+              
+              (((ellipse-bb :request-fb) (rectangle-bb :request-fb))
+               ((:self :request-fb)))
+              
+              (((ellipse-bb :add-fact) (rectangle-bb :add-fact))
+               ((:self :add-fact)))
 
-              (((ellipse-bb :request-fb)) ((:self :request-fb)))
-              (((ellipse-bb :add-fact)) ((:self :add-fact)))
-              (((ellipse-bb :error)) ((:self :error)))))
+              (((ellipse-bb :done)) ((rectangle-bb :go)))
 
+              (((rectangle-bb :done)) ((:self :done)))
+
+              (((rectangle-bb :error) (ellipse-bb :error))
+               ((:self :error)))
+              ))
+           
+           
            (:schem compiler (:prolog-factbase-filename :prolog-output-filename) (:error)
             ;; parts
             (compiler-testbed passes)
             ;; wiring
-
-            ((((:self :prolog-factbase-filename)) ((compiler-testbed :prolog-factbase-filename)))
+            
+            (
+             (((:self :prolog-factbase-filename)) ((compiler-testbed :prolog-factbase-filename)))
              (((:self :prolog-output-filename))   ((compiler-testbed :prolog-output-filename)))
-
+             
              (((compiler-testbed :go)) ((passes :go)))
              (((compiler-testbed :fb)) ((passes :fb)))
-
+             
              (((passes :request-fb)) ((compiler-testbed :request-fb)))
              (((passes :add-fact)) ((compiler-testbed :add-fact)))
              (((passes :done)) ((compiler-testbed :done)))
-
-             (((compiler-testbed :error) (passes :error)) ((:self :error))))))))
+             
+             (((compiler-testbed :error) (passes :error)) ((:self :error)))
+             )))))
     
     #+nil(e/util::enable-logging 1)
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))

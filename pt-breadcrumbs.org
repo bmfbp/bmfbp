@@ -27,6 +27,9 @@
 ** esrap:trace-rule ... :recursive t dies if rule is not defined (typo)
 ** revert back to new esrap
 
+
+** remove cl-user:: from bounding box code
+
 * git branches
 ** master
 ** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
