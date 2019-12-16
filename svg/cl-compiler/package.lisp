@@ -19,3 +19,6 @@
 (defpackage :arrowgrams/compiler/ellipse-bounding-boxes
   (:use :cl))
 
+(defpackage :arrowgrams/compiler/rectangle-bounding-boxes
+  (:use :cl))
+
