@@ -51,8 +51,57 @@
                                      (:file "speechbubble-bounding-boxes" :depends-on ("package"))
                                      (:file "text-bounding-boxes" :depends-on ("package"))
                                      (:file "assign-parents-to-ellipses" :depends-on ("package"))
+
+                                     (:file "find-comments" :depends-on ("package"))
+                                     (:file "find-metadata" :depends-on ("package"))
+                                     (:file "add-kinds" :depends-on ("package"))
+                                     (:file "add-self-ports" :depends-on ("package"))
+                                     (:file "make-unknown-port-names" :depends-on ("package"))
+                                     (:file "create-centers" :depends-on ("package"))
+                                     (:file "calculate-distances" :depends-on ("package"))
+                                     (:file "assign-portnames" :depends-on ("package"))
+                                     (:file "mark-indexed-ports" :depends-on ("package"))
+                                     (:file "concident-ports" :depends-on ("package"))
+                                     (:file "mark-directions" :depends-on ("package"))
+                                     (:file "match-ports-to-components" :depends-on ("package"))
+                                     (:file "pinless" :depends-on ("package"))
+                                     (:file "sem-parts-have-some-ports" :depends-on ("package"))
+                                     (:file "sem-ports-have-sink-or-source" :depends-on ("package"))
+                                     (:file "sem-no-duplicate-kinds" :depends-on ("package"))
+                                     (:file "sem-speech-vs-comments" :depends-on ("package"))
+                                     (:file "assign-wire-numbers-to-edges" :depends-on ("package"))
+                                     (:file "self-input-pins" :depends-on ("package"))
+                                     (:file "self-output-pins" :depends-on ("package"))
+                                     (:file "input-pins" :depends-on ("package"))
+                                     (:file "output-pins" :depends-on ("package"))
+
                                      (:file "compiler"
                                       :depends-on ("reader" "fb" "writer" "convert-to-keywords" "sequencer"
                                                    "ellipse-bounding-boxes" "rectangle-bounding-boxes"
                                                    "speechbubble-bounding-boxes" "text-bounding-boxes"
-                                                   "assign-parents-to-ellipses"))))))
+                                                   "assign-parents-to-ellipses"
+
+                                                   "find-comments"
+                                                   "find-metadata"
+                                                   "add-kinds"
+                                                   "add-self-ports"
+                                                   "make-unknown-port-names"
+                                                   "create-centers"
+                                                   "calculate-distances"
+                                                   "assign-portnames"
+                                                   "mark-indexed-ports"
+                                                   "concident-ports"
+                                                   "mark-directions"
+                                                   "match-ports-to-components"
+                                                   "pinless"
+                                                   "sem-parts-have-some-ports"
+                                                   "sem-ports-have-sink-or-source"
+                                                   "sem-no-duplicate-kinds"
+                                                   "sem-speech-vs-comments"
+                                                   "assign-wire-numbers-to-edges"
+                                                   "self-input-pins"
+                                                   "self-output-pins"
+                                                   "input-pins"
+                                                   "output-pins"
+                                                   
+                                                   ))))))

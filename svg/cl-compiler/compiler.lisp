@@ -182,13 +182,15 @@
            (:schem passes (:fb :go) (:request-fb :add-fact :done :error)
             ;; parts
             (ellipse-bb rectangle-bb text-bb speechbubble-bb assign-parents-to-ellipses
-assign-parents-to-ellipses find-comments find-metadata add-kinds add-self-ports
+find-comments find-metadata add-kinds add-self-ports
 make-unknown-port-names create-centers calculate-distances assign-portnames mark-indexed-ports concident-ports mark-directions
 match-ports-to-components pinless sem-parts-have-some-ports sem-ports-have-sink-or-source sem-no-duplicate-kinds
 sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins)
 
             ;; wiring
             (
+
+             (((:self :go)) ((ellipse-bb :go)))
 
              (((:self :fb)) ((ellipse-bb :fb) (rectangle-bb :fb) (text-bb :fb) (speechbubble-bb :fb) (assign-parents-to-ellipses :fb) (find-comments :fb) (find-metadata :fb) (add-kinds :fb) (add-self-ports :fb) (make-unknown-port-names :fb) (create-centers :fb) (calculate-distances :fb) (assign-portnames :fb) (mark-indexed-ports :fb) (concident-ports :fb) (mark-directions :fb) (match-ports-to-components :fb) (pinless :fb) (sem-parts-have-some-ports :fb) (sem-ports-have-sink-or-source :fb) (sem-no-duplicate-kinds :fb) (sem-speech-vs-comments :fb) (assign-wire-numbers-to-edges :fb) (self-input-pins :fb) (self-output-pins :fb) (input-pins :fb) (output-pins :fb)))
 
