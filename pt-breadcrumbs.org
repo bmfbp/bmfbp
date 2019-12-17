@@ -37,7 +37,7 @@
 
 ** pt-20191208-compiler - compiler rewrite
 
-** pt-20191216-compiler - compiler with most parts stubbed out
+** pt-20191210-compiler - compiler with most parts stubbed out, 1st 5 parts working (up to and including assign-parents-to-ellipses)
 
 * git kraken
 ** merge, drag one branch and drop it onto another
