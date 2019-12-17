@@ -28,3 +28,6 @@
 (defpackage :arrowgrams/compiler/text-bounding-boxes
   (:use :cl))
 
+(defpackage :arrowgrams/compiler/assign-parents-to-ellipses
+  (:use :cl))
+

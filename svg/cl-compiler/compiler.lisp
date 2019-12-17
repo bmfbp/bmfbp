@@ -48,31 +48,38 @@
            (:code text-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/text-bounding-boxes::react #'arrowgrams/compiler/text-bounding-boxes::first-time)
            (:code speechbubble-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/speechbubble-bounding-boxes::react #'arrowgrams/compiler/speechbubble-bounding-boxes::first-time)
 
+           (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/assign-parents-to-ellipses::react #'arrowgrams/compiler/assign-parents-to-ellipses::first-time)
+
            (:schem passes (:fb :go) (:request-fb :add-fact :done :error)
             ;; parts
-            (ellipse-bb rectangle-bb text-bb speechbubble-bb)
+            (ellipse-bb rectangle-bb text-bb speechbubble-bb assign-parents-to-ellipses)
             ;; wiring
             (
              (((:self :fb))
-              ((ellipse-bb :fb) (rectangle-bb :fb) (text-bb :fb) (speechbubble-bb :fb)))
+              ((ellipse-bb :fb) (rectangle-bb :fb) (text-bb :fb) (speechbubble-bb :fb)
+               (assign-parents-to-ellipses :fb)))
              
               (((:self :go)) ((ellipse-bb :go)))
               
               (((ellipse-bb :request-fb) (rectangle-bb :request-fb)
-                (text-bb :request-fb) (speechbubble-bb :request-fb))
+                (text-bb :request-fb) (speechbubble-bb :request-fb)
+                (assign-parents-to-ellipses :request-fb))
                ((:self :request-fb)))
               
               (((ellipse-bb :add-fact) (rectangle-bb :add-fact)
-                (text-bb :add-fact) (speechbubble-bb :add-fact))
+                (text-bb :add-fact) (speechbubble-bb :add-fact)
+                (assign-parents-to-ellipses :add-fact))
                ((:self :add-fact)))
 
               (((ellipse-bb :done)) ((rectangle-bb :go)))
               (((rectangle-bb :done)) ((text-bb :go)))
               (((text-bb :done)) ((speechbubble-bb :go)))
-              (((speechbubble-bb :done)) ((:self :done)))
+              (((speechbubble-bb :done)) ((assign-parents-to-ellipses :go)))
+              (((assign-parents-to-ellipses :done)) ((:self :done)))
 
               (((rectangle-bb :error) (ellipse-bb :error)
-                (text-bb :error) (speechbubble-bb :error))
+                (text-bb :error) (speechbubble-bb :error)
+                (assign-parents-to-ellipses :error))
                ((:self :error)))
               ))
            
