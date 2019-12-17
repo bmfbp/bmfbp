@@ -127,7 +127,7 @@
   #'ARROWGRAMS/COMPILER/OUTPUT-PINS::FIRST-TIME)
 
 ; parts
-(ellipse-bb rectangle-bb text-bb speechbubble-bb 
+(
 assign-parents-to-ellipses find-comments find-metadata add-kinds add-self-ports
 make-unknown-port-names create-centers calculate-distances assign-portnames mark-indexed-ports concident-ports mark-directions
 match-ports-to-components pinless sem-parts-have-some-ports sem-ports-have-sink-or-source sem-no-duplicate-kinds
