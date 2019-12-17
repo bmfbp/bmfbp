@@ -1,3 +1,131 @@
+ (:CODE
+  FIND-COMMENTS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/FIND-COMMENTS::REACT
+  #'ARROWGRAMS/COMPILER/FIND-COMMENTS::FIRST-TIME)
+ (:CODE
+  FIND-METADATA
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/FIND-METADATA::REACT
+  #'ARROWGRAMS/COMPILER/FIND-METADATA::FIRST-TIME)
+ (:CODE
+  ADD-KINDS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/ADD-KINDS::REACT
+  #'ARROWGRAMS/COMPILER/ADD-KINDS::FIRST-TIME)
+ (:CODE
+  ADD-SELF-PORTS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/ADD-SELF-PORTS::REACT
+  #'ARROWGRAMS/COMPILER/ADD-SELF-PORTS::FIRST-TIME)
+ (:CODE
+  MAKE-UNKNOWN-PORT-NAMES
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/MAKE-UNKNOWN-PORT-NAMES::REACT
+  #'ARROWGRAMS/COMPILER/MAKE-UNKNOWN-PORT-NAMES::FIRST-TIME)
+ (:CODE
+  CREATE-CENTERS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/CREATE-CENTERS::REACT
+  #'ARROWGRAMS/COMPILER/CREATE-CENTERS::FIRST-TIME)
+ (:CODE
+  CALCULATE-DISTANCES
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/CALCULATE-DISTANCES::REACT
+  #'ARROWGRAMS/COMPILER/CALCULATE-DISTANCES::FIRST-TIME)
+ (:CODE
+  ASSIGN-PORTNAMES
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/ASSIGN-PORTNAMES::REACT
+  #'ARROWGRAMS/COMPILER/ASSIGN-PORTNAMES::FIRST-TIME)
+ (:CODE
+  MARK-INDEXED-PORTS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/MARK-INDEXED-PORTS::REACT
+  #'ARROWGRAMS/COMPILER/MARK-INDEXED-PORTS::FIRST-TIME)
+ (:CODE
+  CONCIDENT-PORTS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/CONCIDENT-PORTS::REACT
+  #'ARROWGRAMS/COMPILER/CONCIDENT-PORTS::FIRST-TIME)
+ (:CODE
+  MARK-DIRECTIONS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/MARK-DIRECTIONS::REACT
+  #'ARROWGRAMS/COMPILER/MARK-DIRECTIONS::FIRST-TIME)
+ (:CODE
+  MATCH-PORTS-TO-COMPONENTS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/MATCH-PORTS-TO-COMPONENTS::REACT
+  #'ARROWGRAMS/COMPILER/MATCH-PORTS-TO-COMPONENTS::FIRST-TIME)
+ (:CODE PINLESS (:FB :GO) (:ADD-FACT :DONE :REQUEST-FB :ERROR) #'ARROWGRAMS/COMPILER/PINLESS::REACT #'ARROWGRAMS/COMPILER/PINLESS::FIRST-TIME)
+ (:CODE
+  SEM-PARTS-HAVE-SOME-PORTS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/SEM-PARTS-HAVE-SOME-PORTS::REACT
+  #'ARROWGRAMS/COMPILER/SEM-PARTS-HAVE-SOME-PORTS::FIRST-TIME)
+ (:CODE
+  SEM-PORTS-HAVE-SINK-OR-SOURCE
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/SEM-PORTS-HAVE-SINK-OR-SOURCE::REACT
+  #'ARROWGRAMS/COMPILER/SEM-PORTS-HAVE-SINK-OR-SOURCE::FIRST-TIME)
+ (:CODE
+  SEM-NO-DUPLICATE-KINDS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/SEM-NO-DUPLICATE-KINDS::REACT
+  #'ARROWGRAMS/COMPILER/SEM-NO-DUPLICATE-KINDS::FIRST-TIME)
+ (:CODE
+  SEM-SPEECH-VS-COMMENTS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/SEM-SPEECH-VS-COMMENTS::REACT
+  #'ARROWGRAMS/COMPILER/SEM-SPEECH-VS-COMMENTS::FIRST-TIME)
+ (:CODE
+  ASSIGN-WIRE-NUMBERS-TO-EDGES
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/ASSIGN-WIRE-NUMBERS-TO-EDGES::REACT
+  #'ARROWGRAMS/COMPILER/ASSIGN-WIRE-NUMBERS-TO-EDGES::FIRST-TIME)
+ (:CODE
+  SELF-INPUT-PINS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/SELF-INPUT-PINS::REACT
+  #'ARROWGRAMS/COMPILER/SELF-INPUT-PINS::FIRST-TIME)
+ (:CODE
+  SELF-OUTPUT-PINS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/SELF-OUTPUT-PINS::REACT
+  #'ARROWGRAMS/COMPILER/SELF-OUTPUT-PINS::FIRST-TIME)
+ (:CODE
+  INPUT-PINS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/INPUT-PINS::REACT
+  #'ARROWGRAMS/COMPILER/INPUT-PINS::FIRST-TIME)
+ (:CODE
+  OUTPUT-PINS
+  (:FB :GO)
+  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
+  #'ARROWGRAMS/COMPILER/OUTPUT-PINS::REACT
+  #'ARROWGRAMS/COMPILER/OUTPUT-PINS::FIRST-TIME)
+
 ; parts
 (ellipse-bb rectangle-bb text-bb speechbubble-bb 
 assign-parents-to-ellipses find-comments find-metadata add-kinds add-self-ports
@@ -8,39 +136,42 @@ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-
 ; wires
 (
 
-(((:SELF :FB)) ((ELLIPSE-BB :FB) (RECTANGLE-BB :FB) (TEXT-BB :FB) (SPEECHBUBBLE-BB :FB) (ASSIGN-PARENTS-TO-ELLIPSES :FB) (FIND-COMMENTS :FB) (FIND-METADATA :FB) (ADD-KINDS :FB) (ADD-SELF-PORTS :FB) (MAKE-UNKNOWN-PORT-NAMES :FB) (CREATE-CENTERS :FB) (CALCULATE-DISTANCES :FB) (ASSIGN-PORTNAMES :FB) (MARK-INDEXED-PORTS :FB) (CONCIDENT-PORTS :FB) (MARK-DIRECTIONS :FB) (MATCH-PORTS-TO-COMPONENTS :FB) (PINLESS :FB) (SEM-PARTS-HAVE-SOME-PORTS :FB) (SEM-PORTS-HAVE-SINK-OR-SOURCE :FB) (SEM-NO-DUPLICATE-KINDS :FB) (SEM-SPEECH-VS-COMMENTS :FB) (ASSIGN-WIRE-NUMBERS-TO-EDGES :FB) (SELF-INPUT-PINS :FB) (SELF-OUTPUT-PINS :FB) (INPUT-PINS :FB) (OUTPUT-PINS :FB)))
+ (((:self :fb)) ((ellipse-bb :fb) (rectangle-bb :fb) (text-bb :fb) (speechbubble-bb :fb) (assign-parents-to-ellipses :fb) (find-comments :fb) (find-metadata :fb) (add-kinds :fb) (add-self-ports :fb) (make-unknown-port-names :fb) (create-centers :fb) (calculate-distances :fb) (assign-portnames :fb) (mark-indexed-ports :fb) (concident-ports :fb) (mark-directions :fb) (match-ports-to-components :fb) (pinless :fb) (sem-parts-have-some-ports :fb) (sem-ports-have-sink-or-source :fb) (sem-no-duplicate-kinds :fb) (sem-speech-vs-comments :fb) (assign-wire-numbers-to-edges :fb) (self-input-pins :fb) (self-output-pins :fb) (input-pins :fb) (output-pins :fb)))
 
-(((ELLIPSE-BB :REQUEST-FB) (RECTANGLE-BB :REQUEST-FB) (TEXT-BB :REQUEST-FB) (SPEECHBUBBLE-BB :REQUEST-FB) (ASSIGN-PARENTS-TO-ELLIPSES :REQUEST-FB) (FIND-COMMENTS :REQUEST-FB) (FIND-METADATA :REQUEST-FB) (ADD-KINDS :REQUEST-FB) (ADD-SELF-PORTS :REQUEST-FB) (MAKE-UNKNOWN-PORT-NAMES :REQUEST-FB) (CREATE-CENTERS :REQUEST-FB) (CALCULATE-DISTANCES :REQUEST-FB) (ASSIGN-PORTNAMES :REQUEST-FB) (MARK-INDEXED-PORTS :REQUEST-FB) (CONCIDENT-PORTS :REQUEST-FB) (MARK-DIRECTIONS :REQUEST-FB) (MATCH-PORTS-TO-COMPONENTS :REQUEST-FB) (PINLESS :REQUEST-FB) (SEM-PARTS-HAVE-SOME-PORTS :REQUEST-FB) (SEM-PORTS-HAVE-SINK-OR-SOURCE :REQUEST-FB) (SEM-NO-DUPLICATE-KINDS :REQUEST-FB) (SEM-SPEECH-VS-COMMENTS :REQUEST-FB) (ASSIGN-WIRE-NUMBERS-TO-EDGES :REQUEST-FB) (SELF-INPUT-PINS :REQUEST-FB) (SELF-OUTPUT-PINS :REQUEST-FB) (INPUT-PINS :REQUEST-FB) (OUTPUT-PINS :REQUEST-FB)) ((:SELF :REQUEST-FB)))
+ (((ellipse-bb :request-fb) (rectangle-bb :request-fb) (text-bb :request-fb) (speechbubble-bb :request-fb) (assign-parents-to-ellipses :request-fb) (find-comments :request-fb) (find-metadata :request-fb) (add-kinds :request-fb) (add-self-ports :request-fb) (make-unknown-port-names :request-fb) (create-centers :request-fb) (calculate-distances :request-fb) (assign-portnames :request-fb) (mark-indexed-ports :request-fb) (concident-ports :request-fb) (mark-directions :request-fb) (match-ports-to-components :request-fb) (pinless :request-fb) (sem-parts-have-some-ports :request-fb) (sem-ports-have-sink-or-source :request-fb) (sem-no-duplicate-kinds :request-fb) (sem-speech-vs-comments :request-fb) (assign-wire-numbers-to-edges :request-fb) (self-input-pins :request-fb) (self-output-pins :request-fb) (input-pins :request-fb) (output-pins :request-fb)) ((:self :request-fb)))
 
-(((ELLIPSE-BB :ADD-FACT) (RECTANGLE-BB :ADD-FACT) (TEXT-BB :ADD-FACT) (SPEECHBUBBLE-BB :ADD-FACT) (ASSIGN-PARENTS-TO-ELLIPSES :ADD-FACT) (FIND-COMMENTS :ADD-FACT) (FIND-METADATA :ADD-FACT) (ADD-KINDS :ADD-FACT) (ADD-SELF-PORTS :ADD-FACT) (MAKE-UNKNOWN-PORT-NAMES :ADD-FACT) (CREATE-CENTERS :ADD-FACT) (CALCULATE-DISTANCES :ADD-FACT) (ASSIGN-PORTNAMES :ADD-FACT) (MARK-INDEXED-PORTS :ADD-FACT) (CONCIDENT-PORTS :ADD-FACT) (MARK-DIRECTIONS :ADD-FACT) (MATCH-PORTS-TO-COMPONENTS :ADD-FACT) (PINLESS :ADD-FACT) (SEM-PARTS-HAVE-SOME-PORTS :ADD-FACT) (SEM-PORTS-HAVE-SINK-OR-SOURCE :ADD-FACT) (SEM-NO-DUPLICATE-KINDS :ADD-FACT) (SEM-SPEECH-VS-COMMENTS :ADD-FACT) (ASSIGN-WIRE-NUMBERS-TO-EDGES :ADD-FACT) (SELF-INPUT-PINS :ADD-FACT) (SELF-OUTPUT-PINS :ADD-FACT) (INPUT-PINS :ADD-FACT) (OUTPUT-PINS :ADD-FACT)) ((:SELF :ADD-FACT)))
+ (((ellipse-bb :add-fact) (rectangle-bb :add-fact) (text-bb :add-fact) (speechbubble-bb :add-fact) (assign-parents-to-ellipses :add-fact) (find-comments :add-fact) (find-metadata :add-fact) (add-kinds :add-fact) (add-self-ports :add-fact) (make-unknown-port-names :add-fact) (create-centers :add-fact) (calculate-distances :add-fact) (assign-portnames :add-fact) (mark-indexed-ports :add-fact) (concident-ports :add-fact) (mark-directions :add-fact) (match-ports-to-components :add-fact) (pinless :add-fact) (sem-parts-have-some-ports :add-fact) (sem-ports-have-sink-or-source :add-fact) (sem-no-duplicate-kinds :add-fact) (sem-speech-vs-comments :add-fact) (assign-wire-numbers-to-edges :add-fact) (self-input-pins :add-fact) (self-output-pins :add-fact) (input-pins :add-fact) (output-pins :add-fact)) ((:self :add-fact)))
 
-(((ELLIPSE-BB :DONE) (RECTANGLE-BB :GO))
- ((RECTANGLE-BB :DONE) (TEXT-BB :GO))
- ((TEXT-BB :DONE) (SPEECHBUBBLE-BB :GO))
- ((SPEECHBUBBLE-BB :DONE) (ASSIGN-PARENTS-TO-ELLIPSES :GO))
- ((ASSIGN-PARENTS-TO-ELLIPSES :DONE) (FIND-COMMENTS :GO))
- ((FIND-COMMENTS :DONE) (FIND-METADATA :GO))
- ((FIND-METADATA :DONE) (ADD-KINDS :GO))
- ((ADD-KINDS :DONE) (ADD-SELF-PORTS :GO))
- ((ADD-SELF-PORTS :DONE) (MAKE-UNKNOWN-PORT-NAMES :GO))
- ((MAKE-UNKNOWN-PORT-NAMES :DONE) (CREATE-CENTERS :GO))
- ((CREATE-CENTERS :DONE) (CALCULATE-DISTANCES :GO))
- ((CALCULATE-DISTANCES :DONE) (ASSIGN-PORTNAMES :GO))
- ((ASSIGN-PORTNAMES :DONE) (MARK-INDEXED-PORTS :GO))
- ((MARK-INDEXED-PORTS :DONE) (CONCIDENT-PORTS :GO))
- ((CONCIDENT-PORTS :DONE) (MARK-DIRECTIONS :GO))
- ((MARK-DIRECTIONS :DONE) (MATCH-PORTS-TO-COMPONENTS :GO))
- ((MATCH-PORTS-TO-COMPONENTS :DONE) (PINLESS :GO))
- ((PINLESS :DONE) (SEM-PARTS-HAVE-SOME-PORTS :GO))
- ((SEM-PARTS-HAVE-SOME-PORTS :DONE) (SEM-PORTS-HAVE-SINK-OR-SOURCE :GO))
- ((SEM-PORTS-HAVE-SINK-OR-SOURCE :DONE) (SEM-NO-DUPLICATE-KINDS :GO))
- ((SEM-NO-DUPLICATE-KINDS :DONE) (SEM-SPEECH-VS-COMMENTS :GO))
- ((SEM-SPEECH-VS-COMMENTS :DONE) (ASSIGN-WIRE-NUMBERS-TO-EDGES :GO))
- ((ASSIGN-WIRE-NUMBERS-TO-EDGES :DONE) (SELF-INPUT-PINS :GO))
- ((SELF-INPUT-PINS :DONE) (SELF-OUTPUT-PINS :GO))
- ((SELF-OUTPUT-PINS :DONE) (INPUT-PINS :GO))
- ((INPUT-PINS :DONE) (OUTPUT-PINS :GO)))
+ (((ellipse-bb :done)) ((rectangle-bb :go)))
+ (((rectangle-bb :done)) ((text-bb :go)))
+ (((text-bb :done)) ((speechbubble-bb :go)))
+ (((speechbubble-bb :done)) ((assign-parents-to-ellipses :go)))
+ (((assign-parents-to-ellipses :done)) ((find-comments :go)))
+ (((find-comments :done)) ((find-metadata :go)))
+ (((find-metadata :done)) ((add-kinds :go)))
+ (((add-kinds :done)) ((add-self-ports :go)))
+ (((add-self-ports :done)) ((make-unknown-port-names :go)))
+ (((make-unknown-port-names :done)) ((create-centers :go)))
+ (((create-centers :done)) ((calculate-distances :go)))
+ (((calculate-distances :done)) ((assign-portnames :go)))
+ (((assign-portnames :done)) ((mark-indexed-ports :go)))
+ (((mark-indexed-ports :done)) ((concident-ports :go)))
+ (((concident-ports :done)) ((mark-directions :go)))
+ (((mark-directions :done)) ((match-ports-to-components :go)))
+ (((match-ports-to-components :done)) ((pinless :go)))
+ (((pinless :done)) ((sem-parts-have-some-ports :go)))
+ (((sem-parts-have-some-ports :done)) ((sem-ports-have-sink-or-source :go)))
+ (((sem-ports-have-sink-or-source :done)) ((sem-no-duplicate-kinds :go)))
+ (((sem-no-duplicate-kinds :done)) ((sem-speech-vs-comments :go)))
+ (((sem-speech-vs-comments :done)) ((assign-wire-numbers-to-edges :go)))
+ (((assign-wire-numbers-to-edges :done)) ((self-input-pins :go)))
+ (((self-input-pins :done)) ((self-output-pins :go)))
+ (((self-output-pins :done)) ((input-pins :go)))
+ (((input-pins :done)) ((output-pins :go)))
 
-(((ELLIPSE-BB :ERROR) (RECTANGLE-BB :ERROR) (TEXT-BB :ERROR) (SPEECHBUBBLE-BB :ERROR) (ASSIGN-PARENTS-TO-ELLIPSES :ERROR) (FIND-COMMENTS :ERROR) (FIND-METADATA :ERROR) (ADD-KINDS :ERROR) (ADD-SELF-PORTS :ERROR) (MAKE-UNKNOWN-PORT-NAMES :ERROR) (CREATE-CENTERS :ERROR) (CALCULATE-DISTANCES :ERROR) (ASSIGN-PORTNAMES :ERROR) (MARK-INDEXED-PORTS :ERROR) (CONCIDENT-PORTS :ERROR) (MARK-DIRECTIONS :ERROR) (MATCH-PORTS-TO-COMPONENTS :ERROR) (PINLESS :ERROR) (SEM-PARTS-HAVE-SOME-PORTS :ERROR) (SEM-PORTS-HAVE-SINK-OR-SOURCE :ERROR) (SEM-NO-DUPLICATE-KINDS :ERROR) (SEM-SPEECH-VS-COMMENTS :ERROR) (ASSIGN-WIRE-NUMBERS-TO-EDGES :ERROR) (SELF-INPUT-PINS :ERROR) (SELF-OUTPUT-PINS :ERROR) (INPUT-PINS :ERROR) (OUTPUT-PINS :ERROR)) ((:SELF :ERROR)))
+ (((output-pins :done)) ((:self :done)))
 
-)
+
+ (((ellipse-bb :error) (rectangle-bb :error) (text-bb :error) (speechbubble-bb :error) (assign-parents-to-ellipses :error) (find-comments :error) (find-metadata :error) (add-kinds :error) (add-self-ports :error) (make-unknown-port-names :error) (create-centers :error) (calculate-distances :error) (assign-portnames :error) (mark-indexed-ports :error) (concident-ports :error) (mark-directions :error) (match-ports-to-components :error) (pinless :error) (sem-parts-have-some-ports :error) (sem-ports-have-sink-or-source :error) (sem-no-duplicate-kinds :error) (sem-speech-vs-comments :error) (assign-wire-numbers-to-edges :error) (self-input-pins :error) (self-output-pins :error) (input-pins :error) (output-pins :error)) ((:self :error)))
+
+ )
