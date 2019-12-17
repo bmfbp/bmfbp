@@ -55,6 +55,8 @@ type Msg
   | AddArrow
   | AddText
   | UpdateItemName CanvasItemInstance String
+  | UpdateSourcePinName CanvasItemInstance String
+  | UpdateSinkPinName CanvasItemInstance String
   | UpdateItemGitUrl CanvasItemInstance String
   | UpdateItemGitRef CanvasItemInstance String
   | UpdateItemManifestPath CanvasItemInstance String
@@ -66,7 +68,7 @@ type Msg
   | SelectItem CanvasItemInstance
   | ResizeItem CanvasItemInstance Coordinates AnchorPosition
   | HoveredItem CanvasItemInstance
-  | DoubleClick CanvasItemInstance
+  | DoubleClick (Maybe CanvasItemInstance)
   | MovePath CanvasItemInstance Int Coordinates
   | UnhoveredItem
   | ClearSelection
@@ -105,7 +107,9 @@ type Intent
   | ToResizeCanvasItemInstance CanvasItemInstance Coordinates AnchorPosition
   | ToCreateCanvasItemInstance CanvasItemInstance
   | ToMovePath CanvasItemInstance Int Coordinates
-  | ToCreatePolyline (List Coordinates)
+  -- The first parameter is the next point to be drawn and the second parameter
+  -- is the rest of the points from which to draw the polyline.
+  | ToCreatePolyline Coordinates (List Coordinates)
   -- Parameters are the starting pan coordinates and starting cursor
   -- coordinates.
   | ToPanViewBox Coordinates Coordinates
@@ -127,10 +131,13 @@ type alias CanvasItemInstance =
   { id : CanvasItemId
   -- TODO: Rename CanvasItem to Shape
   , item : CanvasItem
-  , name : String
-  , gitUrl : String
-  , gitRef : String
-  , manifestPath : String
+  -- TODO: Refactor the following into Element since it's disjoint.
+  , name : String -- Part and Pin
+  , gitUrl : String -- Part only
+  , gitRef : String -- Part only
+  , manifestPath : String -- Part only
+  , sourcePinName : String -- Wire only
+  , sinkPinName : String -- Wire only
   }
 
 -- These are the elements that can be displayed on the canvas.
@@ -216,13 +223,9 @@ update message model =
       (createNewCanvasItemInstance model (Rect { x = 100, y = 100 } { x = 200, y = 200 }), Cmd.none)
     AddArrow ->
       case model.intent of
-        ToCreatePolyline points ->
-          let
-            model2 = createNewCanvasItemInstance model <| Polyline points
-          in
-            ({ model2 | intent = ToExplore }, Cmd.none)
+        ToCreatePolyline _ points -> updateModelOnly <| addArrow model points
         _ ->
-          ({ model | intent = ToCreatePolyline [] }, Cmd.none)
+          ({ model | intent = ToCreatePolyline model.cursorCoords [] }, Cmd.none)
     AddEllipse ->
       (createNewCanvasItemInstance model (Ellipse { x = 100, y = 100 } { x = 150, y = 140 }), Cmd.none)
     AddText ->
@@ -247,6 +250,16 @@ update message model =
         updateManifestPath i = { i | manifestPath = newManifestPath }
       in
         (updateCanvasItemInstance model item updateManifestPath, Cmd.none)
+    UpdateSourcePinName item newName ->
+      let
+        updateSourcePinName i = { i | sourcePinName = newName }
+      in
+        (updateCanvasItemInstance model item updateSourcePinName, Cmd.none)
+    UpdateSinkPinName item newName ->
+      let
+        updateSinkPinName i = { i | sinkPinName = newName }
+      in
+        (updateCanvasItemInstance model item updateSinkPinName, Cmd.none)
     UserIsTyping item -> updateModelOnly { model | intent = ToType item }
     UserIsNotTyping item -> updateModelOnly { model | intent = ToExplore }
     MouseMove coords ->
@@ -282,6 +295,10 @@ update message model =
                   { x = startingPanCoords.x - (coords.x - startingCoords.x)
                   , y = startingPanCoords.y - (coords.y - startingCoords.y)
                   }
+              }
+            (_, ToCreatePolyline _ points) ->
+              { updatedModel
+              | intent = ToCreatePolyline (getCursorDropPointCoords updatedModel.instantiatedItems coords) points
               }
             _ -> updatedModel
       in
@@ -327,12 +344,12 @@ update message model =
     HoveredItem item -> updateModelOnly { model | hoveredItem = Just item }
     UnhoveredItem -> updateModelOnly { model | hoveredItem = Nothing }
     DoubleClick item ->
-      case item.item of
-        Text _ _ _ ->
-          updateModelOnly
-            { model
-            | intent = ToType item
-            }
+      case (model.intent, item) of
+        (ToCreatePolyline _ points, _) -> updateModelOnly <| addArrow model points
+        (_, Just i) ->
+          case i.item of
+            (Text _ _ _) -> updateModelOnly { model | intent = ToType i }
+            _ -> (model, Cmd.none)
         _ -> (model, Cmd.none)
     MovePath path index point ->  updateModelOnly { model | intent = ToMovePath path index point }
     ClearSelection ->
@@ -348,8 +365,9 @@ update message model =
       case (model.cursorMode, model.intent, model.selectedItems) of
         (_, ToMovePath _ _ _, _) ->
           (model, Cmd.none)
-        (_, ToCreatePolyline points, _) ->
-          ( { model | intent = ToCreatePolyline (points ++ [calculateActualCoords model coords]) }, Cmd.none )
+        (_, ToCreatePolyline dropPoint points, _) ->
+          -- TODO: Next point should create angular lines
+          ( { model | intent = ToCreatePolyline dropPoint (points ++ [calculateActualCoords model dropPoint]) }, Cmd.none )
         -- The user wants to pan if there is no selected items.
         (_, _, []) ->
           updateModelOnly
@@ -395,6 +413,13 @@ update message model =
               in 
                 updateModelOnly model
         _ -> updateModelOnly model
+
+addArrow : Model -> List Coordinates -> Model
+addArrow model points =
+  let
+    model2 = createNewCanvasItemInstance model <| Polyline points
+  in
+    { model2 | intent = ToExplore }
 
 type LispExpr
   = LispComponent String
@@ -889,6 +914,8 @@ createNewCanvasItemInstance model canvasItem =
         , gitUrl = ""
         , gitRef = ""
         , manifestPath = ""
+        , sourcePinName = ""
+        , sinkPinName = ""
         }
   in
     { newModel | instantiatedItems = newItem :: model.instantiatedItems }
@@ -1130,6 +1157,47 @@ replaceCanvasItemInstanceById allItems id newItem =
   in
     List.map replaceItem allItems
 
+getCursorDropPointCoords : List CanvasItemInstance -> Coordinates -> Coordinates
+getCursorDropPointCoords canvasItems cursorCoords =
+  let
+    tolerance = 20
+    moveTopLeft point by = { point | x = point.x - by, y = point.y - by }
+    moveBottomRight point by = { point | x = point.x + by, y = point.y + by }
+    findFirstClosestItem item found =
+      case found of
+        Just _ -> found
+        Nothing ->
+          case item.item of
+            Polyline points -> Nothing
+            Text _ _ _ -> Nothing
+            Rect topLeft bottomRight ->
+              if withinView cursorCoords (moveTopLeft topLeft tolerance) (moveBottomRight bottomRight tolerance)
+              then Just <| getClosestPoint topLeft bottomRight cursorCoords
+              else Nothing
+            Ellipse topLeft bottomRight ->
+              -- TODO: Find the point on the curve instead of the bounding box.
+              if withinView cursorCoords (moveTopLeft topLeft tolerance) (moveBottomRight bottomRight tolerance)
+              then Just <| getClosestPoint topLeft bottomRight cursorCoords
+              else Nothing
+  in
+    Maybe.withDefault cursorCoords <| List.foldl findFirstClosestItem Nothing canvasItems
+
+getClosestPoint : Coordinates -> Coordinates -> Coordinates -> Coordinates
+getClosestPoint topLeft bottomRight point =
+  let
+    x = inBetween topLeft.x bottomRight.x point.x
+    y = inBetween topLeft.y bottomRight.y point.y
+  in
+    { x = x, y = y }
+
+-- Given min, max, and a number, return the number if within min and max,
+-- otherwise min or max.
+inBetween : Int -> Int -> Int -> Int
+inBetween min max num =
+  case List.minimum [max, num] of
+    Just n -> Maybe.withDefault num <| List.maximum [n, min]
+    Nothing -> min
+
 
 -- *** UI ***
 
@@ -1160,8 +1228,8 @@ view model =
                            ]
                            ( El.el
                                -- TODO: Make the size adjust to schematic's content
-                               [ El.width (El.px 1000)
-                               , El.height (El.px 1000)
+                               [ El.width (El.px 5000)
+                               , El.height (El.px 2000)
                                , Font.family [ Font.monospace ]
                                ]
                                (El.html (canvas model))
@@ -1340,7 +1408,10 @@ itemPropertyPanel item =
             Ellipse _ _ ->
               [ textField UpdateItemName item.name "Pin's name here" "Pin name"
               ]
--- TODO: Continue here: Add arrows with two text fields for the two ends
+            Polyline _ ->
+              [ textField UpdateSourcePinName item.sourcePinName "source" "Source pin name"
+              , textField UpdateSinkPinName item.sinkPinName "sink" "Sink pin name"
+              ]
             _ -> []
         )
     ]
@@ -1349,10 +1420,10 @@ canvas : Model -> Html.Html Msg
 canvas model =
   let
     canvasItems = List.map (displayCanvasItemInstance model) model.instantiatedItems
-    polylineUnderConstruction =
+    (polylineUnderConstruction, pointUnderCursorCoords) =
       case model.intent of
-        ToCreatePolyline points -> pointsToString points
-        _ -> ""
+        ToCreatePolyline cursorCoords points -> (pointsToString points, Just cursorCoords)
+        _ -> ("", Nothing)
     specialItems =
       -- Arrowhead. Taken from https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker
       [ Svg.marker
@@ -1377,6 +1448,7 @@ canvas model =
           ]
           [ Svg.path [ SA.d "M 0 0 L 10 5 L 0 10 z" ] []
           ]
+      -- The polyline while it is being constructed.
       , Svg.polyline
           [ SA.fill "white"
           , SA.fillOpacity "0.0"
@@ -1386,8 +1458,26 @@ canvas model =
           , SA.markerEnd "url(#arrowhead)"
           ]
           []
+      -- The dot under cursor while the the polyline is being drawn.
+      , Svg.ellipse
+          [ SA.fill "white"
+          , SA.fillOpacity "1.0"
+          , SA.stroke "grey"
+          , SA.strokeWidth "1.5"
+          , SA.display <|
+              case pointUnderCursorCoords of
+                Just _ -> "inherit"
+                Nothing -> "none"
+          , SA.cx (String.fromInt <| Maybe.withDefault 0 <| Maybe.map .x pointUnderCursorCoords)
+          , SA.cy (String.fromInt <| Maybe.withDefault 0 <| Maybe.map .y pointUnderCursorCoords)
+          , SA.rx (String.fromInt 3)
+          , SA.ry (String.fromInt 3)
+          ]
+          []
+      ]
+    backgroundItems =
       -- Generated from http://www.heropatterns.com/
-      , Svg.pattern
+      [ Svg.pattern
           [ SA.id "background-graph-paper"
           , SA.patternUnits "userSpaceOnUse"
           , SA.x "0"
@@ -1424,10 +1514,13 @@ canvas model =
       [ SA.width "100%"
       , SA.height "100%"
       , SE.onMouseDown ClearSelection
+      , SE.on "dblclick" (JD.succeed <| DoubleClick Nothing)
       -- TODO: Fix
       -- , SA.viewBox viewBoxDims
       ]
-      (specialItems ++ canvasItems)
+      -- Note that we want `specialItems` to be after because of SVG rendering
+      -- order.
+      (backgroundItems ++ canvasItems ++ specialItems)
 
 movementCircleAttributes : Bool -> List (Svg.Attribute Msg)
 movementCircleAttributes toDisplay =
@@ -1558,6 +1651,26 @@ displayCanvasItemInstance model item =
         let
           pointsString = pointsToString points
           movementCircles = makeMovementCirlces itemToDisplay isItemHovered points
+          nameTexts = List.filterMap (Maybe.map makePinNameText) pinNamesWithPoints
+          pinNamesWithPoints =
+            [ Maybe.map (\x -> (x, item.sourcePinName)) starting
+            , Maybe.map (\x -> (x, item.sinkPinName)) ending
+            ]
+          (starting, ending) =
+            case points of
+              [] -> (Nothing, Nothing)
+              (x :: xs) -> (Just x, (List.drop (List.length xs - 1) xs |> List.head))
+          makePinNameText (coords, pinName) =
+            ( Svg.text_
+                [ SA.fill "black"
+                , SA.fontSize "8pt"
+                , SA.stroke (if isSelected then "blue" else "black")
+                -- Give the pin names some space from the points.
+                , SA.x <| String.fromInt <| coords.x + 10
+                , SA.y <| String.fromInt <| coords.y + 10
+                ]
+                [ Svg.text pinName ]
+            )
         in
           Svg.g
             [ SE.onMouseDown (SelectItem item)
@@ -1567,8 +1680,7 @@ displayCanvasItemInstance model item =
             (
               [
                 -- This is the wire visible to the user.
-                (
-                  Svg.polyline
+                ( Svg.polyline
                     [ SA.fill "white"
                     , SA.fillOpacity "0.0"
                     , SA.stroke (if isSelected then "blue" else "black")
@@ -1580,8 +1692,7 @@ displayCanvasItemInstance model item =
                 ),
                 -- This is the wire hidden to the user but of a wider stroke so
                 -- that the user can click on the wire more easily.
-                (
-                  Svg.polyline
+                ( Svg.polyline
                     [ SA.fill "white"
                     , SA.stroke "black"
                     , SA.points pointsString
@@ -1591,7 +1702,7 @@ displayCanvasItemInstance model item =
                     ]
                     []
                 )
-              ] ++ movementCircles
+              ] ++ movementCircles ++ nameTexts
             )
       Ellipse upperLeft lowerRight ->
         let
@@ -1638,7 +1749,7 @@ displayCanvasItemInstance model item =
         in
           Svg.g
             [ SE.onMouseDown (SelectItem item)
-            , SE.on "dblclick" (JD.succeed <| DoubleClick item)
+            , SE.on "dblclick" (JD.succeed <| DoubleClick (Just item))
             , SA.transform ("translate(" ++ String.fromInt upperLeft.x ++ "," ++ String.fromInt upperLeft.y ++ ")")
             ]
             -- This is the selection box.
