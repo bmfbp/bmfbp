@@ -19,3 +19,12 @@
                                   (:bounding-box_bottom (:? id) (:? bb-bottom)))))
     (let ((fb (cons all-speechbubble-rules (cl-event-passing-user::@get-instance-var self :fb))))
       (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil))))
+
+(defun bb-contains (left top right bottom L2 T2 R2 B2)
+  ;; see that L2 T2 R2 B2 fit inside of left/top/right/bottom
+  ;; Draw.io forced us to check only that L2 and T2 fit inside the bounding box - TODO: fix this to use the full bounding box 2
+  (and
+   (<= left L2 R2)
+   (<= top T2 B2)
+   (>= right R2 L2)
+   (>= bottom B2 T2)))
