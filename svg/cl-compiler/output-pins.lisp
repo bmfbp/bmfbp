@@ -16,6 +16,7 @@
            (cl-event-passing-user::@set-instance-var self :fb data)
          (if (eq pin :go)
              (progn
+               (format *standard-output* "~&firing output-pins~%")
                (cl-event-passing-user::@send self :request-fb t)
                (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
            (cl-event-passing-user::@send

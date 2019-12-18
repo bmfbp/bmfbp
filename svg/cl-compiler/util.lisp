@@ -7,7 +7,7 @@
                           (:bounding-box_top (:? id) (:? bb-top))
                           (:bounding-box_right (:? id) (:? bb-right))
                           (:bounding-box_bottom (:? id) (:? bb-bottom)))))
-    (let ((fb (cons all-text-rules fb (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((fb (cons all-text-rules (cl-event-passing-user::@get-instance-var self :fb))))
       (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil))))
 
 (defmethod find-all-speechbubbles ((self e/part:part))
@@ -17,5 +17,5 @@
                                   (:bounding-box_top (:? id) (:? bb-top))
                                   (:bounding-box_right (:? id) (:? bb-right))
                                   (:bounding-box_bottom (:? id) (:? bb-bottom)))))
-    (let ((fb (cons all-text-rules fb (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((fb (cons all-speechbubble-rules (cl-event-passing-user::@get-instance-var self :fb))))
       (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil))))

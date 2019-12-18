@@ -35,3 +35,11 @@
           :error
           (format nil "FIND-METADATA in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+#|
+(defmethod find-metadata ((self e/part:part))
+  (let ((rule
+         '((find-metatdata-rect (:? metadata-id) (:? mstr) (:? rect-id))
+           (:metadata (:? metadata-id) (:? mstr)))))
+    (let ((fb (cons rule (cl-event-passing-user::get-instance-var self :fb))))
+      (prove 
+|#          

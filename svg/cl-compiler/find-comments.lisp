@@ -27,7 +27,7 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             ;; put code here
+             ;(find-comments self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
