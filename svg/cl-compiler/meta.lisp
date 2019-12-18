@@ -1,5 +1,7 @@
 (in-package :cl-user)
 
+(setf *print-right-margin* 128)
+
 (defparameter *parts* 
 '(
 ellipse-bb

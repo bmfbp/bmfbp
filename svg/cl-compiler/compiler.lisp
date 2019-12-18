@@ -30,7 +30,7 @@
              (((converter :done)) ((sequencer :finished-reading)))
 
              (((sequencer :run-pipeline)) ((:self :go)))
-             (((sequencer :write))  ((fb :iterate) (writer :start)))
+             ;(((sequencer :write))  ((fb :iterate) (writer :start)))
 
              (((fb :fb)) ((:self :fb)))
              (((fb :next)) ((writer :next)))
@@ -42,141 +42,63 @@
              (((converter :error) (writer :error) (fb :error) (reader :error) (sequencer :error) )
               ((:self :error)))))
         
-           (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/ellipse-bounding-boxes::react #'arrowgrams/compiler/ellipse-bounding-boxes::first-time)
+           (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error)
+		  #'arrowgrams/compiler/ellipse-bounding-boxes::react #'arrowgrams/compiler/ellipse-bounding-boxes::first-time)
 
-           (:code rectangle-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/rectangle-bounding-boxes::react #'arrowgrams/compiler/rectangle-bounding-boxes::first-time)
-           (:code text-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/text-bounding-boxes::react #'arrowgrams/compiler/text-bounding-boxes::first-time)
-           (:code speechbubble-bb (:fb :go) (:add-fact :request-fb :done :error) #'arrowgrams/compiler/speechbubble-bounding-boxes::react #'arrowgrams/compiler/speechbubble-bounding-boxes::first-time)
+           (:code rectangle-bb (:fb :go) (:add-fact :request-fb :done :error)
+		  #'arrowgrams/compiler/rectangle-bounding-boxes::react #'arrowgrams/compiler/rectangle-bounding-boxes::first-time)
+           (:code text-bb (:fb :go) (:add-fact :request-fb :done :error)
+		  #'arrowgrams/compiler/text-bounding-boxes::react #'arrowgrams/compiler/text-bounding-boxes::first-time)
+           (:code speechbubble-bb (:fb :go) (:add-fact :request-fb :done :error)
+		  #'arrowgrams/compiler/speechbubble-bounding-boxes::react #'arrowgrams/compiler/speechbubble-bounding-boxes::first-time)
 
-           (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/assign-parents-to-ellipses::react #'arrowgrams/compiler/assign-parents-to-ellipses::first-time)
+           (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error)
+		  #'arrowgrams/compiler/assign-parents-to-ellipses::react #'arrowgrams/compiler/assign-parents-to-ellipses::first-time)
 
- (:CODE
-  FIND-COMMENTS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/FIND-COMMENTS::REACT
-  #'ARROWGRAMS/COMPILER/FIND-COMMENTS::FIRST-TIME)
- (:CODE
-  FIND-METADATA
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/FIND-METADATA::REACT
-  #'ARROWGRAMS/COMPILER/FIND-METADATA::FIRST-TIME)
- (:CODE
-  ADD-KINDS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/ADD-KINDS::REACT
-  #'ARROWGRAMS/COMPILER/ADD-KINDS::FIRST-TIME)
- (:CODE
-  ADD-SELF-PORTS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/ADD-SELF-PORTS::REACT
-  #'ARROWGRAMS/COMPILER/ADD-SELF-PORTS::FIRST-TIME)
- (:CODE
-  MAKE-UNKNOWN-PORT-NAMES
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/MAKE-UNKNOWN-PORT-NAMES::REACT
-  #'ARROWGRAMS/COMPILER/MAKE-UNKNOWN-PORT-NAMES::FIRST-TIME)
- (:CODE
-  CREATE-CENTERS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/CREATE-CENTERS::REACT
-  #'ARROWGRAMS/COMPILER/CREATE-CENTERS::FIRST-TIME)
- (:CODE
-  CALCULATE-DISTANCES
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/CALCULATE-DISTANCES::REACT
-  #'ARROWGRAMS/COMPILER/CALCULATE-DISTANCES::FIRST-TIME)
- (:CODE
-  ASSIGN-PORTNAMES
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/ASSIGN-PORTNAMES::REACT
-  #'ARROWGRAMS/COMPILER/ASSIGN-PORTNAMES::FIRST-TIME)
- (:CODE
-  MARK-INDEXED-PORTS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/MARK-INDEXED-PORTS::REACT
-  #'ARROWGRAMS/COMPILER/MARK-INDEXED-PORTS::FIRST-TIME)
- (:CODE
-  CONCIDENT-PORTS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/CONCIDENT-PORTS::REACT
-  #'ARROWGRAMS/COMPILER/CONCIDENT-PORTS::FIRST-TIME)
- (:CODE
-  MARK-DIRECTIONS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/MARK-DIRECTIONS::REACT
-  #'ARROWGRAMS/COMPILER/MARK-DIRECTIONS::FIRST-TIME)
- (:CODE
-  MATCH-PORTS-TO-COMPONENTS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/MATCH-PORTS-TO-COMPONENTS::REACT
-  #'ARROWGRAMS/COMPILER/MATCH-PORTS-TO-COMPONENTS::FIRST-TIME)
- (:CODE PINLESS (:FB :GO) (:ADD-FACT :DONE :REQUEST-FB :ERROR) #'ARROWGRAMS/COMPILER/PINLESS::REACT #'ARROWGRAMS/COMPILER/PINLESS::FIRST-TIME)
- (:CODE
-  SEM-PARTS-HAVE-SOME-PORTS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/SEM-PARTS-HAVE-SOME-PORTS::REACT
-  #'ARROWGRAMS/COMPILER/SEM-PARTS-HAVE-SOME-PORTS::FIRST-TIME)
- (:CODE
-  SEM-PORTS-HAVE-SINK-OR-SOURCE
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/SEM-PORTS-HAVE-SINK-OR-SOURCE::REACT
-  #'ARROWGRAMS/COMPILER/SEM-PORTS-HAVE-SINK-OR-SOURCE::FIRST-TIME)
- (:CODE
-  SEM-NO-DUPLICATE-KINDS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/SEM-NO-DUPLICATE-KINDS::REACT
-  #'ARROWGRAMS/COMPILER/SEM-NO-DUPLICATE-KINDS::FIRST-TIME)
- (:CODE
-  SEM-SPEECH-VS-COMMENTS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/SEM-SPEECH-VS-COMMENTS::REACT
-  #'ARROWGRAMS/COMPILER/SEM-SPEECH-VS-COMMENTS::FIRST-TIME)
- (:CODE
-  ASSIGN-WIRE-NUMBERS-TO-EDGES
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/ASSIGN-WIRE-NUMBERS-TO-EDGES::REACT
-  #'ARROWGRAMS/COMPILER/ASSIGN-WIRE-NUMBERS-TO-EDGES::FIRST-TIME)
- (:CODE
-  SELF-INPUT-PINS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/SELF-INPUT-PINS::REACT
-  #'ARROWGRAMS/COMPILER/SELF-INPUT-PINS::FIRST-TIME)
- (:CODE
-  SELF-OUTPUT-PINS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/SELF-OUTPUT-PINS::REACT
-  #'ARROWGRAMS/COMPILER/SELF-OUTPUT-PINS::FIRST-TIME)
- (:CODE
-  INPUT-PINS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/INPUT-PINS::REACT
-  #'ARROWGRAMS/COMPILER/INPUT-PINS::FIRST-TIME)
- (:CODE
-  OUTPUT-PINS
-  (:FB :GO)
-  (:ADD-FACT :DONE :REQUEST-FB :ERROR)
-  #'ARROWGRAMS/COMPILER/OUTPUT-PINS::REACT
-  #'ARROWGRAMS/COMPILER/OUTPUT-PINS::FIRST-TIME)
+	   ((:code find-comments (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/find-comments::react #'arrowgrams/compiler/find-comments::first-time)
+	    (:code find-metadata (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/find-metadata::react #'arrowgrams/compiler/find-metadata::first-time)
+	    (:code add-kinds (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/add-kinds::react #'arrowgrams/compiler/add-kinds::first-time)
+	    (:code add-self-ports (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/add-self-ports::react #'arrowgrams/compiler/add-self-ports::first-time)
+	    (:code make-unknown-port-names (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/make-unknown-port-names::react #'arrowgrams/compiler/make-unknown-port-names::first-time)
+	    (:code create-centers (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/create-centers::react #'arrowgrams/compiler/create-centers::first-time)
+	    (:code calculate-distances (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/calculate-distances::react #'arrowgrams/compiler/calculate-distances::first-time)
+	    (:code assign-portnames (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/assign-portnames::react #'arrowgrams/compiler/assign-portnames::first-time)
+	    (:code mark-indexed-ports (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/mark-indexed-ports::react #'arrowgrams/compiler/mark-indexed-ports::first-time)
+	    (:code concident-ports (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/concident-ports::react #'arrowgrams/compiler/concident-ports::first-time)
+	    (:code mark-directions (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/mark-directions::react #'arrowgrams/compiler/mark-directions::first-time)
+	    (:code match-ports-to-components (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/match-ports-to-components::react #'arrowgrams/compiler/match-ports-to-components::first-time)
+	    (:code pinless (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/pinless::react #'arrowgrams/compiler/pinless::first-time)
+	    (:code sem-parts-have-some-ports (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/sem-parts-have-some-ports::react #'arrowgrams/compiler/sem-parts-have-some-ports::first-time)
+	    (:code sem-ports-have-sink-or-source (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/sem-ports-have-sink-or-source::react #'arrowgrams/compiler/sem-ports-have-sink-or-source::first-time)
+	    (:code sem-no-duplicate-kinds (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/sem-no-duplicate-kinds::react #'arrowgrams/compiler/sem-no-duplicate-kinds::first-time)
+	    (:code sem-speech-vs-comments (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/sem-speech-vs-comments::react #'arrowgrams/compiler/sem-speech-vs-comments::first-time)
+	    (:code assign-wire-numbers-to-edges (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/assign-wire-numbers-to-edges::react #'arrowgrams/compiler/assign-wire-numbers-to-edges::first-time)
+	    (:code self-input-pins (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/self-input-pins::react #'arrowgrams/compiler/self-input-pins::first-time)
+	    (:code self-output-pins (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/self-output-pins::react #'arrowgrams/compiler/self-output-pins::first-time)
+	    (:code input-pins (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/input-pins::react #'arrowgrams/compiler/input-pins::first-time)
+	    (:code output-pins (:fb :go) (:add-fact :done :request-fb :error)
+		   #'arrowgrams/compiler/output-pins::react #'arrowgrams/compiler/output-pins::first-time))
 
 
            (:schem passes (:fb :go) (:request-fb :add-fact :done :error)

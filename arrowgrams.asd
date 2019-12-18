@@ -41,6 +41,7 @@
   :components ((:module "cl-compiler"
                         :pathname "./svg/cl-compiler/"
                         :components ((:file "package")
+                                     (:file "classes" :depends-on ("package"))
                                      (:file "fb" :depends-on ("package"))
                                      (:file "sequencer" :depends-on ("package"))
                                      (:file "reader" :depends-on ("package"))
@@ -51,32 +52,34 @@
                                      (:file "speechbubble-bounding-boxes" :depends-on ("package"))
                                      (:file "text-bounding-boxes" :depends-on ("package"))
                                      (:file "assign-parents-to-ellipses" :depends-on ("package"))
+                                     (:file "util" :depends-on ("package"))
 
-                                     (:file "find-comments" :depends-on ("package"))
-                                     (:file "find-metadata" :depends-on ("package"))
-                                     (:file "add-kinds" :depends-on ("package"))
-                                     (:file "add-self-ports" :depends-on ("package"))
-                                     (:file "make-unknown-port-names" :depends-on ("package"))
-                                     (:file "create-centers" :depends-on ("package"))
-                                     (:file "calculate-distances" :depends-on ("package"))
-                                     (:file "assign-portnames" :depends-on ("package"))
-                                     (:file "mark-indexed-ports" :depends-on ("package"))
-                                     (:file "concident-ports" :depends-on ("package"))
-                                     (:file "mark-directions" :depends-on ("package"))
-                                     (:file "match-ports-to-components" :depends-on ("package"))
-                                     (:file "pinless" :depends-on ("package"))
-                                     (:file "sem-parts-have-some-ports" :depends-on ("package"))
-                                     (:file "sem-ports-have-sink-or-source" :depends-on ("package"))
-                                     (:file "sem-no-duplicate-kinds" :depends-on ("package"))
-                                     (:file "sem-speech-vs-comments" :depends-on ("package"))
-                                     (:file "assign-wire-numbers-to-edges" :depends-on ("package"))
-                                     (:file "self-input-pins" :depends-on ("package"))
-                                     (:file "self-output-pins" :depends-on ("package"))
-                                     (:file "input-pins" :depends-on ("package"))
-                                     (:file "output-pins" :depends-on ("package"))
+                                     (:file "find-comments" :depends-on ("package" "classes"))
+                                     (:file "find-metadata" :depends-on ("package" "classes"))
+                                     (:file "add-kinds" :depends-on ("package" "classes"))
+                                     (:file "add-self-ports" :depends-on ("package" "classes"))
+                                     (:file "make-unknown-port-names" :depends-on ("package" "classes"))
+                                     (:file "create-centers" :depends-on ("package" "classes"))
+                                     (:file "calculate-distances" :depends-on ("package" "classes"))
+                                     (:file "assign-portnames" :depends-on ("package" "classes"))
+                                     (:file "mark-indexed-ports" :depends-on ("package" "classes"))
+                                     (:file "concident-ports" :depends-on ("package" "classes"))
+                                     (:file "mark-directions" :depends-on ("package" "classes"))
+                                     (:file "match-ports-to-components" :depends-on ("package" "classes"))
+                                     (:file "pinless" :depends-on ("package" "classes"))
+                                     (:file "sem-parts-have-some-ports" :depends-on ("package" "classes"))
+                                     (:file "sem-ports-have-sink-or-source" :depends-on ("package" "classes"))
+                                     (:file "sem-no-duplicate-kinds" :depends-on ("package" "classes"))
+                                     (:file "sem-speech-vs-comments" :depends-on ("package" "classes"))
+                                     (:file "assign-wire-numbers-to-edges" :depends-on ("package" "classes"))
+                                     (:file "self-input-pins" :depends-on ("package" "classes"))
+                                     (:file "self-output-pins" :depends-on ("package" "classes"))
+                                     (:file "input-pins" :depends-on ("package" "classes"))
+                                     (:file "output-pins" :depends-on ("package" "classes"))
 
                                      (:file "compiler"
-                                      :depends-on ("reader" "fb" "writer" "convert-to-keywords" "sequencer"
+                                      :depends-on ("package" "classes"
+                                                   "reader" "fb" "writer" "convert-to-keywords" "sequencer"
                                                    "ellipse-bounding-boxes" "rectangle-bounding-boxes"
                                                    "speechbubble-bounding-boxes" "text-bounding-boxes"
                                                    "assign-parents-to-ellipses"

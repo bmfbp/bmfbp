@@ -35,3 +35,31 @@
           :error
           (format nil "FIND-COMMENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+
+(defmethod find-comments ((self e/part:part))
+  (let ((text-bbs (arrowgrams/compiler/util::find-all-text self)))
+    (let ((speechbubble-bbs (arrowgrams/compiler/util::find-all-speechbubbles self)))
+      (dolist (sbb speechbubble-bbs)
+        (find-first-containment-and-create-new-facts self sbb text-bbs)))))
+
+(defmethod find-first-containment-and-create-new-facts ((self e/part:part) speechbubble-bb text-bbs)
+  (arrowgrams/compiler/classes::with-speechbubble-bb (left top right bottom) speechbubble-bb
+     (dolist (text-bb text-bbs)
+       (arrowgrams/compiler/classes::with-text-bb (text-id text-left text-top text-right text-bottom) text-bb
+          (when (bb-contains left top right bottom text-left tex-top text-right text-bottom)
+            (let ((textid (cdr (first text-bb))))
+              (cl-event-passing-user::@send self :add-fact (list :used textid))
+              (format *standard-output* "~&add fact ~S~%" (list :used textid))
+              (cl-event-passing-user::@send self :add-fact (list :comment textid))
+              (format *standard-output* "~&add fact ~S~%" (list :comment textid))
+              (return-from find-first-containment-and-create-new-facts nil))))
+       (assert nil)))) ;; can't happen
+
+(defun bb-contains (left top right bottom L2 T2 R2 B2)
+  ;; see that L2 T2 R2 B2 fit inside of left/top/right/bottom
+  ;; Draw.io forced us to check only that L2 and T2 fit inside the bounding box - TODO: fix this to use the full bounding box 2
+  (and
+   (<= left L2 R2)
+   (<= top T2 B2)
+   (>= right R2 L2)
+   (>= bottom B2 T2)))
