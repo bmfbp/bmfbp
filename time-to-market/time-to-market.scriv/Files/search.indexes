@@ -1,4 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SearchIndexes Version="1.0">
-    <Documents/>
+    <Documents>
+        <Document ID="DF3F4762-DFB9-40FD-B49E-7A5A4BFC9E75">
+            <Title>What Can Be Encapsulated</Title>
+        </Document>
+        <Document ID="25C3367A-FFB7-4EFB-9A05-F854E2D9082B">
+            <Title>Design and Communicate</Title>
+        </Document>
+        <Document ID="83A07568-F810-4BC1-A0D5-62BAA7229A78">
+            <Title>Eschew Dependencies</Title>
+        </Document>
+        <Document ID="8E8F2837-EF81-4316-9D2F-B3C2CDBAFC68">
+            <Title>Top Down</Title>
+        </Document>
+        <Document ID="CA2087FF-7D0C-4A85-8228-4001E9034125">
+            <Title>Incorporate Assets Developed by Contractors</Title>
+        </Document>
+        <Document ID="3BB3571F-FEFB-4456-8DCB-5F1B402B8CA9">
+            <Title>Incoming Inspection</Title>
+        </Document>
+        <Document ID="F157A412-99D5-4BAE-B610-36747C717D05">
+            <Title>Encapsulate</Title>
+        </Document>
+        <Document ID="58CF4704-462E-467C-997F-730F2E2ADDD2">
+            <Title>Divide and Conquer</Title>
+        </Document>
+        <Document ID="5D3E2A33-6D7A-4AB2-A15E-5CF04F5C3D25">
+            <Title>Bottom Up</Title>
+        </Document>
+        <Document ID="4E23C7F4-F943-48D6-B784-8C1DF96E689A">
+            <Title>Decomposing Software Projects</Title>
+        </Document>
+        <Document ID="6C850017-6D4D-4ADF-B2EB-322165CE1979">
+            <Title>Up Front Integration</Title>
+            <Synopsis>- not at end</Synopsis>
+        </Document>
+        <Document ID="91729996-BF52-4CDF-84F3-5211D0F3A733">
+            <Title>Snap Together</Title>
+        </Document>
+        <Document ID="433E02F4-FAE9-4A5B-A569-F0CEA3A54B0E">
+            <Title>Improving Time to Market for Software Projects</Title>
+        </Document>
+        <Document ID="5C5EE91D-7E2F-4637-A09E-0A2239CB2FE1">
+            <Title>Encapsulate Everything, Not Just Data</Title>
+            <Synopsis>- Structured Programming encapsulated some control flow - OO encapsulates data (only)
+- StateCharts encapsulate State</Synopsis>
+        </Document>
+    </Documents>
 </SearchIndexes>
