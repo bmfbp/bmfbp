@@ -75,7 +75,7 @@ type Msg
   | MouseDown Coordinates
   | MouseUp Coordinates
   | ViewPortHasResized (Result JD.Error (Int, Int))
-  | FileHasBeenRead (Result JD.Error String)
+  | FileHasBeenRead (Result JD.Error File)
 
 type SelectionMode = SingleSelect | MultipleSelect
 
@@ -95,6 +95,114 @@ type alias Model =
   , panCoords : Coordinates
   , viewPortSize : (Int, Int)
   }
+
+type alias File =
+  { moduleName : String
+  , canvasItems : List CanvasItemInstance
+  }
+
+encodeFile : File -> JE.Value
+encodeFile file =
+  JE.object
+    [ ( "moduleName", JE.string file.moduleName )
+    , ( "canvasItems", JE.list encodeCanvasItemInstance file.canvasItems )
+    ]
+
+encodeCanvasItemInstance : CanvasItemInstance -> JE.Value
+encodeCanvasItemInstance canvasItem =
+  JE.object
+    [ ( "id", JE.int canvasItem.id )
+    , ( "item", encodeCanvasItem canvasItem.item )
+    , ( "name", JE.string canvasItem.name )
+    , ( "gitUrl", JE.string canvasItem.gitUrl )
+    , ( "gitRef", JE.string canvasItem.gitRef )
+    , ( "manifestPath", JE.string canvasItem.manifestPath )
+    , ( "sourcePinName", JE.string canvasItem.sourcePinName )
+    , ( "sinkPinName", JE.string canvasItem.sinkPinName )
+    ]
+
+encodeCanvasItem : CanvasItem -> JE.Value
+encodeCanvasItem canvasItem =
+  case canvasItem of
+    Rect topLeft bottomRight ->
+      JE.object
+        [ ( "type", JE.string "rect" )
+        , ( "topLeft", encodeCoordinates topLeft )
+        , ( "bottomRight", encodeCoordinates bottomRight )
+        ]
+    Polyline points ->
+      JE.object
+        [ ( "type", JE.string "polyline" )
+        , ( "points", JE.list encodeCoordinates points )
+        ]
+    Ellipse topLeft bottomRight ->
+      JE.object
+        [ ( "type", JE.string "ellipse" )
+        , ( "topLeft", encodeCoordinates topLeft )
+        , ( "bottomRight", encodeCoordinates bottomRight )
+        ]
+    Text topLeft bottomRight text ->
+      JE.object
+        [ ( "type", JE.string "text" )
+        , ( "topLeft", encodeCoordinates topLeft )
+        , ( "bottomRight", encodeCoordinates bottomRight )
+        , ( "text", JE.string text )
+        ]
+
+encodeCoordinates : Coordinates -> JE.Value
+encodeCoordinates coords =
+  JE.object
+    [ ( "x", JE.int coords.x )
+    , ( "y", JE.int coords.y )
+    ]
+
+fileDecoder : JD.Decoder File
+fileDecoder =
+  JD.map2 File
+    (JD.field "moduleName" JD.string)
+    (JD.field "canvasItems" (JD.list canvasItemInstanceDecoder))
+
+canvasItemInstanceDecoder : JD.Decoder CanvasItemInstance
+canvasItemInstanceDecoder =
+  JD.map8 CanvasItemInstance
+    (JD.field "id" JD.int)
+    (JD.field "item" canvasItemDecoder)
+    (JD.field "name" JD.string)
+    (JD.field "gitUrl" JD.string)
+    (JD.field "gitRef" JD.string)
+    (JD.field "manifestPath" JD.string)
+    (JD.field "sourcePinName" JD.string)
+    (JD.field "sinkPinName" JD.string)
+
+canvasItemDecoder : JD.Decoder CanvasItem
+canvasItemDecoder =
+  JD.field "type" JD.string
+    |> JD.andThen canvasItemContent
+
+canvasItemContent : String -> JD.Decoder CanvasItem
+canvasItemContent contentType =
+  case contentType of
+    "rect" ->
+      JD.map2 Rect
+        (JD.field "topLeft" coordinatesDecoder)
+        (JD.field "bottomRight" coordinatesDecoder)
+    "polyline" ->
+      JD.field "points" <|
+        JD.map Polyline (JD.list coordinatesDecoder)
+    "ellipse" ->
+      JD.map2 Ellipse
+        (JD.field "topLeft" coordinatesDecoder)
+        (JD.field "bottomRight" coordinatesDecoder)
+    "text" ->
+      JD.map3 Text
+        (JD.field "topLeft" coordinatesDecoder)
+        (JD.field "bottomRight" coordinatesDecoder)
+        (JD.field "text" JD.string)
+    _ ->
+      JD.fail "Unrecognized canvas item content"
+
+coordinatesDecoder : JD.Decoder Coordinates
+coordinatesDecoder = JD.map2 Coordinates (JD.field "x" JD.int) (JD.field "y" JD.int)
 
 type alias Coordinates = { x : Int, y : Int }
 
@@ -214,10 +322,16 @@ update message model =
       let
         -- In the future, get the component name from somewhere.
         componentName = "default-component-name"
-        -- In the future, get the metadata from somewhere.
-        metadata = "dir,file,kindName,ref;"
+        encodedFile =
+          encodeFile
+            { moduleName = componentName
+            , canvasItems = model.instantiatedItems
+            }
       in
-        (model, List.map .item model.instantiatedItems |> itemsToPrologFacts componentName metadata |> saveFile)
+        (model, saveFile encodedFile)
+    -- TODO: Continue
+    --ExportSchematic ->
+    --    (model, List.map .item model.instantiatedItems |> itemsToPrologFacts componentName metadata |> saveFile)
     LoadSchematic -> (model, loadFile (JE.null))
     AddRect ->
       (createNewCanvasItemInstance model (Rect { x = 100, y = 100 } { x = 200, y = 200 }), Cmd.none)
@@ -345,7 +459,7 @@ update message model =
     UnhoveredItem -> updateModelOnly { model | hoveredItem = Nothing }
     DoubleClick item ->
       case (model.intent, item) of
-        (ToCreatePolyline _ points, _) -> updateModelOnly <| addArrow model points
+        (ToCreatePolyline _ points, _) -> updateModelOnly <| addArrow model (List.take (List.length points - 1) points)
         (_, Just i) ->
           case i.item of
             (Text _ _ _) -> updateModelOnly { model | intent = ToType i }
@@ -363,11 +477,11 @@ update message model =
             }
     MouseDown coords ->
       case (model.cursorMode, model.intent, model.selectedItems) of
-        (_, ToMovePath _ _ _, _) ->
-          (model, Cmd.none)
         (_, ToCreatePolyline dropPoint points, _) ->
           -- TODO: Next point should create angular lines
           ( { model | intent = ToCreatePolyline dropPoint (points ++ [calculateActualCoords model dropPoint]) }, Cmd.none )
+        (_, ToMovePath _ _ _, _) ->
+          (model, Cmd.none)
         -- The user wants to pan if there is no selected items.
         (_, _, []) ->
           updateModelOnly
@@ -375,7 +489,7 @@ update message model =
         _ ->
           updateModelOnly
             { model | cursorMode = DragCursor coords }
-    MouseUp ending ->
+    MouseUp coords ->
       case (model.cursorMode, model.intent) of
         (_, ToMovePath _ _ _) ->
           updateModelOnly { model | intent = ToExplore }
@@ -390,7 +504,7 @@ update message model =
             }
         (DragCursor starting, _) ->
           let
-            updatedModel = updateSelectedItemCoordinates model starting ending
+            updatedModel = updateSelectedItemCoordinates model starting coords
           in
             updateModelOnly { updatedModel | cursorMode = FreeFormCursor }
         _ -> updateModelOnly { model | cursorMode = FreeFormCursor }
@@ -401,18 +515,27 @@ update message model =
     FileHasBeenRead result ->
       case result of
         Ok content ->
-          case P.run lispParser content of
-            Ok lispExprs ->
-              removeCustomArrowHeads lispExprs
-                |> lispExprToCanvasItems
-                |> List.foldl createNewCanvasItemInstance2 { model | instantiatedItems = [] }
-                |> updateModelOnly
-            Err e ->
-              let
-                x = Debug.log "Error loading file: " e
-              in 
-                updateModelOnly model
-        _ -> updateModelOnly model
+          let
+            a = Debug.log "kktest-0000" content.moduleName
+          in
+            updateModelOnly { model | instantiatedItems = content.canvasItems }
+          -- TODO: Remove
+          --case P.run lispParser content of
+          --  Ok lispExprs ->
+          --    removeCustomArrowHeads lispExprs
+          --      |> lispExprToCanvasItems
+          --      |> List.foldl createNewCanvasItemInstance2 { model | instantiatedItems = [] }
+          --      |> updateModelOnly
+          --  Err e ->
+          --    let
+          --      x = Debug.log "Error loading file: " e
+          --    in 
+          --      updateModelOnly model
+        e ->
+          let
+            x = Debug.log "Error loading file: " e
+          in
+            updateModelOnly model
 
 addArrow : Model -> List Coordinates -> Model
 addArrow model points =
@@ -1004,7 +1127,7 @@ subscriptions model =
     , BE.onKeyDown (JD.map KeyPress keyDecoder)
     , BE.onKeyUp (JD.map KeyUp keyDecoder)
     , viewPortHasResized (JD.decodeValue viewPortDecoder >> ViewPortHasResized)
-    , fileHasBeenRead (JD.decodeValue JD.string >> FileHasBeenRead)
+    , fileHasBeenRead (JD.decodeValue fileDecoder >> FileHasBeenRead)
     ]
 
 viewPortDecoder : JD.Decoder (Int, Int)
@@ -1727,6 +1850,13 @@ displayCanvasItemInstance model item =
                   , SA.ry (String.fromInt radiusY)
                   ]
                   []
+              , Svg.text_
+                  [ SA.transform ("translate(" ++ String.fromInt radiusX ++ "," ++ String.fromInt radiusY ++ ")")
+                  , SA.textAnchor "middle"
+                  , SA.alignmentBaseline "middle"
+                  ]
+                  [ Svg.text item.name
+                  ]
               -- This is the bounding box hidden to the user so that the user
               -- can select the resize circles.
               , Svg.rect
