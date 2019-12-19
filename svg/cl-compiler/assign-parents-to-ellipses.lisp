@@ -34,6 +34,22 @@
           :error
           (format nil "ASSIGN PARENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+(defmethod asserta ((self e/part:part) arg1 l g r e n c result)
+  (format *standard-output* "~&asserta ~S~%" arg1)
+  (cl-event-passing-user::@send self :add-fact arg1)
+  (values l g r e n c result))
+
+(defmethod assign-parents ((self e/part:part))
+  (let ((rule '(
+                (:make-parent-for-ellipse (:? id) (:? main))
+                (:ellipse (:? id))
+                (:component (:? main))
+                (:lisp (asserta (:parent (:? main) (:? id))))
+                )))
+    (let ((fb (cons rule (cl-event-passing-user::@get-instance-var self :fb))))
+      (hprolog:prove nil '((:make-parent-for-ellipse (:? eid) (:? main-id))) fb hprolog:*empty* 1 nil fb nil self))))
+
+#|
 (defmethod assign-parents ((self e/part:part))
   (let ((assign-parents-rules '((:ellipse-id (:? id))
                               (:ellipse (:? id)))))
@@ -48,4 +64,4 @@
                           (cl-event-passing-user::@send self :add-fact (list :parent id pid))
                         (format *standard-output* "~&added parent for ellipse ~A ~S~%" id pid)))
                     ellipse-list)))))))
-
+|#

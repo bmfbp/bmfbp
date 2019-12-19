@@ -37,6 +37,12 @@
 
 #|
 (defmethod find-metadata ((self e/part:part))
+  (let ((rule '(
+                (:metadata (:? m-id) (:? text-id))
+                (:rect (:? box-id))
+                (:lisp (
+
+(defmethod find-metadata ((self e/part:part))
   (let ((rule
          '((find-metatdata-rect (:? metadata-id) (:? mstr) (:? rect-id))
            (:metadata (:? metadata-id) (:? mstr)))))
