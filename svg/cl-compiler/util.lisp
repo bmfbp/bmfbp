@@ -8,7 +8,7 @@
                           (:bounding-box_right (:? id) (:? bb-right))
                           (:bounding-box_bottom (:? id) (:? bb-bottom)))))
     (let ((fb (cons all-text-rules (cl-event-passing-user::@get-instance-var self :fb))))
-      (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil))))
+      (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil self))))
 
 (defmethod find-all-speechbubbles ((self e/part:part))
   (let ((all-speechbubble-rules '((:speechbubble-id (:? id) (:? bb-left) (:? bb-top) (:? bb-right) (:? bb-bottom))
@@ -18,7 +18,7 @@
                                   (:bounding-box_right (:? id) (:? bb-right))
                                   (:bounding-box_bottom (:? id) (:? bb-bottom)))))
     (let ((fb (cons all-speechbubble-rules (cl-event-passing-user::@get-instance-var self :fb))))
-      (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil))))
+      (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil self))))
 
 (defun bb-contains (left top right bottom L2 T2 R2 B2)
   ;; see that L2 T2 R2 B2 fit inside of left/top/right/bottom

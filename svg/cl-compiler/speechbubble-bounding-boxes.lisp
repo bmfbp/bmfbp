@@ -44,7 +44,7 @@
                               (:geometry_w (:? id) (:? w))
                               (:geometry_h (:? id) (:? h)))))
     (let ((fb (cons bounding-box-rules (cl-event-passing-user::@get-instance-var self :fb))))
-        (let ((r (hprolog:prove nil '((:speechbubble-geometry (:? id) (:? cx) (:? cy) (:? w) (:? h))) fb hprolog:*empty* 1 nil fb nil)))
+        (let ((r (hprolog:prove nil '((:speechbubble-geometry (:? id) (:? cx) (:? cy) (:? w) (:? h))) fb hprolog:*empty* 1 nil fb nil self)))
           (mapcar #'(lambda (lis)
                       (assert (= 5 (length lis)))
                       (let ((id (cdr (first lis)))

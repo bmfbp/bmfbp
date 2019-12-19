@@ -43,7 +43,7 @@
                               (:geometry_w (:? id) (:? hw))
                               (:geometry_h (:? id) (:? h)))))
     (let ((fb (cons bounding-box-rules (cl-event-passing-user::@get-instance-var self :fb))))
-      (let ((r (hprolog:prove nil '((:text-geometry (:? id) (:? str) (:? cx) (:? y) (:? hw) (:? h))) fb hprolog:*empty* 1 nil fb nil)))
+      (let ((r (hprolog:prove nil '((:text-geometry (:? id) (:? str) (:? cx) (:? y) (:? hw) (:? h))) fb hprolog:*empty* 1 nil fb nil self)))
         (mapcar #'(lambda (lis)
                     (assert (= 6 (length lis)))
                     (let ((id (cdr (first lis)))

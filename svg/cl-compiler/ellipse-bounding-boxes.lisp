@@ -315,7 +315,7 @@
                               (:geometry_w (:? id) (:? hw))
                               (:geometry_h (:? id) (:? hh)))))
     (let ((fb (cons bounding-box-rules (cl-event-passing-user::@get-instance-var self :fb))))
-      (let ((r (hprolog:prove nil '((:ellipse-geometry (:? eid) (:? cx) (:? cy) (:? hw) (:? hh))) fb hprolog:*empty* 1 nil fb nil)))
+      (let ((r (hprolog:prove nil '((:ellipse-geometry (:? eid) (:? cx) (:? cy) (:? hw) (:? hh))) fb hprolog:*empty* 1 nil fb nil self)))
 (format *standard-output* "~&r=~S~%" r)
         (mapcar #'(lambda (lis)
                     (assert (= 5 (length lis)))
