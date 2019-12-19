@@ -28,3 +28,9 @@
    (<= top T2 B2)
    (>= right R2 L2)
    (>= bottom B2 T2)))
+
+(defmethod asserta ((self e/part:part) arg1 l g r e n c result)
+  (format *standard-output* "~&asserta ~S~%" arg1)
+  (cl-event-passing-user::@send self :add-fact arg1)
+  (values l g r e n c result))
+
