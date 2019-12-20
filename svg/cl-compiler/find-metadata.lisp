@@ -34,10 +34,19 @@
           self
           :error
           (format nil "FIND-METADATA in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+
 #|
 (defmethod find-metadata ((self e/part:part))
   (let ((rule '(
                 (:metadata (:? m-id) (:? text-id))
                 (:rect (:? box-id))
+                (:bounding_box_left (:? box-id) (:? bL))
+                (:bounding_box_top (:? box-id) (:? bT))
+                (:bounding_box_right (:? box-id) (:? bR))
+                (:bounding_box_bottom (:? box-id) (:? bB))
+                (:bounding_box_left (:? text-id) (:? tL))
+                (:bounding_box_top (:? text-id) (:? tT))
+                (:bounding_box_right (:? text-id) (:? tR))
+                (:bounding_box_bottom (:? text-id) (:? tB))
                 (:lisp (
 |#
