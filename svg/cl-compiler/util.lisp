@@ -32,5 +32,5 @@
 (defmethod asserta ((self e/part:part) arg1 l g r e n c result)
   (format *standard-output* "~&asserta ~S~%" arg1)
   (cl-event-passing-user::@send self :add-fact arg1)
-  (values l g r e n c result))
+  (values T l g r e n c result))
 
