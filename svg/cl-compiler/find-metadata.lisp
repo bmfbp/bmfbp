@@ -36,21 +36,25 @@
           (format nil "FIND-METADATA in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod metadata-inside-bounding-box ((self e/part:part)
-                                          bL bT bR bB
-                                          tL tT tR tB
+                                          bID bL bT bR bB
+                                          tID tL tT tR tB
                                           l g r e n c result)
 
   (assert (and (numberp bL) (numberp bT) (numberp bR) (numberp bB) 
                (numberp tL) (numberp tT) (numberp tR) (numberp tB)))
 
-  (if (and (<= bL tL bR)
-           (<= bT tT tB))
-      (values T l g r e n c result)
-    (values nil l g r e n c result)))
+  ;; centerCompletelyInsideBoundingBox - text center inside bb of box
+  (let ((cx (+ tL (- tR tL)))
+        (cy (+ tT (- tB tT))))
+    (if (and (<= bL cx bR)
+             (<= bT cy bB))
+        (values T l g r e n c result)
+      (values nil l g r e n c result))))
 
 (defmethod find-metadata ((self e/part:part))
   (let ((rule '(
                 (:find-metadata (:? text-id))
+                (:metadata (:? meta-id) (:? text-id))
                 (:rect (:? box-id))
                 (:bounding_box_left (:? box-id) (:? bL))
                 (:bounding_box_top (:? box-id) (:? bT))
@@ -61,8 +65,8 @@
                 (:bounding_box_right (:? text-id) (:? tR))
                 (:bounding_box_bottom (:? text-id) (:? tB))
                 (:lisp (metadata-inside-bounding-box
-                        (:? bL) (:? bT) (:? bR) (:? bB)
-                        (:? tL) (:? tT) (:? tR) (:? tB)))
+                        (:? box-id) (:? bL) (:? bT) (:? bR) (:? bB)
+                        (:? text-id) (:? tL) (:? tT) (:? tR) (:? tB)))
                 (:component (:? main-id))
                 (:lisp (arrowgrams/compiler/util::asserta (:used (:? text-id))))
                 (:lisp (arrowgrams/compiler/util::asserta (:roundedrect (:? box-id))))
