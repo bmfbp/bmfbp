@@ -3,6 +3,7 @@
     <ProjectSettings>
         <Content Scope="Included">
             <Filter State="Off" Exclude="No" Type="Label">
+                <CollectionID>93123E62-6018-4D91-A50D-1CA5A454F650</CollectionID>
                 <Label>-1</Label>
                 <Status>-1</Status>
             </Filter>
@@ -13,7 +14,7 @@
             <ResampleImages DPI="72">No</ResampleImages>
             <ConvertTablesAndListToMMD>Yes</ConvertTablesAndListToMMD>
             <PDF>
-                <Cover Bleed="9.0" BleedUnits="pt"/>
+                <Cover Source="FrontMatter" Bleed="9.0" BleedUnits="pt"/>
                 <Compression Enabled="No">
                     <ImageResolutionCompressionType>Set</ImageResolutionCompressionType>
                     <ImageResolution>150</ImageResolution>
@@ -56,7 +57,7 @@
             </MMDMetaData>
         </MetaData>
     </ProjectSettings>
-    <CurrentFileType>Print</CurrentFileType>
+    <CurrentFileType>mmd</CurrentFileType>
     <FormatSettings>
         <Format ID="DEFAULT">
             <SectionLayouts>
@@ -64,6 +65,16 @@
                 <Type ID="E89AFE0B-7D3F-4A69-B82C-FACCDFDDF9B5">TEXT-SECTION</Type>
             </SectionLayouts>
         </Format>
+        <Format ID="pandoc-barebones">
+            <SectionLayouts>
+                <Type ID="09BC78F4-286D-4D70-B643-2395DDF06442">AS-IS</Type>
+                <Type ID="FABF8BC0-4603-4217-8977-8D12D2783987">AS-IS</Type>
+                <Type ID="E89AFE0B-7D3F-4A69-B82C-FACCDFDDF9B5">778FA2E2-F67D-4803-B183-019F8B45528B</Type>
+            </SectionLayouts>
+        </Format>
     </FormatSettings>
-    <LastUsedFormats/>
+    <LastUsedFormats>
+        <Print>DEFAULT</Print>
+        <mmd>pandoc-barebones</mmd>
+    </LastUsedFormats>
 </CompileSettings>
