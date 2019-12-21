@@ -93,7 +93,7 @@
                                                    "calculate-distances"
                                                    "assign-portnames"
                                                    "mark-indexed-ports"
-                                                   "concident-ports"
+                                                   "coincident-ports"
                                                    "mark-directions"
                                                    "match-ports-to-components"
                                                    "pinless"
