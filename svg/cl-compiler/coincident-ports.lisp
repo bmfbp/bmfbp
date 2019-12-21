@@ -1,7 +1,7 @@
 
-(in-package :arrowgrams/compiler/CONCIDENT-PORTS)
+(in-package :arrowgrams/compiler/COINCIDENT-PORTS)
 
-; (:code CONCIDENT-PORTS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/CONCIDENT-PORTS::react #'arrowgrams/compiler/CONCIDENT-PORTS::first-time)
+; (:code COINCIDENT-PORTS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/COINCIDENT-PORTS::react #'arrowgrams/compiler/COINCIDENT-PORTS::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
@@ -21,7 +21,7 @@
            (cl-event-passing-user::@send
             self
             :error
-            (format nil "CONCIDENT-PORTS in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
+            (format nil "COINCIDENT-PORTS in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
 
       (:waiting-for-new-fb
        (if (eq pin :fb)
@@ -34,5 +34,5 @@
          (cl-event-passing-user::@send
           self
           :error
-          (format nil "CONCIDENT-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+          (format nil "COINCIDENT-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
