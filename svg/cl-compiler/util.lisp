@@ -46,8 +46,7 @@
       (error "expected 2 or 3 items, but got ~S" fact))))
 
 (defmethod retract ((self e/part:part) arg1 l g r e n c result)
-  ;; TODO: rewrite complete-fb in the return values
-  (cl-event-passing-user::@send self :retract-fact arg1)
+  ;; TODO: rewrite complete-fb in the return values ; make the change immediate so it affects the current searches
   (let ((local-fb (cl-event-passing-user::@get-instance-var self :fb)))
     (cl-event-passing-user::@set-instance-var self :fb (remove-fact arg1 local-fb)))
   (cl-event-passing-user::@send self :retract-fact arg1)

@@ -178,7 +178,7 @@ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-
              (((compiler-testbed :error) (passes :error)) ((:self :error)))
              )))))
     
-    #+nil(e/util::enable-logging 1)
+    (e/util::enable-logging 1)
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (cl-event-passing-user::@with-dispatch
