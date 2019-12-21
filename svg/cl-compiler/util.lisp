@@ -47,7 +47,6 @@
 
 (defmethod retract ((self e/part:part) arg1 l g r e n c result)
   ;; TODO: rewrite complete-fb in the return values
-  (format *standard-output* "~&retract ~S~%" arg1)
   (cl-event-passing-user::@send self :retract-fact arg1)
   (let ((local-fb (cl-event-passing-user::@get-instance-var self :fb)))
     (cl-event-passing-user::@set-instance-var self :fb (remove-fact arg1 local-fb)))
@@ -55,7 +54,6 @@
   (values T l g r e n c result))
 
 (defmethod asserta ((self e/part:part) arg1 l g r e n c result)
-  (format *standard-output* "~&asserta ~S~%" arg1)
   (cl-event-passing-user::@send self :add-fact arg1)
   (values T l g r e n c result))
 

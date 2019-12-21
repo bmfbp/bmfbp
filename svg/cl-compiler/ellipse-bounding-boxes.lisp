@@ -26,6 +26,7 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
+             (format *standard-output* "~&ellipse-bounding-boxes~%")
              (cl-event-passing-user::@set-instance-var self :fb data)
              (make-bounding-boxes self)
              (cl-event-passing-user::@send self :done t)
@@ -326,8 +327,6 @@
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_left id (- cx hw)))
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_top id (- cy hh)))
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_right id (+ cx hw)))
-                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_bottom id (+ cy hh)))
-                      (format *standard-output* "~&added bounding box for ellipse ~A ~A/~A/~A/~A~%"
-                              id (- cx hw) (- cy hh) (+ cx hw) (+ cy hh))))
+                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_bottom id (+ cy hh)))))
                 r)))))
 

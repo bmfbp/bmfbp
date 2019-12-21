@@ -13,6 +13,7 @@
   (flet ((idle-reaction (action state) (declare (ignorable state))
            (if (eq action :retract)
                (progn
+                 (format *standard-output* "~&retract ~S~%" (e/event:data e))
                  (cl-event-passing-user::@set-instance-var
                   self
                   :factbase
@@ -83,4 +84,5 @@
         (add-lisp-fact self fact)))))
 
 (defmethod add-lisp-fact ((self e/part:part) fact)
+  (format *standard-output* "~&add-fact ~S~%" fact)
   (cl-event-passing-user::@set-instance-var self :factbase (cons (cons fact nil) (cl-event-passing-user::@get-instance-var self :factbase))))

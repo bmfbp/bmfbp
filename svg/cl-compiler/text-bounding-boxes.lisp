@@ -26,6 +26,7 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
+             (format *standard-output* "~&text-bounding-boxes~%")
              (make-bounding-boxes self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
@@ -55,8 +56,6 @@
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_left id (- cx hw)))
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_top id y))
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_right id (+ cx hw)))
-                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_bottom id (+ y h)))
-                      (format *standard-output* "~&added bounding box for text ~A ~A/~A/~A/~A~%"
-                              id (- cx hw) y (+ cx hw) (+ y h))))
+                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_bottom id (+ y h)))))
                 r)))))
 

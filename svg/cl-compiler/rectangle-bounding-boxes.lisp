@@ -26,6 +26,7 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
+             (format *standard-output* "~&rectangle-bounding-boxes~%")
              (make-bounding-boxes self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
@@ -54,8 +55,6 @@
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_left id x))
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_top id y))
                       (cl-event-passing-user::@send self :add-fact (list :bounding_box_right id (+ x w)))
-                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_bottom id (+ y h)))
-                      (format *standard-output* "~&added bounding box for rectangle ~A ~A/~A/~A/~A~%"
-                              id x y (+ x w) (+ y h))))
+                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_bottom id (+ y h)))))
                 r)))))
 

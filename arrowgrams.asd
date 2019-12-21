@@ -63,7 +63,7 @@
                                      (:file "calculate-distances" :depends-on ("package" "classes"))
                                      (:file "assign-portnames" :depends-on ("package" "classes"))
                                      (:file "mark-indexed-ports" :depends-on ("package" "classes"))
-                                     (:file "concident-ports" :depends-on ("package" "classes"))
+                                     (:file "coincident-ports" :depends-on ("package" "classes"))
                                      (:file "mark-directions" :depends-on ("package" "classes"))
                                      (:file "match-ports-to-components" :depends-on ("package" "classes"))
                                      (:file "pinless" :depends-on ("package" "classes"))
