@@ -57,12 +57,13 @@
             </MMDMetaData>
         </MetaData>
     </ProjectSettings>
-    <CurrentFileType>mmd</CurrentFileType>
+    <CurrentFileType>pdf</CurrentFileType>
     <FormatSettings>
         <Format ID="DEFAULT">
             <SectionLayouts>
                 <Type ID="09BC78F4-286D-4D70-B643-2395DDF06442">NEW-PAGE-HEADER-WITH-TEXT</Type>
-                <Type ID="E89AFE0B-7D3F-4A69-B82C-FACCDFDDF9B5">TEXT-SECTION</Type>
+                <Type ID="FABF8BC0-4603-4217-8977-8D12D2783987">AS-IS</Type>
+                <Type ID="E89AFE0B-7D3F-4A69-B82C-FACCDFDDF9B5">TEXT-WITH-HEADER</Type>
             </SectionLayouts>
         </Format>
         <Format ID="pandoc-barebones">
@@ -76,5 +77,6 @@
     <LastUsedFormats>
         <Print>DEFAULT</Print>
         <mmd>pandoc-barebones</mmd>
+        <pdf>DEFAULT</pdf>
     </LastUsedFormats>
 </CompileSettings>
