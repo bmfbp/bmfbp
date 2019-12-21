@@ -8,7 +8,7 @@ function handleDragOver(evt) {
 
 function handleFileRead(evt) {
   const content = evt.target.result;
-  app.ports.fileHasBeenRead.send(content);
+  app.ports.fileHasBeenRead.send(JSON.parse(content));
 }
 
 function handleFileSelect(evt) {
