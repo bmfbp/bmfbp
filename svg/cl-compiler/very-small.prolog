@@ -1,3 +1,16 @@
+rect(id391).
+bounding_box_left(id391,3585.0).
+bounding_box_top(id391,450.0).
+bounding_box_right(id391,3665.0).
+bounding_box_bottom(id391,530.0).
+metadata(id502,id505).
+eltype(id502,metadata).
+text(id505,struidG503).
+geometry_h(id505,12).
+geometry_w(id505,10).
+geometry_top_y(id505,1408.5).
+geometry_center_x(id505,3529.5).
+used(id505).
 ellipse(id575).
 eltype(id575,ellipse).
 geometry_h(id575,40.0).

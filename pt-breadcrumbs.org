@@ -14,6 +14,9 @@
 ** working on bmfbp/svg/cl-compiler
    (ctest)
 
+
+** working on find-metadata - retracts more than one :rect
+
 * todo
 ** cut loops system over to bmfbp
 ** cut cl-event-passing system over to bmfbp
@@ -29,6 +32,8 @@
 
 
 ** remove cl-user:: from bounding box code
+
+** rewrite complete-fb in VALUEs returned by ...util::retract-fact
 
 * git branches
 ** master

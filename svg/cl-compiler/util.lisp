@@ -29,8 +29,42 @@
    (>= right R2 L2)
    (>= bottom B2 T2)))
 
+(defun remove-fact (fact fb)
+  (assert (listp fact))
+  (if (= 2 (length fact))
+      ;; changing remove to delete needs thought - at present, the list is shared with the FB component and all other components
+      (remove-if #'(lambda (x)
+                     (and (eq (first fact) (first x))
+                          (eq (second fact) (second x))))
+                 fb)
+    (if (= 3 (length fact))
+      (remove-if #'(lambda (x)
+                     (and (eq (first fact) (first x))
+                          (eq (second fact) (second x))
+                          (eq (third fact) (third x))))
+                 fb)
+      (error "expected 2 or 3 items, but got ~S" fact))))
+
+(defmethod retract ((self e/part:part) arg1 l g r e n c result)
+  ;; TODO: rewrite complete-fb in the return values
+  (format *standard-output* "~&retract ~S~%" arg1)
+  (cl-event-passing-user::@send self :retract-fact arg1)
+  (let ((local-fb (cl-event-passing-user::@get-instance-var self :fb)))
+    (cl-event-passing-user::@set-instance-var self :fb (remove-fact arg1 local-fb)))
+  (cl-event-passing-user::@send self :retract-fact arg1)
+  (values T l g r e n c result))
+
 (defmethod asserta ((self e/part:part) arg1 l g r e n c result)
   (format *standard-output* "~&asserta ~S~%" arg1)
   (cl-event-passing-user::@send self :add-fact arg1)
   (values T l g r e n c result))
 
+(defmethod run-prolog ((self e/part:part) goal fb)
+  (hprolog:prove nil goal fb hprolog:*empty* 1 nil fb nil self))
+
+(defmethod printf ((self e/part:part) arg l g r e n c result)
+  (declare (ignore self g))
+  (format *standard-output* "~&printf ~S~%" arg)
+  (values T l g r e n c result))
+
+  
