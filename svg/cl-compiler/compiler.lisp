@@ -30,6 +30,7 @@
              (((converter :converted) (:self :add-fact)) ((fb :lisp-fact)))
              (((converter :done)) ((sequencer :finished-reading)))
 
+             (((sequencer :show)) ((fb :show)))
              (((sequencer :run-pipeline) (:self :done)) ((:self :go)))
              ;(((sequencer :write))  ((fb :iterate) (writer :start)))
 
