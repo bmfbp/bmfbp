@@ -15,7 +15,7 @@
    (ctest)
 
 
-** working on add-kinds, failing in not-used
+** add-kinds working, now on to add-self-ports
 
 * todo
 ** cut loops system over to bmfbp
