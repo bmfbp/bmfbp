@@ -15,7 +15,7 @@
    (ctest)
 
 
-** find-metadata sends 2 parent facts instead of 1
+** working on add-kinds, failing in not-used
 
 * todo
 ** cut loops system over to bmfbp

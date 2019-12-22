@@ -45,9 +45,9 @@
                (24 (cl-event-passing-user::@send self (e/part::get-output-pin self 24) T))
                (25 (cl-event-passing-user::@send self (e/part::get-output-pin self 25) T))
                (26 (cl-event-passing-user::@send self (e/part::get-output-pin self 26) T))
-               (27 (cl-event-passing-user::@send self (e/part::get-output-pin self 27) T))))
+               (27 (cl-event-passing-user::@send self (e/part::get-output-pin self 27) T))
+               (28 (format *standard-output* "~&demux done~%"))))
          (cl-event-passing-user::@send
             self
             :error
             (format nil "BOUNDING-BOXES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))))
-             

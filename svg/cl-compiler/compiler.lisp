@@ -20,7 +20,7 @@
             ;; wiring
             ((((:self :prolog-factbase-filename)) ((reader :file-name)))
              (((:self :prolog-output-filename)) ((writer :filename)))
-             (((:self :done)) ((sequencer :finished-pipeline)))
+             ;(((:self :done)) ((sequencer :finished-pipeline)))
              (((:self :request-fb)) ((fb :fb-request)))
              (((:self :retract-fact)) ((fb :retract)))
 
@@ -30,7 +30,7 @@
              (((converter :converted) (:self :add-fact)) ((fb :lisp-fact)))
              (((converter :done)) ((sequencer :finished-reading)))
 
-             (((sequencer :run-pipeline)) ((:self :go)))
+             (((sequencer :run-pipeline) (:self :done)) ((:self :go)))
              ;(((sequencer :write))  ((fb :iterate) (writer :start)))
 
              (((fb :fb)) ((:self :fb)))
