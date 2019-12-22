@@ -54,6 +54,7 @@
                                      (:file "assign-parents-to-ellipses" :depends-on ("package"))
                                      (:file "util" :depends-on ("package"))
 
+                                     (:file "demux" :depends-on ("package"))
                                      (:file "find-comments" :depends-on ("package" "classes"))
                                      (:file "find-metadata" :depends-on ("package" "classes" "util"))
                                      (:file "add-kinds" :depends-on ("package" "classes"))
@@ -84,6 +85,7 @@
                                                    "speechbubble-bounding-boxes" "text-bounding-boxes"
                                                    "assign-parents-to-ellipses"
 
+                                                   "demux"
                                                    "find-comments"
                                                    "find-metadata"
                                                    "add-kinds"

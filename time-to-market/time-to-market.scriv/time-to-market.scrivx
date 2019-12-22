@@ -178,7 +178,7 @@
                                 <IncludeInCompile>Yes</IncludeInCompile>
                             </MetaData>
                             <TextSettings>
-                                <TextSelection>0,0</TextSelection>
+                                <TextSelection>316,0</TextSelection>
                             </TextSettings>
                             <Children>
                                 <BinderItem UUID="29607397-2ABA-47FE-BEB5-62E92FF689D7" Type="Text" Created="2019-12-21 08:57:13 -0500" Modified="2019-12-21 08:57:24 -0500">

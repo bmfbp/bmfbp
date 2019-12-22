@@ -15,7 +15,7 @@
    (ctest)
 
 
-** working on find-metadata - retracts more than one :rect
+** find-metadata sends 2 parent facts instead of 1
 
 * todo
 ** cut loops system over to bmfbp
@@ -34,6 +34,9 @@
 ** remove cl-user:: from bounding box code
 
 ** rewrite complete-fb in VALUEs returned by ...util::retract-fact
+
+
+** figure out why missing demux from parts list of passes did not raise an error, even though it was referenced (((:self :go))(demux :go))
 
 * git branches
 ** master
