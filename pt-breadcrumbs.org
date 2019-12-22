@@ -84,3 +84,6 @@
 ** spec kernel in pseudo code / JS
 ** create new branch pt-20191208-compiler, new subdir bmfbp/svg/cl-compiler, used cl-event-passing and cl-holm-prolog to rebuild compiler
 ** create new branch pt-20191209-compiler, based off master, new subdir bmfbp/svg/cl-compiler, used cl-event-passing and cl-holm-prolog to rebuild compiler
+
+* rules
+** used(x) x is always a text-id, e.g. text(x,s)

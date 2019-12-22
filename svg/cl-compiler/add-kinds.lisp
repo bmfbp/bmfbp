@@ -44,35 +44,59 @@
                (<= bT tT bB))
           l g r e n c result))
 
+;;
+;; used always refers to a text-id, e.g. text(text-id,str-id)
+
 (defmethod add-kinds ((self e/part:part))
   (let ((add-kinds-rule '(
-                (:add-kinds (:? box-id))
-                (:rect (:? box-id))
-                (:bounding_box_left (:? box-id) (:? bL))
-                (:bounding_box_top (:? box-id) (:? bT))
-                (:bounding_box_right (:? box-id) (:? bR))
-                (:bounding_box_bottom (:? box-id) (:? bB))
-(:lisp (arrowgrams/compiler/util::printf (:? box-id)))
-                (:text (:? text-id) (:? str-id))
-(:lisp (arrowgrams/compiler/util::printf (:? str-id)))
-                (:bounding_box_left (:? text-id) (:? tL))
-                (:bounding_box_top (:? text-id) (:? tT))
-(:lisp (arrowgrams/compiler/util::printf 11))
-(:lisp (arrowgrams/compiler/util::printf (:? text-id)))
-                (:lisp (text-completely-inside-box (:? text-id) (:? tL) (:? tT)
-                                                   (:? box-id) (:? bL) (:? bT) (:? bR) (:? bB)))
-(:lisp (arrowgrams/compiler/util::printf 12))
-                (:lisp (arrowgrams/compiler/util::asserta (:used (:? text-id))))
-                (:lisp (arrowgrams/compiler/util::asserta (:kind (:? box-id) (:? text-id))))
-                )))
-    (let ((fb (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))
-      (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))
-
-#|
-                (:not-used (:? str-id))
-
-        (not-used-rule '((:not-used (:? str-id)) (:used (:? str-id)) :! :fail)
-                       ((:not-used (:? str-id))
-                        )
-                )))
-|#
+                          (:add-kinds (:? box-id))
+                          (:rect (:? box-id))
+                          (:bounding_box_left (:? box-id) (:? bL))
+                          (:bounding_box_top (:? box-id) (:? bT))
+                          (:bounding_box_right (:? box-id) (:? bR))
+                          (:bounding_box_bottom (:? box-id) (:? bB))
+                          (:text (:? text-id) (:? str-id))
+                          (:bounding_box_left (:? text-id) (:? tL))
+                          (:bounding_box_top (:? text-id) (:? tT))
+;(:lisp (arrowgrams/compiler/util::printf (:? text-id)))
+;(:lisp (arrowgrams/compiler/util::printf (:? str-id)))
+                          (:not-used (:? text-id))
+                          (:lisp (text-completely-inside-box (:? text-id) (:? tL) (:? tT)
+                                                             (:? box-id) (:? bL) (:? bT) (:? bR) (:? bB)))
+                          (:lisp (arrowgrams/compiler/util::asserta (:used (:? text-id))))
+                          (:lisp (arrowgrams/compiler/util::asserta (:kind (:? box-id) (:? text-id))))
+                          )
+                        ))
+      (let ((find-used-rule1 '(
+                              (:find-used (:? text-id))
+                              (:used (:? text-id))
+                          (:lisp (arrowgrams/compiler/util::printf 2))
+                              :!
+                          (:lisp (arrowgrams/compiler/util::printf 3))
+                              )
+                            ))
+        (let ((find-used-rule2 '(
+                                 (:find-used (:? text-id))
+                          (:lisp (arrowgrams/compiler/util::printf 4))
+                                 )
+                               ))
+          (let ((not-used-rule1 '(
+                                  (:not-used (:? text-id))
+                                  (:used (:? text-id))
+                                  (:lisp (arrowgrams/compiler/util::printf 12))
+                                  :!
+                                  (:lisp (arrowgrams/compiler/util::printf 13))
+                                  :fail)
+                                  )
+                                )
+            (let ((not-used-rule2 '(
+                                    (:not-used (:? text-id))
+                                    )
+                                  ))
+              (let ((fb (cons not-used-rule1
+                              (cons not-used-rule2
+                                    (cons find-used-rule1  ;; order matters!
+                                          (cons find-used-rule2
+                                                (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))))))
+                (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))))
+      
