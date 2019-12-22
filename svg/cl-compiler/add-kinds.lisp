@@ -58,8 +58,6 @@
                           (:text (:? text-id) (:? str-id))
                           (:bounding_box_left (:? text-id) (:? tL))
                           (:bounding_box_top (:? text-id) (:? tT))
-;(:lisp (arrowgrams/compiler/util::printf (:? text-id)))
-;(:lisp (arrowgrams/compiler/util::printf (:? str-id)))
                           (:not-used (:? text-id))
                           (:lisp (text-completely-inside-box (:? text-id) (:? tL) (:? tT)
                                                              (:? box-id) (:? bL) (:? bT) (:? bR) (:? bB)))
@@ -67,36 +65,19 @@
                           (:lisp (arrowgrams/compiler/util::asserta (:kind (:? box-id) (:? text-id))))
                           )
                         ))
-      (let ((find-used-rule1 '(
-                              (:find-used (:? text-id))
-                              (:used (:? text-id))
-                          (:lisp (arrowgrams/compiler/util::printf 2))
-                              :!
-                          (:lisp (arrowgrams/compiler/util::printf 3))
+    (let ((not-used-rule1 '(
+                            (:not-used (:? text-id))
+                            (:used (:? text-id))
+                            :!
+                            :fail)
+                          )
+          )
+      (let ((not-used-rule2 '(
+                              (:not-used (:? text-id))
                               )
                             ))
-        (let ((find-used-rule2 '(
-                                 (:find-used (:? text-id))
-                          (:lisp (arrowgrams/compiler/util::printf 4))
-                                 )
-                               ))
-          (let ((not-used-rule1 '(
-                                  (:not-used (:? text-id))
-                                  (:used (:? text-id))
-                                  (:lisp (arrowgrams/compiler/util::printf 12))
-                                  :!
-                                  (:lisp (arrowgrams/compiler/util::printf 13))
-                                  :fail)
-                                  )
-                                )
-            (let ((not-used-rule2 '(
-                                    (:not-used (:? text-id))
-                                    )
-                                  ))
-              (let ((fb (cons not-used-rule1
-                              (cons not-used-rule2
-                                    (cons find-used-rule1  ;; order matters!
-                                          (cons find-used-rule2
-                                                (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))))))
-                (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))))
+        (let ((fb (cons not-used-rule1 ;; order matters!
+                        (cons not-used-rule2
+                              (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))))
+          (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))
       
