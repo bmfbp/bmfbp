@@ -44,7 +44,8 @@
 (defmethod add-kinds ((self e/part:part))
   (let ((rule '(
                 (:add-kinds (:? box-id))
-(:lisp (arrowgrams/compiler/util::printf 1))
+                (:rect (:? box-id))
+(:lisp (arrowgrams/compiler/util::printf (:? box-id)))
                 (:text (:? text-id) (:? str-id))
 (:lisp (arrowgrams/compiler/util::printf 2))
                 (:not-used (:? str-id))

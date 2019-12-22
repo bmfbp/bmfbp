@@ -5,13 +5,13 @@
 
            (:code reader (:file-name) (:string-fact :eof :error)
             #'arrowgrams/compiler/reader::react #'arrowgrams/compiler/reader::first-time)
-           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next) (:fb :next :no-more :error)
+           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error)
             #'arrowgrams/compiler/fb::react #'arrowgrams/compiler/fb::first-time)
            (:code writer (:filename :start :next :no-more) (:request :error)
             #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
            (:code converter (:string-fact :eof) (:done :converted :error)
             #'arrowgrams/compiler/convert-to-keywords::react #'arrowgrams/compiler/convert-to-keywords::first-time)
-           (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error)
+           (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error :show)
             #'arrowgrams/compiler/sequencer::react #'arrowgrams/compiler/sequencer::first-time)
 
            (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done) (:fb :go :error)

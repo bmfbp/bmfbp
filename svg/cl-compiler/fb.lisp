@@ -2,9 +2,12 @@
 
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
-; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next) (:fb :no-more :next :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next :show) (:fb :no-more :next :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+
+(defparameter *show-additions* nil)
 
 (defmethod first-time ((self e/part:part))
+  (setf *show-additions* nil)
   (cl-event-passing-user::@set-instance-var self :state :idle)
   (cl-event-passing-user::@set-instance-var self :fb-as-iterable-list nil)
   (cl-event-passing-user::@set-instance-var self :factbase nil))
@@ -27,25 +30,27 @@
                    (add-lisp-fact self (e/event:data e))
                  (if (eq action :go)
                      (assert nil)
-                   (if (eq action :fb-request)
-                       (cl-event-passing-user::@send self :fb (cl-event-passing-user::@get-instance-var self :factbase))
-                     (if (eq action :iterate)
-                         (progn
-                           (begin-iteration self)
-                           (cl-event-passing-user::@set-instance-var self :state :iterating))
-                       (cl-event-passing-user:@send self
-                                                    :error
-                                                    (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e)))))))))))
-         
-    (let ((action (e/event::sym e))
-          (state (cl-event-passing-user::@get-instance-var self :state)))    
-      (ecase state
-        (:idle
-         (idle-reaction action state))
-        (:idle-with-cleanup ;; might get one more request after going back to :idle
-         (if (eq action :get-next)
-             (cl-event-passing-user::@set-instance-var self :state :idle)
-           (idle-reaction action state)))
+                   (if (eq action :show)
+                       (setf *show-additions* (e/event:data e))
+                     (if (eq action :fb-request)
+                         (cl-event-passing-user::@send self :fb (cl-event-passing-user::@get-instance-var self :factbase))
+                       (if (eq action :iterate)
+                           (progn
+                             (begin-iteration self)
+                             (cl-event-passing-user::@set-instance-var self :state :iterating))
+                         (cl-event-passing-user:@send self
+                                                      :error
+                                                      (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e))))))))))))
+  
+           (let ((action (e/event::sym e))
+                 (state (cl-event-passing-user::@get-instance-var self :state)))    
+             (ecase state
+               (:idle
+                (idle-reaction action state))
+               (:idle-with-cleanup ;; might get one more request after going back to :idle
+                (if (eq action :get-next)
+                    (cl-event-passing-user::@set-instance-var self :state :idle)
+                  (idle-reaction action state)))
         (:iterating
          (if (eq action :get-next)
              (send-next self)
@@ -84,5 +89,6 @@
         (add-lisp-fact self fact)))))
 
 (defmethod add-lisp-fact ((self e/part:part) fact)
-  (format *standard-output* "~&add-fact ~S~%" fact)
+  (when *show-additions*
+    (format *standard-output* "~&add-fact ~S~%" fact))
   (cl-event-passing-user::@set-instance-var self :factbase (cons (cons fact nil) (cl-event-passing-user::@get-instance-var self :factbase))))
