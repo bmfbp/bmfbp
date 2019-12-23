@@ -64,4 +64,14 @@
   (format *standard-output* "~&printf ~S~%" arg)
   (values T l g r e n c result))
 
-  
+(defvar rule-bounding-box '(
+                            (:bounding-box (:? id) (:? left) (:? top) (:? right) (:? bottom))
+                            (:bounding_box_left (:? id) (:? left))
+                            (:bounding_box_top (:? id) (:? top))
+                            (:bounding_box_right (:? id) (:? right))
+                            (:bounding_box_bottom (:? id) (:? bottom))
+                            ))
+ 
+(defmethod bounding-box-completely-inside ((self e/part:part) id1 id2)
+  (let ((rule '(
+                (:boundingBoxcompletelyInside

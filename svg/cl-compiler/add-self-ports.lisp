@@ -36,3 +36,76 @@
           :error
           (format nil "ADD-SELF-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+
+(defmethod port-touches-ellipse ((self p/part:part)
+                                 pL pT pR pB
+                                 eL eT eR eB
+                                 l g r e n c result)
+  (values
+   (or (and (<= pL eL)
+           (>= pR eL)
+           (>= pT eT)
+           (<= pR eR))
+      (and (<= pT eT)
+           (>= pB eT)
+           (>= pL eL)
+           (<= pR eR))
+      (and (<= pL eR)
+           (>= pR eR)
+           (>= pT eT)
+           (<= pB eB))
+      (and (<= pT eB)
+           (>= pB eB)
+           (>= pL eL)
+           (<= pR eR)))
+   l g r e n d result))
+                                 
+
+
+
+
+(defmethod add-kinds ((self e/part:part))
+  (let ((add-kinds-rule '((:add-self-ports (:? port-id))
+                          
+                          (:port (:? port-id))
+                          (:bounding_box_left (:? port-id) (:? pL))
+                          (:bounding_box_top (:? port-id) (:? pT))
+                          (:bounding_box_right (:? port-id) (:? pR))
+                          (:bounding_box_bottom (:? port-id) (:? pB))
+
+                          (:ellipse (:? ellipse-id))
+                          (:bounding_box_left (:? ellipse-id) (:? eL))
+                          (:bounding_box_top (:? ellipse-id) (:? eT))
+                          (:bounding_box_right (:? ellipse-id) (:? eR))
+                          (:bounding_box_bottom (:? ellipse-id) (:? eB))
+
+                          (:lisp (port-touches-ellipse pL pT pR pB eL eT eR eB))
+
+                          (:text (:? text-id) (:? str-id))
+
+                          (:lisp (text-completely-inside (:? text-id) (:? ellipse-id)))
+
+                          :!
+                          (:lisp (arrowgrams/compiler/util::asserta (:parent (:? ellipse-id) (:? port-id))))
+                          (:lisp (arrowgrams/compiler/util::asserta (:used (:? text-id))))
+                          (:lisp (arrowgrams/compiler/util::asserta (:portNameByID (:? port-id) (:? text-id))))
+                          (:lisp (arrowgrams/compiler/util::asserta (:portName (:? port-id) (:? str-id))))
+                          )
+                        ))
+
+    (let ((not-used-rule1 '(
+                            (:not-used (:? text-id))
+                            (:used (:? text-id))
+                            :!
+                            :fail)
+                          )
+          )
+      (let ((not-used-rule2 '(
+                              (:not-used (:? text-id))
+                              )
+                            ))
+        (let ((fb (cons not-used-rule1 ;; order matters!
+                        (cons not-used-rule2
+                              (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))))
+          (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))
+      
