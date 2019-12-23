@@ -159,12 +159,6 @@ niy</Comments>
 
 In the following, we discuss some of these problems and the Arrowgrams take on them.</Text>
         </Document>
-        <Document ID="5D8E12DA-CFE4-421C-B0CA-B87804CD8FDC">
-            <Title>Thread Safety</Title>
-            <Text>Thread safety is no longer an issue because Arrowgrams Components do not share memory.
-
-</Text>
-        </Document>
         <Document ID="C86565D8-BF89-45FB-AF4A-9BC6D3114BDB">
             <Title>Ports vs. APIs</Title>
             <Text>Ports and wires are like a plugboard used in old-fashioned telephone exchanges, electronics and some musical synthesizers.
@@ -177,6 +171,12 @@ APIs tend to come in one, asymmetrical option - input apis.  And, APIs are much 
 
 Arrowgrams breaks types into two flavors. (1) Ports, and (2) the type of the data that flows on the wires into and out of the ports.  It turns out that types become less important in Arrowgrams</Text>
             <Comments>event</Comments>
+        </Document>
+        <Document ID="5D8E12DA-CFE4-421C-B0CA-B87804CD8FDC">
+            <Title>Thread Safety</Title>
+            <Text>Thread safety is no longer an issue because Arrowgrams Components do not share memory.
+
+</Text>
         </Document>
         <Document ID="F0DBF7D2-1827-49CE-9CE2-E58432306710">
             <Title>Micro-Services</Title>
@@ -193,7 +193,6 @@ The strategy used in Fig. &lt;$n:figure:RequestResponse&gt; can be used to creat
         </Document>
         <Document ID="91729996-BF52-4CDF-84F3-5211D0F3A733">
             <Title>Snapping Software Components Together</Title>
-            <Text> </Text>
         </Document>
         <Document ID="CA2087FF-7D0C-4A85-8228-4001E9034125">
             <Title>Incorporate Assets Developed by Contractors</Title>
