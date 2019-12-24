@@ -38,7 +38,6 @@ zoomStepSize = 0.1
 defaultTextWidth = 7
 defaultTextHeight = 12
 versionCanonicalFormat = "2019-12-19"
-versionCompilableFormat = "2019-12-20"
 
 
 -- *** Application model ***
@@ -113,7 +112,7 @@ encodeCanvasItemInstance canvasItem =
   JE.object
     [ ( "id", JE.int canvasItem.id )
     , ( "item", encodeCanvasItem canvasItem.item )
-    , ( "name", JE.string canvasItem.name )
+    , ( "kindName", JE.string canvasItem.name )
     , ( "gitUrl", JE.string canvasItem.gitUrl )
     , ( "gitRef", JE.string canvasItem.gitRef )
     , ( "manifestPath", JE.string canvasItem.manifestPath )
@@ -126,24 +125,24 @@ encodeCanvasItem canvasItem =
   case canvasItem of
     Rect topLeft bottomRight ->
       JE.object
-        [ ( "type", JE.string "rect" )
+        [ ( "tag", JE.string "Rect" )
         , ( "topLeft", encodeCoordinates topLeft )
         , ( "bottomRight", encodeCoordinates bottomRight )
         ]
     Polyline points ->
       JE.object
-        [ ( "type", JE.string "polyline" )
+        [ ( "tag", JE.string "Polyline" )
         , ( "points", JE.list encodeCoordinates points )
         ]
     Ellipse topLeft bottomRight ->
       JE.object
-        [ ( "type", JE.string "ellipse" )
+        [ ( "tag", JE.string "Ellipse" )
         , ( "topLeft", encodeCoordinates topLeft )
         , ( "bottomRight", encodeCoordinates bottomRight )
         ]
     Text topLeft bottomRight text ->
       JE.object
-        [ ( "type", JE.string "text" )
+        [ ( "tag", JE.string "Text" )
         , ( "topLeft", encodeCoordinates topLeft )
         , ( "bottomRight", encodeCoordinates bottomRight )
         , ( "text", JE.string text )
@@ -176,7 +175,7 @@ canvasItemInstanceDecoder =
   JD.map8 CanvasItemInstance
     (JD.field "id" JD.int)
     (JD.field "item" canvasItemDecoder)
-    (JD.field "name" JD.string)
+    (JD.field "kindName" JD.string)
     (JD.field "gitUrl" JD.string)
     (JD.field "gitRef" JD.string)
     (JD.field "manifestPath" JD.string)
@@ -185,24 +184,24 @@ canvasItemInstanceDecoder =
 
 canvasItemDecoder : JD.Decoder CanvasItem
 canvasItemDecoder =
-  JD.field "type" JD.string
+  JD.field "tag" JD.string
     |> JD.andThen canvasItemContent
 
 canvasItemContent : String -> JD.Decoder CanvasItem
 canvasItemContent contentType =
   case contentType of
-    "rect" ->
+    "Rect" ->
       JD.map2 Rect
         (JD.field "topLeft" coordinatesDecoder)
         (JD.field "bottomRight" coordinatesDecoder)
-    "polyline" ->
+    "Polyline" ->
       JD.field "points" <|
         JD.map Polyline (JD.list coordinatesDecoder)
-    "ellipse" ->
+    "Ellipse" ->
       JD.map2 Ellipse
         (JD.field "topLeft" coordinatesDecoder)
         (JD.field "bottomRight" coordinatesDecoder)
-    "text" ->
+    "Text" ->
       JD.map3 Text
         (JD.field "topLeft" coordinatesDecoder)
         (JD.field "bottomRight" coordinatesDecoder)
@@ -347,9 +346,9 @@ update message model =
         _ ->
           ({ model | intent = ToCreatePolyline model.cursorCoords [] }, Cmd.none)
     AddEllipse ->
-      (createNewCanvasItemInstance model (Ellipse { x = 100, y = 100 } { x = 150, y = 140 }), Cmd.none)
+      (createNewCanvasItemInstance model (Ellipse { x = 100, y = 100 } { x = 300, y = 250 }), Cmd.none)
     AddText ->
-      (createNewCanvasItemInstance model (Text { x = 100, y = 100 } { x = 200, y = 200 } "name"), Cmd.none)
+      (createNewCanvasItemInstance model (Text { x = 100, y = 100 } { x = 200, y = 200 } "text"), Cmd.none)
     UpdateItemName item newName ->
       let
         updateName i = { i | name = newName }

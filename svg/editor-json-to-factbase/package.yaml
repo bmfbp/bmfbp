@@ -1,0 +1,51 @@
+name:                editor-json-to-factbase
+version:             0.1.0.0
+github:              "kenhkan/editor-json-to-factbase"
+license:             BSD3
+author:              "Ken Kan"
+maintainer:          "kenhkan@gmail.com"
+copyright:           "AllRightsReserved"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            AI
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/kenhkan/editor-json-to-factbase#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- bytestring
+- aeson
+- directory
+
+library:
+  source-dirs: src
+
+executables:
+  editor-json-to-factbase-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - editor-json-to-factbase
+
+tests:
+  editor-json-to-factbase-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - editor-json-to-factbase
