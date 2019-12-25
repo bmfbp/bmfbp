@@ -2,7 +2,7 @@ BINDIR=~/bin
 
 all: build test test2 test3 test4 tee pass top
 
-build: 
+build: build-compiler-shims
 	cd ../grash && make
 	cd ../hs-vsh && make
 	cd parts && make
@@ -10,6 +10,9 @@ build:
 	cd flat-compiler && make
 	cd js-compiler && make
 	cd split && make
+
+build-compiler-shims:
+	cd compiler-shims && stack install
 
 clean: 
 	cd ../grash && make clean

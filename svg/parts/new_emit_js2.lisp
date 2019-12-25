@@ -195,10 +195,13 @@
         (let ((meta (@get-metadata)))
 	  (when meta
 	    (format out "  \"metaData\" : ~S,~%" meta)))
-        (format out "  \"self\" : {~%")
-        (@flip-sinks-and-sources-for-self)
-        (emit-part out "self" (@get-self-descriptor) :self t)
-	(format out "  },~%")
+        ; Do not output the `self` property of the JSON output until we have
+        ; fixed the issue of empty `self` object. We may not even need to do
+        ; anything here as we have fix-self-part-exe.
+        ;(format out "  \"self\" : {~%")
+        ;(@flip-sinks-and-sources-for-self)
+        ;(emit-part out "self" (@get-self-descriptor) :self t)
+        ;(format out "  },~%")
         (format out "  \"parts\" : [~%")
         (@emit-all-parts-except-self)
         (format out "  ]~%")
