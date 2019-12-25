@@ -45,7 +45,13 @@
 
 ** pt-20191208-compiler - compiler rewrite
 
+<<<<<<< HEAD
 ** pt-20191210-compiler - compiler with most parts stubbed out, 1st 5 parts working (up to and including assign-parents-to-ellipses)
+=======
+
+** pt-20191223-sample-diagrams - (stashed) pt working on diagrams from Ken
+** translate-editor-output-to-compiler-input - kens diagrams 20191224
+>>>>>>> pt-20191224-editor
 
 * git kraken
 ** merge, drag one branch and drop it onto another

@@ -64,6 +64,17 @@
   (format *standard-output* "~&printf ~S~%" arg)
   (values T l g r e n c result))
 
+<<<<<<< HEAD
+=======
+(defmethod lisp-BoundingBoxCompletelyInside ((self e/part:part)
+                                             L1 T1 R1 B2
+                                             L2 T2 R2 B2
+                                             l g r e n c result)
+  (values
+   (and (>= L1 L2) (>= T1 T2) (>= R2 R1) (>= B2 B1))
+   l g r e n c result))   
+
+>>>>>>> pt-20191224-editor
 (defvar rule-bounding-box '(
                             (:bounding-box (:? id) (:? left) (:? top) (:? right) (:? bottom))
                             (:bounding_box_left (:? id) (:? left))
@@ -74,4 +85,18 @@
  
 (defmethod bounding-box-completely-inside ((self e/part:part) id1 id2)
   (let ((rule '(
+<<<<<<< HEAD
                 (:boundingBoxcompletelyInside
+=======
+                (:bounding-box-completely-inside (:? id1) (:? id2))
+
+                (:bounding-box (:? id1) (:? L1) (:? T1) (:? R1) (:? B1))
+                (:bounding-box (:? id2) (:? L2) (:? T2) (:? R2) (:? B2))
+                (:lisp (lisp-BoundingBoxCompletelyInside (:? L1) (:? T1) (:? R1) (:? B1)
+                                                    (:? L2) (:? T2) (:? R2) (:? B2)))
+                )
+              ))
+    (let ((fb (cons rule (cl-event-passing-user::@get-instance-var self :fb))))
+      (let ((goal `((:bounding-box-completely-inside (:? ,id1) (:? ,id2)))))
+        (run-prolog self goal fb)))))
+>>>>>>> pt-20191224-editor
