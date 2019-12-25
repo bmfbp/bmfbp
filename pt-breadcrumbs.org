@@ -51,7 +51,6 @@
 
 ** pt-20191223-sample-diagrams - (stashed) pt working on diagrams from Ken
 ** translate-editor-output-to-compiler-input - kens diagrams 20191224
->>>>>>> pt-20191224-editor
 
 * git kraken
 ** merge, drag one branch and drop it onto another

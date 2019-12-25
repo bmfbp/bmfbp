@@ -28,7 +28,7 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&add-self-ports~%")
-             ;; put code here
+             (create-self-ports self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -37,108 +37,51 @@
           (format nil "ADD-SELF-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 
-(defmethod port-touches-ellipse ((self p/part:part)
+(defmethod port-touches-ellipse ((self e/part:part)
                                  pL pT pR pB
                                  eL eT eR eB
                                  l g r e n c result)
   (values
-<<<<<<< HEAD
    (or (and (<= pL eL)
-           (>= pR eL)
-           (>= pT eT)
-           (<= pR eR))
-      (and (<= pT eT)
-           (>= pB eT)
-           (>= pL eL)
-           (<= pR eR))
-      (and (<= pL eR)
-           (>= pR eR)
-           (>= pT eT)
-           (<= pB eB))
-      (and (<= pT eB)
-           (>= pB eB)
-           (>= pL eL)
-           (<= pR eR)))
-   l g r e n d result))
+            (>= pR eL)
+            (>= pT eT)
+            (<= pR eR))
+       (and (<= pT eT)
+            (>= pB eT)
+            (>= pL eL)
+            (<= pR eR))
+       (and (<= pL eR)
+            (>= pR eR)
+            (>= pT eT)
+            (<= pB eB))
+       (and (<= pT eB)
+            (>= pB eB)
+            (>= pL eL)
+            (<= pR eR)))
+   l g r e n c result))
                                  
 
-
-
-
-=======
-   (or
-    (and (<= pL eL)
-         (>= pR eL)
-         (>= pT eT)
-         (<= pR eR))
-    (and (<= pT eT)
-         (>= pB eT)
-         (>= pL eL)
-         (<= pR eR))
-    (and (<= pL eR)
-         (>= pR eR)
-         (>= pT eT)
-         (<= pB eB))
-    (and (<= pT eB)
-         (>= pB eB)
-         (>= pL eL)
-         (<= pR eR)))
-   l g r e n d result))
-                                 
-
->>>>>>> pt-20191224-editor
-(defmethod add-kinds ((self e/part:part))
-  (let ((add-kinds-rule '((:add-self-ports (:? port-id))
-                          
-                          (:port (:? port-id))
-<<<<<<< HEAD
-                          (:bounding_box_left (:? port-id) (:? pL))
-                          (:bounding_box_top (:? port-id) (:? pT))
-                          (:bounding_box_right (:? port-id) (:? pR))
-                          (:bounding_box_bottom (:? port-id) (:? pB))
-
-                          (:ellipse (:? ellipse-id))
-                          (:bounding_box_left (:? ellipse-id) (:? eL))
-                          (:bounding_box_top (:? ellipse-id) (:? eT))
-                          (:bounding_box_right (:? ellipse-id) (:? eR))
-                          (:bounding_box_bottom (:? ellipse-id) (:? eB))
-=======
-                          (:bounding-box (:? port-id) (:? pL) (:? pT) (:? pR) (:? pB))
-                          
-                          (:ellipse (:? ellipse-id))
-                          (:bounding-box (:? ellipse-id) (:? eL) (:? eT) (:? eR) (:? eB))
->>>>>>> pt-20191224-editor
-
-                          (:lisp (port-touches-ellipse pL pT pR pB eL eT eR eB))
-
-                          (:text (:? text-id) (:? str-id))
-
-                          (:lisp (text-completely-inside (:? text-id) (:? ellipse-id)))
-
-                          :!
-                          (:lisp (arrowgrams/compiler/util::asserta (:parent (:? ellipse-id) (:? port-id))))
-                          (:lisp (arrowgrams/compiler/util::asserta (:used (:? text-id))))
-                          (:lisp (arrowgrams/compiler/util::asserta (:portNameByID (:? port-id) (:? text-id))))
-                          (:lisp (arrowgrams/compiler/util::asserta (:portName (:? port-id) (:? str-id))))
-                          )
-                        ))
-<<<<<<< HEAD
-
-    (let ((not-used-rule1 '(
-                            (:not-used (:? text-id))
-                            (:used (:? text-id))
-                            :!
-                            :fail)
-                          )
-          )
-=======
->>>>>>> pt-20191224-editor
-      (let ((not-used-rule2 '(
-                              (:not-used (:? text-id))
-                              )
-                            ))
-        (let ((fb (cons not-used-rule1 ;; order matters!
-                        (cons not-used-rule2
-                              (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))))
-          (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))
-      
+(defmethod create-self-ports ((self e/part:part))
+  ;;;     % find one port that touches the ellispe (if there are more, then the "coincidentPorts"
+  ;;;     % pass will find them), asserta all facts needed by ports downstream - portIndex, sink,
+  ;;;     % source, parent
+    (let ((goal '(
+                  (:port (:? port-id))
+(:lisp (arrowgrams/compiler/util::printf 1))
+                  (:bounding-box (:? port-id) (:? pL) (:? pT) (:? pR) (:? pB))
+(:lisp (arrowgrams/compiler/util::printf 2))
+                  (:ellipse (:? eid))
+                  (:bounding-box (:? eid) (:? eL) (:? eT) (:? eR) (:? eB))
+                  (:lisp (port-touches-ellipse (:? pL) (:? pT) (:? pR) (:? pB) (:? eL) (:? eT) (:? eR) (:? eB)))
+                  (:text (:? text-id) (:? str))
+(:lisp (arrowgrams/compiler/util::printf 6))
+                  (:text-completely-inside (:? text-id) (:? eid))
+(:lisp (arrowgrams/compiler/util::printf 7))
+                  :!
+                  (:lisp (asserta (:parent (:? eid) (:? port-id))))
+                  (:lisp (asserta (:used (:? text-id))))
+                  (:lisp (asserta (:portNameByID (:? port-id) (:? text-id))))
+                  (:lisp (asserta (:portName (:? port-id) (:? str))))
+                  )))
+      (let ((fb (arrowgrams/compiler/util::rule-text-completely-inside)))
+        (arrowgrams/compiler/util::run-prolog self goal fb))))
