@@ -30,6 +30,10 @@
 
 ** pt-20191208-compiler - compiler rewrite
 
+
+** pt-20191223-sample-diagrams - (stashed) pt working on diagrams from Ken
+** translate-editor-output-to-compiler-input - kens diagrams 20191224
+
 * git kraken
 ** merge, drag one branch and drop it onto another
    https://support.gitkraken.com/working-with-repositories/branching-and-merging/

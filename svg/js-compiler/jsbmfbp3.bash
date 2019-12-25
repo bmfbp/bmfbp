@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cd ~/quicklisp/local-projects/bmfbp/editor && make
+
+
 EDITOR_JSON_FILE_PATH=$1
 
 if [[ ! -f "${EDITOR_JSON_FILE_PATH}" ]]; then
@@ -7,7 +10,7 @@ if [[ ! -f "${EDITOR_JSON_FILE_PATH}" ]]; then
    exit 3
 fi
 
-set -x
+set -v
 
 (
   # Convert editor's output into the facts and string mappings files
