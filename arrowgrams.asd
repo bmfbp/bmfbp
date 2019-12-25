@@ -110,3 +110,27 @@
                                                    "output-pins"
                                                    
                                                    ))))))
+
+
+(defsystem arrowgrams/prolog-peg
+  :depends-on (:arrowgrams :esrap :cl-peg)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/prolog2lisp"
+			:components ((:file "package")
+                                     (:file "spacing-peg" :depends-on ("package"))
+				     (:file "keyword-peg" :depends-on ("package"))
+				     (:file "comment-peg" :depends-on ("package"))
+				     (:file "identifier-peg" :depends-on ("package"))
+				     (:file "number-peg" :depends-on ("package"))
+				     (:file "original-peg" :depends-on ("package"))
+				     (:file "refactored-peg" :depends-on ("package"))
+				     (:file "generic-peg" :depends-on ("package"))
+				     (:file "prolog-peg" :depends-on ("package"))
+				     (:file "all" :depends-on ("package" "spacing-peg" "keyword-peg" "comment-peg"
+                                      "identifier-peg" "number-peg" "original-peg" "refactored-peg" "generic-peg"))
+                                     ))))
