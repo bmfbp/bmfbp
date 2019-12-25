@@ -73,12 +73,13 @@
 		 (format strm "bounding_box_bottom(~A,~A).~%" end-id (+ y2 *p*)))))))
         
         (rect
-	 ;; rect is given as {top-left, width, height}
-         (destructuring-bind (rect-sym x1 y1 w h)
+	 ;; rect is given as {top, left, width, height, stroke}
+         (destructuring-bind (rect-sym x1 y1 w h stroke)
              list
            (declare (ignore rect-sym))
-           (format strm "rect(~A).~%eltype(~A,box).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
-                   new-id new-id new-id x1 new-id y1 new-id w new-id h)))
+	   (unless (string= stroke "none")
+             (format strm "rect(~A).~%eltype(~A,box).~%~%geometry_left_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+                     new-id new-id new-id x1 new-id y1 new-id w new-id h))))
 
         (metadata
 	 ;; same as rect except with extra string

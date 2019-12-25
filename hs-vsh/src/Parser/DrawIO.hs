@@ -22,7 +22,7 @@ data Output
     = Container [Output]
     | Translate Float Float [Output]
     | Path [PathCommand]
-    | Rect Float Float Float Float 
+    | Rect Float Float Float Float String
     | Ellipse Float Float Float Float
 --    | Dot Float Float Float Float
     | Text DT.Text
@@ -72,7 +72,7 @@ lispify (Path commands)
   -- we need to count the trailing 'Z'.
   | length commands == 8 = wrapInParens ("speechbubble" : map lispifyPathCommand commands)
   | otherwise = wrapInParens ("line" : map lispifyPathCommand commands)
-lispify (Rect x y w h) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h]
+lispify (Rect x y w h str) = wrapInParens ["rect", showToText x, showToText y, showToText w, showToText h, showToText str]
 lispify (Ellipse cx cy rx ry) = wrapInParens ["ellipse", showToText cx, showToText cy, showToText rx, showToText ry]
 -- lispify (Dot cx cy rx ry) = wrapInParens ["dot", showToText cx, showToText cy, showToText rx, showToText ry]
 lispify (Metadata md) = wrapInParens ["metadata", showToText (DAS.encode md)]
@@ -162,7 +162,8 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               y <- lookupAttrIntoString "y"
               width <- lookupAttrIntoString "width"
               height <- lookupAttrIntoString "height"
-              return (Rect (readFloat x) (readFloat y) (readFloat width) (readFloat height))
+	      stroke <- lookupAttrIntoString "stroke"
+              return (Rect (readFloat x) (readFloat y) (readFloat width) (readFloat height) stroke)
           in
             maybe defaultOutput id result
         "ellipse" ->
