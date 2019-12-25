@@ -1,0 +1,96 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 39fb3afa2295c04d78df0eabab3a1fe941e69827594d687c4d10c2d1802c77d2
+
+name:           compiler-shims
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/kenhkan/compiler-shims#readme>
+homepage:       https://github.com/kenhkan/compiler-shims#readme
+bug-reports:    https://github.com/kenhkan/compiler-shims/issues
+author:         Ken Kan
+maintainer:     kenhkan@gmail.com
+copyright:      AllRightsReserved
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/kenhkan/compiler-shims
+
+library
+  exposed-modules:
+      EditorJsonToFactbase
+      FixSelfPart
+      Types.Manifest
+      Types.Metadata
+      Types.Part
+  other-modules:
+      Paths_compiler_shims
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+  default-language: Haskell2010
+
+executable editor-json-to-factbase-exe
+  main-is: EditorJsonToFactbase/Main.hs
+  other-modules:
+      FixSelfPart.Main
+      Paths_compiler_shims
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is EditorJsonToFactbase.Main
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , compiler-shims
+    , containers
+    , directory
+  default-language: Haskell2010
+
+executable fix-self-part-exe
+  main-is: FixSelfPart/Main.hs
+  other-modules:
+      EditorJsonToFactbase.Main
+      Paths_compiler_shims
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is FixSelfPart.Main
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , compiler-shims
+    , containers
+    , directory
+  default-language: Haskell2010
+
+test-suite compiler-shims-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_compiler_shims
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , compiler-shims
+    , containers
+    , directory
+  default-language: Haskell2010

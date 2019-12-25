@@ -25,6 +25,7 @@ data File =
 data CanvasItem =
   CanvasItem
     { gitRef        :: String
+    , contextDir    :: String
     , gitUrl        :: String
     , id            :: Int
     , item          :: Item
@@ -187,6 +188,7 @@ getRectFacts (factId, stringId, strings, metadata, facts) canvasItem topLeft bot
     newMetadata =
       TMD.Metadata 
         (gitRef canvasItem)
+        (contextDir canvasItem)
         (gitUrl canvasItem)
         (manifestPath canvasItem)
         (kindName canvasItem)

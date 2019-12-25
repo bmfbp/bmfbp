@@ -2,7 +2,7 @@ BINDIR=~/bin
 
 all: build test test2 test3 test4 tee pass top
 
-build: build-editor-json-to-factbase
+build: build-compiler-shims
 	cd ../grash && make
 	cd ../hs-vsh && make
 	cd parts && make
@@ -11,8 +11,8 @@ build: build-editor-json-to-factbase
 	cd js-compiler && make
 	cd split && make
 
-build-editor-json-to-factbase:
-	cd editor-json-to-factbase && stack install
+build-compiler-shims:
+	cd compiler-shims && stack install
 
 clean: 
 	cd ../grash && make clean

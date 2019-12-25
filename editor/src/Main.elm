@@ -17,6 +17,7 @@ import Html
 import Html.Attributes as HA
 import Json.Decode as JD
 import Json.Encode as JE
+import Json.Decode.Extra as JDE
 import String.Interpolate as SI
 import Parser as P
 import Parser exposing ((|=), (|.))
@@ -57,6 +58,7 @@ type Msg
   | UpdateSinkPinName CanvasItemInstance String
   | UpdateItemGitUrl CanvasItemInstance String
   | UpdateItemGitRef CanvasItemInstance String
+  | UpdateItemContextDir CanvasItemInstance String
   | UpdateItemManifestPath CanvasItemInstance String
   | UserIsTyping CanvasItemInstance
   | UserIsNotTyping CanvasItemInstance
@@ -115,6 +117,7 @@ encodeCanvasItemInstance canvasItem =
     , ( "kindName", JE.string canvasItem.name )
     , ( "gitUrl", JE.string canvasItem.gitUrl )
     , ( "gitRef", JE.string canvasItem.gitRef )
+    , ( "contextDir", JE.string canvasItem.contextDir )
     , ( "manifestPath", JE.string canvasItem.manifestPath )
     , ( "sourcePinName", JE.string canvasItem.sourcePinName )
     , ( "sinkPinName", JE.string canvasItem.sinkPinName )
@@ -172,15 +175,16 @@ fileDecoderSwitch version =
 
 canvasItemInstanceDecoder : JD.Decoder CanvasItemInstance
 canvasItemInstanceDecoder =
-  JD.map8 CanvasItemInstance
-    (JD.field "id" JD.int)
-    (JD.field "item" canvasItemDecoder)
-    (JD.field "kindName" JD.string)
-    (JD.field "gitUrl" JD.string)
-    (JD.field "gitRef" JD.string)
-    (JD.field "manifestPath" JD.string)
-    (JD.field "sourcePinName" JD.string)
-    (JD.field "sinkPinName" JD.string)
+  JD.succeed CanvasItemInstance
+    |> JDE.andMap (JD.field "id" JD.int)
+    |> JDE.andMap (JD.field "item" canvasItemDecoder)
+    |> JDE.andMap (JD.field "kindName" JD.string)
+    |> JDE.andMap (JD.field "gitUrl" JD.string)
+    |> JDE.andMap (JD.field "gitRef" JD.string)
+    |> JDE.andMap (JD.field "contextDir" JD.string)
+    |> JDE.andMap (JD.field "manifestPath" JD.string)
+    |> JDE.andMap (JD.field "sourcePinName" JD.string)
+    |> JDE.andMap (JD.field "sinkPinName" JD.string)
 
 canvasItemDecoder : JD.Decoder CanvasItem
 canvasItemDecoder =
@@ -251,6 +255,7 @@ type alias CanvasItemInstance =
   , name : String -- Part and Pin
   , gitUrl : String -- Part only
   , gitRef : String -- Part only
+  , contextDir : String -- Part only
   , manifestPath : String -- Part only
   , sourcePinName : String -- Wire only
   , sinkPinName : String -- Wire only
@@ -364,6 +369,11 @@ update message model =
         updateGitRef i = { i | gitRef = newGitRef }
       in
         (updateCanvasItemInstance model item updateGitRef, Cmd.none)
+    UpdateItemContextDir item newContextDir ->
+      let
+        updateContextDir i = { i | contextDir = newContextDir }
+      in
+        (updateCanvasItemInstance model item updateContextDir, Cmd.none)
     UpdateItemManifestPath item newManifestPath ->
       let
         updateManifestPath i = { i | manifestPath = newManifestPath }
@@ -574,6 +584,7 @@ createNewCanvasItemInstance model canvasItem =
         , name = ""
         , gitUrl = ""
         , gitRef = ""
+        , contextDir = ""
         , manifestPath = ""
         , sourcePinName = ""
         , sinkPinName = ""
@@ -1064,7 +1075,8 @@ itemPropertyPanel item =
               [ textField UpdateItemName item.name "e.g. Compile composite" "Part name"
               , textField UpdateItemGitUrl item.gitUrl "e.g. https://github.com/arrowgrams/arrowgrams.git" "Git URL"
               , textField UpdateItemGitRef item.gitRef "e.g. 1b83cf3" "Git ref"
-              , textField UpdateItemManifestPath item.manifestPath "e.g. build_process/parts/compile_composite.json" "Manifest path"
+              , textField UpdateItemContextDir item.contextDir "e.g. build_process/parts/" "Context directory to run in"
+              , textField UpdateItemManifestPath item.manifestPath "e.g. compile_composite.json" "Manifest path relative to the context directory"
               ]
             Ellipse _ _ ->
               [ textField UpdateItemName item.name "Pin's name here" "Pin name"

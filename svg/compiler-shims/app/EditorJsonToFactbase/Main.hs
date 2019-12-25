@@ -1,4 +1,4 @@
-module Main where
+module EditorJsonToFactbase.Main where
 
 import EditorJsonToFactbase
 import qualified Data.Aeson as DA

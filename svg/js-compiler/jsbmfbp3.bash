@@ -56,8 +56,9 @@ set -x
       new_emit_js $NAME <temp25.pro >temp26.lisp
       unmap-strings $NAME <temp26.lisp >temp27.lisp
       new_emit_js2 $NAME <temp27.lisp >temp28.json
-      sed -f strings.sed <temp.log-unfixed.txt >temp.log.txt
+      fix-self-part-exe $NAME <temp28.json >temp29.json
+      #sed -f strings.sed <temp.log-unfixed.txt >temp.log.txt
   fi
 ) >&2
 
-cat temp28.json
+cat temp29.json
