@@ -1,6 +1,6 @@
-name:                editor-json-to-factbase
+name:                compiler-shims
 version:             0.1.0.0
-github:              "kenhkan/editor-json-to-factbase"
+github:              "kenhkan/compiler-shims"
 license:             BSD3
 author:              "Ken Kan"
 maintainer:          "kenhkan@gmail.com"
@@ -17,30 +17,42 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/kenhkan/editor-json-to-factbase#readme>
+description:         Please see the README on GitHub at <https://github.com/kenhkan/compiler-shims#readme>
 
 dependencies:
 - base >= 4.7 && < 5
 - bytestring
 - aeson
 - directory
+- containers
 
 library:
   source-dirs: src
 
 executables:
   editor-json-to-factbase-exe:
-    main:                Main.hs
+    main:                EditorJsonToFactbase/Main.hs
     source-dirs:         app
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -main-is EditorJsonToFactbase.Main
     dependencies:
-    - editor-json-to-factbase
+    - compiler-shims
+  fix-self-part-exe:
+    main:                FixSelfPart/Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -main-is FixSelfPart.Main
+    dependencies:
+    - compiler-shims
 
 tests:
-  editor-json-to-factbase-test:
+  compiler-shims-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -48,4 +60,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - editor-json-to-factbase
+    - compiler-shims

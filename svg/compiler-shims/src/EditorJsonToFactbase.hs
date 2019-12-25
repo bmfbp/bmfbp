@@ -25,6 +25,7 @@ data File =
 data CanvasItem =
   CanvasItem
     { gitRef        :: String
+    , contextDir    :: String
     , gitUrl        :: String
     , id            :: Int
     , item          :: Item
@@ -47,10 +48,11 @@ data Item
   deriving (Show, GG.Generic, DA.ToJSON, DA.FromJSON)
 
 data Fact = Fact String String (Maybe String) deriving (Show)
-type Id = Int
+type FactIdCounter = Int
+type StringIdCounter = Int
 type Factbase = [Fact]
 type StringMappings = [Fact]
-type ConversionState = (Id, StringMappings, [TMD.Metadata], Factbase)
+type ConversionState = (FactIdCounter, StringIdCounter, StringMappings, [TMD.Metadata], Factbase)
 
 factToProlog :: Fact -> String
 factToProlog (Fact pred subj (Just obj)) = pred ++ "(" ++ subj ++ "," ++ obj ++ ")."
@@ -62,10 +64,9 @@ factToLisp (Fact pred subj _) = "(" ++ stringPrefix ++ pred ++ " \"" ++ subj ++ 
 canvasItemsToFacts :: [CanvasItem] -> (StringMappings, Factbase)
 canvasItemsToFacts xs = (strings ++ newStrings, facts ++ metadataFacts)
   where
-    (id, strings, metadata, facts) = convertItemsToFacts (0, [], [], []) xs
-    metadataTextIdStr = "id" ++ show id
-    metadataTagIdStr = "id" ++ show (id + 1)
-    stringId = length strings
+    (factId, stringId, strings, metadata, facts) = convertItemsToFacts (0, 0, [], [], []) xs
+    metadataTextIdStr = "id" ++ show factId
+    metadataTagIdStr = "id" ++ show (factId + 1)
     newStrings = [Fact (show stringId) metadataString Nothing]
     escapeMetadata '"' = "\\\""
     escapeMetadata '\\' = "\\\\"
@@ -93,38 +94,37 @@ getCanvasItemFacts state canvasItem =
     Ellipse { topLeft, bottomRight } -> getEllipseFacts state canvasItem topLeft bottomRight
 
 getEllipseFacts :: ConversionState -> CanvasItem -> Coords -> Coords -> ConversionState
-getEllipseFacts (id, strings, metadata, facts) canvasItem topLeft bottomRight =
-    (id + 2, strings ++ newStrings, metadata, facts ++ newFacts)
+getEllipseFacts (factId, stringId, strings, metadata, facts) canvasItem topLeft bottomRight =
+    (factId + 2, stringId + 1, strings ++ newStrings, metadata, facts ++ newFacts)
   where
-    idStr = "id" ++ show id
-    id2Str = "id" ++ show (id + 1)
-    stringId = length strings
+    ellipseIdStr = "id" ++ show factId
+    textIdStr = "id" ++ show (factId + 1)
     newStrings = [Fact (show stringId) (kindName canvasItem) Nothing]
     newFacts =
-      [ Fact "eltype" idStr (Just "ellipse")
-      , Fact "ellipse" idStr Nothing
-      , Fact "bounding_box_top" idStr (Just $ show $ y topLeft)
-      , Fact "bounding_box_left" idStr (Just $ show $ x topLeft)
-      , Fact "bounding_box_bottom" idStr (Just $ show $ y bottomRight)
-      , Fact "bounding_box_right" idStr (Just $ show $ x bottomRight)
-      , Fact "text" id2Str (Just $ stringPrefix ++ show stringId)
-      , Fact "bounding_box_top" id2Str (Just $ show $ y topLeft + 1)
-      , Fact "bounding_box_left" id2Str (Just $ show $ x topLeft + 1)
-      , Fact "bounding_box_bottom" id2Str (Just $ show $ y bottomRight - 1)
-      , Fact "bounding_box_right" id2Str (Just $ show $ x bottomRight - 1)
+      [ Fact "eltype" ellipseIdStr (Just "ellipse")
+      , Fact "ellipse" ellipseIdStr Nothing
+      , Fact "bounding_box_top" ellipseIdStr (Just $ show $ y topLeft)
+      , Fact "bounding_box_left" ellipseIdStr (Just $ show $ x topLeft)
+      , Fact "bounding_box_bottom" ellipseIdStr (Just $ show $ y bottomRight)
+      , Fact "bounding_box_right" ellipseIdStr (Just $ show $ x bottomRight)
+      , Fact "text" textIdStr (Just $ stringPrefix ++ show stringId)
+      , Fact "bounding_box_top" textIdStr (Just $ show $ y topLeft + 1)
+      , Fact "bounding_box_left" textIdStr (Just $ show $ x topLeft + 1)
+      , Fact "bounding_box_bottom" textIdStr (Just $ show $ y bottomRight - 1)
+      , Fact "bounding_box_right" textIdStr (Just $ show $ x bottomRight - 1)
       ]
 
 getPolylineFacts :: ConversionState -> CanvasItem -> [Coords] -> ConversionState
-getPolylineFacts (id, strings, metadata, facts) canvasItem points =
-    (id + 5, strings ++ newStrings, metadata, facts ++ newFacts)
+getPolylineFacts (factId, stringId, strings, metadata, facts) canvasItem points =
+    (factId + 5, stringId + 2, strings ++ newStrings, metadata, facts ++ newFacts)
   where
-    edgeId = "id" ++ show id
-    sourceId = "id" ++ show (id + 1)
-    sinkId = "id" ++ show (id + 2)
-    sourceLabelId = "id" ++ show (id + 3)
-    sinkLabelId = "id" ++ show (id + 4)
-    sourceStringId = length strings
-    sinkStringId = sourceStringId + 1
+    edgeId = "id" ++ show factId
+    sourceId = "id" ++ show (factId + 1)
+    sinkId = "id" ++ show (factId + 2)
+    sourceLabelId = "id" ++ show (factId + 3)
+    sinkLabelId = "id" ++ show (factId + 4)
+    sourceStringId = stringId
+    sinkStringId = stringId + 1
     firstPoint = head points
     lastPoint = last points
     sourceStringFact = Fact (show sourceStringId) (sourcePinName canvasItem) Nothing
@@ -179,29 +179,29 @@ getPinFacts labelId stringId point =
     ]
 
 getRectFacts :: ConversionState -> CanvasItem -> Coords -> Coords -> ConversionState
-getRectFacts (id, strings, metadata, facts) canvasItem topLeft bottomRight =
-    (id + 2, strings ++ newStrings, newMetadata : metadata, facts ++ newFacts)
+getRectFacts (factId, stringId, strings, metadata, facts) canvasItem topLeft bottomRight =
+    (factId + 2, stringId + 1, strings ++ newStrings, newMetadata : metadata, facts ++ newFacts)
   where
-    idStr = "id" ++ show id
-    id2Str = "id" ++ show (id + 1)
-    stringId = length strings
+    rectIdStr = "id" ++ show factId
+    textIdStr = "id" ++ show (factId + 1)
     newStrings = [Fact (show stringId) (kindName canvasItem) Nothing]
     newMetadata =
       TMD.Metadata 
         (gitRef canvasItem)
+        (contextDir canvasItem)
         (gitUrl canvasItem)
         (manifestPath canvasItem)
         (kindName canvasItem)
     newFacts =
-      [ Fact "eltype" idStr (Just "box")
-      , Fact "rect" idStr Nothing
-      , Fact "bounding_box_top" idStr (Just $ show $ y topLeft)
-      , Fact "bounding_box_left" idStr (Just $ show $ x topLeft)
-      , Fact "bounding_box_bottom" idStr (Just $ show $ y bottomRight)
-      , Fact "bounding_box_right" idStr (Just $ show $ x bottomRight)
-      , Fact "text" id2Str (Just $ stringPrefix ++ show stringId)
-      , Fact "bounding_box_top" id2Str (Just $ show $ y topLeft + 1)
-      , Fact "bounding_box_left" id2Str (Just $ show $ x topLeft + 1)
-      , Fact "bounding_box_bottom" id2Str (Just $ show $ y bottomRight - 1)
-      , Fact "bounding_box_right" id2Str (Just $ show $ x bottomRight - 1)
+      [ Fact "eltype" rectIdStr (Just "box")
+      , Fact "rect" rectIdStr Nothing
+      , Fact "bounding_box_top" rectIdStr (Just $ show $ y topLeft)
+      , Fact "bounding_box_left" rectIdStr (Just $ show $ x topLeft)
+      , Fact "bounding_box_bottom" rectIdStr (Just $ show $ y bottomRight)
+      , Fact "bounding_box_right" rectIdStr (Just $ show $ x bottomRight)
+      , Fact "text" textIdStr (Just $ stringPrefix ++ show stringId)
+      , Fact "bounding_box_top" textIdStr (Just $ show $ y topLeft + 1)
+      , Fact "bounding_box_left" textIdStr (Just $ show $ x topLeft + 1)
+      , Fact "bounding_box_bottom" textIdStr (Just $ show $ y bottomRight - 1)
+      , Fact "bounding_box_right" textIdStr (Just $ show $ x bottomRight - 1)
       ]

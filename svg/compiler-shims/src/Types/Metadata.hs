@@ -7,8 +7,9 @@ import qualified Data.Aeson as DA
 
 data Metadata =
   Metadata
-    { gitRef :: String
-    , gitUrl :: String
+    { gitRef       :: String
+    , contextDir   :: String
+    , gitUrl       :: String
     , manifestPath :: String
-    , kindName :: String
+    , kindName     :: String
     } deriving (Show, GG.Generic, DA.ToJSON, DA.FromJSON)
