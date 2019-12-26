@@ -68,7 +68,11 @@ pBooleanExpr <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
      (if lis
          (let ((op (first (first lis)))
                (s2 (second (first lis))))
-           `(,op ,s ,s2))
+           (if (eq op 'prolog:greater-equal)
+               `(>= ,s ,s2)
+             (if (eq op 'prolog:less-equal)
+                 `(<= ,s ,s2)
+               `(,op ,s ,s2))))
        s)) }
 
 pSum <- pProduct ((pPlus / pMinus) pProduct)*
