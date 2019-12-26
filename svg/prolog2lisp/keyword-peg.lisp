@@ -6,84 +6,84 @@
 (cl-peg:rule arrowgrams/prolog-peg::pKeyword "pTrue / pFail / pIs / pColonDash / pNot / pNotSame / pSame / pNotUnifySame / pUnifySame / pGreaterEqual / pLessEqual / pCut / pPeriod / pComma / pLpar / pRpar / pLBRack / pRBrack / pUserError / pCurrentInput / pUserInput / pMinus / pPlus / pAsterisk / pSlash"
   (:lambda (x) x))
 
-(cl-peg:rule arrowgrams/prolog-peg::pUserError "'user_error' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::user-error))
+(cl-peg:rule prolog::pUserError "'user_error' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::user-error))
 
-(cl-peg:rule arrowgrams/prolog-peg::pCurrentInput "'current_input' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::current-input))
+(cl-peg:rule prolog::pCurrentInput "'current_input' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::current-input))
 
-(cl-peg:rule arrowgrams/prolog-peg::pUserInput "'user_input' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::user-input))
+(cl-peg:rule prolog::pUserInput "'user_input' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::user-input))
 
-(cl-peg:rule arrowgrams/prolog-peg::pFail "'fail' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::pl-fail))
+(cl-peg:rule prolog::pFail "'fail' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::pl-fail))
 
-(cl-peg:rule arrowgrams/prolog-peg::pTrue "'true' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::pl-true))
+(cl-peg:rule prolog::pTrue "'true' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::pl-true))
 
-(cl-peg:rule arrowgrams/prolog-peg::pKWID "pTrue / pFail / pUserError / pCurrentInput / pUserInput"
+(cl-peg:rule prolog::pKWID "pTrue / pFail / pUserError / pCurrentInput / pUserInput"
   (:lambda (x) x))
 
-(cl-peg:rule arrowgrams/prolog-peg::pIs "'is' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::pl-is))
+(cl-peg:rule prolog::pIs "'is' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::pl-is))
 
-(cl-peg:rule arrowgrams/prolog-peg::pNot "'\\\\\+' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::pl-not))
+(cl-peg:rule prolog::pNot "'\\\\\+' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::pl-not))
 
-(cl-peg:rule arrowgrams/prolog-peg::pNotSame "[\\\\] '==' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::not-same))
+(cl-peg:rule prolog::pNotSame "[\\\\] '==' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::not-same))
 
-(cl-peg:rule arrowgrams/prolog-peg::pSame " '==' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::same))
+(cl-peg:rule prolog::pSame " '==' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::same))
 
-(cl-peg:rule arrowgrams/prolog-peg::pNotUnifySame "! pNotSame '\\\\' '=' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::not-unify-same))
+(cl-peg:rule prolog::pNotUnifySame "! pNotSame '\\\\' '=' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::not-unify-same))
 
-(cl-peg:rule arrowgrams/prolog-peg::pUnifySame "!pSame !pLessEqual '=' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::unify-same))
+(cl-peg:rule prolog::pUnifySame "!pSame !pLessEqual '=' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::unify-same))
 
-(cl-peg:rule arrowgrams/prolog-peg::pColonDash "':-' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::colon-dash))
+(cl-peg:rule prolog::pColonDash "':-' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::colon-dash))
 
-(cl-peg:rule arrowgrams/prolog-peg::pGreaterEqual "'>=' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::greater-equal))
+(cl-peg:rule prolog::pGreaterEqual "'>=' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::greater-equal))
 
-(cl-peg:rule arrowgrams/prolog-peg::pLessEqual "'=<' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::less-equal))
+(cl-peg:rule prolog::pLessEqual "'=<' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::less-equal))
 
-(cl-peg:rule arrowgrams/prolog-peg::pCut "'!' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::cut))
+(cl-peg:rule prolog::pCut "'!' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::cut))
 
-(cl-peg:rule arrowgrams/prolog-peg::pPeriod "[.] Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::dot))
+(cl-peg:rule prolog::pPeriod "[.] Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::dot))
 
-(cl-peg:rule arrowgrams/prolog-peg::pComma "',' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::comma))
+(cl-peg:rule prolog::pComma "',' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::comma))
 
-(cl-peg:rule arrowgrams/prolog-peg::pLpar "'(' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::lpar))
+(cl-peg:rule prolog::pLpar "'(' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::lpar))
 
-(cl-peg:rule arrowgrams/prolog-peg::pRpar "')' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::rpar))
+(cl-peg:rule prolog::pRpar "')' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::rpar))
 
-(cl-peg:rule arrowgrams/prolog-peg::pLBrack "'[' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::l-bracket))
+(cl-peg:rule prolog::pLBrack "'[' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::l-bracket))
 
-(cl-peg:rule arrowgrams/prolog-peg::pRBrack "']' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::r-bracket))
+(cl-peg:rule prolog::pRBrack "']' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::r-bracket))
 
-(cl-peg:rule arrowgrams/prolog-peg::pMinus "'-' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::minus))
+(cl-peg:rule prolog::pMinus "'-' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::minus))
 
-(cl-peg:rule arrowgrams/prolog-peg::pPlus "'+' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::plus))
+(cl-peg:rule prolog::pPlus "'+' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::plus))
 
-(cl-peg:rule arrowgrams/prolog-peg::pAsterisk "'*' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::mul))
+(cl-peg:rule prolog::pAsterisk "'*' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::mul))
 
-(cl-peg:rule arrowgrams/prolog-peg::pSlash "'/' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::div))
+(cl-peg:rule prolog::pSlash "'/' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::div))
 
-(cl-peg:rule arrowgrams/prolog-peg::pOrBar "'|' Spacing"
-  (:lambda (x) (declare (ignore x)) 'arrowgrams/prolog-peg::or-bar))
+(cl-peg:rule prolog::pOrBar "'|' Spacing"
+  (:lambda (x) (declare (ignore x)) 'prolog::or-bar))
 
