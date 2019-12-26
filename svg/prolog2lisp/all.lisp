@@ -1,19 +1,10 @@
+(in-package :arrowgrams/prolog-peg)
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (cl-peg:into-package "ARROWGRAMS/PROLOG-PEG"))
 
-(defparameter *grammars* (list
-                          *peg-rules-original*
-                          *peg-rules-refactored*
-                          *peg-rules-generic*
-                          *peg-rules-hprolog*))
-(defun all (&optional (index 3))
-  (let ((g (cl-peg:fullpeg (nth index *grammars*))))
-    (mapc #'(lambda (r) 
-              (eval r)) 
-          (cdr g))
-    #+nil(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram)
-    (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram
-                              "
+(defparameter *all-prolog*
+"
 :- initialization(main).
 :- include('head').
 
@@ -857,113 +848,6 @@ makeOutputPins(_) :-
 :- include('tail').
 
 
-writeterm(Term) :- current_output(Out), write_term(Out, Term, []), write(Out, '.'), nl.
-
-
-writeFB :-
-    forall(arrow(X), writeterm(arrow(X))),
-    forall(arrow_x(X,Y), writeterm(arrow_x(X,Y))),
-    forall(arrow_y(X,Y), writeterm(arrow_y(X,Y))),
-    forall(rect(X), writeterm(rect(X))),
-    forall(roundedrect(X), writeterm(roundedrect(X))),
-    forall(pinless(X), writeterm(pinless(X))),
-    forall(comment(X), writeterm(comment(X))),
-    forall(speechbubble(X), writeterm(speechbubble(X))),
-    forall(metadata(X,Y), writeterm(metadata(X,Y))),
-    forall(ellipse(X), writeterm(ellipse(X))),
-    forall(dot(X), writeterm(dot(X))),
-    forall(line(X), writeterm(line(X))), 
-    forall(line_begin_x(X,Y), writeterm(line_begin_x(X,Y))), 
-    forall(line_begin_y(X,Y), writeterm(line_begin_y(X,Y))), 
-    forall(line_end_x(X,Y), writeterm(line_end_x(X,Y))), 
-    forall(line_end_y(X,Y), writeterm(line_end_y(X,Y))), 
-    forall(stroke_absolute_x(X,Y), writeterm(stroke_absolute_x(X,Y))), 
-    forall(stroke_absolute_y(X,Y), writeterm(stroke_absolute_y(X,Y))),
-    forall(stroke_relative_x(X,Y), writeterm(stroke_relative_x(X,Y))),
-    forall(stroke_relative_y(X,Y), writeterm(stroke_relative_y(X,Y))),
-    forall(text(X,Y), writeterm(text(X,Y))),
-    forall(text_x(X,Y), writeterm(text_x(X,Y))),
-    forall(text_y(X,Y), writeterm(text_y(X,Y))),
-    forall(text_w(X,Y), writeterm(text_w(X,Y))),
-    forall(text_h(X,Y), writeterm(text_h(X,Y))),
-
-    forall(join_centerPair(X,Y), writeterm(join_centerPair(X,Y))),
-    forall(join_distance(X,Y), writeterm(join_distance(X,Y))),
-    forall(distance_xy(X,Y), writeterm(distance_xy(X,Y))),
-
-    forall(bounding_box_left(X,Y), writeterm(bounding_box_left(X,Y))),
-    forall(bounding_box_top(X,Y), writeterm(bounding_box_top(X,Y))),
-    forall(bounding_box_right(X,Y), writeterm(bounding_box_right(X,Y))),
-    forall(bounding_box_bottom(X,Y), writeterm(bounding_box_bottom(X,Y))),
-    forall(center_x(X,Y), writeterm(center_x(X,Y))),
-    forall(center_y(X,Y), writeterm(center_y(X,Y))),
-    forall(component(X), writeterm(component(X))),
-    forall(edge(X), writeterm(edge(X))),
-    forall(eltype(X,Y), writeterm(eltype(X,Y))),
-    forall(geometry_h(X,Y), writeterm(geometry_h(X,Y))),
-    forall(geometry_w(X,Y), writeterm(geometry_w(X,Y))),
-    forall(geometry_left_x(X,Y), writeterm(geometry_left_x(X,Y))),
-    forall(geometry_top_y(X,Y), writeterm(geometry_top_y(X,Y))),
-    forall(geometry_center_x(X,Y), writeterm(geometry_center_x(X,Y))),
-    forall(geometry_center_y(X,Y), writeterm(geometry_center_y(X,Y))),
-    forall(used(X), writeterm(used(X))),
-    forall(kind(X,Y), writeterm(kind(X,Y))),
-    forall(selfPort(X,Y), writeterm(selfPort(X,Y))),
-    forall(port(X), writeterm(port(X))),
-    forall(portName(X,Y), writeterm(portName(X,Y))),
-    forall(portNameByID(X,Y), writeterm(portNameByID(X,Y))),
-    forall(unassigned(X), writeterm(unassigned(X))),
-    forall(source(X,Y), writeterm(source(X,Y))),
-    forall(sink(X,Y), writeterm(sink(X,Y))),
-    forall(npipes(X), writeterm(npipes(X))),
-    forall(pipeNum(X,Y), writeterm(pipeNum(X,Y))),
-
-    forall(nwires(X), writeterm(nwires(X))),
-    forall(wireNum(X,Y), writeterm(wireNum(X,Y))),
-
-    forall(sourcefd(X,Y), writeterm(sourcefd(X,Y))),
-    forall(sinkfd(X,Y), writeterm(sinkfd(X,Y))),
-    forall(inputPin(X,Y), writeterm(inputPin(X,Y))),
-    forall(outputPin(X,Y), writeterm(outputPin(X,Y))),
-    forall(selfInputPin(X), writeterm(selfInputPin(X))),
-    forall(selfOutputPin(X), writeterm(selfOutputPin(X))),
-    forall(wireIndex(X,Y), writeterm(wireIndex(X,Y))),
-    forall(n_c(X), writeterm(n_c(X))),
-    forall(namedSink(X), writeterm(namedSink(X))),
-    forall(namedSource(X), writeterm(namedSource(X))),
-    forall(parent(X,Y), writeterm(parent(X,Y))),
-    writelog.
-
-writelog :-
-    forall(log(X),writelog(X)),
-    forall(log(Z,Y),writelog(Z,Y)),
-    forall(log(A,B,C),writelog(A,B,C)),
-    forall(log(D,E,F,G),writelog(D,E,F,G)),
-    forall(log(H,I,J,K,L),writelog(H,I,J,K,L)),
-    forall(log(M,N,O,P,Q,R),writelog(M,N,O,P,Q,R)),
-    forall(log(S,T,U,V,W,X,Y),writelog(S,T,U,V,W,X,Y)),
-    forall(log(R,S,T,U,V,W,X,Y),writelog(R,S,T,U,V,W,X,Y)),
-    forall(log(R,S,T,U,V,W,X,Y,Z),writelog(R,S,T,U,V,W,X,Y,Z)).
-
-writelog(X) :- writeterm(log(X)).
-writelog(Y,Z) :-writeterm(log(Y,Z)).
-writelog(X,Y,Z) :-writeterm(log(X,Y,Z)).
-writelog(W,X,Y,Z) :-writeterm(log(W,X,Y,Z)).
-writelog(A,B,C,D,E) :-writeterm(log(A,B,C,D,E)).
-writelog(A,B,C,D,E,F) :-writeterm(log(A,B,C,D,E,F)).
-writelog(A,B,C,D,E,F,G) :-writeterm(log(A,B,C,D,E,F,G)).
-writelog(A,B,C,D,E,F,G,H) :-writeterm(log(A,B,C,D,E,F,G,H)).
-writelog(A,B,C,D,E,F,G,H,I) :-writeterm(log(A,B,C,D,E,F,G,H,I)).
-
-
-wspc :-
-    write(user_error,' ').
-
-nle :- nl(user_error).
-
-we(X) :- write(user_error,X).
-
-wen(X):- we(X),nle.
 
 
 inc(Var, Value) :-
@@ -1041,6 +925,40 @@ centerCompletelyInsideBoundingBox(ID1,ID2) :-
     Cy >= T2,
     Cy =< B2.
 
-"
-                              )))
-      (pprint parsed))))
+")
+
+(defparameter *test* "condRect :-
+    forall(rect(ID), createRectBoundingBox(ID)).
+condRect :-
+    true.")
+
+(defparameter *grammars* (list
+                          *peg-rules-original*
+                          *peg-rules-refactored*
+                          *peg-rules-generic*
+                          *peg-rules-hprolog*))
+
+(defun deleter-p (x)
+  (or (null x)
+      (and (listp x)
+           (null (car x))
+           (null (cdr x)))))
+
+(defun all (&optional (index 3))
+  (let ((g (cl-peg:fullpeg (nth index *grammars*))))
+    (mapc #'(lambda (r) 
+              (eval r)) 
+          (cdr g))
+    #+nil(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram)
+    ;(let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *test*)))
+    (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *all-prolog*)))
+      (let ((parsed2
+             (delete nil (mapcar #'(lambda (x)
+                                     (if (and (listp x) (eq :rule (car x)))
+                                         (delete-if #'deleter-p x)
+                                       x))
+                                 parsed))))
+        parsed2))))
+
+(defun dont-care-p (x)
+  (string= "_" (symbol-name x)))

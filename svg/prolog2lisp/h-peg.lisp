@@ -2,15 +2,35 @@
   (cl-peg:into-package "ARROWGRAMS/PROLOG-PEG"))
 
 (defparameter *peg-rules-hprolog*
-;; generic grammar, not PAIP specific
+;;  grammar for emitting holm prolog
 "
-pPrimary <- pOpClause / pCut / pNumber / hVariable / pFunctor / pKWID / pIdentifier / pList / pParenthesizedExpr
+pPrimary <- pOpClause / hCut / pNumber / hVariable / pFunctor / hKWID / hIdentifier / pList / pParenthesizedExpr
+
+hKWID <- pKWID
+  { (:lambda (id)
+     (unless (eq id 'arrowgrams/prolog-peg::pl-true)
+       id)) }
+  
+hIdentifier <- pIdentifier
+  { (:lambda (id)
+     (unless (or (eq :writefb id) (eq :halt id) (eq 'pl-true id))
+       id)) }
 
 hVariable <- pVariable
-  { (:lambda (x) `(:? ,(intern (symbol-name x)))) }
+  { (:lambda (x)
+      (let ((str (symbol-name x)))
+        (if (dont-care-p x)
+            `(:? ,(gensym \"DONTCARE\"))
+          `(:? ,(intern str))))) }
+
+hCut <- pCut
+  { (:lambda (x) (declare (ignore x)) :!) }
 
 pParenthesizedExpr <- pLpar pExpr pRpar
-  { (:destructure (lp e rp) (declare (ignore lp rp)) e) }
+  { (:destructure (lp e rp)
+     (declare (ignore lp rp))
+     (unless (or (eq :writefb e) (eq :halt e) (eq 'pl-true e))
+       e)) }
 
 pList <- pEmptyList / pCarOnlyList / pOrList
 pEmptyList <- pLBrack pRBrack
@@ -27,7 +47,9 @@ pOrList <- pLBrack pCommaSeparatedListOfExpr pOrBar pCommaSeparatedListOfExpr pR
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
   { (:destructure (id lp lis rp)
      (declare (ignore lp rp))
-     `(,id ,@lis)) }
+     (if (eq :readfb id)
+         nil              
+     `(,id ,@lis))) }
 
 pExpr <- pBooleanExpr
 
@@ -114,7 +136,7 @@ pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
                          ,@clause-list)) }
 
 pDirective <- pColonDash CommentStuff* EndOfLine
-  { (:lambda (x) (declare (ignore x)) '(prolog:directive)) }
+  { (:lambda (x) (declare (ignore x)) nil) }
 pTopLevel <- Spacing (pFact / pRule / pDirective)
   { (:destructure (spc thing)
      (declare (ignore spc))
