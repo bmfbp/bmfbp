@@ -19,7 +19,7 @@
 (cl-peg:rule arrowgrams/prolog-peg::Identifier1 "! pKeyword FirstIdentCharacter FollowingIdentCharacter*"
   (:destructure (nothing firstChar followChars)
    (declare (ignore nothing))
-   (intern (string-upcase (esrap:text firstChar followChars)) cl-peg::*peg-package*)))
+   (intern (string-upcase (esrap:text firstChar followChars)) "KEYWORD")))
 
 (cl-peg:rule arrowgrams/prolog-peg::pVariable "(Variable1a / Variable1b) Spacing"
   (:destructure (id spc)
@@ -30,9 +30,9 @@
   (:destructure (nothing firstChar followChars)
    (declare (ignore nothing))
    (multiple-value-bind (sym status)
-       (intern (concatenate 'string "?"
+       (intern (concatenate 'string 
                             (string-upcase (esrap:text firstChar followChars)))
-               cl-peg::*peg-package*)
+               "KEYWORD")
      (declare (ignore status))
      sym)))
 
@@ -40,7 +40,7 @@
    (:lambda (c)
      (declare (ignore c))
      (multiple-value-bind (sym status)
-         (intern "?" cl-peg::*peg-package*)
+         (intern "_" "KEYWORD")
        (declare (ignore status))
        sym)))
                 

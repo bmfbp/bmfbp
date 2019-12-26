@@ -4,16 +4,15 @@
 (defparameter *grammars* (list
                           *peg-rules-original*
                           *peg-rules-refactored*
-                          *peg-rules-generic*))
-(defun all (&optional (index 2))
+                          *peg-rules-generic*
+                          *peg-rules-hprolog*))
+(defun all (&optional (index 3))
   (let ((g (cl-peg:fullpeg (nth index *grammars*))))
     (mapc #'(lambda (r) 
               (eval r)) 
           (cdr g))
     #+nil(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram)
-    (let
-        (
-         (parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram
+    (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram
                               "
 :- initialization(main).
 :- include('head').
@@ -1043,5 +1042,5 @@ centerCompletelyInsideBoundingBox(ID1,ID2) :-
     Cy =< B2.
 
 "
-               )))
+                              )))
       (pprint parsed))))
