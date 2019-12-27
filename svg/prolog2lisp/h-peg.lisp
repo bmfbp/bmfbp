@@ -48,8 +48,10 @@ pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
   { (:destructure (id lp lis rp)
      (declare (ignore lp rp))
      (if (eq :readfb id)
-         nil              
-     `(,id ,@lis))) }
+         nil
+       (if (eq :asserta id)
+           `(:lisp (asserta ,@lis))
+         `(,id ,@lis)))) }
 
 pExpr <- pBooleanExpr
 
