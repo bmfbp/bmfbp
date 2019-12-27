@@ -20,7 +20,7 @@ hVariable <- pVariable
   { (:lambda (x)
       (let ((str (symbol-name x)))
         (if (dont-care-p x)
-            `(:? ,(gensym \"DONTCARE\"))
+            `(:? ,(intern (symbol-name (gensym \"DONTCARE-\"))))
           `(:? ,(intern str))))) }
 
 hCut <- pCut
