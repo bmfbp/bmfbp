@@ -19,25 +19,16 @@ createBoundingBoxes :-
 
 condRect :-
     forall(rect(ID), createRectBoundingBox(ID)).
-condRect :-
-    true.
 
 condSpeech :-
     forall(speechbubble(ID), createRectBoundingBox(ID)).
-condSpeech :-
-    true.
 
 condText :-
     forall(text(ID,_), createTextBoundingBox(ID)).
-condText :-
-    true.
 
 conditionalCreateEllipseBB :-
     ellipse(_),
     forall(ellipse(ID), createEllipseBoundingBox(ID)).
-
-conditionalCreateEllipseBB :- % for pre-ellipse code  
-    true.
 
 createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),
@@ -137,9 +128,6 @@ find_metadata_main :-
 condMeta :-
     forall(metadata(MID,_),createMetaDataRect(MID)).
 
-condMeta :-
-    true.
-
 createMetaDataRect(MID) :-
     metadata(MID,TextID),
     rect(BoxID),
@@ -172,8 +160,6 @@ condDoKinds :-
     forall(eltype(ID,box),createAllKinds(ID)),
     !.
 
-condDoKinds :- true.
-
 createAllKinds(BoxID) :-
     forall(text(TextID,_),createOneKind(BoxID,TextID)).
 
@@ -183,9 +169,6 @@ createOneKind(BoxID,TextID) :-
     textCompletelyInsideBox(TextID,BoxID),
     asserta(used(TextID)),
     asserta(kind(BoxID,Str)).
-
-createOneKind(_,_) :-
-    true.
 
 textCompletelyInsideBox(TextID,BoxID) :-
     pointCompletelyInsideBoundingBox(TextID,BoxID).
@@ -203,9 +186,6 @@ add_selfPorts_main :-
 
 condEllipses :-
     forall(ellipse(EllipseID),createSelfPorts(EllipseID)).
-
-condEllipses :-
-    true.
 
 createSelfPorts(EllipseID) :-
     % find one port that touches the ellispe (if there are more, then the 'coincidentPorts'
@@ -297,9 +277,6 @@ create_centers_main :-
 conditionalEllipseCenters :-
     ellipse(_),
     forall(ellipse(ID),createCenter(ID)).
-
-conditionalEllipseCenters:-
-    true.
 
 createCenter(ID) :-
     bounding_box_left(ID,Left),
@@ -470,9 +447,6 @@ findCoincidentSink(A,B):-
     asserta(log(coincidentsink,A,B,N)),
     asserta(portName(B,N)).
 
-findCoincidentSink(_,_):-
-    true.
-
 notNamedSink(X) :-
     \\+ namedSink(X).
 
@@ -496,9 +470,6 @@ findCoincidentSource(A,B):-
     portName(A,N),
     asserta(log(coincidentsource,A,B,N)),
     asserta(portName(B,N)).
-
-findCoincidentSource(_,_):-
-    true.
 
 notNamedSource(X) :-
     \\+ namedSource(X).
@@ -754,17 +725,12 @@ condSourceEllipse :-
     forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)),
 !.
 
-condSourceEllispe :- true.
-
 makeSelfInputPins(EllipseID) :-
     parent(Main,EllipseID),
     component(Main),
     portFor(EllipseID,PortID),
     source(_,PortID),
     asserta(selfInputPin(PortID)),!.  % self-input -> is a source (backwards from part inputs)
-
-makeSelfInputPins(_) :-
-    true.
 
 :- include('tail').
 
@@ -781,7 +747,6 @@ selfOutputPins_main :-
 condSinkEllipse :-
     forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)),
     !.
-condSourceEllipse :- true.
 
 makeSelfOutputPins(EllipseID) :-
     parent(Main,EllipseID),
@@ -790,8 +755,6 @@ makeSelfOutputPins(EllipseID) :-
     sink(_,PortID),
     asserta(selfOutputPin(PortID)),!.  % self-output -> is a sink (backwards from part inputs)
 
-makeSelfOutputPins(_) :-
-    true.
 
 :- include('tail').
 
@@ -808,15 +771,11 @@ inputPins_main :-
 condSinkRect :-
     forall(rect(RectID),makeInputPins(RectID)),
     !.
-condSinkRect :- true.
 
 makeInputPins(RectID) :-
     portFor(RectID,PortID),
     sink(_,PortID),
     asserta(inputPin(PortID)),!.
-
-makeInputPins(_) :-
-    true.
 
 :- include('tail').
 
@@ -833,15 +792,12 @@ outputPins_main :-
 condSourceRect :-
     forall(rect(RectID),makeOutputPins(RectID)),
     !.
-condSourceRect :- true.
 
 makeOutputPins(RectID) :-
     portFor(RectID,PortID),
     source(_,PortID),
     asserta(outputPin(PortID)),!.
 
-makeOutputPins(_) :-
-    true.
 
 :- include('tail').
 
