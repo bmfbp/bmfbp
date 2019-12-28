@@ -1,0 +1,4 @@
+* usage:
+** (arrowgrams/prolog-peg::all 3)
+** then manually copy emitted code to converted.lisp
+** then cherry pick code for a given pass
