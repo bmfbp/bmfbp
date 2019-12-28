@@ -126,7 +126,10 @@ pFact <- pFunctor Spacing pPeriod
 
 pClause <- pPrimary
   { (:lambda (x)
-      (memo-clause x)) }
+      (memo-clause x)
+      (if (eq :nl x)
+          `(format *standard-error* \"~%\")
+        x)) }
 
 pCommaSeparatedClauses <- pCommaSeparatedClauses1
 
