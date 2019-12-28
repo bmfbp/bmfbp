@@ -22,6 +22,7 @@ condRect :-
            (null (cdr x)))))
 
 (defun all (&optional (index 3))
+  (init)
   (let ((g (cl-peg:fullpeg (nth index *grammars*))))
     (mapc #'(lambda (r) 
               (eval r)) 
@@ -56,4 +57,4 @@ condRect :-
               (setq success t))
             (unless success (format out-str "~a~%" line))))))
     out-str))
-  
+
