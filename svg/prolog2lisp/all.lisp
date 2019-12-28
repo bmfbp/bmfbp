@@ -26,9 +26,9 @@ condRect :-
     (mapc #'(lambda (r) 
               (eval r)) 
           (cdr g))
-    (esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
-    (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *test*)))
-    ;(let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *all-prolog*)))
+    ;(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
+    ;(let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *test*)))
+    (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *all-prolog*)))
       (let ((parsed2
              (delete nil (mapcar #'(lambda (x)
                                      (if (and (listp x) (eq :rule (car x)))
