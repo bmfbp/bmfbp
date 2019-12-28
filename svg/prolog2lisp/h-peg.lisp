@@ -129,7 +129,9 @@ pClause <- pPrimary
       (memo-clause x)
       (if (eq :nl x)
           `(format *standard-error* \"~%\")
-        x)) }
+        (if (and (listp x) (eq (car x) :write))
+          `(format *standard-error* \"~a~%\" ,(second x))
+        x))) }
 
 pCommaSeparatedClauses <- pCommaSeparatedClauses1
 
