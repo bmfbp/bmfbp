@@ -122,7 +122,9 @@ pFact <- pFunctor Spacing pPeriod
 
 pClause <- pPrimary
 
-pCommaSeparatedClauses <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pPrimary
+pCommaSeparatedClauses <- pCommaSeparatedClauses1
+
+pCommaSeparatedClauses1 <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pPrimary
   { (:destructure (lis p)
      (when (atom p) (setf p (list p)))
      (if lis

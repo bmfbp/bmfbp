@@ -36,6 +36,8 @@
    #:r-bracket
    #:or-bar
 
+   #:assert
+   #:retract
    #:forall
    #:function-all-solutions
    ))
