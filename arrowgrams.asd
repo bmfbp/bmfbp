@@ -132,6 +132,8 @@
 				     (:file "generic-peg" :depends-on ("package"))
 				     (:file "h-peg" :depends-on ("package"))
 				     (:file "prolog-peg" :depends-on ("package"))
+				     (:file "prolog-rules" :depends-on ("package"))
 				     (:file "all" :depends-on ("package" "spacing-peg" "keyword-peg" "comment-peg"
-                                      "identifier-peg" "number-peg" "original-peg" "refactored-peg" "generic-peg" "h-peg"))
+                                      "identifier-peg" "number-peg" "original-peg" "refactored-peg" "generic-peg"
+                                      "h-peg" "prolog-rules"))
                                      ))))
