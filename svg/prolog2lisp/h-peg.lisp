@@ -53,7 +53,9 @@ pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
          nil
        (if (eq :asserta id)
            `(:lisp (asserta ,@lis))
-         `(,id ,@lis)))) }
+         (if (eq :retract id)
+             `(:lisp (retract ,@lis))
+           `(,id ,@lis))))) }
 
 pExpr <- pBooleanExpr
 
