@@ -36,5 +36,6 @@
    #:r-bracket
    #:or-bar
 
+   #:forall
    #:function-all-solutions
    ))
