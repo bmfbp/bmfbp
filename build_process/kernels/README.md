@@ -31,35 +31,40 @@ The kernel module exports one function:
 
 where
 
-- `rootDir` is the directory containing all the leaf kinds. The kernel locates
-  the leaf part manifest file using:
+- `rootDir` is the directory containing all the information about the kinds.
+  The kernel locates the definition file using:
   `${rootDir}/${sha256(${repo}-${ref})/${dir}/${file}`, where all the variables
   except for `rootDir` are extracted from the leaf definition (see below).
 - `kinds` is an object whose keys are the kind names and whose values are the
-  kind definitions. For the structure of the definitions between leaves and
-  composites, see the sub-sections below.
-- `topLevelKindName` is the kind name to start the program with.
+  reference objects.
+- `topLevelKindName` is the kind name to start running with.
 
-### Leaves
+### References
 
-This is an example for a leaf definition.
+The kernel only takes these. It then resolves each reference to a manifest file
+specified below.
+
+This is an example of a reference object.
 
 ```
 {
-  "dir": "build_process/",
-  "file": "get_file_content_in_repo.json",
+  "contextDir": "build_process/",
+  "manifestPath": "get_file_content_in_repo.json",
   "kindName": "get file content in repo",
-  "ref": "master",
-  "repo": "https://github.com/bmfbp/bmfbp.git"
+  "gitRef": "master",
+  "gitUrl": "https://github.com/bmfbp/bmfbp.git"
 }
 ```
 
-The manifest file looks something like:
+### Leaves
+
+A manifest file for leaves looks something like:
 
 ```
 {
   "entrypoint": "./get_file_content_in_repo.js",
-  "kindType": "nodejs",
+  "kindType": "leaf",
+  "platform": "nodejs",
   "inPins": [
     "git repo metadata",
     "temp directory"
@@ -71,10 +76,10 @@ The manifest file looks something like:
 }
 ```
 
-The entrypoint file must export at least a `main` function for the system to
-call into. It can optionally include a `bootstrap` function that would be
-called after system initialization. A common use case is to send the initial
-messages to start the system.
+For leaves, the entrypoint file must export at least a `main` function for the
+system to call into. It can optionally include a `bootstrap` function that
+would be called after system initialization. A common use case is to send the
+initial messages to start the system.
 
 An example in Node.js:
 
@@ -93,7 +98,20 @@ exports.main = (pin, packet, send) => {
 
 ### Composites
 
-This is an example for a composite definition.
+A manifest file for composites looks something like:
+
+```
+{
+  "entrypoint": "./mock.json",
+  "kindType": "schematic",
+  "platform": "nodejs",
+  "inPins": [],
+  "outPins": []
+}
+```
+
+This is an example for a composite definition file pointed to in `entrypoint`
+above.
 
 ```
 {

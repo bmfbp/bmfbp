@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./mock_leaf.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "in1",
+    "in2"
+  ],
+  "outPins": [
+    "out1"
+  ]
+}

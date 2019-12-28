@@ -1,81 +1,360 @@
-const runKernel = (() => {
-  'use strict';
+'use strict';
 
-  const fs = require('fs');
-  const crypto = require('crypto');
+// REMOVE_START_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+//
+// The following is for debugging and sanity checking. Not needed at runtime.
 
-  function PartPinTuple(part, pin) {
-    this.part = part;
-    this.pin = pin;
+const makeKindRef = (kindName, gitUrl, gitRef, contextDir, manifestPath) => {
+  return {
+    contextDir: contextDir,
+    manifestPath: manifestPath,
+    kindName: kindName,
+    gitRef: gitRef,
+    gitUrl: gitUrl
+  };
+};
+
+const prepareLocalKind = (pathToLocalGitRepo, rootDir, kindRef) => {
+  const kindIdHash = getKindIdHash(kindRef);
+  const localRefDir = path.dirname(path.join(rootDir, kindIdHash, kindRef.manifestPath));
+  const localGitDir = path.join(pathToLocalGitRepo, kindRef.contextDir);
+
+  console.log('Preparing local kind', localGitDir, localRefDir);
+
+  fs.mkdirSync(path.dirname(localRefDir), {
+    recursive: true
+  });
+
+  if (!fs.existsSync(localRefDir)) {
+    fs.symlinkSync(localGitDir, localRefDir);
+  }
+};
+
+const preflightCheck = (rootDir, kindRefs, topLevelKindName) => {
+  console.log('Preflight check', rootDir, kindRefs, topLevelKindName);
+
+  if (!fs.existsSync(rootDir) || !fs.statSync(rootDir).isDirectory()) {
+    throw new Error('Root directory does not exist', rootDir);
   }
 
-  function OutEvent(packet, from, pin) {
-    this.packet = packet;
-    this.from = from;
-    this.pin = pin;
+  if (kindRefs[topLevelKindName] === undefined) {
+    throw new Error('Top level kind name not found', topLevelKindName);
   }
 
-  function Kind(definition, inPins, outPins) {
-    this.definition = definition;
-    this.inPins = inPins;
-    this.outPins = outPins;
+  Object.keys(kindRefs).forEach((key) => {
+    console.log('Checking kind', key);
+    const kindRef = kindRefs[key];
+
+    checkKindReference(kindRef);
+
+    const manifest = getManifestFromKindRef(rootDir, kindRef);
+    console.log('Checking manifest', manifest);
+
+    checkKindManifest(rootDir, kindRef, manifest);
+
+    const entrypointPath = getAbsPath(rootDir, kindRef, manifest.entrypoint);
+    const entrypoint = require(entrypointPath);
+
+    switch (manifest.kindType) {
+      case 'composite':
+        console.log('Checking composite entrypoint', entrypoint);
+        let metadata;
+
+        if (typeof entrypoint.kindName !== 'string') {
+          throw new Error('entrypoint.kindName must be a string and is not.');
+        }
+        if (typeof entrypoint.wireCount !== 'number') {
+          throw new Error('entrypoint.wireCount must be a number and is not.');
+        }
+        if (!isPartDefinition(entrypoint.self)) {
+          throw new Error('entrypoint.self must be part and is not.');
+        }
+        if (!isArrayOfParts(entrypoint.parts)) {
+          throw new Error('entrypoint.parts must be an array of parts and is not.');
+        }
+        try {
+          metadata = JSON.parse(entrypoint.metaData);
+        } catch (e) {
+          throw new Error('entrypoint.metaData must be a JSON string and is not.');
+        }
+        if (!(metadata instanceof Array)) {
+          throw new Error('entrypoint.metaData after parsing must be an array and is not.');
+        }
+        metadata.forEach((kindRef) => {
+          checkKindReference(kindRef);
+        });
+        const entrypointInPins = Object.keys(entrypoint.self.inMap);
+        const entrypointOutPins = Object.keys(entrypoint.self.outMap);
+        if (!areArraysIdentical(manifest.inPins, entrypointInPins)) {
+          throw new Error('entrypoint.self.inMaps must mirror manifest.inPins and does not.');
+        }
+        if (!areArraysIdentical(manifest.outPins, entrypointOutPins)) {
+          throw new Error('entrypoint.self.outMaps must mirror manifest.outPins and does not.');
+        }
+        break;
+
+      case 'leaf':
+        console.log('Checking leaf entrypoint');
+
+        if (typeof entrypoint.main !== 'function') {
+          throw new Error('entrypoint.main must be a function and is not.');
+        }
+        break;
+    }
+  });
+};
+
+const checkKindReference = (kindRef) => {
+  if (typeof kindRef !== 'object') {
+    throw new Error('ref must be an object and is not.');
+  }
+  if (typeof kindRef.contextDir !== 'string') {
+    throw new Error('contextDir must be a string and is not.');
+  }
+  if (typeof kindRef.manifestPath !== 'string') {
+    throw new Error('manifestPath must be a string and is not.');
+  }
+  if (typeof kindRef.kindName !== 'string') {
+    throw new Error('kindName must be a string and is not.');
+  }
+  if (typeof kindRef.gitRef !== 'string') {
+    throw new Error('gitRef must be a string and is not.');
+  }
+  if (typeof kindRef.gitUrl !== 'string') {
+    throw new Error('gitUrl must be a string and is not.');
+  }
+};
+
+const checkKindManifest = (rootDir, kindRef, manifest) => {
+  const entrypointPath = getAbsPath(rootDir, kindRef, manifest.entrypoint);
+  console.log('Checking kind manifest', rootDir, kindRef, manifest, entrypointPath);
+
+  if (!fs.existsSync(entrypointPath) || !fs.statSync(entrypointPath).isFile()) {
+    throw new Error('manifest.entrypoint must be a file and is not.');
+  }
+  if (['composite', 'leaf'].indexOf(manifest.kindType) < 0) {
+    throw new Error('manifest.kindType is not valid');
+  }
+  if (manifest.platform !== 'nodejs') {
+    throw new Error('manifest.platform must be "nodejs" and is not.');
+  }
+  if (!(manifest.inPins instanceof Array)) {
+    throw new Error('manifest.inPins must be an array and is not.');
+  }
+  manifest.inPins.forEach((inPin) => {
+    if (typeof inPin !== 'string') {
+      throw new Error('manifest.inPin must be a string and is not.');
+    }
+  });
+  if (!(manifest.outPins instanceof Array)) {
+    throw new Error('manifest.outPins must be an array and is not.');
+  }
+  manifest.outPins.forEach((outPin) => {
+    if (typeof outPin !== 'string') {
+      throw new Error('manifest.outPin must be a string and is not.');
+    }
+  });
+};
+
+const areArraysIdentical = (x, y) => {
+  if (x.length !== y.length) {
+    return false;
   }
 
-  function Bootstrap(func, send, release) {
-    this.func = func;
-    this.send = send;
-    this.release = release;
+  const xSorted = x.sort();
+  const ySorted = y.sort();
+
+  for (var i = 0, l = xSorted.length; i < l; i++) {
+    if (xSorted[i] !== ySorted[i]) {
+      return false;
+    }
   }
 
+  return true;
+};
+
+const isArrayOfArrayOfNumbers = (arr) => {
+  var i, l, j, m;
+
+  if (!(arr instanceof Array)) {
+    return false;
+  } else {
+    for (i = 0, l = arr.length; i < l; i++) {
+      if (!(arr[i] instanceof Array)) {
+        return false;
+      } else {
+        for (j = 0, m = arr[i].length; j < m; j++) {
+          if (typeof arr[i][j] !== 'number') {
+            return false;
+          }
+        }
+      }
+    }
+  }
+
+  return true;
+};
+
+const isMapOfStringToNumber = (map) => {
+  let qualified = true;
+
+  Object.keys(map).forEach((key) => {
+    if (typeof key !== 'string') {
+      qualified = false;
+    }
+
+    if (typeof map[key] !== 'number') {
+      qualified = false;
+    }
+  });
+
+  return qualified;
+};
+
+const isPartDefinition = (part) => {
+  const hasKindName = typeof part.kindName === 'string';
+  const hasPartName = typeof part.partName === 'string';
+  const hasInCount = typeof part.inCount === 'number';
+  const hasOutCount = typeof part.outCount === 'number';
+  const hasInPins = isArrayOfArrayOfNumbers(part.inPins);
+  const hasOutPins = isArrayOfArrayOfNumbers(part.outPins);
+  const hasInMap = isMapOfStringToNumber(part.inMap);
+  const hasOutMap = isMapOfStringToNumber(part.outMap);
+
+  return hasKindName && hasPartName && hasInCount && hasOutCount && hasInPins && hasOutPins && hasInMap && hasOutMap;
+};
+
+const isArrayOfParts = (parts) => {
+  var i, l;
+
+  if (!(parts instanceof Array)) {
+    return false;
+  }
+
+  for (i = 0, l = parts.length; i < l; i++) {
+    if (!(isPartDefinition(parts[i]))) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const getKindIdHash = (kindRef) => {
+  const kindId = [kindRef.gitUrl, kindRef.gitRef, kindRef.contextDir, kindRef.manifestPath].join('|');
+  const kindIdHash = crypto.createHash('sha256').update(kindId).digest('hex');
+  return kindIdHash;
+};
+
+// REMOVE_END_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+
+const fs = require('fs');
+const crypto = require('crypto');
+const path = require('path');
+
+const kindManifests = {};
+const kindPins = {};
+const leafPartBootstraps = [];
+
+const OutEvent = (packet, from, pin) => {
+  return {
+    packet: packet,
+    from: from,
+    pin: pin
+  };
+};
+
+const getAbsPath = (rootDir, kindRef, relPath) => {
+  const kindIdHash = getKindIdHash(kindRef);
+  return path.join(rootDir, kindIdHash, relPath);
+};
+
+// Load the manifest given a kind reference object. See README.md for the
+// structure of a reference object.
+const getManifestFromKindRef = (rootDir, kindRef) => {
+  const kindIdHash = getKindIdHash(kindRef);
+  console.log('Getting manifest from reference', kindIdHash, kindRef); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+  let manifest;
+
+  if (kindManifests[kindIdHash] !== undefined) {
+    manifest = kindManifests[kindIdHash];
+  } else {
+    const manifestPath = getAbsPath(rootDir, kindRef, kindRef.manifestPath);
+    manifest = require(manifestPath);
+    kindManifests[kindIdHash] = manifest;
+    // TODO: We need to somehow make kindIdHash calculable within a composite so that we could support the same kind name for multiple kinds. One idea is to have the reference object spec to include a universal kindId and do away with kindIdHash.
+    kindPins[kindRef.kindName] = {
+      inPins: manifest.inPins,
+      outPins: manifest.outPins
+    };
+  }
+
+  return manifest;
+};
+
+const runKernel = (rootDir, kindRefs, topLevelKindName) => {
   // parentSend - This is the `send()` subroutine to send packets via the sinks
-  //   of this composite. We don't have access to this until the parent Composite
-  //   calls the main function of this Composite.
-  // parentRelease - This is how the Composite triggers the parent Composite to
-  //   process any packet sent to this Composite's Sinks.
-  const initComposite = (schematic, parentSend, parentRelease) => {
-    // Maps Part index in `schematic.parts` to Part object
-    const parts = new Array(schematic.parts.length);
-    // The main entry points of the Parts, indexed like `parts` above
-    const partMains = new Array(schematic.parts.length);
-    // Maps wire number to the Parts that are on the receiving end of the wire
-    const wireToReceivers = new Array(schematic.wireCount);
-    // The input and output queues of the Parts, indexed by the Part index.
-    // There is exactly one input queue and one output queue for each Part.
-    const inQueue = new Array(schematic.parts.length);
-    // The output queue is an array of arrays, first indexed by Part index,
-    // then by the Part's pin index.
-    const outQueue = new Array(schematic.parts.length);
-    // Input pin translation from pin names (strings) to pin indexes (numbers) of
-    // the constituent parts.
+  //   of this composite.
+  // parentRelease - This is how the Composite triggers the parent composite to
+  //   process any packet sent to this composite's sinks.
+  const initComposite = (kindDef, parentSend, parentRelease) => {
+    console.log('initComposite', kindDef); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+
+    const wireCount = kindDef.wireCount;
+    const partCount = kindDef.parts.length;
+    // Maps part index in `kindDef.parts` to part object
+    const parts = [];
+    // The main entry points of the parts, indexed by part index
+    const partMains = [];
+    // Maps wire number to the parts that are on the receiving end of the wire
+    const wireToReceivers = [];
+    // The input queues of the parts, indexed by the part index. There is
+    // exactly one input queue for each part.
+    const inQueue = [];
+    // The output queue is an array of arrays, first indexed by part index,
+    // then by the part's pin index. There is exactly one output queue for each
+    // part.
+    const outQueue = [];
+    // Input pin translation from pin names (strings) to pin indexes (numbers)
+    // of the constituent parts.
     const inPins = [];
     // Output pin translation from pin names (strings) to pin indexes (numbers)
     // of the constituent parts.
     const outPins = [];
-    // Indexes of the Parts that can be activated
+    const compositeInPins = kindDef.self.inPins;
+    const compositeOutPins = kindDef.self.outPins;
+    const compositeInMap = kindDef.self.inMap;
+    const compositeOutMap = kindDef.self.outMap;
+    // Indexes of the parts that can be activated
     const readyParts = [];
-    const compositeInPins = schematic.self.inPins;
-    const compositeOutPins = schematic.self.outPins;
-    // We need to transform the `sinks` in schematic, which maps Sink number
-    // to Wire number, to an array that maps Wire number to Sink number for
-    // efficiency at run-time.
-    const wireToSinks = new Array(schematic.wireCount);
-    // Maps a tuple of Part ID and output Pin ID to wires
-    const partPinToWires = new Array(schematic.parts.length);
+    // Map wire number to sink numbers. Note that one wire may be attached to
+    // multiple sinks.
+    const wireToSinks = [];
+    // Map a tuple of part ID and output pin ID to wires. Note that each tuple
+    // may point to multiple wires.
+    const partPinToWires = [];
     // We need a way to know when to flush the Sinks.
     var flushSinks = false;
 
-    const send = (originatingPartIndex, pinIndex, packet) => {
-      outQueue[originatingPartIndex].push(new OutEvent(packet, originatingPartIndex, pinIndex));
+    const send = (originatingPartIndex, pinIndex, packet, releaseImmediately) => {
+      console.log('internal send', kindDef.kindName, originatingPartIndex, pinIndex, packet); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+      outQueue[originatingPartIndex].push(OutEvent(packet, originatingPartIndex, pinIndex));
+
+      if (releaseImmediately === true) {
+        release(originatingPartIndex);
+      }
     };
 
     const pushToInQueue = (wireNumber, outEvent) => {
       const receivers = wireToReceivers[wireNumber];
       const sinks = wireToSinks[wireNumber];
+      console.log('pushToInQueue', kindDef.kindName, wireNumber, outEvent, receivers, sinks); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
       var i, l;
       var receiver;
 
-      // For Sinks
+      // For sinks
       for (i = 0, l = sinks.length; i < l; i++) {
+console.log('kktest-0000', sinks, i);
         parentSend(sinks[i], outEvent.packet);
         flushSinks = true;
       }
@@ -96,48 +375,63 @@ const runKernel = (() => {
       var outEvent;
       var wires;
       const queue = outQueue[partIndex];
+      console.log('release', kindDef.kindName, partIndex, queue); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
 
       while (queue.length > 0) {
         outEvent = queue.shift();
-        wire = partPinToWires[outEvent.from][outEvent.pin];
-        pushToInQueue(wire, outEvent);
+        console.log('release processing event', partPinToWires, kindDef.kindName, outEvent); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+        wires = partPinToWires[outEvent.from][outEvent.pin];
+        for (i = 0, l = wires.length; i < l; i++) {
+          pushToInQueue(wires[i], outEvent);
+        }
       }
 
       setTimeout(dispatch, 0);
     };
 
     const runPart = (partIndex, incomingPin, incomingPacket) => {
-      var incomingPinName;
+      console.log('runPart', kindDef.kindName, partIndex, incomingPin, incomingPacket); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
 
-      // Translate from pin index to pin name if necessary.
-      if (typeof incomingPin === 'number') {
-        incomingPinName = inPins[partIndex][incomingPin];
-        if (incomingPinName === undefined) {
-          throw new Error('Pin index "' + incomingPin + '" not found');
-        }
-      } else {
+// TODO: Is it necessary to translate from both?
+// TODO: Refactor this
+      // Translate from pin index to pin name.
+      let incomingPinName;
+      if (typeof incomingPin === 'string') {
         incomingPinName = incomingPin;
+      } else {
+        incomingPinName = inPins[partIndex][incomingPin];
       }
+      // REMOVE_START_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+      if (incomingPinName === undefined) {
+        console.log('incoming pin not found', kindDef.kindName, partIndex, incomingPin);
+      }
+      // REMOVE_END_WHEN:MINIMAL_BUILD,PROFILING_BUILD
 
       // Run the part's main function.
-      partMains[partIndex](incomingPinName, incomingPacket, (outgoingPin, outgoingPacket) => {
-        var outgoingPinIndex;
+      console.log('runPart before', kindDef.kindName, partIndex, incomingPinName, incomingPacket); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+      partMains[partIndex](incomingPinName, incomingPacket, (outgoingPin, outgoingPacket, releaseImmediately) => {
+        console.log('runPart after', kindDef.kindName, partIndex, outgoingPin, outgoingPacket); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
 
-        // Translate pin name to pin index if necessary.
-        if (typeof outgoingPin === 'number') {
-          outgoingPinIndex = outgoingPin;
-        } else {
+// TODO: Refactor this
+        // Translate pin name to pin index.
+        let outgoingPinIndex;
+        if (typeof outgoingPin === 'string') {
           outgoingPinIndex = outPins[partIndex].indexOf(outgoingPin);
-          if (outgoingPinIndex < 0) {
-            throw new Error('Pin name "' + outgoingPin + '" not expected');
-          }
+        } else {
+          outgoingPinIndex = outgoingPin;
         }
+        // REMOVE_START_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+        if (outgoingPinIndex < 0) {
+          console.log('outgoing pin not found', kindDef.kindName, partIndex, outgoingPin);
+        }
+        // REMOVE_END_WHEN:MINIMAL_BUILD,PROFILING_BUILD
 
-        send(partIndex, outgoingPinIndex, outgoingPacket);
+        send(partIndex, outgoingPinIndex, outgoingPacket, releaseImmediately);
       });
     };
 
     const dispatch = () => {
+      console.log('dispatch', kindDef.kindName); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
       var partIndex;
       var queue;
       var inEvent;
@@ -146,8 +440,10 @@ const runKernel = (() => {
         partIndex = readyParts.shift();
         queue = inQueue[partIndex];
 
+        console.log('dispatch start', kindDef.kindName, partIndex); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
         while (queue.length > 0) {
           inEvent = queue.pop();
+          console.log('dispatch event', kindDef.kindName, partIndex, inEvent); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
           runPart(partIndex, inEvent.pin, inEvent.packet);
         }
 
@@ -155,6 +451,7 @@ const runKernel = (() => {
       }
 
       if (flushSinks) {
+        console.log('dispatch release parent', kindDef.kindName); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
         parentRelease();
       }
     };
@@ -166,50 +463,75 @@ const runKernel = (() => {
     var outPinCount;
 
     // Initialize arrays.
-    for (i = 0, l = wireToSinks.length; i < l; i++) {
+    for (i = 0, l = wireCount; i < l; i++) {
       wireToSinks[i] = [];
     }
-    for (i = 0, l = wireToReceivers.length; i < l; i++) {
+    for (i = 0, l = wireCount; i < l; i++) {
       wireToReceivers[i] = [];
     }
-    for (i = 0, l = parts.length; i < l; i++) {
-      partPinToWires[i] = schematic.parts[i].outPins;
+    for (i = 0, l = partCount; i < l; i++) {
+      partPinToWires[i] = kindDef.parts[i].outPins;
     }
 
-    // Prepare the Sinks.
+    // Prepare the sinks.
     for (i = 0, l = compositeOutPins.length; i < l; i++) {
       wireToSinks[compositeOutPins[i]].push(i);
     }
 
-    // Prepare the Parts.
-    for (i = 0, l = schematic.parts.length; i < l; i++) {
-      part = schematic.parts[i];
+    // Prepare the parts.
+    for (i = 0, l = partCount; i < l; i++) {
+      console.log('preparing a part', kindDef.kindName, i); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+      part = kindDef.parts[i];
       parts[i] = part;
       inQueue[i] = [];
       outQueue[i] = [];
 
       for (m = 0, n = part.inPins.length; m < n; m++) {
+        console.log('preparing a input pin', kindDef.kindName, i, m, wireToReceivers); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
         wireNumber = part.inPins[m];
-        wireToReceivers[wireNumber].push(new PartPinTuple(i, m));
+        wireToReceivers[wireNumber].push({
+          part: i,
+          pin: m
+        });
       }
 
-      partMains[i] = initPart(allKinds[part.kindName]);
-      inPins[i] = allKinds[part.kindName].inPins;
-      outPins[i] = allKinds[part.kindName].outPins;
+      // The "main" of a part is just a wrapper so that we could provide
+      // specific send and release subroutines to the "main" in the entrypoint
+      // subroutine specified in the kind definition.
+      partMains[i] = ((partIndex) => {
+        const sendFromThisPart = (pin, packet) => {
+// TODO: Refactor this
+          let pinIndex;
+          if (typeof pin === 'string') {
+            pinIndex = outPins[partIndex].indexOf(pin);
+          } else {
+            pinIndex = pin;
+          }
+          send(partIndex, pinIndex, packet);
+        };
+        const releaseFromThisPart = () => {
+          release(partIndex);
+        };
+        return initPart(part.kindName, sendFromThisPart, releaseFromThisPart);
+      })(i);
+      console.log('saving kind pins', kindPins, kindDef.kindName, part.kindName, i); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+      inPins[i] = kindPins[part.kindName].inPins;
+      outPins[i] = kindPins[part.kindName].outPins;
     }
 
-    // The parent of this Composite calls this like a Leaf Part's function with
-    // the same arguments to set up the Part. This allows the outer Composites to
-    // be able to treat Composites and Leaf Parts in the same way.
+    // The parent of this composite calls this like a leaf part's function with
+    // the same arguments. This allows the outer composites to be able to treat
+    // composites and leaf parts in the same way.
     //
-    // Whenever there is a packet coming from the outer Composite, push it
+    // Whenever there is a packet coming from the outer composite, push it
     // directly to the queue and wait for dispatch.
-    return (sourceNumber, packet, send) => {
+    return (sourceName, packet, send) => {
+      const sourceNumber = compositeInMap[sourceName];
       const sourceWireNumber = compositeInPins[sourceNumber];
+      console.log('composite receives packet', kindDef.kindName, sourceName, sourceNumber, packet, sourceWireNumber); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+      // No action if the following is not true. It'd be a no-connection scenario.
       if (sourceWireNumber) {
-        pushToInQueue(sourceWireNumber, new OutEvent(packet));
-      } else {
-        // No connection. No action needed.
+        pushToInQueue(sourceWireNumber, OutEvent(packet));
       }
       setTimeout(dispatch, 0);
     };
@@ -217,146 +539,53 @@ const runKernel = (() => {
 
   // This takes a leaf definition (see README), extract the input and output pin
   // definitions, and the main and bootstrap routines to be invoked later.
-  const initLeaf = (leaf, send, release) => {
-    const repoIdOnFilesystem = [leaf.repo, leaf.ref].join('-');
-    const repoIdHash = crypto.createHash('sha256').update(repoIdOnFilesystem).digest('hex');
-    const repoDir = path.join(leafRootDir, repoIdHash);
-    const manifestPath = path.join(repoDir, leaf.dir, leaf.file);
-    const manifest = require(manifestPath);
-    const entrypointPath = path.join(repoDir, leaf.dir, manifest.entrypoint);
-
-    if (manifest.kindType !== 'nodejs') {
-      throw new Error('Kind type must be "nodejs" but is ' + manifest.kindType);
-    }
-
-    // Clear Node.js require cache to force each instance of the leaf type to be
-    // separate from one another.
-    for (var key in require.cache) {
-      delete require.cache[key];
-    }
-
-    const entrypoint = require(entrypointPath);
-
-    if (typeof entrypoint.main !== 'function') {
-      throw new Error('Leaf entrypoint does not export a "main" method.');
-    }
-    if (!(entrypoint.inPins instanceof Array)) {
-      throw new Error('Leaf does not contain an input pin definition.');
-    }
-    if (!(entrypoint.outPins instanceof Array)) {
-      throw new Error('Leaf does not contain an output pin definition.');
-    }
-
-    // All instances of the same leaf kind share the same input and output pins
-    // anyway so it's ok to replace existing values here.
-    allKinds[leaf.kindName].inPins = manifest.inPins;
-    allKinds[leaf.kindName].outPins = manifest.outPins;
+  const initLeaf = (entrypoint, send, release) => {
+    console.log('initLeaf'); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
 
     // Save bootstrap function to be called at the end of initialization.
-    if (entrypoint.bootstrap !== undefined) {
-      allLeafPartBootstraps.push(() => entrypoint.bootstrap(send, release));
+    if (typeof entrypoint.bootstrap === 'function') {
+      leafPartBootstraps.push(() => entrypoint.bootstrap(send, release));
     }
 
     return entrypoint.main;
   };
 
-  const isArrayOfArrayOfNumbers = (arr) => {
-    var i, l, j, m;
+  const initPart = (kindName, send, release) => {
+    console.log('initPart', kindName); // REMOVE_LINE_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+    const kindRef = kindRefs[kindName];
+    const manifest = getManifestFromKindRef(rootDir, kindRef);
+    const entrypointPath = getAbsPath(rootDir, kindRef, manifest.entrypoint);
 
-    if (!(arr instanceof Array)) {
-      return false;
-    } else {
-      for (i = 0, l = arr.length; i < l; i++) {
-        if (!(arr[i] instanceof Array)) {
-          return false;
-        } else {
-          for (j = 0, m = arr.length; j < m; j++) {
-            if (typeof arr[i][j] !== 'number') {
-              return false;
-            }
-          }
-        }
-      }
+    // Clear Node.js require cache to force each instance of the leaf type to be
+    // separate from one another.
+    for (var key in require.cache) {
+// TODO: Delete only the relevant ones.
+console.log('Cache key', key);
+      delete require.cache[key];
     }
 
-    return true;
+    const entrypoint = require(entrypointPath);
+
+    switch (manifest.kindType) {
+      case 'leaf':
+        return initLeaf(entrypoint, send, release);
+        break;
+      case 'composite':
+        return initComposite(entrypoint, send, release);
+        break;
+    }
   };
 
-  const isPartDeclaration = (part) => {
-    return typeof part.self.kindName === 'string' &&
-      typeof part.self.inCount === 'number' &&
-      typeof part.self.outCount === 'number' &&
-      isArrayOfArrayOfNumbers(part.self.inPins) &&
-      isArrayOfArrayOfNumbers(part.self.outPins);
-  };
+  initPart(topLevelKindName);
+  leafPartBootstraps.forEach((bootstrap) => bootstrap());
+};
 
-  const isArrayOfParts = (parts) => {
-    var i, l;
-
-    if (!(parts instanceof Array)) {
-      return false;
-    }
-
-    for (i = 0, l = parts.length; i < l; i++) {
-      if (!(isPartDeclaration(parts[i]))) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-  const initPart = (part, send, release) => {
-    if (typeof part === 'object') {
-      // Leaf part
-      const hasContextDir = typeof part.dir === 'string';
-      const hasManifestPath = typeof part.file === 'string';
-      const hasKindName = typeof part.kindName === 'string';
-      const hasGitRef = typeof part.ref === 'string';
-      const hasRepoUrl = typeof part.repo === 'string';
-      if (hasContextDir && hasManifestPath && hasKindName && hasGitRef && hasRepoUrl) {
-        return initLeaf(part, send, release);
-      }
-
-      // Composite part
-      const hasName = part.hasOwnProperty('name');
-      const hasWireCount = part.hasOwnProperty('wireCount') && typeof part.wireCount === 'number';
-      const hasSelf = isPartDeclaration(part.hasOwnProperty('self'));
-      const hasParts = part.hasOwnProperty('parts') && isArrayOfParts(part.parts);
-      if (hasName && hasWireCount && hasSelf && hasParts) {
-        return initComposite(part, send, release);
-      }
-    }
-
-    throw new Error('Unexpected part passed to initialize');
-  };
-
-  const allKinds = {};
-  const allLeafPartBootstraps = [];
-  var leafRootDir;
-
-  // This is the `runKernel` function.
-  return (rootDir, kinds, topLevelKindName) => {
-    let kind;
-
-    const rootDirStats = fs.statSync(rootDir);
-    if (!rootDirStats.isDirectory()) {
-      throw new Error('Directory "' + dir + '" does not exist.');
-    }
-    leafRootDir = rootDir;
-
-    for (var key in kinds) {
-      if (typeof kinds[key] !== 'object') {
-        throw new Error('Part "' + key + '" must be an object.');
-      }
-
-      kind = new Kind;
-      kind.definition = kinds[key];
-      allKinds[key] = kind;
-    }
-
-    initPart(allKinds[topLevelKindName]);
-
-    allLeafPartBootstraps.forEach((bootstrap) => bootstrap());
-  };
-})();
+if (typeof module === 'object') {
+  exports.runKernel = runKernel;
+  // REMOVE_START_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+  exports.getKindIdHash = getKindIdHash;
+  exports.preflightCheck = preflightCheck;
+  exports.makeKindRef = makeKindRef;
+  exports.prepareLocalKind = prepareLocalKind;
+  // REMOVE_END_WHEN:MINIMAL_BUILD,PROFILING_BUILD
+}
