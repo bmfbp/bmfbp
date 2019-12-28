@@ -113,7 +113,7 @@
 
 
 (defsystem arrowgrams/prolog-peg
-  :depends-on (:arrowgrams :esrap :cl-peg)
+  :depends-on (:arrowgrams :esrap :cl-peg :cl-ppcre)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
                                          (safety 3)

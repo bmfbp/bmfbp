@@ -29,7 +29,7 @@ condRect :-
     (let ((*target* *all-prolog*))
     ;(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
     ;(let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *test*)))
-      (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *target*)))
+      (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram (kill-foralls *target*))))
         (let ((parsed2
                (delete nil (mapcar #'(lambda (x)
                                        (if (and (listp x) (eq :rule (car x)))
@@ -40,3 +40,20 @@ condRect :-
 
 (defun dont-care-p (x)
   (string= "_" (symbol-name x)))
+
+(defun kill-foralls (in-str)
+  (with-output-to-string (out-str)
+    (with-input-from-string (str in-str)
+      (@:loop
+        (let ((line (read-line str nil 'EOF)))
+          (@:exit-when (eq line 'EOF))
+          (let ((success nil))
+            (cl-ppcre:register-groups-bind (first second third fourth)
+                (  "(forall.)(.+)([)])([,.])$"  line)
+              (format out-str "~&~a~a %% ~a~a~a~a~%"
+                      second fourth
+                      first second third fourth)
+              (setq success t))
+            (unless success (format out-str "~a~%" line))))))
+    out-str))
+  
