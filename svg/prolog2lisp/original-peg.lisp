@@ -5,8 +5,7 @@
 ;;  before refactoring
 (defparameter *peg-rules-original*
 "
-pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar) / pForall
-pForallClause <- pForall pLpar pExpr pComma pExpr pRpar
+pPrimary <- pOpClause / pCut / pNumber / pVariable / pFunctor / pKWID / pIdentifier / pList / (pLpar pExpr pRpar)
 pList <- pLBrack pCommaSeparatedListOfExpr? (pOrBar pCommaSeparatedListOfExpr)? pRBrack
 pCommaSeparatedListOfExpr <- (pExpr pComma)* pExpr
 pFunctor <- pIdentifier pLpar pCommaSeparatedListOfExpr pRpar
@@ -21,7 +20,8 @@ pUnifyExpr <- pPrimary pUnifyOp pPrimary
 pIsExpr <- pVariable pIs pExpr
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
 pFact <- pFunctor Spacing pPeriod
-pClause <- pClause1
+pClause <- pClause1 / pForallClause
+pForallClause <- pForall pLpar pPrimary pRpar
 pClause1 <- pPrimary
 pCommaSeparatedClauses <- (pClause pComma)* pClause
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod

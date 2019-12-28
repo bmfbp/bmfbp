@@ -3,7 +3,7 @@
 
 ;; not all of these are Prolog keywords, some are just convenience matches for
 ;; the working code base
-(cl-peg:rule arrowgrams/prolog-peg::pKeyword "pTrue / pFail / pIs / pColonDash / pNot / pNotSame / pSame / pNotUnifySame / pUnifySame / pGreaterEqual / pLessEqual / pCut / pPeriod / pComma / pLpar / pRpar / pLBRack / pRBrack / pUserError / pCurrentInput / pUserInput / pMinus / pPlus / pAsterisk / pSlash"
+(cl-peg:rule arrowgrams/prolog-peg::pKeyword "pForall / pTrue / pFail / pIs / pColonDash / pNot / pNotSame / pSame / pNotUnifySame / pUnifySame / pGreaterEqual / pLessEqual / pCut / pPeriod / pComma / pLpar / pRpar / pLBRack / pRBrack / pUserError / pCurrentInput / pUserInput / pMinus / pPlus / pAsterisk / pSlash"
   (:lambda (x) x))
 
 #|
@@ -14,10 +14,10 @@
 (cl-peg:rule arrowgrams/prolog-peg::pRetract "'retract' Spacing"
   (:lambda (x) (declare (ignore x)) 'prolog::retract))
 
+|#
+
 (cl-peg:rule arrowgrams/prolog-peg::pForall "'forall' Spacing"
   (:lambda (x) (declare (ignore x)) 'prolog::forall))
-
-|#
 
 
 (cl-peg:rule arrowgrams/prolog-peg::pUserError "'user_error' Spacing"
@@ -35,7 +35,7 @@
 (cl-peg:rule arrowgrams/prolog-peg::pTrue "'true' Spacing"
   (:lambda (x) (declare (ignore x)) 'prolog::pl-true))
 
-(cl-peg:rule arrowgrams/prolog-peg::pKWID "pTrue / pFail / pUserError / pCurrentInput / pUserInput"
+(cl-peg:rule arrowgrams/prolog-peg::pKWID "pForall / pTrue / pFail / pUserError / pCurrentInput / pUserInput"
   (:lambda (x) x))
 
 (cl-peg:rule arrowgrams/prolog-peg::pIs "'is' Spacing"
