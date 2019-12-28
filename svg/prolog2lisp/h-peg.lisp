@@ -131,8 +131,8 @@ pClause <- pPrimary
           `(format *standard-error* \"~%\")
         (if (and (listp x) (eq (car x) :write))
           `(format *standard-error* \"~a~%\" ,(second x))
-        x))) }
-
+          (rewrite x)))) }
+          
 pCommaSeparatedClauses <- pCommaSeparatedClauses1
 
 pCommaSeparatedClauses1 <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pClause
