@@ -41,4 +41,12 @@
             (pushnew rule-name *rules-or-functors-called*)))))))
     
 (defun diff ()
-  (set-difference *rules-or-functors-called* *rules-defined*))
+  (let ((diff1
+         (set-difference
+          *rules-or-functors-called*
+          +facts+)))
+    (let ((diff2
+           (set-difference diff1 +builtins+)))
+      (let ((diff3
+             (set-difference diff2 *rules-defined*)))
+        diff3))))
