@@ -1,3 +1,5 @@
+(in-package :arrowgrams/prolog-peg)
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (cl-peg:into-package "ARROWGRAMS/PROLOG-PEG"))
 
@@ -140,6 +142,7 @@ pClauseCommaUsedOnlyByCommaSeparatedClauses <- pClause pComma
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
   { (:destructure (prim cd clause-list spc p)
      (declare (ignore cd spc p))
+     (memo-rule-definition prim)
      `(:rule ,(if (listp prim) prim (list prim))
                          ,@clause-list)) }
 
