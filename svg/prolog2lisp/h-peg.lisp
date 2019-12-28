@@ -73,9 +73,9 @@ pBooleanExpr <- pSum ((pGreaterEqual / pLessEqual / pSame / pNotSame) pSum)*
          (let ((op (first (first lis)))
                (s2 (second (first lis))))
            (if (eq op 'prolog:greater-equal)
-               `(>= ,s ,s2)
+               `(prolog:>= ,s ,s2)
              (if (eq op 'prolog:less-equal)
-                 `(<= ,s ,s2)
+                 `(prolog:<= ,s ,s2)
                `(,op ,s ,s2))))
        s)) }
 
@@ -123,6 +123,8 @@ pFact <- pFunctor Spacing pPeriod
      f) }
 
 pClause <- pPrimary
+  { (:lambda (x)
+      (memo-clause x)) }
 
 pCommaSeparatedClauses <- pCommaSeparatedClauses1
 

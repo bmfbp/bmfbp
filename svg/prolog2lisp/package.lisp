@@ -40,4 +40,10 @@
    #:retract
    #:forall
    #:function-all-solutions
+   
+   #:<
+   #:<=
+   #:>
+   #:>=
+
    ))
