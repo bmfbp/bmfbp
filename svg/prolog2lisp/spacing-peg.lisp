@@ -1,3 +1,5 @@
+(in-package :arrowgrams/prolog-peg)
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (cl-peg:into-package "ARROWGRAMS/PROLOG-PEG"))
 
