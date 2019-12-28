@@ -751,7 +751,8 @@ selfInputPins_main :-
     halt.
 
 condSourceEllipse :-
-    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)),!.
+    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)),
+!.
 
 condSourceEllispe :- true.
 
