@@ -113,7 +113,7 @@
 
 
 (defsystem arrowgrams/prolog-peg
-  :depends-on (:arrowgrams :esrap :cl-peg :cl-ppcre)
+  :depends-on (:arrowgrams :esrap :cl-peg :cl-ppcre :cl-holm-prolog)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
                                          (safety 3)
@@ -133,8 +133,9 @@
 				     (:file "h-peg" :depends-on ("package"))
 				     (:file "prolog-peg" :depends-on ("package"))
 				     (:file "prolog-rules" :depends-on ("package"))
-				     (:file "memo" :depends-on ("package"))
+				     (:file "facts" :depends-on ("package"))
+				     (:file "memo" :depends-on ("package" "facts"))
 				     (:file "all" :depends-on ("package" "spacing-peg" "keyword-peg" "comment-peg"
                                       "identifier-peg" "number-peg" "original-peg" "refactored-peg" "generic-peg"
-                                      "h-peg" "prolog-rules" "memo"))
+                                      "h-peg" "prolog-rules" "memo" "facts"))
                                      ))))
