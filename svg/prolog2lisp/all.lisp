@@ -50,7 +50,7 @@ condRect :-
           (let ((success nil))
             (cl-ppcre:register-groups-bind (first second third fourth)
                 (  "(forall.)(.+)([)])([,.])$"  line)
-              (format out-str "~&~a~a %% ~a~a~a~a~%"
+              (format out-str "~&~a~a %% ~a~a~a~a:)~%"
                       second fourth
                       first second third fourth)
               (setq success t))
