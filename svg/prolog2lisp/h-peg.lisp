@@ -143,10 +143,12 @@ pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
 
 pDirective <- pColonDash CommentStuff* EndOfLine
   { (:lambda (x) (declare (ignore x)) nil) }
+
 pTopLevel <- Spacing (pFact / pRule / pDirective)
   { (:destructure (spc thing)
      (declare (ignore spc))
      thing) }
+
 pProgram <- pTopLevel+
   { (:lambda (x) `(progn ,@x)) }
 "
