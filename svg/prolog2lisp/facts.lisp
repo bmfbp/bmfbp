@@ -1,6 +1,6 @@
 (in-package :arrowgrams/prolog-peg)
 
-(defconstant +builtins+ '(:LISP/1 CL::<=/2 CL::>=/2))
+(defconstant +builtins+ '(:LISP/1 CL::<=/2 CL::>=/2 :!/0))
 
 (defconstant +facts+ '(
                     :ARROW/1
