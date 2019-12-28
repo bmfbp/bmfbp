@@ -126,7 +126,7 @@ pClause <- pPrimary
 
 pCommaSeparatedClauses <- pCommaSeparatedClauses1
 
-pCommaSeparatedClauses1 <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pPrimary
+pCommaSeparatedClauses1 <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pClause
   { (:destructure (lis p)
      (when (atom p) (setf p (list p)))
      (if lis
