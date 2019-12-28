@@ -19,6 +19,7 @@
 
 |#
 
+
 (cl-peg:rule arrowgrams/prolog-peg::pUserError "'user_error' Spacing"
   (:lambda (x) (declare (ignore x)) 'prolog::user-error))
 
