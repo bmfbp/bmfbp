@@ -140,24 +140,24 @@ pCommaSeparatedClauses <- pCommaSeparatedClauses1
 
 pCommaSeparatedClauses1 <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pClause
   { (:destructure (lis p)
-     (when (and (atom p) (not (eq :! p)))
-       (setf p (list p)))
      (if lis
          `(,@lis ,p)
-       (list p))) }
+       p )) }
 
 pClauseCommaUsedOnlyByCommaSeparatedClauses <- pClause pComma
  { (:destructure (p c)
     (declare (ignore c))
-    (when (atom p) (setf p (list p)))
-    p) }
+    (list p)) }
 
 pRule <- pPrimary pColonDash pCommaSeparatedClauses Spacing pPeriod
   { (:destructure (prim cd clause-list spc p)
      (declare (ignore cd spc p))
      (memo-rule-definition prim)
-     `(:rule ,(if (listp prim) prim (list prim))
-                         ,@clause-list)) }
+     (let ((clist (if (atom clause-list)
+                      (list clause-list)
+                    clause-list)))
+       `(:rule ,(if (listp prim) prim (list prim))
+         ,@clist))) }
 
 pDirective <- pColonDash CommentStuff* EndOfLine
   { (:lambda (x) (declare (ignore x)) nil) }

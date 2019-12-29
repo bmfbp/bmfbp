@@ -20,6 +20,8 @@ createComments(_) :-
     !,
     fail.")
 
+(defparameter *cut-test2* "checkZero(0) :- !.")
+
 (defparameter *grammars* (list
                           *peg-rules-original*
                           *peg-rules-refactored*
@@ -38,10 +40,10 @@ createComments(_) :-
     (mapc #'(lambda (r) 
               (eval r)) 
           (cdr g))
-    ;(let ((*target* *all-prolog*))
+    (let ((*target* *all-prolog*))
     ;(let ((*target* *true-test*))
-    (let ((*target* *cut-test*))
-      (esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
+    ;(let ((*target* *cut-test2*))
+      ;(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
     ;(let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *test*)))
       (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram (kill-foralls *target*))))
         (let ((parsed2
