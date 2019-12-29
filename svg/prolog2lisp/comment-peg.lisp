@@ -3,12 +3,12 @@
 
 (cl-peg:rule arrowgrams/prolog-peg::Comment "'%' CommentStuff* EndOfLine"
  (:lambda (list) (declare (ignore list))
-   (values)))
+   '(:comment)))
 
 (cl-peg:rule arrowgrams/prolog-peg::CommentStuff "!EndOfLine char1"
-  (:lambda (x) (declare (ignore x)) (values)))
+  (:lambda (x) (declare (ignore x)) '(:comment-stuff)))
  
 (cl-peg:rule arrowgrams/prolog-peg::char1 "."
   (:lambda (c)
-    c))
+    '(:char)))
  

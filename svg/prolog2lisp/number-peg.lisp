@@ -11,7 +11,7 @@
            (progn
              (format *error-output* "~&bad integer : ~s~%" n)
              (assert nil))
-         n)))))
+         (list :number n))))))
 
 ;; no floats, hence we parse only integers
 (cl-peg:rule arrowgrams/prolog-peg::pIntegerFollow "[0-9]"

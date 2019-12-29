@@ -4,7 +4,7 @@
 (cl-peg:rule arrowgrams/prolog-peg::pIdentifier "(QuotedAtom / Identifier1) Spacing"
   (:destructure (id spc)
    (declare (ignore spc))
-   id))
+   (list :identifier id)))
 
 (cl-peg:rule arrowgrams/prolog-peg::QuotedAtom "['] NoQuotes+ [']"
   (:destructure (q1 chars q2)
@@ -24,7 +24,7 @@
 (cl-peg:rule arrowgrams/prolog-peg::pVariable "(Variable1a / Variable1b) Spacing"
   (:destructure (id spc)
    (declare (ignore spc))
-   id))
+   (list :variable id)))
 
 (cl-peg:rule arrowgrams/prolog-peg::Variable1a "! pKeyword FirstVariableCharacter FollowingIdentCharacter*"
   (:destructure (nothing firstChar followChars)
