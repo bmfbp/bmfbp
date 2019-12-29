@@ -25,19 +25,13 @@
         (t clause)))
   
 
-
-#|
-          (if (and (listp x)
-                   (eq (first x) :inc)
-                   (eq (second x) 'counter))
-              `(lisp (inc-counter))
-            (if (and (listp x)
-                     (eq (first x) :dec)
-                     (eq (second x) 'counter))
-                `(lisp (dec-counter))
-              (if (and (listp x)
-                       (eq (first x) :g_assign)
-                       (eq (second x) 'counter)
-                       (eq (third x) 0))
-                  `(lisp (clear-counter))
-|#
+(defun rewrite-op (op)
+  (if (eq op 'prolog:plus)
+      'cl:+
+    (if (eq op 'prolog:minus)
+        'cl:-
+      (if (eq op 'prolog:mul)
+          'cl:*
+        (if (eq op 'prolog:div)
+            'cl:/
+          (error (format nil "expecting +,-,*,/, but got ~A" op)))))))

@@ -89,7 +89,8 @@ pSum <- pProduct ((pPlus / pMinus) pProduct)*
      (if lis
          (let ((op (first (first lis)))
                (p2 (second (first lis))))
-           `(,op ,p ,p2))
+           (let ((operator (rewrite-op op)))
+             `(,operator ,p ,p2)))
        p)) }
 
 pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
@@ -98,7 +99,7 @@ pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
      (assert (or (null lis)
                  (and (listp lis) (= 1 (length lis)) (listp (first lis)))))
      (if lis
-         (let ((op (first (first lis)))
+         (let ((op (rewrite-op (first (first lis))))
                (p2 (second (first lis))))
            `(,op ,p ,p2))
        p)) }
@@ -115,7 +116,9 @@ pIsExpr <- pVariable pIs pExpr
   { (:destructure (v op e)
      (declare (ignore op))
      #+nil(format *standard-output* \"~&pIsExpr v=~S e=~S~%\" v e)
-     `(:is ,v ,e)) }
+     (let ((var (list :? (intern (symbol-name v)))))  ;; at this point, v is always a keyword
+       `(:lispis ,var ,e))
+     #+nil`(:is ,v ,e)) }
 
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
 
