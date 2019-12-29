@@ -9,6 +9,11 @@
 condRect :-
     true.")
 
+(defparameter *true-test* "
+createComments(_) :-
+    asserta(log('fATAL',commentFinderFailed)),
+    true.")
+
 (defparameter *grammars* (list
                           *peg-rules-original*
                           *peg-rules-refactored*
@@ -27,8 +32,9 @@ condRect :-
     (mapc #'(lambda (r) 
               (eval r)) 
           (cdr g))
-    (let ((*target* *all-prolog*))
-    ;(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
+    ;(let ((*target* *all-prolog*))
+    (let ((*target* *true-test*))
+    (esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
     ;(let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *test*)))
       (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram (kill-foralls *target*))))
         (let ((parsed2
