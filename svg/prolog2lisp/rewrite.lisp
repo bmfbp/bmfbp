@@ -32,6 +32,9 @@
         ((eq 'prolog:pl-fail clause)
          `(:lisp nil))
 
+        ((eq 'prolog:cut clause)
+         ':!)
+
         (t clause)))
   
 
