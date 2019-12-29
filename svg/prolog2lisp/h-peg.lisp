@@ -140,7 +140,8 @@ pCommaSeparatedClauses <- pCommaSeparatedClauses1
 
 pCommaSeparatedClauses1 <- pClauseCommaUsedOnlyByCommaSeparatedClauses* pClause
   { (:destructure (lis p)
-     (when (atom p) (setf p (list p)))
+     (when (and (atom p) (not (eq :! p)))
+       (setf p (list p)))
      (if lis
          `(,@lis ,p)
        (list p))) }
