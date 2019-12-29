@@ -915,4 +915,9 @@ we(X) :- write(user_error,X).
 wen(X):- we(X),nle.
 
 
+portFor(RectOrEllipseID,PortID):-
+    parent(RectOrEllipseID,PortID),
+    port(PortID).
+
+
 ")

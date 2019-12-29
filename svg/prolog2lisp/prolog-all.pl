@@ -1413,3 +1413,8 @@ dumplog(S,T,U,V,W,X,Y,Z) :- we(S),wspc,we(T),wspc,we(U),wspc,we(V),wspc,we(W),ws
 dumplog(_,_,_,_,_,_,_,_) :- true.
 dumplog(R,S,T,U,V,W,X,Y,Z) :- we(R),wspc,we(S),wspc,we(T),wspc,we(U),wspc,we(V),wspc,we(W),wspc,we(X),wspc,we(Y),wspc,wen(Z).
 dumplog(_,_,_,_,_,_,_,_,_) :- true.
+
+portFor(RectOrEllipseID,PortID):-
+    parent(RectOrEllipseID,PortID),
+    port(PortID).
+
