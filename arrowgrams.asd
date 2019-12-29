@@ -142,3 +142,29 @@
                                       "identifier-peg" "number-peg" "original-peg" "refactored-peg" "generic-peg"
                                       "h-peg" "prolog-rules" "memo" "facts" "rewrite"))
                                      ))))
+
+(defsystem arrowgrams/parser
+  :depends-on (:arrowgrams :cl-event-passing :loops)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/prolog2lisp2"
+			:components ((:file "package")
+                                     (:file "read-file-into-string" :depends-on ("package"))
+                                     (:file "chars" :depends-on ("package"))
+                                     (:file "eol-comments" :depends-on ("package"))))))
+
+(defsystem arrowgrams/parser/prolog
+  :depends-on (:arrowgrams/parser)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/prolog2lisp2"
+			:components ((:file "package")
+                                     (:file "read-file-into-string" :depends-on ("package"))
+                                     (:file "chars" :depends-on ("package"))
+                                     (:file "eol-comments" :depends-on ("package"))
+                                     (:file "prolog-parser" 
+                                      :depends-on ("package" "read-file-into-string" "chars" "eol-comments"))))))
