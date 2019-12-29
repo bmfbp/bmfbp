@@ -117,7 +117,7 @@ pIsExpr <- pVariable pIs pExpr
      (declare (ignore op))
      #+nil(format *standard-output* \"~&pIsExpr v=~S e=~S~%\" v e)
      (let ((var (list :? (intern (symbol-name v)))))  ;; at this point, v is always a keyword
-       `(:lispis ,var ,e))
+       `(:lispv ,var ,e))
      #+nil`(:is ,v ,e)) }
 
 pBinaryOp <- pIs / pNotSame / pSame / pUnifySame / pNotUnifySame / pGreaterEqual / pLessEqual
