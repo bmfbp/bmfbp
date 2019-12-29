@@ -10,16 +10,11 @@
                      (eq :counter (second clause)))
                 `(:lispv ,(third clause) (read-counter)))
                
-               #+nil((and (eq :is (first clause))
-                     (listp (third clause))
-                     (eq 'prolog:minus (first (third clause))))
-                (let ((maybe-sym (second clause)))
-                  (let ((vname (if (and (symbolp maybe-sym)
-                                        (eq (find-package "KEYWORD") (symbol-package maybe-sym)))
-                                   (intern (symbol-name maybe-sym))
-                                 (second clause))))
-                    `(:lispv ,vname ,@(rest (third clause))))))
-               
+               ((or
+                 (eq :g_assign (first clause))
+                 (eq :g_read (first clause)))
+                (format nil "(:lisp (assert nil (nil) \"was /~S/" clause))
+
                (t clause)))
 
         ((eq 'prolog:pl-true clause)

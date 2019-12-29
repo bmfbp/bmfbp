@@ -673,15 +673,17 @@ check_has_exactly_one_kind(RectID) :-
 sem_speechVScomments_main :-
     readFB(user_input),
     g_assign(counter,0),
-    forall(speechbubble(ID),xinc(ID)),
-    forall(comment(ID),xdec(ID)),
+    %% forall(speechbubble(ID),xinc(ID)),
+    %% forall(comment(ID),xdec(ID)),
+    forall(speechbubble(ID),inc(counter,_)),
+    forall(comment(ID),dec(counter,_)),
     g_read(counter,Counter),
     checkZero(Counter),
     writeFB,
     halt.
 
-xinc(_) :- inc(counter,_).
-xdec(_) :- dec(counter,_).
+%% xinc(_) :- inc(counter,_).
+%% xdec(_) :- dec(counter,_).
 
 
 checkZero(0) :- !.
@@ -803,16 +805,16 @@ makeOutputPins(RectID) :-
 
 
 
-
-inc(Var, Value) :-
-    g_read(Var, Value),
-    X is Value+1,
-    g_assign(Var, X).
-
-dec(Var, Value) :-
-    g_read(Var, Value),
-    X is Value-1,
-    g_assign(Var, X).
+%% pt
+%% inc(Var, Value) :-
+%%     g_read(Var, Value),
+%%     X is Value+1,
+%%     g_assign(Var, X).
+%% 
+%% dec(Var, Value) :-
+%%     g_read(Var, Value),
+%%     X is Value-1,
+%%     g_assign(Var, X).
 
 boundingboxCompletelyInside(ID1,ID2) :-
     bounding_box_left(ID1,L1),
