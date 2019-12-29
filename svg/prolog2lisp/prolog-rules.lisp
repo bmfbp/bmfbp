@@ -673,17 +673,13 @@ check_has_exactly_one_kind(RectID) :-
 sem_speechVScomments_main :-
     readFB(user_input),
     g_assign(counter,0),
-    %% forall(speechbubble(ID),xinc(ID)),
-    %% forall(comment(ID),xdec(ID)),
-    forall(speechbubble(ID),inc(counter,_)),
-    forall(comment(ID),dec(counter,_)),
+    forall(speechbubble(ID),inc(counter,_)), % pt
+    forall(comment(ID),dec(counter,_)), % pt
     g_read(counter,Counter),
     checkZero(Counter),
     writeFB,
     halt.
 
-%% xinc(_) :- inc(counter,_).
-%% xdec(_) :- dec(counter,_).
 
 
 checkZero(0) :- !.

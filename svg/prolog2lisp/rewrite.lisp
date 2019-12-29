@@ -6,9 +6,18 @@
                      (eq :counter (second clause))
                      (zerop (third clause)))
                 `(:lisp (reset-counter)))
+
                ((and (eq :g_read (first clause))
                      (eq :counter (second clause)))
                 `(:lispv ,(third clause) (read-counter)))
+               
+               ((and (eq :inc (first clause))
+                     (eq :counter (second clause)))
+                `(:lispv ,(third clause) (inc-counter)))
+               
+               ((and (eq :dec (first clause))
+                     (eq :counter (second clause)))
+                `(:lispv ,(third clause) (dec-counter)))
                
                ((or
                  (eq :g_assign (first clause))
