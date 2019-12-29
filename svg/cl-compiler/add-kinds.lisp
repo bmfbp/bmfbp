@@ -83,6 +83,8 @@
       
 
 (defmethod add-kinds ((self e/part:part))
-  (let ((cons arrowgram/compiler::+rules+ (cl-event-passing-user:@get-instance-var self :fb))
-        (goal '((add_kinds_main))))
+  (let ((fb
+         (cons arrowgrams/compiler::+rules+
+               (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:add_kinds_main))))
           (arrowgrams/compiler/util::run-prolog self goal fb)))
