@@ -1,7 +1,6 @@
 (in-package :arrowgrams/prolog-peg)
 
 (defun rewrite-clause (clause)
-  (format *standard-output* "~&rewrite clause /~S/~%" clause)
   (cond ((listp clause)
          (cond ((and (eq :g_assign (first clause))
                      (eq :counter (second clause))
