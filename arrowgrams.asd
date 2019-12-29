@@ -54,11 +54,13 @@
                                      (:file "assign-parents-to-ellipses" :depends-on ("package"))
                                      (:file "util" :depends-on ("package"))
 
+                                     (:file "rules" :depends-on ("package"))
+
                                      (:file "demux" :depends-on ("package"))
                                      (:file "find-comments" :depends-on ("package" "classes"))
                                      (:file "find-metadata" :depends-on ("package" "classes" "util"))
-                                     (:file "add-kinds" :depends-on ("package" "classes"))
-                                     (:file "add-self-ports" :depends-on ("package" "classes"))
+                                     (:file "add-kinds" :depends-on ("package" "classes" "rules"))
+                                     (:file "add-self-ports" :depends-on ("package" "classes" "rules"))
                                      (:file "make-unknown-port-names" :depends-on ("package" "classes"))
                                      (:file "create-centers" :depends-on ("package" "classes"))
                                      (:file "calculate-distances" :depends-on ("package" "classes"))

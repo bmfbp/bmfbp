@@ -1,3 +1,5 @@
+(in-package :arrowgrams/compiler)
+
 (defconstant +rules+ 
 '(
 (:RULE (:NOT-SAME (:? X) (:? X)) :! :FAIL) 

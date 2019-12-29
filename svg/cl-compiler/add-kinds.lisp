@@ -47,7 +47,7 @@
 ;;
 ;; used always refers to a text-id, e.g. text(text-id,str-id)
 
-(defmethod add-kinds ((self e/part:part))
+(defmethod old-add-kinds ((self e/part:part))
   (let ((add-kinds-rule '(
                           (:add-kinds (:? box-id))
                           (:rect (:? box-id))
@@ -81,3 +81,8 @@
                               (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))))
           (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))
       
+
+(defmethod add-kinds ((self e/part:part))
+  (let ((cons arrowgram/compiler::+rules+ (cl-event-passing-user:@get-instance-var self :fb))
+        (goal '((add_kinds_main))))
+          (arrowgrams/compiler/util::run-prolog self goal fb)))
