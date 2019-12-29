@@ -107,7 +107,7 @@ pProduct <- pPrimary ((pAsterisk / pSlash) pPrimary)*
 
 pOpClause <- pOpExpr / pUnifyExpr / pIsExpr / pExpr
 pOpExpr <- pNot pExpr
-  { (:destructure (n e) (declare (ignore n)) `(:lisp (not ,e))) }
+  { (:destructure (n e) (declare (ignore n)) `(:lisp (assert nil (nil) \",e\"))) }
 
 pUnifyExpr <- pUnifyExprEQ / pUnifyExprNEQ
 pUnifyExprEQ <- pPrimary pUnifySame pPrimary

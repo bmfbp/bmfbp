@@ -418,7 +418,12 @@ findCoincidentSource(A,B):-
     asserta(portName(B,N)).
 
 notNamedSource(X) :-
-    \\+ namedSource(X).
+    namedSource(X),
+    !,
+    fail.
+
+notNamedSource(X) :-
+    true.
 
 
 
