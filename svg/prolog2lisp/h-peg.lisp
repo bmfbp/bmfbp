@@ -167,6 +167,12 @@ pTopLevel <- Spacing (pFact / pRule / pDirective)
      thing) }
 
 pProgram <- pTopLevel+
-  { (:lambda (x) `(progn ,@x)) }
+  { (:lambda (x) `(
+                   (:rule (:not-same (:? x) (:? x))
+                    :!
+                    :fail)
+                   (:rule (:not-same (:? x) (:? y)))
+                   ,@x)) }
 "
 )
+
