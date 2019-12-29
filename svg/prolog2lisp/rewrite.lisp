@@ -21,6 +21,8 @@
                     `(:lispv ,vname ,@(rest (third clause))))))
                
                (t clause)))
+        ((eq 'prolog:pl-true clause)
+         `(:lisp t))
         (t clause)))
   
 
