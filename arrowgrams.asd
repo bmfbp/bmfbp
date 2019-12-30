@@ -163,8 +163,13 @@
   :components ((:module contents
 			:pathname "./svg/prolog2lisp2"
 			:components ((:file "package")
-                                     (:file "read-file-into-string" :depends-on ("package"))
-                                     (:file "chars" :depends-on ("package"))
-                                     (:file "eol-comments" :depends-on ("package"))
+                                     (:file "token" :depends-on ("package"))
+                                     (:file "read-file-into-string" :depends-on ("package" "token"))
+                                     (:file "chars" :depends-on ("package" "token"))
+                                     (:file "eol-comments" :depends-on ("package" "token"))
+                                     (:file "whitespace" :depends-on ("package" "token"))
+                                     (:file "token-counter" :depends-on ("package" "token"))
                                      (:file "prolog-parser" 
-                                      :depends-on ("package" "read-file-into-string" "chars" "eol-comments"))))))
+                                      :depends-on ("package" "token"
+                                                   "read-file-into-string" "chars" "eol-comments"
+                                                   "whitespace" "token-counter"))))))

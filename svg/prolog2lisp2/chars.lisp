@@ -3,7 +3,7 @@
 ;; (:request) only when :emitting-characters, sends one character for each request
 ;;
 ;;OUTPUTS
-;; (:out <char>)  either a character or :EOF
+;; (:out (:character c NN))  outputs character tokens (:CHARACTER c NN) where NN is the character index, or (:EOF #\Newline NN)
 ;; (:error object)       some fatal error, "object" specifies error details
 ;;
 ;; (:code chars (:in-string :request) (:out :error)
@@ -13,48 +13,46 @@
 (in-package :arrowgrams/parser/chars)
 
 (defmethod first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  (cl-event-passing-user::@set-instance-var self :string nil))
+  (@set-instance-var self :state :idle)
+  (@set-instance-var self :position 1)
+  (@set-instance-var self :stream nil))
 
 (defmethod react ((self e/part:part) (e e/event:event))
   (let ((data (e/event:data e))
         (action (e/event::sym e)))
 
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get-instance-var self :state)
       (:idle
        (ecase action
          (:in-string
-          (let ((str (cl-event-passing-user::@set-instance-var self :string data))
-                (vec (make-array (length data) :element-type 'character :adjustable t :fill-pointer 0)))
-            (with-input-from-string (s str)  ;; this is ridiculous - TODO rewrite to be more efficient
-              (let (c)
-                (@:loop
-                  (setf c (read-char s nil :EOF))
-                  (@:exit-when (eq :EOF c))
-                  (vector-push-extend c vec))))
-            (cl-event-passing-user::@set-instance-var self :string vec)
-            (send-a-char self)
-            (cl-event-passing-user::@set-instance-var self :state :emitting-characters)))))
+          (@set-instance-var self :stream (make-string-input-stream data))
+          (send-a-char self)
+          (@set-instance-var self :state :emitting-characters))))
       
       (:emitting-characters
        (ecase action
          (:request
           (send-a-char self))))
  
-      (:done
-       (send-error self "CHARS: no more characters")))))
+      (:almost-done
+       (ecase action
+         (:request ;; one more straggling request is expected
+          (@set-instance-var self :state :done))))
 
-(defmethod send ((self e/part:part) c)
-  (cl-event-passing-user::@send self :out c))
+      (:done
+       (send-error self (format nil "CHARS: no more characters at position ~a" (@get-instance-var self :position)))))))
 
 (defmethod send-error ((self e/part:part) message)
-  (cl-event-passing-user::@send self :error message))
+  (@send self :error message))
 
 (defmethod send-a-char ((self e/part:part))
-  (let ((string-vector (cl-event-passing-user::@get-instance-var self :string)))
-    (if (zerop (fill-pointer string-vector))
-        (progn
-          (send self :EOF)
-          (cl-event-passing-user::@set-instance-var self :state :done))
-      (let ((c (vector-pop string-vector)))
-        (send self c)))))
+  (let ((stream (@get-instance-var self :stream))
+        (position (@get-instance-var self :position))
+        (out-pin (@get-output-pin self :out)))
+    (let ((c (read-char stream nil :EOF)))
+      (if (eq :EOF c)
+          (progn
+            (@send self out-pin (make-token :type :EOF :value #\Newline :position position))
+            (@set-instance-var self :state :almost-done))
+          (@send self out-pin (make-token :type :character :value c :position position)))
+      (@set-instance-var self :position (1+ position)))))
