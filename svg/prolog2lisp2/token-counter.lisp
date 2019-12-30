@@ -19,9 +19,9 @@
         (action (e/event::sym e)))
     (assert (eq action :in))
     (let ((ty (token-type token)))
-      (if (eq :EOF token-type)
+      (if (eq :EOF ty)
           (finalize self)
-        (tcount self token-type token)))))
+        (tcount self token)))))
 
 (defmethod tcount ((self e/part:part) token)
   (let ((hash-key (token-type token)))

@@ -21,8 +21,8 @@
                (((eol-comments :request)) ((chars :request))) ;; request from chars eol-comments loops, then immediately back into chars (this prevents 'chars' from zipping through the whole file and creating too many events at once)
 
 
-               ;(((eol-comments :out)) ((ws :in)))
-               (((eol-comments :out)) ((:self :out)))
+               (((eol-comments :out)) ((ws :in)))
+               ;(((eol-comments :out)) ((tcounter :in)))
                
                (((ws :out)) ((tcounter :in)))
 

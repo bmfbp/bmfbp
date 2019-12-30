@@ -37,23 +37,30 @@
               (forward-token self token)))))
 
         (:collecting-whitespace
-         (ecase token-type
+         (ecase ty
            (:comment
-            (finalize self token)
+            (finalize-whitespace self)
+            (send-token self token)
             (set-state self :idle))
            (:eof
-            (finalize self)
+            (finalize-eof self token)
             (set-state self :done))
            (:character
             (if (whitespace-char-p c)
                 (push-token-into-buffer self token)
               (progn
-                (finalize self)
-                (set-state self :idle))))))))))
+                (finalize-whitespace self)
+                (send-token self token)
+                (set-state self :idle))))))
 
-(defmethod finalize ((self e/part:part) eof-token)
+        (:done
+         (error (format nil "whitespace received input after finishing /~S/" e)))))))
+
+(defmethod finalize-whitespace ((self e/part:part))
+  (send-buffer self))
+
+(defmethod finalize-eof ((self e/part:part) eof-token)
   (send-buffer self)
-  (clear-buffer self)
   (send-token self eof-token))
 
 (defmethod set-state ((self e/part:part) next-state)
@@ -80,7 +87,7 @@
   (@set-instance-var self :buffer (cons token (@get-instance-var self :buffer))))
 
 (defmethod get-buffer ((self e/part:part))
-  (@get-instance-var self :buffer))
+  (reverse (@get-instance-var self :buffer)))
 
 (defun whitespace-char-p (c)
   ;; return T if c is a whitespace characater, else NIL
