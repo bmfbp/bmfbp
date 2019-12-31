@@ -28,7 +28,9 @@ pConstant <- tInt
 
 (defrule pStructure (or (and tAtom tLpar tRpar)
                         (and tAtom tLpar pTermList tRpar))
-  (:lambda(x) `(structure ,(delete nil x)))) 
+  (:lambda (y)
+    (let ((x (delete nil y)))
+      `(structure ,x))))
 
 (defrule pTermList (or (and pTerm (! tComma))
                        (and pTerm tComma pTermList))
