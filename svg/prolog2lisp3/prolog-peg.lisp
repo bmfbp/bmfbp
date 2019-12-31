@@ -19,24 +19,38 @@ pConstant <- tInt
 
 (defrule pStructure (or (and tAtom tLpar tRpar)
                         (and tAtom tLpar pTermList tRpar)))
-(defrule pTermList (or (and pTerm
-                       (and pTerm tComma pTermList))))
+(defrule pTermList (or (and pTerm (! tComma))
+                       (and pTerm tComma pTermList))
+  (:lambda (x)
+    `(termlist ,x)))
 
-(defrule pTermList (and (* pTermComma) pTerm))
+
+#|
+(defrule pTermList (and (* pTermComma) pTerm)
+  (:destructure (star term)
+   `(termlist ,star ,term)))
+|#
        
-(defrule pTermComma (and pTerm tComma))
+(defrule pTermComma (and pTerm tComma)
+  (:constant nil))
+
 
 (defrule pTerm (or
                 pConstant
-                ;(and tIdent (! #\())
                 (and tAtom (! #\())
                 tSingleQuotedAtom
                 tVar
-                pStructure))
+                pStructure)
+  (:lambda (x)
+    `(term ,x)))
 
-(defrule tAtom tIdent)
+(defrule tAtom tIdent
+  (:lambda (x)
+    `(atom ,x)))
 
-(defrule pConstant tInt)
+(defrule pConstant tInt
+  (:lambda (x)
+    `(int ,x)))
 
 (defun test ()
   (pprint (parse 'tComma ","))
