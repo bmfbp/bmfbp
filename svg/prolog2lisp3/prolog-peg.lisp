@@ -1,6 +1,6 @@
 (in-package :arrowgrams/parser)
 
-(defconstant +prolog-grammar+
+#+nil(defconstant +prolog-grammar+
 "
 pClause <- pPredicate tDot / pPredict tColonDash tDot
 pPredicateList <- pPredicate / pPredicate tComma pPredicateList
@@ -38,7 +38,7 @@ pConstant <- tInt
                    (= 2 (length x)))) ;; dummy(X,Y) => (struct (atom (ident "dummy")) (term-list ???
       `(structure ,(first x) ,(second x)))))
 
-(defrule pTermList (or (and pTerm (! tComma))
+(defrule pTermList (or (and pTerm pNotComma) ;(! tComma))
                        (and pTerm tComma pTermList))
   (:lambda (x) `(term-list ,(delete nil x))))
 
@@ -50,6 +50,8 @@ pConstant <- tInt
                 tVar
                 pStructure)
   (:lambda (x) `(term ,x)))
+
+(defrule pNotComma (! tComma))
 
 (defrule tAtom (or tIdent tCut tTrue tFail) (:lambda (x) `(atom ,x)))
 
