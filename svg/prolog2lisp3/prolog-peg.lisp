@@ -34,7 +34,9 @@ pConstant <- tInt
                         (and tAtom tLpar pTermList tRpar))
   (:lambda (y)
     (let ((x (delete nil y)))
-      `(structure ,x))))
+      (assert (and (listp x)
+                   (= 2 (length x)))) ;; dummy(X,Y) => (struct (atom (ident "dummy")) (term-list ???
+      `(structure ,(first x) ,(second x)))))
 
 (defrule pTermList (or (and pTerm (! tComma))
                        (and pTerm tComma pTermList))
