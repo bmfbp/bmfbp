@@ -56,7 +56,8 @@ pConstant <- tInt
 (defun test ()
   (pprint (esrap:parse 'pRule "notNamedSource(X):- namedSource(S),!,fail."))
   (pprint (esrap:parse 'pRule "checkZero(X):-!."))
-  (pprint (esrap:parse 'pRule "dummy(Y):-forall(ident(X),doident(X,Y)).")))
+  (pprint (esrap:parse 'pRule "dummy(Y):-forall(ident(X),doident(X,Y))."))
+  (pprint (esrap:parse 'pRule "dummy2:-rectract(ident(X)).")))
 
 (defun test0c ()
   (pprint (esrap:parse 'pRule "dummy:-namedSource(X),namedSource(0),!,fail."))
