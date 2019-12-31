@@ -16,7 +16,11 @@ pConstant <- tInt
 
 |#
 
-(defrule pRule (and pPredicate tColonDash pPredicateList tDot) (:lambda (x) `(rule ,(delete nil x))))
+(defrule pRule (and pPredicate tColonDash pPredicateList tDot)
+  (:lambda (y)
+    (let ((x (delete nil y)))
+      (assert (and (listp x) (= 2 (length x))))
+      `(rule ,(first x) ,(second x)))))
 
 (defrule pPredicateList (or (and pPredicate (! tComma))
                             (and pPredicate tComma pPredicateList))
