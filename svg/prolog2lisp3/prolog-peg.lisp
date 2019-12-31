@@ -124,11 +124,11 @@ D <- '0' | ... | ''9'
 
 (esrap:defrule rule-Expr rule-Additive)
 
-(esrap:defrule rule-Additive (or (and rule-Mult #\+ rule-Additive)
-                                 (and rule-Mult #\- rule-Additive)
+(esrap:defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
+                                 (and rule-Mult tMinus rule-Additive)
                                  rule-Mult))
-(esrap:defrule rule-Mult (or (and rule-Primary #\* rule-Mult)
-                             (and rule-Primary #\/ rule-Mult)
+(esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
+                             (and rule-Primary tDiv rule-Mult)
                              rule-Primary))
 (esrap:defrule rule-Primary (or tInt
                                 (and #\( rule-Additive #\))))
