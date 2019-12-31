@@ -68,6 +68,45 @@ D <- '0' | ... | ''9'
 (esrap:defrule rule-D (esrap:character-ranges (#\0 #\9)))
 
 (defun mm ()
-  (esrap:parse 'rule-E "(12-3)"))
+  (esrap:parse 'rule-E "(12+3)")
+  (esrap:parse 'rule-E "(12+3)+1"))
 
 
+#|
+from https://pegjs.org/documentation
+
+start
+  = additive
+
+additive
+  = left:multiplicative "+" right:additive { return left + right; }
+  / multiplicative
+
+multiplicative
+  = left:primary "*" right:multiplicative { return left * right; }
+  / primary
+
+primary
+  = integer
+  / "(" additive:additive ")" { return additive; }
+
+integer "integer"
+  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+
+|#
+
+(esrap:defrule rule-Start rule-Additive
+  (:text t))
+
+(esrap:defrule rule-Additive (or (and rule-Mult #\+ rule-Additive)
+                                 (and rule-Mult #\- rule-Additive)
+                                 rule-Mult))
+(esrap:defrule rule-Mult (or (and rule-Primary #\* rule-Mult)
+                             (and rule-Primary #\/ rule-Mult)
+                             rule-Primary))
+(esrap:defrule rule-Primary (or rule-Integer
+                                (and #\( rule-Additive #\))))
+(esrap:defrule rule-Integer (esrap:character-ranges (#\0 #\9)))
+
+(defun jj ()
+  (esrap:parse 'rule-Start "2*(3-4+1)/2"))

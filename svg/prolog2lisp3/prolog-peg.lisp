@@ -47,10 +47,11 @@ pConstant <- tInt
                 pConstant
                 (and tAtom (! #\())
                 tSingleQuotedAtom
-                tVar
+                (and tVar pNotIs)
                 pStructure)
   (:lambda (x) `(term ,x)))
 
+(defrule pNotIs (! tIs))
 (defrule pNotComma (! tComma))
 (defrule pNotLpar (! tLpar))
 
@@ -58,11 +59,11 @@ pConstant <- tInt
 
 (defrule pConstant tInt (:lambda (x) `(constant ,x)))
 
-(defun test ()
-  (pprint (esrap:parse 'pRule "notNamedSource(X):- namedSource(S),!,fail."))
-  (pprint (esrap:parse 'pRule "checkZero(X):-!."))
-  (pprint (esrap:parse 'pRule "dummy(Y):-forall(ident(X),doident(X,Y))."))
-  (pprint (esrap:parse 'pRule "dummy2:-rectract(ident(X)).")))
+;; revelation: math exprs only appear as the RHS of IS statements
+
+(defun test0d ()
+  (pprint (esrap:parse 'pRule "notNamedSource(X):- namedSource(S),!,fail.")))
+
 
 (defun test0c ()
   (pprint (esrap:parse 'pRule "dummy:-namedSource(X),namedSource(0),!,fail."))
@@ -109,3 +110,30 @@ dummy3 :-
   X is Y + Z.
 dummy4 :-
   asserta(ident(X)).")
+
+
+#|
+ Ford's thesis page 22
+E <- N
+   / '(' E '+' E ')'
+   / '(' E '-' E ')'
+N <- D N
+   / D
+D <- '0' | ... | ''9'
+|#
+
+(esrap:defrule rule-Expr rule-Additive)
+
+(esrap:defrule rule-Additive (or (and rule-Mult #\+ rule-Additive)
+                                 (and rule-Mult #\- rule-Additive)
+                                 rule-Mult))
+(esrap:defrule rule-Mult (or (and rule-Primary #\* rule-Mult)
+                             (and rule-Primary #\/ rule-Mult)
+                             rule-Primary))
+(esrap:defrule rule-Primary (or tInt
+                                (and #\( rule-Additive #\))))
+
+(defun test ()
+  (pprint (parse 'rule-Expr "2"))
+  (pprint (parse 'rule-Expr "234")))
+

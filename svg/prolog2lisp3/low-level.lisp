@@ -31,10 +31,16 @@ tEndOfLine <- '\\r\\n' / '\\n' / '\\r'
 (defrule tComma (and "," (* tWS)) (:constant nil))
 (defrule tLpar (and "(" (* tWS)) (:constant nil))
 (defrule tRpar (and ")" (* tWS)) (:constant nil))
+(defrule tPlus (and "+" (* tWS)) (:constant nil))
+(defrule tMinus (and "-" (* tWS)) (:constant nil))
+(defrule tMul (and "*" (* tWS)) (:constant nil))
+(defrule tDiv (and "/" (* tWS)) (:constant nil))
 
 (defrule tCut (and "!" (* tWS)) (:constant 'cut))
 (defrule tTrue (and "true" (* tWS)) (:constant 'true))
 (defrule tFail (and "fail" (* tWS)) (:constant 'fail))
+
+(defrule tIs (and "fail" (* tWS)) (:constant 'is))
 
 
 
