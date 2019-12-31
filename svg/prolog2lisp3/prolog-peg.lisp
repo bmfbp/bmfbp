@@ -135,5 +135,10 @@ D <- '0' | ... | ''9'
 
 (defun test ()
   (pprint (parse 'rule-Expr "2"))
+  (pprint (parse 'rule-Expr "2+3"))
+  (pprint (parse 'rule-Expr "2+3-4"))
+  (pprint (parse 'rule-Expr "2+3-4*5"))
+  (pprint (parse 'rule-Expr "2+3-4*5/6"))
+  (pprint (parse 'rule-Expr "2+3-4*5/6+(2+2)"))
   (pprint (parse 'rule-Expr "234")))
 
