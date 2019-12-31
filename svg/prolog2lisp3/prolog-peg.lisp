@@ -13,26 +13,26 @@ pConstant <- tInt
 
 #|
 (defrule pClause (or (and pPredicate tDot) (and pPredicate tColonDash tDot)))
-(defrule pPredicateList (or pPredicate (and pPredicate tComma pPredicateList)))
-(defrule pPredicate (or tAtom pStructure))
+
 |#
+
+(defrule pRule (and pPredicate tColonDash pPredicateList tDot) (:lambda (x) `(rule ,(delete nil x))))
+
+(defrule pPredicateList (or (and pPredicate (! tComma))
+                            (and pPredicate tComma pPredicateList))
+  (:lambda (x) `(predicate-list ,(delete nil x))))
+
+(defrule pPredicate (or (and tAtom (! tLpar))
+                        pStructure)
+  (:lambda (x) `(predicate ,(delete nil x))))
 
 (defrule pStructure (or (and tAtom tLpar tRpar)
-                        (and tAtom tLpar pTermList tRpar)))
+                        (and tAtom tLpar pTermList tRpar))
+  (:lambda(x) `(structure ,(delete nil x)))) 
+
 (defrule pTermList (or (and pTerm (! tComma))
                        (and pTerm tComma pTermList))
-  (:lambda (x)
-    `(termlist ,x)))
-
-
-#|
-(defrule pTermList (and (* pTermComma) pTerm)
-  (:destructure (star term)
-   `(termlist ,star ,term)))
-|#
-       
-(defrule pTermComma (and pTerm tComma)
-  (:constant nil))
+  (:lambda (x) `(term-list ,(delete nil x))))
 
 
 (defrule pTerm (or
@@ -41,21 +41,59 @@ pConstant <- tInt
                 tSingleQuotedAtom
                 tVar
                 pStructure)
-  (:lambda (x)
-    `(term ,x)))
+  (:lambda (x) `(term ,x)))
 
-(defrule tAtom tIdent
-  (:lambda (x)
-    `(atom ,x)))
+(defrule tAtom (or tIdent tCut tTrue tFail) (:lambda (x) `(atom ,x)))
 
-(defrule pConstant tInt
-  (:lambda (x)
-    `(int ,x)))
+(defrule pConstant tInt (:lambda (x) `(constant ,x)))
 
 (defun test ()
+  (pprint (esrap:parse 'pRule "notNamedSource(X):- namedSource(S),!,fail."))
+  (pprint (esrap:parse 'pRule "checkZero(X):-!."))
+  (pprint (esrap:parse 'pRule "dummy(Y):-forall(ident(X),doident(X,Y)).")))
+
+(defun test0c ()
+  (pprint (esrap:parse 'pRule "dummy:-namedSource(X),namedSource(0),!,fail."))
+  (pprint (esrap:parse 'pRule "dummy(X):-namedSource(X),namedSource(0),!,fail.")))
+
+(defun test0b ()
+  (pprint (esrap:parse 'pPredicate "namedSource(X)"))
+  (pprint (esrap:parse 'pPredicate "namedSource(0)"))
+  (pprint (esrap:parse 'pPredicateList "namedSource(X),namedSource(0)"))
+  (pprint (esrap:parse 'pPredicateList "namedSource(X),namedSource(0),!,fail"))
+  (pprint (esrap:parse 'pRule "dummy:-namedSource(X),namedSource(0),!,fail.")))
+
+(defun old-test ()
   (pprint (parse 'tComma ","))
   (pprint (parse 'pTermList "d"))
   (pprint (parse 'pTermList "a,f"))
   (pprint (parse 'pTermList "port,floor"))
   (pprint (parse 'pTermList "port(id391),floor(id391,0)"))
   (pprint (parse 'pTermList "port(id391),floor(id391,Var)")))
+
+(defun test0a ()
+  (pprint (parse 'pTermList "namedSource(X)"))
+  (pprint (parse 'pTermList "!"))
+  (pprint (parse 'pTermList "true"))
+  (pprint (parse 'pTermList "fail"))
+  (pprint (parse 'pTermList "!,fail"))
+  (pprint (parse 'pTermList "fail,!"))
+  (pprint (parse 'pTermList "namedSource(X),!,fail")))
+
+(defun test0 ()
+  (pprint (esrap:parse 'pTermList  "namedSource(X),!,fail.")))
+
+(defun test2 ()
+"notNamedSource(X) :-
+    namedSource(X),
+    !,
+    fail.
+checkZero(0) :- !.
+dummy :-
+  forall(ident(X),doident(X)).
+dummy2 :-
+  retract(ident(X)).
+dummy3 :-
+  X is Y + Z.
+dummy4 :-
+  asserta(ident(X)).")

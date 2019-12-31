@@ -26,15 +26,17 @@ tEndOfLine <- '\\r\\n' / '\\n' / '\\r'
 (defrule tEndOfLine (or #\Newline #\Return))
 (defrule tWhiteSpace (or #\Space #\Tab))
 
-(defrule tDot (and "." (* tWS)))
-(defrule tComma (and "," (* tWS)))
-(defrule tLpar (and "(" (* tWS)))
-(defrule tRpar (and ")" (* tWS)))
+(defrule tColonDash (and #\: #\- (* tWS)) (:constant nil))
+(defrule tDot (and "." (* tWS)) (:constant nil))
+(defrule tComma (and "," (* tWS)) (:constant nil))
+(defrule tLpar (and "(" (* tWS)) (:constant nil))
+(defrule tRpar (and ")" (* tWS)) (:constant nil))
 
-(defrule tInt (+ (character-ranges (#\0 #\9)))
-  (:text t) (:function parse-integer))
+(defrule tCut (and "!" (* tWS)) (:constant 'cut))
+(defrule tTrue (and "true" (* tWS)) (:constant 'true))
+(defrule tFail (and "fail" (* tWS)) (:constant 'fail))
 
-(defrule tVar (or tDontCare tNamedVar))
+
 
 (defrule tNamedVar (and tCapitalLetter (* tOtherLetter))
   (:text t))
@@ -43,9 +45,6 @@ tEndOfLine <- '\\r\\n' / '\\n' / '\\r'
   (:text t))
 
 (defrule tNotSquote (and (! #\') character))
-
-(defrule tIdent (and tLowerCaseLetter (* tOtherLetter))
-  (:text t))
 
 (defrule tDontCare "_" (:text t))
 
