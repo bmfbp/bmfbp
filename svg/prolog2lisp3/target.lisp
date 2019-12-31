@@ -22,6 +22,10 @@ dummy4 :-
        (predicate cut)
        (predicate fail)))
 
+(PREDICATE
+ (STRUCTURE
+  ((ATOM "namedSource") NIL (TERM-LIST ((TERM "X") NIL)) NIL)))
+
 (rule (predicate chekZero (argList (int 0)))
       (predicateList
        (predicate cut)))
