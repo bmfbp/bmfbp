@@ -125,14 +125,25 @@ D <- '0' | ... | ''9'
 (esrap:defrule is-Statement (and tVar tIs rule-Expr))
 
 (esrap:defrule rule-Expr rule-Additive)
+
 (esrap:defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
                                  (and rule-Mult tMinus rule-Additive)
-                                 rule-Mult))
+                                 rule-Mult)
+  (:lambda (x)
+    `(additive ,x)))
+
 (esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
                              (and rule-Primary tDiv rule-Mult)
-                             rule-Primary))
+                             rule-Primary)
+  (:lambda (x)
+    `(multiplicative ,x)))
+
 (esrap:defrule rule-Primary (or tInt
-                                (and #\( rule-Additive #\))))
+                                (and tLpar rule-Additive tRpar))
+  (:lambda (x)
+    `(primary ,x)))
+
+(esrap:defrule rule-TOP (and (* tWS) rule-Expr))
 
 (defun test ()
   (pprint (parse 'rule-Expr "2"))
@@ -142,7 +153,8 @@ D <- '0' | ... | ''9'
   (pprint (parse 'rule-Expr "2+3-4*5/6"))
   (pprint (parse 'rule-Expr "2+3-4*5/6+(2+2)"))
   (pprint (parse 'rule-Expr "234"))
-  (pprint (parse 'is-Statement "X is 234")))
+  (pprint (parse 'is-Statement "X is 234"))
+  (pprint (parse 'rule-TOP " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
 
 
 #|
