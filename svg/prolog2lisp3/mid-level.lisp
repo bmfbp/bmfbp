@@ -1,18 +1,24 @@
 (in-package :arrowgrams/parser)
 
+(defun remTrailingSpace (x-spc)
+  (destructuring-bind (x spc)
+    x-spc
+  (declare (ignore spc))
+  x))
+
 (defrule tInt (and (+ (character-ranges (#\0 #\9)))
                    (* tWS))
-  (:destructure (x spc) (declare (ignore spc)) x)                 
+  (:function remTrailingSpace)
   (:text t)
   (:function parse-integer)
   (:lambda (x) `(int ,x)))
 
 (defrule tVar (and (or tDontCare tNamedVar) (* tWS))
-  (:destructure (x spc) (declare (ignore spc)) x)
+  (:function remTrailingSpace)
   (:lambda (x) `(var ,x))) 
 
 (defrule tIdent (and tLowerCaseLetter (* tOtherLetter) (* tWS))
-  (:destructure (x spc) (declare (ignore spc)) x)                 
+  (:function remTrailingSpace)
   (:text t)
   (:lambda (x) `(ident ,x)))
 
