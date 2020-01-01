@@ -125,7 +125,12 @@ N <- D N
 D <- '0' | ... | ''9'
 |#
 
-(esrap:defrule is-Statement (and tVar tIs rule-Expr))
+(defun delnil (x) (delete nil x))
+
+(esrap:defrule is-Statement (and tVar tIs rule-Expr)
+  (:lambda (x) (delnil x))
+  (:lambda (x) `(is ,x)))
+
 
 (esrap:defrule rule-Expr rule-Additive)
 
@@ -166,10 +171,15 @@ D <- '0' | ... | ''9'
 
 
 
-(defrule rule-TOP (and (* tWS) rule-Top-Expr ))
-(defun test ()
+(defrule rule-TOP-1 (and (* tWS)  rule-Expr ))
+(defrule rule-TOP-2 (and (* tWS)  is-Statement ))
+(defun test0g ()
   (pprint (parse 'rule-TOP-Expr " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )"))
-  (pprint (parse 'rule-TOP " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+  (pprint (parse 'rule-TOP-1 " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )"))
+  (pprint (parse 'rule-TOP-2 "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+
+(defun test ()
+  (pprint (parse 'rule-TOP-2 "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
   ;(pprint (parse 'rule-TOP "X is 234,computeWith(X)")))
 
 
