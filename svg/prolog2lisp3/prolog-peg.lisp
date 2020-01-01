@@ -127,10 +127,6 @@ D <- '0' | ... | ''9'
 
 (defun delnil (x) (delete nil x))
 
-(esrap:defrule is-Statement (and tVar tIs rule-Expr)
-  (:lambda (x) (delnil x))
-  (:lambda (x) `(is ,x)))
-
 
 (esrap:defrule rule-Expr rule-Additive)
 
@@ -156,7 +152,10 @@ D <- '0' | ... | ''9'
 
 
 
-(esrap:defrule rule-TOP-Expr (and (* tWS) rule-Expr))
+(esrap:defrule rule-TOP-Expr (and (* tWS) rule-Expr)
+  (:destructure (spc e) (declare (ignore spc)) e)
+  (:lambda (x) (delnil x))
+  (:lambda (x) `(top-expr ,x)))
 
 (defun test0f ()
   (pprint (parse 'rule-Expr "2"))
@@ -170,16 +169,22 @@ D <- '0' | ... | ''9'
   (pprint (parse 'rule-Expr "2+3-4*5/6+(2+2)")))
 
 
+(esrap:defrule is-Statement (and tVar tIs rule-Expr)
+  (:lambda (x) (delnil x))
+  (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
+
 
 (defrule rule-TOP-1 (and (* tWS)  rule-Expr ))
-(defrule rule-TOP-2 (and (* tWS)  is-Statement ))
+(defrule rule-TOP-IS (and (* tWS)  is-Statement )
+  (:destructure (spc x) (declare (ignore spc)) x))
+  
 (defun test0g ()
   (pprint (parse 'rule-TOP-Expr " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )"))
   (pprint (parse 'rule-TOP-1 " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )"))
-  (pprint (parse 'rule-TOP-2 "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+  (pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
 
 (defun test ()
-  (pprint (parse 'rule-TOP-2 "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+  (pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
   ;(pprint (parse 'rule-TOP "X is 234,computeWith(X)")))
 
 
