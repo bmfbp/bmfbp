@@ -51,7 +51,7 @@ pConstant <- tInt
                   (and tVar pNotIs)
                   pStructure)
                  (* tWS))
-  (:destructure (x spc) (declare (ignore spc)) x)
+  (:function remTrailingSpace)
   (:lambda (x) `(term ,x)))
 
 (defrule pNotIs (! tIs))
@@ -124,22 +124,9 @@ pConstant <- tInt
   (:function remLeadingSpace))
   
 (defun test ()
-  ;(pprint (esrap:parse 'pPredicate "namedSource(X)"))
-  ;(pprint (esrap:parse 'pPredicate "namedSource(0)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is 2"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 "))
-  #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is (2)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is (2 + 3)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is (4 - 5)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is 1 + (4 - 5)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is (6 + 7) + (4 - 5)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is (6 + 7) - (4 - 5)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is (8 * 9) - (10 / 11)"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is (12 * 13) * (14 / 15)"))
   (setf cl:*print-right-margin* 40)
-  (pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
+  (pprint (esrap:parse 'pPredicate "namedSource(X)"))
   )
 
 
