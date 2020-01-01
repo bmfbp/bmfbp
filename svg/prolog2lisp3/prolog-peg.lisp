@@ -102,11 +102,18 @@ pConstant <- tInt
   (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
 
 
-(defrule rule-TOP-1 (and (* tWS)  rule-Expr ))
+(defun remLeadingSpace (spc-x)
+  (destructuring-bind (spc x)
+      spc-x
+    (declare (ignore spc))
+    x))
+
 (defrule rule-TOP-IS (and (* tWS)  is-Statement )
-  (:destructure (spc x) (declare (ignore spc)) x))
+  (:function remLeadingSpace))
   
 (defun test ()
+  ;(pprint (esrap:parse 'pPredicate "namedSource(X)"))
+  ;(pprint (esrap:parse 'pPredicate "namedSource(0)"))
   (pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
   ;(pprint (parse 'rule-TOP "X is 234,computeWith(X)")))
 
