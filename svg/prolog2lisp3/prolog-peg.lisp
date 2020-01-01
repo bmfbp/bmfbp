@@ -24,7 +24,8 @@ pConstant <- tInt
 
 (defrule pPredicateList (or (and pPredicate pNotComma)
                             (and pPredicate tComma pPredicateList))
-  (:lambda (x) `(predicate-list ,(delete nil x))))
+  (:function delnil)
+  (:lambda (x) `(predicate-list ,x)))
 
 (defrule pPredicate (or (and tAtom pNotLpar)
                         pStructure)
