@@ -75,9 +75,13 @@ pConstant <- tInt
                                  rule-Mult)
   (:lambda (x) (delnil x))
   (:lambda (x)
-    (ecase (length x)
-      (2 x)
-      (3 (list (second x) (first x) (third x))))))
+    #+nil(format *standard-output* "~&additive c = ~a x = ~S~%" (length x) x)
+    (if (and (listp x) (eq '+ (second x)))
+        `(+ ,(first x) ,(third x))
+      x)))
+;;;     (ecase (length x)
+;;;       (2 x)
+;;;       (3 (list (second x) (first x) (third x))))))
 
 (esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
                              (and rule-Primary tDiv rule-Mult)
@@ -92,7 +96,11 @@ pConstant <- tInt
                                 (and tLpar rule-Additive tRpar))
   (:lambda (x) (delnil x))
   (:lambda (x)
-    `(primary ,x)))
+    (format *standard-output* "~&primary  c = ~a x = ~s~%" (if (listp x) (length x) 0) x)
+    (assert (listp x))
+    (if (and (= 1 (length x)) (listp (first x)))
+        `(paren ,(first x))
+    `(primary ,x))))
 
 
 
@@ -121,7 +129,10 @@ pConstant <- tInt
   #+nil(pprint (parse 'rule-TOP-IS "X is 2"))
   #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 "))
   #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4"))
-  (pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is (2)"))
+  (pprint (parse 'rule-TOP-IS "X is (2 + 3)"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is (2 + 3) - 5"))
   #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
   ;(pprint (parse 'rule-TOP "X is 234,computeWith(X)")))
 
