@@ -75,14 +75,18 @@ pConstant <- tInt
                                  rule-Mult)
   (:lambda (x) (delnil x))
   (:lambda (x)
-    `(additive ,x)))
+    (ecase (length x)
+      (2 x)
+      (3 (list (second x) (first x) (third x))))))
 
 (esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
                              (and rule-Primary tDiv rule-Mult)
                              rule-Primary)
   (:lambda (x) (delnil x))
   (:lambda (x)
-    `(multiplicative ,x)))
+    (ecase (length x)
+      (2 x)
+      (3 (list (second x) (first x) (third x))))))
 
 (esrap:defrule rule-Primary (or tInt
                                 (and tLpar rule-Additive tRpar))
@@ -114,7 +118,11 @@ pConstant <- tInt
 (defun test ()
   ;(pprint (esrap:parse 'pPredicate "namedSource(X)"))
   ;(pprint (esrap:parse 'pPredicate "namedSource(0)"))
-  (pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 2"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 "))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4"))
+  (pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
   ;(pprint (parse 'rule-TOP "X is 234,computeWith(X)")))
 
 
