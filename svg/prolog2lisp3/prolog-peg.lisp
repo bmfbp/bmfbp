@@ -43,12 +43,15 @@ pConstant <- tInt
   (:lambda (x) `(term-list ,(delete nil x))))
 
 
-(defrule pTerm (or
-                pConstant
-                (and tAtom (! #\())
-                tSingleQuotedAtom
-                (and tVar pNotIs)
-                pStructure)
+(defrule pTerm ( and
+                 (or
+                  pConstant
+                  (and tAtom (! #\())
+                  tSingleQuotedAtom
+                  (and tVar pNotIs)
+                  pStructure)
+                 (* tWS))
+  (:destructure (x spc) (declare (ignore spc)) x)
   (:lambda (x) `(term ,x)))
 
 (defrule pNotIs (! tIs))
@@ -129,23 +132,28 @@ D <- '0' | ... | ''9'
 (esrap:defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
                                  (and rule-Mult tMinus rule-Additive)
                                  rule-Mult)
+  (:lambda (x) (delete nil x))
   (:lambda (x)
     `(additive ,x)))
 
 (esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
                              (and rule-Primary tDiv rule-Mult)
                              rule-Primary)
+  (:lambda (x) (delete nil x))
   (:lambda (x)
     `(multiplicative ,x)))
 
 (esrap:defrule rule-Primary (or tInt
                                 (and tLpar rule-Additive tRpar))
+  (:lambda (x) (delete nil x))
   (:lambda (x)
     `(primary ,x)))
 
-(esrap:defrule rule-TOP (and (* tWS) rule-Expr))
 
-(defun test ()
+
+(esrap:defrule rule-TOP-Expr (and (* tWS) rule-Expr))
+
+(defun test0f ()
   (pprint (parse 'rule-Expr "2"))
   (pprint (parse 'rule-Expr "2+3"))
   (pprint (parse 'rule-Expr "2+3-4"))
@@ -154,12 +162,21 @@ D <- '0' | ... | ''9'
   (pprint (parse 'rule-Expr "2+3-4*5/6+(2+2)"))
   (pprint (parse 'rule-Expr "234"))
   (pprint (parse 'is-Statement "X is 234"))
-  (pprint (parse 'rule-TOP " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+  (pprint (parse 'rule-Expr "2+3-4*5/6+(2+2)")))
+;;(pprint (parse 'rule-TOP " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+
+
+
+(defun test ()
+  (pprint (parse 'rule-TOP-Expr " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+  ;(pprint (parse 'rule-TOP "X is 234,computeWith(X)")))
+
+
 
 
 #|
 TODO
-1. ws
-2. tie is and expr into predicate?
+x 1. ws
+2. tie is and expr into predicate? Thinking about term-list and how IS fits in.
 
 |#
