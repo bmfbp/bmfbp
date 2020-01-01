@@ -122,8 +122,9 @@ N <- D N
 D <- '0' | ... | ''9'
 |#
 
-(esrap:defrule rule-Expr rule-Additive)
+(esrap:defrule is-Statement (and tVar tIs rule-Expr))
 
+(esrap:defrule rule-Expr rule-Additive)
 (esrap:defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
                                  (and rule-Mult tMinus rule-Additive)
                                  rule-Mult))
@@ -140,5 +141,13 @@ D <- '0' | ... | ''9'
   (pprint (parse 'rule-Expr "2+3-4*5"))
   (pprint (parse 'rule-Expr "2+3-4*5/6"))
   (pprint (parse 'rule-Expr "2+3-4*5/6+(2+2)"))
-  (pprint (parse 'rule-Expr "234")))
+  (pprint (parse 'rule-Expr "234"))
+  (pprint (parse 'is-Statement "X is 234")))
 
+
+#|
+TODO
+1. ws
+2. tie is and expr into predicate?
+
+|#

@@ -40,7 +40,7 @@ tEndOfLine <- '\\r\\n' / '\\n' / '\\r'
 (defrule tTrue (and "true" (* tWS)) (:constant 'true))
 (defrule tFail (and "fail" (* tWS)) (:constant 'fail))
 
-(defrule tIs (and "fail" (* tWS)) (:constant 'is))
+(defrule tIs (and "is" (* tWS)) (:constant 'is))
 
 
 
