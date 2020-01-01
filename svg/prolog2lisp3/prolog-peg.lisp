@@ -163,12 +163,13 @@ D <- '0' | ... | ''9'
   (pprint (parse 'rule-Expr "234"))
   (pprint (parse 'is-Statement "X is 234"))
   (pprint (parse 'rule-Expr "2+3-4*5/6+(2+2)")))
-;;(pprint (parse 'rule-TOP " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
 
 
 
+(defrule rule-TOP (and (* tWS) rule-Top-Expr ))
 (defun test ()
-  (pprint (parse 'rule-TOP-Expr " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
+  (pprint (parse 'rule-TOP-Expr " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )"))
+  (pprint (parse 'rule-TOP " 2 + 3 - 4 * 5 / 6 + ( 2 + 2 )")))
   ;(pprint (parse 'rule-TOP "X is 234,computeWith(X)")))
 
 
