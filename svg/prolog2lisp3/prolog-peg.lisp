@@ -73,20 +73,20 @@ pConstant <- tInt
 (esrap:defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
                                  (and rule-Mult tMinus rule-Additive)
                                  rule-Mult)
-  (:lambda (x) (delete nil x))
+  (:lambda (x) (delnil x))
   (:lambda (x)
     `(additive ,x)))
 
 (esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
                              (and rule-Primary tDiv rule-Mult)
                              rule-Primary)
-  (:lambda (x) (delete nil x))
+  (:lambda (x) (delnil x))
   (:lambda (x)
     `(multiplicative ,x)))
 
 (esrap:defrule rule-Primary (or tInt
                                 (and tLpar rule-Additive tRpar))
-  (:lambda (x) (delete nil x))
+  (:lambda (x) (delnil x))
   (:lambda (x)
     `(primary ,x)))
 
