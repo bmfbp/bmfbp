@@ -137,7 +137,9 @@ pConstant <- tInt
   #+nil(pprint (parse 'rule-TOP-IS "X is (6 + 7) + (4 - 5)"))
   #+nil(pprint (parse 'rule-TOP-IS "X is (6 + 7) - (4 - 5)"))
   #+nil(pprint (parse 'rule-TOP-IS "X is (8 * 9) - (10 / 11)"))
-  (pprint (parse 'rule-TOP-IS "X is (12 * 13) * (14 / 15)"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is (12 * 13) * (14 / 15)"))
+  (setf cl:*print-right-margin* 40)
+  (pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
   )
 
 
