@@ -130,5 +130,6 @@ pConstant <- tInt
   #+nil(pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
   (esrap:trace-rule 'pPredicate :recursive t)
   #+nil(pprint (esrap:parse 'pPredicate "namedSource(X)"))
-  (pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
+  #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
+  (pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
   )
