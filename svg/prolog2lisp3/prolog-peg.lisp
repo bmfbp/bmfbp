@@ -28,7 +28,8 @@ pConstant <- tInt
 
 (defrule pPredicate (or (and tAtom pNotLpar)
                         pStructure)
-  (:lambda (x) `(predicate ,(delete nil x))))
+  (:function delnil)
+  (:lambda (x) `(predicate ,x)))
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
                         (and tAtom tLpar pTermList tRpar))
@@ -126,15 +127,7 @@ pConstant <- tInt
 (defun test ()
   (setf cl:*print-right-margin* 40)
   #+nil(pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
-  (pprint (esrap:parse 'pPredicate "namedSource(X)"))
+  (esrap:trace-rule 'pPredicate :recursive t)
+  #+nil(pprint (esrap:parse 'pPredicate "namedSource(X)"))
+  (pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   )
-
-
-
-
-#|
-TODO
-x 1. ws
-2. tie is and expr into predicate? Thinking about term-list and how IS fits in.
-
-|#
