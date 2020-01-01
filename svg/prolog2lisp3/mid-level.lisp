@@ -4,7 +4,8 @@
   (:text t) (:function parse-integer) (:lambda (x) `(int ,x)))
 
 (defrule tVar (and (or tDontCare tNamedVar) (* tWS))
-  (:destructure (x spc) (declare (ignore spc)) `(var ,x)))
+  (:destructure (x spc) (declare (ignore spc)) x)
+  (:lambda (x) `(var ,x))) 
 
 (defrule tIdent (and tLowerCaseLetter (* tOtherLetter))
   (:text t) (:lambda (x) `(ident ,x)))
