@@ -22,7 +22,9 @@ tEndOfLine <- '\\r\\n' / '\\n' / '\\r'
 )
 
 (defrule tWS (or tComment tWhiteSpace tEndOfLine) (:constant :ws))
-(defrule tComment (and #\% (* character) tEndOfLine))
+(defrule tJunk-to-eol (and (* character) (or tEndOfLine tEOF)) (:constant :junk))
+(defrule tComment (and #\% (* character) (or tEndOfLine tEOF)))
+(defrule tEOF (! character))
 (defrule tEndOfLine (or #\Newline #\Return))
 (defrule tWhiteSpace (or #\Space #\Tab))
 
