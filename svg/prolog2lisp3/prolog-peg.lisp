@@ -1,5 +1,10 @@
 (in-package :arrowgrams/parser)
 
+(defun delnil (x) (delete nil x))
+
+(defun pr (x)
+  (format *standard-output* "~&pr: ~S~%" x))
+
 #+nil(defconstant +prolog-grammar+
 "
 pClause <- pPredicate tDot / pPredict tColonDash tDot
@@ -31,6 +36,7 @@ pConstant <- tInt
                         pStructure
                         is-Statement)
   (:function delnil)
+  (:function pr)
   (:lambda (x) `(predicate ,x)))
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
@@ -66,9 +72,6 @@ pConstant <- tInt
 (defrule pConstant tInt (:lambda (x) `(constant ,x)))
 
 ;; revelation: math exprs only appear as the RHS of IS statements
-
-
-(defun delnil (x) (delete nil x))
 
 
 (esrap:defrule rule-Expr rule-Additive)
@@ -129,9 +132,12 @@ pConstant <- tInt
 (defun test ()
   (setf cl:*print-right-margin* 40)
   #+nil(pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
-  (esrap:trace-rule 'pPredicate :recursive t)
+  ;(esrap:trace-rule 'pPredicate :recursive t)
   #+nil(pprint (esrap:parse 'pPredicate "namedSource(X)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
-  (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
+  #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
+  (pprint (esrap:parse 'pPredicateList "atom"))
+  #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y)"))
+  #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0),X is 1"))
   )
