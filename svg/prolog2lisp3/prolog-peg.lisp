@@ -18,9 +18,11 @@
                         is-Statement)
   (:lambda (x) `(predicate ,x)))
 
-(defrule pStructure (or (and tAtom tLpar tRpar)
-                        (and tAtom tLpar pTermList tRpar))
+(defrule pStructure (or pStructure1 pStructure2))
+(defrule pStructure1 (and tAtom tLpar tRpar)
   (:function ignore-lpar-rpar-3)
+  (:lambda (x) `(structure ,x)))
+(defrule pStructure2 (and tAtom tLpar pTermList tRpar)
   (:function ignore-lpar-rpar-4)
   (:lambda (x) `(structure ,x)))
 
