@@ -1,5 +1,8 @@
 `(in-package :arrowgrams/parser)
 
+(defrule rule-TOP (and (+ rule-TOP1) tEOF)
+  (:lambda (x) `(list-of-rules ,@(first x))))
+
 (defrule rule-TOP1 (or pRule rule-directive rule-fact))
 
 (defrule rule-directive (and (* tWS) tColonDash tJunk-to-eol) (:constant '(directive)))
@@ -150,6 +153,8 @@
   (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X)."))
   (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X),  Right is X + Width."))
+  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),  Right is X + Width."))
   #+nil (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),
