@@ -28,7 +28,8 @@ pConstant <- tInt
   (:lambda (x) `(predicate-list ,x)))
 
 (defrule pPredicate (or (and tAtom pNotLpar)
-                        pStructure)
+                        pStructure
+                        is-Statement)
   (:function delnil)
   (:lambda (x) `(predicate ,x)))
 
