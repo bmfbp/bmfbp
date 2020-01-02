@@ -1,8 +1,12 @@
 (in-package :arrowgrams/parser)
 
-(defrule rule-TOP (or pRule rule-directive))
+(defrule rule-TOP (or pRule rule-directive rule-fact))
 
 (defrule rule-directive (and (* tWS) tColonDash tJunk-to-eol) (:constant '(directive)))
+
+(defrule rule-fact (and pPredicate tDot) (:lambda (x) `(fact ,(first x))))
+
+
 
 (defrule pRule (and pPredicate tColonDash pPredicateList tDot)
   (:lambda (x) `(rule ,(first x) ,(third x))))
@@ -137,7 +141,19 @@
   (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y),dummy(0),X is 1."))
 
   (pprint (esrap:parse 'rule-TOP ":- initialization(main)."))
-  (pprint (esrap:parse 'rule-Top ":- include('head')."))
-  (pprint (esrap:parse 'rule-Top ":- include('tail')."))
+  (pprint (esrap:parse 'rule-TOP ":- include('head')."))
+  (pprint (esrap:parse 'rule-TOP ":- include('tail')."))
 
+  (pprint (esrap:parse 'rule-TOP "ellispse(id391)."))
+  #+nil (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X),
+    geometry_top_y(ID, Y),
+    geometry_w(ID, Width),
+    geometry_h(ID, Height),
+    asserta(bounding_box_left(ID,X)),
+    asserta(bounding_box_top(ID,Y)),
+    Right is X + Width,
+    Bottom is Y + Height,
+    asserta(bounding_box_right(ID,Right)),
+    asserta(bounding_box_bottom(ID,Bottom))."))
 )
