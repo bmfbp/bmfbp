@@ -143,7 +143,7 @@
                                       "h-peg" "prolog-rules" "memo" "facts" "rewrite"))
                                      ))))
 
-(defsystem arrowgrams/parser
+#+nil(defsystem arrowgrams/parser
   :depends-on (:arrowgrams :cl-event-passing :loops)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
@@ -168,8 +168,24 @@
                                      (:file "chars" :depends-on ("package" "token"))
                                      (:file "eol-comments" :depends-on ("package" "token"))
                                      (:file "whitespace" :depends-on ("package" "token"))
+                                     (:file "squote" :depends-on ("package" "token"))
+                                     (:file "uint" :depends-on ("package" "token"))
+                                     (:file "ident" :depends-on ("package" "token"))
                                      (:file "token-counter" :depends-on ("package" "token"))
                                      (:file "prolog-parser" 
                                       :depends-on ("package" "token"
                                                    "read-file-into-string" "chars" "eol-comments"
-                                                   "whitespace" "token-counter"))))))
+                                                   "squote" "whitespace" "token-counter" "uint" "ident"))))))
+
+(defsystem arrowgrams/parser
+  :depends-on (:arrowgrams :esrap :cl-event-passing :loops)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/prolog2lisp3"
+			:components ((:file "package")
+                                     (:file "low-level" :depends-on ("package"))
+                                     (:file "mid-level" :depends-on ("package" "low-level"))
+                                     (:file "ignore" :depends-on ("package"))
+                                     (:file "prolog-peg" :depends-on ("mid-level" "ignore"))))))
