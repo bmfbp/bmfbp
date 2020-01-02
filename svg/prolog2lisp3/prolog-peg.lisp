@@ -43,7 +43,8 @@
                   (and tVar pNotIs)
                   pStructure)
                  (* tWS))
-  (:function remTrailingSpace)
+  (:function ignore-nested-not)
+  (:function ignore-trailing-space)
   (:lambda (x) `(term ,x)))
 
 (defrule pNotIs (! tIs))
