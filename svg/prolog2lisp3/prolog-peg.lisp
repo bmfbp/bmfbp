@@ -4,7 +4,7 @@
   (format *standard-output* "~&pr: ~S~%" x)
   x)
 
-(defun skip-not (x)
+(defun skip-trailing-not (x)
   (let ((condition (and (listp x)
                         (= 2 (length x))
                         (eq nil (second x)))))
@@ -46,14 +46,14 @@ pConstant <- tInt
 (defrule pPredicateList (or (and pPredicate pNotComma)
                             (and pPredicate tComma pPredicateList))
   (:function pr)
-  (:function skip-not)
+  (:function skip-trailing-not)
   (:lambda (x) `(predicate-list ,x)))
 
 (defrule pPredicate (or (and tAtom pNotLpar)
                         pStructure
                         is-Statement)
   (:function pr)
-  (:function skip-not)
+  (:function skip-trailing-not)
   (:lambda (x) `(predicate ,x)))
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
@@ -66,7 +66,7 @@ pConstant <- tInt
 
 (defrule pTermList (or (and pTerm pNotComma)
                        (and pTerm tComma pTermList))
-  (:function skip-not)
+  (:function skip-trailing-not)
   (:lambda (x) `(term-list ,x)))
 
 
@@ -149,7 +149,7 @@ pConstant <- tInt
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
-  (pprint (esrap:parse 'pPredicateList "atom"))
-  #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y)"))
+  #+nil(pprint (esrap:parse 'pPredicateList "atom"))
+  (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0),X is 1"))
   )
