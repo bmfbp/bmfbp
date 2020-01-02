@@ -3,7 +3,8 @@
 (defun delnil (x) (delete nil x))
 
 (defun pr (x)
-  (format *standard-output* "~&pr: ~S~%" x))
+  (format *standard-output* "~&pr: ~S~%" x)
+  x)
 
 #+nil(defconstant +prolog-grammar+
 "
