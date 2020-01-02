@@ -77,6 +77,7 @@ pConstant <- tInt
 (defrule pTermList (or (and pTerm pNotComma)
                        (and pTerm tComma pTermList))
   (:function skip-trailing-not)
+  (:function skip-middle-comma)
   (:lambda (x) `(term-list ,x)))
 
 
