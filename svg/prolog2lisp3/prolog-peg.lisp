@@ -95,7 +95,8 @@
 
 
 (defrule rule-TOP-IS (and (* tWS)  is-Statement )
-  (:function ignore-leading-ws))
+  (:function ignore-leading-ws)
+  (:function first))
 
 (defun test ()
   (setf cl:*print-right-margin* 40)
