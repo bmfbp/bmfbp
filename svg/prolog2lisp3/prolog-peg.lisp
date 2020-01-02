@@ -156,16 +156,11 @@
     geometry_left_x(ID,X),  Right is X + Width."))
   (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),  Right is X + Width."))
-  #+nil (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
-    geometry_left_x(ID,X),
-    geometry_top_y(ID, Y),
-    geometry_w(ID, Width),
-    geometry_h(ID, Height),
-    asserta(bounding_box_left(ID,X)),
-    asserta(bounding_box_top(ID,Y)),
-    Right is X + Width,
-    Bottom is Y + Height,
-    asserta(bounding_box_right(ID,Right)),
-    asserta(bounding_box_bottom(ID,Bottom))."))
+  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X),  Right is X + Width.
+createRectBoundingBox2(ID) :-
+    geometry_left_x(ID,X),  Right is X + Width."))
 
+  (pprint (esrap:parse 'rule-TOP *all-prolog*))
+  
 )
