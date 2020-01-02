@@ -1,4 +1,4 @@
-(in-package :arrowgrams/prolog-peg)
+(in-package :arrowgrams/parser)
 
 (defparameter *all-prolog*
 "
