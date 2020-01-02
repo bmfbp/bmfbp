@@ -84,7 +84,7 @@
         `(/ ,(first x) ,(third x))
         x))))
 
-(esrap:defrule rule-Primary (or tInt rule-Primary2)
+(esrap:defrule rule-Primary (or tInt rule-Primary2 tVar)
   (:lambda (x) `(primary ,x)))
 (esrap:defrule rule-Primary2 (and tLpar rule-Additive tRpar)
   (:function second))
@@ -145,6 +145,12 @@
   (pprint (esrap:parse 'rule-TOP ":- include('tail')."))
 
   (pprint (esrap:parse 'rule-TOP "ellispse(id391)."))
+  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X)."))
+  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X)."))
+  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X),  Right is X + Width."))
   #+nil (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),
     geometry_top_y(ID, Y),
