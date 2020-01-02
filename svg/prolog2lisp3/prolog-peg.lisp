@@ -6,6 +6,15 @@
   (format *standard-output* "~&pr: ~S~%" x)
   x)
 
+(defun skip-not (x)
+  (let ((condition (and (listp x)
+                        (= 2 (length x))
+                        (eq nil (second x)))))
+    (format *standard-output* "~&condition: ~a~%" condition)
+    (if condition
+        (first x)
+      x)))
+
 #+nil(defconstant +prolog-grammar+
 "
 pClause <- pPredicate tDot / pPredict tColonDash tDot
@@ -30,14 +39,15 @@ pConstant <- tInt
 
 (defrule pPredicateList (or (and pPredicate pNotComma)
                             (and pPredicate tComma pPredicateList))
-  (:function delnil)
+  (:function pr)
+  (:function skip-not)
   (:lambda (x) `(predicate-list ,x)))
 
 (defrule pPredicate (or (and tAtom pNotLpar)
                         pStructure
                         is-Statement)
-  (:function delnil)
   (:function pr)
+  (:function skip-not)
   (:lambda (x) `(predicate ,x)))
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
@@ -50,7 +60,8 @@ pConstant <- tInt
 
 (defrule pTermList (or (and pTerm pNotComma)
                        (and pTerm tComma pTermList))
-  (:lambda (x) `(term-list ,(delete nil x))))
+  (:function skip-not)
+  (:lambda (x) `(term-list ,x)))
 
 
 (defrule pTerm ( and
