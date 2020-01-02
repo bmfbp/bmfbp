@@ -1,10 +1,7 @@
 (in-package :arrowgrams/parser)
 
 (defrule pRule (and pPredicate tColonDash pPredicateList tDot)
-  (:lambda (y)
-    (let ((x (delete nil y)))
-      (assert (and (listp x) (= 2 (length x))))
-      `(rule ,(first x) ,(second x)))))
+  (:lambda (x) `(rule ,(first x) ,(third x))))
 
 (defrule pPredicateList (or pPredicateList1 pPredicateList2))
 (defrule pPredicateList1 (and pPredicate pNotComma)
@@ -44,8 +41,8 @@
   (:function first)
   (:lambda (x) `(term ,x)))
 
-(defrule pAtomNotLpar (and tAtom (! #\()) (:function ignore-trailing-lp-2))
-(defrule pVarNotIs (and tVar pNotIs) (:function ignore-trailing-ws-2))
+(defrule pAtomNotLpar (and tAtom (! #\()) (:function first))
+(defrule pVarNotIs (and tVar pNotIs) (:function first))
 (defrule pNotIs (! tIs))
 (defrule pNotComma (! tComma))
 (defrule pNotLpar (! tLpar))
@@ -81,12 +78,10 @@
         `(/ ,(first x) ,(third x))
         x))))
 
-(esrap:defrule rule-Primary (or tInt
-                                (and tLpar rule-Additive tRpar))
-  (:function ignore-parens)
+(esrap:defrule rule-Primary (or tInt rule-Primary2)
   (:lambda (x) `(primary ,x)))
-
-
+(esrap:defrule rule-Primary2 (and tLpar rule-Additive tRpar)
+  (:function second))
 
 (esrap:defrule rule-TOP-Expr (and (* tWS) rule-Expr)
   (:destructure (spc e) (declare (ignore spc)) e)
@@ -97,8 +92,7 @@
 
 
 (defrule rule-TOP-IS (and (* tWS)  is-Statement )
-  (:function ignore-leading-ws)
-  (:function first))
+  (:function second))
 
 (defun test ()
   (setf cl:*print-right-margin* 40)
@@ -121,4 +115,12 @@
   (pprint (esrap:parse 'pPredicateList "atom"))
   (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y)"))
   (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0),X is 1"))
-  )
+
+  (pprint (esrap:parse 'pRule "x :- namedSource(X)."))
+  #+nil  (pprint (esrap:parse 'pRule "namedSource(X),dummy(0)"))
+  #+nil  (pprint (esrap:parse 'pRule "namedSource(X),pred(X,Y),dummy(0)"))
+  #+nil  (pprint (esrap:parse 'pRule "atom,pred(X,Y),dummy(0)"))
+  #+nil  (pprint (esrap:parse 'pRule "atom"))
+  #+nil  (pprint (esrap:parse 'pRule "atom,pred(X,Y)"))
+  #+nil  (pprint (esrap:parse 'pRule "atom,pred(X,Y),dummy(0),X is 1"))
+)
