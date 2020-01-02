@@ -43,8 +43,6 @@
                   (and tVar pNotIs)
                   pStructure)
                  (* tWS))
-  (:function ignore-nested-not)
-  (:function ignore-trailing-space)
   (:lambda (x) `(term ,x)))
 
 (defrule pNotIs (! tIs))
@@ -86,7 +84,6 @@
                                 (and tLpar rule-Additive tRpar))
   (:lambda (x) (skip-nil x))
   (:lambda (x)
-    (format *standard-output* "~&primary  c = ~a x = ~s~%" (if (listp x) (length x) 0) x)
     (assert (listp x))
     (if (and (= 1 (length x)) (listp (first x)))
         `(paren ,(first x))
