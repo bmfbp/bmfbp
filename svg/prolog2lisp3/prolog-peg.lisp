@@ -13,6 +13,15 @@
         (first x)
       x)))
 
+(defun skip-middle-comma (x)
+  (let ((condition (and (listp x)
+                        (= 3 (length x))
+                        (eq nil (second x)))))
+    (format *standard-output* "~&skip-middle-comma condition: ~a~%" condition)
+    (if condition
+        (list (first x) (third x))
+      x)))
+
 (defun skip-nil (x) (delete nil x))
 
 (defun skip-leading-space (spc-x)
@@ -47,6 +56,7 @@ pConstant <- tInt
                             (and pPredicate tComma pPredicateList))
   (:function pr)
   (:function skip-trailing-not)
+  (:function skip-middle-comma)
   (:lambda (x) `(predicate-list ,x)))
 
 (defrule pPredicate (or (and tAtom pNotLpar)
