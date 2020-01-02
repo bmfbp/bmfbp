@@ -116,7 +116,7 @@
   (pprint (esrap:parse 'pStructure "namedSource()"))
   (pprint (esrap:parse 'pStructure "namedSource(X)"))
 
-  #+nil(pprint (esrap:parse 'pPredicate "namedSource(X)"))
+  (pprint (esrap:parse 'pPredicate "namedSource(X)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
