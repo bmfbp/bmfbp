@@ -10,5 +10,3 @@
            (equal '((:ws)) (last x)))
       (butlast x)
     x))
-
-(defun skip-nil (x) (delete nil x))
