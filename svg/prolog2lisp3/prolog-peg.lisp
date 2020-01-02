@@ -9,7 +9,7 @@
       (cond ((and (= 3 (length x)) (char= #\( (second x)) (char= #\) (third x)))
              (first x))
             ((and (= 4 (length x)) (char= #\( (second x)) (char= #\) (fourth x)))
-             (list (first x) (second x)))
+             (list (first x) (third x)))
             (t x))
     x))                  
              
