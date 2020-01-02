@@ -2,15 +2,15 @@
 ;; (:in <token>)  
 ;;
 ;;OUTPUTS
-;; (:out <token>)
+;; (:out <token>)  <token :squoted-string ... > or original tokens
 ;; (:error object)       obj=(list <error-message> <string-kind> <buffer>)
 
-(in-package :arrowgrams/parser/eol-comments)
+(in-package :arrowgrams/parser/squote)
 
-;; find all comments that start with % and finish at the EOL
-;; avoid the insides of dquote and squote strings "..." and '...'
+;; find all single-quoted strings '...' (one kind of prolog atoms)
+;; avoid the insides of dquoted strings "..."
 
-;; :state is :idle, :in-comment, :in-dquote or :in-squote
+;; :state is :idle, :in-dquote or :in-squote
 
 (defmethod react ((self e/part:part) (e e/event:event))
   (let ((state (@get-instance-var self :state))
@@ -20,32 +20,22 @@
           (position (token-position token)))
       (if (eq ty :EOF)
           (do-eof self state token)
-        (progn
+        (if (or (eq ty :comment)
+                (eq ty :whitespace))
+            (send-token self token)
           (ecase state 
             
             (:idle
-             (if (char= c #\%)
+             (if (char= c #\")
                  (progn
-                   (clear-buffer self)
-                   (push-token-into-buffer self token)
-                   (@set-instance-var self :state :in-comment))
-               (if (char= c #\")
+                   (send-token self token)
+                   (@set-instance-var self :state :in-dquote))
+               (if (char= c #\')
                    (progn
-                     (send-token self token)
-                     (@set-instance-var self :state :in-dquote))
-                 (if (char= c #\')
-                     (progn
-                       (send-token self token)
-                       (@set-instance-var self :state :in-squote))
-                   (send-token self token)))))
-            
-            (:in-comment
-             (if (char= c #\Newline) ;; eof handled above
-                 (progn
-                   (push-token-into-buffer self token)
-                   (send-buffer self)
-                   (@set-instance-var self :state :idle))
-               (push-token-into-buffer self token)))
+                     (clear-buffer self)
+                     (push-token-into-buffer self token)
+                     (@set-instance-var self :state :in-squote))
+                 (send-token self token))))
             
             (:in-dquote
              (send-token self token)
@@ -53,11 +43,10 @@
                (@set-instance-var self :state :idle)))
             
             (:in-squote
-             (send-token self token)
+             (push-token-into-buffer self token)
              (when (char= c #\')
-               (@set-instance-var self :state :idle))))))))
-  
-      (send-request self)) ;; not sent if :EOF
+               (send-buffer self)
+               (@set-instance-var self :state :idle)))))))))
 
 (defmethod send-unterminated-string-error ((self e/part:part) string-type)
   (let ((err-pin (@get-output-pin self :error)))
@@ -84,12 +73,8 @@
   (let ((out-pin (@get-output-pin self :out)))
     (let ((buffer (get-buffer self)))
       (when buffer
-        (@send self out-pin (make-token :type :comment :value buffer :position (token-position (first buffer))))
+        (@send self out-pin (make-token :type :squoted-string :value buffer :position (token-position (first buffer))))
         (clear-buffer self)))))
-
-(defmethod send-request ((self e/part:part))
-  (let ((req-pin (@get-output-pin self :request)))
-    (@send self req-pin T)))
 
 (defmethod do-eof ((self e/part:part) state eof-token)
   (send-buffer self)

@@ -27,7 +27,7 @@
            (:comment
             (forward-token self token))
            (:eof
-            (finalize self token))
+            (finalize-eof self token))
            (:character
             (if (whitespace-char-p c)
                 (progn

@@ -6,11 +6,17 @@
              (:code eol-comments (:in) (:request :out :error) #'arrowgrams/parser/eol-comments::react #'arrowgrams/parser/eol-comments::first-time)
              (:code readf (:filename) (:out :fatal) #'arrowgrams/parser/read-file-into-string::react)
              (:code ws (:in) (:out :error) #'arrowgrams/parser/ws::react #'arrowgrams/parser/ws::first-time)
+             (:code squote (:in) (:out :error) #'arrowgrams/parser/squote::react #'arrowgrams/parser/squote::first-time)
              (:code tcounter (:in) (:out :fatal) #'arrowgrams/parser/token-counter::react #'arrowgrams/parser/token-counter::first-time)
              (:code chars (:in-string :request) (:out :error) #'arrowgrams/parser/chars::react #'arrowgrams/parser/chars::first-time)
+             (:code uint (:in) (:out :error) #'arrowgrams/parser/uint::react #'arrowgrams/parser/uint::first-time)
+             (:code ident (:in) (:out :error) #'arrowgrams/parser/ident::react #'arrowgrams/parser/ident::first-time)
+
              (:schem TOP (:filename) (:out :error)
+
               ;; parts
-              (eol-comments readf chars tcounter ws)
+              (eol-comments readf chars tcounter ws squote uint ident)
+              
               ;; wiring
               (
                (((:self :filename)) ((readf :filename)))
@@ -24,14 +30,27 @@
                (((eol-comments :out)) ((ws :in)))
                ;(((eol-comments :out)) ((tcounter :in)))
                
-               (((ws :out)) ((tcounter :in)))
+               (((ws :out)) ((squote :in)))
+
+               (((squote :out)) ((uint :in)))
+               
+               (((uint :out)) ((ident :in)))
+
+
+               (((ident :out)) ((tcounter :in)))
 
                (((tcounter :out)) ((:self :out)))
 
-               (((readf :fatal) (chars :error) (eol-comments :error) (ws :error) (tcounter :fatal))
+               (
+                (
+                 (readf :fatal) (chars :error) (eol-comments :error) (ws :error) (tcounter :fatal)
+                 (squote :error) (uint :error) (ident :error)
+                 )
                 ((:self :error))
+                )
+               )
                
-               ))))))
+              ))))
 
     (let ((parser-input-filename-pin (cl-event-passing-user::@get-input-pin prolog-parser :filename)))
       (cl-event-passing-user::@with-dispatch

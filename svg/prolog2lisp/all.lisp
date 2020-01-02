@@ -22,12 +22,21 @@ createComments(_) :-
 
 (defparameter *cut-test2* "checkZero(0) :- !.")
 
-(defparameter *cut-test3* "
+(defparameter *test3* "
 notNamedSource(X) :-
     namedSource(X),
     !,
     fail.
-checkZero(0) :- !.")
+checkZero(0) :- !.
+dummy :-
+  forall(ident(X),doident(X)).
+dummy2 :-
+  retract(ident(X)).
+dummy3 :-
+  X is Y + Z.
+dummy4 :-
+  asserta(ident(X)).
+")
 
 (defparameter *grammars* (list
                           *peg-rules-original*
@@ -50,10 +59,10 @@ checkZero(0) :- !.")
     ;(let ((*target* *all-prolog*))
     ;(let ((*target* *true-test*))
     ;(let ((*target* *cut-test2*))
-    (let ((*target* *cut-test3*))
+    (let ((*target* *test3*))
       ;(esrap:trace-rule 'arrowgrams/prolog-peg::pProgram :recursive t)
     ;(let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *test*)))
-      (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram (kill-foralls *target*))))
+      (let ((parsed (esrap:parse 'arrowgrams/prolog-peg::pProgram *target*)))
         (let ((parsed2
                (delete nil (mapcar #'(lambda (x)
                                        (if (and (listp x) (eq :rule (car x)))
