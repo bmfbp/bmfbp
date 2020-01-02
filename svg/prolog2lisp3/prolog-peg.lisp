@@ -20,15 +20,17 @@
 
 (defrule pStructure (or pStructure1 pStructure2))
 (defrule pStructure1 (and tAtom tLpar tRpar)
-  (:function ignore-lpar-rpar-3)
+  (:function first)
   (:lambda (x) `(structure ,x)))
 (defrule pStructure2 (and tAtom tLpar pTermList tRpar)
   (:function ignore-lpar-rpar-4)
-  (:lambda (x) `(structure ,x)))
+  (:lambda (x) `(structure ,@x)))
 
-(defrule pTermList (or (and pTerm pNotComma)
-                       (and pTerm tComma pTermList))
+(defrule pTermList (or pTermList1 pTermList2))
+(defrule pTermList1 (and pTerm pNotComma)
   (:function ignore-not-comma-2)
+  (:lambda (x) `(term-list ,x)))
+(defrule pTermList2 (and pTerm tComma pTermList)
   (:function ignore-mid-comma-3)
   (:lambda (x) `(term-list ,x)))
 
