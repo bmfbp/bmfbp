@@ -1,5 +1,9 @@
 (in-package :arrowgrams/parser)
 
+(defrule rule-TOP (or pRule rule-directive))
+
+(defrule rule-directive (and (* tWS) tColonDash tJunk-to-eol) (:constant '(directive)))
+
 (defrule pRule (and pPredicate tColonDash pPredicateList tDot)
   (:lambda (x) `(rule ,(first x) ,(third x))))
 
@@ -122,4 +126,16 @@
   (pprint (esrap:parse 'pRule "a :- atom."))
   (pprint (esrap:parse 'pRule "a :- atom,pred(X,Y)."))
   (pprint (esrap:parse 'pRule "a :- atom,pred(X,Y),dummy(0),X is 1."))
+
+  (pprint (esrap:parse 'rule-TOP "x :- namedSource(X)."))
+  (pprint (esrap:parse 'rule-TOP "x(X) :- namedSource(X)."))
+  (pprint (esrap:parse 'rule-TOP "x :- namedSource(X),dummy(0)."))
+  (pprint (esrap:parse 'rule-TOP "x :- namedSource(X),pred(X,Y),dummy(0)."))
+  (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y),dummy(0)."))
+  (pprint (esrap:parse 'rule-TOP "a :- atom."))
+  (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y)."))
+  (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y),dummy(0),X is 1."))
+
+  (pprint (esrap:parse 'rule-TOP ":- initialization(main)."))
+
 )
