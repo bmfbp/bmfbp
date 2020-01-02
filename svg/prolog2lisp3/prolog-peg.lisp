@@ -1,6 +1,6 @@
-(in-package :arrowgrams/parser)
+`(in-package :arrowgrams/parser)
 
-(defrule rule-TOP (or pRule rule-directive rule-fact))
+(defrule rule-TOP1 (or pRule rule-directive rule-fact))
 
 (defrule rule-directive (and (* tWS) tColonDash tJunk-to-eol) (:constant '(directive)))
 
@@ -89,7 +89,7 @@
 (esrap:defrule rule-Primary2 (and tLpar rule-Additive tRpar)
   (:function second))
 
-(esrap:defrule rule-TOP-Expr (and (* tWS) rule-Expr)
+(esrap:defrule rule-TOP1-Expr (and (* tWS) rule-Expr)
   (:destructure (spc e) (declare (ignore spc)) e)
   (:lambda (x) `(top-expr ,x)))
 
@@ -97,17 +97,17 @@
   (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
 
 
-(defrule rule-TOP-IS (and (* tWS)  is-Statement )
+(defrule rule-TOP1-IS (and (* tWS)  is-Statement )
   (:function second))
 
 (defun test ()
   (setf cl:*print-right-margin* 40)
 
-  #+nil(pprint (parse 'rule-TOP-IS "X is 1"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is 1+2"))
-  #+nil(pprint (parse 'rule-TOP-IS "X is 1 + 2"))
+  #+nil(pprint (parse 'rule-TOP1-IS "X is 1"))
+  #+nil(pprint (parse 'rule-TOP1-IS "X is 1+2"))
+  #+nil(pprint (parse 'rule-TOP1-IS "X is 1 + 2"))
 
-  (pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
+  (pprint (parse 'rule-TOP1-IS "X is (16 + 17) / (18 - 19)"))
 
   ;(esrap:trace-rule 'pPredicate :recursive t)
 
@@ -131,27 +131,27 @@
   (pprint (esrap:parse 'pRule "a :- atom,pred(X,Y)."))
   (pprint (esrap:parse 'pRule "a :- atom,pred(X,Y),dummy(0),X is 1."))
 
-  (pprint (esrap:parse 'rule-TOP "x :- namedSource(X)."))
-  (pprint (esrap:parse 'rule-TOP "x(X) :- namedSource(X)."))
-  (pprint (esrap:parse 'rule-TOP "x :- namedSource(X),dummy(0)."))
-  (pprint (esrap:parse 'rule-TOP "x :- namedSource(X),pred(X,Y),dummy(0)."))
-  (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y),dummy(0)."))
-  (pprint (esrap:parse 'rule-TOP "a :- atom."))
-  (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y)."))
-  (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y),dummy(0),X is 1."))
+  (pprint (esrap:parse 'rule-TOP1 "x :- namedSource(X)."))
+  (pprint (esrap:parse 'rule-TOP1 "x(X) :- namedSource(X)."))
+  (pprint (esrap:parse 'rule-TOP1 "x :- namedSource(X),dummy(0)."))
+  (pprint (esrap:parse 'rule-TOP1 "x :- namedSource(X),pred(X,Y),dummy(0)."))
+  (pprint (esrap:parse 'rule-TOP1 "a :- atom,pred(X,Y),dummy(0)."))
+  (pprint (esrap:parse 'rule-TOP1 "a :- atom."))
+  (pprint (esrap:parse 'rule-TOP1 "a :- atom,pred(X,Y)."))
+  (pprint (esrap:parse 'rule-TOP1 "a :- atom,pred(X,Y),dummy(0),X is 1."))
 
-  (pprint (esrap:parse 'rule-TOP ":- initialization(main)."))
-  (pprint (esrap:parse 'rule-TOP ":- include('head')."))
-  (pprint (esrap:parse 'rule-TOP ":- include('tail')."))
+  (pprint (esrap:parse 'rule-TOP1 ":- initialization(main)."))
+  (pprint (esrap:parse 'rule-TOP1 ":- include('head')."))
+  (pprint (esrap:parse 'rule-TOP1 ":- include('tail')."))
 
-  (pprint (esrap:parse 'rule-TOP "ellispse(id391)."))
-  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+  (pprint (esrap:parse 'rule-TOP1 "ellispse(id391)."))
+  (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X)."))
-  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+  (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X)."))
-  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+  (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),  Right is X + Width."))
-  #+nil (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+  #+nil (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),
     geometry_top_y(ID, Y),
     geometry_w(ID, Width),
@@ -162,4 +162,5 @@
     Bottom is Y + Height,
     asserta(bounding_box_right(ID,Right)),
     asserta(bounding_box_bottom(ID,Bottom))."))
+
 )
