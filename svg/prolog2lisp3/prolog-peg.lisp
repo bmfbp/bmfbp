@@ -14,7 +14,7 @@
   (:lambda (x) `(predicate-list ,(first x) ,(third x))))
 
 
-(defrule pPredicate (or (and tAtom pNotLpar)
+(defrule pPredicate (or pAtomNotLpar
                         pStructure
                         is-Statement)
   (:lambda (x) `(predicate ,x)))
@@ -41,7 +41,7 @@
                   pVarNotIs
                   pStructure)
                  (* tWS))
-  (:function ignore-trailing-ws-2)
+  (:function first)
   (:lambda (x) `(term ,x)))
 
 (defrule pAtomNotLpar (and tAtom (! #\()) (:function ignore-trailing-lp-2))
@@ -117,8 +117,8 @@
   (pprint (esrap:parse 'pPredicate "namedSource(X)"))
   (pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   (pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
-  #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
-  #+nil(pprint (esrap:parse 'pPredicateList "atom"))
-  #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y)"))
-  #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0),X is 1"))
+  (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
+  (pprint (esrap:parse 'pPredicateList "atom"))
+  (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y)"))
+  (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0),X is 1"))
   )
