@@ -137,5 +137,7 @@
   (pprint (esrap:parse 'rule-TOP "a :- atom,pred(X,Y),dummy(0),X is 1."))
 
   (pprint (esrap:parse 'rule-TOP ":- initialization(main)."))
+  (pprint (esrap:parse 'rule-Top ":- include('head')."))
+  (pprint (esrap:parse 'rule-Top ":- include('tail')."))
 
 )
