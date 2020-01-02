@@ -16,8 +16,7 @@
                         is-Statement)
   (:lambda (x) `(predicate ,x)))
 
-(defrule pStructure (or pStructure1 pStructure2)
-  (:lambda (x) `(structure ,x)))
+(defrule pStructure (or pStructure1 pStructure2))
 (defrule pStructure1 (and tAtom tLpar tRpar)
   (:lambda (x) `(structure ,(first x))))
 (defrule pStructure2 (and tAtom tLpar pTermList tRpar)
@@ -116,6 +115,7 @@
   (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0),X is 1"))
 
   (pprint (esrap:parse 'pRule "x :- namedSource(X)."))
+  (pprint (esrap:parse 'pRule "x(X) :- namedSource(X)."))
   #+nil  (pprint (esrap:parse 'pRule "namedSource(X),dummy(0)"))
   #+nil  (pprint (esrap:parse 'pRule "namedSource(X),pred(X,Y),dummy(0)"))
   #+nil  (pprint (esrap:parse 'pRule "atom,pred(X,Y),dummy(0)"))
