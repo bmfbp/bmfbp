@@ -4,6 +4,15 @@
   (format *standard-output* "~&pr: ~S~%" x)
   x)
 
+(defun ignore-lpar-rpar (x)
+  (if (listp x)
+      (cond ((and (= 3 (length x)) (char= #\( (second x)) (char= #\) (third x)))
+             (first x))
+            ((and (= 4 (length x)) (char= #\( (second x)) (char= #\) (fourth x)))
+             (list (first x) (second x)))
+            (t x))
+    x))                  
+             
 (defun ignore-trailing-not (x)
   (let ((condition (and (listp x)
                         (= 2 (length x))
@@ -68,7 +77,7 @@ pConstant <- tInt
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
                         (and tAtom tLpar pTermList tRpar))
-  (:function skip-nil)
+  (:function ignore-lpar-rpar)
   (:lambda (x)
       (assert (and (listp x)
                    (= 2 (length x)))) ;; dummy(X,Y) => (struct (atom (ident "dummy")) (term-list ???
