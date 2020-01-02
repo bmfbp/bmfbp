@@ -4,7 +4,7 @@
   (format *standard-output* "~&pr: ~S~%" x)
   x)
 
-(defun skip-trailing-not (x)
+(defun ignore-trailing-not (x)
   (let ((condition (and (listp x)
                         (= 2 (length x))
                         (eq nil (second x)))))
@@ -13,18 +13,18 @@
         (first x)
       x)))
 
-(defun skip-middle-comma (x)
+(defun ignore-middle-comma (x)
   (let ((condition (and (listp x)
                         (= 3 (length x))
                         (eq nil (second x)))))
-    (format *standard-output* "~&skip-middle-comma condition: ~a~%" condition)
+    (format *standard-output* "~&ignore-middle-comma condition: ~a~%" condition)
     (if condition
         (list (first x) (third x))
       x)))
 
 (defun skip-nil (x) (delete nil x))
 
-(defun skip-leading-space (spc-x)
+(defun ignore-leading-space (spc-x)
   (destructuring-bind (spc x)
       spc-x
     (declare (ignore spc))
@@ -55,15 +55,15 @@ pConstant <- tInt
 (defrule pPredicateList (or (and pPredicate pNotComma)
                             (and pPredicate tComma pPredicateList))
   (:function pr)
-  (:function skip-trailing-not)
-  (:function skip-middle-comma)
+  (:function ignore-trailing-not)
+  (:function ignore-middle-comma)
   (:lambda (x) `(predicate-list ,x)))
 
 (defrule pPredicate (or (and tAtom pNotLpar)
                         pStructure
                         is-Statement)
   (:function pr)
-  (:function skip-trailing-not)
+  (:function ignore-trailing-not)
   (:lambda (x) `(predicate ,x)))
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
@@ -76,8 +76,8 @@ pConstant <- tInt
 
 (defrule pTermList (or (and pTerm pNotComma)
                        (and pTerm tComma pTermList))
-  (:function skip-trailing-not)
-  (:function skip-middle-comma)
+  (:function ignore-trailing-not)
+  (:function ignore-middle-comma)
   (:lambda (x) `(term-list ,x)))
 
 
@@ -150,7 +150,7 @@ pConstant <- tInt
 
 
 (defrule rule-TOP-IS (and (* tWS)  is-Statement )
-  (:function skip-leading-space))
+  (:function ignore-leading-space))
   
 (defun test ()
   (setf cl:*print-right-margin* 40)
