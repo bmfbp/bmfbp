@@ -34,11 +34,11 @@ pConstant <- tInt
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
                         (and tAtom tLpar pTermList tRpar))
-  (:lambda (y)
-    (let ((x (delete nil y)))
+  (:function delnil)
+  (:lambda (x)
       (assert (and (listp x)
                    (= 2 (length x)))) ;; dummy(X,Y) => (struct (atom (ident "dummy")) (term-list ???
-      `(structure ,(first x) ,(second x)))))
+      `(structure ,(first x) ,(second x))))
 
 (defrule pTermList (or (and pTerm pNotComma)
                        (and pTerm tComma pTermList))
@@ -131,5 +131,6 @@ pConstant <- tInt
   (esrap:trace-rule 'pPredicate :recursive t)
   #+nil(pprint (esrap:parse 'pPredicate "namedSource(X)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
-  (pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
+  #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
+  (pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
   )
