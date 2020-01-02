@@ -6,12 +6,13 @@
       (assert (and (listp x) (= 2 (length x))))
       `(rule ,(first x) ,(second x)))))
 
-(defrule pPredicateList (or (and pPredicate pNotComma)
-                            (and pPredicate tComma pPredicateList))
-  (:lambda (x)
-    (setq *print-level* nil)
-    (break "predicate list ~S" x)
-    `(predicate-list ,x)))
+(defrule pPredicateList (or pPredicateList1 pPredicateList2))
+(defrule pPredicateList1 (and pPredicate pNotComma)
+  (:function first)
+  (:lambda (x) `(predicate-list ,x)))
+(defrule pPredicateList2 (and pPredicate tComma pPredicateList)
+  (:lambda (x) `(predicate-list ,(first x) ,(third x))))
+
 
 (defrule pPredicate (or (and tAtom pNotLpar)
                         pStructure
@@ -117,7 +118,7 @@
   (pprint (esrap:parse 'pStructure "namedSource(X)"))
 
   (pprint (esrap:parse 'pPredicate "namedSource(X)"))
-  #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
+  (pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom"))
