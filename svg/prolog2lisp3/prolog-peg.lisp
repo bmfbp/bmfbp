@@ -76,11 +76,7 @@
 
 (esrap:defrule rule-Primary (or tInt
                                 (and tLpar rule-Additive tRpar))
-  (:lambda (x)
-    (assert (listp x))
-    (if (and (= 1 (length x)) (listp (first x)))
-        `(paren ,(first x))
-    `(primary ,x))))
+  (:lambda (x) `(primary ,x)))
 
 
 
@@ -98,8 +94,8 @@
   (setf cl:*print-right-margin* 40)
   ;(pprint (parse 'rule-TOP-IS "X is 1"))
   ;(pprint (parse 'rule-TOP-IS "X is 1+2"))
-  (pprint (parse 'rule-TOP-IS "X is 1 + 2"))
-  ;(pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 1 + 2"))
+  (pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
   ;(esrap:trace-rule 'pPredicate :recursive t)
   ;(pprint (esrap:parse 'pPredicate "namedSource(X)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
