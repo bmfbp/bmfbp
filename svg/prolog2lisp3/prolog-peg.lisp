@@ -1,7 +1,5 @@
 (in-package :arrowgrams/parser)
 
-(defun delnil (x) (delete nil x))
-
 (defun pr (x)
   (format *standard-output* "~&pr: ~S~%" x)
   x)
@@ -14,6 +12,14 @@
     (if condition
         (first x)
       x)))
+
+(defun delnil (x) (delete nil x))
+
+(defun skip-leading-space (spc-x)
+  (destructuring-bind (spc x)
+      spc-x
+    (declare (ignore spc))
+    x))
 
 #+nil(defconstant +prolog-grammar+
 "
@@ -132,14 +138,8 @@ pConstant <- tInt
   (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
 
 
-(defun remLeadingSpace (spc-x)
-  (destructuring-bind (spc x)
-      spc-x
-    (declare (ignore spc))
-    x))
-
 (defrule rule-TOP-IS (and (* tWS)  is-Statement )
-  (:function remLeadingSpace))
+  (:function skip-leading-space))
   
 (defun test ()
   (setf cl:*print-right-margin* 40)
