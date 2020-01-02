@@ -16,13 +16,12 @@
                         is-Statement)
   (:lambda (x) `(predicate ,x)))
 
-(defrule pStructure (or pStructure1 pStructure2))
-(defrule pStructure1 (and tAtom tLpar tRpar)
-  (:function first)
+(defrule pStructure (or pStructure1 pStructure2)
   (:lambda (x) `(structure ,x)))
+(defrule pStructure1 (and tAtom tLpar tRpar)
+  (:lambda (x) `(structure ,(first x))))
 (defrule pStructure2 (and tAtom tLpar pTermList tRpar)
-  (:function ignore-lpar-rpar-4)
-  (:lambda (x) `(structure ,@x)))
+  (:lambda (x) `(structure ,(first x) ,(third x))))
 
 (defrule pTermList (or pTermList1 pTermList2))
 (defrule pTermList1 (and pTerm pNotComma)
