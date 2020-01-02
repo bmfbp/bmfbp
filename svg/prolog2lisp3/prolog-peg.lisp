@@ -19,10 +19,7 @@
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
                         (and tAtom tLpar pTermList tRpar))
-  (:lambda (x)
-      (assert (and (listp x)
-                   (= 2 (length x)))) ;; dummy(X,Y) => (struct (atom (ident "dummy")) (term-list ???
-      `(structure ,(first x) ,(second x))))
+  (:lambda (x) `(structure ,(first x) ,(second x))))
 
 (defrule pTermList (or (and pTerm pNotComma)
                        (and pTerm tComma pTermList))
@@ -93,13 +90,13 @@
   
 (defun test ()
   (setf cl:*print-right-margin* 40)
-  ;(pprint (parse 'rule-TOP-IS "X is 1"))
-  ;(pprint (parse 'rule-TOP-IS "X is 1+2"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 1"))
+  #+nil(pprint (parse 'rule-TOP-IS "X is 1+2"))
   #+nil(pprint (parse 'rule-TOP-IS "X is 1 + 2"))
   (pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
   ;(esrap:trace-rule 'pPredicate :recursive t)
   ;(pprint (esrap:parse 'pPredicate "namedSource(X)"))
-  #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
+  (pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom"))
