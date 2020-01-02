@@ -34,14 +34,15 @@
 (defrule pTerm ( and
                  (or
                   pConstant
-                  (and tAtom (! #\())
+                  pAtomNotLpar
                   tSingleQuotedAtom
-                  pVarNotIs #+nil(and tVar pNotIs)
+                  pVarNotIs
                   pStructure)
                  (* tWS))
   (:function ignore-trailing-ws-2)
   (:lambda (x) `(term ,x)))
 
+(defrule pAtomNotLpar (and tAtom (! #\()) (:function ignore-trailing-lp-2))
 (defrule pVarNotIs (and tVar pNotIs) (:function ignore-trailing-ws-2))
 (defrule pNotIs (! tIs))
 (defrule pNotComma (! tComma))
@@ -93,8 +94,9 @@
   (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
 
 
-(defrule rule-TOP-IS (and (* tWS)  is-Statement ))
-  
+(defrule rule-TOP-IS (and (* tWS)  is-Statement )
+  (:function ignore-leading-ws))
+
 (defun test ()
   (setf cl:*print-right-margin* 40)
 

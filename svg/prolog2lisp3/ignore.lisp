@@ -4,9 +4,22 @@
   (format *standard-output* "~&pr: ~S~%" x)
   x)
 
+(defun ignore-trailing-lp-2 (lis)
+  (if (= 2 (length lis))
+      (first lis)
+    lis))
+
+(defun ignore-leading-ws (lis)
+  (cdr lis))
+
 (defun ignore-trailing-ws-2 (lis)
   (if (= 2 (length lis))
       (first lis)
+    lis))
+
+(defun ignore-trailing-ws-3 (lis)
+  (if (= 3 (length lis))
+      (list (first lis) (second lis))
     lis))
 
 (defun ignore-parens (list)

@@ -2,7 +2,7 @@
 
 (defrule tInt (and (+ (character-ranges (#\0 #\9)))
                    (* tWS))
-  (:function ignore-trailing-ws)
+  (:function ignore-trailing-ws-2)
   (:text t)
   (:function parse-integer)
   (:lambda (x) `(int ,x)))
@@ -12,6 +12,7 @@
   (:lambda (x) `(var ,x)))
 
 (defrule tIdent (and tLowerCaseLetter (* tOtherLetter) (* tWS))
+  (:function ignore-trailing-ws-2)
   (:text t)
   (:lambda (x) `(ident ,x)))
 
