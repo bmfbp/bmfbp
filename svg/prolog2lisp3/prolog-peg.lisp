@@ -13,7 +13,7 @@
         (first x)
       x)))
 
-(defun delnil (x) (delete nil x))
+(defun skip-nil (x) (delete nil x))
 
 (defun skip-leading-space (spc-x)
   (destructuring-bind (spc x)
@@ -58,7 +58,7 @@ pConstant <- tInt
 
 (defrule pStructure (or (and tAtom tLpar tLpar)
                         (and tAtom tLpar pTermList tRpar))
-  (:function delnil)
+  (:function skip-nil)
   (:lambda (x)
       (assert (and (listp x)
                    (= 2 (length x)))) ;; dummy(X,Y) => (struct (atom (ident "dummy")) (term-list ???
@@ -97,7 +97,7 @@ pConstant <- tInt
 (esrap:defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
                                  (and rule-Mult tMinus rule-Additive)
                                  rule-Mult)
-  (:lambda (x) (delnil x))
+  (:lambda (x) (skip-nil x))
   (:lambda (x)
     (if (and (listp x) (eq '+ (second x)))
         `(+ ,(first x) ,(third x))
@@ -108,7 +108,7 @@ pConstant <- tInt
 (esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
                              (and rule-Primary tDiv rule-Mult)
                              rule-Primary)
-  (:lambda (x) (delnil x))
+  (:lambda (x) (skip-nil x))
   (:lambda (x)
     (if (and (listp x) (eq '* (second x)))
         `(* ,(first x) ,(third x))
@@ -118,7 +118,7 @@ pConstant <- tInt
 
 (esrap:defrule rule-Primary (or tInt
                                 (and tLpar rule-Additive tRpar))
-  (:lambda (x) (delnil x))
+  (:lambda (x) (skip-nil x))
   (:lambda (x)
     (format *standard-output* "~&primary  c = ~a x = ~s~%" (if (listp x) (length x) 0) x)
     (assert (listp x))
@@ -130,11 +130,11 @@ pConstant <- tInt
 
 (esrap:defrule rule-TOP-Expr (and (* tWS) rule-Expr)
   (:destructure (spc e) (declare (ignore spc)) e)
-  (:lambda (x) (delnil x))
+  (:lambda (x) (skip-nil x))
   (:lambda (x) `(top-expr ,x)))
 
 (esrap:defrule is-Statement (and tVar tIs rule-Expr)
-  (:lambda (x) (delnil x))
+  (:lambda (x) (skip-nil x))
   (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
 
 
@@ -143,7 +143,7 @@ pConstant <- tInt
   
 (defun test ()
   (setf cl:*print-right-margin* 40)
-  #+nil(pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
+  (pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
   ;(esrap:trace-rule 'pPredicate :recursive t)
   #+nil(pprint (esrap:parse 'pPredicate "namedSource(X)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
