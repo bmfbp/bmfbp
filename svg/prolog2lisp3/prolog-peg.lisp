@@ -76,7 +76,8 @@
 
 (esrap:defrule rule-Primary (or tInt
                                 (and tLpar rule-Additive tRpar))
-  (:lambda (x) `(primary ,x)))
+  (:function ignore-parens)
+  (:lambda (x) (format *standard-output* "~&primary ~S~%" x) `(primary ,x)))
 
 
 

@@ -10,3 +10,13 @@
            (equal '((:ws)) (last x)))
       (butlast x)
     x))
+
+(defun ignore-parens (list)
+  (if (and
+       (= 3 (length list))
+       (char= #\( (first list))
+       (char= #\) (third list)))
+      (second list)
+    list))
+       
+       
