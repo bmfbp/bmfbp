@@ -30,11 +30,6 @@
       (second list)
     list))
 
-(defun ignore-lpar-rpar-3 (lis)
-  (if (= 3 (length lis))
-      (first lis)
-    lis))
-
 (defun ignore-lpar-rpar-4 (lis)
   (if (= 4 (length lis))
       (list (first lis) (third lis))
