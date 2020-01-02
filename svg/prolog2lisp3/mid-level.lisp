@@ -8,8 +8,8 @@
   (:lambda (x) `(int ,x)))
 
 (defrule tVar (and (or tDontCare tNamedVar) (* tWS))
-  (:function ignore-trailing-ws)
-  (:lambda (x) `(var ,x))) 
+  (:function ignore-trailing-ws-2)
+  (:lambda (x) `(var ,x)))
 
 (defrule tIdent (and tLowerCaseLetter (* tOtherLetter) (* tWS))
   (:text t)

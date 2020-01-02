@@ -8,21 +8,26 @@
 
 (defrule pPredicateList (or (and pPredicate pNotComma)
                             (and pPredicate tComma pPredicateList))
-  (:function pr)
-  (:lambda (x) `(predicate-list ,x)))
+  (:lambda (x)
+    (setq *print-level* nil)
+    (break "predicate list ~S" x)
+    `(predicate-list ,x)))
 
 (defrule pPredicate (or (and tAtom pNotLpar)
                         pStructure
                         is-Statement)
-  (:function pr)
   (:lambda (x) `(predicate ,x)))
 
-(defrule pStructure (or (and tAtom tLpar tLpar)
+(defrule pStructure (or (and tAtom tLpar tRpar)
                         (and tAtom tLpar pTermList tRpar))
-  (:lambda (x) `(structure ,(first x) ,(second x))))
+  (:function ignore-lpar-rpar-3)
+  (:function ignore-lpar-rpar-4)
+  (:lambda (x) `(structure ,x)))
 
 (defrule pTermList (or (and pTerm pNotComma)
                        (and pTerm tComma pTermList))
+  (:function ignore-not-comma-2)
+  (:function ignore-mid-comma-3)
   (:lambda (x) `(term-list ,x)))
 
 
@@ -31,11 +36,13 @@
                   pConstant
                   (and tAtom (! #\())
                   tSingleQuotedAtom
-                  (and tVar pNotIs)
+                  pVarNotIs #+nil(and tVar pNotIs)
                   pStructure)
                  (* tWS))
+  (:function ignore-trailing-ws-2)
   (:lambda (x) `(term ,x)))
 
+(defrule pVarNotIs (and tVar pNotIs) (:function ignore-trailing-ws-2))
 (defrule pNotIs (! tIs))
 (defrule pNotComma (! tComma))
 (defrule pNotLpar (! tLpar))
@@ -74,7 +81,7 @@
 (esrap:defrule rule-Primary (or tInt
                                 (and tLpar rule-Additive tRpar))
   (:function ignore-parens)
-  (:lambda (x) (format *standard-output* "~&primary ~S~%" x) `(primary ,x)))
+  (:lambda (x) `(primary ,x)))
 
 
 
@@ -90,13 +97,20 @@
   
 (defun test ()
   (setf cl:*print-right-margin* 40)
+
   #+nil(pprint (parse 'rule-TOP-IS "X is 1"))
   #+nil(pprint (parse 'rule-TOP-IS "X is 1+2"))
   #+nil(pprint (parse 'rule-TOP-IS "X is 1 + 2"))
+
   (pprint (parse 'rule-TOP-IS "X is (16 + 17) / (18 - 19)"))
+
   ;(esrap:trace-rule 'pPredicate :recursive t)
-  ;(pprint (esrap:parse 'pPredicate "namedSource(X)"))
-  (pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
+
+  (pprint (esrap:parse 'pStructure "namedSource()"))
+  (pprint (esrap:parse 'pStructure "namedSource(X)"))
+
+  #+nil(pprint (esrap:parse 'pPredicate "namedSource(X)"))
+  #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom"))
