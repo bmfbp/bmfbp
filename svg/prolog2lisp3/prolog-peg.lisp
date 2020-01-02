@@ -29,12 +29,9 @@
 
 (defrule pTermList (or pTermList1 pTermList2))
 (defrule pTermList1 (and pTerm pNotComma)
-  (:function ignore-not-comma-2)
-  (:lambda (x) `(term-list ,x)))
+  (:lambda (x) `(term-list ,(first x))))
 (defrule pTermList2 (and pTerm tComma pTermList)
-  (:function ignore-mid-comma-3)
-  (:lambda (x) `(term-list ,x)))
-
+  (:lambda (x) `(term-list ,(first x) ,(third x))))
 
 (defrule pTerm ( and
                  (or
@@ -119,7 +116,7 @@
 
   (pprint (esrap:parse 'pPredicate "namedSource(X)"))
   (pprint (esrap:parse 'pPredicateList "namedSource(X),dummy(0)"))
-  #+nil(pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
+  (pprint (esrap:parse 'pPredicateList "namedSource(X),pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y),dummy(0)"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom"))
   #+nil(pprint (esrap:parse 'pPredicateList "atom,pred(X,Y)"))
