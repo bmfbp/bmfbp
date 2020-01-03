@@ -1,5 +1,4 @@
 (in-package :arrowgrams/parser)
-
 (defparameter *rules-defined* nil)
 (defparameter *rules-called* nil)
 (defparameter *parsed* nil)
@@ -37,9 +36,30 @@ notNamedSource(X) :-
     retract(rect(BoxID)).
 ")
 
+(defparameter *str6*
+"
+sem_speechVScomments_main :-
+    readFB(user_input),
+    g_assign(counter,0),
+% pt
+    forall(speechbubble(ID),inc(counter,_)),
+% pt
+    forall(comment(ID),dec(counter,_)),
+    g_read(counter,Counter),
+    checkZero(Counter),
+    writeFB,
+    halt.
+")
+
+(defparameter *str7*
+"
+sem_speechVScomments_main :-
+    g_assign(counter,0).
+")
+
 (defun convert ()
   (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str5*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *str6*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -128,7 +148,9 @@ notNamedSource(X) :-
 
 (defun walk-constant (x)
   (assert (and (listp x) (eq 'constant (car x))))
-  (second x))
+  (let ((val (second x)))
+    (assert (eq (first val) 'int))
+    (second val)))
 
 (defun walk-is (x)
   (assert (and (listp x) (eq 'is (car x))))
@@ -171,7 +193,7 @@ notNamedSource(X) :-
 (defun rewrite1 (x)
   (if (listp x)
       (cond
-       ((= 1 (length x))
+       ((= 1 (length x)) ;/0
         (cond
          ((eq (car x) :fail)
             :fail)
@@ -186,7 +208,7 @@ notNamedSource(X) :-
 
          (t x)))
         
-       ((= 2 (length x))
+       ((= 2 (length x)) ;/1
         (cond
          ((eq (car x) :nl)
           (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
@@ -199,13 +221,27 @@ notNamedSource(X) :-
           `(lisp (retract ',(second x))))
          (t x)))
              
-       ((= 3 (length x))                   
+       ((= 3 (length x)) ;/2
         (cond
          ((eq (car x) :write)
           (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
             `(lisp (format ,stream "~A" ,(third x)))))
          ((eq (car x) :forall)
           `(:@ ,(second x) ,(third x)))
+
+         ((and (eq (first x) :inc)
+               (eq (second x) :counter))
+          `(lisp (inc-counter)))
+         ((and (eq (first x) :dec)
+               (eq (second x) :counter))
+          `(lisp (dec-counter)))
+         ((and (eq (first x) :g_read)
+               (eq (second x) :counter))
+          `(lisp (read-counter ,(third x))))
+         ((and (eq (first x) :g_assign)
+               (eq (second x) :counter))
+          `(lisp (set-counter ,(third x))))
+
          (t x)))
        
        (t x))
