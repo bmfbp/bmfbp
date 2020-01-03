@@ -31,8 +31,8 @@ notNamedSource(X) :-
 ")
 
 (defun convert ()
-  ;(setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  (setq *parsed* (esrap:parse 'rule-TOP *str4*))
+  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *str4*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -172,6 +172,10 @@ notNamedSource(X) :-
             :!)
          ((eq (car x) :true)
           `(lisp t))
+         ((eq (car x) :halt)
+          `(lisp t))
+         ((eq (car x) :writefb)
+          `(lisp t))
 
          (t x)))
         
@@ -180,9 +184,8 @@ notNamedSource(X) :-
          ((eq (car x) :nl)
           (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
             `(lisp (format ,stream "~%"))))
-         ((eq (car x) :fail)
-          (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-            :fail))
+         ((eq (car x) :readfb)
+          `(lisp t))
          (t x)))
              
        ((= 3 (length x))                   
