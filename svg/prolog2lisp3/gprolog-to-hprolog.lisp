@@ -5,8 +5,14 @@
 (defparameter *parsed* nil)
 (defparameter *converted* nil)
 
+(defparameter *str1*
+"
+nle :- nl(user_error).
+")
+
 (defun convert ()
-  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  (setq *parsed* (esrap:parse 'rule-TOP *str1*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -33,6 +39,7 @@
            (let ((name (car head))
                  (args (cdr head)))
              (let ((arity (length args)))
+               ;(assert (eq (find-package "KEYWORD") (symbol-package name)))
                (let ((string-name (intern (format nil "~A/~A" (symbol-name name) arity) "KEYWORD")))
                  (pushnew string-name *rules-defined* :test 'string=)
                  (let ((rewritten (rewrite body)))
@@ -122,6 +129,17 @@
         (let ((rule-name-with-arity (intern (format nil "~A/~A" (string-upcase (symbol-name rule-name)) (length args)) "KEYWORD")))
           (pushnew rule-name-with-arity *rules-called*))))))
 
-(defun rewrite (x)
-  x)
+(defun rewrite (body)
+  (mapcar #'rewrite1 body))
+
+(defun rewrite1 (x)
+  (if (listp x)
+      (progn
+        (format *standard-output* "~&rewrite1 ~A~%" x)
+        (cond ((and (= 2 (length x))
+                    (eq (car x) :nl))
+               (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
+                 `(lisp (format ,stream "~%"))))
+              (t x)))
+    x))
 
