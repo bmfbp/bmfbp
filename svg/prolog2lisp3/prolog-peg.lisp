@@ -98,7 +98,7 @@
   (:destructure (spc e) (declare (ignore spc)) e)
   (:lambda (x) `(top-expr ,x)))
 
-(defrule is-predicate (and tVar tIs rule-Expr)
+(defrule is-predicate (and tVar tIs (or rule-Expr pPredicate))
   (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
 
 (defrule GEQ-predicate (and pTerm tGEQ pTerm) (:lambda (x) `(>= ,(first x) ,(third x))))
@@ -179,7 +179,7 @@ createRectBoundingBox2(ID) :-
 
 (defun test ()
   (setf cl:*print-right-margin* 40)
-  (pprint (esrap:parse 'rule-TOP
+  #+nil(pprint (esrap:parse 'rule-TOP
 "
 :- initialization(main).
 :- include('head').
@@ -190,9 +190,10 @@ calc_bounds_main :-
     writeFB,
     halt.
 "))
-  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+  #+nil(pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),  Right is X + Width.
 createRectBoundingBox2(ID) :-
     geometry_left_x(ID,X),  Right is X + Width."))
-  (pprint (esrap:parse 'rule-TOP "b(PortLeftX,ELeftX) :- PortLeftX =< ELeftX, PortLeftX >= ELeftX."))
-  (pprint (esrap:parse 'rule-TOP *all-prolog*)))
+  #+nil(pprint (esrap:parse 'rule-TOP "b(PortLeftX,ELeftX) :- PortLeftX =< ELeftX, PortLeftX >= ELeftX."))
+  (let ((final (esrap:parse 'rule-TOP *all-prolog*)))
+    final))
