@@ -15,9 +15,15 @@ nle :- nl(user_error).
 we(X) :- write(user_error,X).
 ")
 
+(defparameter *str3*
+"
+condRect :-
+    forall(rect(ID), createRectBoundingBox(ID)).
+")
+
 (defun convert ()
-  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str2*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  (setq *parsed* (esrap:parse 'rule-TOP *str3*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -135,7 +141,16 @@ we(X) :- write(user_error,X).
           (pushnew rule-name-with-arity *rules-called*))))))
 
 (defun rewrite (body)
-  (mapcar #'rewrite1 body))
+  (let ((result nil))
+    (mapc #'(lambda (x)
+              (let ((r (rewrite1 x)))
+                (if (and (listp r) (eq :@ (car r)))
+                    (progn
+                      (push (third r) result)
+                      (push (second r) result))
+                  (push r result))))
+          body)
+    (reverse result)))
 
 (defun rewrite1 (x)
   (if (listp x)
