@@ -189,4 +189,5 @@
                                      (:file "mid-level" :depends-on ("package" "low-level"))
                                      (:file "ignore" :depends-on ("package"))
                                      (:file "prolog-rules" :depends-on ("package"))
-                                     (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules"))))))
+                                     (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules"))
+                                     (:file "gprolog-to-hprolog" :depends-on ("prolog-peg"))))))
