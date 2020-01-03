@@ -45,7 +45,6 @@
                  (or
                   pConstant
                   pAtomNotLpar
-                  ;; not possible t-quoted-atom
                   pVarNotIs
                   pStructure)
                  (* tWS))
