@@ -54,12 +54,14 @@ sem_speechVScomments_main :-
 (defparameter *str7*
 "
 sem_speechVScomments_main :-
-    g_assign(counter,0).
+    g_assign(counter,0),
+    prolog_not_equal(Kind1,Kind2),
+    prolog_not_equal_equal(Kind1,Kind2).
 ")
 
 (defun convert ()
   (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str6*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *str7*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -241,6 +243,11 @@ sem_speechVScomments_main :-
          ((and (eq (first x) :g_assign)
                (eq (second x) :counter))
           `(lisp (set-counter ,(third x))))
+
+         ((eq (first x) :prolog_not_equal_equal)
+          `(:not_same ,(second x) ,(third x)))
+         ((eq (first x) :prolog_not_equal)
+          `(:not_same ,(second x) ,(third x)))
 
          (t x)))
        

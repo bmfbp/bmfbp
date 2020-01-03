@@ -598,7 +598,7 @@ sem_noDuplicateKinds_main :-
 check_has_exactly_one_kind(RectID) :-
     kind(RectID,Kind1),
     kind(RectID,Kind2),
-    not_same(Kind1,Kind2),
+    prolog_not_equal(Kind1,Kind2),
     % Kind1 \\= Kind2,
     !,
     asserta(log('fATAL_ERRORS_DURING_COMPILATION','noDuplicateKinds')),
