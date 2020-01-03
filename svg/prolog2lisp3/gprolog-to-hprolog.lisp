@@ -21,9 +21,18 @@ condRect :-
     forall(rect(ID), createRectBoundingBox(ID)).
 ")
 
+(defparameter *str4*
+"
+notNamedSource(X) :-
+    namedSource(X),
+    !,
+    true,
+    fail.
+")
+
 (defun convert ()
-  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str3*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  (setq *parsed* (esrap:parse 'rule-TOP *str4*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -154,18 +163,37 @@ condRect :-
 
 (defun rewrite1 (x)
   (if (listp x)
-      (cond ((= 2 (length x))
-             (cond ((eq (car x) :nl)
-                    (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-                      `(lisp (format ,stream "~%"))))
-                   (t x)))
-            ((= 3 (length x))                   
-             (cond ((eq (car x) :write)
-                    (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-                      `(lisp (format ,stream "~A" ,(third x)))))
-                   ((eq (car x) :forall)
-                    `(:@ ,(second x) ,(third x)))
-                   (t x)))
-            (t x))
+      (cond
+       ((= 1 (length x))
+        (cond
+         ((eq (car x) :fail)
+            :fail)
+         ((eq (car x) :!)
+            :!)
+         ((eq (car x) :true)
+          `(lisp t))
+
+         (t x)))
+        
+       ((= 2 (length x))
+        (cond
+         ((eq (car x) :nl)
+          (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
+            `(lisp (format ,stream "~%"))))
+         ((eq (car x) :fail)
+          (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
+            :fail))
+         (t x)))
+             
+       ((= 3 (length x))                   
+        (cond
+         ((eq (car x) :write)
+          (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
+            `(lisp (format ,stream "~A" ,(third x)))))
+         ((eq (car x) :forall)
+          `(:@ ,(second x) ,(third x)))
+         (t x)))
+       
+       (t x))
     x))
 
