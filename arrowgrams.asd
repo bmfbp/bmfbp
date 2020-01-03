@@ -114,68 +114,68 @@
                                                    ))))))
 
 
-(defsystem arrowgrams/prolog-peg
-  :depends-on (:arrowgrams :esrap :cl-peg :cl-ppcre :cl-holm-prolog)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3)
-                                         (safety 3)
-                                         (speed 0)))
-                    (funcall next))
-  :components ((:module contents
-			:pathname "./svg/prolog2lisp"
-			:components ((:file "package")
-                                     (:file "spacing-peg" :depends-on ("package"))
-				     (:file "keyword-peg" :depends-on ("package"))
-				     (:file "comment-peg" :depends-on ("package"))
-				     (:file "identifier-peg" :depends-on ("package"))
-				     (:file "number-peg" :depends-on ("package"))
-				     (:file "original-peg" :depends-on ("package"))
-				     (:file "refactored-peg" :depends-on ("package"))
-				     (:file "generic-peg" :depends-on ("package"))
-				     (:file "h-peg" :depends-on ("package"))
-				     (:file "prolog-peg" :depends-on ("package"))
-				     (:file "prolog-rules" :depends-on ("package"))
-				     (:file "facts" :depends-on ("package"))
-				     (:file "rewrite" :depends-on ("package"))
-				     (:file "memo" :depends-on ("package" "facts"))
-				     (:file "all" :depends-on ("package" "spacing-peg" "keyword-peg" "comment-peg"
-                                      "identifier-peg" "number-peg" "original-peg" "refactored-peg" "generic-peg"
-                                      "h-peg" "prolog-rules" "memo" "facts" "rewrite"))
-                                     ))))
+;;; (defsystem arrowgrams/prolog-peg
+;;;   :depends-on (:arrowgrams :esrap :cl-peg :cl-ppcre :cl-holm-prolog)
+;;;   :around-compile (lambda (next)
+;;;                     (proclaim '(optimize (debug 3)
+;;;                                          (safety 3)
+;;;                                          (speed 0)))
+;;;                     (funcall next))
+;;;   :components ((:module contents
+;;; 			:pathname "./svg/prolog2lisp"
+;;; 			:components ((:file "package")
+;;;                                      (:file "spacing-peg" :depends-on ("package"))
+;;; 				     (:file "keyword-peg" :depends-on ("package"))
+;;; 				     (:file "comment-peg" :depends-on ("package"))
+;;; 				     (:file "identifier-peg" :depends-on ("package"))
+;;; 				     (:file "number-peg" :depends-on ("package"))
+;;; 				     (:file "original-peg" :depends-on ("package"))
+;;; 				     (:file "refactored-peg" :depends-on ("package"))
+;;; 				     (:file "generic-peg" :depends-on ("package"))
+;;; 				     (:file "h-peg" :depends-on ("package"))
+;;; 				     (:file "prolog-peg" :depends-on ("package"))
+;;; 				     (:file "prolog-rules" :depends-on ("package"))
+;;; 				     (:file "facts" :depends-on ("package"))
+;;; 				     (:file "rewrite" :depends-on ("package"))
+;;; 				     (:file "memo" :depends-on ("package" "facts"))
+;;; 				     (:file "all" :depends-on ("package" "spacing-peg" "keyword-peg" "comment-peg"
+;;;                                       "identifier-peg" "number-peg" "original-peg" "refactored-peg" "generic-peg"
+;;;                                       "h-peg" "prolog-rules" "memo" "facts" "rewrite"))
+;;;                                      ))))
 
-#+nil(defsystem arrowgrams/parser
-  :depends-on (:arrowgrams :cl-event-passing :loops)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-                    (funcall next))
-  :components ((:module contents
-			:pathname "./svg/prolog2lisp2"
-			:components ((:file "package")
-                                     (:file "read-file-into-string" :depends-on ("package"))
-                                     (:file "chars" :depends-on ("package"))
-                                     (:file "eol-comments" :depends-on ("package"))))))
+;;; #+nil(defsystem arrowgrams/parser
+;;;   :depends-on (:arrowgrams :cl-event-passing :loops)
+;;;   :around-compile (lambda (next)
+;;;                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+;;;                     (funcall next))
+;;;   :components ((:module contents
+;;; 			:pathname "./svg/prolog2lisp2"
+;;; 			:components ((:file "package")
+;;;                                      (:file "read-file-into-string" :depends-on ("package"))
+;;;                                      (:file "chars" :depends-on ("package"))
+;;;                                      (:file "eol-comments" :depends-on ("package"))))))
 
-(defsystem arrowgrams/parser/prolog
-  :depends-on (:arrowgrams/parser)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-                    (funcall next))
-  :components ((:module contents
-			:pathname "./svg/prolog2lisp2"
-			:components ((:file "package")
-                                     (:file "token" :depends-on ("package"))
-                                     (:file "read-file-into-string" :depends-on ("package" "token"))
-                                     (:file "chars" :depends-on ("package" "token"))
-                                     (:file "eol-comments" :depends-on ("package" "token"))
-                                     (:file "whitespace" :depends-on ("package" "token"))
-                                     (:file "squote" :depends-on ("package" "token"))
-                                     (:file "uint" :depends-on ("package" "token"))
-                                     (:file "ident" :depends-on ("package" "token"))
-                                     (:file "token-counter" :depends-on ("package" "token"))
-                                     (:file "prolog-parser" 
-                                      :depends-on ("package" "token"
-                                                   "read-file-into-string" "chars" "eol-comments"
-                                                   "squote" "whitespace" "token-counter" "uint" "ident"))))))
+;;; (defsystem arrowgrams/parser/prolog
+;;;   :depends-on (:arrowgrams/parser)
+;;;   :around-compile (lambda (next)
+;;;                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+;;;                     (funcall next))
+;;;   :components ((:module contents
+;;; 			:pathname "./svg/prolog2lisp2"
+;;; 			:components ((:file "package")
+;;;                                      (:file "token" :depends-on ("package"))
+;;;                                      (:file "read-file-into-string" :depends-on ("package" "token"))
+;;;                                      (:file "chars" :depends-on ("package" "token"))
+;;;                                      (:file "eol-comments" :depends-on ("package" "token"))
+;;;                                      (:file "whitespace" :depends-on ("package" "token"))
+;;;                                      (:file "squote" :depends-on ("package" "token"))
+;;;                                      (:file "uint" :depends-on ("package" "token"))
+;;;                                      (:file "ident" :depends-on ("package" "token"))
+;;;                                      (:file "token-counter" :depends-on ("package" "token"))
+;;;                                      (:file "prolog-parser" 
+;;;                                       :depends-on ("package" "token"
+;;;                                                    "read-file-into-string" "chars" "eol-comments"
+;;;                                                    "squote" "whitespace" "token-counter" "uint" "ident"))))))
 
 (defsystem arrowgrams/parser
   :depends-on (:arrowgrams :esrap :cl-event-passing :loops)
@@ -189,4 +189,4 @@
                                      (:file "mid-level" :depends-on ("package" "low-level"))
                                      (:file "ignore" :depends-on ("package"))
                                      (:file "prolog-rules" :depends-on ("package"))
-                                     (:file "prolog-peg" :depends-on ("mid-level" "ignore" "prolog-rules"))))))
+                                     (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules"))))))
