@@ -80,6 +80,8 @@
                                      (:file "input-pins" :depends-on ("package" "classes"))
                                      (:file "output-pins" :depends-on ("package" "classes"))
 
+                                     (:file "rules-util" :depends-on ("package"))
+
                                      (:file "compiler"
                                       :depends-on ("package" "classes"
                                                    "reader" "fb" "writer" "convert-to-keywords" "sequencer"
@@ -110,7 +112,8 @@
                                                    "self-output-pins"
                                                    "input-pins"
                                                    "output-pins"
-                                                   
+
+                                                   "rules-util"
                                                    ))))))
 
 
