@@ -11,9 +11,15 @@
   (:function first)
   (:lambda (x) `(var ,x)))
 
-(defrule tIdent (and tLowerCaseLetter (* tOtherLetter) (* tWS))
+(defrule tIdent (or tIdent1 tIdent2))
+
+(defrule tIdent1 (and tLowerCaseLetter (* tOtherLetter) (* tWS))
   (:function butlast)
   (:text t)
+  (:lambda (x) `(ident ,x)))
+
+(defrule tIdent2 (and tSingleQuotedAtom (* tWS))
+  (:function first)
   (:lambda (x) `(ident ,x)))
 
 
