@@ -6,7 +6,7 @@
 (defun convert ()
   (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
   (g-to-h *parsed*)
-  *rules-called*)
+  *rules-defined*)
 
 (defun g-to-h (parsed)
   (setf *rules-defined* nil)
