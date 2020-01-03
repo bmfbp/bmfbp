@@ -1,12 +1,18 @@
 (in-package :arrowgrams/parser)
 
 (defparameter *rules-defined* nil)
+(defparameter *rules-called* nil)
 (defparameter *parsed* nil)
+(defparameter *converted* nil)
 
 (defun convert ()
   (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  (g-to-h *parsed*)
-  *rules-defined*)
+  (setq *converted* nil)
+  (setq *rules-defined* nil)
+  (setq *rules-called* nil)
+  (setq *converted* (g-to-h *parsed*))
+  (setq *converted* (delete nil *converted*))
+  (pprint *converted*))
 
 (defun g-to-h (parsed)
   (setf *rules-defined* nil)
@@ -23,15 +29,19 @@
            (let ((name (car head))
                  (args (cdr head)))
              (let ((arity (length args)))
-               (let ((string-name (format nil "~A/~A" (symbol-name name) arity)))
-                 (format *standard-output* "~&rule ~S~%" string-name)
-                 (pushnew string-name *rules-defined* :test 'string=))))))))
+               (let ((string-name (intern (format nil "~A/~A" (symbol-name name) arity))))
+                 (pushnew string-name *rules-defined* :test 'string=)
+                 (let ((rewritten (rewrite body)))
+                       (mapc #'memo-called-rule rewritten)
+                       `( (,string-name ,@args)
+                          ,@rewritten )))))))))
                    
 (defun walk-predicate-list (x)
   (unless (null x)
     (assert (eq 'predicate-list (first x)))
-    (list (walk-predicate (second x))
-            (walk-predicate-list (third x)))))
+    (cons
+     (walk-predicate (second x))
+     (walk-predicate-list (third x)))))
 
 (defun walk-predicate (pred)
   (assert (eq 'predicate (first pred)))
@@ -96,3 +106,14 @@
           (cons (convert-vars (car x))
                 (convert-vars (cdr x)))
         x))))
+
+
+
+
+(defun memo-called-rule (x)
+  (when (and (listp x) (not (null x)))
+    (let ((rule-name (car x)))
+      (pushnew rule-name *rules-called*))))
+
+(defun rewrite (x)
+  x)
