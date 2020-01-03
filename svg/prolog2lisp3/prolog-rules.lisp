@@ -397,7 +397,7 @@ findCoincidentSink(A,B):-
     asserta(portName(B,N)).
 
 notNamedSink(X) :-
-    prolog_not_proven(namedSink(X)),
+    prolog_not_proven(namedSink(X)).
     % \\+ namedSink(X).
 
 
@@ -598,7 +598,8 @@ sem_noDuplicateKinds_main :-
 check_has_exactly_one_kind(RectID) :-
     kind(RectID,Kind1),
     kind(RectID,Kind2),
-    Kind1 \\= Kind2,
+    prolog_not_equal(Kind1,Kind2),
+    % Kind1 \\= Kind2,
     !,
     asserta(log('fATAL_ERRORS_DURING_COMPILATION','noDuplicateKinds')),
     asserta(log('rect ', RectID)),
