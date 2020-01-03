@@ -3,6 +3,7 @@
 (defparameter *rules-called* nil)
 (defparameter *parsed* nil)
 (defparameter *converted* nil)
+(defparameter *rules-needed* nil)
 
 (defparameter *str1*
 "
@@ -66,18 +67,29 @@ x :-
      L1 >= L2.
 ")
 
+(defparameter *str9*
+  "
+x :-
+    prolog_not_proven(namedSink(X)),
+    prolog_not_proven(used(TextID)),
+    prolog_not_proven(used(TextID)).
+")
+
 (defun convert ()
-  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str8*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  (setq *parsed* (esrap:parse 'rule-TOP *str9*))
   (setq *converted* nil)
+  (setq *rules-needed* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
   (setq *converted* (g-to-h *parsed*))
   (setq *converted* (delete nil *converted*))
   (pprint *converted*)
-  (format *standard-output* "~%~%")
   (let ((diff1 (set-difference *rules-called* +facts+)))
-    (set-difference diff1 *rules-defined*)))
+    (set-difference diff1 *rules-defined*)
+    (format *standard-output* "~%~%~A rules defined, ~A rules called~%rules needed=~S~%missing rules=~S~%~%"
+          (length *rules-defined*) (length *rules-called*) *rules-needed* diff1)
+    diff1))
     
 
 (defun g-to-h (parsed)
@@ -212,7 +224,7 @@ x :-
           (args (cdr x)))
       (when (atom rule-name)
         (let ((rule-name-with-arity (intern (format nil "~A/~A" (string-upcase (symbol-name rule-name)) (length args)) "KEYWORD")))
-          (pushnew rule-name-with-arity *rules-called*))))))
+          (pushnew rule-name-with-arity *rules-called* :test 'string=))))))
 
 (defun rewrite (body)
   (let ((result nil))
@@ -255,6 +267,18 @@ x :-
           `(lisp (asserta ',(second x))))
          ((eq (car x) :retract)
           `(lisp (retract ',(second x))))
+
+         ((eq (car x) :prolog_not_proven)
+          (let ((clause (second x)))
+            (let ((not-name (intern (format nil "NOT-~A" (symbol-name (car clause))) "KEYWORD")))
+              (let ((not-name-with-arity (intern (format nil "~A/~A"
+                                                         (symbol-name not-name)
+                                                         (1- (length clause)))
+                                                 "KEYWORD")))
+                (let ((rewritten `(,not-name ,@(rest clause))))
+                  (pushnew not-name-with-arity *rules-needed* :test 'string=)
+                  rewritten)))))
+
          (t x)))
              
        ((= 3 (length x)) ;/2
