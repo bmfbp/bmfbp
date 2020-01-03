@@ -10,9 +10,14 @@
 nle :- nl(user_error).
 ")
 
+(defparameter *str2*
+"
+we(X) :- write(user_error,X).
+")
+
 (defun convert ()
-  ;(setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  (setq *parsed* (esrap:parse 'rule-TOP *str1*))
+  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *str2*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -134,12 +139,16 @@ nle :- nl(user_error).
 
 (defun rewrite1 (x)
   (if (listp x)
-      (progn
-        (format *standard-output* "~&rewrite1 ~A~%" x)
-        (cond ((and (= 2 (length x))
-                    (eq (car x) :nl))
-               (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-                 `(lisp (format ,stream "~%"))))
-              (t x)))
+      (cond ((= 2 (length x))
+             (cond ((eq (car x) :nl)
+                    (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
+                      `(lisp (format ,stream "~%"))))
+                   (t x)))
+            ((= 3 (length x))                   
+             (cond ((eq (car x) :write)
+                    (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
+                      `(lisp (format ,stream "~A" ,(third x)))))
+                   (t x)))
+            (t x))
     x))
 
