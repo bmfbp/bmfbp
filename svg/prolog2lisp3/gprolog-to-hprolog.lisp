@@ -59,9 +59,16 @@ sem_speechVScomments_main :-
     prolog_not_equal_equal(Kind1,Kind2).
 ")
 
+(defparameter *str8*
+"
+x :-    
+     Left is CX - HalfWidth,
+     L1 >= L2.
+")
+
 (defun convert ()
-  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str7*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+  (setq *parsed* (esrap:parse 'rule-TOP *str8*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -91,9 +98,11 @@ sem_speechVScomments_main :-
                ;(assert (eq (find-package "KEYWORD") (symbol-package name)))
                (let ((string-name (intern (format nil "~A/~A" (symbol-name name) arity) "KEYWORD")))
                  (pushnew string-name *rules-defined* :test 'string=)
+                 (when (eq :predicate name)
+                   (break ""))
                  (let ((rewritten (rewrite body)))
                    (let ((final-body (mapc #'memo-called-rule rewritten)))
-                     `( (,string-name ,@args)
+                     `( (,name ,@args)
                         ,@final-body ))))))))))
                    
 (defun walk-predicate-list (x)
@@ -110,7 +119,10 @@ sem_speechVScomments_main :-
       (atom (list (walk-atom arg)))
       (structure (walk-structure arg))
       (is (walk-is arg))
-      (otherwise pred))))
+      (otherwise (if (and (listp arg)
+                          (or (eq '>= (first arg)) (eq '<= (first arg))))
+                     `(lisp (,(first arg) ,(walk-term (second arg)) ,(walk-term (third arg))))
+                   arg))))) 
 
 (defun walk-atom (x)
   (assert (eq 'atom (first x)))
@@ -157,19 +169,23 @@ sem_speechVScomments_main :-
 (defun walk-is (x)
   (assert (and (listp x) (eq 'is (car x))))
   (let ((LHS (walk-var (second x)))
-        (RHS (convert-vars (third x))))
-    `(,LHS ,RHS)))
+        (RHS (list (first (third x))
+                   (walk-predicate-or-expr (second (third x)))
+                   (walk-predicate-or-expr (third (third x))))))
+    `(lispv ,LHS ,RHS)))
 
-(defun convert-vars (x)
-  (unless (null x)
-    (if (and (listp x) (eq 'var (car x)))
-        (walk-var x)
-      (if (listp x)
-          (cons (convert-vars (car x))
-                (convert-vars (cdr x)))
-        x))))
+(defun walk-predicate-or-expr (x)
+  (assert (listp x))
+  (if (eq 'precidate (car x))
+      (walk-predicate x)
+    (walk-primary x)))
 
-
+(defun walk-primary (x)
+  (assert (listp x))
+  (assert (eq 'primary (first x)))
+  (let ((arg (second x)))
+    (ecase (first arg)
+      (var (walk-var arg)))))
 
 
 (defun memo-called-rule (x)
