@@ -1,9 +1,9 @@
-`(in-package :arrowgrams/parser)
+(in-package :arrowgrams/parser)
 
 (defrule rule-TOP (and (+ rule-TOP1) tEOF)
   (:lambda (x) `(list-of-rules ,@(first x))))
 
-(defrule rule-TOP1 (or pRule rule-directive rule-fact))
+(defrule rule-TOP1 (and (* tWS) (or pRule rule-directive rule-fact)) (:function second))
 
 (defrule rule-directive (and (* tWS) tColonDash tJunk-to-eol) (:constant '(directive)))
 
@@ -24,7 +24,9 @@
 
 (defrule pPredicate (or pAtomNotLpar
                         pStructure
-                        is-Statement)
+                        is-predicate
+                        GEQ-predicate
+                        LEQ-predicate)
   (:lambda (x) `(predicate ,x)))
 
 (defrule pStructure (or pStructure1 pStructure2))
@@ -65,9 +67,9 @@
 ;; revelation: math exprs only appear as the RHS of IS statements
 
 
-(esrap:defrule rule-Expr rule-Additive)
+(defrule rule-Expr rule-Additive)
 
-(esrap:defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
+(defrule rule-Additive (or (and rule-Mult tPlus rule-Additive)
                                  (and rule-Mult tMinus rule-Additive)
                                  rule-Mult)
   (:lambda (x)
@@ -77,7 +79,7 @@
         `(- ,(first x) ,(third x))
         x))))
 
-(esrap:defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
+(defrule rule-Mult (or (and rule-Primary tMul rule-Mult)
                              (and rule-Primary tDiv rule-Mult)
                              rule-Primary)
   (:lambda (x)
@@ -87,30 +89,33 @@
         `(/ ,(first x) ,(third x))
         x))))
 
-(esrap:defrule rule-Primary (or tInt rule-Primary2 tVar)
+(defrule rule-Primary (or tInt rule-Primary2 tVar)
   (:lambda (x) `(primary ,x)))
-(esrap:defrule rule-Primary2 (and tLpar rule-Additive tRpar)
+(defrule rule-Primary2 (and tLpar rule-Additive tRpar)
   (:function second))
 
-(esrap:defrule rule-TOP1-Expr (and (* tWS) rule-Expr)
+(defrule rule-TOP1-Expr (and (* tWS) rule-Expr)
   (:destructure (spc e) (declare (ignore spc)) e)
   (:lambda (x) `(top-expr ,x)))
 
-(esrap:defrule is-Statement (and tVar tIs rule-Expr)
+(defrule is-predicate (and tVar tIs rule-Expr)
   (:destructure (v is e) (declare (ignore is)) `(is ,v ,e)))
 
+(defrule GEQ-predicate (and pTerm tGEQ pTerm) (:lambda (x) `(>= ,(first x) ,(third x))))
+(defrule LEQ-predicate (and pTerm tLEQ pTerm) (:lambda (x) `(<= ,(first x) ,(third x))))
 
-(defrule rule-TOP1-IS (and (* tWS)  is-Statement )
+
+(defrule rule-TOP1-IS (and (* tWS)  is-predicate )
   (:function second))
 
-(defun test ()
+(defun test0h ()
   (setf cl:*print-right-margin* 40)
 
-  #+nil(pprint (parse 'rule-TOP1-IS "X is 1"))
-  #+nil(pprint (parse 'rule-TOP1-IS "X is 1+2"))
-  #+nil(pprint (parse 'rule-TOP1-IS "X is 1 + 2"))
+  #+nil(pprint (esrap:parse 'rule-TOP1-IS "X is 1"))
+  #+nil(pprint (esrap:parse 'rule-TOP1-IS "X is 1+2"))
+  #+nil(pprint (esrap:parse 'rule-TOP1-IS "X is 1 + 2"))
 
-  (pprint (parse 'rule-TOP1-IS "X is (16 + 17) / (18 - 19)"))
+  (pprint (esrap:parse 'rule-TOP1-IS "X is (16 + 17) / (18 - 19)"))
 
   ;(esrap:trace-rule 'pPredicate :recursive t)
 
@@ -156,11 +161,38 @@
     geometry_left_x(ID,X),  Right is X + Width."))
   (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),  Right is X + Width."))
+
+  (format *standard-output* "~%")
+  (format *standard-output* "~%")
+  (format *standard-output* "~%")
+
   (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
     geometry_left_x(ID,X),  Right is X + Width.
 createRectBoundingBox2(ID) :-
     geometry_left_x(ID,X),  Right is X + Width."))
 
-  (pprint (esrap:parse 'rule-TOP *all-prolog*))
-  
-)
+  (format *standard-output* "~%")
+  (format *standard-output* "~%")
+  (format *standard-output* "~%")
+
+  (pprint (esrap:parse 'rule-TOP *all-prolog*)))
+
+(defun test ()
+  (setf cl:*print-right-margin* 40)
+  (pprint (esrap:parse 'rule-TOP
+"
+:- initialization(main).
+:- include('head').
+
+calc_bounds_main :-
+    readFB(user_input), 
+    createBoundingBoxes,
+    writeFB,
+    halt.
+"))
+  (pprint (esrap:parse 'rule-TOP "createRectBoundingBox(ID) :-
+    geometry_left_x(ID,X),  Right is X + Width.
+createRectBoundingBox2(ID) :-
+    geometry_left_x(ID,X),  Right is X + Width."))
+  (pprint (esrap:parse 'rule-TOP "b(PortLeftX,ELeftX) :- PortLeftX =< ELeftX, PortLeftX >= ELeftX."))
+  (pprint (esrap:parse 'rule-TOP *all-prolog*)))

@@ -165,7 +165,8 @@ createAllKinds(BoxID) :-
 
 createOneKind(BoxID,TextID) :-
     text(TextID,Str),
-    \\+ used(TextID),
+    prolog_not_proven(used(TextID)),
+    % \\+ used(TextID),
     textCompletelyInsideBox(TextID,BoxID),
     asserta(used(TextID)),
     asserta(kind(BoxID,Str)).
@@ -256,7 +257,8 @@ make_unknown_port_names_main :-
 
 unused_text(TextID) :-
     text(TextID,_),
-    \\+ used(TextID).
+    prolog_not_proven(used(TextID)).
+    % \\+ used(TextID).
 
 createPortNameIfNotAKindName(TextID) :-
     asserta(unassigned(TextID)).
@@ -384,7 +386,8 @@ findCoincidentSink(A,B):-
     center_y(B,By),
     center_x(A,Ax),
     center_x(B,Bx),
-    A \\== B,
+    prolog_not_equal_equal(A,B),
+    % A \\== B,
     sink(_,B),
     notNamedSink(B),
     closeTogether(Ax,Bx),
@@ -394,7 +397,8 @@ findCoincidentSink(A,B):-
     asserta(portName(B,N)).
 
 notNamedSink(X) :-
-    \\+ namedSink(X).
+    prolog_not_proven(namedSink(X)),
+    % \\+ namedSink(X).
 
 
 coincidentSources:-
@@ -408,7 +412,8 @@ findCoincidentSource(A,B):-
     center_y(B,By),
     center_x(A,Ax),
     center_x(B,Bx),
-    A \\== B,
+    prolog_not_equal_equal(A,B),
+    % A \\== B,
     source(_,B),
     notNamedSource(B),
     closeTogether(Ax,Bx),
