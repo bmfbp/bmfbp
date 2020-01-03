@@ -30,9 +30,16 @@ notNamedSource(X) :-
     fail.
 ")
 
+(defparameter *str5*
+"
+notNamedSource(X) :-
+    asserta(log(BoxID,box_is_meta_data)),
+    retract(rect(BoxID)).
+")
+
 (defun convert ()
   (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str4*))
+  ;(setq *parsed* (esrap:parse 'rule-TOP *str5*))
   (setq *converted* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
@@ -186,6 +193,10 @@ notNamedSource(X) :-
             `(lisp (format ,stream "~%"))))
          ((eq (car x) :readfb)
           `(lisp t))
+         ((eq (car x) :asserta)
+          `(lisp (asserta ',(second x))))
+         ((eq (car x) :retract)
+          `(lisp (retract ',(second x))))
          (t x)))
              
        ((= 3 (length x))                   
