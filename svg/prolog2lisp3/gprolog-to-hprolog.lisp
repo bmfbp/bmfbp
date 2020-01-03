@@ -12,7 +12,11 @@
   (setq *rules-called* nil)
   (setq *converted* (g-to-h *parsed*))
   (setq *converted* (delete nil *converted*))
-  (pprint *converted*))
+  (pprint *converted*)
+  (format *standard-output* "~%~%")
+  (let ((diff1 (set-difference *rules-called* +facts+)))
+    (set-difference diff1 *rules-defined*)))
+    
 
 (defun g-to-h (parsed)
   (setf *rules-defined* nil)
@@ -112,9 +116,12 @@
 
 (defun memo-called-rule (x)
   (when (and (listp x) (not (null x)))
-    (let ((rule-name (car x)))
+    (let ((rule-name (car x))
+          (args (cdr x)))
       (when (atom rule-name)
-        (pushnew rule-name *rules-called*)))))
+        (let ((rule-name-with-arity (intern (format nil "~A/~A" (string-upcase (symbol-name rule-name)) (length args)) "KEYWORD")))
+          (pushnew rule-name-with-arity *rules-called*))))))
 
 (defun rewrite (x)
   x)
+
