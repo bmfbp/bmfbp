@@ -249,11 +249,11 @@ x :-
          ((eq (car x) :!)
             :!)
          ((eq (car x) :true)
-          `(:lisp t))
+          `(:lisp (true)))
          ((eq (car x) :halt)
-          `(:lisp t))
+          `(:lisp (true)))
          ((eq (car x) :writefb)
-          `(:lisp t))
+          `(:lisp (true)))
 
          (t x)))
         
@@ -263,7 +263,7 @@ x :-
           (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
             `(:lisp (format ,stream "~%"))))
          ((eq (car x) :readfb)
-          `(:lisp t))
+          `(:lisp (true)))
          ((eq (car x) :asserta)
           `(:lisp-method (asserta ',(second x))))
          ((eq (car x) :retract)
