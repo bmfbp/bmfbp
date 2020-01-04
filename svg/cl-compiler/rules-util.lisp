@@ -5,25 +5,25 @@
 (defconstant +manually-defined-rules+
   '(
     ((:not-same (:? X) (:? Y))
-     !
+     :!
      :fail
      )
     ((:not-same (:? X) (:? Y))
-     !)
+     :!)
 
     ((:not-used (:? X))
      (:used (:? x))
-     !
+     :!
      :fail)
     (:not-used (:? X)
-     !)
+     :!)
 
     ((:not-namedSink (:? x))
      (:namedSink (:? x))
-     !
+     :!
      :fail)
     ((:not-namedSink (:? x))
-     !)
+     :!)
     ))
 
 (defun inc-counter ()
