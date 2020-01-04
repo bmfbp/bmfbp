@@ -86,5 +86,5 @@
   (let ((fb
          (append arrowgrams/compiler::+rules+
                (cl-event-passing-user::@get-instance-var self :fb)))
-        (goal '((:add_kinds_main))))
+        (goal '((:trace-on 2) (:add_kinds_main))))
           (arrowgrams/compiler/util::run-prolog self goal fb)))
