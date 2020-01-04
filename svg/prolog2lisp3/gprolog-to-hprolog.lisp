@@ -86,11 +86,13 @@ x :-
   (setq *converted* (delete nil *converted*))
   (setq *rules-defined* (sort-by-name *rules-defined*))
   (setq *rules-called* (sort-by-name *rules-called*))
-  (let ((diff1 (set-difference *rules-called* (sort-by-name +facts+))))
-    (set-difference diff1 *rules-defined*)
-    (format *standard-output* "~%~%~A rules defined, ~A rules called~%rules needed=~S~%missing rules=~S~%~%"
-          (length *rules-defined*) (length *rules-called*) *rules-needed* diff1)
-    *converted*))
+  (setq *rules-needed* (sort-by-name *rules-needed*))
+  (let ((manually-added-facts (sort-by-name +facts+)))
+    (let ((diff1 (set-difference *rules-called* manually-added-facts)))
+      (let ((diff2 (set-difference diff1 *rules-defined*)))
+        (format *standard-output* "~%~%~A rules defined, ~A rules called~%~%rules needed=~S~%~A missing rules=~S~%~%"
+                (length *rules-defined*) (length *rules-called*) *rules-needed* (length diff2) diff2)
+        *converted*))))
     
 
 (defun g-to-h (parsed)
@@ -110,7 +112,7 @@ x :-
              (let ((arity (length args)))
                ;(assert (eq (find-package "KEYWORD") (symbol-package name)))
                (let ((string-name (intern (format nil "~A/~A" (symbol-name name) arity) "KEYWORD")))
-                 (pushnew string-name *rules-defined*)
+                 (pushnew string-name *rules-defined* :test 'name-EQ)
                  (when (eq :predicate name)
                    (break ""))
                  (let ((rewritten (rewrite body)))
@@ -225,7 +227,7 @@ x :-
           (args (cdr x)))
       (when (atom rule-name)
         (let ((rule-name-with-arity (intern (format nil "~A/~A" (string-upcase (symbol-name rule-name)) (length args)) "KEYWORD")))
-          (pushnew rule-name-with-arity *rules-called*))))))
+          (pushnew rule-name-with-arity *rules-called* :test 'name-EQ))))))
 
 (defun rewrite (body)
   (let ((result nil))
@@ -277,7 +279,7 @@ x :-
                                                          (1- (length clause)))
                                                  "KEYWORD")))
                 (let ((rewritten `(,not-name ,@(rest clause))))
-                  (pushnew not-name-with-arity *rules-needed*)
+                  (pushnew not-name-with-arity *rules-needed* :test 'name-EQ)
                   rewritten)))))
 
          (t x)))
@@ -330,13 +332,22 @@ x :-
 
 
 (defun sort-by-name (sym-list)
-  (sort sym-list #'name-LE))
+  (sort sym-list #'name-GE))
 
-(defun name-LE (sym1 sym2)
+(defun name-GE (sym1 sym2)
   (let ((p1 (symbol-package sym1))
         (p2 (symbol-package sym2)))
     (if (eq p1 p2)
         (let ((s1 (symbol-name sym1))
               (s2 (symbol-name sym2)))
-          (string-lessp s1 s2))
-      (string-lessp (package-name p1 (package-name p2))))))
+          (string-greaterp s1 s2))
+      (string-greaterp (package-name p1) (package-name p2)))))
+
+(defun name-EQ (sym1 sym2)
+  (let ((p1 (symbol-package sym1))
+        (p2 (symbol-package sym2)))
+    (if (eq p1 p2)
+        (let ((s1 (symbol-name sym1))
+              (s2 (symbol-name sym2)))
+          (string= s1 s2))
+      nil)))
