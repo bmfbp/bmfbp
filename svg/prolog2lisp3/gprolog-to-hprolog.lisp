@@ -85,14 +85,19 @@ x :-
   (setq *converted* (g-to-h *parsed*))
   (setq *converted* (delete nil *converted*))
   (setq *rules-defined* (sort-by-name *rules-defined*))
-  (setq *rules-called* (sort-by-name *rules-called*))
+  (setq *rules-called* (sort-by-name (append *rules-needed* *rules-called*)))
   (setq *rules-needed* (sort-by-name *rules-needed*))
   (let ((manually-added-facts (sort-by-name +facts+)))
     (let ((diff1 (set-difference *rules-called* manually-added-facts)))
       (let ((diff2 (set-difference diff1 *rules-defined*)))
-        (format *standard-output* "~%~%~A rules defined, ~A rules called~%~%rules needed=~S~%~A missing rules=~S~%~%"
-                (length *rules-defined*) (length *rules-called*) *rules-needed* (length diff2) diff2)
-        *converted*))))
+        (format *standard-output* "~%~%~A rules defined, ~A rules called~%~%"
+                (length *rules-defined*) (length *rules-called*))
+        (if (zerop (length diff2))
+            (format *standard-output* "NO missing rules")
+          (format *standard-output* "~A missing rules=~S"
+                  (length diff2) diff2))
+        (format *standard-output* "~%~%"))
+      *converted*)))
     
 
 (defun g-to-h (parsed)
@@ -306,9 +311,9 @@ x :-
           `(:lisp (set-counter ,(third x))))
 
          ((eq (first x) :prolog_not_equal_equal)
-          `(:not_same ,(second x) ,(third x)))
+          `(:not-same ,(second x) ,(third x)))
          ((eq (first x) :prolog_not_equal)
-          `(:not_same ,(second x) ,(third x)))
+          `(:not-same ,(second x) ,(third x)))
 
          (t x)))
        
