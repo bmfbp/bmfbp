@@ -43,3 +43,6 @@
 
 (defun out-nl ()
   (format *standard-output* "~%"))
+
+(defun true ()
+  t)
