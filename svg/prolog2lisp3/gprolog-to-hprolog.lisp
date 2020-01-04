@@ -86,7 +86,7 @@ x :-
   (setq *converted* (delete nil *converted*))
   (setq *rules-defined* (sort-by-name *rules-defined*))
   (setq *rules-called* (sort-by-name *rules-called*))
-  (let ((diff1 (set-difference *rules-called* +facts+)))
+  (let ((diff1 (set-difference *rules-called* (sort-by-name +facts+))))
     (set-difference diff1 *rules-defined*)
     (format *standard-output* "~%~%~A rules defined, ~A rules called~%rules needed=~S~%missing rules=~S~%~%"
           (length *rules-defined*) (length *rules-called*) *rules-needed* diff1)
