@@ -37,3 +37,9 @@
 
 (defun read-counter ()
   *counter*)
+
+(defun out-space ()
+  (format *standard-output* " "))
+
+(defun out-nl ()
+  (format *standard-output* "~%"))
