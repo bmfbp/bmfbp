@@ -331,9 +331,9 @@ x :-
 (defun write-to-rules (lis fname)
   (with-open-file (outf fname :direction :output :if-exists :supersede)
     (format outf "(in-package :arrowgrams/compiler)~%~%")
-    (format outf "(defconstant +rules+ '(")
+    (format outf "(defconstant +rules+~%'")
     (pprint lis outf)
-    (format outf "~%)~%")))
+    (format outf ")~%~%")))
 
 
 (defun sort-by-name (sym-list)
