@@ -40,7 +40,7 @@
                 (:make-parent-for-ellipse (:? id) (:? main))
                 (:ellipse (:? id))
                 (:component (:? main))
-                (:lisp (arrowgrams/compiler/util::asserta (:parent (:? main) (:? id))))
+                (:lisp-method (arrowgrams/compiler/util::asserta (:parent (:? main) (:? id))))
                 )))
     (let ((fb (cons rule (cl-event-passing-user::@get-instance-var self :fb))))
       (hprolog:prove nil '((:make-parent-for-ellipse (:? eid) (:? main-id))) fb hprolog:*empty* 1 nil fb nil self))))
