@@ -1,12 +1,8 @@
 (in-package :arrowgrams/parser)
 
-#+nil(defconstant +builtins+ '(:LISPV/2 :LISP/1 CL::<=/2 CL::>=/2 :!/0 :WRITE/2 :NL/1
-                          :inc/2 :dec/2 :g_read/2 :g_assign/2
-                          PROLOG::pl-fail/0 PROLOG::PL-TRUE/0 prolog::not-same/2))
+(defconstant +builtins+ '(:LISPV/2 :LISP/1 :LISP-METHOD/1 :INC/2 :DEC/2 :NOT-SAME/2 :NOT-USED/1 :NOT-NAMEDSINK/1))
 
-(defconstant +builtins+ nil)
-
-(defconstant +facts+ '(
+(defconstant +prolog-facts+ '(
                     :ARROW/1
                     :ARROW_X/2
                     :ARROW_Y/2
@@ -99,3 +95,5 @@
                     :LOG/8
                     :LOG/9
                     ))
+
+(defconstant +facts+ (append +builtins+ +prolog-facts+))
