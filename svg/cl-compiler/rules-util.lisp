@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/util)
+(in-package :arrowgrams/compiler)
 
 (defparameter *counter* 0)
 
