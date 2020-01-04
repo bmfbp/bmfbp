@@ -75,8 +75,8 @@ x :-
     prolog_not_proven(used(TextID)).
 ")
 
-(defun convert ()
-  (setq *parsed* (esrap:parse 'rule-TOP *all-prolog*))
+(defun convert (parsed)
+  (setq *parsed* parsed)
   ;(setq *parsed* (esrap:parse 'rule-TOP *str9*))
   (setq *converted* nil)
   (setq *rules-needed* nil)
@@ -84,12 +84,13 @@ x :-
   (setq *rules-called* nil)
   (setq *converted* (g-to-h *parsed*))
   (setq *converted* (delete nil *converted*))
-  (pprint *converted*)
+  (setq *rules-defined* (sort-by-name *rules-defined*))
+  (setq *rules-called* (sort-by-name *rules-called*))
   (let ((diff1 (set-difference *rules-called* +facts+)))
     (set-difference diff1 *rules-defined*)
     (format *standard-output* "~%~%~A rules defined, ~A rules called~%rules needed=~S~%missing rules=~S~%~%"
           (length *rules-defined*) (length *rules-called*) *rules-needed* diff1)
-    diff1))
+    *converted*))
     
 
 (defun g-to-h (parsed)
@@ -264,9 +265,9 @@ x :-
          ((eq (car x) :readfb)
           `(:lisp t))
          ((eq (car x) :asserta)
-          `(:lisp (asserta ',(second x))))
+          `(:lisp-method (asserta ',(second x))))
          ((eq (car x) :retract)
-          `(:lisp (retract ',(second x))))
+          `(:lisp-method (retract ',(second x))))
 
          ((eq (car x) :prolog_not_proven)
           (let ((clause (second x)))
@@ -312,3 +313,30 @@ x :-
        (t x))
     x))
 
+
+(defun create ()
+  (let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
+    (let ((converted (convert tree)))
+      (write-to-rules converted (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/rules.lisp"))
+    'done)))
+  
+
+(defun write-to-rules (lis fname)
+  (with-open-file (outf fname :direction :output :if-exists :supersede)
+    (format outf "(in-package :arrowgrams/compiler)~%~%")
+    (format outf "(defconstant +rules+ '(")
+    (pprint lis outf)
+    (format outf "~%)~%")))
+
+
+(defun sort-by-name (sym-list)
+  (sort sym-list #'name-LE))
+
+(defun name-LE (sym1 sym2)
+  (let ((p1 (symbol-package sym1))
+        (p2 (symbol-package sym2)))
+    (if (eq p1 p2)
+        (let ((s1 (symbol-name sym1))
+              (s2 (symbol-name sym2)))
+          (string-lessp s1 s2))
+      (string-lessp (package-name p1 (package-name p2))))))

@@ -196,3 +196,4 @@ createRectBoundingBox2(ID) :-
   #+nil(pprint (esrap:parse 'rule-TOP "b(PortLeftX,ELeftX) :- PortLeftX =< ELeftX, PortLeftX >= ELeftX."))
   (let ((final (esrap:parse 'rule-TOP *all-prolog*)))
     final))
+
