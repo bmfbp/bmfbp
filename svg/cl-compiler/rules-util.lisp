@@ -24,7 +24,7 @@
      :fail)
     ((:not-namedSink (:? x))
      !)
-    )
+    ))
 
 (defun inc-counter ()
   (incf *counter*))
