@@ -59,7 +59,8 @@
 
 (defrule tAtom (or tIdent tCut tTrue tFail) (:lambda (x) `(atom ,x)))
 
-(defrule pConstant tInt (:lambda (x) `(constant ,x)))
+(defrule pConstant (or tInt tString)
+  (:lambda (x) `(constant ,x)))
 
 
 

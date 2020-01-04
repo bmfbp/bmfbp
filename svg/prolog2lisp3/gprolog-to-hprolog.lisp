@@ -183,7 +183,7 @@ x :-
 (defun walk-constant (x)
   (assert (and (listp x) (eq 'constant (car x))))
   (let ((val (second x)))
-    (assert (eq (first val) 'int))
+    (assert (or (eq (first val) 'int) (eq (first val) 'string)))
     (second val)))
 
 (defun walk-is (x)
