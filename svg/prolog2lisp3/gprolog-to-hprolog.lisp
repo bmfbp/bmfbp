@@ -4,6 +4,7 @@
 (defparameter *parsed* nil)
 (defparameter *converted* nil)
 (defparameter *rules-needed* nil)
+(defparameter *foralls* nil)
 
 (defparameter *str1*
 "
@@ -82,6 +83,7 @@ x :-
   (setq *rules-needed* nil)
   (setq *rules-defined* nil)
   (setq *rules-called* nil)
+  (setq *foralls* nil)
   (setq *converted* (g-to-h *parsed*))
   (setq *converted* (delete nil *converted*))
   (setq *rules-defined* (sort-by-name *rules-defined*))
@@ -90,8 +92,9 @@ x :-
   (let ((manually-added-facts (sort-by-name +facts+)))
     (let ((diff1 (set-difference *rules-called* manually-added-facts)))
       (let ((diff2 (set-difference diff1 *rules-defined*)))
-        (format *standard-output* "~%~%~A rules defined, ~A rules called~%~%"
+        (format *standard-output* "~%~%~A rules defined, ~A rules called~%"
                 (length *rules-defined*) (length *rules-called*))
+        (format *standard-output* "foralls created ~A~%~%" (length *foralls*))
         (if (zerop (length diff2))
             (format *standard-output* "NO missing rules")
           (format *standard-output* "~A missing rules=~S"
@@ -109,7 +112,7 @@ x :-
               (eq 'directive (car rule)))
          nil)
         (t
-         (assert (eq 'rule (car rule)))
+         (assert (or (eq 'rule (car rule)) (eq 'fact (car rule))))
          (let ((head (walk-predicate (second rule)))
                (body (walk-predicate-list (third rule))))
            (let ((name (car head))
@@ -237,12 +240,12 @@ x :-
 (defun rewrite (body)
   (let ((result nil))
     (mapc #'(lambda (x)
-              (let ((r (rewrite1 x)))
-                (if (and (listp r) (eq :@ (car r)))
-                    (progn
-                      (push (second r) result)
-                      (push (third r) result))
-                  (push r result))))
+               (let ((r (rewrite1 x)))
+;;;                 (if (and (listp r) (eq :@ (car r)))
+;;;                     (progn
+;;;                       (push (second r) result)
+;;;                       (push (third r) result))
+                  (push r result)))
           body)
     (reverse result)))
 
@@ -268,17 +271,17 @@ x :-
         (cond
          ((eq (car x) :nl)
           (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-            `(:lisp (format ,stream "~%"))))
+            `(:lisp (out-nl))))
          ((eq (car x) :readfb)
           `(:lisp (true)))
          ((eq (car x) :asserta)
-          `(:lisp-method (asserta ',(second x))))
+          `(:lisp-method (arrowgrams/compiler/util::asserta ,(second x))))
          ((eq (car x) :retract)
-          `(:lisp-method (retract ',(second x))))
+          `(:lisp-method (arrowgrams/compiler/util::retract ,(second x))))
 
          ((eq (car x) :prolog_not_proven)
           (let ((clause (second x)))
-            (let ((not-name (intern (format nil "NOT-~A" (symbol-name (car clause))) "KEYWORD")))
+            (let ((not-name (intern (format nil "NOT_~A" (symbol-name (car clause))) "KEYWORD")))
               (let ((not-name-with-arity (intern (format nil "~A/~A"
                                                          (symbol-name not-name)
                                                          (1- (length clause)))
@@ -292,10 +295,18 @@ x :-
        ((= 3 (length x)) ;/2
         (cond
          ((eq (car x) :write)
-          (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-            `(:lisp (format ,stream "~A" ,(third x)))))
-         ((eq (car x) :forall)
-          `(:@ ,(second x) ,(third x)))
+          `(:lisp (out ,(third x))))
+
+;;;          ((eq (car x) :forall)
+;;;           (let ((new-rule-name (gensysm "FORALL-")))
+;;;             ;; this isn't fully general but suits our purposes, i.e. forall is only
+;;;             ;; used in rules with no parameters, so we don't need to parse and pass parameters
+;;;             
+;;;             (let ((rewritten-forall `((,new-rule-name) ,(second x) ,(third x) :fail))
+;;;                   (rewritten-stub `((,new-rule-name))))
+;;;               (push rewritten-stub *foralls*)
+;;;               (push rewritten-forall *foralls*)
+;;;               new-rule-name)))
 
          ((and (eq (first x) :inc)
                (eq (second x) :counter))
@@ -311,27 +322,26 @@ x :-
           `(:lisp (set-counter ,(third x))))
 
          ((eq (first x) :prolog_not_equal_equal)
-          `(:not-same ,(second x) ,(third x)))
+          `(:not_same ,(second x) ,(third x)))
          ((eq (first x) :prolog_not_equal)
-          `(:not-same ,(second x) ,(third x)))
+          `(:not_same ,(second x) ,(third x)))
 
          (t x)))
        
        (t x))
     x))
 
-
 (defun create ()
   (let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
-    (let ((converted (convert tree)))
-      (write-to-rules converted (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/rules.lisp"))
-    'done)))
-  
+    (let ((converted1 (convert tree)))
+      (let ((converted2 (if *foralls* (cons *foralls* converted1) converted1)))
+        (write-to-rules converted2 (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/rules.lisp")))))
+    'done)
 
 (defun write-to-rules (lis fname)
   (with-open-file (outf fname :direction :output :if-exists :supersede)
     (format outf "(in-package :arrowgrams/compiler)~%~%")
-    (format outf "(defconstant +rules+~%'")
+    (format outf "(defparameter +rules+~%'")
     (pprint lis outf)
     (format outf ")~%~%")))
 

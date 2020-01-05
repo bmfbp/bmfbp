@@ -2,29 +2,7 @@
 
 (defparameter *counter* 0)
 
-(defconstant +manually-defined-rules+
-  '(
-    ((:not-same (:? X) (:? Y))
-     :!
-     :fail
-     )
-    ((:not-same (:? X) (:? Y))
-     :!)
 
-    ((:not-used (:? X))
-     (:used (:? x))
-     :!
-     :fail)
-    (:not-used (:? X)
-     :!)
-
-    ((:not-namedSink (:? x))
-     (:namedSink (:? x))
-     :!
-     :fail)
-    ((:not-namedSink (:? x))
-     :!)
-    ))
 
 (defun inc-counter ()
   (incf *counter*))
@@ -46,3 +24,10 @@
 
 (defun true ()
   t)
+
+(defun out (&rest lis)
+  (format *standard-output* "~&out: ")
+  (@:loop
+    (@:exit-when (null lis))
+    (format *standard-output* "~S " (pop lis)))
+  (format *standard-output* "~%"))
