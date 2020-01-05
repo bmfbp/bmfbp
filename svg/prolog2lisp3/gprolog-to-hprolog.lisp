@@ -144,7 +144,7 @@ x :-
       (is (walk-is arg))
       (otherwise (if (and (listp arg)
                           (or (eq '>= (first arg)) (eq '<= (first arg))))
-                     `(:lisp (,(first arg) ,(walk-term (second arg)) ,(walk-term (third arg))))
+                     `(:lisp-true-fail (,(first arg) ,(walk-term (second arg)) ,(walk-term (third arg))))
                    arg))))) 
 
 (defun walk-atom (x)
