@@ -16,3 +16,4 @@ temp*
 *.sed
 *.json.lisp
 time-to-market*
+*rules.lisp
