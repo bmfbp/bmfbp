@@ -29,5 +29,4 @@
   (format *standard-output* "~&out: ")
   (@:loop
     (@:exit-when (null lis))
-    (format *standard-output* "~S " (pop lis)))
-  (format *standard-output* "~%"))
+    (format *standard-output* "~S " (pop lis))))
