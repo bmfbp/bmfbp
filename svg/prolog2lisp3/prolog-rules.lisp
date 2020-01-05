@@ -156,9 +156,13 @@ add_kinds_main :-
     writeFB,
     halt.
 
+% pt
+% condDoKinds :-
+%     forall(eltype(ID,box),createAllKinds(ID)),
+%     !. pt removed ! after forall
+
 condDoKinds :-
-    forall(eltype(ID,box),createAllKinds(ID)),
-    !.
+    forall(eltype(ID,box),createAllKinds(ID)).
 
 createAllKinds(BoxID) :-
     forall(text(TextID,_),createOneKind(BoxID,TextID)).
@@ -678,9 +682,12 @@ selfInputPins_main :-
     writeFB,
     halt.
 
+%condSourceEllipse :-
+%    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)),
+%!.
+
 condSourceEllipse :-
-    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)),
-!.
+    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)).
 
 makeSelfInputPins(EllipseID) :-
     parent(Main,EllipseID),
@@ -701,9 +708,12 @@ selfOutputPins_main :-
     writeFB,
     halt.
 
+%condSinkEllipse :-
+%    forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)),
+%    !.
+
 condSinkEllipse :-
-    forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)),
-    !.
+    forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)).
 
 makeSelfOutputPins(EllipseID) :-
     parent(Main,EllipseID),
@@ -725,9 +735,12 @@ inputPins_main :-
     writeFB,
     halt.
 
+%condSinkRect :-
+%    forall(rect(RectID),makeInputPins(RectID)),
+%    !.
+
 condSinkRect :-
-    forall(rect(RectID),makeInputPins(RectID)),
-    !.
+    forall(rect(RectID),makeInputPins(RectID)).
 
 makeInputPins(RectID) :-
     portFor(RectID,PortID),
@@ -746,9 +759,12 @@ outputPins_main :-
     writeFB,
     halt.
 
+%condSourceRect :-
+%    forall(rect(RectID),makeOutputPins(RectID)),
+%    !.
+
 condSourceRect :-
-    forall(rect(RectID),makeOutputPins(RectID)),
-    !.
+    forall(rect(RectID),makeOutputPins(RectID)).
 
 makeOutputPins(RectID) :-
     portFor(RectID,PortID),
