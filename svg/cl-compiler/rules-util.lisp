@@ -26,7 +26,6 @@
   t)
 
 (defun out (&rest lis)
-  (format *standard-output* "~&out: ")
   (@:loop
     (@:exit-when (null lis))
     (format *standard-output* "~S " (pop lis))))
