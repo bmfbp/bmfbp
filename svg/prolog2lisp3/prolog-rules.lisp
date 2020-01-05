@@ -152,6 +152,7 @@ metadataCompletelyInsideBoundingBox(TextID,BoxID) :-
 
 add_kinds_main :-
     readFB(user_input), 
+wen('a'),
     condDoKinds,
     writeFB,
     halt.
@@ -161,11 +162,17 @@ add_kinds_main :-
 %     forall(eltype(ID,box),createAllKinds(ID)),
 %     !. pt removed ! after forall
 
-condDoKinds :-
-    forall(eltype(ID,box),createAllKinds(ID)).
+condDoKinds :- eltype(ID,box),createAllKinds(ID),fail.
+condDoKinds :- true.
+
+% createAllKinds(BoxID) :-
+%     forall(text(TextID,_),createOneKind(BoxID,TextID)).
 
 createAllKinds(BoxID) :-
-    forall(text(TextID,_),createOneKind(BoxID,TextID)).
+    text(TextID,_),
+    createOneKind(BoxID,TextID),
+    fail.
+createAllKinds(_) :- true.
 
 createOneKind(BoxID,TextID) :-
     text(TextID,Str),
@@ -892,5 +899,19 @@ portFor(RectOrEllipseID,PortID):-
     parent(RectOrEllipseID,PortID),
     port(PortID).
 
+
+
+%
+% manually defined
+%
+
+not_same(X,X) :- !, fail.
+not_same(X,Y).
+
+not_used(X) :- used(X),!,fail.
+not_used(X).
+
+not_namedSink(X) :- namedSink(X),!,fail.
+not_namedSink(X).
 
 ")
