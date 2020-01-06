@@ -183,7 +183,9 @@ condDoKinds :-
   allTexts(TextID),
   textCompletelyInsideBox(TextID,BoxID),
   !,
-  we('condDoKinds success'),we(BoxID),wen(TextID).
+we('box id '),wen(BoxID).
+%wen(TextID),
+%  we('condDoKinds success'),we(BoxID),wen(TextID).
 
 %maybeCreateKind(BoxID,TextID) :-
 %we('maybe create kind 0 '),we(BoxID),wen(TextID),
@@ -923,9 +925,9 @@ wspc :-
 
 nle :- nl(user_error).
 
-we(X) :- write(user_error,X).
+we(WE_ARG) :- write(user_error,WE_ARG).
 
-wen(X):- we(X),nle.
+wen(WEN_arg):- we(WEN_arg),nle.
 
 
 portFor(RectOrEllipseID,PortID):-
