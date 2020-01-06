@@ -14,7 +14,7 @@
       (:idle
        (ecase action
          (:filename
-          (cl-event-passing-user::@set-instance-var self :filname (e/event:data e))
+          (cl-event-passing-user::@set-instance-var self :filename (e/event:data e))
           (open-stream self))
          
          (:start
