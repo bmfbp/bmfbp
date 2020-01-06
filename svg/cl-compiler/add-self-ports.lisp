@@ -29,7 +29,7 @@
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&add-self-ports~%")
              ;(format *standard-output* "~& create-self-port commented out ~%")
-             (create-self-ports self)
+             ;(create-self-ports self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
