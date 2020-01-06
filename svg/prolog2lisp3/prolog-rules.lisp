@@ -180,7 +180,9 @@ allTexts(_).
 condDoKinds :- allBoxes(BoxID),allTexts(TextID),maybeCreateKind(BoxID,TextID).
 
 maybeCreateKind(BoxID,TextID) :-
+we('maybe create kind 0 '),we(BoxID),wen(TextID),
    textCompletelyInsideBox(TextID,BoxID),
+we('create kind success 1 '),we(BoxID),wen(TextID),
    asserta(used(TextID)),
    asserta(kind(BoxID,Str)).
 
