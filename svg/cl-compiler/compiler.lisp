@@ -14,13 +14,13 @@
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error :show)
             #'arrowgrams/compiler/sequencer::react #'arrowgrams/compiler/sequencer::first-time)
 
-           (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done) (:fb :go :error)
+           (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
             ;; parts
             (reader fb writer converter sequencer)
             ;; wiring
             ((((:self :prolog-factbase-filename)) ((reader :file-name)))
              (((:self :prolog-output-filename)) ((writer :filename)))
-             ;(((:self :done)) ((sequencer :finished-pipeline)))
+             (((:self :dump)) ((sequencer :finished-pipeline)))
              (((:self :request-fb)) ((fb :fb-request)))
              (((:self :retract-fact)) ((fb :retract)))
 
@@ -32,7 +32,7 @@
 
              (((sequencer :show)) ((fb :show)))
              (((sequencer :run-pipeline) (:self :done)) ((:self :go)))
-             ;(((sequencer :write))  ((fb :iterate) (writer :start)))
+             (((sequencer :write))  ((fb :iterate) (writer :start)))
 
              (((fb :fb)) ((:self :fb)))
              (((fb :next)) ((writer :next)))
@@ -191,7 +191,7 @@
              ))
            
            
-           (:schem compiler (:prolog-factbase-filename :prolog-output-filename) (:error)
+           (:schem compiler (:prolog-factbase-filename :prolog-output-filename :dump) (:error)
             ;; parts
             (compiler-testbed passes)
             ;; wiring
@@ -199,6 +199,7 @@
             (
              (((:self :prolog-factbase-filename)) ((compiler-testbed :prolog-factbase-filename)))
              (((:self :prolog-output-filename))   ((compiler-testbed :prolog-output-filename)))
+             (((:self :dump))   ((compiler-testbed :dump)))
              
              (((compiler-testbed :go)) ((passes :go)))
              (((compiler-testbed :fb)) ((passes :fb)))
@@ -217,7 +218,15 @@
     (cl-event-passing-user::@with-dispatch
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
       (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/test.prolog")))
+        (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
         ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/very-small.prolog")))
-        (cl-event-passing-user::@inject compiler-net
-                                        (e/part::get-input-pin compiler-net :prolog-factbase-filename)
-                                        filename)))))
+          (cl-event-passing-user::@inject compiler-net
+                                          (e/part::get-input-pin compiler-net :prolog-output-filename)
+                                          output-filename)
+          (cl-event-passing-user::@inject compiler-net
+                                          (e/part::get-input-pin compiler-net :prolog-factbase-filename)
+                                          filename)
+          (cl-event-passing-user::@inject compiler-net
+                                          (e/part::get-input-pin compiler-net :dump)
+                                          T))))))
+                                                                 

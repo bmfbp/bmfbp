@@ -91,4 +91,34 @@
 (defmethod add-lisp-fact ((self e/part:part) fact)
   (when *show-additions*
     (format *standard-output* "~&add-fact ~S~%" fact))
-  (cl-event-passing-user::@set-instance-var self :factbase (cons (cons fact nil) (cl-event-passing-user::@get-instance-var self :factbase))))
+  (let ((fb (cl-event-passing-user::@get-instance-var self :factbase)))
+    (let ((existing-fact-lis (find-fact fact fb)))
+      (when existing-fact-lis
+        (let ((existing-fact (first existing-fact-lis)))
+          (if (equal existing-fact fact)
+              (fb-warning self "fact already exists ~A" fact)
+            (fb-error self "fact ~S attempts to override existing fact ~S" fact existing-fact))))
+      (cl-event-passing-user::@set-instance-var self :factbase (cons
+                                                                (cons fact nil) ;; rules are lists of lists, facts are a list of a list
+                                                                fb)))))
+
+(defmethod fb-warning ((self e/part:part) format-string &rest format-args)
+  (cl-event-passing-user::@send self :error (apply #'cl:format
+                                                   nil
+                                                   (concatenate 'string "WARNING FB: " format-string)
+                                                   format-args)))
+                                
+(defmethod fb-error ((self e/part:part) format-string &rest format-args)
+  (cl-event-passing-user::@send self :error (apply #'cl:format
+                                                   nil
+                                                   (concatenate 'string "ERROR FB: " format-string)
+                                                   format-args)))
+
+
+(defun find-fact (fact factbase)
+  (find-if #'(lambda (f-list)
+               (when (= 1 (length f-list))) ;; skip over rules, examine only facts
+               (let ((f (first f-list)))
+                 (and (equal (first fact) (first f))
+                      (equal (second fact) (second f)))))
+            factbase))
