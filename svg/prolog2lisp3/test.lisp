@@ -70,8 +70,15 @@ x :-
     prolog_not_proven(used(TextID)).
 ")
 
+(defparameter *str10*
+"
+x :-    
+     Left is (CX - HalfWidth).
+")
+
 (defun test ()
-  (let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
+  ;(let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
+  (let ((tree (esrap:parse 'rule-TOP *str10*)))
     (let ((converted1 (convert tree)))
       (let ((converted2 (if *foralls* (cons *foralls* converted1) converted1)))
         (pprint tree))))
