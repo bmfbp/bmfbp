@@ -58,7 +58,7 @@
 
 (defrule tNotSquote (and (! #\') character))
 
-(defrule tDontCare "_" (:text t))
+(defrule tDontCare "_" (:lambda (x) (declare (ignore x)) (gensym "DONTCARE_")))
 
 (defrule tCapitalLetter (character-ranges (#\A #\Z)))
 (defrule tLowerCaseLetter (character-ranges (#\a #\z)))
