@@ -70,3 +70,9 @@ x :-
     prolog_not_proven(used(TextID)).
 ")
 
+(defun test ()
+  (let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
+    (let ((converted1 (convert tree)))
+      (let ((converted2 (if *foralls* (cons *foralls* converted1) converted1)))
+        (pprint tree))))
+    'done)
