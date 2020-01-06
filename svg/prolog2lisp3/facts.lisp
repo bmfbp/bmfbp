@@ -1,9 +1,9 @@
 (in-package :arrowgrams/parser)
 
-(defconstant +builtins+ '(:LISPV/2 :LISP/1 :LISP-METHOD/1 :LISP-TRUE-FAIL/1
+(defparameter *builtins* '(:LISPV/2 :LISP/1 :LISP-METHOD/1 :LISP-TRUE-FAIL/1
                           :INC/2 :DEC/2 :NOT-SAME/2 :NOT-USED/1 :NOT-NAMEDSINK/1))
 
-(defconstant +prolog-facts+ '(
+(defparameter *prolog-facts* '(
                     :ARROW/1
                     :ARROW_X/2
                     :ARROW_Y/2
@@ -97,4 +97,4 @@
                     :LOG/9
                     ))
 
-(defconstant +facts+ (append +builtins+ +prolog-facts+))
+(defparameter *facts* (append *builtins* *prolog-facts*))

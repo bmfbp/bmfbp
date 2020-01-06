@@ -89,7 +89,7 @@ x :-
   (setq *rules-defined* (sort-by-name *rules-defined*))
   (setq *rules-called* (sort-by-name (append *rules-needed* *rules-called*)))
   (setq *rules-needed* (sort-by-name *rules-needed*))
-  (let ((manually-added-facts (sort-by-name +facts+)))
+  (let ((manually-added-facts (sort-by-name *facts*)))
     (let ((diff1 (set-difference *rules-called* manually-added-facts)))
       (let ((diff2 (set-difference diff1 *rules-defined*)))
         (format *standard-output* "~%~%~A rules defined, ~A rules called~%"
@@ -259,11 +259,11 @@ x :-
          ((eq (car x) :!)
             :!)
          ((eq (car x) :true)
-          `(:lisp (true)))
+          `(:lisp (arrowgrams/compiler::true)))
          ((eq (car x) :halt)
-          `(:lisp (true)))
+          `(:lisp (arrowgrams/compiler::true)))
          ((eq (car x) :writefb)
-          `(:lisp (true)))
+          `(:lisp (arrowgrams/compiler::true)))
 
          (t x)))
         
@@ -271,9 +271,9 @@ x :-
         (cond
          ((eq (car x) :nl)
           (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-            `(:lisp (out-nl))))
+            `(:lisp (arrowgrams/compiler::out-nl))))
          ((eq (car x) :readfb)
-          `(:lisp (true)))
+          `(:lisp (arrowgrams/compiler::true)))
          ((eq (car x) :asserta)
           `(:lisp-method (arrowgrams/compiler/util::asserta ,(second x))))
          ((eq (car x) :retract)
@@ -295,7 +295,7 @@ x :-
        ((= 3 (length x)) ;/2
         (cond
          ((eq (car x) :write)
-          `(:lisp (out ,(third x))))
+          `(:lisp (arrowgrams/compiler::out ,(third x))))
 
 ;;;          ((eq (car x) :forall)
 ;;;           (let ((new-rule-name (gensysm "FORALL-")))
@@ -310,16 +310,16 @@ x :-
 
          ((and (eq (first x) :inc)
                (eq (second x) :counter))
-          `(:lisp (inc-counter)))
+          `(:lisp (arrowgrams/compiler::inc-counter)))
          ((and (eq (first x) :dec)
                (eq (second x) :counter))
-          `(:lisp (dec-counter)))
+          `(:lisp (arrowgrams/compiler::dec-counter)))
          ((and (eq (first x) :g_read)
                (eq (second x) :counter))
           `(:lispv ,(third x) (read-counter)))
          ((and (eq (first x) :g_assign)
                (eq (second x) :counter))
-          `(:lisp (set-counter ,(third x))))
+          `(:lisp (arrowgrams/compiler::set-counter ,(third x))))
 
          ((eq (first x) :prolog_not_equal_equal)
           `(:not_same ,(second x) ,(third x)))
