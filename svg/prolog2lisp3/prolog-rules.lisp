@@ -171,20 +171,26 @@ wen('a'),
 %% new
 %
 %%%%%%%
-allBoxes(BoxID) :- eltype(BoxID,box),fail.
+
+allBoxes(BoxID) :- eltype(BoxID,box),we('box '),wen(BoxID),fail.
 allBoxes(_).
 
-allTexts(TextID) :- text(TextID,_),not_used(TextID),fail.
+allTexts(TextID) :- text(TextID,_),not_used(TextID),we('text '),wen(TextID),fail.
 allTexts(_).
 
-condDoKinds :- allBoxes(BoxID),allTexts(TextID),maybeCreateKind(BoxID,TextID).
+condDoKinds :- 
+  allBoxes(BoxID),
+  allTexts(TextID),
+  textCompletelyInsideBox(TextID,BoxID),
+  !,
+  we('condDoKinds success'),we(BoxID),wen(TextID).
 
-maybeCreateKind(BoxID,TextID) :-
-we('maybe create kind 0 '),we(BoxID),wen(TextID),
-   textCompletelyInsideBox(TextID,BoxID),
-we('create kind success 1 '),we(BoxID),wen(TextID),
-   asserta(used(TextID)),
-   asserta(kind(BoxID,Str)).
+%maybeCreateKind(BoxID,TextID) :-
+%we('maybe create kind 0 '),we(BoxID),wen(TextID),
+%   textCompletelyInsideBox(TextID,BoxID),
+%we('create kind success 1 '),we(BoxID),wen(TextID),
+%   asserta(used(TextID)),
+%   asserta(kind(BoxID,Str)).
 
 %%%%%%%
 %
