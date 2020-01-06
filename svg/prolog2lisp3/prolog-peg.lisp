@@ -92,7 +92,8 @@
 (defrule rule-Primary (or tInt rule-Primary2 tVar)
   (:lambda (x) `(primary ,x)))
 (defrule rule-Primary2 (and tLpar rule-Additive tRpar)
-  (:function second))
+  (:function second)
+  (:lambda (x) (assert nil (x) "parenthesized primary (~a) not implemented yet" x)))
 
 (defrule rule-TOP1-Expr (and (* tWS) rule-Expr)
   (:destructure (spc e) (declare (ignore spc)) e)
