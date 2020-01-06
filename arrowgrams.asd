@@ -188,10 +188,11 @@
   :components ((:module contents
 			:pathname "./svg/prolog2lisp3"
 			:components ((:file "package")
+                                     (:file "../cl-compiler/package")
                                      (:file "low-level" :depends-on ("package"))
                                      (:file "mid-level" :depends-on ("package" "low-level"))
                                      (:file "ignore" :depends-on ("package"))
-                                     (:file "prolog-rules" :depends-on ("package"))
+                                     (:file "prolog-rules" :depends-on ("package" "../cl-compiler/package"))
                                      (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules"))
                                      (:file "facts" :depends-on ("package"))
                                      (:file "gprolog-to-hprolog" :depends-on ("prolog-peg" "facts"))))))
