@@ -195,4 +195,5 @@
                                      (:file "prolog-rules" :depends-on ("package" "../cl-compiler/package"))
                                      (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules"))
                                      (:file "facts" :depends-on ("package"))
-                                     (:file "gprolog-to-hprolog" :depends-on ("prolog-peg" "facts"))))))
+                                     (:file "gprolog-to-hprolog" :depends-on ("prolog-peg" "facts"))
+                                     (:file "test" :depends-on ("gprolog-to-hprolog" "prolog-peg" "facts"))))))
