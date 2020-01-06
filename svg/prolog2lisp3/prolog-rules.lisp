@@ -162,8 +162,33 @@ wen('a'),
 %     forall(eltype(ID,box),createAllKinds(ID)),
 %     !. pt removed ! after forall
 
-condDoKinds :- eltype(ID,box),createAllKinds(ID),fail.
-condDoKinds :- true.
+% old
+% condDoKinds :- eltype(ID,box),createAllKinds(ID),fail.
+% condDoKinds :- true.
+
+%%%%%%%
+%
+%% new
+%
+%%%%%%%
+allBoxes(BoxID) :- eltype(BoxID,box),fail.
+allBoxes(_).
+
+allTexts(TextID) :- text(TextID,_),not_used(TextID),fail.
+allTexts(_).
+
+condDoKinds :- allBoxes(BoxID),allTexts(TextID),maybeCreateKind(BoxID,TextID).
+
+maybeCreateKind(BoxID,TextID) :-
+   textCompletelyInsideBox(TextID,BoxID),
+   asserta(used(TextID)),
+   asserta(kind(BoxID,Str)).
+
+%%%%%%%
+%
+%% end new
+%
+%%%%%%%
 
 % createAllKinds(BoxID) :-
 %     forall(text(TextID,_),createOneKind(BoxID,TextID)).
