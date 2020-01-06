@@ -47,7 +47,7 @@ createTextBoundingBox(ID) :-
     geometry_top_y(ID, Y),
     geometry_w(ID, HalfWidth),
     geometry_h(ID, Height),
-    X is (CX - HalfWidth),
+    X is CX - HalfWidth,
     asserta(bounding_box_left(ID,X)),
     asserta(bounding_box_top(ID,Y)),
     Right is CX + HalfWidth,
@@ -832,8 +832,8 @@ centerCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID1,R1),
     bounding_box_bottom(ID1,B1),
     
-    Cx is L1 + (R1 - L1),
-    Cy is T1 + (B1 - T1),
+    Cx is L1 + R1 - L1,
+    Cy is T1 + B1 - T1,
 
     bounding_box_left(ID2,L2),
     bounding_box_top(ID2,T2),
