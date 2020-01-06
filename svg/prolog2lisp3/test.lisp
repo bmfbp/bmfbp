@@ -72,8 +72,10 @@ x :-
 
 (defparameter *str10*
 "
-x :-    
+a :-    
      Left is (CX - HalfWidth).
+b :-    
+     Left is CX - HalfWidth.
 ")
 
 (defun test ()
@@ -81,5 +83,5 @@ x :-
   (let ((tree (esrap:parse 'rule-TOP *str10*)))
     (let ((converted1 (convert tree)))
       (let ((converted2 (if *foralls* (cons *foralls* converted1) converted1)))
-        (pprint tree))))
-    'done)
+        (pprint converted2)))
+    'done))
