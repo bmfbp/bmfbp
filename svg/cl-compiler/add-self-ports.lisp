@@ -28,8 +28,7 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&add-self-ports~%")
-             ;(format *standard-output* "~& create-self-port commented out ~%")
-             ;(create-self-ports self)
+             (create-self-ports self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -46,6 +45,7 @@
 
   ;;; (rules converted in ../prolog2lisp/converted.lisp)
 
-  (let ((fb (cons arrowgrams/compiler::+rules+ (cl-event-passing-user::@get-instance-var self :fb))))
+  (let ((fb (cons arrowgrams/compiler::*rules*
+                  (cl-event-passing-user::@get-instance-var self :fb))))
     (let ((goal '(:ADD_SELFPORTS_MAIN)))
       (arrowgrams/compiler/util::run-prolog self goal fb))))
