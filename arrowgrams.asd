@@ -117,6 +117,18 @@
                                                    ))))))
 
 
+(defsystem :arrowgrams/compiler/test
+  :depends-on (:arrowgrams :arrowgrams/clparts :cl-holm-prolog :cl-ppcre)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "cl-compiler-rule-tests"
+                        :pathname "./svg/cl-compiler/"
+                        :components ((:file "package")
+                                     (:file "rules.lisp" :depends-on ("package"))
+                                     (:file "test.lisp" :depends-on ("rules.lisp"))))))
+
+
 ;;; (defsystem arrowgrams/prolog-peg
 ;;;   :depends-on (:arrowgrams :esrap :cl-peg :cl-ppcre :cl-holm-prolog)
 ;;;   :around-compile (lambda (next)
@@ -193,7 +205,8 @@
                                      (:file "mid-level" :depends-on ("package" "low-level"))
                                      (:file "ignore" :depends-on ("package"))
                                      (:file "prolog-rules" :depends-on ("package" "../cl-compiler/package"))
-                                     (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules"))
+                                     (:file "test-rule1" :depends-on ("package" "../cl-compiler/package"))
+                                     (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules" "test-rule1"))
                                      (:file "facts" :depends-on ("package"))
                                      (:file "gprolog-to-hprolog" :depends-on ("prolog-peg" "facts"))
                                      (:file "test" :depends-on ("gprolog-to-hprolog" "prolog-peg" "facts"))))))

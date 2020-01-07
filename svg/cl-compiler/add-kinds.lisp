@@ -82,11 +82,19 @@
           (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))
       
 
-(defmethod add-kinds ((self e/part:part))
+#+nil (defmethod add-kinds ((self e/part:part))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
        ;(goal '((:trace-on 1) (:add_kinds_main))))
         (goal '((:add_kinds_main))))
+    (arrowgrams/compiler/util::run-prolog self goal fb)))
+
+(defmethod add-kinds ((self e/part:part))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:printall))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))
