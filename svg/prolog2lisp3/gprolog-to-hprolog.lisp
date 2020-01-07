@@ -263,7 +263,8 @@
     x))
 
 (defun create ()
-  (let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
+  ;(let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
+  (let ((tree (esrap:parse 'rule-TOP *test1*)))
     (let ((converted1 (convert tree)))
       (let ((converted2 (if *foralls* (cons *foralls* converted1) converted1)))
         (write-to-rules converted2 (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/rules.lisp")))))
@@ -272,7 +273,7 @@
 (defun write-to-rules (lis fname)
   (with-open-file (outf fname :direction :output :if-exists :supersede)
     (format outf "(in-package :arrowgrams/compiler)~%~%")
-    (format outf "(defparameter +rules+~%'")
+    (format outf "(defparameter *rules*~%'")
     (pprint lis outf)
     (format outf ")~%~%")))
 
