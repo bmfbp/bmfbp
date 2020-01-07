@@ -217,14 +217,16 @@ add_selfPorts_main :-
     writeFB,
     halt.
 
-condEllipses :-
-    forall(ellipse(EllipseID),createSelfPorts(EllipseID)).
+%%%%%%%
+%
+%% new
+%
+%%%%%%%
 
-createSelfPorts(EllipseID) :-
-    % find one port that touches the ellispe (if there are more, then the 'coincidentPorts'
-    % pass will find them), asserta all facts needed by ports downstream - portIndex, sink,
-    % source, parent
+condEllipses :-
+    ellipse(EllipseID),
     port(PortID),
+we('ellipse/port '),we(EllipseID),wen(PortID),
     bounding_box_left(EllipseID,ELeftX),
     bounding_box_top(EllipseID,ETopY),
     bounding_box_right(EllipseID,ERightX),
@@ -241,6 +243,37 @@ createSelfPorts(EllipseID) :-
     asserta(used(NameID)),
     asserta(portNameByID(PortID,NameID)),
     asserta(portName(PortID,Name)).
+
+%%%%%%%
+%
+%% end new
+%
+%%%%%%%
+
+% condEllipses :-
+%    forall(ellipse(EllipseID),createSelfPorts(EllipseID)).
+
+% createSelfPorts(EllipseID) :-
+%     % find one port that touches the ellispe (if there are more, then the 'coincidentPorts'
+%     % pass will find them), asserta all facts needed by ports downstream - portIndex, sink,
+%     % source, parent
+%     port(PortID),
+%     bounding_box_left(EllipseID,ELeftX),
+%     bounding_box_top(EllipseID,ETopY),
+%     bounding_box_right(EllipseID,ERightX),
+%     bounding_box_bottom(EllipseID,EBottomY),
+%     bounding_box_left(PortID,PortLeftX),
+%     bounding_box_top(PortID,PortTopY),
+%     bounding_box_right(PortID,PortRightX),
+%     bounding_box_bottom(PortID,PortBottomY),
+%     portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,ERightX,EBottomY),
+%     text(NameID,Name),
+%     textCompletelyInside(NameID,EllipseID),
+%     !,
+%     asserta(parent(EllipseID,PortID)),
+%     asserta(used(NameID)),
+%     asserta(portNameByID(PortID,NameID)),
+%     asserta(portName(PortID,Name)).
 
 portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,_,EBottomY):-
     % port touches left side of ellipse bounding rect
