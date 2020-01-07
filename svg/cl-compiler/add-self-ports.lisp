@@ -43,9 +43,9 @@
   ;;;     % pass will find them), asserta all facts needed by ports downstream - portIndex, sink,
   ;;;     % source, parent
 
-  ;;; (rules converted in ../prolog2lisp/converted.lisp)
-
-  (let ((fb (cons arrowgrams/compiler::*rules*
-                  (cl-event-passing-user::@get-instance-var self :fb))))
-    (let ((goal '(:ADD_SELFPORTS_MAIN)))
-      (arrowgrams/compiler/util::run-prolog self goal fb))))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:add_selfports_main))))
+    (arrowgrams/compiler/util::run-prolog self goal fb)))
