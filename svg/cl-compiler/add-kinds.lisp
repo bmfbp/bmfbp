@@ -85,7 +85,7 @@
 (defmethod add-kinds ((self e/part:part))
   (let ((fb
          (append
-          arrowgrams/compiler::+rules+
+          arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
        ;(goal '((:trace-on 1) (:add_kinds_main))))
         (goal '((:add_kinds_main))))
