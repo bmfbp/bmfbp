@@ -26,8 +26,8 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&COMMENTED OUT assign-parents-to-ellipses~%")
-             ;(assign-parents self)
+             (format *standard-output* "~&assign-parents-to-ellipses~%")
+             (assign-parents self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
