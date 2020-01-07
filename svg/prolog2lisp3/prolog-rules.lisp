@@ -152,7 +152,6 @@ metadataCompletelyInsideBoundingBox(TextID,BoxID) :-
 
 add_kinds_main :-
     readFB(user_input), 
-wen('a'),
     condDoKinds,
     writeFB,
     halt.
@@ -172,27 +171,14 @@ wen('a'),
 %
 %%%%%%%
 
-allBoxes(BoxID) :- eltype(BoxID,box),we('box '),wen(BoxID),fail.
-allBoxes(_).
-
-allTexts(TextID) :- text(TextID,_),not_used(TextID),we('text '),wen(TextID),fail.
-allTexts(_).
-
-condDoKinds :- 
-  allBoxes(BoxID),
-  allTexts(TextID),
+condDoKinds :-
+  eltype(BoxID,box),
+  text(TextID,Str),
+  not_used(TextID),
   textCompletelyInsideBox(TextID,BoxID),
   !,
-we('box id '),wen(BoxID).
-%wen(TextID),
-%  we('condDoKinds success'),we(BoxID),wen(TextID).
-
-%maybeCreateKind(BoxID,TextID) :-
-%we('maybe create kind 0 '),we(BoxID),wen(TextID),
-%   textCompletelyInsideBox(TextID,BoxID),
-%we('create kind success 1 '),we(BoxID),wen(TextID),
-%   asserta(used(TextID)),
-%   asserta(kind(BoxID,Str)).
+  asserta(used(TextID)),
+  asserta(kind(BoxID,Str)).
 
 %%%%%%%
 %

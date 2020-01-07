@@ -9,7 +9,6 @@
 
 (defun convert (parsed)
   (setq *parsed* parsed)
-  ;(setq *parsed* (esrap:parse 'rule-TOP *str9*))
   (setq *converted* nil)
   (setq *rules-needed* nil)
   (setq *rules-defined* nil)
@@ -263,8 +262,8 @@
     x))
 
 (defun create ()
-  ;(let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
-  (let ((tree (esrap:parse 'rule-TOP *test1*)))
+  (let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
+  ;(let ((tree (esrap:parse 'rule-TOP *test1*)))
     (let ((converted1 (convert tree)))
       (let ((converted2 (if *foralls* (cons *foralls* converted1) converted1)))
         (write-to-rules converted2 (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/rules.lisp")))))
