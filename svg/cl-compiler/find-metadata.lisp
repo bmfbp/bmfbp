@@ -27,8 +27,8 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&find-metadata~%")
-             (find-metadata self)
+             (format *standard-output* "~&COMMENTED OUT find-metadata~%")
+             ;(find-metadata self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
