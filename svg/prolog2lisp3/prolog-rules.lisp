@@ -125,8 +125,26 @@ find_metadata_main :-
     writeFB,
     halt.
 
+%%%%%%%
+%
+%% new
+%
+%%%%%%%
+
 condMeta :-
-    forall(metadata(MID,_),createMetaDataRect(MID)).
+    metadata(MID,TextID),
+    rect(BoxID),
+    metadataCompletelyInsideBoundingBox(TextID,BoxID),
+!,
+    asserta(used(TextID)),
+    asserta(roundedrect(BoxID)),
+    component(Main),
+    asserta(parent(Main,BoxID)),
+    asserta(log(BoxID,box_is_meta_data)),
+    retract(rect(BoxID)).
+
+% condMeta :-
+%   forall(metadata(MID,_),createMetaDataRect(MID)).
 
 createMetaDataRect(MID) :-
     metadata(MID,TextID),
@@ -886,8 +904,13 @@ centerCompletelyInsideBoundingBox(ID1,ID2) :-
     bounding_box_right(ID1,R1),
     bounding_box_bottom(ID1,B1),
     
-    Cx is L1 + R1 - L1,
-    Cy is T1 + B1 - T1,
+%    Cx is L1 + R1 - L1,
+%    Cy is T1 + B1 - T1,
+    Temp1 is R1 - L1,
+    Cx is L1 + Temp1,
+
+    Temp2 is B1 - T1,
+    Cy is T1 + Temp2,
 
     bounding_box_left(ID2,L2),
     bounding_box_top(ID2,T2),
