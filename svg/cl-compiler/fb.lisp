@@ -89,19 +89,22 @@
         (add-lisp-fact self fact)))))
 
 (defmethod add-lisp-fact ((self e/part:part) fact)
-  (when *show-additions*
-    (format *standard-output* "~&add-fact ~S~%" fact))
-  (let ((fb (cl-event-passing-user::@get-instance-var self :factbase)))
-    (let ((existing-fact-lis (find-fact fact fb)))
-      (when existing-fact-lis
-        (let ((existing-fact (first existing-fact-lis)))
-          (if (equal existing-fact fact)
-              (fb-warning self "fact already exists ~A" fact)
-            (progn
-              (fb-error self "fact ~S attempts to override existing fact ~S" fact existing-fact)
-              (cl-event-passing-user::@set-instance-var self :factbase (cons
-                                                                        (cons fact nil) ;; rules are lists of lists, facts are a list of a list
-                                                                        fb)))))))))
+  (flet ((writefb (fb)
+           (cl-event-passing-user::@set-instance-var self :factbase (cons
+                                                                     (cons fact nil) ;; rules are lists of lists, facts are a list of a list
+                                                                     fb))))
+    (when *show-additions*
+      (format *standard-output* "~&add-fact ~S~%" fact))
+    (let ((fb (cl-event-passing-user::@get-instance-var self :factbase)))
+      (let ((existing-fact-lis (find-fact fact fb)))
+        (if existing-fact-lis
+            (let ((existing-fact (first existing-fact-lis)))
+              (if (equal existing-fact fact)
+                  (fb-warning self "fact already exists ~A" fact)
+                (progn
+                  (fb-error self "fact ~S attempts to override existing fact ~S" fact existing-fact)
+                  (writefb fb))))
+          (writefb fb))))))
 
 (defmethod fb-warning ((self e/part:part) format-string &rest format-args)
   (cl-event-passing-user::@send self :error (apply #'cl:format
