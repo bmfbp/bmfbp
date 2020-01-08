@@ -27,8 +27,8 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&COMMENTED OUT add-kinds~%")
-             ;(add-kinds self)
+             (format *standard-output* "~&add-kinds~%")
+             (add-kinds self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -47,7 +47,7 @@
 ;;
 ;; used always refers to a text-id, e.g. text(text-id,str-id)
 
-(defmethod old-add-kinds ((self e/part:part))
+#+nil (defmethod old-add-kinds ((self e/part:part))
   (let ((add-kinds-rule '(
                           (:add-kinds (:? box-id))
                           (:rect (:? box-id))
