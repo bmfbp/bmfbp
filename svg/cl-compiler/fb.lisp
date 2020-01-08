@@ -97,10 +97,11 @@
         (let ((existing-fact (first existing-fact-lis)))
           (if (equal existing-fact fact)
               (fb-warning self "fact already exists ~A" fact)
-            (fb-error self "fact ~S attempts to override existing fact ~S" fact existing-fact))))
-      (cl-event-passing-user::@set-instance-var self :factbase (cons
-                                                                (cons fact nil) ;; rules are lists of lists, facts are a list of a list
-                                                                fb)))))
+            (progn
+              (fb-error self "fact ~S attempts to override existing fact ~S" fact existing-fact)
+              (cl-event-passing-user::@set-instance-var self :factbase (cons
+                                                                        (cons fact nil) ;; rules are lists of lists, facts are a list of a list
+                                                                        fb)))))))))
 
 (defmethod fb-warning ((self e/part:part) format-string &rest format-args)
   (cl-event-passing-user::@send self :error (apply #'cl:format
