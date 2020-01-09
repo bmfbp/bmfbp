@@ -141,7 +141,8 @@ condMeta :-
     component(Main),
     asserta(parent(Main,BoxID)),
     asserta(log(BoxID,box_is_meta_data)),
-    retract(rect(BoxID)).
+    retract(rect(BoxID)),
+fail.
 
 % condMeta :-
 %   forall(metadata(MID,_),createMetaDataRect(MID)).
@@ -260,7 +261,8 @@ we('ellipse/port '),we(EllipseID),wen(PortID),
     asserta(parent(EllipseID,PortID)),
     asserta(used(NameID)),
     asserta(portNameByID(PortID,NameID)),
-    asserta(portName(PortID,Name)).
+    asserta(portName(PortID,Name)),
+fail.
 
 %%%%%%%
 %
