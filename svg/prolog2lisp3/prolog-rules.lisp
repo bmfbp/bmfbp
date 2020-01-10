@@ -391,13 +391,14 @@ create_centers_main :-
   wen('create centers 1'),
   createEllipseCenters,
   wen('create centers 2'),
+  wen('create centers 3'),
   fail.
 
 createTextCenters :- unassigned(TextID),createCenter(TextID).
 
 createEllipseCenters :- ellipse(EID),createCenter(EID).
 
-% createPortCenters :- eltype(PortID,port),we('create port center '),wen(PortID),createCenter(PortID),fail.
+createPortCenters :- eltype(PortID,port),createCenter(PortID).
 
 %%%%%%%%%%%
 %
