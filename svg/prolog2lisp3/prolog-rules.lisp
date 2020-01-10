@@ -385,7 +385,13 @@ createPortNameIfNotAKindName(TextID) :-
 %
 %%%%%%%%%%%
 
-create_centers_main :- wen('create centers 0'),createTextCenters,wen('create centers 1'),createEllipseCenters,wen('create centers 2'),fail.
+create_centers_main :-
+  wen('create centers 0'),
+  createTextCenters,
+  wen('create centers 1'),
+  createEllipseCenters,
+  wen('create centers 2'),
+  fail.
 
 createTextCenters :- unassigned(TextID),createCenter(TextID).
 
