@@ -10,7 +10,7 @@
 (defun dec-counter ()
   (decf *counter*))
 
-(defun assign-counter (n)
+(defun set-counter (n)
   (setf *counter* n))
 
 (defun read-counter ()
