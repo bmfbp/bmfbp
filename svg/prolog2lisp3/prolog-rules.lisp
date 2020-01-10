@@ -245,7 +245,6 @@ add_selfPorts_main :-
 condEllipses :-
     ellipse(EllipseID),
     port(PortID),
-we('ellipse/port '),we(EllipseID),wen(PortID),
     bounding_box_left(EllipseID,ELeftX),
     bounding_box_top(EllipseID,ETopY),
     bounding_box_right(EllipseID,ERightX),
@@ -256,9 +255,6 @@ we('ellipse/port '),we(EllipseID),wen(PortID),
     bounding_box_bottom(PortID,PortBottomY),
     portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,ERightX,EBottomY),
     !,
-we('cond ellipse success at pte (port/ellipse) '),we(PortID),we(EllipseID),
-we(PortLeftX),we(PortTopY),we(portRightX),we(PortBottomY),
-we(ELeftX),we(ETopY),we(ERightX),wen(EBottomY),
     text(NameID,Name),
     textCompletelyInside(NameID,EllipseID),
     asserta(parent(EllipseID,PortID)),
@@ -386,12 +382,9 @@ createPortNameIfNotAKindName(TextID) :-
 %%%%%%%%%%%
 
 create_centers_main :-
-  wen('create centers 0'),
   createTextCenters,
-  wen('create centers 1'),
   createEllipseCenters,
-  wen('create centers 2'),
-  wen('create centers 3'),
+  createPortCenters,
   fail.
 
 createTextCenters :- unassigned(TextID),createCenter(TextID).
@@ -411,7 +404,6 @@ conditionalEllipseCenters :-
     forall(ellipse(ID),createCenter(ID)).
 
 createCenter(ID) :-
-we('create center '),wen(ID),
     bounding_box_left(ID,Left),
     bounding_box_top(ID,Top),
     bounding_box_right(ID,Right),
