@@ -121,11 +121,16 @@
 
 (defun walk-is (x)
   (assert (and (listp x) (eq 'is (car x))))
-  (let ((LHS (walk-var (second x)))
-        (RHS (list (first (third x))
-                   (walk-predicate-or-expr (second (third x)))
-                   (walk-predicate-or-expr (third (third x))))))
-    `(:lispv ,LHS ,RHS)))
+  (let ((LHS (walk-var (second x))))
+    (if (and (listp x)
+             (= 3 (length x))
+             (member (first (third x)) '(+ - * /)))
+        (progn
+          (let ((RHS (list (first (third x))
+                           (walk-predicate-or-expr (second (third x)))
+                           (walk-predicate-or-expr (third (third x))))))
+            `(:lispv ,LHS ,RHS)))
+      (assert nil))))
 
 (defun walk-predicate-or-expr (x)
   (assert (listp x))
@@ -180,6 +185,7 @@
     (reverse result)))
 
 (defun rewrite1 (x)
+(format *standard-output* "~&x is /~S/~%" x)        
   (if (listp x)
       (cond
        ((= 1 (length x)) ;/0
@@ -208,6 +214,10 @@
           `(:lisp-method (arrowgrams/compiler/util::asserta ,(second x))))
          ((eq (car x) :retract)
           `(:lisp-method (arrowgrams/compiler/util::retract ,(second x))))
+
+         ((eq (first x) :sqrt)
+          (break)
+          `(:lispv (cl:sqrt ,(second x))))
 
          ((eq (car x) :prolog_not_proven)
           (let ((clause (second x)))
