@@ -245,7 +245,6 @@ add_selfPorts_main :-
 condEllipses :-
     ellipse(EllipseID),
     port(PortID),
-we('ellipse/port '),we(EllipseID),wen(PortID),
     bounding_box_left(EllipseID,ELeftX),
     bounding_box_top(EllipseID,ETopY),
     bounding_box_right(EllipseID,ERightX),
@@ -255,12 +254,9 @@ we('ellipse/port '),we(EllipseID),wen(PortID),
     bounding_box_right(PortID,PortRightX),
     bounding_box_bottom(PortID,PortBottomY),
     portTouchesEllipse(PortLeftX,PortTopY,PortRightX,PortBottomY,ELeftX,ETopY,ERightX,EBottomY),
-we('cond ellipse success at pte '),we(PortID),we(EllipseID),
-we(PortLeftX),we(PortTopY),we(portRightX),we(PortBottomY),
-we(ELeftX),we(ETopY),we(ERightX),wen(EBottomY),
+    !,
     text(NameID,Name),
     textCompletelyInside(NameID,EllipseID),
-    !,
     asserta(parent(EllipseID,PortID)),
     asserta(used(NameID)),
     asserta(portNameByID(PortID,NameID)),
@@ -337,11 +333,25 @@ textCompletelyInside(TextID,OBJID) :-
 :- initialization(main).
 :- include('head').
 
-make_unknown_port_names_main :-
-    readFB(user_input), 
-    forall(unused_text(TextID),createPortNameIfNotAKindName(TextID)),
-    writeFB,
-    halt.
+% make_unknown_port_names_main :-
+%     readFB(user_input), 
+%     forall(unused_text(TextID),createPortNameIfNotAKindName(TextID)),
+%     writeFB,
+%     halt.
+
+%%%%%%%%%%%
+%
+% new
+%
+%%%%%%%%%%%
+
+make_unknown_port_names_main :- text(TextID,_),not_used(TextID),asserta(unassigned(TextID)),fail.
+
+%%%%%%%%%%%
+%
+% end new
+%
+%%%%%%%%%%%
 
 unused_text(TextID) :-
     text(TextID,_),
@@ -356,13 +366,38 @@ createPortNameIfNotAKindName(TextID) :-
 :- initialization(main).
 :- include('head').
 
+% create_centers_main :-
+%    readFB(user_input), 
+%    forall(unassigned(TextID),createCenter(TextID)),
+%    conditionalEllipseCenters,
+%    forall(eltype(PortID,'port'),createCenter(PortID)),
+%    writeFB,
+%    halt.
+
+
+%%%%%%%%%%%
+%
+% new
+%
+%%%%%%%%%%%
+
 create_centers_main :-
-    readFB(user_input), 
-    forall(unassigned(TextID),createCenter(TextID)),
-    conditionalEllipseCenters,
-    forall(eltype(PortID,'port'),createCenter(PortID)),
-    writeFB,
-    halt.
+  createTextCenters,
+  createEllipseCenters,
+  createPortCenters,
+  fail.
+
+createTextCenters :- unassigned(TextID),createCenter(TextID).
+
+createEllipseCenters :- ellipse(EID),createCenter(EID).
+
+createPortCenters :- eltype(PortID,port),createCenter(PortID).
+
+%%%%%%%%%%%
+%
+% end new
+%
+%%%%%%%%%%%
 
 conditionalEllipseCenters :-
     ellipse(_),
@@ -374,12 +409,12 @@ createCenter(ID) :-
     bounding_box_right(ID,Right),
     bounding_box_bottom(ID,Bottom),
     W is Right - Left,
-    W is W / 2,
-    X is Left + W,
+    Temp is W / 2,
+    X is Left + Temp,
     asserta(center_x(ID,X)),
     H is Bottom - Top,
-    H is H / 2,
-    Y is Top + H,
+    Temph is H / 2,
+    Y is Top + Temph,
     asserta(center_y(ID,Y)).
 
 
@@ -387,12 +422,45 @@ createCenter(ID) :-
 :- initialization(main).
 :- include('head').
 
+% calculate_distances_main :-
+%     readFB(user_input), 
+%     g_assign(counter,0),
+%     forall(eltype(PortID,'port'),makeAllCenterPairs(PortID)),
+%     writeFB,
+%     halt.
+
+%%%%%%%
+%
+% new
+%
+%%%%%%%
+
 calculate_distances_main :-
-    readFB(user_input), 
     g_assign(counter,0),
-    forall(eltype(PortID,'port'),makeAllCenterPairs(PortID)),
-    writeFB,
-    halt.
+    eltype(PortID,port),
+    g_read(counter,NewID),
+    asserta(join_centerPair(PortID,NewID)),
+    inc(counter,_),
+    center_x(PortID,Px),
+    center_y(PortID,Py),
+    center_x(TextID,Tx),
+    center_y(TextID,Ty),
+    DX is Tx - Px,
+    DY is Ty - Py,
+    DXsq is DX * DX,
+    DYsq is DY * DY,
+    Sum is DXsq + DYsq,
+    DISTANCE is sqrt(Sum),
+    asserta(join_distance(JoinPairID,TextID)),
+    asserta(distance_xy(JoinPairID,DISTANCE)),
+fail.
+
+%%%%%%%
+%
+% end new
+%
+%%%%%%%
+
 
 makeAllCenterPairs(PortID) :-
     % each port gets one centerPair for each unused text item
@@ -402,7 +470,7 @@ makeAllCenterPairs(PortID) :-
     % distance_xy(Pair,dx^2 + dy^2)
     forall(unassigned(TextID),makeCenterPair(PortID,TextID)).
 
-makeCenterPair(PortID,TextID) :-
+old_makeCenterPair(PortID,TextID) :-
     makePairID(PortID,JoinPairID),
     center_x(PortID,Px),
     center_y(PortID,Py),
