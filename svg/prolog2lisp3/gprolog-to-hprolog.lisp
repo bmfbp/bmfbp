@@ -130,7 +130,18 @@
                            (walk-predicate-or-expr (second (third x)))
                            (walk-predicate-or-expr (third (third x))))))
             `(:lispv ,LHS ,RHS)))
-      (assert nil))))
+      (if (and (listp x)
+               (= 3 (length x))
+               (eq 'predicate (car (third x))))
+          (let ((r (walk-predicate (third x))))
+            (let ((RHS
+                   (if (eq (car r) :sqrt)
+                       (cons 'cl:sqrt (cdr r))
+                     (if (eq (car r) :abs)
+                         (cons 'cl:abs (cdr r))
+                       (assert nil)))))
+              `(:lispv ,LHS ,RHS)))
+        (assert nil)))))
 
 (defun walk-predicate-or-expr (x)
   (assert (listp x))
@@ -185,7 +196,6 @@
     (reverse result)))
 
 (defun rewrite1 (x)
-(format *standard-output* "~&x is /~S/~%" x)        
   (if (listp x)
       (cond
        ((= 1 (length x)) ;/0
