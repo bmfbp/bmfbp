@@ -28,7 +28,7 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&calculate-distances~%")
-             ;; put code here
+             ;
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
