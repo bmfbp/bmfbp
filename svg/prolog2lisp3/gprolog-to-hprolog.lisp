@@ -211,12 +211,6 @@
    ((eq (car x) :writefb)
     `(:lisp (arrowgrams/compiler::true)))
    
-   ((eq (car x) :lisp_collect_begin)
-    `(:lisp (arrowgrams/compiler::lisp-collect-begin)))
-   
-   ((eq (car x) :lisp_collect_finalize)
-    `(:lisp (arrowgrams/compiler::lisp-collect-finalize)))
-   
    (t x)))
 
 (defun rewrite-2 (x)
