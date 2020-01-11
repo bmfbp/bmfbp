@@ -43,9 +43,12 @@
           (cl-event-passing-user::@get-instance-var self :fb)))
         (goal '((:collect_unassigned_text (:? text) (:? str)))))
     (let ((text-results (arrowgrams/compiler/util::run-prolog self goal fb)))
-      (format *standard-output* "~&results=~S~%" results)
+      (format *standard-output* "~&text results=~S~%" text-results)
       (let ((goal '((:collect_joins (:? join) (:? text) (:? port) (:? distance)))))
         (let ((join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
-          (format *standard-output* "~&join results=~S~%" join-results))))))
-
+          (format *standard-output* "~&join results=~S~%" join-results)
+          (let ((goal '((:collect_joins_for_port (:? port) (:? text) (:? str) (:? join) (:? distance)))))
+            (let ((port-join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
+              (format *standard-output* "~&port join results=~S~%" port-join-results))))))))
+    
 
