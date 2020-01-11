@@ -28,11 +28,21 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&assign-portnames~%")
-             ;; put code here
+             (assign-portnames self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
           self
           :error
           (format nil "ASSIGN-PORTNAMES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+
+(defmethod assign-portnames ((self e/part:part))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:collect_distances))))
+    (arrowgrams/compiler/util::run-prolog self goal fb)))
+
+
 
