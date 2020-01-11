@@ -135,11 +135,14 @@
                (eq 'predicate (car (third x))))
           (let ((r (walk-predicate (third x))))
             (let ((RHS
-                   (if (eq (car r) :sqrt)
-                       (cons 'cl:sqrt (cdr r))
-                     (if (eq (car r) :abs)
-                         (cons 'cl:abs (cdr r))
-                       (assert nil)))))
+                   (cond
+                    ((eq (car r) :sqrt)
+                     (cons 'cl:sqrt (cdr r)))
+                     ((eq (car r) :abs)
+                      (cons 'cl:abs (cdr r)))
+                     ((member (car r) '(:lisp_return_closest_text :lisp_return_closest_port :lisp_return_closest_string))
+                      r)
+                     (t (assert nil)))))
               `(:lispv ,LHS ,RHS)))
         (assert nil)))))
 
@@ -186,98 +189,118 @@
 (defun rewrite (body)
   (let ((result nil))
     (mapc #'(lambda (x)
-               (let ((r (rewrite1 x)))
-;;;                 (if (and (listp r) (eq :@ (car r)))
-;;;                     (progn
-;;;                       (push (second r) result)
-;;;                       (push (third r) result))
+               (let ((r (rewrite-helper x)))
                   (push r result)))
           body)
     (reverse result)))
 
-(defun rewrite1 (x)
+(defun rewrite-1 (x)
+  (cond
+   ((eq (car x) :fail)
+    :fail)
+   ((eq (car x) :!)
+    :!)
+   ((eq (car x) :true)
+    `(:lisp (arrowgrams/compiler::true)))
+   ((eq (car x) :halt)
+    `(:lisp (arrowgrams/compiler::true)))
+   ((eq (car x) :writefb)
+    `(:lisp (arrowgrams/compiler::true)))
+   
+   ((eq (car x) :lisp_collect_begin)
+    `(:lisp (arrowgrams/compiler::lisp-collect-begin)))
+   
+   ((eq (car x) :lisp_collect_finalize)
+    `(:lisp (arrowgrams/compiler::lisp-collect-finalize)))
+   
+   (t x)))
+
+(defun rewrite-2 (x)
+  (cond
+   ((eq (car x) :nl)
+    (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
+      `(:lisp (arrowgrams/compiler::out-nl))))
+   ((eq (car x) :readfb)
+    `(:lisp (arrowgrams/compiler::true)))
+   ((eq (car x) :asserta)
+    `(:lisp-method (arrowgrams/compiler/util::asserta ,(second x))))
+   ((eq (car x) :retract)
+    `(:lisp-method (arrowgrams/compiler/util::retract ,(second x))))
+   
+   ((eq (car x) :lisp_return_closest_text)
+    `(:lispv ,(second x) (arrowgrams/compiler::lisp-return-closest-text)))
+   ((eq (car x) :lisp_return_closest_port)
+    `(:lispv ,(second x) (arrowgrams/compiler::lisp-return-closest-port)))
+   ((eq (car x) :lisp_return_closest_string)
+    `(:lispv ,(second x) (arrowgrams/compiler::lisp-return-closest-string)))
+   
+   ((eq (car x) :prolog_not_proven)
+    (let ((clause (second x)))
+      (let ((not-name (intern (format nil "NOT_~A" (symbol-name (car clause))) "KEYWORD")))
+        (let ((not-name-with-arity (intern (format nil "~A/~A"
+                                                   (symbol-name not-name)
+                                                   (1- (length clause)))
+                                           "KEYWORD")))
+          (let ((rewritten `(,not-name ,@(rest clause))))
+            (pushnew not-name-with-arity *rules-needed* :test 'name-EQ)
+            rewritten)))))
+
+   (t x)))
+
+(defun rewrite-3 (x)
+  (cond
+   ((eq (car x) :write)
+    `(:lisp (arrowgrams/compiler::out ,(third x))))
+
+   ((eq (first x) :sqrt)
+    (break)
+    `(:lispv ,(second x) (cl:sqrt ,(third x))))
+
+   ((and (eq (first x) :inc)
+         (eq (second x) :counter))
+    `(:lisp (arrowgrams/compiler::inc-counter)))
+   ((and (eq (first x) :dec)
+         (eq (second x) :counter))
+    `(:lisp (arrowgrams/compiler::dec-counter)))
+   ((and (eq (first x) :g_read)
+         (eq (second x) :counter))
+    `(:lispv ,(third x) (read-counter)))
+   ((and (eq (first x) :g_assign)
+         (eq (second x) :counter))
+    `(:lisp (arrowgrams/compiler::set-counter ,(third x))))
+
+   ((eq (first x) :prolog_not_equal_equal)
+    `(:not_same ,(second x) ,(third x)))
+   ((eq (first x) :prolog_not_equal)
+    `(:not_same ,(second x) ,(third x)))
+   (t x)))
+
+(defun rewrite-4 (x)
+  x)
+
+(defun rewrite-5 (x)
+  (cond
+   ((eq (car x) :lisp_collect_distance)
+    (let ((arg1 (second x))
+          (arg2 (third x))
+          (arg3 (fourth x))
+          (arg4 (fifth x)))
+      `(:lisp (arrowgrams/compiler::lisp-collect-distance ,arg1 ,arg2 ,arg3 ,arg4))))
+   (t x)))
+
+(defun rewrite-helper (x)
   (if (listp x)
       (cond
        ((= 1 (length x)) ;/0
-        (cond
-         ((eq (car x) :fail)
-            :fail)
-         ((eq (car x) :!)
-            :!)
-         ((eq (car x) :true)
-          `(:lisp (arrowgrams/compiler::true)))
-         ((eq (car x) :halt)
-          `(:lisp (arrowgrams/compiler::true)))
-         ((eq (car x) :writefb)
-          `(:lisp (arrowgrams/compiler::true)))
-
-         (t x)))
-        
+        (rewrite-1 x))
        ((= 2 (length x)) ;/1
-        (cond
-         ((eq (car x) :nl)
-          (let ((stream (if (eq :user_error (second x)) '*standard-error* '*standard-output*)))
-            `(:lisp (arrowgrams/compiler::out-nl))))
-         ((eq (car x) :readfb)
-          `(:lisp (arrowgrams/compiler::true)))
-         ((eq (car x) :asserta)
-          `(:lisp-method (arrowgrams/compiler/util::asserta ,(second x))))
-         ((eq (car x) :retract)
-          `(:lisp-method (arrowgrams/compiler/util::retract ,(second x))))
-
-         ((eq (first x) :sqrt)
-          (break)
-          `(:lispv (cl:sqrt ,(second x))))
-
-         ((eq (car x) :prolog_not_proven)
-          (let ((clause (second x)))
-            (let ((not-name (intern (format nil "NOT_~A" (symbol-name (car clause))) "KEYWORD")))
-              (let ((not-name-with-arity (intern (format nil "~A/~A"
-                                                         (symbol-name not-name)
-                                                         (1- (length clause)))
-                                                 "KEYWORD")))
-                (let ((rewritten `(,not-name ,@(rest clause))))
-                  (pushnew not-name-with-arity *rules-needed* :test 'name-EQ)
-                  rewritten)))))
-
-         (t x)))
-             
+        (rewrite-2 x))
        ((= 3 (length x)) ;/2
-        (cond
-         ((eq (car x) :write)
-          `(:lisp (arrowgrams/compiler::out ,(third x))))
-
-;;;          ((eq (car x) :forall)
-;;;           (let ((new-rule-name (gensysm "FORALL-")))
-;;;             ;; this isn't fully general but suits our purposes, i.e. forall is only
-;;;             ;; used in rules with no parameters, so we don't need to parse and pass parameters
-;;;             
-;;;             (let ((rewritten-forall `((,new-rule-name) ,(second x) ,(third x) :fail))
-;;;                   (rewritten-stub `((,new-rule-name))))
-;;;               (push rewritten-stub *foralls*)
-;;;               (push rewritten-forall *foralls*)
-;;;               new-rule-name)))
-
-         ((and (eq (first x) :inc)
-               (eq (second x) :counter))
-          `(:lisp (arrowgrams/compiler::inc-counter)))
-         ((and (eq (first x) :dec)
-               (eq (second x) :counter))
-          `(:lisp (arrowgrams/compiler::dec-counter)))
-         ((and (eq (first x) :g_read)
-               (eq (second x) :counter))
-          `(:lispv ,(third x) (read-counter)))
-         ((and (eq (first x) :g_assign)
-               (eq (second x) :counter))
-          `(:lisp (arrowgrams/compiler::set-counter ,(third x))))
-
-         ((eq (first x) :prolog_not_equal_equal)
-          `(:not_same ,(second x) ,(third x)))
-         ((eq (first x) :prolog_not_equal)
-          `(:not_same ,(second x) ,(third x)))
-
-         (t x)))
-       
+        (rewrite-3 x))
+       ((= 4 (length x)) ;/3
+        (rewrite-4 x))
+       ((= 5 (length x)) ;/4
+        (rewrite-5 x))
        (t x))
     x))
 
