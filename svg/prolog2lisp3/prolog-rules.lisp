@@ -437,7 +437,9 @@ createCenter(ID) :-
 
 calculate_distances_main :-
     g_assign(counter,0),
+!,
     eltype(PortID,port),
+    unassigned(TextID),
     g_read(counter,NewID),
     asserta(join_centerPair(PortID,NewID)),
     inc(counter,_),
@@ -451,8 +453,8 @@ calculate_distances_main :-
     DYsq is DY * DY,
     Sum is DXsq + DYsq,
     DISTANCE is sqrt(Sum),
-    asserta(join_distance(JoinPairID,TextID)),
-    asserta(distance_xy(JoinPairID,DISTANCE)),
+    asserta(join_distance(NewID,TextID)),
+    asserta(distance_xy(NewID,DISTANCE)),
 fail.
 
 %%%%%%%
@@ -498,6 +500,43 @@ makePairID(PortID,NewID) :-
 
 :- initialization(main).
 :- include('head').
+%%%%%%%%%%%
+%
+% new
+%
+%%%%%%%%%%%
+
+collect_distances :-
+wen('a'),
+  text(TextID,StrID),
+wen('b'),
+  unassigned(TextID),
+wen('c'),
+  lisp_collect_begin,
+wen('d'),
+  join_distance(PortID,TextID),
+wen('e'),
+  distance_xy(JoinID,Distance),
+we('f '),we(JoinID),we(Distance),we(PortID),wen(TextID),
+  join_centerPair(PortID,JoinID),
+wen('g'),
+  lisp_collect_distance(TextId,StrID,PortID,Distance),
+wen('h'),
+  fail.
+collect_distances :-
+  lisp_collect_finalize,
+  TextID is lisp_return_closest_text,
+  PortID is lisp_return_closest_port,
+  StrID is  lisp_return_closest_string,
+  asserta(portNameByID(PortID,TextID)),
+  asserta(portName(PortID,StrID)).
+
+%%%%%%%%%%%
+%
+% end new
+%
+%%%%%%%%%%%
+
 :- include('tail').
 
 markIndexedPorts_main :-
