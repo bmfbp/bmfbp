@@ -515,7 +515,7 @@ collect_distances :-
   distance_xy(JoinID,Distance),
   lisp_collect_distance(TextId,StrID,PortID,Distance),
   lisp_collect_finalize,
-  IDTextis lisp_return_closest_text,
+  IDText is lisp_return_closest_text,
   IDPort is lisp_return_closest_port,
   IDStr is  lisp_return_closest_string,
   asserta(portNameByID(IDPort,IDText)),
