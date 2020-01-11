@@ -506,21 +506,32 @@ makePairID(PortID,NewID) :-
 %
 %%%%%%%%%%%
 
+collect_unassigned_text(TextID,StrID) :- text(TextID,StrID), unassigned(TextID).
+
+collect_joins(JoinID,TextID,PortID,Distance) :-   
+  join_distance(JoinID,TextID),
+  join_centerPair(PortID,JoinID),
+  distance_xy(JoinID,Distance).
+
+
 collect_distances :-
   text(TextID,StrID),
   unassigned(TextID),
-  lisp_collect_begin,
+fail.
+collect_distances :-
+%  lisp_collect_begin,
   join_distance(JoinID,TextID),
   join_centerPair(PortID,JoinID),
   distance_xy(JoinID,Distance),
-  lisp_collect_distance(TextId,StrID,PortID,Distance),
-  lisp_collect_finalize,
+%  lisp_collect_distance(TextId,StrID,PortID,Distance),
+fail.
+collect_distances :-
+%  lisp_collect_finalize,
   IDText is lisp_return_closest_text,
   IDPort is lisp_return_closest_port,
   IDStr is  lisp_return_closest_string,
   asserta(portNameByID(IDPort,IDText)),
-  asserta(portName(IDPort,IDStr)),
-fail.
+  asserta(portName(IDPort,IDStr)).
 
 %%%%%%%%%%%
 %
