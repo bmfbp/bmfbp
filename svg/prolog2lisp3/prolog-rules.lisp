@@ -510,12 +510,13 @@ collect_joins_for_port(PortID,TextID,StrID,JoinID,Distance) :-
   port(PortID),
   join_centerPair(PortID,JoinID),
   join_distance(JoinID,TextID),
-  join_centerPair(PortID,JoinID),
   distance_xy(JoinID,Distance),
   text(TextID,StrID).
   
 
 collect_unassigned_text(TextID,StrID) :- text(TextID,StrID), unassigned(TextID).
+
+collect_port(PortID) :- port(PortID).
 
 collect_joins(JoinID,TextID,PortID,Distance) :-   
   join_distance(JoinID,TextID),
