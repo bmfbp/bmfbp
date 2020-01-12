@@ -40,15 +40,67 @@
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb)))
-        (goal '((:collect_unassigned_text (:? text) (:? str)))))
-    (let ((text-results (arrowgrams/compiler/util::run-prolog self goal fb)))
-      (format *standard-output* "~&text results=~S~%" text-results)
-      (let ((goal '((:collect_joins (:? join) (:? text) (:? port) (:? distance)))))
-        (let ((join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
-          (format *standard-output* "~&join results=~S~%" join-results)
-          (let ((goal '((:collect_joins_for_port (:? port) (:? text) (:? str) (:? join) (:? distance)))))
-            (let ((port-join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
-              (format *standard-output* "~&port join results=~S~%" port-join-results))))))))
+          (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((goal '((:collect_joins (:? join) (:? text) (:? port) (:? distance)))))
+      (let ((join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
+        (format *standard-output* "~&join results=~S~%" join-results)
+        (let ((goal '((:collect_port (:? port)))))
+          (let ((port-results (arrowgrams/compiler/util::run-prolog self goal fb)))
+            (format *standard-output* "~&port results=~S~%" port-results)
+
+            (let ((port-list-hash (make-hash-table))
+                  (text-used-up (make-hash-table))
+                  (port-text-hash (make-hash-table))
+                  (port-str-hash  (make-hash-table)))
+              
+              (mapc #'(lambda (j)
+                        (destructuring-bind (join-id text-id port-id distance str-id)
+                            j
+                          (let ((list-for-port (gethash port-id port-list-hash)))
+                            (let ((new-list (cons (list distance text-id str-id join-id) list-for-port)))
+                              (setf (gethash port-id port-list-hash) new-list)))))
+                    join-results)
+
+              (maphash #'(lambda (port-id list-for-port)
+                           (multiple-value-bind (text-id str-id)
+                               (find-minimum-distance list-for-port)
+                             (assert-text-not-used text-used-up text-id)
+                             (setf (gethash port-id port-text-hash) text-id)
+                             (setf (gethash port-id port-str-hash)  str-id)))
+                       port-hash)
+
+              (asserta-portname self port-text-hash)
+              (asserta-portstr  self port-str-hash))))))))
+
+(defun assert-text-not-used (text-used-up-hash text-id)
+  (multiple-value-bind (val success)
+      (gethash text-id text-used-up-hash)
+    (declare (ignore val))
+    (assert (not success))
+    (setf (gethash text-id text-used-up-hash) text-id)))
+
+(defun find-minimum-distance (L)
+  (let ((min-dist -1)
+        (min-text nil)
+        (min-str nil))
+    (dolist (l4 L)
+      (destructuring-bind (distance text str join)
+          L
+        (declare (ignore join))
+        (assert (>= distance 0))
+        (when (< distance min-dist)
+          (setf min-dist distance
+                min-text text
+                min-str str))))
+  (values min-text min-str)))
     
+(defmethod asserta-portname ((self e/part:part) h)
+  (maphash #'(lambda (port text)
+               (arrowgrams/compiler/util::asserta self (list :portNameByID port text) nil nil nil nil nil nil nil))
+           h))
+
+(defmethod asserta-portstr ((self e/part:part) h)
+  (maphash #'(lambda (port strid)
+               (arrowgrams/compiler/util::asserta self (list :portName port strid)    nil nil nil nil nil nil nil))
+           h))
 
