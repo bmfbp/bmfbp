@@ -578,12 +578,10 @@ coincidentPorts_main :-
     writeFB,
     halt.
 
-% new
+%coincidentSinks :- namedSink(X),findAllCoincidentSinks(X),fail.
+%findAllCoincidentSinks(A,B) :- sink(_,B),findCoincidentSink(A,B),fail.
 
-coincidentSinks :- namedSink(X),sink(_,B),findCoincidentSink(X,B),fail.
-coincidentSinks.
-
-% end new
+% works coincidentSinks(A,B) :- namedSink(A),sink(_,B),findCoincidentSink(A,B),fail.
 
 % coincidentSinks:-
 %    forall(namedSink(X),findAllCoincidentSinks(X)).
@@ -612,11 +610,11 @@ notNamedSink(X) :-
 
 % new
 
-coincidentSources :- namedSource(X),findAllCoincidentSources(X),fail.
-coincidentSinks.
+coincidentSinks(A,B) :- namedSink(A),findAllCoincidentSinks(A,B).
+findAllCoincidentSinks(A,B) :- sink(_,B),findCoincidentSink(A,B),fail.
 
-findAllCoincidentSources(A) :- sink(_,B),findCoincidentSource(A,B),fail.
-findAllCoincidentSources(_).
+coincidentSources(A,B) :- namedSource(A),findAllCoincidentSources(A,B).
+findAllCoincidentSources(A,B) :- source(_,B),findCoincidentSource(A,B),fail.
 
 % end new
 

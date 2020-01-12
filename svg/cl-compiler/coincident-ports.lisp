@@ -41,11 +41,11 @@
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
-        (goal '((:coincidentSinks))))
+        (goal '((:coincidentSinks (:? A) (:? B)))))
     (arrowgrams/compiler/util::run-prolog self goal fb))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
-        (goal '((:coincidentSources))))
+        (goal '((:coincidentSources (:? A) (:? B)))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))
