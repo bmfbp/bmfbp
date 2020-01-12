@@ -578,12 +578,18 @@ coincidentPorts_main :-
     writeFB,
     halt.
 
+% new
 
-coincidentSinks:-
-    forall(namedSink(X),findAllCoincidentSinks(X)).
+coincidentSinks :- namedSink(X),sink(_,B),findCoincidentSink(X,B),fail.
+coincidentSinks.
 
-findAllCoincidentSinks(A) :-
-    forall(sink(_,B),findCoincidentSink(A,B)).
+% end new
+
+% coincidentSinks:-
+%    forall(namedSink(X),findAllCoincidentSinks(X)).
+
+% findAllCoincidentSinks(A) :-
+%     forall(sink(_,B),findCoincidentSink(A,B)).
 
 findCoincidentSink(A,B):-
     center_y(A,Ay),
@@ -604,12 +610,21 @@ notNamedSink(X) :-
     prolog_not_proven(namedSink(X)).
     % \\+ namedSink(X).
 
+% new
 
-coincidentSources:-
-    forall(namedSource(X),findAllCoincidentSources(X)).
+coincidentSources :- namedSource(X),findAllCoincidentSources(X),fail.
+coincidentSinks.
 
-findAllCoincidentSources(A) :-
-    forall(source(_,B),findCoincidentSource(A,B)).
+findAllCoincidentSources(A) :- sink(_,B),findCoincidentSource(A,B),fail.
+findAllCoincidentSources(_).
+
+% end new
+
+% coincidentSources:-
+%     forall(namedSource(X),findAllCoincidentSources(X)).
+
+% findAllCoincidentSources(A) :-
+%     forall(source(_,B),findCoincidentSource(A,B)).
 
 findCoincidentSource(A,B):-
     center_y(A,Ay),

@@ -28,7 +28,7 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&coincident-ports~%")
-             ;; put code here
+             (coincident-ports self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -36,3 +36,16 @@
           :error
           (format nil "COINCIDENT-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+(defmethod coincident-ports ((self e/part:part))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:coincidentSinks))))
+    (arrowgrams/compiler/util::run-prolog self goal fb))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:coincidentSources))))
+    (arrowgrams/compiler/util::run-prolog self goal fb)))
