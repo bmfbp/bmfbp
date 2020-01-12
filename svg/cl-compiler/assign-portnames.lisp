@@ -81,8 +81,10 @@
         (min-text nil)
         (min-str nil))
     (dolist (l4 L)
+      (assert (listp L))
+      (assert (= 1 (length L)))
       (destructuring-bind (distance text str join)
-          L
+          (car L)
         (declare (ignore join))
         (assert (>= distance 0))
         (when (< distance min-dist)
