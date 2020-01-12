@@ -69,10 +69,10 @@
                 join-results)
           
           (maphash #'(lambda (port-id join-list-for-port)
-                       (let ((join-data (find-minimum-distance join-list-for-port)))
-                         (format *standard-output* "~&join-data ~S~%" join-data)
-                         (assert-text-not-used text-used-up (join-text-id join-data))
-                         (setf (gethash port-id port-join-hash) join-data)))
+                       (let ((join (find-minimum-distance join-list-for-port)))
+                         (format *standard-output* "~&join-data ~S~%" join)
+                         (assert-text-not-used text-used-up (join-text-id join) join)
+                         (setf (gethash port-id port-join-hash) join)))
                    port-list-hash)
           
           (asserta-portnames self port-join-hash))))))
@@ -93,11 +93,12 @@
                (arrowgrams/compiler/util::asserta self (list :portNameBy (join-port-id join) (join-str-id join)) nil nil nil nil nil nil nil))
            h))
 
-(defun assert-text-not-used (text-used-up-hash text-id)
+(defun assert-text-not-used (text-used-up-hash text-id join)
   (assert (not (null text-id)))
   (multiple-value-bind (val success)
       (gethash text-id text-used-up-hash)
-    (declare (ignore val))
-    (assert (not success))
-    (setf (gethash text-id text-used-up-hash) text-id)))
+    (when success
+      (format *standard-output* "~&duplicate port name~%~S~%~S~%" val join)
+      (assert nil))
+    (setf (gethash text-id text-used-up-hash) join)))
 
