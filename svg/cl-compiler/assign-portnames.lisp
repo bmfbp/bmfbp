@@ -36,6 +36,13 @@
           :error
           (format nil "ASSIGN-PORTNAMES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+(defstruct join
+  id
+  text-id
+  port-id
+  str-id
+  distance)
+
 (defmethod assign-portnames ((self e/part:part))
   (let ((fb
          (append
@@ -47,27 +54,44 @@
         
         (let ((port-list-hash (make-hash-table))
               (text-used-up (make-hash-table))
-              (port-text-hash (make-hash-table))
-              (port-str-hash  (make-hash-table)))
+              (port-join-hash (make-hash-table)))
           
-          (mapc #'(lambda (j)
-                    (destructuring-bind (join-id text-id port-id distance str-id)
-                        j
-                      (let ((list-for-port (gethash port-id port-list-hash)))
-                        (let ((new-list (cons (list distance text-id str-id join-id) list-for-port)))
-                          (setf (gethash port-id port-list-hash) new-list)))))
+          (mapc #'(lambda (alist)
+                    (let ((port-id (cdr (assoc 'port alist)))
+                          (distance (cdr (assoc 'distance alist)))
+                          (text-id (cdr (assoc 'text alist)))
+                          (str-id (cdr (assoc 'str alist)))
+                          (join-id (cdr (assoc 'join alist))))
+                      (let ((join-data (make-join :id join-id :port-id port-id :text-id text-id :str-id str-id :distance distance)))
+                        (let ((list-for-port (gethash port-id port-list-hash)))
+                          (let ((new-list (cons join-data list-for-port)))
+                            (setf (gethash port-id port-list-hash) new-list))))))
                 join-results)
           
-          (maphash #'(lambda (port-id list-for-port)
-                       (multiple-value-bind (text-id str-id)
-                           (find-minimum-distance list-for-port)
-                         (assert-text-not-used text-used-up text-id)
-                         (setf (gethash port-id port-text-hash) text-id)
-                         (setf (gethash port-id port-str-hash)  str-id)))
+          (maphash #'(lambda (port-id join-list-for-port)
+                       (let ((join-data (find-minimum-distance join-list-for-port)))
+                         (format *standard-output* "~&join-data ~S~%" join-data)
+                         (assert-text-not-used text-used-up (join-text-id join-data))
+                         (setf (gethash port-id port-join-hash) join-data)))
                    port-list-hash)
           
-          (asserta-portname self port-text-hash)
-          (asserta-portstr  self port-str-hash))))))
+          (asserta-portnames self port-join-hash))))))
+
+(defun find-minimum-distance (L)
+  (let ((min-join nil))
+    (assert (listp L))
+    (dolist (join L)
+      (assert (>= (join-distance join) 0))
+      (when (or (null min-join)
+                (< (join-distance join) (join-distance min-join)))
+            (setf min-join join)))
+    min-join))
+    
+(defmethod asserta-portnames ((self e/part:part) h)
+  (maphash #'(lambda (join)
+               (arrowgrams/compiler/util::asserta self (list :portNameByID (join-port-id join) (join-text-id join)) nil nil nil nil nil nil nil)
+               (arrowgrams/compiler/util::asserta self (list :portNameBy (join-port-id join) (join-str-id join)) nil nil nil nil nil nil nil))
+           h))
 
 (defun assert-text-not-used (text-used-up-hash text-id)
   (assert (not (null text-id)))
@@ -76,36 +100,4 @@
     (declare (ignore val))
     (assert (not success))
     (setf (gethash text-id text-used-up-hash) text-id)))
-
-(defun find-minimum-distance (L)
-  (let ((min-dist -1)
-        (min-text nil)
-        (min-str nil))
-    (assert (listp L))
-    (dolist (al L)
-      (assert (listp al))
-      (assert (= 4 (length al)))
-      (destructuring-bind (distance-cons text-cons str-cons join-cons)
-          al
-        (declare (ignore join))
-        (let ((distance (cdr distance-cons))
-              (text (cdr text-cons))
-              (str (cdr str-cons))
-              (join (cdr join-cons)))
-          (assert (>= distance 0))
-          (when (< distance min-dist)
-            (setf min-dist distance
-                  min-text text
-                  min-str str))))
-      (values min-text min-str))))
-    
-(defmethod asserta-portname ((self e/part:part) h)
-  (maphash #'(lambda (port text)
-               (arrowgrams/compiler/util::asserta self (list :portNameByID port text) nil nil nil nil nil nil nil))
-           h))
-
-(defmethod asserta-portstr ((self e/part:part) h)
-  (maphash #'(lambda (port strid)
-               (arrowgrams/compiler/util::asserta self (list :portName port strid)    nil nil nil nil nil nil nil))
-           h))
 
