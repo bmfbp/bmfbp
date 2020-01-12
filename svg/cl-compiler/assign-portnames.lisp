@@ -70,6 +70,7 @@
           (asserta-portstr  self port-str-hash))))))
 
 (defun assert-text-not-used (text-used-up-hash text-id)
+  (assert (not (null text-id)))
   (multiple-value-bind (val success)
       (gethash text-id text-used-up-hash)
     (declare (ignore val))
