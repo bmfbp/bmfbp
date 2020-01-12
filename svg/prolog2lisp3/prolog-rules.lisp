@@ -524,24 +524,48 @@ collect_joins(JoinID,TextID,PortID,Distance,StrID) :-
 
 :- include('tail').
 
-markIndexedPorts_main :-
-    readFB(user_input), 
-    forall(portName(P,_),markNamed(P)),
-    writeFB,
-    halt.
+% markIndexedPorts_main :-
+%     readFB(user_input), 
+%     forall(portName(P,_),markNamed(P)),
+%     writeFB,
+%     halt.
+
+%%%%%%%%%%%
+%
+% new
+%
+%%%%%%%%%%%
+
+markIndexedPorts_main :-portName(P,_),markNamed(P),fail.
 
 markNamed(P) :-
     sink(_,P),
+!,
     asserta(namedSink(P)).
 
 markNamed(P) :-
     source(_,P),
+!,
     asserta(namedSource(P)).
 
-markName(P) :-
-    we('port '),
-    we(P),
-    wen(' has no name!').
+%%%%%%%%%%%
+%
+% end new
+%
+%%%%%%%%%%%
+
+% markNamed(P) :-
+%     sink(_,P),
+%     asserta(namedSink(P)).
+% 
+% markNamed(P) :-
+%     source(_,P),
+%     asserta(namedSource(P)).
+% 
+% markName(P) :-
+%     we('port '),
+%     we(P),
+%     wen(' has no name!').
 
 :- initialization(main).
 :- include('head').
