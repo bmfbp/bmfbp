@@ -66,7 +66,7 @@
               (8 (format stream "~a(~a,~a,~a,~a,~a,~a,~a,~a,~a).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)
                          (sixth fact) (seventh fact) (eighth fact) (ninth fact)))
               (9 (format stream "~a(~a,~a,~a,~a,~a,~a,~a,~a,~a).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)
-                         (sixth fact) (seventh fact) (eighth fact) (ninth fact) (tenth fact))))
+                         (sixth fact) (seventh fact) (eighth fact) (ninth fact) (tenth fact)))))
         (if (= 2 (length fact))
             (format stream "~a(~a).~%" (first fact) (second fact))
           (if (= 3 (length fact))
