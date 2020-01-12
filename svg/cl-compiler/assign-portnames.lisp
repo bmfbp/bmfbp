@@ -41,12 +41,9 @@
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb))))
-    (let ((goal '((:collect_joins (:? join) (:? text) (:? port) (:? distance)))))
+    (let ((goal '((:collect_joins (:? join) (:? text) (:? port) (:? distance) (:? str)))))
       (let ((join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
         (format *standard-output* "~&join results=~S~%" join-results)
-        (let ((goal '((:collect_port (:? port)))))
-          (let ((port-results (arrowgrams/compiler/util::run-prolog self goal fb)))
-            (format *standard-output* "~&port results=~S~%" port-results)
 
             (let ((port-list-hash (make-hash-table))
                   (text-used-up (make-hash-table))
@@ -67,7 +64,7 @@
                              (assert-text-not-used text-used-up text-id)
                              (setf (gethash port-id port-text-hash) text-id)
                              (setf (gethash port-id port-str-hash)  str-id)))
-                       port-hash)
+                       port-list-hash)
 
               (asserta-portname self port-text-hash)
               (asserta-portstr  self port-str-hash))))))))
