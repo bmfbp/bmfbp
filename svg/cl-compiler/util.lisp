@@ -49,7 +49,7 @@
                                  (eq (second fact) (second x-fact))
                                  (eq (third fact) (third x-fact))))))
                  fb)
-      (error "expected 2 or 3 items, but got ~S" fact))))
+      (error "UTIL remove-fact ERROR: expected 2 or 3 items, but got ~S" fact))))
 
 (defmethod retract ((self e/part:part) arg1 l g r e n c result)
   ;; TODO: rewrite complete-fb in the return values ; make the change immediate so it affects the current searches
