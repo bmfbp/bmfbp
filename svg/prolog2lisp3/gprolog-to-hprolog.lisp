@@ -255,7 +255,7 @@
     `(:lisp (arrowgrams/compiler::dec-counter)))
    ((and (eq (first x) :g_read)
          (eq (second x) :counter))
-    `(:lispv ,(third x) (read-counter)))
+    `(:lispv ,(third x) (arrowgrams/compiler::read-counter)))
    ((and (eq (first x) :g_assign)
          (eq (second x) :counter))
     `(:lisp (arrowgrams/compiler::set-counter ,(third x))))
