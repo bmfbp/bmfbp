@@ -78,9 +78,36 @@ b :-
      Left is CX - HalfWidth.
 ")
 
+(defparameter *str11*
+"
+collect_distances :-
+wen('a'),
+  text(TextID,StrID),
+wen('b'),
+  unassigned(TextID),
+wen('c'),
+  lisp_collect_begin,
+wen('d'),
+wen('e'),
+  join_distance(PortID,TextID),
+  distance_xy(JoinID,Distance),
+  join_centerPair(PortID,JoinID),
+  lisp_collect_distance(TextId,StrID,PortID,Distance),
+  fail.
+collect_distances :-
+  lisp_collect_finalize,
+  TextID is lisp_return_closest_text,
+  PortID is lisp_return_closest_port,
+  StrID is  lisp_return_closest_string,
+  XX is sqrt(YY),
+  XX is abs(YY),
+  asserta(portNameByID(PortID,TextID)),
+  asserta(portName(PortID,StrID)).
+")
+
 (defun test ()
   ;(let ((tree (esrap:parse 'rule-TOP *all-prolog*)))
-  (let ((tree (esrap:parse 'rule-TOP *str10*)))
+  (let ((tree (esrap:parse 'rule-TOP *str11*)))
     (let ((converted1 (convert tree)))
       (let ((converted2 (if *foralls* (cons *foralls* converted1) converted1)))
         (pprint converted2)))
