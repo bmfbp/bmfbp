@@ -65,7 +65,7 @@
                       (let ((join-data (make-join :id join-id :port-id port-id :text-id text-id :str-id str-id :distance distance)))
                         (let ((list-for-port (gethash port-id port-join-list-hash)))
                           (let ((new-list (cons join-data list-for-port)))
-                            (format *standard-output* "port-id ~S new-list length ~A~%" port-id (length new-list))
+                            #+nil(format *standard-output* "port-id ~S new-list length ~A~%" port-id (length new-list))
                             (setf (gethash port-id port-join-list-hash) new-list))))))
                 join-results)
           
@@ -91,7 +91,7 @@
 (defmethod asserta-portnames ((self e/part:part) h)
   (maphash #'(lambda (port join)
                (arrowgrams/compiler/util::asserta self (list :portNameByID port (join-text-id join)) nil nil nil nil nil nil nil)
-               (arrowgrams/compiler/util::asserta self (list :portNameBy port (join-str-id join)) nil nil nil nil nil nil nil))
+               (arrowgrams/compiler/util::asserta self (list :portName port (join-str-id join)) nil nil nil nil nil nil nil))
            h))
 
 (defun assert-text-not-used (text-used-up-hash text-id join)
