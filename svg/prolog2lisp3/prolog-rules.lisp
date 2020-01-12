@@ -688,10 +688,14 @@ match_ports_to_components_main :-
     writeFB,
     halt.
 
-match_ports :-
-    % assign a parent component to every port, port must intersect parent's bounding-box
-    % unimplemented semantic check: check that every port has exactly one parent
-    forall(eltype(PortID, port),assign_parent_for_port(PortID)).
+% match_ports :-
+%     % assign a parent component to every port, port must intersect parent's bounding-box
+%     % unimplemented semantic check: check that every port has exactly one parent
+%     forall(eltype(PortID, port),assign_parent_for_port(PortID)).
+
+% new
+match_ports(PortID) :- eltype(PortID,port),assign_parent_for_port(PortID),fail.
+% end new
 
 assign_parent_for_port(PortID) :-
     % if port already has a parent (e.g. ellipse), quit while happy.
