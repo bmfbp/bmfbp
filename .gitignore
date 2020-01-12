@@ -18,3 +18,4 @@ temp*
 time-to-market*
 svg/cl-compiler/rules.lisp
 svg/cl-compiler/output.prolog
+svg/cl-compiler/output2.prolog
