@@ -171,7 +171,7 @@
              (((demux 11)) ((create-centers :go)))
              (((demux 12)) ((calculate-distances :go)))
              (((demux 13)) ((assign-portnames :go)))
-             (((demux 14)) ((mark-indexed-ports :go)))
+             (((demux 14)) ((mark-indexed-ports :go))) ;; start here
              (((demux 15)) ((coincident-ports :go)))
              (((demux 16)) ((mark-directions :go)))
              (((demux 17)) ((match-ports-to-components :go)))
@@ -216,7 +216,8 @@
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (cl-event-passing-user::@with-dispatch
-      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
+      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
+      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp14.pro")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/test.prolog")))
         (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
         ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/very-small.prolog")))
