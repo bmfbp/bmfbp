@@ -86,7 +86,7 @@
       (assert (listp al))
       (assert (= 4 (length al)))
       (destructuring-bind (distance-cons text-cons str-cons join-cons)
-          (car al)
+          al
         (declare (ignore join))
         (let ((distance (cdr distance-cons))
               (text (cdr text-cons))
