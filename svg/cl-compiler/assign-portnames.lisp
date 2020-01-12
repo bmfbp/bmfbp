@@ -83,15 +83,19 @@
     (dolist (l4 L)
       (assert (listp L))
       (assert (= 1 (length L)))
-      (destructuring-bind (distance text str join)
+      (destructuring-bind (distance-cons text-cons str-cons join-cons)
           (car L)
         (declare (ignore join))
-        (assert (>= distance 0))
-        (when (< distance min-dist)
-          (setf min-dist distance
-                min-text text
-                min-str str))))
-  (values min-text min-str)))
+        (let ((distance (cdr distance-cons))
+              (text (cdr text-cons))
+              (str (cdr str-cons))
+              (join (cdr join-cons)))
+          (assert (>= distance 0))
+          (when (< distance min-dist)
+            (setf min-dist distance
+                  min-text text
+                  min-str str))))
+      (values min-text min-str))))
     
 (defmethod asserta-portname ((self e/part:part) h)
   (maphash #'(lambda (port text)
