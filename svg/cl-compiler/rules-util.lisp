@@ -38,7 +38,7 @@
   (setf *closest* nil))
 
 (defun lisp-collect-distance(text-id string-id port-id distance)
-  (push (list distance text-id string-id portid)
+  (push (list distance text-id port-id string-id)
 	*distances*))
 
 (defun lisp-collect-finalize ()
@@ -51,7 +51,7 @@
 		     (setf *closest* dtsp)
 		     nil))))
 	*distances*))
-		     
+		 
 (defun lisp-return-closest-text ()
   (second *closest*))
 
