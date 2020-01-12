@@ -44,30 +44,30 @@
     (let ((goal '((:collect_joins (:? join) (:? text) (:? port) (:? distance) (:? str)))))
       (let ((join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
         (format *standard-output* "~&join results=~S~%" join-results)
-
-            (let ((port-list-hash (make-hash-table))
-                  (text-used-up (make-hash-table))
-                  (port-text-hash (make-hash-table))
-                  (port-str-hash  (make-hash-table)))
-              
-              (mapc #'(lambda (j)
-                        (destructuring-bind (join-id text-id port-id distance str-id)
-                            j
-                          (let ((list-for-port (gethash port-id port-list-hash)))
-                            (let ((new-list (cons (list distance text-id str-id join-id) list-for-port)))
-                              (setf (gethash port-id port-list-hash) new-list)))))
-                    join-results)
-
-              (maphash #'(lambda (port-id list-for-port)
-                           (multiple-value-bind (text-id str-id)
-                               (find-minimum-distance list-for-port)
-                             (assert-text-not-used text-used-up text-id)
-                             (setf (gethash port-id port-text-hash) text-id)
-                             (setf (gethash port-id port-str-hash)  str-id)))
-                       port-list-hash)
-
-              (asserta-portname self port-text-hash)
-              (asserta-portstr  self port-str-hash))))))))
+        
+        (let ((port-list-hash (make-hash-table))
+              (text-used-up (make-hash-table))
+              (port-text-hash (make-hash-table))
+              (port-str-hash  (make-hash-table)))
+          
+          (mapc #'(lambda (j)
+                    (destructuring-bind (join-id text-id port-id distance str-id)
+                        j
+                      (let ((list-for-port (gethash port-id port-list-hash)))
+                        (let ((new-list (cons (list distance text-id str-id join-id) list-for-port)))
+                          (setf (gethash port-id port-list-hash) new-list)))))
+                join-results)
+          
+          (maphash #'(lambda (port-id list-for-port)
+                       (multiple-value-bind (text-id str-id)
+                           (find-minimum-distance list-for-port)
+                         (assert-text-not-used text-used-up text-id)
+                         (setf (gethash port-id port-text-hash) text-id)
+                         (setf (gethash port-id port-str-hash)  str-id)))
+                   port-list-hash)
+          
+          (asserta-portname self port-text-hash)
+          (asserta-portstr  self port-str-hash))))))
 
 (defun assert-text-not-used (text-used-up-hash text-id)
   (multiple-value-bind (val success)
