@@ -27,8 +27,8 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&sem-parts-have-some-ports~%")
-             ;; put code here
+             (format *standard-output* "~&COMMENTED OUT sem-parts-have-some-ports~%")
+             ;(sem-parts-have-some-ports self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -36,3 +36,11 @@
           :error
           (format nil "SEM-PARTS-HAVE-SOME-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+(defmethod sem-parts-have-some-ports ((self e/part:part))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:new_sem_partsHaveSomePorts_main (:? R)))))
+    (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+      (format *standard-output* "~&result=~S~%" result))))
