@@ -75,7 +75,7 @@
                                      (:file "sem-ports-have-sink-or-source" :depends-on ("package" "classes"))
                                      (:file "sem-no-duplicate-kinds" :depends-on ("package" "classes"))
                                      (:file "sem-speech-vs-comments" :depends-on ("package" "classes"))
-                                     (:file "assign-wire-numbers-to-edges" :depends-on ("package" "classes"))
+                                     (:file "assign-wire-numbers-to-edges" :depends-on ("package" "classes" "rules-util" "util"))
                                      (:file "self-input-pins" :depends-on ("package" "classes"))
                                      (:file "self-output-pins" :depends-on ("package" "classes"))
                                      (:file "input-pins" :depends-on ("package" "classes"))
