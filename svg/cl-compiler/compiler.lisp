@@ -177,7 +177,7 @@
              (((demux 14)) ((mark-indexed-ports :go))) ;; start here
              (((demux 15)) ((coincident-ports :go)))
              (((demux 16)) ((mark-directions :go)))
-             (((demux 17)) ((mark-directions :go)))
+             (((demux 17)) ((mark-nc :go)))
              (((demux 18)) ((match-ports-to-components :go)))
              (((demux 19)) ((pinless :go)))
              (((demux 20)) ((sem-parts-have-some-ports :go)))
