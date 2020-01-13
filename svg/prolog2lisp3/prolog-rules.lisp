@@ -1045,23 +1045,29 @@ sink_rect(RectID) :-
 :- include('head').
 :- include('port').
 
-outputPins_main :-
-    readFB(user_input),
-    condSourceRect,
-    writeFB,
-    halt.
+% outputPins_main :-
+%    readFB(user_input),
+%    condSourceRect,
+%    writeFB,
+%    halt.
 
 %condSourceRect :-
 %    forall(rect(RectID),makeOutputPins(RectID)),
 %    !.
 
-condSourceRect :-
-    forall(rect(RectID),makeOutputPins(RectID)).
-
-makeOutputPins(RectID) :-
+source_rect(RectID) :-
+    rect(RectID),
     portFor(RectID,PortID),
     source(_,PortID),
-    asserta(outputPin(PortID)),!.
+    asserta(outputPin(PortID)).
+
+% condSourceRect :-
+%     forall(rect(RectID),makeOutputPins(RectID)).
+
+% makeOutputPins(RectID) :-
+%     portFor(RectID,PortID),
+%     source(_,PortID),
+%     asserta(outputPin(PortID)),!.
 
 
 :- include('tail').
