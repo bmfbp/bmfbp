@@ -988,15 +988,25 @@ selfOutputPins_main :-
 %    forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)),
 %    !.
 
-condSinkEllipse :-
-    forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)).
+% condSinkEllipse :-
+%     forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)).
 
-makeSelfOutputPins(EllipseID) :-
+sink_ellipse(EllipseID) :-
     parent(Main,EllipseID),
     component(Main),
     portFor(EllipseID,PortID),
     sink(_,PortID),
-    asserta(selfOutputPin(PortID)),!.  % self-output -> is a sink (backwards from part inputs)
+    asserta(selfOutputPin(PortID)).  % self-output -> is a sink (backwards from part inputs)
+
+% condSinkEllipse :-
+%     forall(ellipse(EllipseID),makeSelfOutputPins(EllipseID)).
+
+% makeSelfOutputPins(EllipseID) :-
+%     parent(Main,EllipseID),
+%     component(Main),
+%     portFor(EllipseID,PortID),
+%     sink(_,PortID),
+%     asserta(selfOutputPin(PortID)),!.  % self-output -> is a sink (backwards from part inputs)
 
 
 :- include('tail').
