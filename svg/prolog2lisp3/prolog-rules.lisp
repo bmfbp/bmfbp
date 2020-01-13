@@ -704,16 +704,12 @@ no_parent(X).
 
 new_assign_parent_for_port(PortID) :-
   ellipse(ParentID),
-% we('ellipse intersection (port/parent) '),we(PortID),wen(ParentID),
   portIntersection(PortID,ParentID),
-we('port+ellipse intersect '),we(PortID),wen(ParentID),
   asserta(parent(ParentID,PortID)).
 
 new_assign_parent_for_port(PortID) :-
   rect(ParentID),
-we('port '),we(PortID),we(' rect '),wen(ParentID),
   portIntersection(PortID,ParentID),
-we('port+rect intersect '),we(PortID),wen(ParentID),
   asserta(parent(ParentID,PortID)).
 
 mark_nc(PortID) :-
@@ -775,20 +771,28 @@ intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, Pare
 :- initialization(main).
 :- include('head').
 
-pinless_main :-
-    readFB(user_input),
-    forall(eltype(ParentID, box), check_has_port(ParentID)),
-    writeFB,
-    halt.
+% new
 
-check_has_port(ParentID):-
-    parent(ParentID,PortID),
-    port(PortID),
-    !.
+mark_pinless(RRectID) :-
+  roundedrect(RRectID),
+  asserta(pinless(RRectID)).
 
-check_has_port(ParentID):-
-    roundedrect(ParentID),
-    asserta(pinless(ParentID)).
+% new
+
+% pinless_main :-
+%     readFB(user_input),
+%     forall(eltype(ParentID, box), check_has_port(ParentID)),
+%     writeFB,
+%     halt.
+
+% check_has_port(ParentID):-
+%     parent(ParentID,PortID),
+%     port(PortID),
+%     !.
+
+% check_has_port(ParentID):-
+%     roundedrect(ParentID),
+%     asserta(pinless(ParentID)).
 
 :- include('tail').
 
