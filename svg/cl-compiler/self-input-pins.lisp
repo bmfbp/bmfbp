@@ -1,4 +1,3 @@
-
 (in-package :arrowgrams/compiler/SELF-INPUT-PINS)
 
 ; (:code SELF-INPUT-PINS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/SELF-INPUT-PINS::react #'arrowgrams/compiler/SELF-INPUT-PINS::first-time)
@@ -28,7 +27,7 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&self-input-pins~%")
-             ;; put code here
+             (self-input-pins self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -36,3 +35,10 @@
           :error
           (format nil "SELF-INPUT-PINS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+(defmethod self-input-pins ((self e/part:part))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:source_ellipse (:? E)))))
+    (arrowgrams/compiler/util::run-prolog self goal fb)))

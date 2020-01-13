@@ -953,15 +953,24 @@ selfInputPins_main :-
 %    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)),
 %!.
 
-condSourceEllipse :-
-    forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)).
+% condSourceEllipse :-
+%     forall(ellipse(EllipseID),makeSelfInputPins(EllipseID)).
 
-makeSelfInputPins(EllipseID) :-
-    parent(Main,EllipseID),
+% new
+source_ellipse(EllipseID) :-
+    ellipse(EllipseID),
     component(Main),
+    parent(Main,EllipseID),
     portFor(EllipseID,PortID),
     source(_,PortID),
-    asserta(selfInputPin(PortID)),!.  % self-input -> is a source (backwards from part inputs)
+    asserta(selfInputPin(PortID)).  % self-input -> is a source (backwards from part inputs)
+
+% makeSelfInputPins(EllipseID) :-
+%    parent(Main,EllipseID),
+%    component(Main),
+%    portFor(EllipseID,PortID),
+%    source(_,PortID),
+%    asserta(selfInputPin(PortID)),!.  % self-input -> is a source (backwards from part inputs)
 
 :- include('tail').
 
