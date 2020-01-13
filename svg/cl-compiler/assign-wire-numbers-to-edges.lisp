@@ -44,4 +44,4 @@
         (goal '((:assign_wire_numbers_to_edges_main (:? A)))))
     (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
       ;(format *standard-output* "~&counter is ~a result is ~S~%" arrowgrams/compiler::*counter* result))))
-      (asserta self `(:nwires ,arrowgrams/compiler::*counter* nil nil nil nil nil nil nil)))))
+      (arrowgrams/compiler/util::asserta self `(:nwires ,arrowgrams/compiler::*counter* nil nil nil nil nil nil nil)))))
