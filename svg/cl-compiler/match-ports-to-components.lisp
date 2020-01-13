@@ -36,7 +36,7 @@
           :error
           (format nil "MATCH-PORTS-TO-COMPONENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
-(defmethod mark-ports-to-components ((self e/part:part))
+(defmethod match-ports-to-components ((self e/part:part))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
