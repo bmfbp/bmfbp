@@ -698,17 +698,22 @@ match_ports_to_components(PortID) :- eltype(PortID,port),no_parent(PortID),new_a
 
 no_parent(X) :-
   parent(_,X),
-  !.
+!,
+  fail.
 no_parent(X).
 
-new_assign_parent_forPort(PortID) :-
+new_assign_parent_for_port(PortID) :-
   ellipse(ParentID),
+% we('ellipse intersection (port/parent) '),we(PortID),wen(ParentID),
   portIntersection(PortID,ParentID),
+we('port+ellipse intersect '),we(PortID),wen(ParentID),
   asserta(parent(ParentID,PortID)).
 
-new_assign_parent_forPort(PortID) :-
+new_assign_parent_for_port(PortID) :-
   rect(ParentID),
+we('port '),we(PortID),we(' rect '),wen(ParentID),
   portIntersection(PortID,ParentID),
+we('port+rect intersect '),we(PortID),wen(ParentID),
   asserta(parent(ParentID,PortID)).
 
 mark_nc(PortID) :-
