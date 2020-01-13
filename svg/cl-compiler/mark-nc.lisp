@@ -21,20 +21,20 @@
            (cl-event-passing-user::@send
             self
             :error
-            (format nil "MARK-DIRECTIONS(b) in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
+            (format nil "MARK-NC in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
 
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&mark-directions (b)~%")
+             (format *standard-output* "~&mark-nc~%")
              (mark-nc self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
           self
           :error
-          (format nil "MARK-DIRECTIONS (b) in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+          (format nil "MARK-NC) in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod mark-nc ((self e/part:part))
   (let ((fb

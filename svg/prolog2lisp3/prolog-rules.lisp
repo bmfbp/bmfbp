@@ -694,7 +694,7 @@ match_ports_to_components_main :-
 %     forall(eltype(PortID, port),assign_parent_for_port(PortID)).
 
 % new
-match_ports_a(PortID) :- eltype(PortID,port),no_parent(PortID),new_assign_parent_for_port(PortID).
+match_ports_to_components(PortID) :- eltype(PortID,port),no_parent(PortID),new_assign_parent_for_port(PortID).
 
 no_parent(X) :-
   parent(_,X),
