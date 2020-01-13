@@ -704,12 +704,12 @@ no_parent(X).
 new_assign_parent_forPort(PortID) :-
   ellipse(ParentID),
   portIntersection(PortID,ParentID),
-  asserta(parent(ParentID,PortID).
+  asserta(parent(ParentID,PortID)).
 
 new_assign_parent_forPort(PortID) :-
   rect(ParentID),
   portIntersection(PortID,ParentID),
-  asserta(parent(ParentID,PortID).
+  asserta(parent(ParentID,PortID)).
 
 mark_nc(PortID) :-
   no_parent(PortID),
