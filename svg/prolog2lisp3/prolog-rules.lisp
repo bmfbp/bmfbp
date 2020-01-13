@@ -1025,7 +1025,7 @@ sink_ellipse(EllipseID) :-
 %    forall(rect(RectID),makeInputPins(RectID)),
 %    !.
 
-sink_rect :-
+sink_rect(RectID) :-
     rect(RectID),
     portFor(RectID,PortID),
     sink(_,PortID),
