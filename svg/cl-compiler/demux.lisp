@@ -6,7 +6,8 @@
 (defparameter *counter* 0)
 
 (defmethod first-time ((self e/part:part))
-  (setf *counter* 0)
+  ;(setf *counter* 0)
+  (setf *counter* 13)
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
@@ -46,7 +47,8 @@
                (25 (cl-event-passing-user::@send self (e/part::get-output-pin self 25) T))
                (26 (cl-event-passing-user::@send self (e/part::get-output-pin self 26) T))
                (27 (cl-event-passing-user::@send self (e/part::get-output-pin self 27) T))
-               (28 (format *standard-output* "~&demux done~%"))))
+               (28 (cl-event-passing-user::@send self (e/part::get-output-pin self 28) T))
+               (29 (format *standard-output* "~&demux done~%"))))
          (cl-event-passing-user::@send
             self
             :error

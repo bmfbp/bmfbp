@@ -506,30 +506,15 @@ makePairID(PortID,NewID) :-
 %
 %%%%%%%%%%%
 
-collect_distances :-
-wen('a'),
-  text(TextID,StrID),
-wen('b'),
-  unassigned(TextID),
-wen('c'),
-  lisp_collect_begin,
-wen('d'),
-  join_distance(PortID,TextID),
-wen('e'),
-  distance_xy(JoinID,Distance),
-we('f '),we(JoinID),we(Distance),we(PortID),wen(TextID),
+collect_unassigned_text(TextID,StrID) :- text(TextID,StrID), unassigned(TextID).
+
+collect_port(PortID) :- port(PortID).
+
+collect_joins(JoinID,TextID,PortID,Distance,StrID) :-   
+  join_distance(JoinID,TextID),
   join_centerPair(PortID,JoinID),
-wen('g'),
-  lisp_collect_distance(TextId,StrID,PortID,Distance),
-wen('h'),
-  fail.
-collect_distances :-
-  lisp_collect_finalize,
-  TextID is lisp_return_closest_text,
-  PortID is lisp_return_closest_port,
-  StrID is  lisp_return_closest_string,
-  asserta(portNameByID(PortID,TextID)),
-  asserta(portName(PortID,StrID)).
+  distance_xy(JoinID,Distance),
+  text(TextID,StrID).
 
 %%%%%%%%%%%
 %
@@ -539,24 +524,48 @@ collect_distances :-
 
 :- include('tail').
 
-markIndexedPorts_main :-
-    readFB(user_input), 
-    forall(portName(P,_),markNamed(P)),
-    writeFB,
-    halt.
+% markIndexedPorts_main :-
+%     readFB(user_input), 
+%     forall(portName(P,_),markNamed(P)),
+%     writeFB,
+%     halt.
+
+%%%%%%%%%%%
+%
+% new
+%
+%%%%%%%%%%%
+
+markIndexedPorts_main :-portName(P,_),markNamed(P),fail.
 
 markNamed(P) :-
     sink(_,P),
+!,
     asserta(namedSink(P)).
 
 markNamed(P) :-
     source(_,P),
+!,
     asserta(namedSource(P)).
 
-markName(P) :-
-    we('port '),
-    we(P),
-    wen(' has no name!').
+%%%%%%%%%%%
+%
+% end new
+%
+%%%%%%%%%%%
+
+% markNamed(P) :-
+%     sink(_,P),
+%     asserta(namedSink(P)).
+% 
+% markNamed(P) :-
+%     source(_,P),
+%     asserta(namedSource(P)).
+% 
+% markName(P) :-
+%     we('port '),
+%     we(P),
+%     wen(' has no name!').
 
 :- initialization(main).
 :- include('head').
@@ -569,12 +578,16 @@ coincidentPorts_main :-
     writeFB,
     halt.
 
+%coincidentSinks :- namedSink(X),findAllCoincidentSinks(X),fail.
+%findAllCoincidentSinks(A,B) :- sink(_,B),findCoincidentSink(A,B),fail.
 
-coincidentSinks:-
-    forall(namedSink(X),findAllCoincidentSinks(X)).
+% works coincidentSinks(A,B) :- namedSink(A),sink(_,B),findCoincidentSink(A,B),fail.
 
-findAllCoincidentSinks(A) :-
-    forall(sink(_,B),findCoincidentSink(A,B)).
+% coincidentSinks:-
+%    forall(namedSink(X),findAllCoincidentSinks(X)).
+
+% findAllCoincidentSinks(A) :-
+%     forall(sink(_,B),findCoincidentSink(A,B)).
 
 findCoincidentSink(A,B):-
     center_y(A,Ay),
@@ -595,12 +608,21 @@ notNamedSink(X) :-
     prolog_not_proven(namedSink(X)).
     % \\+ namedSink(X).
 
+% new
 
-coincidentSources:-
-    forall(namedSource(X),findAllCoincidentSources(X)).
+coincidentSinks(A,B) :- namedSink(A),findAllCoincidentSinks(A,B).
+findAllCoincidentSinks(A,B) :- sink(_,B),findCoincidentSink(A,B),fail.
 
-findAllCoincidentSources(A) :-
-    forall(source(_,B),findCoincidentSource(A,B)).
+coincidentSources(A,B) :- namedSource(A),findAllCoincidentSources(A,B).
+findAllCoincidentSources(A,B) :- source(_,B),findCoincidentSource(A,B),fail.
+
+% end new
+
+% coincidentSources:-
+%     forall(namedSource(X),findAllCoincidentSources(X)).
+
+% findAllCoincidentSources(A) :-
+%     forall(source(_,B),findCoincidentSource(A,B)).
 
 findCoincidentSource(A,B):-
     center_y(A,Ay),
@@ -666,10 +688,37 @@ match_ports_to_components_main :-
     writeFB,
     halt.
 
-match_ports :-
-    % assign a parent component to every port, port must intersect parent's bounding-box
-    % unimplemented semantic check: check that every port has exactly one parent
-    forall(eltype(PortID, port),assign_parent_for_port(PortID)).
+% match_ports :-
+%     % assign a parent component to every port, port must intersect parent's bounding-box
+%     % unimplemented semantic check: check that every port has exactly one parent
+%     forall(eltype(PortID, port),assign_parent_for_port(PortID)).
+
+% new
+match_ports_to_components(PortID) :- eltype(PortID,port),no_parent(PortID),new_assign_parent_for_port(PortID).
+
+no_parent(X) :-
+  parent(_,X),
+!,
+  fail.
+no_parent(X).
+
+new_assign_parent_for_port(PortID) :-
+  ellipse(ParentID),
+  portIntersection(PortID,ParentID),
+  asserta(parent(ParentID,PortID)).
+
+new_assign_parent_for_port(PortID) :-
+  rect(ParentID),
+  portIntersection(PortID,ParentID),
+  asserta(parent(ParentID,PortID)).
+
+mark_nc(PortID) :-
+  no_parent(PortID),
+  eltype(PortID,port),
+  asserta(log(PortID,'is_nc')),
+  asserta(n_c(PortID)).
+
+% end new
 
 assign_parent_for_port(PortID) :-
     % if port already has a parent (e.g. ellipse), quit while happy.
@@ -722,20 +771,28 @@ intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, Pare
 :- initialization(main).
 :- include('head').
 
-pinless_main :-
-    readFB(user_input),
-    forall(eltype(ParentID, box), check_has_port(ParentID)),
-    writeFB,
-    halt.
+% new
 
-check_has_port(ParentID):-
-    parent(ParentID,PortID),
-    port(PortID),
-    !.
+mark_pinless(RRectID) :-
+  roundedrect(RRectID),
+  asserta(pinless(RRectID)).
 
-check_has_port(ParentID):-
-    roundedrect(ParentID),
-    asserta(pinless(ParentID)).
+% new
+
+% pinless_main :-
+%     readFB(user_input),
+%     forall(eltype(ParentID, box), check_has_port(ParentID)),
+%     writeFB,
+%     halt.
+
+% check_has_port(ParentID):-
+%     parent(ParentID,PortID),
+%     port(PortID),
+%     !.
+
+% check_has_port(ParentID):-
+%     roundedrect(ParentID),
+%     asserta(pinless(ParentID)).
 
 :- include('tail').
 

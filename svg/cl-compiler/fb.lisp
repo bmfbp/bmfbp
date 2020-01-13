@@ -102,7 +102,7 @@
               (if (equal existing-fact fact)
                   (fb-warning self "fact already exists ~A" fact)
                 (progn
-                  (fb-error self "fact ~S attempts to override existing fact ~S" fact existing-fact)
+                  ;(fb-error self "fact ~S attempts to override existing fact ~S" fact existing-fact)
                   (writefb fb))))
           (writefb fb))))))
 

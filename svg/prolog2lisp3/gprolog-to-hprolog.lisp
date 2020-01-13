@@ -140,8 +140,12 @@
                      (cons 'cl:sqrt (cdr r)))
                      ((eq (car r) :abs)
                       (cons 'cl:abs (cdr r)))
-                     ((member (car r) '(:lisp_return_closest_text :lisp_return_closest_port :lisp_return_closest_string))
-                      r)
+                     ((eq (car r) :lisp_return_closest_text)
+                      (cons 'arrowgrams/compiler::lisp-return-closest-text (cdr r)))
+                     ((eq (car r) :lisp_return_closest_port)
+                      (cons 'arrowgrams/compiler::lisp-return-closest-port (cdr r)))
+                     ((eq (car r) :lisp_return_closest_string)
+                      (cons 'arrowgrams/compiler::lisp-return-closest-string (cdr r)))
                      (t (assert nil)))))
               `(:lispv ,LHS ,RHS)))
         (assert nil)))))
@@ -207,12 +211,6 @@
    ((eq (car x) :writefb)
     `(:lisp (arrowgrams/compiler::true)))
    
-   ((eq (car x) :lisp_collect_begin)
-    `(:lisp (arrowgrams/compiler::lisp-collect-begin)))
-   
-   ((eq (car x) :lisp_collect_finalize)
-    `(:lisp (arrowgrams/compiler::lisp-collect-finalize)))
-   
    (t x)))
 
 (defun rewrite-2 (x)
@@ -226,13 +224,6 @@
     `(:lisp-method (arrowgrams/compiler/util::asserta ,(second x))))
    ((eq (car x) :retract)
     `(:lisp-method (arrowgrams/compiler/util::retract ,(second x))))
-   
-   ((eq (car x) :lisp_return_closest_text)
-    `(:lispv ,(second x) (arrowgrams/compiler::lisp-return-closest-text)))
-   ((eq (car x) :lisp_return_closest_port)
-    `(:lispv ,(second x) (arrowgrams/compiler::lisp-return-closest-port)))
-   ((eq (car x) :lisp_return_closest_string)
-    `(:lispv ,(second x) (arrowgrams/compiler::lisp-return-closest-string)))
    
    ((eq (car x) :prolog_not_proven)
     (let ((clause (second x)))
@@ -264,7 +255,7 @@
     `(:lisp (arrowgrams/compiler::dec-counter)))
    ((and (eq (first x) :g_read)
          (eq (second x) :counter))
-    `(:lispv ,(third x) (read-counter)))
+    `(:lispv ,(third x) (arrowgrams/compiler::read-counter)))
    ((and (eq (first x) :g_assign)
          (eq (second x) :counter))
     `(:lisp (arrowgrams/compiler::set-counter ,(third x))))
