@@ -799,6 +799,24 @@ mark_pinless(RRectID) :-
 :- initialization(main).
 :- include('head').
 
+% new
+new_sem_partsHaveSomePorts_main(RectID):-
+   eltype(RectID,box),not_pinless(RectID),no_port(RectID),
+   asserta(log(PartID,'error_part_has_no_port','partsHaveSomePorts')).
+not_pinless(R) :-
+   pinless(R),
+   !,
+   fail.
+not_pinless(R).
+
+no_port(R) :-
+  parent(R,Port),
+  port(Port),
+  !,
+  fail.
+no_port(R).
+% end new
+
 sem_partsHaveSomePorts_main :-
     readFB(user_input),
     forall(eltype(PartID, box), check_has_port(PartID)),

@@ -28,7 +28,7 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&assign-wire-numbers-to-edges~%")
-             ;; put code here
+             (assign-wire-numbers-to-edges self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -36,3 +36,10 @@
           :error
           (format nil "ASSIGN-WIRE-NUMBERS-TO-EDGES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
+(defmethod assign-wire-numbers-to-edges ((self e/part:part))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (goal '((:assign_wire_numbers_to_edges_main (:? A)))))
+    (arrowgrams/compiler/util::run-prolog self goal fb)))
