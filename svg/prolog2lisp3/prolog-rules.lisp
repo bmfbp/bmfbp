@@ -696,7 +696,7 @@ match_ports_to_components_main :-
 % new
 match_ports_a(PortID) :- eltype(PortID,port),no_parent(PortID),new_assign_parent_for_port(PortID).
 
-no_parent(X) :=
+no_parent(X) :-
   parent(_,X),
   !.
 no_parent(X).
