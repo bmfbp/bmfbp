@@ -1015,23 +1015,29 @@ sink_ellipse(EllipseID) :-
 :- include('head').
 :- include('port').
 
-inputPins_main :-
-    readFB(user_input),
-    condSinkRect,
-    writeFB,
-    halt.
+% inputPins_main :-
+%     readFB(user_input),
+%     condSinkRect,
+%     writeFB,
+%     halt.
 
 %condSinkRect :-
 %    forall(rect(RectID),makeInputPins(RectID)),
 %    !.
 
-condSinkRect :-
-    forall(rect(RectID),makeInputPins(RectID)).
-
-makeInputPins(RectID) :-
+sink_rect :-
+    rect(RectID),
     portFor(RectID,PortID),
     sink(_,PortID),
-    asserta(inputPin(PortID)),!.
+    asserta(inputPin(PortID)).
+
+% condSinkRect :-
+%     forall(rect(RectID),makeInputPins(RectID)).
+
+% makeInputPins(RectID) :-
+%     portFor(RectID,PortID),
+%     sink(_,PortID),
+%     asserta(inputPin(PortID)),!.
 
 :- include('tail').
 
