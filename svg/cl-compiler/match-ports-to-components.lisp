@@ -27,7 +27,7 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&match-port-to-components (a)~%")
+             (format *standard-output* "~&match-ports-to-components~%")
              (match-ports-to-components self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
