@@ -922,12 +922,13 @@ checkZero(N) :-
 :- initialization(main).
 :- include('head').
 
-assign_wire_numbers_to_edges_main :-
+assign_wire_numbers_to_edges_main(EdgeID) :-
     g_assign(counter,0),
     readFB(user_input),
-    forall(edge(EdgeID),assign_wire_number(EdgeID)),
-    g_read(counter,N),
-    asserta(nwires(N)),
+%    forall(edge(EdgeID),assign_wire_number(EdgeID)),
+   edge(EdgeID), assign_wire_number(EdgeID),
+%     g_read(counter,N),
+%     asserta(nwires(N)),
     writeFB,
     halt.
 
