@@ -1,7 +1,7 @@
 
-(in-package :arrowgrams/compiler/MARK-DIRECTIONS)
+(in-package :arrowgrams/compiler/MARK-NC)
 
-; (:code MARK-DIRECTIONS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/MARK-DIRECTIONS::react #'arrowgrams/compiler/MARK-DIRECTIONS::first-time)
+; (:code MARK-NC (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/MARK-NC::react #'arrowgrams/compiler/MARK-NC::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
@@ -21,25 +21,25 @@
            (cl-event-passing-user::@send
             self
             :error
-            (format nil "MARK-DIRECTIONS in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
+            (format nil "MARK-DIRECTIONS(b) in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
 
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&mark-directions (a)~%")
-             (mark-directions self)
+             (format *standard-output* "~&mark-directions (b)~%")
+             (mark-nc self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
           self
           :error
-          (format nil "MARK-DIRECTIONS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+          (format nil "MARK-DIRECTIONS (b) in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
-(defmethod mark-directions ((self e/part:part))
+(defmethod mark-nc ((self e/part:part))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
-        (goal '((:match_ports_a (:? A)))))
+        (goal '((:mark_nc (:? A)))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))

@@ -47,7 +47,8 @@
                (25 (cl-event-passing-user::@send self (e/part::get-output-pin self 25) T))
                (26 (cl-event-passing-user::@send self (e/part::get-output-pin self 26) T))
                (27 (cl-event-passing-user::@send self (e/part::get-output-pin self 27) T))
-               (28 (format *standard-output* "~&demux done~%"))))
+               (28 (cl-event-passing-user::@send self (e/part::get-output-pin self 28) T))
+               (29 (format *standard-output* "~&demux done~%"))))
          (cl-event-passing-user::@send
             self
             :error

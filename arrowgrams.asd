@@ -68,6 +68,7 @@
                                      (:file "mark-indexed-ports" :depends-on ("package" "classes"))
                                      (:file "coincident-ports" :depends-on ("package" "classes"))
                                      (:file "mark-directions" :depends-on ("package" "classes"))
+                                     (:file "mark-nc" :depends-on ("package" "classes"))
                                      (:file "match-ports-to-components" :depends-on ("package" "classes"))
                                      (:file "pinless" :depends-on ("package" "classes"))
                                      (:file "sem-parts-have-some-ports" :depends-on ("package" "classes"))
@@ -101,6 +102,7 @@
                                                    "mark-indexed-ports"
                                                    "coincident-ports"
                                                    "mark-directions"
+                                                   "mark-nc"
                                                    "match-ports-to-components"
                                                    "pinless"
                                                    "sem-parts-have-some-ports"

@@ -694,7 +694,29 @@ match_ports_to_components_main :-
 %     forall(eltype(PortID, port),assign_parent_for_port(PortID)).
 
 % new
-match_ports(PortID) :- eltype(PortID,port),assign_parent_for_port(PortID),fail.
+match_ports_a(PortID) :- eltype(PortID,port),no_parent(PortID),new_assign_parent_for_port(PortID).
+
+no_parent(X) :=
+  parent(_,X),
+  !.
+no_parent(X).
+
+new_assign_parent_forPort(PortID) :-
+  ellipse(ParentID),
+  portIntersection(PortID,ParentID),
+  asserta(parent(ParentID,PortID).
+
+new_assign_parent_forPort(PortID) :-
+  rect(ParentID),
+  portIntersection(PortID,ParentID),
+  asserta(parent(ParentID,PortID).
+
+mark_nc(PortID) :-
+  no_parent(PortID),
+  eltype(PortID,port),
+  asserta(log(PortID,'is_nc')),
+  asserta(n_c(PortID)).
+
 % end new
 
 assign_parent_for_port(PortID) :-
