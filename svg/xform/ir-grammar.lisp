@@ -1,44 +1,44 @@
 (in-package :arrowgrams/compiler/xform)
 
 (esrap:defrule arrowgrams-intermediate-representation
-    (and LPAR @self-Part RPAR <end-of-input>))
+    (and LPAR <self-Part> RPAR <end-of-input>))
 
-(esrap:defrule @self-Part 
-    (and @self-kind @self-inputs @self-outputs <self-part-decls> @self-wiring))
+(esrap:defrule <self-Part> 
+    (and <self-kind> <self-inputs> <self-outputs> <self-part-decls> <self-wiring>))
 
-(esrap:defrule @self-kind IDENT)
+(esrap:defrule <self-kind> IDENT)
 
-(esrap:defrule @self-inputs @inputs)
+(esrap:defrule <self-inputs> <inputs>)
 
-(esrap:defrule @self-outputs @outputs)
+(esrap:defrule <self-outputs> <outputs>)
 
-(esrap:defrule @self-wiring (and LPAR WIRES (* @wire) RPAR)
+(esrap:defrule <self-wiring> (and LPAR WIRES (* <wire>) RPAR)
   (:function second))
 
 (esrap:defrule <self-part-decls> (and LPAR PARTS (* <part-decl>) RPAR))
 
 
-(esrap:defrule @wire (and LPAR @wire-id @froms @tos RPAR)
+(esrap:defrule <wire> (and LPAR <wire-id> <froms> <tos> RPAR)
   (:destructure (lp part pin rp)
 		(declare (ignore lp rp))
 		(list part pin)))
 
-(esrap:defrule @wire-id IDENT)
-(esrap:defrule @froms (and LPAR (* <part-pin>) RPAR))
-(esrap:defrule @tos (and LPAR (* <part-pin>) RPAR))
+(esrap:defrule <wire-id> IDENT)
+(esrap:defrule <froms> (and LPAR (* <part-pin>) RPAR))
+(esrap:defrule <tos> (and LPAR (* <part-pin>) RPAR))
 
 (esrap:defrule <part-pin> (and <part-id> <pin-id>))
 
-(esrap:defrule <part-decl> (and LPAR @id @kind @inputs @outputs RPAR))
+(esrap:defrule <part-decl> (and LPAR <id> <kind> <inputs> <outputs> RPAR))
 
-(esrap:defrule @id IDENT)
+(esrap:defrule <id> IDENT)
 
-(esrap:defrule @kind IDENT)
+(esrap:defrule <kind> IDENT)
 
-(esrap:defrule @inputs (and LPAR (* <pin-id>) RPAR)
+(esrap:defrule <inputs> (and LPAR (* <pin-id>) RPAR)
   (:function second))
 
-(esrap:defrule @outputs (and LPAR (* <pin-id>) RPAR)
+(esrap:defrule <outputs> (and LPAR (* <pin-id>) RPAR)
   (:function second))
 
 
@@ -57,11 +57,11 @@
 (esrap:defrule IDENT (and STRING (* WS))
   (:function first))
 
-(esrap:defrule STRING (and #\" (* @not-dquote) #\")
+(esrap:defrule STRING (and #\" (* <not-dquote>) #\")
   (:function second)
   (:text t))
 
-(esrap:defrule @not-dquote (and (esrap:! #\") character)
+(esrap:defrule <not-dquote> (and (esrap:! #\") character)
   (:function second))
 
 
