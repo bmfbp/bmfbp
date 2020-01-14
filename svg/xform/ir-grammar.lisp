@@ -9,25 +9,21 @@
 
 (esrap:defrule @self-kind IDENT)
 
-(esrap:defrule @self-inputs (and LPAR @pin-list RPAR)
+(esrap:defrule @self-inputs (and LPAR (* @pin) RPAR)
   (:function second))
 
-(esrap:defrule @self-outputs (and LPAR @pin-list RPAR)
+(esrap:defrule @self-outputs (and LPAR (* @pin) RPAR)
   (:function second))
 
-(esrap:defrule @self-wiring (and LPAR @wire-list RPAR)
+(esrap:defrule @self-wiring (and LPAR (* @wire) RPAR)
   (:function second))
 
-
-(esrap:defrule @wire-list (or @wire @wire-list))
 
 (esrap:defrule @wire (and LPAR @part @pin RPAR)
   (:destructure (lp part pin rp)
 		(declare (ignore lp rp))
 		(list part pin)))
   
-(esrap:defrule @pin-list (or @pin @pin-list))
-
 (esrap:defrule @pin IDENT)
   
 
@@ -51,7 +47,7 @@
 (esrap:defrule LPAR (and #\( (* WS))
   (:constant #\())
 
-(esrap:defrule RPAR (and #\( (* WS))
+(esrap:defrule RPAR (and #\) (* WS))
   (:constant #\)))
 
 (esrap:defrule WS (or #\Space #\Tab #\Newline COMMENT-TO-EOL EOF)
