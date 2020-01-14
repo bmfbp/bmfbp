@@ -1,17 +1,17 @@
 (
   "build process" ;; kind name
-  ("top-level svg" "top-level name")  ;; inputs to schematic
-  ("javascript source code")          ;; outputs from schematic
+  ("top-level svg" "top-level name")
+  ("javascript source code")
 
-  (                                   ;; parts list
+  (                         
     ( 
       "part1"
       "get content in repo"  
-      (                               ;; input list
+      (                     
 	 "git repo metadata"
 	 "temp directory"
       )
-      (                               ;; output list
+      (                     
 	 "file content"
       )
     )
