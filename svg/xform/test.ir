@@ -3,7 +3,7 @@
   ("top-level svg" "top-level name")
   ("javascript source code")
 
-  ( parts                         
+  ( parts
     ( 
       "part1"
       "get content in repo"  
