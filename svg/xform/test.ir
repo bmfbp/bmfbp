@@ -3,7 +3,7 @@
   ("top-level svg" "top-level name")
   ("javascript source code")
 
-  (                         
+  ( parts                         
     ( 
       "part1"
       "get content in repo"  
@@ -23,10 +23,10 @@
     ( "part7" "determine kindType" ("part metadata" "file content") ("schematic metadata" "leaf metadata"))
     ( "part8" "prepare temp directory" () ("directory"))
     ( "part9" "collector" ("done" "leaf" "composite") ("intermediate code"))
-    ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code"))
+    ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code") )
   )
 
-  (
+  ( wires
     ( "wire1" 
       ( ("part1" "file content") (SELF "top-level svg") )
       ( ("part3" "svg") ("part2" "start") )          

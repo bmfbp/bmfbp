@@ -12,10 +12,10 @@
 
 (esrap:defrule @self-outputs @outputs)
 
-(esrap:defrule @self-wiring (and LPAR (* @wire) RPAR)
+(esrap:defrule @self-wiring (and LPAR WIRES (* @wire) RPAR)
   (:function second))
 
-(esrap:defrule @self-part-decls (and LPAR (* @part-decl) RPAR))
+(esrap:defrule @self-part-decls (and LPAR PARTS (* @part-decl) RPAR))
 
 
 (esrap:defrule @wire (and LPAR @part @pin RPAR)
@@ -43,6 +43,8 @@
 
   
 
+(esrap:defrule PARTS (and 'parts' (* WS)))
+(esrap:defrule WIRES (and 'wires' (* WS)))
 
 
 
@@ -57,7 +59,7 @@
 (esrap:defrule @not-dquote (and (esrap:! #\") character)
   (:function second))
 
-  
+
 (esrap:defrule LPAR (and #\( (* WS))
   (:constant #\())
 
