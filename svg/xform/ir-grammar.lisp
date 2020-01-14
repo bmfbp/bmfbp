@@ -41,10 +41,10 @@
   (:function first))
 
 (esrap:defrule STRING (and #\" (* @not-dquote) #\")
-  (:function first)
+  (:function second)
   (:text t))
 
-(esrap:defrule @not-dquote (and (! #\") character)
+(esrap:defrule @not-dquote (and (esrap:! #\") character)
   (:function second))
 
   
@@ -64,7 +64,7 @@
 (esrap:defrule EOL #\Newline
   (:constant :NL))
 
-(esrap:defrule EOF (and (! character))
+(esrap:defrule EOF (and (esrap:! character))
   (:constant :EOF))
 
   
