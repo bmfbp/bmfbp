@@ -3,27 +3,41 @@
 (esrap:defrule arrowgrams-intermediate-representation
     (and LPAR @self-Part RPAR))
 
-
 (esrap:defrule @self-Part 
-    (and @self-kind @self-inputs @self-outputs @self-wiring))
+    (and @self-kind @self-inputs @self-outputs @self-part-decls @self-wiring))
 
 (esrap:defrule @self-kind IDENT)
 
-(esrap:defrule @self-inputs (and LPAR (* @pin) RPAR)
-  (:function second))
+(esrap:defrule @self-inputs @inputs)
 
-(esrap:defrule @self-outputs (and LPAR (* @pin) RPAR)
-  (:function second))
+(esrap:defrule @self-outputs @outputs)
 
 (esrap:defrule @self-wiring (and LPAR (* @wire) RPAR)
   (:function second))
+
+(esrap:defrule @self-part-decls <- LPAR (* part-decl) RPAR)
 
 
 (esrap:defrule @wire (and LPAR @part @pin RPAR)
   (:destructure (lp part pin rp)
 		(declare (ignore lp rp))
 		(list part pin)))
-  
+
+
+(esrap:defrule @part-decl <- LPAR @id @kind @inputs @outputs RPAR)
+
+(esrap:defrule @id <- IDENT)
+
+(esrap:defrule @kind <- IDENT)
+
+(esrap:defrule @inputs (and LPAR (* @pin) RPAR)
+  (:function second))
+
+(esrap:defrule @outputs (and LPAR (* @pin) RPAR)
+  (:function second))
+
+
+(esrap:defrule @part IDENT)
 (esrap:defrule @pin IDENT)
   
 
