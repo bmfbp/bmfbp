@@ -1,5 +1,5 @@
 (
-  "build process" ;; kind name
+  "build process"
   ("top-level svg" "top-level name")
   ("javascript source code")
 
@@ -19,27 +19,30 @@
     ( "part3" "compile composite" ("svg") ("graph as json" "parts as json objects"))
     ( "part4" "json object stacker" ("get a part" "push object") ("no more" "part metadata"))
     ( "part5" "fetch git repo" ("git repo metadata" "temp directory") ("metadata"))
-    ( "part6" "get file content in repo" ("git repo metadata" temp directory") ("metadata" "file content"))
+    ( "part6" "get file content in repo" ("git repo metadata" "temp directory") ("metadata" "file content"))
     ( "part7" "determine kindType" ("part metadata" "file content") ("schematic metadata" "leaf metadata"))
-    ( "part8" "prepare temp directory () ("directory"))
+    ( "part8" "prepare temp directory" () ("directory"))
     ( "part9" "collector" ("done" "leaf" "composite") ("intermediate code"))
     ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code"))
   )
 
-  (                                   ;; wiring list
+  (
     ( "wire1" 
-      ( ("part1" "file content) (SELF "top-level svg") )  ;; from
-      ( ("part3" "svg") ("part2" "start") )               ;; to
+      ( ("part1" "file content") (SELF "top-level svg") )
+      ( ("part3" "svg") ("part2" "start") )          
     )
    ("wire2" (("json object stacker" "no more")) (("iterator" "done") ("collector done")))
    ("wire3" (("compile composite" "parts as json objects")) (("json object stacker" "push object")))
    ("wire4" (("json object stacker" "get a part")) (("iterator" "get a part")))
    ("wire5" (("json object stacker" "part metadata")) (("iterator" "continue") ("fetch git repo" "git repo metadata")))
    ("wire6" (("prepare temp directory"))
-            (("get file content in repo" "temp directory") ("file content in repo" "temp directory") ("fetch git repo" "temp directory") ("javascript builder" "temp directory")))
+            (("get file content in repo" "temp directory")
+	     ("file content in repo" "temp directory") 
+	     ("fetch git repo" "temp directory") 
+	     ("javascript builder" "temp directory")))
    ("wire7" (("determine type kind" "schematic metadata")) (("get file content in repo" "get repo metadata")))
    ("wire11" (("determine type kind" "leaf metadata")) (("collector" "leaf")))
-   ("wire8" (("collector" "intermdiate code")) (("javascript builder" "intermediate code")))
+   ("wire8" (("collector" "intermediate code")) (("javascript builder" "intermediate code")))
    ("wire9" ((SELF "top-level name")) (("javacript builder" "top-level name")))
    ("wire10" (("javascript builder" "javascript source code")) ((SELF "javascript source code")))
  )
