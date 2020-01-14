@@ -43,8 +43,8 @@
 
   
 
-(esrap:defrule PARTS (and 'parts' (* WS)))
-(esrap:defrule WIRES (and 'wires' (* WS)))
+(esrap:defrule PARTS (and "parts" (* WS)))
+(esrap:defrule WIRES (and "wires" (* WS)))
 
 
 
@@ -61,15 +61,15 @@
 
 
 (esrap:defrule LPAR (and #\( (* WS))
-  (:constant #\())
+  (:constant :lpar))
 
 (esrap:defrule RPAR (and #\) (* WS))
-  (:constant #\)))
+  (:constant :rpare))
 
 (esrap:defrule WS (or <white-space> <comment>))
 
 (esrap:defrule <white-space> (or #\Space #\Tab #\Newline #\Page)
-  (:constant #\Space))
+  (:constant :space))
 
 
 
