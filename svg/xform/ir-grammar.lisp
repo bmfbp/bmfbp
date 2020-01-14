@@ -15,7 +15,7 @@
 (esrap:defrule @self-wiring (and LPAR (* @wire) RPAR)
   (:function second))
 
-(esrap:defrule @self-part-decls (and LPAR (* part-decl) RPAR))
+(esrap:defrule @self-part-decls (and LPAR (* @part-decl) RPAR))
 
 
 (esrap:defrule @wire (and LPAR @part @pin RPAR)
