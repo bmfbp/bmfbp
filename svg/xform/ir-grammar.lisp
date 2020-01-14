@@ -1,7 +1,7 @@
 (in-package :arrowgrams/compiler/xform)
 
 (esrap:defrule arrowgrams-intermediate-representation
-    (and LPAR @self-Part RPAR))
+    (and LPAR @self-Part RPAR <end-of-input>))
 
 (esrap:defrule @self-Part 
     (and @self-kind @self-inputs @self-outputs @self-part-decls @self-wiring))
@@ -15,7 +15,7 @@
 (esrap:defrule @self-wiring (and LPAR (* @wire) RPAR)
   (:function second))
 
-(esrap:defrule @self-part-decls <- LPAR (* part-decl) RPAR)
+(esrap:defrule @self-part-decls (and LPAR (* part-decl) RPAR))
 
 
 (esrap:defrule @wire (and LPAR @part @pin RPAR)
@@ -24,11 +24,11 @@
 		(list part pin)))
 
 
-(esrap:defrule @part-decl <- LPAR @id @kind @inputs @outputs RPAR)
+(esrap:defrule @part-decl (and LPAR @id @kind @inputs @outputs RPAR))
 
-(esrap:defrule @id <- IDENT)
+(esrap:defrule @id IDENT)
 
-(esrap:defrule @kind <- IDENT)
+(esrap:defrule @kind IDENT)
 
 (esrap:defrule @inputs (and LPAR (* @pin) RPAR)
   (:function second))
@@ -64,17 +64,29 @@
 (esrap:defrule RPAR (and #\) (* WS))
   (:constant #\)))
 
-(esrap:defrule WS (or #\Space #\Tab #\Newline COMMENT-TO-EOL EOF)
+(esrap:defrule WS (or <white-space> <comment>))
+
+(esrap:defrule <white-space> (or #\Space #\Tab #\Newline #\Page)
   (:constant #\Space))
 
-(esrap:defrule COMMENT-TO-EOL
-    (and #\; (* character) (or EOL EOF))
-  (:constant :COMMENT))
 
-(esrap:defrule EOL #\Newline
-  (:constant :NL))
 
-(esrap:defrule EOF (and (esrap:! character))
+(esrap:defrule <comment> (and #\; <same-line>)
+  (:function second))
+
+
+;; from https://github.com/scymtym/parser.common-rules
+
+(esrap:defrule <end-of-input>
+    (esrap::! character)
   (:constant :EOF))
+
+(esrap:defrule <end-of-line>
+    (or (esrap::& (or #\Newline #\Page)) <end-of-input>)
+  (:constant :EOL))
+
+(esrap:defrule <same-line>
+    (* (not (or #\Newline #\Page)))
+  (:text t))
 
   
