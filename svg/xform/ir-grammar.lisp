@@ -64,7 +64,7 @@
   (:constant :lpar))
 
 (esrap:defrule RPAR (and #\) (* WS))
-  (:constant :rpare))
+  (:constant :rpar))
 
 (esrap:defrule WS (or <white-space> <comment>))
 
