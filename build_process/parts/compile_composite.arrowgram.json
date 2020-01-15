@@ -172,7 +172,7 @@
                 }
             },
             "kindName": "compile one arrowgram",
-            "manifestPath": "compile_one_arrowgram.json",
+            "manifestPath": "compile_one_arrowgram.manifest.json",
             "sinkPinName": "",
             "sourcePinName": ""
         },
