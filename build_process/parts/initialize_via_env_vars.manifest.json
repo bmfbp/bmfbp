@@ -1,0 +1,11 @@
+{
+    "entrypoint": "./initialize_via_env_vars.js",
+    "inPins": [],
+    "kindType": "leaf",
+    "outPins": [
+      "temp directory",
+      "top-level kind ref",
+      "top-level name"
+    ],
+    "platform": "nodejs"
+}

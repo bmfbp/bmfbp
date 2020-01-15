@@ -1,12 +1,13 @@
 {
   "entrypoint": "./json_object_stacker.js",
-  "kindType": "nodejs",
+  "kindType": "leaf",
+  "platform": "nodejs",
   "inPins": [
-    "push object",
-    "get a part"
+    "push one",
+    "get one"
   ],
   "outPins": [
     "no more",
-    "part metadata"
+    "one object"
   ]
 }

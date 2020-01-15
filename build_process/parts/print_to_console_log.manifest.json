@@ -1,0 +1,9 @@
+{
+    "entrypoint": "./print_to_console_log.js",
+    "inPins": [
+      "print"
+    ],
+    "kindType": "leaf",
+    "outPins": [],
+    "platform": "nodejs"
+}

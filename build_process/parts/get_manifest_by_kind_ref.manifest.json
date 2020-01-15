@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./get_manifest_by_kind_ref.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "kind ref",
+    "root directory"
+  ],
+  "outPins": [
+    "manifest"
+  ]
+}

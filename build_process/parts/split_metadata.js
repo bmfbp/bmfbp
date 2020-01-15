@@ -3,9 +3,10 @@ exports.main = (pin, packet, send) => {
     case 'in':
       let metadata;
       try {
-        metadata = JSON.parse(JSON.parse(packet).metaData);
+        metadata = JSON.parse(packet.metaData);
       } catch (e) {
-        console.error('Metadata should be a JSON string: ', packet);
+        console.error(packet);
+        console.error(new Error('Metadata should be a JSON object'));
         return;
       }
       metadata.forEach(function (object) {
@@ -13,6 +14,6 @@ exports.main = (pin, packet, send) => {
       });
       break;
     default:
-      console.error('Unknown pin name provided: ' + pin);
+      console.error(new Error('Unknown pin name provided: ' + pin));
   }
 };

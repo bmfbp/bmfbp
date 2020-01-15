@@ -1,12 +1,12 @@
 {
-    "entrypoint": "./compile_composite.definition.json",
+    "entrypoint": "./compile_composite.arrowgram.json",
     "inPins": [
-        "in"
+        "arrowgram"
     ],
     "kindType": "composite",
     "outPins": [
         "metadata json",
-        "schematic json"
+        "composite json"
     ],
     "platform": "nodejs"
 }

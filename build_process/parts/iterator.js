@@ -16,7 +16,7 @@ exports.main = (pin, packet, send) => {
     case 'started':
       switch (pin) {
         case 'continue':
-          send('get a part', true);
+          send('get one', true);
           break;
 
         case 'done':

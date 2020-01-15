@@ -3,13 +3,13 @@ const compile = require('../../parts/compile_one_diagram');
  
 fs.readFile(`${__dirname}/facts.pro`, 'utf8', function(err, facts) {
   if (err) {
-    console.error(err);
+    console.error(new Error(err));
     return;
   }
 
   fs.readFile(`${__dirname}/strings.lisp`, 'utf8', function(err, strings) {
     if (err) {
-      console.error(err);
+      console.error(new Error(err));
       return;
     }
 

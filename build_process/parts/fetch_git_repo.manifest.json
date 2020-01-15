@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./fetch_git_repo.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "kind ref",
+    "root directory"
+  ],
+  "outPins": [
+    "kind ref"
+  ]
+}

@@ -1,7 +1,0 @@
-{
-  "entrypoint": "./mock_composite.definition.json",
-  "kindType": "composite",
-  "platform": "nodejs",
-  "inPins": [],
-  "outPins": []
-}

@@ -1,0 +1,7 @@
+{
+    "entrypoint": "./debug_builder.arrowgram.json",
+    "inPins": [],
+    "kindType": "composite",
+    "outPins": [],
+    "platform": "nodejs"
+}

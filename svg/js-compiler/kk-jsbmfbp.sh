@@ -1,5 +1,4 @@
 #!/bin/bash
-echo "kktest"
 
 # scanner
 #hs_vsh_drawio_to_fb <$1 >temp1.lisp

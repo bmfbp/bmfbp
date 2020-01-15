@@ -1,0 +1,15 @@
+{
+  "entrypoint": "./collector.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "composite definition",
+    "composite kind ref",
+    "leaf kind ref",
+    "root directory",
+    "continue"
+  ],
+  "outPins": [
+    "part kind refs"
+  ]
+}

@@ -162,7 +162,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               y <- lookupAttrIntoString "y"
               width <- lookupAttrIntoString "width"
               height <- lookupAttrIntoString "height"
-	      stroke <- lookupAttrIntoString "stroke"
+              stroke <- lookupAttrIntoString "stroke"
               return (Rect (readFloat x) (readFloat y) (readFloat width) (readFloat height) stroke)
           in
             maybe defaultOutput id result
@@ -173,7 +173,7 @@ parseNode (TTD.NodeElement (TTD.Element { TTD.eltName = name, TTD.eltAttrs = att
               cy <- lookupAttrIntoString "cy"
               rx <- lookupAttrIntoString "rx"
               ry <- lookupAttrIntoString "ry"
-	      return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
+              return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
 --              if rx == ry
 --                then return (Dot (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))
 --                else return (Ellipse (readFloat cx) (readFloat cy) (readFloat rx) (readFloat ry))

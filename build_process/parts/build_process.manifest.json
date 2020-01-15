@@ -1,0 +1,13 @@
+{
+    "entrypoint": "./build_process.arrowgram.json",
+    "inPins": [
+        "top-level kind ref",
+        "top-level name",
+        "temp directory"
+    ],
+    "kindType": "composite",
+    "outPins": [
+        "nodejs source code"
+    ],
+    "platform": "nodejs"
+}

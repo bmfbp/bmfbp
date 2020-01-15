@@ -1,12 +1,13 @@
 {
-  "entrypoint": "./mock_leaf.js",
+  "entrypoint": "gate.js",
   "kindType": "leaf",
   "platform": "nodejs",
   "inPins": [
-    "in1",
-    "in2"
+    "in",
+    "open",
+    "close after open"
   ],
   "outPins": [
-    "out1"
+    "out"
   ]
 }

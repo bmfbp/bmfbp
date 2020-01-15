@@ -13,7 +13,7 @@ exports.main = (pin, packet, send) => {
       compile(packet, send);
       break;
     default:
-      console.error('Unknown pin name provided: ' + pin);
+      console.error(new Error('Unknown pin name provided: ' + pin));
   }
 };
 
@@ -21,7 +21,7 @@ async function writeTempFile(filePath, content) {
   return new Promise((resolve, reject) => {
     fs.writeFile(filePath, content, (err) => {
       if (err) {
-        console.error(filePath, err);
+        console.error(new Error(err));
         reject();
         return;
       }
@@ -34,7 +34,7 @@ async function writeTempFile(filePath, content) {
 function compile(arrowgram, send) {
   compile2(arrowgram, send).catch(err => {
     if (err) {
-      console.error(err);
+      console.error(new Error(err));
       return;
     }
   });
@@ -43,7 +43,7 @@ function compile(arrowgram, send) {
 async function compile2(arrowgram, send) {
   await fs.mkdtemp(`${os.tmpdir()}${sep}`, async (err, dir) => {
     if (err) {
-      console.error(dir, err);
+      console.error(new Error(err));
       return;
     }
 
@@ -52,13 +52,13 @@ async function compile2(arrowgram, send) {
 
     console.log('compiling one arrowgram', command);
     child_process.exec(command, function(err, stdout, stderr) {
-      console.error(stderr);
+      console.error(new Error(stderr));
       if (err) {
-        console.error(command, err);
+        console.error(new Error(err));
         return;
       }
 
-      send('out', stdout, true);
+      send('out', JSON.parse(stdout), true);
     });
   });
 
