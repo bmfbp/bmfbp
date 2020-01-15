@@ -16,6 +16,8 @@
       (                     
 	 "file content"
       )
+      "getFileReact"
+      "getFileFirstTime"
     )
     ( "part2" "iterator" ("start" "done" "continue") ("get a part") "iteratorReact" "iteratorFirstTime")
     ( "part3" "compile composite" ("svg") ("graph as json" "parts as json objects") "compileReact" "compileFirstTime")

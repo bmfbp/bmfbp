@@ -29,7 +29,7 @@
 
 (esrap:defrule <part-pin> (and LPAR <part-id-or-self> <pin-id> RPAR))
 
-(esrap:defrule <part-decl> (and LPAR <id> <kind> <inputs> <outputs> <react-function> <react-first-time> RPAR))
+(esrap:defrule <part-decl> (and LPAR <id> <kind> <inputs> <outputs> <react-function> <first-time-function> RPAR))
 
 (esrap:defrule <id> IDENT)
 
