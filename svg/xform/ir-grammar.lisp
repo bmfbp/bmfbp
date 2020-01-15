@@ -4,7 +4,7 @@
     (and LPAR <self-Part> RPAR <end-of-input>))
 
 (esrap:defrule <self-Part> 
-    (and <self-kind> <self-inputs> <self-outputs> <self-part-decls> <self-wiring>))
+    (and <self-kind> <self-inputs> <self-outputs> <react-function> <first-time-function> <self-part-decls> <self-wiring>))
 
 (esrap:defrule <self-kind> IDENT)
 
@@ -29,7 +29,7 @@
 
 (esrap:defrule <part-pin> (and LPAR <part-id-or-self> <pin-id> RPAR))
 
-(esrap:defrule <part-decl> (and LPAR <id> <kind> <inputs> <outputs> RPAR))
+(esrap:defrule <part-decl> (and LPAR <id> <kind> <inputs> <outputs> <react-function> <react-first-time> RPAR))
 
 (esrap:defrule <id> IDENT)
 
@@ -44,6 +44,8 @@
 
 (esrap:defrule <part-id-or-self> (or <part-id> <self-keyword>))
 
+(esrap:defrule <react-function> IDENT)
+(esrap:defrule <first-time-function> IDENT)
 (esrap:defrule <part-id> IDENT)
 (esrap:defrule <pin-id> IDENT)
   

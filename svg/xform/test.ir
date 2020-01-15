@@ -2,6 +2,8 @@
   "build process"
   ("top-level svg" "top-level name")
   ("javascript source code")
+  "react"
+  "firstTimeFunc"
 
   (
     ( 
@@ -15,15 +17,15 @@
 	 "file content"
       )
     )
-    ( "part2" "iterator" ("start" "done" "continue") ("get a part"))
-    ( "part3" "compile composite" ("svg") ("graph as json" "parts as json objects"))
-    ( "part4" "json object stacker" ("get a part" "push object") ("no more" "part metadata"))
-    ( "part5" "fetch git repo" ("git repo metadata" "temp directory") ("metadata"))
-    ( "part6" "get file content in repo" ("git repo metadata" "temp directory") ("metadata" "file content"))
-    ( "part7" "determine kindType" ("part metadata" "file content") ("schematic metadata" "leaf metadata"))
-    ( "part8" "prepare temp directory" () ("directory"))
-    ( "part9" "collector" ("done" "leaf" "composite") ("intermediate code"))
-    ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code") )
+    ( "part2" "iterator" ("start" "done" "continue") ("get a part") "iteratorReact" "iteratorFirstTime")
+    ( "part3" "compile composite" ("svg") ("graph as json" "parts as json objects") "compileReact" "compileFirstTime")
+    ( "part4" "json object stacker" ("get a part" "push object") ("no more" "part metadata") "stackerReact" "stackerFirstTime")
+    ( "part5" "fetch git repo" ("git repo metadata" "temp directory") ("metadata") "fetchReact" "fetchFirstTime")
+    ( "part6" "get file content in repo" ("git repo metadata" "temp directory") ("metadata" "file content") "repoReact" "repoFirstTime")
+    ( "part7" "determine kindType" ("part metadata" "file content") ("schematic metadata" "leaf metadata") "determineReact" "determineFirstTime")
+    ( "part8" "prepare temp directory" () ("directory") "prepareReact" "prepareFirstTime")
+    ( "part9" "collector" ("done" "leaf" "composite") ("intermediate code") "collectorReact" "collectorFirstTime")
+    ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code") "builderReact" "builderFirstTime")
   )
 
   (
