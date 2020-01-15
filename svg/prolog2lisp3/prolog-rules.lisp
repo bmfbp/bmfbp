@@ -1201,6 +1201,9 @@ match_top_name(N) :- component(N).
 
 find_parts(ID,StrID) :- rect(ID),kind(ID,StrID).
 
+find_self_input_pins(PortID,Strid) :- selfinputpin(PortID),portname(PortID,StrID).
+find_self_output_pins(PortID,Strid) :- selfoutputpin(PortID),portname(PortID,StrID).
+
 %
 % manually defined
 %

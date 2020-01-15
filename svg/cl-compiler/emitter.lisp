@@ -47,8 +47,9 @@
           (format *standard-output* "~&name = ~A~%" top-name))))
     
     (let ((goal '((:find_parts (:? ID) (:? Strid)))))
-      (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
-        (let ((id (cdr (assoc 'ID (car result))))
-              (strid (cdr (assoc 'Strid (car result)))))                        
-          (format *standard-output* "~&id = ~A strid=~a~%" id kind))))))
+      (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+        (dolist (result results)
+          (let ((id (cdr (assoc 'ID result)))
+                (strid (cdr (assoc 'Strid result))))
+            (format *standard-output* "~&id = ~A strid=~a~%" id strid)))))))
 
