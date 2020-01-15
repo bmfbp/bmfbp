@@ -44,5 +44,5 @@
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
         (let ((top-name (cdr (assoc 'N (car result)))))
-          (format *standard-output* "~&name = ~A~%"))))))
+          (format *standard-output* "~&name = ~A~%" top-name))))))
 
