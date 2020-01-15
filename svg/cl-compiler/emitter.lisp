@@ -58,12 +58,14 @@
         (dolist (result results)
           (let ((id (cdr (assoc 'ID result)))
                 (strid (cdr (assoc 'Strid result))))
-            (format *standard-output* "~&self input pin=~a~%" id strid)))))
+            (declare (ignore id))
+            (format *standard-output* "~&self input pin=~a~%" strid)))))
 
     (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         (dolist (result results)
           (let ((id (cdr (assoc 'ID result)))
                 (strid (cdr (assoc 'Strid result))))
-            (format *standard-output* "~&self output pin=~a~%" id strid)))))))
+            (declare (ignore id))
+            (format *standard-output* "~&self output pin=~a~%" strid)))))))
 
