@@ -3,7 +3,7 @@
   ("top-level svg" "top-level name")
   ("javascript source code")
 
-  ( parts
+  (
     ( 
       "part1"
       "get file content in repo"  
@@ -26,7 +26,7 @@
     ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code") )
   )
 
-  ( wires
+  (
     ( "wire1" 
       ( ("part1" "file content") (self "top-level svg") )
       ( ("part3" "svg") ("part2" "start") )          
