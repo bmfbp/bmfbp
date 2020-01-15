@@ -108,7 +108,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 44,
             "item": {
@@ -809,7 +809,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 24,
             "item": {
@@ -830,7 +830,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 25,
             "item": {
@@ -851,7 +851,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 26,
             "item": {
@@ -914,7 +914,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 29,
             "item": {
@@ -935,7 +935,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 30,
             "item": {
@@ -956,7 +956,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 31,
             "item": {
@@ -977,7 +977,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 32,
             "item": {
@@ -998,7 +998,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 33,
             "item": {
@@ -1019,7 +1019,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp",
             "id": 34,
             "item": {

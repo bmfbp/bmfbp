@@ -115,7 +115,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp.git",
             "id": 4,
             "item": {
@@ -157,7 +157,7 @@
         },
         {
             "contextDir": "build_process/parts/",
-            "gitRef": "master",
+            "gitRef": "bootstrap-build-process-1",
             "gitUrl": "https://github.com/bmfbp/bmfbp.git",
             "id": 1,
             "item": {
