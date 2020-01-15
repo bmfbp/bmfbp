@@ -103,9 +103,11 @@
 		  #'arrowgrams/compiler/input-pins::react #'arrowgrams/compiler/input-pins::first-time)
 	   (:code output-pins (:fb :go) (:add-fact :done :request-fb :error)
 		  #'arrowgrams/compiler/output-pins::react #'arrowgrams/compiler/output-pins::first-time)
+	   (:code emitter (:fb :go) (:done :request-fb :error)
+		  #'arrowgrams/compiler/emitter::react #'arrowgrams/compiler/emitter::first-time)
 
 
-           (:code demux (:go) (1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 :error)
+           (:code demux (:go) (1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 :error)
             #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
 
            (:schem passes (:fb :go) (:request-fb :add-fact :retract-fact :done :error)

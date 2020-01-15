@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/demux)
 
-; (:code demux (:go) (1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 :error) #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
+; (:code demux (:go) (1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 :error) #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
 
 
 (defparameter *counter* 0)
@@ -48,8 +48,9 @@
                (26 (cl-event-passing-user::@send self (e/part::get-output-pin self 26) T))
                (27 (cl-event-passing-user::@send self (e/part::get-output-pin self 27) T))
                (28 (cl-event-passing-user::@send self (e/part::get-output-pin self 28) T))
-               (29 (format *standard-output* "~&demux done~%"))))
+               (29 (cl-event-passing-user::@send self (e/part::get-output-pin self 29) T))
+               (30 (format *standard-output* "~&demux done~%"))))
          (cl-event-passing-user::@send
             self
             :error
-            (format nil "BOUNDING-BOXES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))))
+            (format nil "DEMUX in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))))

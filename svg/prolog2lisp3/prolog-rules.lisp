@@ -1196,6 +1196,8 @@ portFor(RectOrEllipseID,PortID):-
     port(PortID).
 
 
+% for emitter
+match_top_name(N) :- component(N).
 
 %
 % manually defined
@@ -1209,5 +1211,6 @@ not_used(X).
 
 not_namedSink(X) :- namedSink(X),!,fail.
 not_namedSink(X).
+
 
 ")
