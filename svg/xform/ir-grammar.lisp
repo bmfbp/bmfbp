@@ -19,15 +19,15 @@
 
 
 (esrap:defrule <wire> (and LPAR <wire-id> <froms> <tos> RPAR)
-  (:destructure (lp part pin rp)
+  (:destructure (lp wire-id froms tos rp)
 		(declare (ignore lp rp))
-		(list part pin)))
+		(list wire-id froms tos)))
 
 (esrap:defrule <wire-id> IDENT)
 (esrap:defrule <froms> (and LPAR (* <part-pin>) RPAR))
 (esrap:defrule <tos> (and LPAR (* <part-pin>) RPAR))
 
-(esrap:defrule <part-pin> (and <part-id> <pin-id>))
+(esrap:defrule <part-pin> (and LPAR <part-id-or-self> <pin-id> RPAR))
 
 (esrap:defrule <part-decl> (and LPAR <id> <kind> <inputs> <outputs> RPAR))
 
@@ -42,12 +42,15 @@
   (:function second))
 
 
+(esrap:defrule <part-id-or-self> (or <part-id> <self-keyword>))
+
 (esrap:defrule <part-id> IDENT)
 (esrap:defrule <pin-id> IDENT)
   
 
   
 
+(esrap:defrule <self-keyword>  (and "self" (* WS)))
 (esrap:defrule PARTS (and "parts" (* WS)))
 (esrap:defrule WIRES (and "wires" (* WS)))
 
