@@ -81,6 +81,8 @@
                                      (:file "input-pins" :depends-on ("package" "classes"))
                                      (:file "output-pins" :depends-on ("package" "classes"))
 
+                                     (:file "emitter" :depends-on ("package" "classes"))
+
                                      (:file "rules-util" :depends-on ("package"))
 
                                      (:file "compiler"
@@ -114,6 +116,8 @@
                                                    "self-output-pins"
                                                    "input-pins"
                                                    "output-pins"
+
+						   "emitter"
 
                                                    "rules-util"
                                                    ))))))
@@ -212,3 +216,14 @@
                                      (:file "facts" :depends-on ("package"))
                                      (:file "gprolog-to-hprolog" :depends-on ("prolog-peg" "facts"))
                                      (:file "test" :depends-on ("gprolog-to-hprolog" "prolog-peg" "facts"))))))
+
+(defsystem arrowgrams/compiler/xform
+  :depends-on (:arrowgrams :esrap :cl-event-passing :loops :cl-peg)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/xform"
+			:components ((:file "package")
+				     (:file "ir-grammar")
+                                     (:file "xform" :depends-on ("package" "ir-grammar"))))))
