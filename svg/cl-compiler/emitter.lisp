@@ -44,5 +44,11 @@
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
         (let ((top-name (cdr (assoc 'N (car result)))))
-          (format *standard-output* "~&name = ~A~%" top-name))))))
+          (format *standard-output* "~&name = ~A~%" top-name))))
+    
+    (let ((goal '((:find_parts (:? ID) (:? Strid)))))
+      (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+        (let ((id (cdr (assoc 'ID (car result))))
+              (strid (cdr (assoc 'Strid (car result)))))                        
+          (format *standard-output* "~&id = ~A strid=~a~%" id kind))))))
 

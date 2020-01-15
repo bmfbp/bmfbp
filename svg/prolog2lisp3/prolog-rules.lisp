@@ -1199,6 +1199,8 @@ portFor(RectOrEllipseID,PortID):-
 % for emitter
 match_top_name(N) :- component(N).
 
+find_parts(ID,StrID) :- rect(ID),kind(ID,StrID).
+
 %
 % manually defined
 %
