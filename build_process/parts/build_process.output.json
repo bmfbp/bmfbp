@@ -1,0 +1,341 @@
+{
+    "kindName": "build-process",
+    "metaData": "[{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"compile composite\",\"manifestPath\":\"compile_composite.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"iterator\",\"manifestPath\":\"iterator.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"get arrowgram by kind ref\",\"manifestPath\":\"get_file_content_in_repo.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"collector\",\"manifestPath\":\"collector.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"json object stacker\",\"manifestPath\":\"collector.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"nodejs builder\",\"manifestPath\":\"javascript_builder.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"fetch git repo\",\"manifestPath\":\"fetch_git_repo.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"get manifest by kind ref\",\"manifestPath\":\"get_file_content_in_repo.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"determine kind type\",\"manifestPath\":\"determine_kindType.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"gate\",\"manifestPath\":\"gate.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp\"}]",
+    "parts": [
+        {
+            "inCount": 2,
+            "inMap": {
+                "get one": 0,
+                "push one": 1
+            },
+            "inPins": [
+                [
+                    1
+                ],
+                [
+                    6
+                ]
+            ],
+            "kindName": "json object stacker",
+            "outCount": 2,
+            "outMap": {
+                "no more": 1,
+                "one object": 0
+            },
+            "outPins": [
+                [
+                    0
+                ],
+                [
+                    3,
+                    2
+                ]
+            ],
+            "partName": "ID151"
+        },
+        {
+            "inCount": 2,
+            "inMap": {
+                "kind ref": 0,
+                "root directory": 1
+            },
+            "inPins": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    19
+                ]
+            ],
+            "kindName": "fetch git repo",
+            "outCount": 1,
+            "outMap": {
+                "kind ref": 0
+            },
+            "outPins": [
+                [
+                    26,
+                    13
+                ]
+            ],
+            "partName": "ID143"
+        },
+        {
+            "inCount": 3,
+            "inMap": {
+                "continue": 2,
+                "done": 0,
+                "start": 1
+            },
+            "inPins": [
+                [
+                    2
+                ],
+                [
+                    7
+                ],
+                [
+                    10,
+                    8
+                ]
+            ],
+            "kindName": "iterator",
+            "outCount": 1,
+            "outMap": {
+                "get one": 0
+            },
+            "outPins": [
+                [
+                    1
+                ]
+            ],
+            "partName": "ID157"
+        },
+        {
+            "inCount": 5,
+            "inMap": {
+                "composite definition": 1,
+                "composite kind ref": 2,
+                "continue": 0,
+                "leaf kind ref": 4,
+                "root directory": 3
+            },
+            "inPins": [
+                [
+                    3
+                ],
+                [
+                    5
+                ],
+                [
+                    11
+                ],
+                [
+                    12
+                ],
+                [
+                    23
+                ]
+            ],
+            "kindName": "collector",
+            "outCount": 1,
+            "outMap": {
+                "part kind refs": 0
+            },
+            "outPins": [
+                [
+                    17
+                ]
+            ],
+            "partName": "ID153"
+        },
+        {
+            "inCount": 2,
+            "inMap": {
+                "in": 1,
+                "open": 0
+            },
+            "inPins": [
+                [
+                    4
+                ],
+                [
+                    20
+                ]
+            ],
+            "kindName": "gate",
+            "outCount": 1,
+            "outMap": {
+                "out": 0
+            },
+            "outPins": [
+                [
+                    9,
+                    7
+                ]
+            ],
+            "partName": "ID17"
+        },
+        {
+            "inCount": 1,
+            "inMap": {
+                "arrowgram": 0
+            },
+            "inPins": [
+                [
+                    14
+                ]
+            ],
+            "kindName": "compile composite",
+            "outCount": 2,
+            "outMap": {
+                "composite json": 0,
+                "metadata json": 1
+            },
+            "outPins": [
+                [
+                    10,
+                    5
+                ],
+                [
+                    6
+                ]
+            ],
+            "partName": "ID159"
+        },
+        {
+            "inCount": 2,
+            "inMap": {
+                "kind ref": 0,
+                "manifest": 1
+            },
+            "inPins": [
+                [
+                    13
+                ],
+                [
+                    25
+                ]
+            ],
+            "kindName": "determine kind type",
+            "outCount": 2,
+            "outMap": {
+                "composite kind ref": 1,
+                "leaf kind ref": 0
+            },
+            "outPins": [
+                [
+                    23,
+                    8
+                ],
+                [
+                    24
+                ]
+            ],
+            "partName": "ID139"
+        },
+        {
+            "inCount": 2,
+            "inMap": {
+                "kind ref": 1,
+                "root directory": 0
+            },
+            "inPins": [
+                [
+                    22
+                ],
+                [
+                    24
+                ]
+            ],
+            "kindName": "get arrowgram by kind ref",
+            "outCount": 2,
+            "outMap": {
+                "arrowgram": 1,
+                "kind ref": 0
+            },
+            "outPins": [
+                [
+                    11
+                ],
+                [
+                    14
+                ]
+            ],
+            "partName": "ID155"
+        },
+        {
+            "inCount": 3,
+            "inMap": {
+                "part kind refs": 1,
+                "root directory": 2,
+                "top-level name": 0
+            },
+            "inPins": [
+                [
+                    16
+                ],
+                [
+                    17
+                ],
+                [
+                    18
+                ]
+            ],
+            "kindName": "nodejs builder",
+            "outCount": 1,
+            "outMap": {
+                "nodejs source code": 0
+            },
+            "outPins": [
+                [
+                    15
+                ]
+            ],
+            "partName": "ID149"
+        },
+        {
+            "inCount": 2,
+            "inMap": {
+                "kind ref": 1,
+                "root directory": 0
+            },
+            "inPins": [
+                [
+                    21
+                ],
+                [
+                    26
+                ]
+            ],
+            "kindName": "get manifest by kind ref",
+            "outCount": 1,
+            "outMap": {
+                "manifest": 0
+            },
+            "outPins": [
+                [
+                    25
+                ]
+            ],
+            "partName": "ID141"
+        }
+    ],
+    "self": {
+        "inCount": 3,
+        "inMap": {
+            "temp directory": 0,
+            "top-level kind ref": 2,
+            "top-level name": 1
+        },
+        "inPins": [
+            [
+                22,
+                21,
+                19,
+                18,
+                12,
+                4
+            ],
+            [
+                16
+            ],
+            [
+                20
+            ]
+        ],
+        "kindName": "self",
+        "outCount": 1,
+        "outMap": {
+            "nodejs source code": 0
+        },
+        "outPins": [
+            [
+                15
+            ]
+        ],
+        "partName": "self"
+    },
+    "wireCount": 27
+}

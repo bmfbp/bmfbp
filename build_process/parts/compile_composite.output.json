@@ -1,0 +1,78 @@
+{
+    "kindName": "compile-composite",
+    "metaData": "[{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"compile one arrowgram\",\"manifestPath\":\"compile_one_arrowgram.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp.git\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"split metadata\",\"manifestPath\":\"split_metadata.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp.git\"}]",
+    "parts": [
+        {
+            "inCount": 1,
+            "inMap": {
+                "in": 0
+            },
+            "inPins": [
+                [
+                    1
+                ]
+            ],
+            "kindName": "split metadata",
+            "outCount": 1,
+            "outMap": {
+                "out": 0
+            },
+            "outPins": [
+                [
+                    0
+                ]
+            ],
+            "partName": "ID22"
+        },
+        {
+            "inCount": 1,
+            "inMap": {
+                "in": 0
+            },
+            "inPins": [
+                [
+                    2
+                ]
+            ],
+            "kindName": "compile one arrowgram",
+            "outCount": 1,
+            "outMap": {
+                "out": 0
+            },
+            "outPins": [
+                [
+                    3,
+                    1
+                ]
+            ],
+            "partName": "ID26"
+        }
+    ],
+    "self": {
+        "inCount": 1,
+        "inMap": {
+            "arrowgram": 0
+        },
+        "inPins": [
+            [
+                2
+            ]
+        ],
+        "kindName": "self",
+        "outCount": 2,
+        "outMap": {
+            "composite json": 1,
+            "metadata json": 0
+        },
+        "outPins": [
+            [
+                0
+            ],
+            [
+                3
+            ]
+        ],
+        "partName": "self"
+    },
+    "wireCount": 4
+}
