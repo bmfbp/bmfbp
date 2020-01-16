@@ -78,7 +78,6 @@
                     (outputs (getf plist :outputs)))
                 (setf (gethash :self parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
 
-#|
     (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         (dolist (result results)
@@ -104,7 +103,6 @@
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
                 (setf (gethash rectid parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
-|#
 
     (maphash #'(lambda (id plist)
                  (format *standard-output* "id=~A plist=~S~%" id plist))

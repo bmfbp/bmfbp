@@ -226,7 +226,7 @@
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (cl-event-passing-user::@with-dispatch
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
-      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp14.pro")))
+      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/temp14.pro")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/test.prolog")))
         (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
         ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/very-small.prolog")))
