@@ -64,7 +64,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash :self parts) (list :name name :inputs (cons strid inputs) :outputs outputs))))))))
+                (setf (gethash :self parts) (list :name name :inputs (pushnew strid inputs) :outputs outputs))))))))
 
     (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -76,7 +76,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash :self parts) (list :name name :inputs inputs :outputs (cons strid outputs)))))))))
+                (setf (gethash :self parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
 
 #|
     (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
@@ -90,7 +90,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash rectid parts) (list :name name :inputs (cons strid inputs) :outputs outputs))))))))
+                (setf (gethash rectid parts) (list :name name :inputs (pushnew strid inputs) :outputs outputs))))))))
 
     (let ((goal '((:find_part_output_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -103,7 +103,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash rectid parts) (list :name name :inputs inputs :outputs (cons strid outputs)))))))))
+                (setf (gethash rectid parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
 |#
 
     (maphash #'(lambda (id plist)
