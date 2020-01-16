@@ -39,19 +39,23 @@
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb))))
+          (cl-event-passing-user::@get-instance-var self :fb)))
+        (parts (make-hash-table)))
+
     (let ((goal '((:match_top_name (:? N)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
         (let ((top-name (cdr (assoc 'N (car result)))))
-          (format *standard-output* "~&name = ~A~%" top-name))))
+          (format *standard-output* "~&name = ~A~%" top-name)
+          (setf (gethash :self parts) (list 'name top-name 'inputs nil 'outputs nil)))))
     
     (let ((goal '((:find_parts (:? ID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         (dolist (result results)
           (let ((id (cdr (assoc 'ID result)))
                 (strid (cdr (assoc 'Strid result))))
-            (format *standard-output* "~&id = ~A strid=~a~%" id strid)))))
+            (format *standard-output* "~&id = ~A strid=~a~%" id strid)
+            (setf (gethash id parts) (list 'name strid 'inputs nil 'output nil))))))
 
     (let ((goal '((:find_self_input_pins (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -59,7 +63,12 @@
           (let ((id (cdr (assoc 'ID result)))
                 (strid (cdr (assoc 'Strid result))))
             (declare (ignore id))
-            (format *standard-output* "~&self input pin=~a~%" strid)))))
+            (format *standard-output* "~&self input pin=~a~%" strid)
+            (let ((plist (gethash :self parts)))
+              (let ((name (get 'name plist))
+                    (inputs (get 'inputs plist))
+                    (outputs (get 'outputs plist)))
+                (setf (get plist 'inputs) (list 'name name 'inputs (cons strid inputs) 'outputs outputs))))))))
 
     (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -67,7 +76,12 @@
           (let ((id (cdr (assoc 'ID result)))
                 (strid (cdr (assoc 'Strid result))))
             (declare (ignore id))
-            (format *standard-output* "~&self output pin=~a~%" strid)))))
+            (format *standard-output* "~&self output pin=~a~%" strid)
+            (let ((plist (gethash :self parts)))
+              (let ((name (get 'name plist))
+                    (inputs (get 'inputs plist))
+                    (outputs (get 'outputs plist)))
+                (setf (get plist 'inputs) (list 'name name 'outputs (cons strid outputs) 'inputs inputs))))))))
 
     (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -76,7 +90,13 @@
                 (PortID (cdr (assoc 'PortID result)))
                 (strid (cdr (assoc 'Strid result))))
             (declare (ignore PortID))
-            (format *standard-output* "~&part ~A input pin=~a~%" rectid strid)))))
+            (format *standard-output* "~&part ~A input pin=~a~%" rectid strid)
+            (let ((plist (gethash rectid parts)))
+              (let ((name (get 'name plist))
+                    (inputs (get 'inputs plist))
+                    (outputs (get 'outputs plist)))
+                (setf (get plist 'inputs) (list 'name name 'inputs (cons strid inputs) 'outputs outputs))))))))
+
     (let ((goal '((:find_part_output_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         (dolist (result results)
@@ -84,5 +104,18 @@
                 (PortID (cdr (assoc 'PortID result)))
                 (strid (cdr (assoc 'Strid result))))
             (declare (ignore PortID))
-            (format *standard-output* "~&part ~A output pin=~a~%" rectid strid)))))))
+            (format *standard-output* "~&part ~A output pin=~a~%" rectid strid)
+            (let ((plist (gethash rectid parts)))
+              (let ((name (get 'name plist))
+                    (inputs (get 'inputs plist))
+                    (outputs (get 'outputs plist)))
+                (setf (get plist 'inputs) (list 'name name 'outputs (cons strid outputs) 'inputs inputs))))))))
+
+    (maphash #'(lambda (id plist)
+                 (format *standard-output* "id=~A plist=~S~%" id plist))
+             parts)))
+                 
+
+
+
 
