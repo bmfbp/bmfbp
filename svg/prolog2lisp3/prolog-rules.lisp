@@ -1029,7 +1029,8 @@ sink_rect(RectID) :-
     rect(RectID),
     portFor(RectID,PortID),
     sink(_,PortID),
-    asserta(inputPin(PortID)).
+    asserta(inputPin(RectID,PortID)).
+%    asserta(inputPin(PortID)).
 
 % condSinkRect :-
 %     forall(rect(RectID),makeInputPins(RectID)).
@@ -1059,7 +1060,7 @@ source_rect(RectID) :-
     rect(RectID),
     portFor(RectID,PortID),
     source(_,PortID),
-    asserta(outputPin(PortID)).
+    asserta(outputPin(RectID,PortID)).
 
 % condSourceRect :-
 %     forall(rect(RectID),makeOutputPins(RectID)).
