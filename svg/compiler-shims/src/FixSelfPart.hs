@@ -11,8 +11,6 @@ import qualified Types.Manifest as TMF
 import qualified Data.ByteString.Lazy.Char8 as DBLC
 import qualified Data.List as DLS
 
-import qualified Debug.Trace as DT
-
 fixSelfInManifest :: String -> String
 fixSelfInManifest input = DBLC.unpack $ DA.encode fixedPart
   where
@@ -23,7 +21,7 @@ fixSelfInManifest input = DBLC.unpack $ DA.encode fixedPart
         Just x -> x
     (selfParts, realParts) = DLS.partition isSelfPart (TMF.parts manifest)
     selfPart = invertInsAndOuts $ mconcat selfParts
-    fixedPart = manifest { TMF.self = DT.traceShowId (Just selfPart), TMF.parts = DT.traceShowId realParts }
+    fixedPart = manifest { TMF.self = Just selfPart, TMF.parts = realParts }
 
 -- The input pins and the output pins are inverted when we are looking at the
 -- "self" part, which is the schematic itself.  Think of it this way: an

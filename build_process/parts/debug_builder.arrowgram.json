@@ -1,0 +1,161 @@
+{
+    "canvasItems": [
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 7,
+            "item": {
+                "points": [
+                    {
+                        "x": 505,
+                        "y": 150
+                    },
+                    {
+                        "x": 506,
+                        "y": 408
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "temp directory",
+            "sourcePinName": "temp directory"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 6,
+            "item": {
+                "points": [
+                    {
+                        "x": 453,
+                        "y": 150
+                    },
+                    {
+                        "x": 453,
+                        "y": 408
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "top-level name",
+            "sourcePinName": "top-level name"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 5,
+            "item": {
+                "points": [
+                    {
+                        "x": 406,
+                        "y": 150
+                    },
+                    {
+                        "x": 407,
+                        "y": 408
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "top-level kind ref",
+            "sourcePinName": "top-level kind ref"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 4,
+            "item": {
+                "points": [
+                    {
+                        "x": 507,
+                        "y": 308
+                    },
+                    {
+                        "x": 955,
+                        "y": 306
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "print",
+            "sourcePinName": "nodejs source code"
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp.git",
+            "id": 3,
+            "item": {
+                "bottomRight": {
+                    "x": 954,
+                    "y": 406
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 854,
+                    "y": 306
+                }
+            },
+            "kindName": "print to console log",
+            "manifestPath": "print_to_console_log.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp.git",
+            "id": 2,
+            "item": {
+                "bottomRight": {
+                    "x": 505,
+                    "y": 150
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 405,
+                    "y": 50
+                }
+            },
+            "kindName": "initialize via env vars",
+            "manifestPath": "initialize_via_env_vars.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp.git",
+            "id": 1,
+            "item": {
+                "bottomRight": {
+                    "x": 506,
+                    "y": 408
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 406,
+                    "y": 308
+                }
+            },
+            "kindName": "build process",
+            "manifestPath": "build_process.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        }
+    ],
+    "moduleName": "default-component-name",
+    "version": "2019-12-19"
+}

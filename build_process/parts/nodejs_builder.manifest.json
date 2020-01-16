@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./nodejs_builder.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "part kind refs",
+    "root directory",
+    "top-level name"
+  ],
+  "outPins": [
+    "nodejs source code"
+  ]
+}

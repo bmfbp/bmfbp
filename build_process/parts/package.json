@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@hapi/joi": "^16.1.8",
+    "command-exists": "^1.2.8",
+    "del": "^5.1.0",
+    "ncp": "^2.0.0",
+    "tmp": "^0.1.0"
+  }
+}

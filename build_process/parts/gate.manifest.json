@@ -1,0 +1,13 @@
+{
+  "entrypoint": "gate.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "in",
+    "open",
+    "close after open"
+  ],
+  "outPins": [
+    "out"
+  ]
+}
