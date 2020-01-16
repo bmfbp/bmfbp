@@ -104,11 +104,10 @@
                     (outputs (getf plist :outputs)))
                 (setf (gethash rectid parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
 
-    (maphash #'(lambda (id plist)
+    #+nil(maphash #'(lambda (id plist)
                  (format *standard-output* "id=~A plist=~S~%" id plist))
-             parts)))
-                 
+             parts)
 
-
-
-
+    (let ((self-plist (gethash :self parts)))
+      (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs))))
+        (format *standard-output* "~&final: ~S~%"final)))))
