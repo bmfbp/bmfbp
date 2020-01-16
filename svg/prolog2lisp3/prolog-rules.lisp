@@ -1204,6 +1204,8 @@ find_parts(ID,StrID) :- rect(ID),kind(ID,StrID).
 
 find_self_input_pins(PortID,Strid) :- selfinputpin(PortID),portname(PortID,StrID).
 find_self_output_pins(PortID,Strid) :- selfoutputpin(PortID),portname(PortID,StrID).
+find_part_input_pins(RectID,PortID,Strid) :- inputPin(RectID,PortID),portName(PortID,Strid).
+find_part_output_pins(RectID,PortID,Strid) :- outputPin(RectID,PortID),portName(PortID,Strid).
 
 %
 % manually defined
