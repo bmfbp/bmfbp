@@ -1,6 +1,6 @@
 {
     "kindName": "compile-composite",
-    "metaData": "[{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"compile one arrowgram\",\"manifestPath\":\"compile_one_arrowgram.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp.git\"},{\"gitRef\":\"bootstrap-build-process-1\",\"kindName\":\"split metadata\",\"manifestPath\":\"split_metadata.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp.git\"}]",
+    "metaData": "[{\"gitRef\":\"master\",\"kindName\":\"compile one arrowgram\",\"manifestPath\":\"compile_one_arrowgram.manifest.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp.git\"},{\"gitRef\":\"master\",\"kindName\":\"split metadata\",\"manifestPath\":\"split_metadata.json\",\"contextDir\":\"build_process/parts/\",\"gitUrl\":\"https://github.com/bmfbp/bmfbp.git\"}]",
     "parts": [
         {
             "inCount": 1,
