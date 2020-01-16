@@ -68,7 +68,7 @@
               (let ((name (get 'name plist))
                     (inputs (get 'inputs plist))
                     (outputs (get 'outputs plist)))
-                (setf (get plist 'inputs) (list 'name name 'inputs (cons strid inputs) 'outputs outputs))))))))
+                (setf (gethash name parts) (list 'name name 'inputs (cons strid inputs) 'outputs outputs))))))))
 
     (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -81,7 +81,7 @@
               (let ((name (get 'name plist))
                     (inputs (get 'inputs plist))
                     (outputs (get 'outputs plist)))
-                (setf (get plist 'inputs) (list 'name name 'outputs (cons strid outputs) 'inputs inputs))))))))
+                (setf (gethash :self parts) (list 'name name 'outputs (cons strid outputs) 'inputs inputs))))))))
 
     (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -95,7 +95,7 @@
               (let ((name (get 'name plist))
                     (inputs (get 'inputs plist))
                     (outputs (get 'outputs plist)))
-                (setf (get plist 'inputs) (list 'name name 'inputs (cons strid inputs) 'outputs outputs))))))))
+                (setf (gethash rectid parts) (list 'name name 'inputs (cons strid inputs) 'outputs outputs))))))))
 
     (let ((goal '((:find_part_output_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -109,7 +109,7 @@
               (let ((name (get 'name plist))
                     (inputs (get 'inputs plist))
                     (outputs (get 'outputs plist)))
-                (setf (get plist 'inputs) (list 'name name 'outputs (cons strid outputs) 'inputs inputs))))))))
+                (setf (gethash rectid parts) (list 'name name 'outputs (cons strid outputs) 'inputs inputs))))))))
 
     (maphash #'(lambda (id plist)
                  (format *standard-output* "id=~A plist=~S~%" id plist))
