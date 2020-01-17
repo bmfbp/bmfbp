@@ -40,7 +40,8 @@
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
-        (parts (make-hash-table)))
+        (parts (make-hash-table :test 'equal))
+        (wires nil))
 
     (let ((goal '((:match_top_name (:? N)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -104,10 +105,23 @@
                     (outputs (getf plist :outputs)))
                 (setf (gethash rectid parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
 
-    #+nil(maphash #'(lambda (id plist)
+    (format *standard-output* "~&~%wires~%")
+    (let ((goal '((:find_wire (:? Rect1ID) (:? Port1ID) (:? PortName1) (:? Rect2ID) (:? Port2ID) (:? PortName2)))))
+      (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+        (dolist (result results)
+          (let ((rect1id (cdr (assoc 'Rect1ID result)))
+                (Port1ID (cdr (assoc 'Port1ID result)))
+                (name1 (cdr (assoc 'PortName1 result)))
+                (rect2id (cdr (assoc 'Rect2ID result)))
+                (Port2ID (cdr (assoc 'Port2ID result)))
+                (name2 (cdr (assoc 'PortName2 result))))
+            (format *standard-output* "~&edge ~a ~a ~a --> ~a ~a ~a~%" rect1id port1id name1 rect2id port2id name2)))))
+
+    (format *standard-output* "~&~%parts~%")
+    (maphash #'(lambda (id plist)
                  (format *standard-output* "id=~A plist=~S~%" id plist))
              parts)
 
     (let ((self-plist (gethash :self parts)))
       (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs))))
-        (format *standard-output* "~&final: ~S~%"final)))))
+        (format *standard-output* "~&final: ~S~%" final)))))
