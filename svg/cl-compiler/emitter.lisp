@@ -115,7 +115,7 @@
                 (rectid2 (cdr (assoc 'RectID2 result)))
                 (PortID2 (cdr (assoc 'PortID2 result)))
                 (name2 (cdr (assoc 'PortName2 result))))
-            (format *standard-output* "~&edge ~s ~s ~s --> ~s ~s ~s~%" rectid1 portid1 name1 rectid2 portid2 name2)))))
+            (format *standard-output* "~&edge ~s ~s --> ~s ~s~%" rectid1 name1 rectid2 name2)))))
 
     (format *standard-output* "~&~%parts~%")
     (maphash #'(lambda (id plist)
