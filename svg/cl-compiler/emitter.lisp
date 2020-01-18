@@ -130,7 +130,7 @@
                    parts)
           
           (let ((self-plist (gethash :self parts)))
-            (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) ,(make-parts-list parts) ,wires)))
+            (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
               (format *standard-output* "~&final: ~S~%" final))))))))
 
 (defun make-parts-list (parts-hash)
