@@ -47,7 +47,7 @@
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
         (let ((top-name (cdr (assoc 'N (car result)))))
-          (setf (gethash :self parts) `(:name .top-name)))))
+          (setf (gethash self parts) `(:id self :name .top-name)))))
 
     (let ((goal '((:find_parts (:? ID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -65,7 +65,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash :self parts) `(:id ,id :kind ,name :inputs ,(pushnew strid inputs) :outputs ,outputs))))))))
+                (setf (gethash :self parts) `(:id self :kind ,name :inputs ,(pushnew strid inputs) :outputs ,outputs))))))))
 
     (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -77,7 +77,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash :self parts) `(:id :self :kind ,name :inputs ,inputs :outputs ,(pushnew strid outputs)))))))))
+                (setf (gethash :self parts) `(:id self :kind ,name :inputs ,inputs :outputs ,(pushnew strid outputs)))))))))
 
     (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
