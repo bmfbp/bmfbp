@@ -1209,12 +1209,12 @@ find_part_output_pins(RectID,PortID,Strid) :- outputPin(RectID,PortID),portName(
 
 find_wire(ParentID1,PortID1,PortName1,ParentID2,PortID2,PortName2) :- 
   edge(Edge),
-  source(Edge,PortID2),
-  sink(Edge,PortID1),
-  parent(ParentID1,PortID1),
+  source(Edge,PortID1),
+  sink(Edge,PortID2),
   parent(ParentID2,PortID2),
-  portName(PortID1,PortName1),
-  portName(PortID2,PortName2).
+  parent(ParentID1,PortID1),
+  portName(PortID2,PortName2),
+  portName(PortID1,PortName1).
 
 
 %
