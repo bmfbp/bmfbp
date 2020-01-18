@@ -129,7 +129,6 @@
             (let ((id1 (replace-ellipse rectid1 ellipses))
                   (id2 (replace-ellipse rectid2 ellipses)))
               (let ((edge `(,id1 ,name1 ,id2 ,name2)))
-(format *standard-output* "~&edge ~S~%" edge)
                 (push edge edges)))))
         
         (let ((wires (collapse-fan-out edges)))
@@ -140,8 +139,8 @@
 
 (defun replace-ellipse (id ellipse-list)
   (if (member id ellipse-list)
-      :self
-    id))
+      "self"
+    (format nil "\"~A\""id)))
 
 (defun make-parts-list (parts-hash)
   (let ((result nil))
