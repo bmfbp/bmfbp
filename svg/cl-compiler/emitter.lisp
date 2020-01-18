@@ -41,13 +41,20 @@
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
         (parts (make-hash-table :test 'equal))
-        (wires nil))
+        (wires nil)
+        (ellipses nil))
 
     (let ((goal '((:match_top_name (:? N)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
         (let ((top-name (cdr (assoc 'N (car result)))))
           (setf (gethash :self parts) `(:id self :name .top-name)))))
+
+    (let ((goal '((:find_ellipse (:? E)))))
+      (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+        (mapc #'(lambda (econs)
+                  (pushdnew (cdr econs) ellipses))
+              result)))
 
     (let ((goal '((:find_parts (:? ID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -118,7 +125,9 @@
                 (rectid2 (cdr (assoc 'RectID2 result)))
                 (PortID2 (cdr (assoc 'PortID2 result)))
                 (name2 (cdr (assoc 'PortName2 result))))
-            (let ((edge `(,rectid1 ,name1 ,rectid2 ,name2)))
+            (let ((id1 (replace-ellipse rectid1 ellipses))
+                  (id2 (replace-ellipse rectid2 ellipses)))
+            (let ((edge `(,id1 ,name1 ,id2 ,name2)))
               ;(format *standard-output* "~&edge ~s ~s --> ~s ~s~%~S~%" rectid1 name1 rectid2 name2 edge)
               (push edge edges))))
         
@@ -132,6 +141,11 @@
           (let ((self-plist (gethash :self parts)))
             (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
               (format *standard-output* "~&final: ~S~%" final))))))))
+
+(defun replace-ellipse (id ellipse-list)
+  (if (member id ellipse-list)
+      :self
+    id))
 
 (defun make-parts-list (parts-hash)
   (let ((result nil))
