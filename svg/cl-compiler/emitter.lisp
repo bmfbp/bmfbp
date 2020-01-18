@@ -137,23 +137,23 @@
                 collect key)))
 
 (defclass memo-bag ()
-  ((seen-list :initiform nil :accessor seen-cons-list)))
+  ((seen-cons-list :initform nil :accessor seen-cons-list)))
 
 (defmethod seen-p ((self memo-bag) part pin)
   (member-if #'(lambda (cns)
                  (and (eq (car cns) part)
-                      (eq (cdr cnd) pin)))
-             (seen-list self)))
+                      (eq (cdr cns) pin)))
+             (seen-cons-list self)))
 
 (defmethod memorize ((self memo-bag) part pin)
-  (push (cons part pin) (seen-list self)))
+  (push (cons part pin) (seen-cons-list self)))
 
-(defun return-all-matching-edges (edge-list part pin)
+(defun return-all-matching-edge-sinks (edge-list part pin)
   (delete nil
           (mapcar #'(lambda (edge)
                       (if (and (eq part (first edge))
                                (eq pin (second edge)))
-                          edge
+                          (list (third edge) (fourth edge))
                         nil))
                   edge-list)))
                                
@@ -161,17 +161,19 @@
   ;; combine all edges into one, that have the same source part+pin
   ;;return a list of lists ((source-part source-pin) ((sink-part sink-pin) (sink-part sink-pin) ...))
   (let ((result nil)
-        (original edges)
+        (edge-list edges)
         (memo (make-instance 'memo-bag)))
     (@:loop
-      (@:exit-when (null original))
-      (let ((edge (pop original)))
+      (@:exit-when (null edge-list))
+      (let ((edge (pop edge-list)))
         (let ((source-part (first edge))
               (source-pin  (second edge)))
-          (when (not (seen-p memo (source-part source-pin)))
+          (format *standard-output* "~&source-par ~S source-pin~S~%" source-part source-pin)
+          (when (not (seen-p memo source-part source-pin))
             (memorize memo source-part source-pin)
-            (let ((wire (return-all-matching-edges edges source-part source-pin)))
-              (push wire result))))))
+            (let ((wire (return-all-matching-edge-sinks edges source-part source-pin)))
+              (push (list (list source-part source-pin) wire)
+                    result))))))
     result))
 
               
