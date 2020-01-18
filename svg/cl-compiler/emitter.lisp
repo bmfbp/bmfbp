@@ -79,18 +79,19 @@
                     (outputs (getf plist :outputs)))
                 (setf (gethash :self parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
 
-    (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
+    (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid) (:? Kindstr)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         (dolist (result results)
           (let ((rectid (cdr (assoc 'RectID result)))
                 (PortID (cdr (assoc 'PortID result)))
-                (strid (cdr (assoc 'Strid result))))
+                (strid (cdr (assoc 'Strid result)))
+                (kind (cdr (assoc 'kindstr result))))
             (declare (ignore PortID))
             (let ((plist (gethash rectid parts)))
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash rectid parts) (list :name name :inputs (pushnew strid inputs) :outputs outputs))))))))
+                (setf (gethash rectid parts) (list :name name :kind kind :inputs (pushnew strid inputs) :outputs outputs))))))))
 
     (let ((goal '((:find_part_output_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -101,9 +102,10 @@
             (declare (ignore PortID))
             (let ((plist (gethash rectid parts)))
               (let ((name (getf plist :name))
+                    (kind (getf plist :kind)
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash rectid parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
+                (setf (gethash rectid parts) (list :name name :kind kind :inputs inputs :outputs (pushnew strid outputs)))))))))
 
     (format *standard-output* "~&~%edges~%")
     (let ((goal '((:find_wire (:? RectID1) (:? PortID1) (:? PortName1) (:? RectID2) (:? PortID2) (:? PortName2)))))
@@ -132,9 +134,14 @@
             (format *standard-output* "~&final: ~S~%" final)))))))))
 
 (defun make-parts-list (parts-hash)
-  (delete :self
-          (loop for key being the hash-keys of parts-hash
-                collect key)))
+  (delete nil (maphash #'(lambda (key plist)
+                           (if (eq key :self)
+                               nil
+                             (let ((kind (getf plist :kind))
+                                   (inputs (getf plist :inputs))
+                                   (outputs (getf plist :outputs)))
+                               (list key kind inputs outputs))))
+                       parts-hash)))
 
 (defclass memo-bag ()
   ((seen-cons-list :initform nil :accessor seen-cons-list)))
