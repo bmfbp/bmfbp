@@ -65,7 +65,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash :self parts) (list :name name :inputs (pushnew strid inputs) :outputs outputs))))))))
+                (setf (gethash :self parts) (list :id id :kind name :inputs (pushnew strid inputs) :outputs outputs))))))))
 
     (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -77,7 +77,7 @@
               (let ((name (getf plist :name))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash :self parts) (list :name name :inputs inputs :outputs (pushnew strid outputs)))))))))
+                (setf (gethash :self parts) (list :id :self :kind name :inputs inputs :outputs (pushnew strid outputs)))))))))
 
     (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid) (:? Kindstr)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -88,10 +88,10 @@
                 (kind (cdr (assoc 'kindstr result))))
             (declare (ignore PortID))
             (let ((plist (gethash rectid parts)))
-              (let ((name (getf plist :name))
+              (let ((kind (getf plist :kind))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash rectid parts) (list :name name :kind kind :inputs (pushnew strid inputs) :outputs outputs))))))))
+                (setf (gethash rectid parts) (list :id rectid :kind kind :inputs (pushnew strid inputs) :outputs outputs))))))))
 
     (let ((goal '((:find_part_output_pins (:? RectID) (:? PortID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -101,11 +101,11 @@
                 (strid (cdr (assoc 'Strid result))))
             (declare (ignore PortID))
             (let ((plist (gethash rectid parts)))
-              (let ((name (getf plist :name))
-                    (kind (getf plist :kind)
+              (let ((id (getf plist :id))
+                    (kind (getf plist :kind))
                     (inputs (getf plist :inputs))
                     (outputs (getf plist :outputs)))
-                (setf (gethash rectid parts) (list :name name :kind kind :inputs inputs :outputs (pushnew strid outputs)))))))))
+                (setf (gethash rectid parts) (list :id id :kind kind :inputs inputs :outputs (pushnew strid outputs)))))))))
 
     (format *standard-output* "~&~%edges~%")
     (let ((goal '((:find_wire (:? RectID1) (:? PortID1) (:? PortName1) (:? RectID2) (:? PortID2) (:? PortName2)))))
@@ -121,27 +121,31 @@
             (let ((edge `(,rectid1 ,name1 ,rectid2 ,name2)))
               (format *standard-output* "~&edge ~s ~s --> ~s ~s~%~S~%" rectid1 name1 rectid2 name2 edge)
               (push edge edges))))
-
+        
         (let ((wires (collapse-fan-out edges)))
-
+          
           (format *standard-output* "~&~%parts~%")
           (maphash #'(lambda (id plist)
-                       (format *standard-output* "id=~A plist=~S" id plist)
+                       (format *standard-output* "id=~A plist=~S~%" id plist))
                    parts)
-        
-        (let ((self-plist (gethash :self parts)))
-          (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) ,(make-parts-list parts) ,wires)))
-            (format *standard-output* "~&final: ~S~%" final)))))))))
+          
+          (let ((self-plist (gethash :self parts)))
+            (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) ,(make-parts-list parts) ,wires)))
+              (format *standard-output* "~&final: ~S~%" final))))))))
 
 (defun make-parts-list (parts-hash)
-  (delete nil (maphash #'(lambda (key plist)
-                           (if (eq key :self)
-                               nil
-                             (let ((kind (getf plist :kind))
-                                   (inputs (getf plist :inputs))
-                                   (outputs (getf plist :outputs)))
-                               (list key kind inputs outputs))))
-                       parts-hash)))
+  (let ((result nil))
+    (delete nil (maphash #'(lambda (key plist)
+                             (if (eq key :self)
+                                 nil
+                               (let ((id (getf plist :id))
+                                     (kind (getf plist :kind))
+                                     (inputs (getf plist :inputs))
+                                     (outputs (getf plist :outputs)))
+                                 (format *standard-output* "~&id ~S key ~S kind ~S inputs ~S outputs ~S~%" id key kind inputs outputs) 
+                                 (push (list key kind inputs outputs) result))))
+                         parts-hash))
+    result))
 
 (defclass memo-bag ()
   ((seen-cons-list :initform nil :accessor seen-cons-list)))
