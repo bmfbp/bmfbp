@@ -137,7 +137,7 @@
                 collect key)))
 
 (defclass memo-bag ()
-  (seen-list :initiform nil :accessor seen-cons-list))
+  ((seen-list :initiform nil :accessor seen-cons-list)))
 
 (defmethod seen-p ((self memo-bag) part pin)
   (member-if #'(lambda (cns)
