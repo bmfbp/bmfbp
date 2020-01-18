@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="9B48B0BF-32CE-41EA-9BFE-80D686992E87">
+            <Title>Pin</Title>
+            <Text>A pin is a tuple:
+
+	•	name
+	•	parent.
+
+Name is a string or a positive integer.
+
+Parent is a reference to the part that owns the pin.  The pin is local to the parent part.
+
+Pins are classified as 
+
+	•	input pins
+	•	output pins.
+
+The names in the input pin namespace are distinct.  Likewise, all names in the output pin namespace are distinct.
+
+The input and output namespaces are distinct from one another, so a part can have the same pin name in its input pin list as appears on its output pin list.
+</Text>
+            <Comments>a.k.a. port.
+An index.
+i.e. each name/index can appear only once in the namespace.</Comments>
+        </Document>
+    </Documents>
+</SearchIndexes>

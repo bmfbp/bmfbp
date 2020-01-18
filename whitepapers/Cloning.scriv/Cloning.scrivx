@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrivenerProject Identifier="A3F7C2CB-48DA-4BF1-BBDA-F4042E3C7CF8" Version="2.0" Creator="SCRMAC-3.1.5-12259" Device="Pauls-MacBook-Pro-279" Author="Paul Tarvydas" Modified="2020-01-18 07:44:04 -0500" ModID="D2F4F16D-7FB3-46C8-8AA9-0D0CBF3C074D">
+    <Binder>
+        <BinderItem UUID="9C3BB59E-5474-4294-9320-8541FB121714" Type="DraftFolder" Created="2020-01-17 06:07:10 -0500" Modified="2020-01-17 06:07:10 -0500">
+            <Title>Draft</Title>
+            <MetaData>
+                <IncludeInCompile>Yes</IncludeInCompile>
+            </MetaData>
+            <Children>
+                <BinderItem UUID="E4FC5A87-0DCA-4794-BD4A-FBD12C4F2070" Type="Text" Created="2020-01-17 06:07:10 -0500" Modified="2020-01-17 06:17:25 -0500">
+                    <Title>Cloning</Title>
+                    <MetaData>
+                        <IncludeInCompile>Yes</IncludeInCompile>
+                    </MetaData>
+                    <TextSettings>
+                        <TextSelection>862,0</TextSelection>
+                    </TextSettings>
+                </BinderItem>
+            </Children>
+        </BinderItem>
+        <BinderItem UUID="A5C4836D-EDD2-445B-BE29-B5052AEF39E8" Type="ResearchFolder" Created="2020-01-17 06:07:10 -0500" Modified="2020-01-17 06:07:10 -0500">
+            <Title>Research</Title>
+            <MetaData>
+                <IncludeInCompile>Yes</IncludeInCompile>
+            </MetaData>
+        </BinderItem>
+        <BinderItem UUID="69B7911F-1F45-4A3E-AD72-28ABB47749AF" Type="TrashFolder" Created="2020-01-17 06:07:10 -0500" Modified="2020-01-17 06:07:10 -0500">
+            <Title>Trash</Title>
+            <MetaData>
+                <IncludeInCompile>Yes</IncludeInCompile>
+            </MetaData>
+        </BinderItem>
+    </Binder>
+    <Collections>
+        <Collection Type="Binder" ID="535C11E9-F544-40F8-B112-5094153350B8" Color="0.150563 0.150563 0.150563">
+            <Title>Binder</Title>
+        </Collection>
+        <Collection Type="RecentSearch" ID="D3A4F8C6-7ABA-48C1-AAAB-42B9997E3548" Color="0.190667 0.172702 0.216529">
+            <Title>Search Results</Title>
+        </Collection>
+    </Collections>
+    <SectionTypes>
+        <TypeDefinitions>
+            <Type ID="683A957E-61A4-4E42-8C28-A8F81C98C320">Heading</Type>
+            <Type ID="C7D23820-BB8B-4447-B240-16D20B9A7AA5">Sub-Heading</Type>
+            <Type ID="93751112-F823-467A-A9D9-867478FC9557">Section</Type>
+        </TypeDefinitions>
+        <LevelTypes>
+            <Folders>
+                <Type>683A957E-61A4-4E42-8C28-A8F81C98C320</Type>
+            </Folders>
+            <Containers>
+                <Type>93751112-F823-467A-A9D9-867478FC9557</Type>
+            </Containers>
+            <Files>
+                <Type>93751112-F823-467A-A9D9-867478FC9557</Type>
+            </Files>
+        </LevelTypes>
+    </SectionTypes>
+    <LabelSettings>
+        <Title>Label</Title>
+        <DefaultLabelID>-1</DefaultLabelID>
+        <Labels>
+            <Label ID="-1">No Label</Label>
+            <Label ID="0" Color="0.993495 0.701207 0.732587">Red</Label>
+            <Label ID="1" Color="0.995418 0.790946 0.652385">Orange</Label>
+            <Label ID="2" Color="0.997722 0.89273 0.652569">Yellow</Label>
+            <Label ID="3" Color="0.715855 0.948712 0.697692">Green</Label>
+            <Label ID="4" Color="0.702319 0.888276 0.974252">Blue</Label>
+            <Label ID="5" Color="0.957566 0.766747 0.999616">Purple</Label>
+        </Labels>
+    </LabelSettings>
+    <StatusSettings>
+        <Title>Status</Title>
+        <DefaultStatusID>-1</DefaultStatusID>
+        <StatusItems>
+            <Status ID="-1">No Status</Status>
+            <Status ID="0">To Do</Status>
+            <Status ID="1">In Progress</Status>
+            <Status ID="2">First Draft</Status>
+            <Status ID="3">Revised Draft</Status>
+            <Status ID="4">Final Draft</Status>
+            <Status ID="5">Done</Status>
+        </StatusItems>
+    </StatusSettings>
+    <ProjectTargets Notify="No">
+        <DraftTarget Type="Words" CountIncludedOnly="Yes" CurrentCompileGroupOnly="No" Deadline="2020-01-17 06:07:08 -0500" IgnoreDeadline="Yes">0</DraftTarget>
+        <SessionTarget Type="Words" CountDraftOnly="Yes" AllowNegatives="Yes" NextResetDate="2020-01-19 00:00:00 -0500" ResetType="Time" ResetTime="00:00" DeterminedFromDeadline="No" WritingDays="" CanWriteOnDeadlineDate="No">0</SessionTarget>
+        <PreviousSession Words="0" Characters="0" Date="2020-01-18 07:14:16 -0500"/>
+    </ProjectTargets>
+    <RecentWritingHistory Date="2020-01-18 00:00:00 -0500">
+        <DraftWordCount>0</DraftWordCount>
+        <DraftCharCount>0</DraftCharCount>
+        <OtherWordCount>0</OtherWordCount>
+        <OtherCharCount>0</OtherCharCount>
+    </RecentWritingHistory>
+    <PrintSettings PaperSize="612.0,792.0" LeftMargin="72.0" RightMargin="72.0" TopMargin="90.0" BottomMargin="90.0" PaperType="na-letter" Orientation="Portrait" HorizontalPagination="Clip" VerticalPagination="Auto" ScaleFactor="1.0" HorizontallyCentered="Yes" VerticallyCentered="Yes" Collates="Yes" PagesAcross="1" PagesDown="1"/>
+</ScrivenerProject>

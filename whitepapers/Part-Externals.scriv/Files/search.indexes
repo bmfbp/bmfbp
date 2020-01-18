@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="E24E0F9D-261D-4CA4-842D-CAC23B66B501">
+            <Title> Part Externals</Title>
+            <Text>A Part, at its most basic, is  4-tuple
+
+	•	List of inputs
+	•	List of outputs
+	•	reaction function
+	•	first-time function
+
+Using OO techniques, we can reduce this to a 3-tuple:
+
+	•	List of inputs
+	•	List of outputs
+	•	Kind
+
+Where Kind is
+	•	reaction function
+	•	first-time function
+
+A Schematic Part also contains a parts list and a wiring list, so a Schematic is a 6-tuple:
+
+	•	List of inputs
+	•	List of outputs
+	•	reaction function
+	•	first-time function
+	•	parts list
+	•	wiring list.
+
+Using OO, this cannot be reduced further, since each schematic might contain a different initialization function (e.g. to initialize constants inside the schematic).
+
+	•	List of inputs
+	•	List of outputs
+	•	Kind (schematic)
+	•	first-time function
+	•	parts list
+	•	wiring list.
+
+All Schematics share the same reaction function.
+
+N.B. the wiring list belongs to the Schematic and is “interpreted” by the Schematic.  That means that, semantically, all parts defer event delivery to their parent schematics.  Parts cannot refer directly to other parts - event routing is performed by parent schematics.
+
+N.B. during bootstrapping, we might choose not to implement each field for all kinds of Parts.</Text>
+            <Comments>a.k.a. Component
+A.k.a. Initialization
+Very similar to “Class”
+a.k.a. Composite
+Leaf or schematic.
+Must not.</Comments>
+        </Document>
+    </Documents>
+</SearchIndexes>

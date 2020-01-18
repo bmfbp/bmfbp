@@ -1,0 +1,47 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$Scr_Cs::0>
+\f1\fs22 Dispatcher \{\
+  run all first-time functions.\
+  dispatch output queues, if any.\
+  loop \
+    exit when all parts have empty input queues\
+    for some part, p, that is ready\
+       e <- dequeue event from p\'92s input queue\
+       call react(p,e)\
+       dispatch output queues\
+    end for \
+  end loop\
+\}\
+\
+Dispatch output queues \{\
+  loop\
+    exit when all parts have empty output queues\
+    p <- any part with non-empty output queue\
+    loop\
+      exit when p has empty output queue\
+      schem <- p\'92s parent\
+      e <- dequeue p\'92s output queue\
+      source <- \{p,e.pin\}\
+      receivers <- lookup source in schem\'92s receiver bag\
+      (receivers is used 3 times)\
+      lock input queues of all receivers\
+      loop\
+        exit when receivers is empty\
+        receiver \{part,inpuPin\} <- pop from receivers\
+        newEvent <- map e.outputPin to inputPin\
+        push newEvent onto receiver\'92s input queue\
+      end loop\
+      unlock input queues of all receivers\
+    end loop\
+\}\
+N.B. lock/unlock needed only in bare metal and multi-thread versions.\
+\
+Send(self : part, e : Event) \{\
+  push e onto output queue of part\
+\}
+\f0\fs24 <!$Scr_Cs::0>}

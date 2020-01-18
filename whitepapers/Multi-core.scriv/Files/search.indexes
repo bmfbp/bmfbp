@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="EFAFDB73-8D69-4622-9011-6968C8F78834">
+            <Title>bare metal, distributed and multi core</Title>
+            <Text>Bare metal, distributed and multi-core algorithms are the same as other algorithms except that lock and unlock actually do something.
+
+On bare metal, lock/unlock turns interrupts off/on (resp.).  N.B. this means that there is a short window of time during which incoming hardware events will be missed.  This is no different from regular operating systems drivers.  The “trick” is to make the interrupt-off window as small as possible.  
+
+In Arrowgrams, the lock/unlock primitives are needed only to lock receiver queues.  This operation might be optimized using atomic operators and knowledge of how many (and which) queues need to be locked.
+
+In multi-core, the problem only manifests itself when sending events from one core to another.  As in other operating systems, the lock/unlock and deliver to other core operations are performed using assistance from assembler code.
+
+In fully distributed systems, we might wish to loosen the guarantees to allow for long-latency sends.  We might wish to implement distributed locks, where needed, using commit protocols.
+
+Since fully distributed systems can have very long send latency, we expect that designers (Software Architects) will deal with such issues explicitly for every application (the latencies are application specific, hence, need to be directly managed by Architects).  During prototyping, it might be useful to implement full Arrowgrams semantics across long-latency nodes (i.e. disregard efficiency).</Text>
+        </Document>
+    </Documents>
+</SearchIndexes>
