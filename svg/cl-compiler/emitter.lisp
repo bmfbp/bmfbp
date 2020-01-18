@@ -52,8 +52,10 @@
 
     (let ((goal '((:find_ellipse (:? E)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
-        (mapc #'(lambda (econs)
-                  (pushdnew (cdr econs) ellipses))
+        (mapc #'(lambda (lecons)
+                  (assert (and (listp lecons) (= 1 (length lecons))))
+                  (let ((econs (car lecons)))
+                    (pushnew (cdr econs) ellipses)))
               result)))
 
     (let ((goal '((:find_parts (:? ID) (:? Strid)))))
@@ -114,7 +116,6 @@
                     (outputs (getf plist :outputs)))
                 (setf (gethash rectid parts) `(:id ,id :kind ,kind :inputs ,inputs :outputs ,(pushnew strid outputs)))))))))
 
-    ;(format *standard-output* "~&~%edges~%")
     (let ((goal '((:find_wire (:? RectID1) (:? PortID1) (:? PortName1) (:? RectID2) (:? PortID2) (:? PortName2)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb))
             (edges nil))
@@ -127,16 +128,11 @@
                 (name2 (cdr (assoc 'PortName2 result))))
             (let ((id1 (replace-ellipse rectid1 ellipses))
                   (id2 (replace-ellipse rectid2 ellipses)))
-            (let ((edge `(,id1 ,name1 ,id2 ,name2)))
-              ;(format *standard-output* "~&edge ~s ~s --> ~s ~s~%~S~%" rectid1 name1 rectid2 name2 edge)
-              (push edge edges))))
+              (let ((edge `(,id1 ,name1 ,id2 ,name2)))
+(format *standard-output* "~&edge ~S~%" edge)
+                (push edge edges)))))
         
         (let ((wires (collapse-fan-out edges)))
-          
-          ;(format *standard-output* "~&~%parts~%")
-          #+nil(maphash #'(lambda (id plist)
-                       (format *standard-output* "id=~A plist=~S~%" id plist))
-                   parts)
           
           (let ((self-plist (gethash :self parts)))
             (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
