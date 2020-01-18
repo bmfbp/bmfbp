@@ -18,7 +18,7 @@
            (progn
              (cl-event-passing-user::@send self :poke-fb t)
              (cl-event-passing-user::@send self :run-pipeline t)
-             (cl-event-passing-user::@send self :show t)
+             ;(cl-event-passing-user::@send self :show t)
              (cl-event-passing-user::@set-instance-var self :state :waiting-for-pipeline))
          (cl-event-passing-user::@send
           self
