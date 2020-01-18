@@ -140,7 +140,7 @@
 (defun replace-ellipse (id ellipse-list)
   (if (member id ellipse-list)
       "self"
-    (format nil "\"~A\""id)))
+    (symbol-name id)))
 
 (defun make-parts-list (parts-hash)
   (let ((result nil))
@@ -151,10 +151,12 @@
                                      (kind (getf plist :kind))
                                      (inputs (getf plist :inputs))
                                      (outputs (getf plist :outputs)))
-                                 ;(format *standard-output* "~&id ~S key ~S kind ~S inputs ~S outputs ~S~%" id key kind inputs outputs) 
-                                 (push (list key kind inputs outputs) result))))
+                                 (push (list (stringify key) kind inputs outputs) result))))
                          parts-hash))
     result))
+
+(defun stringify (x)
+  (symbol-name x))
 
 (defclass memo-bag ()
   ((seen-cons-list :initform nil :accessor seen-cons-list)))
