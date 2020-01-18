@@ -1,0 +1,1065 @@
+{
+    "canvasItems": [
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 49,
+            "item": {
+                "bottomRight": {
+                    "x": 1310,
+                    "y": 1179
+                },
+                "tag": "Ellipse",
+                "topLeft": {
+                    "x": 1205,
+                    "y": 1098
+                }
+            },
+            "kindName": "temp directory",
+            "manifestPath": "",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 48,
+            "item": {
+                "points": [
+                    {
+                        "x": 452,
+                        "y": 749
+                    },
+                    {
+                        "x": 407,
+                        "y": 815
+                    },
+                    {
+                        "x": 565,
+                        "y": 877
+                    },
+                    {
+                        "x": 672,
+                        "y": 718
+                    },
+                    {
+                        "x": 813,
+                        "y": 781
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 47,
+            "item": {
+                "points": [
+                    {
+                        "x": 274,
+                        "y": 245
+                    },
+                    {
+                        "x": 549,
+                        "y": 652
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "in",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 45,
+            "item": {
+                "points": [
+                    {
+                        "x": 1261,
+                        "y": 1099
+                    },
+                    {
+                        "x": 1245,
+                        "y": 720
+                    },
+                    {
+                        "x": 553,
+                        "y": 737
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "open",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 44,
+            "item": {
+                "bottomRight": {
+                    "x": 549,
+                    "y": 751
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 449,
+                    "y": 651
+                }
+            },
+            "kindName": "gate",
+            "manifestPath": "gate.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 43,
+            "item": {
+                "points": [
+                    {
+                        "x": 808,
+                        "y": 1371
+                    },
+                    {
+                        "x": 808,
+                        "y": 1447
+                    },
+                    {
+                        "x": 1113,
+                        "y": 1440
+                    },
+                    {
+                        "x": 1139,
+                        "y": 501
+                    },
+                    {
+                        "x": 886,
+                        "y": 445
+                    },
+                    {
+                        "x": 496,
+                        "y": 437
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 42,
+            "item": {
+                "points": [
+                    {
+                        "x": 795,
+                        "y": 223
+                    },
+                    {
+                        "x": 885,
+                        "y": 446
+                    },
+                    {
+                        "x": 496,
+                        "y": 437
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "continue",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 41,
+            "item": {
+                "points": [
+                    {
+                        "x": 189,
+                        "y": 443
+                    },
+                    {
+                        "x": 108,
+                        "y": 8
+                    },
+                    {
+                        "x": 1202,
+                        "y": 12
+                    },
+                    {
+                        "x": 1191,
+                        "y": 314
+                    },
+                    {
+                        "x": 1183,
+                        "y": 357
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "composite kind ref",
+            "sourcePinName": "kind ref"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 39,
+            "item": {
+                "points": [
+                    {
+                        "x": 1259,
+                        "y": 1100
+                    },
+                    {
+                        "x": 1320,
+                        "y": 545
+                    },
+                    {
+                        "x": 1184,
+                        "y": 414
+                    },
+                    {
+                        "x": 1184,
+                        "y": 413
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "root directory",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 37,
+            "item": {
+                "points": [
+                    {
+                        "x": 766,
+                        "y": 879
+                    },
+                    {
+                        "x": 521,
+                        "y": 1015
+                    },
+                    {
+                        "x": 551,
+                        "y": 1189
+                    },
+                    {
+                        "x": 815,
+                        "y": 1345
+                    },
+                    {
+                        "x": 815,
+                        "y": 1332
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "kind ref",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 36,
+            "item": {
+                "points": [
+                    {
+                        "x": 182,
+                        "y": 408
+                    },
+                    {
+                        "x": 102,
+                        "y": 43
+                    },
+                    {
+                        "x": 801,
+                        "y": 44
+                    },
+                    {
+                        "x": 794,
+                        "y": 154
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "arrowgram",
+            "sourcePinName": "arrowgram"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 22,
+            "item": {
+                "points": [
+                    {
+                        "x": 1559,
+                        "y": 374
+                    },
+                    {
+                        "x": 1861,
+                        "y": 330
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "",
+            "sourcePinName": "nodejs source code"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 21,
+            "item": {
+                "points": [
+                    {
+                        "x": 1503,
+                        "y": 158
+                    },
+                    {
+                        "x": 1557,
+                        "y": 312
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "top-level name",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 20,
+            "item": {
+                "points": [
+                    {
+                        "x": 1180,
+                        "y": 389
+                    },
+                    {
+                        "x": 1462,
+                        "y": 414
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "part kind refs",
+            "sourcePinName": "part kind refs"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 19,
+            "item": {
+                "points": [
+                    {
+                        "x": 1257,
+                        "y": 1097
+                    },
+                    {
+                        "x": 1317,
+                        "y": 544
+                    },
+                    {
+                        "x": 1564,
+                        "y": 514
+                    },
+                    {
+                        "x": 1560,
+                        "y": 410
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "root directory",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 18,
+            "item": {
+                "points": [
+                    {
+                        "x": 1256,
+                        "y": 1098
+                    },
+                    {
+                        "x": 1247,
+                        "y": 827
+                    },
+                    {
+                        "x": 813,
+                        "y": 878
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "root directory",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 17,
+            "item": {
+                "points": [
+                    {
+                        "x": 1256,
+                        "y": 1100
+                    },
+                    {
+                        "x": 1255,
+                        "y": 1063
+                    },
+                    {
+                        "x": 814,
+                        "y": 1116
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "root directory",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 16,
+            "item": {
+                "points": [
+                    {
+                        "x": 1258,
+                        "y": 1098
+                    },
+                    {
+                        "x": 1262,
+                        "y": 949
+                    },
+                    {
+                        "x": 307,
+                        "y": 940
+                    },
+                    {
+                        "x": 312,
+                        "y": 488
+                    },
+                    {
+                        "x": 190,
+                        "y": 489
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "root directory",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 15,
+            "item": {
+                "points": [
+                    {
+                        "x": 808,
+                        "y": 1373
+                    },
+                    {
+                        "x": 808,
+                        "y": 1445
+                    },
+                    {
+                        "x": 1111,
+                        "y": 1441
+                    },
+                    {
+                        "x": 1141,
+                        "y": 418
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "leaf kind ref",
+            "sourcePinName": "leaf kind ref"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 14,
+            "item": {
+                "points": [
+                    {
+                        "x": 710,
+                        "y": 1370
+                    },
+                    {
+                        "x": 155,
+                        "y": 1300
+                    },
+                    {
+                        "x": 142,
+                        "y": 507
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "kind ref",
+            "sourcePinName": "composite kind ref"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 13,
+            "item": {
+                "points": [
+                    {
+                        "x": 810,
+                        "y": 1133
+                    },
+                    {
+                        "x": 813,
+                        "y": 1274
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "manifest",
+            "sourcePinName": "manifest"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 11,
+            "item": {
+                "points": [
+                    {
+                        "x": 768,
+                        "y": 880
+                    },
+                    {
+                        "x": 816,
+                        "y": 1032
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "kind ref",
+            "sourcePinName": "kind ref"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 10,
+            "item": {
+                "points": [
+                    {
+                        "x": 716,
+                        "y": 640
+                    },
+                    {
+                        "x": 814,
+                        "y": 780
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "kind ref",
+            "sourcePinName": "one object"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 8,
+            "item": {
+                "points": [
+                    {
+                        "x": 496,
+                        "y": 397
+                    },
+                    {
+                        "x": 623,
+                        "y": 435
+                    },
+                    {
+                        "x": 818,
+                        "y": 618
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "get one",
+            "sourcePinName": "get one"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 6,
+            "item": {
+                "points": [
+                    {
+                        "x": 820,
+                        "y": 596
+                    },
+                    {
+                        "x": 956,
+                        "y": 578
+                    },
+                    {
+                        "x": 956,
+                        "y": 385
+                    },
+                    {
+                        "x": 497,
+                        "y": 356
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "done",
+            "sourcePinName": "no more"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 5,
+            "item": {
+                "points": [
+                    {
+                        "x": 818,
+                        "y": 596
+                    },
+                    {
+                        "x": 959,
+                        "y": 562
+                    },
+                    {
+                        "x": 959,
+                        "y": 367
+                    },
+                    {
+                        "x": 1095,
+                        "y": 415
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "continue",
+            "sourcePinName": "no more"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 4,
+            "item": {
+                "points": [
+                    {
+                        "x": 795,
+                        "y": 221
+                    },
+                    {
+                        "x": 1135,
+                        "y": 172
+                    },
+                    {
+                        "x": 1182,
+                        "y": 316
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "composite definition",
+            "sourcePinName": "composite json"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 3,
+            "item": {
+                "points": [
+                    {
+                        "x": 748,
+                        "y": 254
+                    },
+                    {
+                        "x": 816,
+                        "y": 540
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "push one",
+            "sourcePinName": "metadata json"
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 2,
+            "item": {
+                "points": [
+                    {
+                        "x": 450,
+                        "y": 751
+                    },
+                    {
+                        "x": 383,
+                        "y": 669
+                    },
+                    {
+                        "x": 396,
+                        "y": 438
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "kindName": "",
+            "manifestPath": "",
+            "sinkPinName": "start",
+            "sourcePinName": "out"
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 24,
+            "item": {
+                "bottomRight": {
+                    "x": 815,
+                    "y": 1371
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 715,
+                    "y": 1271
+                }
+            },
+            "kindName": "determine kind type",
+            "manifestPath": "determine_kindType.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 25,
+            "item": {
+                "bottomRight": {
+                    "x": 814,
+                    "y": 1130
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 714,
+                    "y": 1030
+                }
+            },
+            "kindName": "get manifest by kind ref",
+            "manifestPath": "get_file_content_in_repo.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 26,
+            "item": {
+                "bottomRight": {
+                    "x": 813,
+                    "y": 879
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 713,
+                    "y": 779
+                }
+            },
+            "kindName": "fetch git repo",
+            "manifestPath": "fetch_git_repo.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 27,
+            "item": {
+                "bottomRight": {
+                    "x": 1948,
+                    "y": 403
+                },
+                "tag": "Ellipse",
+                "topLeft": {
+                    "x": 1843,
+                    "y": 322
+                }
+            },
+            "kindName": "nodejs source code",
+            "manifestPath": "",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 28,
+            "item": {
+                "bottomRight": {
+                    "x": 1561,
+                    "y": 160
+                },
+                "tag": "Ellipse",
+                "topLeft": {
+                    "x": 1456,
+                    "y": 79
+                }
+            },
+            "kindName": "top-level name",
+            "manifestPath": "",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 29,
+            "item": {
+                "bottomRight": {
+                    "x": 1558,
+                    "y": 413
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 1458,
+                    "y": 313
+                }
+            },
+            "kindName": "nodejs builder",
+            "manifestPath": "javascript_builder.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 30,
+            "item": {
+                "bottomRight": {
+                    "x": 817,
+                    "y": 641
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 717,
+                    "y": 541
+                }
+            },
+            "kindName": "json object stacker",
+            "manifestPath": "collector.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 31,
+            "item": {
+                "bottomRight": {
+                    "x": 1183,
+                    "y": 416
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 1083,
+                    "y": 316
+                }
+            },
+            "kindName": "collector",
+            "manifestPath": "collector.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 32,
+            "item": {
+                "bottomRight": {
+                    "x": 187,
+                    "y": 506
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 87,
+                    "y": 406
+                }
+            },
+            "kindName": "get arrowgram by kind ref",
+            "manifestPath": "get_file_content_in_repo.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 33,
+            "item": {
+                "bottomRight": {
+                    "x": 496,
+                    "y": 437
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 396,
+                    "y": 337
+                }
+            },
+            "kindName": "iterator",
+            "manifestPath": "iterator.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "build_process/parts/",
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp",
+            "id": 34,
+            "item": {
+                "bottomRight": {
+                    "x": 795,
+                    "y": 256
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 695,
+                    "y": 156
+                }
+            },
+            "kindName": "compile composite",
+            "manifestPath": "compile_composite.manifest.json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "contextDir": "",
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 35,
+            "item": {
+                "bottomRight": {
+                    "x": 321,
+                    "y": 245
+                },
+                "tag": "Ellipse",
+                "topLeft": {
+                    "x": 216,
+                    "y": 164
+                }
+            },
+            "kindName": "top-level kind ref",
+            "manifestPath": "",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        }
+    ],
+    "moduleName": "build-process",
+    "version": "2019-12-19"
+}

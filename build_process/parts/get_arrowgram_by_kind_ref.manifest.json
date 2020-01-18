@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./get_arrowgram_by_kind_ref.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "kind ref",
+    "root directory"
+  ],
+  "outPins": [
+    "arrowgram",
+    "kind ref"
+  ]
+}

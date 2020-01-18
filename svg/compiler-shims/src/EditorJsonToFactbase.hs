@@ -76,10 +76,10 @@ canvasItemsToFacts xs = (strings ++ newStrings, facts ++ metadataFacts)
       [ Fact "metadata" metadataTagIdStr (Just metadataTextIdStr)
       , Fact "eltype" metadataTagIdStr (Just "metadata")
       , Fact "text" metadataTextIdStr (Just $ stringPrefix ++ show stringId)
-      , Fact "bounding_box_top" metadataTextIdStr (Just "0")
-      , Fact "bounding_box_left" metadataTextIdStr (Just "0")
-      , Fact "bounding_box_bottom" metadataTextIdStr (Just "1")
-      , Fact "bounding_box_right" metadataTextIdStr (Just "1")
+      , Fact "bounding_box_top" metadataTextIdStr (Just "-1000")
+      , Fact "bounding_box_left" metadataTextIdStr (Just "-1000")
+      , Fact "bounding_box_bottom" metadataTextIdStr (Just "-999")
+      , Fact "bounding_box_right" metadataTextIdStr (Just "-999")
       ]
 
 convertItemsToFacts :: ConversionState -> [CanvasItem] -> ConversionState
@@ -169,7 +169,7 @@ getPinFacts labelId stringId point =
     -- have to place it further out for now. A future action is to modify the
     -- editor to output association information so that we can adjust the pin
     -- text's bounding box.
-    offset = 25
+    offset = 10
   in
     [ Fact "text" labelId (Just $ stringPrefix ++ show stringId)
     , Fact "bounding_box_top" labelId (Just $ show $ y point + offset - 1)

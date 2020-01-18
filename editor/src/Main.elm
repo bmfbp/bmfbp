@@ -88,7 +88,6 @@ type alias Model =
   , currentItemUnderCursor : Maybe CanvasItemInstance
   , cursorMode : CursorMode
   , intent : Intent
-  , canvasItemCount : Int
   , selectionMode : SelectionMode
   , hoveredItem : Maybe CanvasItemInstance
   , zoomFactor : Float
@@ -313,7 +312,6 @@ initialModel =
   , currentItemUnderCursor = Nothing
   , cursorMode = FreeFormCursor
   , intent = ToExplore
-  , canvasItemCount = 0
   , selectionMode = SingleSelect
   , hoveredItem = Nothing
   , zoomFactor = 1.0
@@ -553,7 +551,6 @@ zoom model zoomBy = ({ model | zoomFactor = model.zoomFactor * zoomBy }, Cmd.non
 handleKeyDown : Model -> String -> (Model, Cmd Msg)
 handleKeyDown model key =
   let
-    createInstance = createNewCanvasItemInstance model
     defaultCmd = Cmd.none
   in
     case key of
@@ -577,7 +574,7 @@ handleKeyUp model key = model
 createNewCanvasItemInstance : Model -> CanvasItem -> Model
 createNewCanvasItemInstance model canvasItem =
   let
-    (newModel, newItem) =
+    newItem =
       copyCanvasItemInstance model
         { id = -1
         , item = canvasItem
@@ -590,7 +587,7 @@ createNewCanvasItemInstance model canvasItem =
         , sinkPinName = ""
         }
   in
-    { newModel | instantiatedItems = newItem :: model.instantiatedItems }
+    { model | instantiatedItems = newItem :: model.instantiatedItems }
 
 createNewCanvasItemInstance2 : CanvasItem -> Model -> Model
 createNewCanvasItemInstance2 item model = createNewCanvasItemInstance model item
@@ -605,11 +602,11 @@ deleteSelectedCanvasItemInstances model =
 copySelectedCanvasItemInstances : Model -> Model
 copySelectedCanvasItemInstances model =
   let
-    (newModel, copiedItems) = List.foldl foldCopy (model, []) model.selectedItems
+    copiedItems = List.foldl (foldCopy model) [] model.selectedItems
     move instance = { instance | item = moveItem 20 20 instance.item }
     newItems = List.map move copiedItems
   in
-    { newModel
+    { model
         | instantiatedItems = List.append newItems model.instantiatedItems
         , selectedItems = newItems
     }
@@ -633,20 +630,22 @@ moveCoordinates : Int -> Int -> Coordinates -> Coordinates
 moveCoordinates deltaX deltaY coords =
   { coords | x = coords.x + deltaX, y = coords.y + deltaY }
 
-foldCopy : CanvasItemInstance -> (Model, List CanvasItemInstance) -> (Model, List CanvasItemInstance)
-foldCopy item (model, newItems) =
+foldCopy : Model -> CanvasItemInstance -> List CanvasItemInstance -> List CanvasItemInstance
+foldCopy model item newItems =
   let
-    (newModel, newItem) = copyCanvasItemInstance model item
+    newItem = copyCanvasItemInstance model item
   in
-    (newModel, newItem :: newItems)
+    (newItem :: newItems)
 
-copyCanvasItemInstance : Model -> CanvasItemInstance -> (Model, CanvasItemInstance)
+findLargestId : List CanvasItemInstance -> Int
+findLargestId = List.map .id >> List.maximum >> Maybe.withDefault 0
+
+copyCanvasItemInstance : Model -> CanvasItemInstance -> CanvasItemInstance
 copyCanvasItemInstance model canvasItem =
   let
-    newId = model.canvasItemCount
-    newItem = { canvasItem | id = newId }
+    newId = findLargestId model.instantiatedItems + 1
   in
-    ({ model | canvasItemCount = newId + 1 }, newItem)
+    { canvasItem | id = newId }
 
 updateModelOnly : Model -> (Model, Cmd Msg)
 updateModelOnly model = (model, Cmd.none)

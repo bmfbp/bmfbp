@@ -1,0 +1,11 @@
+{
+  "entrypoint": "./split_metadata.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "in"
+  ],
+  "outPins": [
+    "out"
+  ]
+}

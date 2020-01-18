@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./determine_kind_type.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "manifest",
+    "kind ref"
+  ],
+  "outPins": [
+    "composite kind ref",
+    "leaf kind ref"
+  ]
+}

@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const kernelPath = path.join(__dirname, 'kernel.js');
 
-const kernelPath = path.resolve(__dirname, '../kernels/node.js');
-const kernelContent = fs.readSync(kernelPath);
-
-var tempDir = null;
+var rootDir = null;
 var topLevelName = null;
 
 exports.main = (pin, packet, send) => {
@@ -13,18 +11,18 @@ exports.main = (pin, packet, send) => {
       topLevelName = packet;
       break;
 
-    case 'temp directory':
+    case 'root directory':
       fs.stat(packet, (error, stats) => {
         if (stats.isDirectory()) {
-          tempDir = packet;
+          rootDir = packet;
         } else {
-          console.error(new Error('"' + dir + '" not a directory'));
+          console.error(new Error(`"${dir}" not a directory`));
         }
       });
       break;
 
-    case 'intermediate code':
-      if (tempDir === null) {
+    case 'part kind refs':
+      if (rootDir === null) {
         console.error(new Error('Temporary directory not defined'));
       }
       if (topLevelName === null) {
@@ -32,12 +30,12 @@ exports.main = (pin, packet, send) => {
       }
 
       const parts = JSON.stringify(packet);
-      const output = [
-        kernelContent,
-        'runKernel("' + tempDir + '", ' + parts + ');'
-      ];
+      const output = `require("${kernelPath}").runKernel("${rootDir}", ${parts}, "${topLevelName}");`;
 
-      send('javascript source code', output.join('\n'));
+      send('nodejs source code', output);
+
+      rootDir = null;
+      topLevelName = null;
       break;
   };
 };

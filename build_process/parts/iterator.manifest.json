@@ -1,12 +1,13 @@
 {
   "entrypoint": "./iterator.js",
-  "kindType": "nodejs",
+  "kindType": "leaf",
+  "platform": "nodejs",
   "inPins": [
     "start",
     "continue",
     "done"
   ],
   "outPins": [
-    "get a part"
+    "get one"
   ]
 }

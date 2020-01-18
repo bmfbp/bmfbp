@@ -1,0 +1,11 @@
+{
+  "entrypoint": "compile_one_arrowgram.js",
+  "kindType": "leaf",
+  "platform": "nodejs",
+  "inPins": [
+    "in"
+  ],
+  "outPins": [
+    "out"
+  ]
+}
