@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="AF0F0A4F-B9A0-409E-973A-E647DA34D7B1">
+            <Text>Arrowgrams guarantees that:
+
+	•	Output events are sent in the order that they are created.
+	•	An output event that fans-out is delivered atomically to all receivers, i.e. other events cannot appear on the input queues of receivers until the fanned-out event has been fully delivered to all receivers.
+
+Arrowgrams does not guarantee:
+
+	•	When output events are dispatched from one part.
+	•	Ordering of execution of ready parts.
+	•	Whether all outputs from one part are sent “at the same time” as other outputs from that part.  
+
+For example, if a part sends events A,B and C, then the dispatcher is free to to dispatch event A, “pause” and dispatch events from other parts, then dispatch B and C.  Arrowgrams only guarantees that C will follow B which follows A in time. 
+</Text>
+            <Comments>Is sent from one output pin to multiple input pins.
+</Comments>
+        </Document>
+    </Documents>
+</SearchIndexes>
