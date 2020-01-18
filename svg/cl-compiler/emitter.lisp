@@ -47,7 +47,7 @@
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
         (let ((top-name (cdr (assoc 'N (car result)))))
-          (setf (gethash self parts) `(:id self :name .top-name)))))
+          (setf (gethash :self parts) `(:id self :name .top-name)))))
 
     (let ((goal '((:find_parts (:? ID) (:? Strid)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
