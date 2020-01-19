@@ -2,7 +2,7 @@
 
 (cl-peg:into-package :arrowgrams/compiler/xform)
 
-(defun parse-ir (filename :key (trace nil))
+(defun parse-ir (filename &key (trace nil))
   (let ((example-as-string 
 	 (alexandria:read-file-into-string
           (asdf:system-relative-pathname :arrowgrams filename))))
@@ -21,7 +21,7 @@
     (esrap:parse 'arrowgrams-intermediate-representation example-as-string)))
 
 (defun xtest ()
-  (parse-ir (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/BUILD_PROCESS.ir")))
+  (parse-ir (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/BUILD_PROCESS.ir") :trace t))
 
 (defun cl-user::xtest ()
-  (arrowgrams/compiler/xform::xtest :trace t))
+  (arrowgrams/compiler/xform::xtest))
