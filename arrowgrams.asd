@@ -164,3 +164,18 @@
 				     (:file "ir-grammar")
 				     (:file "ir-to-lisp" :depends-on ("ir-grammar"))
                                      (:file "xform" :depends-on ("package" "ir-grammar" "ir-to-lisp"))))))
+
+(defsystem arrowgrams/compiler/back-end
+  :depends-on (:arrowgrams :cl-event-passing :loops :cl-peg)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/back-end"
+			:components ((:file "package")
+				     (:file "util" :depends-on ("package"))
+				     (:file "token" :depends-on ("package"))
+				     (:file "tokenize" :depends-on ("util"))
+				     (:file "parens" :depends-on ("util"))
+				     (:file "dumper" :depends-on ("util"))
+				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "dumper"))))))
