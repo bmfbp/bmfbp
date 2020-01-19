@@ -41,7 +41,10 @@
 		(declare (ignore lp rp))
 		(list part pin)))
 
-(esrap:defrule {part-decl} (and LPAR {id} {kind} {inputs} {outputs} {react-function} {first-time-function} RPAR))
+(esrap:defrule {part-decl} (and LPAR {id} {kind} {inputs} {outputs} {react-function} {first-time-function} RPAR)
+  (:destructure (lp id kind inputs outputs react first-time rp)
+		(declare (ignore lp kind react first-time rp))
+		(list id inputs outputs)))
 
 
 (esrap:defrule {id} IDENT)
