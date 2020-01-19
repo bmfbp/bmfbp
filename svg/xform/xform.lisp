@@ -5,7 +5,8 @@
 (defun parse-ir ()
   (let ((example-as-string 
 	 (alexandria:read-file-into-string
-          (asdf:system-relative-pathname :arrowgrams "svg/xform/test.ir"))))
+          ;(asdf:system-relative-pathname :arrowgrams "svg/xform/test.ir"))))
+          (asdf:system-relative-pathname :arrowgrams "svg/xform/test2.lisp"))))
 
 #|
     (esrap:trace-rule 'arrowgrams-intermediate-representation :recursive t)
