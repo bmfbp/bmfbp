@@ -19,3 +19,9 @@ time-to-market*
 svg/cl-compiler/rules.lisp
 svg/cl-compiler/output.prolog
 svg/cl-compiler/output2.prolog
+
+svg/cl-compiler/bad.txt
+
+svg/cl-compiler/BUILD_PROCESS.ir
+
+svg/xform/test2.lisp
