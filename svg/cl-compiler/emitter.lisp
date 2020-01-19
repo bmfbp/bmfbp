@@ -135,7 +135,10 @@
           
           (let ((self-plist (gethash :self parts)))
             (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
-              (format *standard-output* "~&final: ~S~%" final))))))))
+              (format *standard-output* "~&final: ~S~%" final)
+              (with-open-file (f (asdf:system-relative-pathname :arrowgrams (format nil "svg/cl-compiler/~a.ir" top-name))
+                                 :direction :output :if-exists :supersede)
+                (pprint final f)))))))))
 
 (defun replace-ellipse (id ellipse-list)
   (if (member id ellipse-list)
