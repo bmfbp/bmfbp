@@ -23,7 +23,7 @@
 		(declare (ignore lp rp))
 		(list wire-id froms tos)))
 
-(esrap:defrule <wire-id> IDENT)
+(esrap:defrule <wire-id> (or IDENT <INTEGER>))
 (esrap:defrule <froms> (and LPAR (* <part-pin>) RPAR))
 (esrap:defrule <tos> (and LPAR (* <part-pin>) RPAR))
 
@@ -68,6 +68,7 @@
 (esrap:defrule <not-dquote> (and (esrap:! #\") character)
   (:function second))
 
+(esrap:defrule <INTEGER> (+ (esrap:character-ranges (#\0 #\9))))
 
 (esrap:defrule LPAR (and #\( (* WS))
   (:constant :lpar))
