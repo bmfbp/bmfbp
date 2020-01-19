@@ -32,7 +32,10 @@
 (esrap:defrule {froms} (and LPAR (* {part-pin}) RPAR))
 (esrap:defrule {tos} (and LPAR (* {part-pin}) RPAR))
 
-(esrap:defrule {part-pin} (and LPAR {part-id-or-self} {pin-id} RPAR))
+(esrap:defrule {part-pin} (and LPAR {part-id-or-self} {pin-id} RPAR)
+  (:destructure (lp part pin rp)
+		(declare (ignore lp rp))
+		(list part pin)))
 
 (esrap:defrule {part-decl} (and LPAR {id} {kind} {inputs} {outputs} {react-function} {first-time-function} RPAR))
 
