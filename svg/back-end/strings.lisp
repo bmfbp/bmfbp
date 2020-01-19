@@ -13,7 +13,7 @@
 (defun push-char-into-buffer (c)
   (push c *strings-buffer*))
 
-(defun get-buffer () (reverse *strings-buffer*))
+(defun get-buffer () (coerce (reverse *strings-buffer*) 'string))
 (defun get-position () *strings-position*)
 
 (defmethod strings-first-time ((self e/part:part))

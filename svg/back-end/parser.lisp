@@ -6,11 +6,12 @@
 
             (:code tokenize (:start :pull) (:out :error) #'tokenize-react #'tokenize-first-time)
             (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
+            (:code eol (:token) (:request :out :error) #'eol-react #'eol-first-time)
             (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
             (:code dumper (:start :in) (:out :request :error) #'dumper-react #'dumper-first-time)
 
             (:schem parser (:start) (:out :error)
-             (dumper tokenize parens strings) ;; parts
+             (dumper tokenize parens strings eol) ;; parts
 
              ( ;; wiring
               (((:self :start))                        ;; from
@@ -23,6 +24,9 @@
                ((parens :token)))
 
               (((parens :out))
+               ((eol :token)))
+              
+              (((eol :out))
                ((strings :token)))
 
               (((strings :out))
