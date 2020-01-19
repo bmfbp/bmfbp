@@ -18,7 +18,7 @@
       (esrap:untrace-rule 'STRING)
       (esrap:untrace-rule 'IDENT))
 
-    (let ((result (esrap:parse 'arrowgrams-intrmediate-representation string-to-be-parsed)))
+    (let ((result (esrap:parse 'arrowgrams-intermediate-representation string-to-be-parsed)))
       (esrap:untrace-rule 'arrowgrams-intermediate-representation :recursive t)
       result)))
 
@@ -39,7 +39,7 @@
       (esrap:untrace-rule 'IDENT))
 
     (let ((result (esrap:parse 'ir-to-lisp-grammar string-to-be-parsed)))
-      (esrap:untrace-rule 'arrowgrams-intermediate-representation :recursive t)
+      (esrap:untrace-rule 'ir-to-lisp-grammar :recursive t)
       result)))
   
 (defun clear ()
@@ -48,8 +48,9 @@
 
 (defun xtest ()
   (let ((ir-filename (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/BUILD_PROCESS.ir")))
-    (parse-ir ir-filename :trace t)
-    ;(convert-ir-to-lisp ir-filename );:trace t)
+    (let ((a (parse-ir ir-filename :trace t))
+	  (b (convert-ir-to-lisp ir-filename :trace t)))
+      (list a b))
     ))
 
 (defun cl-user::xtest ()
