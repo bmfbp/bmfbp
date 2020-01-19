@@ -44,7 +44,13 @@
 (esrap:defrule {part-decl} (and LPAR {id} {kind} {inputs} {outputs} {react-function} {first-time-function} RPAR)
   (:destructure (lp id kind inputs outputs react first-time rp)
 		(declare (ignore lp kind react first-time rp))
-		(list id inputs outputs)))
+		(let ((ins (if (eq :xxx inputs) 
+			       nil
+			       inputs))
+		      (outs (if (eq :xxx outputs)
+				nil
+				outputs)))
+		(list ':{part-decl} id inputs outputs))))
 
 
 (esrap:defrule {id} IDENT)
@@ -56,8 +62,7 @@
 (esrap:defrule {pin-list} (and LPAR (* {pin-id}) RPAR)
   (:function second))
 
-(esrap:defrule {outputs} (and LPAR (* {pin-id}) RPAR)
-  (:function second))
+(esrap:defrule {outputs} (or <nil> {pin-list}))
 
 
 (esrap:defrule {part-id-or-self} (or {part-id} {self-keyword}))
