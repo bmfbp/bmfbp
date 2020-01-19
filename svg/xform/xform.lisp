@@ -50,7 +50,7 @@
   (let ((ir-filename (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/BUILD_PROCESS.ir")))
     (let ((a (parse-ir ir-filename :trace t))
 	  (b (convert-ir-to-lisp ir-filename :trace t)))
-      (list a b))
+      b)
     ))
 
 (defun cl-user::xtest ()
