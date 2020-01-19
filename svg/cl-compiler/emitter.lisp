@@ -42,13 +42,14 @@
           (cl-event-passing-user::@get-instance-var self :fb)))
         (parts (make-hash-table :test 'equal))
         (wires nil)
-        (ellipses nil))
+        (ellipses nil)
+        (top-name nil))
 
     (let ((goal '((:match_top_name (:? N)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
-        (let ((top-name (cdr (assoc 'N (car result)))))
-          (setf (gethash :self parts) `(:id self :name .top-name)))))
+        (setf top-name (cdr (assoc 'N (car result))))
+          (setf (gethash :self parts) `(:id self :name .top-name))))
 
     (let ((goal '((:find_ellipse (:? E)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
