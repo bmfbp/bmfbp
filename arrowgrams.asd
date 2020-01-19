@@ -162,4 +162,5 @@
 			:pathname "./svg/xform"
 			:components ((:file "package")
 				     (:file "ir-grammar")
-                                     (:file "xform" :depends-on ("package" "ir-grammar"))))))
+				     (:file "ir-to-lisp")
+                                     (:file "xform" :depends-on ("package" "ir-grammar" "ir-to-lisp"))))))
