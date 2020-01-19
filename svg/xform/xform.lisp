@@ -18,7 +18,9 @@
       (esrap:untrace-rule 'STRING)
       (esrap:untrace-rule 'IDENT))
 
-    (esrap:parse 'arrowgrams-intermediate-representation example-as-string)))
+    (esrap:parse 'arrowgrams-intermediate-representation example-as-string)
+
+    (esrap:untrace-rule 'arrowgrams-intermediate-representation :recursive t)))
 
 (defun xtest ()
   (parse-ir (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/BUILD_PROCESS.ir") :trace t))
