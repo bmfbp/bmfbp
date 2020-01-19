@@ -35,10 +35,15 @@
 
 (esrap:defrule <kind> IDENT)
 
-(esrap:defrule <inputs> (or <nil-keyword> (and LPAR (* <pin-id>) RPAR))
+(esrap:defrule <nil> (and "NIL" (* WS))
+  (:constant :xxx))
+
+(esrap:defrule <inputs> (or <nil> <pin-list>))
+
+(esrap:defrule <pin-list> (and LPAR (* <pin-id>) RPAR)
   (:function second))
 
-(esrap:defrule <outputs> (or <nil-keyword> (and LPAR (* <pin-id>) RPAR))
+(esrap:defrule <outputs> (and LPAR (* <pin-id>) RPAR)
   (:function second))
 
 
@@ -51,14 +56,8 @@
   
 
   
-
-(esrap:defrule <self-keyword>  (and "self" (* WS))
-  (:function first))
-
-(esrap:defrule <nil-keyword>  (and (or "nil" "NIL") (* WS))
-  (:constant nil))
-
-(esrap:defrule IDENT (and STRING (* WS))
+(
+esrap:defrule IDENT (and STRING (* WS))
   (:function first))
 
 (esrap:defrule STRING (and #\" (* <not-dquote>) #\")
