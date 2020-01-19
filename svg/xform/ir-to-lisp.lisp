@@ -29,8 +29,12 @@
 		(list wire-id froms tos)))
 
 (esrap:defrule {wire-id} (or IDENT <INTEGER>))
-(esrap:defrule {froms} (and LPAR (* {part-pin}) RPAR))
-(esrap:defrule {tos} (and LPAR (* {part-pin}) RPAR))
+
+(esrap:defrule {froms} (and LPAR (* {part-pin}) RPAR)
+  (:function second))
+  
+(esrap:defrule {tos} (and LPAR (* {part-pin}) RPAR)
+  (:function second))
 
 (esrap:defrule {part-pin} (and LPAR {part-id-or-self} {pin-id} RPAR)
   (:destructure (lp part pin rp)
@@ -38,6 +42,7 @@
 		(list part pin)))
 
 (esrap:defrule {part-decl} (and LPAR {id} {kind} {inputs} {outputs} {react-function} {first-time-function} RPAR))
+
 
 (esrap:defrule {id} IDENT)
 
