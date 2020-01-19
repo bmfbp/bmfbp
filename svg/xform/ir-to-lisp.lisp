@@ -1,7 +1,10 @@
 (in-package :arrowgrams/compiler/xform)
 
 (esrap:defrule ir-to-lisp-grammar
-    (and (* WS) LPAR <self-Part> RPAR <end-of-input>))
+    (and (* WS) LPAR <self-Part> RPAR <end-of-input>)
+  (:function third))
+
+
 
 (esrap:defrule <self-Part> 
     (and <self-kind> <self-inputs> <self-outputs> <react-function> <first-time-function> <self-part-decls> <self-wiring>))
