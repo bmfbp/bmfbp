@@ -132,7 +132,7 @@
               (let ((edge `(,id1 ,name1 ,id2 ,name2)))
                 (push edge edges)))))
         
-        (let ((wires (collapse-fan-out edges)))
+        (let ((wires (insert-wire-number (collapse-fan-out edges))))
           
           (let ((self-plist (gethash :self parts)))
             (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
@@ -205,3 +205,11 @@
     result))
 
               
+(defun insert-wire-number (wires)
+  (let ((i -1))
+    (let ((result (mapcar #'(lambda (w)
+                              (incf i)
+                              (cons i w))
+                          wires)))
+      result)))
+      
