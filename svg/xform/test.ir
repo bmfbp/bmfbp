@@ -6,19 +6,7 @@
   "firstTimeFunc"
 
   (
-    ( 
-      "part1"
-      "get file content in repo"  
-      (                     
-	 "git repo metadata"
-	 "temp directory"
-      )
-      (                     
-	 "file content"
-      )
-      "getFileReact"
-      "getFileFirstTime"
-    )
+    ("part1" "get file content in repo" ("git repo metadata" "temp directory") ("file content") "getFileReact" "getFileFirstTime")
     ( "part2" "iterator" ("start" "done" "continue") ("get a part") "iteratorReact" "iteratorFirstTime")
     ( "part3" "compile composite" ("svg") ("graph as json" "parts as json objects") "compileReact" "compileFirstTime")
     ( "part4" "json object stacker" ("get a part" "push object") ("no more" "part metadata") "stackerReact" "stackerFirstTime")
