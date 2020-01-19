@@ -52,11 +52,11 @@
 
   
 
-(esrap:defrule <self-keyword>  (and "self" (* WS)))
-(esrap:defrule <nil-keyword>  (and (or "nil" "NIL") (* WS)))
+(esrap:defrule <self-keyword>  (and "self" (* WS))
+  (:function first))
 
-
-
+(esrap:defrule <nil-keyword>  (and (or "nil" "NIL") (* WS))
+  (:constant nil))
 
 (esrap:defrule IDENT (and STRING (* WS))
   (:function first))
@@ -68,7 +68,9 @@
 (esrap:defrule <not-dquote> (and (esrap:! #\") character)
   (:function second))
 
-(esrap:defrule <INTEGER> (and (+ (esrap:character-ranges (#\0 #\9))) (* WS)))
+(esrap:defrule <INTEGER> (and (+ (esrap:character-ranges (#\0 #\9))) (* WS))
+  (:function first)
+  (:text t))
 
 (esrap:defrule LPAR (and #\( (* WS))
   (:constant :lpar))

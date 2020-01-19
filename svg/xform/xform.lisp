@@ -18,9 +18,9 @@
       (esrap:untrace-rule 'STRING)
       (esrap:untrace-rule 'IDENT))
 
-    (esrap:parse 'arrowgrams-intermediate-representation string-to-be-parsed)
-
-    (esrap:untrace-rule 'arrowgrams-intermediate-representation :recursive t)))
+    (let ((result (esrap:parse 'arrowgrams-intrmediate-representation string-to-be-parsed)))
+      (esrap:untrace-rule 'arrowgrams-intermediate-representation :recursive t)
+      result)))
 
 (defun convert-ir-to-lisp (filename &key (trace nil))
   (let ((string-to-be-parsed 
@@ -38,15 +38,22 @@
       (esrap:untrace-rule 'STRING)
       (esrap:untrace-rule 'IDENT))
 
-    (let ((result (esrap:parse 'arrowgrams-intermediate-representation string-to-be-parsed)))
+    (let ((result (esrap:parse 'ir-to-lisp-grammar string-to-be-parsed)))
       (esrap:untrace-rule 'arrowgrams-intermediate-representation :recursive t)
       result)))
   
+(defun clear ()
+  (esrap::clear-rules)
+  (ql:quickload :arrowgrams/compiler/xform))
 
 (defun xtest ()
   (let ((ir-filename (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/BUILD_PROCESS.ir")))
-    (parse-ir ir-filename :trace t))
-  (convert-ir-to-lisp ir-filename :trace t))
+    (parse-ir ir-filename :trace t)
+    ;(convert-ir-to-lisp ir-filename );:trace t)
+    ))
 
 (defun cl-user::xtest ()
   (arrowgrams/compiler/xform::xtest))
+
+(defun cl-user::clear ()
+  (arrowgrams/compiler/xform::clear))
