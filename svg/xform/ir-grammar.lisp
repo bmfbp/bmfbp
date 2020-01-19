@@ -68,7 +68,7 @@
 (esrap:defrule <not-dquote> (and (esrap:! #\") character)
   (:function second))
 
-(esrap:defrule <INTEGER> (+ (esrap:character-ranges (#\0 #\9))))
+(esrap:defrule <INTEGER> (and (+ (esrap:character-ranges (#\0 #\9))) (* WS)))
 
 (esrap:defrule LPAR (and #\( (* WS))
   (:constant :lpar))
