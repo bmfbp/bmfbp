@@ -50,19 +50,22 @@
 		      (outs (if (eq :xxx outputs)
 				nil
 				outputs)))
-		(list ':{part-decl} id inputs outputs))))
+		  (format *standard-output* "~&aaa part-decl id=~S inputs=~S[~S eq? ~A] outputs=~S~%" id inputs (type-of inputs) (eq :xxx inputs) outputs)
+		  (list ':{part-decl} id ins outs))))
 
 
 (esrap:defrule {id} IDENT)
 
 (esrap:defrule {kind} IDENT)
 
+
 (esrap:defrule {inputs} (or <nil> {pin-list}))
+
+(esrap:defrule {outputs} (or <nil> {pin-list}))
 
 (esrap:defrule {pin-list} (and LPAR (* {pin-id}) RPAR)
   (:function second))
 
-(esrap:defrule {outputs} (or <nil> {pin-list}))
 
 
 (esrap:defrule {part-id-or-self} (or {part-id} {self-keyword}))

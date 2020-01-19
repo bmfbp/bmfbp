@@ -8,6 +8,7 @@
           (asdf:system-relative-pathname :arrowgrams filename))))
     (when trace
       (esrap:trace-rule 'arrowgrams-intermediate-representation :recursive t)
+#|
       (esrap:untrace-rule '<not-dquote>)
       (esrap:untrace-rule 'WS)
       (esrap:untrace-rule '<white-space>)
@@ -16,7 +17,9 @@
       (esrap:untrace-rule '<end-of-line>)
       (esrap:untrace-rule '<same-line>)
       (esrap:untrace-rule 'STRING)
-      (esrap:untrace-rule 'IDENT))
+      (esrap:untrace-rule 'IDENT)
+|#
+      )
 
     (let ((result (esrap:parse 'arrowgrams-intermediate-representation string-to-be-parsed)))
       (esrap:untrace-rule 'arrowgrams-intermediate-representation :recursive t)
@@ -28,6 +31,7 @@
           (asdf:system-relative-pathname :arrowgrams filename))))
     (when trace
       (esrap:trace-rule 'ir-to-lisp-grammar :recursive t)
+#|
       (esrap:untrace-rule '<not-dquote>)
       (esrap:untrace-rule 'WS)
       (esrap:untrace-rule '<white-space>)
@@ -36,7 +40,9 @@
       (esrap:untrace-rule '<end-of-line>)
       (esrap:untrace-rule '<same-line>)
       (esrap:untrace-rule 'STRING)
-      (esrap:untrace-rule 'IDENT))
+      (esrap:untrace-rule 'IDENT)
+|#
+      )
 
     (let ((result (esrap:parse 'ir-to-lisp-grammar string-to-be-parsed)))
       (esrap:untrace-rule 'ir-to-lisp-grammar :recursive t)
@@ -58,3 +64,4 @@
 
 (defun cl-user::clear ()
   (arrowgrams/compiler/xform::clear))
+
