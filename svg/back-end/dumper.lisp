@@ -16,7 +16,7 @@
         (let ((tok (e/event::data e)))
           (let ((kind (token-kind tok))
                 (c    (token-text tok)))
-            (send! self :out (format nil "~S pos:~a c:~S" kind (token-position tok) c))
+            (send! self :out (format nil "~a pos:~a c:~a" kind (token-position tok) c))
             (if (eq :EOF c)
                 (setf *state* :done)
               (send! self :request t)))))))

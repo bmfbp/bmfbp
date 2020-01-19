@@ -177,5 +177,6 @@
 				     (:file "token" :depends-on ("package"))
 				     (:file "tokenize" :depends-on ("util"))
 				     (:file "parens" :depends-on ("util"))
+				     (:file "strings" :depends-on ("util"))
 				     (:file "dumper" :depends-on ("util"))
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "dumper"))))))
