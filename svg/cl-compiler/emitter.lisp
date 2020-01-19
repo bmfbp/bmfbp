@@ -194,7 +194,7 @@
           (when (not (seen-p memo source-part source-pin))
             (memorize memo source-part source-pin)
             (let ((wire (return-all-matching-edge-sinks edges source-part source-pin)))
-              (push (list (list source-part source-pin) wire)
+              (push (list (list (list source-part source-pin)) wire)
                     result))))))
     result))
 
