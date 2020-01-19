@@ -4,8 +4,8 @@
   (let ((parser-net
          (cl-event-passing-user::@defnetwork parser
 
-            (:code tokenize (:start :next) (:out :error) #'tokenize-react #'tokenize-first-time)
-            (:code parens (:next) (:token :error) #'parens-react #'parens-first-time)
+            (:code tokenize (:start :request) (:out :error) #'tokenize-react #'tokenize-first-time)
+            (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
             (:code dumper (:start :in) (:out :request :error) #'dumper-react #'dumper-first-time)
 
             (:schem parser (:start) (:out :error)
@@ -16,7 +16,7 @@
                ((tokenize :start) (dumper :start)))   ;; to
 
               (((dumper :request))
-               ((tokenize :next)))
+               ((tokenize :request)))
 
               (((tokenize :out))
                ((parens :token)))

@@ -13,8 +13,8 @@
        (setf *stream* (make-string-input-stream str))
        (setf *position* 0)))
 
-    (:next
+    (:request
      (let ((c (read-char *stream* nil :EOF)))
        (incf *position*)
        (let ((tok (make-token :position *position* :kind (if (eq :EOF c) :EOF :character) :text c)))
-         (send! self :token tok))))))
+         (send! self :out tok))))))

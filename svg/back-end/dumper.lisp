@@ -12,7 +12,7 @@
      (ecase (e/event::sym e)
        (:start
         (send! self :request t))
-       (:next
+       (:in
         (let ((tok (e/event::data e)))
           (let ((kind (token-kind tok))
                 (c    (token-text tok)))
