@@ -1,7 +1,7 @@
 (in-package :arrowgrams/compiler/xform)
 
 (esrap:defrule arrowgrams-intermediate-representation
-    (and LPAR <self-Part> RPAR <end-of-input>))
+    (and (* WS) LPAR <self-Part> RPAR <end-of-input>))
 
 (esrap:defrule <self-Part> 
     (and <self-kind> <self-inputs> <self-outputs> <react-function> <first-time-function> <self-part-decls> <self-wiring>))
