@@ -17,4 +17,4 @@
      (let ((c (read-char *stream* nil :EOF)))
        (incf *position*)
        (let ((tok (make-token :position *position* :kind (if (eq :EOF c) :EOF :character) :text c)))
-         (send! self :out :token tok))))))
+         (send! self :token tok))))))

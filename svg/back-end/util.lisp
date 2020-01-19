@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defmethod send! ((self e/part:part) pin kind data)
+(defmethod send! ((self e/part:part) pin data)
   (cl-event-passing-user::@send self pin data))
 
 (defmethod send-event! ((self e/part:part) pin (e e/event:event))

@@ -11,15 +11,15 @@
     (:dumping
      (ecase (e/event::sym e)
        (:start
-        (send! self :request :next t))
+        (send! self :request t))
        (:next
         (let ((tok (e/event::data e)))
           (let ((kind (token-kind tok))
                 (c    (token-text tok)))
-            (send! self :out :message (format nil "~S pos:~a c:~S" kind (token-position tok) c))
+            (send! self :out (format nil "~S pos:~a c:~S" kind (token-position tok) c))
             (if (eq :EOF c)
                 (setf *state* :done)
-              (send! self :request :next t)))))))
+              (send! self :request t)))))))
     
     (:done
-     (send! self :error :message (format nil "dumper got an event, when dumper thinks it is done")))))
+     (send! self :error (format nil "dumper got an event, when dumper thinks it is done")))))
