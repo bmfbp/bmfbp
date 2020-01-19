@@ -1,108 +1,57 @@
 (in-package :arrowgrams/compiler/xform)
 
 (esrap:defrule ir-to-lisp-grammar
-    (and (* WS) LPAR <self-Part> RPAR <end-of-input>)
+    (and (* WS) LPAR <xself-Part> RPAR <end-of-input>)
   (:function third))
 
+(esrap:defrule <xself-Part> 
+    (and <xself-kind> <xself-inputs> <xself-outputs> <xreact-function> <xfirst-time-function> <xself-part-decls> <xself-wiring>)
+  (:destructure (kind inputs outputs react first-time parts wiring)
+		(declare (ignore kind react first-time))
+		(list inputs outputs parts wiring)))
 
 
-(esrap:defrule <self-Part> 
-    (and <self-kind> <self-inputs> <self-outputs> <react-function> <first-time-function> <self-part-decls> <self-wiring>))
+(esrap:defrule <xself-kind> IDENT)
 
-(esrap:defrule <self-kind> IDENT)
+(esrap:defrule <xself-inputs> <xinputs>)
 
-(esrap:defrule <self-inputs> <inputs>)
+(esrap:defrule <xself-outputs> <xoutputs>)
 
-(esrap:defrule <self-outputs> <outputs>)
-
-(esrap:defrule <self-wiring> (and LPAR (* <wire>) RPAR)
+(esrap:defrule <xself-wiring> (and LPAR (* <xwire>) RPAR)
   (:function second))
 
-(esrap:defrule <self-part-decls> (and LPAR (* <part-decl>) RPAR))
+(esrap:defrule <xself-part-decls> (and LPAR (* <xpart-decl>) RPAR))
 
 
-(esrap:defrule <wire> (and LPAR <wire-id> <froms> <tos> RPAR)
+(esrap:defrule <xwire> (and LPAR <xwire-id> <xfroms> <xtos> RPAR)
   (:destructure (lp wire-id froms tos rp)
 		(declare (ignore lp rp))
 		(list wire-id froms tos)))
 
-(esrap:defrule <wire-id> (or IDENT <INTEGER>))
-(esrap:defrule <froms> (and LPAR (* <part-pin>) RPAR))
-(esrap:defrule <tos> (and LPAR (* <part-pin>) RPAR))
+(esrap:defrule <xwire-id> (or IDENT <INTEGER>))
+(esrap:defrule <xfroms> (and LPAR (* <xpart-pin>) RPAR))
+(esrap:defrule <xtos> (and LPAR (* <xpart-pin>) RPAR))
 
-(esrap:defrule <part-pin> (and LPAR <part-id-or-self> <pin-id> RPAR))
+(esrap:defrule <xpart-pin> (and LPAR <xpart-id-or-self> <xpin-id> RPAR))
 
-(esrap:defrule <part-decl> (and LPAR <id> <kind> <inputs> <outputs> <react-function> <first-time-function> RPAR))
+(esrap:defrule <xpart-decl> (and LPAR <xid> <xkind> <xinputs> <xoutputs> <xreact-function> <xfirst-time-function> RPAR))
 
-(esrap:defrule <id> IDENT)
+(esrap:defrule <xid> IDENT)
 
-(esrap:defrule <kind> IDENT)
+(esrap:defrule <xkind> IDENT)
 
-(esrap:defrule <nil> (and "NIL" (* WS))
-  (:constant :xxx))
+(esrap:defrule <xinputs> (or <nil> <xpin-list>))
 
-(esrap:defrule <inputs> (or <nil> <pin-list>))
-
-(esrap:defrule <pin-list> (and LPAR (* <pin-id>) RPAR)
+(esrap:defrule <xpin-list> (and LPAR (* <xpin-id>) RPAR)
   (:function second))
 
-(esrap:defrule <outputs> (and LPAR (* <pin-id>) RPAR)
+(esrap:defrule <xoutputs> (and LPAR (* <xpin-id>) RPAR)
   (:function second))
 
 
-(esrap:defrule <part-id-or-self> (or <part-id> <self-keyword>))
+(esrap:defrule <xpart-id-or-self> (or <xpart-id> <xself-keyword>))
 
-(esrap:defrule <react-function> IDENT)
-(esrap:defrule <first-time-function> IDENT)
-(esrap:defrule <part-id> IDENT)
-(esrap:defrule <pin-id> IDENT)
-  
-
-  
-(
-esrap:defrule IDENT (and STRING (* WS))
-  (:function first))
-
-(esrap:defrule STRING (and #\" (* <not-dquote>) #\")
-  (:function second)
-  (:text t))
-
-(esrap:defrule <not-dquote> (and (esrap:! #\") character)
-  (:function second))
-
-(esrap:defrule <INTEGER> (and (+ (esrap:character-ranges (#\0 #\9))) (* WS))
-  (:function first)
-  (:text t))
-
-(esrap:defrule LPAR (and #\( (* WS))
-  (:constant :lpar))
-
-(esrap:defrule RPAR (and #\) (* WS))
-  (:constant :rpar))
-
-(esrap:defrule WS (or <white-space> <comment>))
-
-(esrap:defrule <white-space> (or #\Space #\Tab #\Newline #\Page)
-  (:constant :space))
-
-
-
-(esrap:defrule <comment> (and #\; <same-line>)
-  (:function second))
-
-
-;; from https://github.com/scymtym/parser.common-rules
-
-(esrap:defrule <end-of-input>
-    (esrap::! character)
-  (:constant :EOF))
-
-(esrap:defrule <end-of-line>
-    (or (esrap::& (or #\Newline #\Page)) <end-of-input>)
-  (:constant :EOL))
-
-(esrap:defrule <same-line>
-    (* (not (or #\Newline #\Page)))
-  (:text t))
-
-  
+(esrap:defrule <xreact-function> IDENT)
+(esrap:defrule <xfirst-time-function> IDENT)
+(esrap:defrule <xpart-id> IDENT)
+(esrap:defrule <xpin-id> IDENT)
