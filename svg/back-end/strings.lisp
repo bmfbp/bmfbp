@@ -2,12 +2,12 @@
 
 ; (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
 
-(defparameter *strings-buffer* nil)
+(defparameter *strings-buffer* '(#\"))
 (defparameter *strings-position* 0)
 (defparameter *strings-state* :idle)
 
 (defun clear-buffer (pos)
-  (setf *strings-buffer* nil)
+  (setf *strings-buffer* '(#\"))
   (setf *strings-position* pos))
 
 (defun push-char-into-buffer (c)
@@ -47,6 +47,7 @@
                  (let ((c (token-text tok)))
                    (case c
                      (#\"
+                      (push-char-into-buffer c)
                       (let ((str-token (new-string)))
                         (clear-buffer (token-position tok))
                         (send! self :out str-token)
@@ -54,7 +55,7 @@
                      (otherwise
                       (push-char-into-buffer c)
                       (pull)))))
-                (t (forward-token))))))))
+                (t (assert nil))))))))
      
 
      
