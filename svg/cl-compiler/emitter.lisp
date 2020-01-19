@@ -141,7 +141,8 @@
                 (with-open-file (f filename :direction :output :if-exists :supersede)
                   (let ((*print-right-margin* 120))
                     (pprint final f)))
-                (arrowgrams/compiler/xform::parse-ir filename)))))))))
+                (arrowgrams/compiler/xform::parse-ir filename)
+                (arrowgrams/compiler/xform::convert-ir-to-lisp filename)))))))))
 
 (defun replace-ellipse (id ellipse-list)
   (if (member id ellipse-list)
