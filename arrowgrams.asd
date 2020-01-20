@@ -184,4 +184,6 @@
 				     (:file "symbols" :depends-on ("util"))
 				     (:file "dumper" :depends-on ("util"))
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
-                                                                  "symbols" "spaces"))))))
+                                                                  "symbols" "spaces"))
+
+				     (:file "wiring" :depends-on ("util"))))))
