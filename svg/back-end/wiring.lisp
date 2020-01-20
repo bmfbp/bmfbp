@@ -14,15 +14,15 @@ dumper.error tokenize.error parens.error strings.error ws.error symbols.error sp
 ")
 
 (esrap:defrule <ws> (or #\Space #\Newline))
-(esrap:defrule <arrow> (and "->" (* ws)) (:constant :arrow))
-(esrap:defrule <dot> (and "." (* ws)) (:constant :dot))
+(esrap:defrule <arrow> (and "->" (* <ws>)) (:constant :arrow))
+(esrap:defrule <dot> (and "." (* <ws>)) (:constant :dot))
 (esrap:defrule <ident> (and (esrap:character-ranges (#\a #\z) (#\A #\Z)) (* (esrap:character-ranges (#\a #\z) (#\A #\Z) (#\0 #\9)))) (:text t))
 (esrap:defrule <part> <ident>)
 (esrap:defrule <pin> <ident>)
 (esrap:defrule <part-pin> (and <part> <dot> <pin> (* <ws>)))
 (esrap:defrule <part-pins> (+ <part-pin>))
 (esrap:defrule <wire> (and <part-pins> <arrow> <part-pins>))
-(esrap:defrule <wires> (+ wire))
+(esrap:defrule <wires> (and (* <ws>) (+ <wire>) (* <ws>)))
 
 (defun make-wires ()
   (esrap:parse '<wires> *wiring*))
