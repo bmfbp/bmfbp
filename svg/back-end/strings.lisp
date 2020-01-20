@@ -69,7 +69,6 @@
                   (pull))
               (progn
                 (release-and-clear-buffer)
-                (forward-token)
                 (next-state :idle)))))))
       (:done
        (send! self :error (format nil "strings finished, but received ~S" e))))))
