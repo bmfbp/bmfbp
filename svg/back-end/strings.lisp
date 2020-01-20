@@ -21,44 +21,54 @@
   )
 
 (defmethod strings-react ((self e/part:part) (e e/event:event))
-  (flet ((new-string ()
-           (let ((new-token (make-token :kind :string :text (get-buffer) :position (get-position))))
-             new-token))
-         (pull () (send! self :request t))
-         (forward-token ()
-           (send-event! self :out e)))
-  (ecase *strings-state*
-    (:idle
-     (ecase (e/event::sym e)
-       (:token
-        (let ((tok (e/event:data e)))
-          (cond ((eq :character (token-kind tok))
-                 (let ((c (token-text tok)))
-                   (case c
-                     (#\"
-                      (clear-buffer (token-position tok))
-                      (push-char-into-buffer c)
-                      (pull)
-                      (setf *strings-state* :collecting-string))
-                     (otherwise (forward-token)))))
-                (t (forward-token)))))))
-    (:collecting-string
-        (let ((tok (e/event:data e)))
-          (cond ((eq :character (token-kind tok))
-                 (let ((c (token-text tok)))
-                   (case c
-                     (#\"
-                      (push-char-into-buffer c)
-                      (let ((str-token (new-string)))
+  (labels ((new-string () (make-token :kind :string :text (get-buffer) :position (get-position)))
+           (check-eof ()
+             (when (eq :eof (token-kind (e/event:data e)))
+               (setf *strings-state* :done)))
+           (pull () (send! self :request t))
+           (forward-token () (send-event! self :out e)))
+    ;(format *standard-output* "~&strings ~S ~S~%" *strings-state* (e/event:data e))
+    (ecase *strings-state*
+      (:idle
+       (ecase (e/event::sym e)
+         (:token
+          (let ((tok (e/event:data e)))
+            (cond ((eq :character (token-kind tok))
+                   (let ((c (token-text tok)))
+                     (case c
+                       (#\"
                         (clear-buffer (token-position tok))
-                        (send! self :out str-token)
-                        (setf *strings-state* :idle)))
-                     (otherwise
-                      (push-char-into-buffer c)
-                      (pull)))))
-                ((eq :EOF (token-kind tok))
-                 (send! self :error (format nil "incomplete string at ~A" (get-position))))
-                (t (assert nil))))))))
+                        (push-char-into-buffer c)
+                        (pull)
+                        (setf *strings-state* :collecting-string))
+                       (otherwise (forward-token)
+                                  (check-eof)))))
+                  (t
+                   (forward-token)
+                   (check-eof)))))))
+      
+      (:collecting-string
+       (let ((tok (e/event:data e)))
+         (cond ((eq :character (token-kind tok))
+                (let ((c (token-text tok)))
+                  (case c
+                    (#\"
+                     (push-char-into-buffer c)
+                     (let ((str-token (new-string)))
+                       (clear-buffer (token-position tok))
+                       (send! self :out str-token)
+                       (setf *strings-state* :idle)))
+                    (otherwise
+                     (push-char-into-buffer c)
+                     (pull)))))
+               ((eq :EOF (token-kind tok))
+                (send! self :error (format nil "incomplete string at ~A" (get-position))))
+               (t (assert nil)))))
+      
+      (:done
+       (send! self :error (format nil "strings done, but received token ~S" (e/event:data e)))))))
+
+        
      
 
      

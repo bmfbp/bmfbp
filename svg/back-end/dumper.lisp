@@ -1,22 +1,27 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defparameter *state* nil)
+(defparameter *dumper-state* nil)
 
 (defmethod dumper-first-time ((self e/part:part))
-  (setf *state* :dumping)
+  (setf *dumper-state* :idle)
   )
 
 (defmethod dumper-react ((self e/part:part) (e e/event:event))
+  ;(format *standard-output* "~&dumper ~S   ~S ~S~%" *dumper-state* (e/event::sym e) (e/event:data e))
   (let ((tok (e/event::data e)))
-    (ecase *state*
-      (:dumping
+    (ecase *dumper-state*
+      (:idle
        (ecase (e/event::sym e)
          (:start
-          (send! self :request t))
+          (send! self :request t)
+          (setf *dumper-state* :dumping))))
+
+      (:dumping
+       (ecase (e/event::sym e)
          (:in
           (send! self :out (format nil "~a pos:~a c:~a" (token-kind tok) (token-position tok) (if (eq :ws (token-kind tok)) "." (token-text tok))))
           (if (eq :EOF (token-text tok))
-              (setf *state* :done)
+              (setf *dumper-state* :done)
             (send! self :request t)))))
       
       (:done
