@@ -53,7 +53,7 @@
                      (otherwise
                       (push-char-into-buffer c)
                       (pull)))))
-                (t (assert nil))))))))
+                (t (forward-token))))))))
      
 
      
