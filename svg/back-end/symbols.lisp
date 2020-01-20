@@ -7,7 +7,7 @@
 (defparameter *symbols-state* :idle)
 
 (defun symbols-get-buffer () (coerce (reverse *symbols-buffer*) 'string))
-(defun get-position () *symbols-start-position*)
+(defun symbols-get-position () *symbols-start-position*)
 
 (defmethod symbols-first-time ((self e/part:part))
   (setf *symbols-state* :idle)
@@ -15,8 +15,8 @@
 
 (defmethod symbols-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *symbols-buffer*))
-           (pull () (send! self :request t))
-           (forward-token () (send-event! self :out e))
+           (pull () (send! self :request t) (format *standard-output* "~&symbols pull~%"))
+           (forward-token () (send-event! self :out e) (format *standard-output* "~&symbols forwards token ~S~%" e))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -35,12 +35,14 @@
              (setf *symbols-buffer* nil)
              (setf *symbols-start-position* (token-position (e/event:data e))))
            (release-buffer ()
-             (send! self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (get-position))))
+             (format *standard-output* "~&symbols release-buffer~%")
+             (send! self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position))))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
          )
-    
+
+    (format *standard-output* "~&symbols in state ~S gets ~S ~S~%" *symbols-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
     (ecase *symbols-state*
       (:idle
        (ecase (action)
