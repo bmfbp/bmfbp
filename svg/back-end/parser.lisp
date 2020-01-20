@@ -12,7 +12,7 @@
             (:code dumper (:start :in) (:out :request :error) #'dumper-react #'dumper-first-time)
 
             (:schem parser (:start) (:out :error)
-             (dumper tokenize parens strings eol ws) ;; parts
+             (dumper tokenize parens strings ws) ;; parts
 
              ( ;; wiring
               (((:self :start))                        ;; from
@@ -28,9 +28,6 @@
                ((parens :token)))
 
               (((parens :out))
-               ((eol :token)))
-
-              (((eol :out))
                ((ws :token)))
               
               (((ws :out))
@@ -39,7 +36,7 @@
               (((dumper :out))
                ((:self :out)))
 
-              (((dumper :error) (tokenize :error) (parens :error) (ws :error) (strings :error) (eol :error))    ;; from
+              (((dumper :error) (tokenize :error) (parens :error) (ws :error) (strings :error))    ;; from
                ((:self :error)))                       ;; to
 
               )))))

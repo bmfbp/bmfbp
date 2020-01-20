@@ -2,12 +2,12 @@
 
 ; (:code ws (:token) (:request :out :error) #'ws-react #'ws-first-time)
 
-(defparameter *ws-buffer* '(#\"))
+(defparameter *ws-buffer* nil)
 (defparameter *ws-position* 0)
 (defparameter *ws-state* :idle)
 
 (defun clear-buffer (pos)
-  (setf *ws-buffer* '(#\"))
+  (setf *ws-buffer* nil)
   (setf *ws-position* pos))
 
 (defun push-char-into-buffer (c)
@@ -33,8 +33,9 @@
           (cond ((eq :character (token-kind tok))
                  (let ((c (token-text tok)))
                    (case c
-                     (#\Space
+                     ((#\Space #\Newline)
                       (clear-buffer (token-position tok))
+                      (push-char-into-buffer c)
                       (pull)
                       (setf *ws-state* :collecting-spaces))
                      (otherwise (forward-token)))))
