@@ -16,6 +16,18 @@
              (dumper tokenize parens strings ws symbols spaces) ;; parts
 
              ( ;; wiring
+
+              ;; :self[:start] -> dumper[:start],tokenize[:start]
+              ;; dumper[:request], strings[:request], ws[:reqest], symbols[:request] -> tokenize[:pull]
+              ;; tokenize[:out] -> strings[:token]
+              ;; strings[:out] -> parens[:token]
+              ;; parens[:out] -> spaces[:token]
+              ;; spaces[:out] -> symbols[:token]
+              ;; symbols[:out] -> dumper[:in]
+              ;; dumper[:out] -> :self[:out]
+              ;;
+              ;; dumper[:error], tokenize[:error], parens[:error], strings[:error], ws[:error], symbols[:error], spaces[:error] -> :self[:error]
+
               (((:self :start))                        ;; from
                ;((tokenize :start) (dumper :start)))   ;; to
                ((dumper :start) (tokenize :start)))   ;; to
@@ -42,10 +54,11 @@
 
               (((dumper :out)) ((:self :out)))
 
-              (((dumper :error) (tokenize :error) (parens :error) (ws :error) (strings :error))    ;; from
+              (((dumper :error) (tokenize :error) (parens :error) (ws :error) (strings :error) (symbols :error) (spaces :error))    ;; from
                ((:self :error)))                       ;; to
+             )
 
-              )))))
+             ))))
     
     (cl-event-passing-user::@enable-logging)
     (inject! parser-net :start filename)))
@@ -55,5 +68,6 @@
     (arrowgrams/compiler/back-end::parser filename)))
 
 (defun cl-user::clear ()
+  (esrap::clear-rules)
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/compiler/back-end))
