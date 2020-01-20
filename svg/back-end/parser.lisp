@@ -15,48 +15,17 @@
             (:schem parser (:start) (:out :error)
              (dumper tokenize parens strings ws symbols spaces) ;; parts
 
-             ( ;; wiring
+;; wiring - see wiring.lisp
 
-              ;; :self[:start] -> dumper[:start],tokenize[:start]
-              ;; dumper[:request], strings[:request], ws[:reqest], symbols[:request] -> tokenize[:pull]
-              ;; tokenize[:out] -> strings[:token]
-              ;; strings[:out] -> parens[:token]
-              ;; parens[:out] -> spaces[:token]
-              ;; spaces[:out] -> symbols[:token]
-              ;; symbols[:out] -> dumper[:in]
-              ;; dumper[:out] -> :self[:out]
-              ;;
-              ;; dumper[:error], tokenize[:error], parens[:error], strings[:error], ws[:error], symbols[:error], spaces[:error] -> :self[:error]
-
-              (((:self :start))                        ;; from
-               ;((tokenize :start) (dumper :start)))   ;; to
-               ((dumper :start) (tokenize :start)))   ;; to
-
-
-              (((dumper :request) (strings :request) (ws :request) (symbols :request))
-               ((tokenize :pull)))
-
-              (((tokenize :out))
-               ((strings :token)))
-              
-              (((strings :out)) 
-               ((parens :token)))
-
-              (((parens :out))
-               ((spaces :token)))
-
-              (((spaces :out))
-               ((symbols :token)))
-
-              (((symbols :out))
-               ((dumper :in)))
-
-
-              (((dumper :out)) ((:self :out)))
-
-              (((dumper :error) (tokenize :error) (parens :error) (ws :error) (strings :error) (symbols :error) (spaces :error))    ;; from
-               ((:self :error)))                       ;; to
-             )
+((((:SELF "start")) ((DUMPER "start") (TOKENIZE "start")))
+ (((DUMPER "request") (STRINGS "request") (WS "reqest") (SYMBOLS "request")) ((TOKENIZE "pull")))
+ (((TOKENIZE "out")) ((STRINGS "token")))
+ (((STRINGS "out")) ((PARENS "token")))
+ (((PARENS "out")) ((SPACES "token")))
+ (((SPACES "out")) ((SYMBOLS "token")))
+ (((SYMBOLS "out")) ((DUMPER "in")))
+ (((DUMPER "out")) ((:SELF "out")))
+ (((DUMPER "error") (TOKENIZE "error") (PARENS "error") (STRINGS "error") (WS "error") (SYMBOLS "error") (SPACES "error")) ((:SELF "error"))))
 
              ))))
     
