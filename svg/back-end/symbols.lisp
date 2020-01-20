@@ -16,7 +16,8 @@
 (defmethod symbols-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *symbols-buffer*))
            (pull () (send! self :request t) (format *standard-output* "~&symbols pull~%"))
-           (forward-token () (send-event! self :out e) (format *standard-output* "~&symbols forwards token ~S~%" e))
+           (forward-token () (send-event! self :out e) (format *standard-output* "~&symbols forwards token ~S ~S~%" e
+                                                               (e/event::sym e) (e/event::data e)))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
