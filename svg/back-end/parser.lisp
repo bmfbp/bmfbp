@@ -18,7 +18,7 @@
               (((:self :start))                        ;; from
                ((tokenize :start) (dumper :start)))   ;; to
 
-              (((dumper :request) (strings :request))
+              (((dumper :request) (strings :request) (ws :request))
                ((tokenize :pull)))
 
               (((tokenize :out))
