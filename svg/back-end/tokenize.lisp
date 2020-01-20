@@ -14,6 +14,7 @@
        (setf *position* 0)))
 
     (:pull
+     (format *standard-output* "~&tokenize in state idle gets :pull ~S~%" (e/event:data e))
      (let ((c (read-char *stream* nil :EOF)))
        (incf *position*)
        (let ((tok (make-token :position *position* :kind (if (eq :EOF c) :EOF :character) :text c)))
