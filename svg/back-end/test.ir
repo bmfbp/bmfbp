@@ -1,1 +1,7 @@
-  ("ID538" "prepare temp directory" ("directory") NIL "react" "first-time")
+
+	("ID538"
+	"prepare temp directory"
+	("directory")
+	NIL
+	"react"
+	"first-time")

@@ -33,13 +33,14 @@
                (clear-buffer (token-position (e/event::data e)))
                (send! self :out ws-token)
                (forward-token)
-               (setf *ws-state* :idle))
+               (setf *ws-state* :idle))))
+    (let ((tok (e/event:data e)))
+      (format *standard-output* "~&ws ~s kind=~s pos=~s text=~s~%" *ws-state* (token-kind tok) (token-position tok) (token-text tok)))
     (let ((tok (e/event:data e)))
       (ecase *ws-state*
         (:idle
          (ecase (e/event::sym e)
            (:token
-            ;(format *standard-output* "~&ws :idle kind=~s pos=~s text=~s~%" (token-kind tok) (token-position tok) (token-text tok))
             (cond ((eq :character (token-kind tok))
                    (let ((c (token-text tok)))
                      (case c
@@ -66,7 +67,7 @@
                (t (release-buffer)
                   (check-eof))))
         (:done
-         (send! self :error (format nil "ws done, but received ~S" tok)))))))))
+         (send! self :error (format nil "ws done, but received ~S" tok)))))))
      
 
      

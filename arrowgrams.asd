@@ -179,8 +179,9 @@
 				     (:file "parens" :depends-on ("util"))
 				     (:file "ws" :depends-on ("util"))
 				     (:file "eol" :depends-on ("util"))
+				     (:file "spaces" :depends-on ("util"))
 				     (:file "strings" :depends-on ("util"))
 				     (:file "symbols" :depends-on ("util"))
 				     (:file "dumper" :depends-on ("util"))
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
-                                                                  "symbols"))))))
+                                                                  "symbols" "spaces"))))))
