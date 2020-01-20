@@ -32,10 +32,10 @@
                ((ws :token)))
               
               (((ws :out))
-               ((symbols :token)))
+               ((dumper :in)))
 
-              (((symbols :out))
-                ((dumper :in)))
+;;             (((symbols :out))
+;;               ((dumper :in)))
 
               (((dumper :out))
                ((:self :out)))
