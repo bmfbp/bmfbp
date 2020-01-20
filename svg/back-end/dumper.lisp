@@ -7,19 +7,18 @@
   )
 
 (defmethod dumper-react ((self e/part:part) (e e/event:event))
-  (ecase *state*
-    (:dumping
-     (ecase (e/event::sym e)
-       (:start
-        (send! self :request t))
-       (:in
-        (let ((tok (e/event::data e)))
-          (let ((kind (token-kind tok))
-                (c    (token-text tok)))
-            (send! self :out (format nil "~a pos:~a c:~a" kind (token-position tok) (if (eq :ws kind) "." c)))
-            (if (eq :EOF c)
-                (setf *state* :done)
-              (send! self :request t)))))))
-    
-    (:done
-     (send! self :error (format nil "dumper got an event, when dumper thinks it is done")))))
+  (let ((tok (e/event::data e)))
+    (ecase *state*
+      (:dumping
+       (ecase (e/event::sym e)
+         (:start
+          (send! self :request t))
+         (:in
+          (send! self :out (format nil "~a pos:~a c:~a" (token-kind tok) (token-position tok) (if (eq :ws (token-kind tok)) "." (token-text tok))))
+          (if (eq :EOF (token-text tok))
+              (setf *state* :done)
+            (send! self :request t)))))
+      
+      (:done
+       (send! self :error (format nil "dumper got an event, when dumper thinks it is done"))
+       (send! self :out (format nil "~a pos:~a c:~a" (token-kind tok) (token-position tok) (if (eq :ws (token-kind tok)) "." (token-text tok))))))))
