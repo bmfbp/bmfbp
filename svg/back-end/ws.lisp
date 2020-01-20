@@ -45,15 +45,15 @@
           (cond ((eq :character (token-kind tok))
                  (let ((c (token-text tok)))
                    (case c
-                     (#\Space
+                     ((#\Space #\Newline)
                       (push-char-into-buffer c)
-                      (let ((str-token (new-ws)))
-                        (clear-buffer (token-position tok))
-                        (send! self :out str-token)
-                        (setf *ws-state* :idle)))
+                      (pull))
                      (otherwise
-                      (push-char-into-buffer c)
-                      (pull)))))
+                      (let ((ws-token (new-ws)))
+                        (clear-buffer (token-position tok))
+                        (send! self :out ws-token)
+                        (forward-token)
+                        (setf *ws-state* :idle))))))
                 (t (forward-token))))))))
      
 
