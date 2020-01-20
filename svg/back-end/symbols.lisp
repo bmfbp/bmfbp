@@ -59,7 +59,7 @@
                          (send! self :out str-token)
                          (forward-token)
                          (setf *symbols-state* :idle))))))
-                (t (assert nil))))))))
+                (t (forward-token))))))))
      
 
      
