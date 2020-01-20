@@ -16,16 +16,15 @@
              (dumper tokenize parens strings ws symbols spaces) ;; parts
 
 ;; wiring - see wiring.lisp
-
-((((:SELF "start")) ((DUMPER "start") (TOKENIZE "start")))
- (((DUMPER "request") (STRINGS "request") (WS "reqest") (SYMBOLS "request")) ((TOKENIZE "pull")))
- (((TOKENIZE "out")) ((STRINGS "token")))
- (((STRINGS "out")) ((PARENS "token")))
- (((PARENS "out")) ((SPACES "token")))
- (((SPACES "out")) ((SYMBOLS "token")))
- (((SYMBOLS "out")) ((DUMPER "in")))
- (((DUMPER "out")) ((:SELF "out")))
- (((DUMPER "error") (TOKENIZE "error") (PARENS "error") (STRINGS "error") (WS "error") (SYMBOLS "error") (SPACES "error")) ((:SELF "error"))))
+((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))
+ (((DUMPER :REQUEST) (STRINGS :REQUEST) (WS :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
+ (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))
+ (((STRINGS :OUT)) ((PARENS :TOKEN)))
+ (((PARENS :OUT)) ((SPACES :TOKEN)))
+ (((SPACES :OUT)) ((SYMBOLS :TOKEN)))
+ (((SYMBOLS :OUT)) ((DUMPER :IN)))
+ (((DUMPER :OUT)) ((:SELF :OUT)))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (WS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
 
              ))))
     
