@@ -1,10 +1,5 @@
 (in-package :cl-user)
 
-(defparameter *test-wiring* "
-self.start -> dumper.start,tokenize.start
-self.start -> dumper.start,tokenize.start
-")
-
 (defparameter *wiring* "
 self.start -> dumper.start,tokenize.start
 dumper.request,strings.request,ws.reqest,symbols.request -> tokenize.pull
@@ -29,7 +24,7 @@ dumper.error,tokenize.error,parens.error,strings.error,ws.error,symbols.error,sp
 (esrap:defrule <part-pin-comma> (and <part> <dot> <pin> <comma>))
 (esrap:defrule <part-pins> (and (* <part-pin-comma>) <part-pin> (* <ws>)))
 (esrap:defrule <wire> (and <part-pins> <arrow> <part-pins>))
-(esrap:defrule <wires> (and (* <ws>) (+ <wire>)))
+(esrap:defrule <wires> (and (* <ws>) (+ <wire>)) (:function second))
 
 (defun make-wires ()
   (esrap:parse '<wires> *wiring*))
