@@ -55,6 +55,8 @@
                      (otherwise
                       (push-char-into-buffer c)
                       (pull)))))
+                ((eq :EOF (token-kind tok))
+                 (send! self :error (format nil "incomplete string at ~A" (token-position tok))))
                 (t (assert nil))))))))
      
 
