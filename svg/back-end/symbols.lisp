@@ -44,17 +44,17 @@
     (ecase *symbols-state*
       (:idle
        (ecase (action)
-       (:token
-        (if (eof-p)
-            (progn
-              (forward-token)
-              (next-state :done))
-          (if (start-char-p)
+         (:token
+          (if (eof-p)
               (progn
-                (push-char-into-buffer)
-                (pull)
-                (next-state :collecting-symbol))
-            nil)))))
+                (forward-token)
+                (next-state :done))
+            (if (start-char-p)
+                (progn
+                  (push-char-into-buffer)
+                  (pull)
+                  (next-state :collecting-symbol))
+              (forward-token))))))
       (:collecting-symbol
        (ecase (action)
          (:token
@@ -73,4 +73,4 @@
                 (next-state :idle)))))))
       (:done
        (send! self :error (format nil "symbols finished, but received ~S" e))))))
-      
+
