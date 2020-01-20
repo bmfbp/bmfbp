@@ -19,7 +19,7 @@
               (((:self :start))                        ;; from
                ((tokenize :start) (dumper :start)))   ;; to
 
-              (((dumper :request) (strings :request) (ws :request))
+              (((dumper :request) (strings :request) (ws :request) (symbols :request))
                ((tokenize :pull)))
 
               (((tokenize :out))
