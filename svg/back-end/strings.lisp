@@ -34,7 +34,7 @@
              (setf *strings-start-position* (token-position (e/event:data e))))
            (release-buffer ()
              (format *standard-output* "~&strings release-buffer~%")
-             (send! self :out (make-token :kind :symbol :text (strings-get-buffer) :position (strings-get-position))))
+             (send! self :out (make-token :kind :string :text (strings-get-buffer) :position (strings-get-position))))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
@@ -68,6 +68,7 @@
                   (push-char-into-buffer)
                   (pull))
               (progn
+                (push-char-into-buffer)
                 (release-and-clear-buffer)
                 (next-state :idle)))))))
       (:done
