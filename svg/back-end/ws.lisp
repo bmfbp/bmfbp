@@ -21,40 +21,42 @@
   )
 
 (defmethod ws-react ((self e/part:part) (e e/event:event))
-  (flet ((new-ws () (make-token :kind :ws :text (get-buffer) :position (get-position)))
-         (pull () (send! self :request t))
+  (labels ((pull () (send! self :request t))
          (forward-token ()
-           (send-event! self :out e)))
-  (ecase *ws-state*
-    (:idle
-     (ecase (e/event::sym e)
-       (:token
-        (let ((tok (e/event:data e)))
-          (cond ((eq :character (token-kind tok))
-                 (let ((c (token-text tok)))
-                   (case c
-                     ((#\Space #\Newline)
-                      (clear-buffer (token-position tok))
-                      (push-char-into-buffer c)
-                      (pull)
-                      (setf *ws-state* :collecting-spaces))
-                     (otherwise (forward-token)))))
-                (t (forward-token)))))))
-    (:collecting-spaces
-        (let ((tok (e/event:data e)))
-          (cond ((eq :character (token-kind tok))
-                 (let ((c (token-text tok)))
-                   (case c
-                     ((#\Space #\Newline)
-                      (push-char-into-buffer c)
-                      (pull))
-                     (otherwise
-                      (let ((ws-token (new-ws)))
+           (send-event! self :out e))
+         (release-buffer ()
+           (let ((ws-token (make-token :kind :ws :text (get-buffer) :position (get-position))))
+             (clear-buffer (token-position (e/event::data e)))
+             (send! self :out ws-token)
+             (forward-token)
+             (setf *ws-state* :idle))))
+    (let ((tok (e/event:data e)))
+      (ecase *ws-state*
+        (:idle
+         (ecase (e/event::sym e)
+           (:token
+            (format *standard-output* "~&ws :idle kind=~s pos=~s text=~s~%" (token-kind tok) (token-position tok) (token-text tok))
+            (cond ((eq :character (token-kind tok))
+                   (let ((c (token-text tok)))
+                     (case c
+                       ((#\Space #\Newline)
                         (clear-buffer (token-position tok))
-                        (send! self :out ws-token)
-                        (forward-token)
-                        (setf *ws-state* :idle))))))
-                (t (forward-token))))))))
+                        (push-char-into-buffer c)
+                        (setf *ws-state* :collecting-spaces)
+                        (pull))
+                       (otherwise (forward-token)))))
+                  (t (forward-token))))))
+        (:collecting-spaces
+         (format *standard-output* "~&ws :collecting kind=~s pos=~s text=~s~%" (token-kind tok) (token-position tok) (token-text tok))
+         (cond ((eq :character (token-kind tok))
+                (let ((c (token-text tok)))
+                  (case c
+                    ((#\Space #\Newline)
+                     (push-char-into-buffer c)
+                     (pull))
+                    (otherwise
+                     (release-buffer)))))
+               (t (release-buffer))))))))
      
 
      
