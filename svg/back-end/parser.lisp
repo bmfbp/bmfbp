@@ -7,24 +7,32 @@
             (:code tokenize (:start :pull) (:out :error) #'tokenize-react #'tokenize-first-time)
             (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
             (:code spaces (:token) (:request :out :error) #'spaces-react #'spaces-first-time)
-            (:code ws (:token) (:request :out :error) #'ws-react #'ws-first-time)
             (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
             (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
             (:code dumper (:start :in) (:out :request :error) #'dumper-react #'dumper-first-time)
 
             (:schem parser (:start) (:out :error)
-             (dumper tokenize parens strings ws symbols spaces) ;; parts
+             (dumper tokenize parens strings symbols spaces) ;; parts
 
 ;; wiring - see wiring.lisp
-((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))
+#+nil((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))
  (((DUMPER :REQUEST) (STRINGS :REQUEST) (WS :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
+ (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))
+ (((STRINGS :OUT)) ((PARENS :TOKEN)))
+ (((PARENS :OUT)) ((SPACES :TOKEN)))
+ (((SPACES :OUT)) ((DUMPER :IN)))     ;; no symbols
+ (((DUMPER :OUT)) ((:SELF :OUT)))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (WS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
+
+((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))
+ (((DUMPER :REQUEST) (STRINGS :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
  (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))
  (((STRINGS :OUT)) ((PARENS :TOKEN)))
  (((PARENS :OUT)) ((SPACES :TOKEN)))
  (((SPACES :OUT)) ((SYMBOLS :TOKEN)))
  (((SYMBOLS :OUT)) ((DUMPER :IN)))
  (((DUMPER :OUT)) ((:SELF :OUT)))
- (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (WS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
 
              ))))
     
