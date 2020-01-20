@@ -34,6 +34,9 @@
                ((spaces :token)))
 
               (((spaces :out))
+               ((symbols :token)))
+
+              (((symbols :out))
                ((dumper :in)))
 
 
