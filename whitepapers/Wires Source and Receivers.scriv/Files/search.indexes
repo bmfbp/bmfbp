@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="B007E23A-B26C-4CBA-ACDD-B0ECF6EDECA4">
+            <Title>Wire</Title>
+            <Text>A wire is a tuple:
+
+	•	a source,
+	•	list of input receivers.
+
+For example, consider Fig. &lt;$n:figure:Example1&gt;
+
+#
+Fig. &lt;$n:figure:Example1&gt; Example 1
+
+This example contains 4 wires.
+
+The wiring list might be expressed as
+
+A.u —&gt; [C.w, D.y]
+B.v —&gt; [C.x, D.z]
+E.q —&gt; G.s
+F.r —&gt; G.s
+
+The sources are A.u, A.b, E.q and F.r.
+
+The receivers are C.w, C.x, D.y, D.z and G.s.
+
+In this example, the first wire has A.u as its source and the list [C.w,D.y] as its list of receivers.
+
+Wires belong to schematics.
+
+A source consists of
+	•	an output pin (which also includes a reference to the sending part)
+	•	a wire, a list of receivers.
+
+A receiver consists of
+	•	an input pin (which also includes a reference to the receiving part).
+
+</Text>
+            <Comments>Basically an output pin and an output part, see below
+parts/pins - see below
+Event routing is performed by the parent schematic.  Alway.  This is in contrast to most programming languages,  where callers can refer to callees directly by name.  This also occurs in CSP.  DLLs provide islands of indirection between callers and calles.  The Linker permanently fixes up these islands by supplying final addresses at link time.  A schematic is, in a sense, a first-class linker - all input and all output events are shepherded through islands of indirection.  Fixups are performed at load-time.</Comments>
+        </Document>
+        <Document ID="FFFDF9C0-E81F-4353-B111-14A2E77964BF">
+            <Title>Example1</Title>
+        </Document>
+    </Documents>
+</SearchIndexes>

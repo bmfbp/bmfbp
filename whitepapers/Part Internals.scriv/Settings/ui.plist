@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CompileFolder</key>
+	<string>/Users/tarvydas/quicklisp/local-projects/bmfbp/whitepapers</string>
+	<key>NotesScaleFactor</key>
+	<real>1.5</real>
+	<key>QRPanelSettings</key>
+	<dict>
+		<key>1E167B2F-8D99-4513-BC47-B1B9991CD688</key>
+		<dict>
+			<key>BinderUUID</key>
+			<string>1E167B2F-8D99-4513-BC47-B1B9991CD688</string>
+			<key>CurrentMetaData</key>
+			<integer>-1</integer>
+			<key>MainPaneWidth</key>
+			<real>963</real>
+			<key>ProjectBookmarksSplitInfo</key>
+			<array>
+				<string>{{0, 0}, {225, 495}}</string>
+				<string>{{235, 0}, {443, 495}}</string>
+			</array>
+			<key>ProjectBookmarksVisible</key>
+			<false/>
+			<key>ShowsFormatBar</key>
+			<true/>
+			<key>ShowsMetaData</key>
+			<false/>
+			<key>SplitInfo</key>
+			<array>
+				<string>{{0, 277}, {475, 167}}</string>
+			</array>
+			<key>TextSettings</key>
+			<dict>
+				<key>hasMultiplePages</key>
+				<false/>
+				<key>isRulerVisible</key>
+				<false/>
+				<key>lineNumberingInterval</key>
+				<integer>1</integer>
+				<key>showsLineNumbers</key>
+				<false/>
+				<key>textFocusMode</key>
+				<integer>0</integer>
+				<key>textScaleFactor</key>
+				<real>1.5</real>
+				<key>usesFacingPages</key>
+				<false/>
+				<key>usesTypewriterScrolling</key>
+				<false/>
+			</dict>
+			<key>WindowFrame</key>
+			<string>722 160 963 782 0 0 1920 1057 </string>
+		</dict>
+	</dict>
+	<key>binderSplitFrames</key>
+	<array>
+		<string>{{0, 0}, {265, 650}}</string>
+		<string>{{266, 0}, {980, 650}}</string>
+	</array>
+	<key>bookmarksSelectionInfo</key>
+	<dict>
+		<key>1E167B2F-8D99-4513-BC47-B1B9991CD688</key>
+		<dict>
+			<key>Row</key>
+			<integer>-1</integer>
+		</dict>
+	</dict>
+	<key>collectionsRepresentedBinderDocumentsInfo</key>
+	<dict>
+		<key>MainID</key>
+		<string></string>
+		<key>SupportingID</key>
+		<string></string>
+	</dict>
+	<key>fullScreenTextEditorSettings</key>
+	<dict>
+		<key>textScaleFactor</key>
+		<real>1.25</real>
+	</dict>
+	<key>inspectorSplitFrames</key>
+	<array>
+		<string>{{0, 0}, {734, 620}}</string>
+		<string>{{735, 0}, {245, 620}}</string>
+	</array>
+	<key>inspectorWidth</key>
+	<real>245</real>
+	<key>mainDocumentEditor.dockedQRTextSettings</key>
+	<dict>
+		<key>textScaleFactor</key>
+		<real>1.5</real>
+	</dict>
+	<key>mainDocumentEditor.scrollRect</key>
+	<string>{{0, 105.33333333333333}, {479.33333333333331, 376}}</string>
+	<key>mainDocumentEditor.textEditorState</key>
+	<dict>
+		<key>textScaleFactor</key>
+		<real>1.5</real>
+	</dict>
+	<key>mainWindowFrame</key>
+	<string>42 339 1246 672 0 0 1920 1057 </string>
+	<key>supportingDocumentEditor.dockedQRTextSettings</key>
+	<dict>
+		<key>textScaleFactor</key>
+		<real>1.5</real>
+	</dict>
+	<key>supportingDocumentEditor.scrollRect</key>
+	<string>{{0, 0}, {606, 294}}</string>
+	<key>supportingDocumentEditor.textEditorState</key>
+	<dict>
+		<key>textScaleFactor</key>
+		<real>1.5</real>
+	</dict>
+	<key>supportingDocumentViewIsCurrent</key>
+	<false/>
+</dict>
+</plist>
