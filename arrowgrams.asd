@@ -180,5 +180,7 @@
 				     (:file "ws" :depends-on ("util"))
 				     (:file "eol" :depends-on ("util"))
 				     (:file "strings" :depends-on ("util"))
+				     (:file "symbols" :depends-on ("util"))
 				     (:file "dumper" :depends-on ("util"))
-				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"))))))
+				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
+                                                                  "symbols"))))))

@@ -9,10 +9,11 @@
             (:code eol (:token) (:request :out :error) #'eol-react #'eol-first-time)
             (:code ws (:token) (:request :out :error) #'ws-react #'ws-first-time)
             (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
+            (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
             (:code dumper (:start :in) (:out :request :error) #'dumper-react #'dumper-first-time)
 
             (:schem parser (:start) (:out :error)
-             (dumper tokenize parens strings ws) ;; parts
+             (dumper tokenize parens strings ws symbols) ;; parts
 
              ( ;; wiring
               (((:self :start))                        ;; from
@@ -31,6 +32,9 @@
                ((ws :token)))
               
               (((ws :out))
+               ((symbols :token)))
+
+              (((symbols :out))
                 ((dumper :in)))
 
               (((dumper :out))
