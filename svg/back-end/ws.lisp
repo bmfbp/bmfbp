@@ -21,7 +21,7 @@
   )
 
 (defmethod ws-react ((self e/part:part) (e e/event:event))
-  (flet ((new-ws () (make-token :kind :string :text (get-buffer) :position (get-position)))
+  (flet ((new-ws () (make-token :kind :ws :text (get-buffer) :position (get-position)))
          (pull () (send! self :request t))
          (forward-token ()
            (send-event! self :out e)))
