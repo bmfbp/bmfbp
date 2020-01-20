@@ -1,6 +1,10 @@
 (in-package :cl-user)
 
 (defparameter *wiring* "
+self.start x.y -> dumper.start tokenize.start
+")
+
+(defparameter *hold-wiring* "
 self.start -> dumper.start tokenize.start
 dumper.request strings.request ws.reqest symbols.request -> tokenize.pull
 tokenize.out -> strings.token
@@ -20,9 +24,9 @@ dumper.error tokenize.error parens.error strings.error ws.error symbols.error sp
 (esrap:defrule <part> <ident>)
 (esrap:defrule <pin> <ident>)
 (esrap:defrule <part-pin> (and <part> <dot> <pin> (* <ws>)))
-(esrap:defrule <part-pins> (+ <part-pin>))
+(esrap:defrule <part-pins> (and (+ <part-pin>) (* <ws>)))
 (esrap:defrule <wire> (and <part-pins> <arrow> <part-pins>))
-(esrap:defrule <wires> (and (* <ws>) (+ <wire>) (* <ws>)))
+(esrap:defrule <wires> (and (* <ws>) (+ <wire>)))
 
 (defun make-wires ()
   (esrap:parse '<wires> *wiring*))
