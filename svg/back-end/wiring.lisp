@@ -23,11 +23,11 @@ dumper.error,tokenize.error,parens.error,strings.error,ws.error,symbols.error,sp
 (esrap:defrule <part-pin> (and <part> <dot> <pin> (* <ws>))
   (:destructure (part dot pin ws)
    (declare (ignore dot ws))
-   `(,part ,pin)))
+   `(,(destring part) ,pin)))
 (esrap:defrule <part-pin-comma> (and <part> <dot> <pin> <comma>)
   (:destructure (part dot pin comma)
    (declare (ignore dot comma))
-   `(,part ,pin)))
+   `(,(destring part) ,pin)))
 (esrap:defrule <part-pins> (and (* <part-pin-comma>) <part-pin> (* <ws>))
   (:destructure (part-pin-comma part-pin ws)
    (declare (ignore ws))
@@ -44,3 +44,7 @@ dumper.error,tokenize.error,parens.error,strings.error,ws.error,symbols.error,sp
     (pprint result)
     nil))
   
+(defun destring (str)
+  (if (string= "self" str)
+      :self
+    (intern (string-upcase str))))
