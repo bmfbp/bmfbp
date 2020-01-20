@@ -28,7 +28,10 @@ dumper.error,tokenize.error,parens.error,strings.error,ws.error,symbols.error,sp
   (:destructure (part dot pin comma)
    (declare (ignore dot comma))
    `(,part ,pin)))
-(esrap:defrule <part-pins> (and (* <part-pin-comma>) <part-pin> (* <ws>)))
+(esrap:defrule <part-pins> (and (* <part-pin-comma>) <part-pin> (* <ws>))
+  (:destructure (part-pin-comma part-pin ws)
+   (declare (ignore ws))
+   `(,@part-pin-comma ,part-pin)))
 (esrap:defrule <wire> (and <part-pins> <arrow> <part-pins>)
   (:destructure (LHS arrow RHS)
    (declare (ignore arrow))
@@ -37,5 +40,7 @@ dumper.error,tokenize.error,parens.error,strings.error,ws.error,symbols.error,sp
 (esrap:defrule <wires> (and (* <ws>) (+ <wire>)) (:function second))
 
 (defun make-wires ()
-  (esrap:parse '<wires> *wiring*))
+  (let ((result (esrap:parse '<wires> *wiring*)))
+    (pprint result)
+    nil))
   
