@@ -2,7 +2,7 @@
 
 (defparameter *wiring* "
 self.start -> dumper.start,tokenize.start
-dumper.request,strings.request,ws.reqest,symbols.request -> tokenize.pull
+dumper.request,strings.request,ws.request,symbols.request -> tokenize.pull
 tokenize.out -> strings.token
 strings.out -> parens.token
 parens.out -> spaces.token
