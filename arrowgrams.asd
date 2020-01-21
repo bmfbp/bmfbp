@@ -184,7 +184,11 @@
 				     (:file "symbols" :depends-on ("util" "token"))
 				     (:file "integers" :depends-on ("util" "token"))
 				     (:file "dumper" :depends-on ("util" "token"))
+				     (:file "generic-parser" :depends-on ("util" "token"))
 				     (:file "scanner" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
                                                                   "symbols" "integers" "spaces"))
+
+				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws"
+                                                                  "symbols" "integers" "spaces" "generic-parser"))
 
 				     (:file "wiring" :depends-on ("util"))))))

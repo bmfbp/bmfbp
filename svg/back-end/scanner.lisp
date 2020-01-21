@@ -33,11 +33,7 @@
     (cl-event-passing-user:@enable-logging)
     (inject! scanner-net :start filename)))
 
-(defun cl-user::test ()
+(defun cl-user::scanner-test ()
   (let ((filename (asdf:system-relative-pathname :arrowgrams "svg/back-end/test.ir")))
     (arrowgrams/compiler/back-end::scanner filename)))
 
-(defun cl-user::clear ()
-  (esrap::clear-rules)
-  (asdf::run-program "rm -rf ~/.cache/common-lisp")
-  (ql:quickload :arrowgrams/compiler/back-end))

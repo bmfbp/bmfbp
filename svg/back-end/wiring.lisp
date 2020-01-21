@@ -2,14 +2,16 @@
 
 (defparameter *full-wiring* "
 self.start -> dumper.start,tokenize.start
-spaces.request,dumper.request,strings.request,symbols.request,integers.request -> tokenize.pull
+parser.request,spaces.request,dumper.request,strings.request,symbols.request,integers.request -> tokenize.pull
 tokenize.out -> strings.token
 strings.out -> parens.token
 parens.out -> spaces.token
 spaces.out -> symbols.token
 symbols.out -> integers.token
-integers.out -> dumper.in
-dumper.out -> self.out
+integers.out -> parser.in
+
+parser.go -> parser.doparse
+parser.out -> self.out
 
 dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
 ")
