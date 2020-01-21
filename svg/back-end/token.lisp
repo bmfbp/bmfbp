@@ -4,5 +4,5 @@
   kind
   position
   text
-  (special :nil))
+  (special nil))
 
