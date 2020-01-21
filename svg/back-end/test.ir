@@ -1,1 +1,42 @@
-efg A bcd
+(
+  "build process"
+  ("top-level svg" "top-level name")
+  ("javascript source code")
+  "react"
+  "firstTimeFunc"
+
+  (
+    ("part1" "get file content in repo" ("git repo metadata" "temp directory") ("file content") "getFileReact" "getFileFirstTime")
+    ( "part2" "iterator" ("start" "done" "continue") ("get a part") "iteratorReact" "iteratorFirstTime")
+    ( "part3" "compile composite" ("svg") ("graph as json" "parts as json objects") "compileReact" "compileFirstTime")
+    ( "part4" "json object stacker" ("get a part" "push object") ("no more" "part metadata") "stackerReact" "stackerFirstTime")
+    ( "part5" "fetch git repo" ("git repo metadata" "temp directory") ("metadata") "fetchReact" "fetchFirstTime")
+    ( "part6" "get file content in repo" ("git repo metadata" "temp directory") ("metadata" "file content") "repoReact" "repoFirstTime")
+    ( "part7" "determine kindType" ("part metadata" "file content") ("schematic metadata" "leaf metadata") "determineReact" "determineFirstTime")
+    ( "part8" "prepare temp directory" () ("directory") "prepareReact" "prepareFirstTime")
+    ( "part9" "collector" ("done" "leaf" "composite") ("intermediate code") "collectorReact" "collectorFirstTime")
+    ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code") "builderReact" "builderFirstTime")
+  )
+
+  (
+    ( "wire1" 
+      ( ("part1" "file content") (self "top-level svg") )
+      ( ("part3" "svg") ("part2" "start") )          
+    )
+    ("wire2" (("part4" "no more")) (("part2" "done") ("part9" "done")))
+    ("wire3" (("part3" "parts as json objects")) (("part4" "push object")))
+    ("wire4" (("part4" "get a part")) (("part2" "get a part")))
+    ("wire5" (("part4" "part metadata")) 
+     (("part2" "continue") ("part5" "git repo metadata")))
+    ("wire6" (("part8" "directory"))
+     (("part6" "temp directory")
+      ("part1" "temp directory") 
+      ("part5" "temp directory") 
+      ("part10" "temp directory")))
+    ("wire7" (("part7" "schematic metadata")) (("part6" "get repo metadata")))
+    ("wire11" (("part7" "leaf metadata")) (("part9" "leaf")))
+    ("wire8" (("part9" "intermediate code")) (("part10" "intermediate code")))
+    ("wire9" ((self "top-level name")) (("part10" "top-level name")))
+    ("wire10" (("part10" "javascript source code")) ((self "javascript source code")))
+ )
+)
