@@ -2,7 +2,7 @@
 
 (defparameter *full-wiring* "
 self.start -> dumper.start,tokenize.start
-dumper.request,strings.request,symbols.request,integers.request -> tokenize.pull
+spaces.request,dumper.request,strings.request,symbols.request,integers.request -> tokenize.pull
 tokenize.out -> strings.token
 strings.out -> parens.token
 parens.out -> spaces.token
@@ -13,7 +13,6 @@ dumper.out -> self.out
 
 dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
 ")
-
 
 
 (defparameter *no-symbols-no-strings-wiring* "
