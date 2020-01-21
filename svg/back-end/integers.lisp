@@ -43,7 +43,7 @@
              (clear-buffer))
          )
 
-    (format *standard-output* "~&integers in state ~S gets ~S ~S~%" *integers-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    ;(format *standard-output* "~&integers in state ~S gets ~S ~S~%" *integers-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
     (ecase *integers-state*
       (:idle
        (ecase (action)
