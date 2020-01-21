@@ -14,7 +14,7 @@
       (:idle
        (ecase (e/event::sym e)
          (:start
-          (send! self :request t)
+          (send! self :request :dumper1)
           (setf *dumper-state* :dumping))))
 
       (:dumping
@@ -24,7 +24,7 @@
                                    (if (member (token-kind tok) no-print) "." (token-text tok))))
           (if (eq :EOF (token-text tok))
               (setf *dumper-state* :done)
-            (send! self :request t)))))
+            (send! self :request :dumper2)))))
       
       (:done
        (send! self :error (format nil "dumper got an event, when dumper thinks it is done"))
