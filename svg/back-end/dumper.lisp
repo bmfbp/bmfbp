@@ -34,7 +34,7 @@
         (:dumping
          (ecase (e/event::sym e)
            (:in
-            (debug-tok :out "dumper: " tok)
+            (debug-tok :out "" tok)
             (if (eq :EOF (token-text tok))
                 (setf *dumper-state* :done)
               (unless (token-pulled-p tok)
