@@ -17,11 +17,7 @@
 (defmethod integers-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *integers-buffer*))
            (pull () (send! self :request :integers))
-           (forward-token (&key (pulled-p nil))
-             (if pulled-p
-                 (let ((tok (e/event:data e)))
-                   (send! self :out (make-token :kind (token-kind tok) :text (token-text tok) :position (token-position tok) :pulled-p nil)))
-               (send-event! self :out e)))
+           (forward-token (&key (pulled-p nil)) (send-event! self :out e))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
