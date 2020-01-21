@@ -3,5 +3,6 @@
 (defstruct token
   kind
   position
-  text)
+  text
+  (special :nil))
 

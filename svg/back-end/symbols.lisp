@@ -5,6 +5,7 @@
 (defparameter *symbols-buffer* nil)
 (defparameter *symbols-start-position* 0)
 (defparameter *symbols-state* :idle)
+(defparameter *symbols-token-special* nil)
 
 (defun symbols-get-buffer () (coerce (reverse *symbols-buffer*) 'string))
 (defun symbols-get-position () *symbols-start-position*)
@@ -15,9 +16,8 @@
 
 (defmethod symbols-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *symbols-buffer*))
-           (pull () (send! self :request :symbols) (format *standard-output* "~&symbols pull~%"))
-           (forward-token () (send-event! self :out e) (format *standard-output* "~&symbols forwards token ~S ~S~%" e
-                                                               (e/event::sym e) (e/event::data e)))
+           (pull () (send! self :request :symbols))
+           (forward-token () (send-event! self :out e))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -36,14 +36,13 @@
              (setf *symbols-buffer* nil)
              (setf *symbols-start-position* (token-position (e/event:data e))))
            (release-buffer ()
-             (format *standard-output* "~&symbols release-buffer~%")
-             (send! self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position))))
+             (send! self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position) :special *symbols-token-special*)))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
          )
 
-    (format *standard-output* "~&symbols in state ~S gets ~S ~S~%" *symbols-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    ;(format *standard-output* "~&symbols in state ~S gets ~S ~S~%" *symbols-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
     (ecase *symbols-state*
       (:idle
        (ecase (action)
@@ -56,6 +55,7 @@
                 (progn
                   (push-char-into-buffer)
                   (pull)
+                  (setf *symbols-token-special* t)
                   (next-state :collecting-symbol))
               (forward-token))))))
       (:collecting-symbol
@@ -69,6 +69,7 @@
             (if (follow-char-p)
                 (progn
                   (push-char-into-buffer)
+                  (setf *symbols-token-special* nil)  ;; set to nil if > 1 character collected
                   (pull))
               (progn
                 (release-and-clear-buffer)
