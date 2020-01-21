@@ -29,3 +29,7 @@ svg/xform/test2.lisp
 svg/cl-compiler/hold-build.ir
 
 svg/back-end/runs.lisp
+
+svg/back-end/log.lisp
+
+svg/back-end/log2.lisp
