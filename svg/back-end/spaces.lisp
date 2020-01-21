@@ -9,7 +9,7 @@
   )
 
 (defmethod spaces-react ((self e/part:part) (e e/event:event))
-  (flet ((new-newline (pos) (make-token :kind :ws :text #\Space :position pos))
+  (flet ((new-space (pos) (make-token :kind :ws :text " " :position pos))
          (forward-token () (send-event! self :out e)))
     (ecase *spaces-state*
       (:idle
@@ -20,6 +20,6 @@
                    (let ((c (token-text tok)))
                      (case c
                        ((#\Space #\Newline #\Tab #\Page)
-                        (send! self :out (new-newline (token-position tok))))
+                        (send! self :out (new-space (token-position tok))))
                        (otherwise (forward-token)))))
                   (t (forward-token))))))))))
