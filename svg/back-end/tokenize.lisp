@@ -24,7 +24,7 @@
         (let ((c (read-char *tokenizer-stream* nil :EOF)))
           (incf *tokenizer-position*)
           (let ((reached-eof (eq :EOF c)))
-          (let ((tok (make-token :position *tokenizer-position* :kind (if readched-eof :EOF :character) :text c)))
+          (let ((tok (make-token :position *tokenizer-position* :kind (if reached-eof :EOF :character) :text c)))
             (send! self :out tok)
             (when reached-eof
               (setf *tokenizer-state* :done))))))))
