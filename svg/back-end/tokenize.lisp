@@ -30,6 +30,6 @@
               (setf *tokenizer-state* :done))))))))
 
     (:done
-     (send! self :error (format nil "tokenizer done, but received ~S" e)))))
+     (send! self :error (format nil "tokenizer done, but received ~S ~S" (e/event::sym e) (e/event:data e))))))
 
     
