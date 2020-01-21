@@ -1,8 +1,8 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defun parser (filename)
-  (let ((parser-net
-         (cl-event-passing-user::@defnetwork parser
+(defun scanner (filename)
+  (let ((scanner-net
+         (cl-event-passing-user::@defnetwork scanner
 
             (:code tokenize (:start :pull) (:out :error) #'tokenize-react #'tokenize-first-time)
             (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
@@ -12,7 +12,7 @@
             (:code integers (:token) (:request :out :error) #'integers-react #'integers-first-time)
             (:code dumper (:start :in) (:out :request :error) #'dumper-react #'dumper-first-time)
 
-            (:schem parser (:start) (:out :error)
+            (:schem scanner (:start) (:out :error)
              (dumper tokenize parens strings symbols spaces integers ) ;; parts
 
 ;; wiring - see wiring.lisp
@@ -31,11 +31,11 @@
           ))))
     
     (cl-event-passing-user:@enable-logging)
-    (inject! parser-net :start filename)))
+    (inject! scanner-net :start filename)))
 
 (defun cl-user::test ()
   (let ((filename (asdf:system-relative-pathname :arrowgrams "svg/back-end/test.ir")))
-    (arrowgrams/compiler/back-end::parser filename)))
+    (arrowgrams/compiler/back-end::scanner filename)))
 
 (defun cl-user::clear ()
   (esrap::clear-rules)
