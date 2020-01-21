@@ -21,13 +21,19 @@
         (:dumping
          (ecase (e/event::sym e)
            (:in
-            (send! self :out (format nil "~a pos:~a c:~a" (token-kind tok) (token-position tok)
-                                     (if (member (token-kind tok) no-print) "." (token-text tok))))
+            (send! self :out (format nil "~a pos:~a c:~a special:~a"
+                                     (token-kind tok)
+                                     (token-position tok)
+                                     (if (member (token-kind tok) no-print) "." (token-text tok))
+                                     (token-special tok)))
             (if (eq :EOF (token-text tok))
                 (setf *dumper-state* :done)
               (unless (token-special tok)
                 (pull :dump2))))))
 
         (:done
-         (send! self :error (format nil "dumper done, but got ~a pos:~a c:~a" (token-kind tok) (token-position tok)
-                                    (if (member (token-kind tok) no-print) "." (token-text tok)))))))))
+         (send! self :error (format nil "dumper done, but got ~a pos:~a c:~a special:~a"
+                                    (token-kind tok)
+                                    (token-position tok)
+                                    (if (member (token-kind tok) no-print) "." (token-text tok))
+                                    (token-special tok))))))))

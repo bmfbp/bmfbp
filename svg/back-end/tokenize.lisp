@@ -5,6 +5,7 @@
 (defparameter *tokenizer-state* :idle)
 
 (defmethod tokenize-first-time ((self e/part:part))
+  (setf *tokenizer-state* :idle)
   )
 
 (defmethod tokenize-react ((self e/part:part) (e e/event:event))

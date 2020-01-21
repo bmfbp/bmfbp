@@ -17,7 +17,11 @@
 (defmethod symbols-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *symbols-buffer*))
            (pull () (send! self :request :symbols))
-           (forward-token () (send-event! self :out e))
+           (forward-token (&key (special nil))
+             (if special
+                 (let ((tok (e/event:data e)))
+                   (send! self :out (make-token :kind (token-kind tok) :text (token-text tok) :position (token-position tok) :special nil)))
+               (send-event! self :out e)))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -36,7 +40,7 @@
              (setf *symbols-buffer* nil)
              (setf *symbols-start-position* (token-position (e/event:data e))))
            (release-buffer ()
-             (send! self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position) :special *symbols-token-special*)))
+             (send! self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position) :special t)))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
@@ -55,7 +59,6 @@
                 (progn
                   (push-char-into-buffer)
                   (pull)
-                  (setf *symbols-token-special* t)
                   (next-state :collecting-symbol))
               (forward-token))))))
       (:collecting-symbol
@@ -69,11 +72,10 @@
             (if (follow-char-p)
                 (progn
                   (push-char-into-buffer)
-                  (setf *symbols-token-special* nil)  ;; set to nil if > 1 character collected
                   (pull))
               (progn
                 (release-and-clear-buffer)
-                (forward-token)
+                (forward-token :special t)
                 (next-state :idle)))))))
       (:done
        (send! self :error (format nil "symbols finished, but received ~S" e))))))

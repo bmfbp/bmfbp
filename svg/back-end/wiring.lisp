@@ -86,3 +86,31 @@ dumper.error,tokenize.error,symbols.error -> self.error
 
 (defun pin-name (str)
   (intern (string-upcase str) "KEYWORD"))
+
+
+
+
+#+nil((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))  ;; no symbols, no strings
+ (((DUMPER :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
+ (((TOKENIZE :OUT)) ((PARENS :TOKEN)))
+ (((PARENS :OUT)) ((SPACES :TOKEN)))
+ (((SPACES :OUT)) ((DUMPER :IN)))
+ (((DUMPER :OUT)) ((:SELF :OUT)))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
+
+#+nil((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))
+ (((DUMPER :REQUEST) (STRINGS :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
+ (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))
+ (((STRINGS :OUT)) ((PARENS :TOKEN)))
+ (((PARENS :OUT)) ((SPACES :TOKEN)))
+ (((SPACES :OUT)) ((DUMPER :IN)))     ;; no symbols
+ (((DUMPER :OUT)) ((:SELF :OUT)))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
+
+#+nil((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START))) ;; symbols only
+ (((DUMPER :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
+ (((TOKENIZE :OUT)) ((SYMBOLS :TOKEN)))
+ (((SYMBOLS :OUT)) ((DUMPER :IN)))
+ (((DUMPER :OUT)) ((:SELF :OUT)))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (SYMBOLS :ERROR)) ((:SELF :ERROR))))   
+
