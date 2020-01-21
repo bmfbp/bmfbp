@@ -2,7 +2,7 @@
 
 (defparameter *full-wiring* "
 self.start -> dumper.start,tokenize.start
-dumper.request,strings.request,symbols.request -> tokenize.pull
+dumper.request,strings.request,symbols.request,integers.request -> tokenize.pull
 tokenize.out -> strings.token
 strings.out -> parens.token
 parens.out -> spaces.token
