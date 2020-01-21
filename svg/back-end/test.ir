@@ -1,42 +1,49 @@
-(
-  "build process"
-  ("top-level svg" "top-level name")
-  ("javascript source code")
-  "react"
-  "firstTimeFunc"
 
-  (
-    ("part1" "get file content in repo" ("git repo metadata" "temp directory") ("file content") "getFileReact" "getFileFirstTime")
-    ( "part2" "iterator" ("start" "done" "continue") ("get a part") "iteratorReact" "iteratorFirstTime")
-    ( "part3" "compile composite" ("svg") ("graph as json" "parts as json objects") "compileReact" "compileFirstTime")
-    ( "part4" "json object stacker" ("get a part" "push object") ("no more" "part metadata") "stackerReact" "stackerFirstTime")
-    ( "part5" "fetch git repo" ("git repo metadata" "temp directory") ("metadata") "fetchReact" "fetchFirstTime")
-    ( "part6" "get file content in repo" ("git repo metadata" "temp directory") ("metadata" "file content") "repoReact" "repoFirstTime")
-    ( "part7" "determine kindType" ("part metadata" "file content") ("schematic metadata" "leaf metadata") "determineReact" "determineFirstTime")
-    ( "part8" "prepare temp directory" () ("directory") "prepareReact" "prepareFirstTime")
-    ( "part9" "collector" ("done" "leaf" "composite") ("intermediate code") "collectorReact" "collectorFirstTime")
-    ( "part10" "javascript builder" ("top-level name" "intermediate code" "temp directory") ("javascript souce code") "builderReact" "builderFirstTime")
-  )
-
-  (
-    ( "wire1" 
-      ( ("part1" "file content") (self "top-level svg") )
-      ( ("part3" "svg") ("part2" "start") )          
-    )
-    ("wire2" (("part4" "no more")) (("part2" "done") ("part9" "done")))
-    ("wire3" (("part3" "parts as json objects")) (("part4" "push object")))
-    ("wire4" (("part4" "get a part")) (("part2" "get a part")))
-    ("wire5" (("part4" "part metadata")) 
-     (("part2" "continue") ("part5" "git repo metadata")))
-    ("wire6" (("part8" "directory"))
-     (("part6" "temp directory")
-      ("part1" "temp directory") 
-      ("part5" "temp directory") 
-      ("part10" "temp directory")))
-    ("wire7" (("part7" "schematic metadata")) (("part6" "get repo metadata")))
-    ("wire11" (("part7" "leaf metadata")) (("part9" "leaf")))
-    ("wire8" (("part9" "intermediate code")) (("part10" "intermediate code")))
-    ("wire9" ((self "top-level name")) (("part10" "top-level name")))
-    ("wire10" (("part10" "javascript source code")) ((self "javascript source code")))
- )
-)
+("self"
+ ("top-level name" "top-level svg")
+ ("javascript source code")
+ "react"
+ "first-time"
+ (("ID511" "fetch git repo" ("git repo metadata" "temp directory") ("metadata") "react" "first-time")
+  ("ID456"
+   "determine kindType"
+   ("file content" "part metadata")
+   ("schematic metadata" "leaf metadata")
+   "react"
+   "first-time")
+  ("ID412" "compile composite" ("svg") ("parts as json objects" "graph as json") "react" "first-time")
+  ("ID538" "prepare temp directory" NIL ("directory") "react" "first-time")
+  ("ID466" "get file content in repo" ("git repo metadata" "temp directory") ("file content") "react" "first-time")
+  ("ID422" "collector" ("done" "composite" "leaf") ("intermediate code") "react" "first-time")
+  ("ID559"
+   "get file content in repo"
+   ("git repo metadata" "temp directory")
+   ("file content" "metadata")
+   "react"
+   "first-time")
+  ("ID495"
+   "javascript builder"
+   ("intermediate code" "temp directory" "top-level name")
+   ("javascript source code")
+   "react"
+   "first-time")
+  ("ID430" "iterator" ("continue" "done" "start") ("get a part") "react" "first-time")
+  ("ID391" "json object stacker" ("push object" "get a part") ("part metadata" "no more") "react" "first-time"))
+ ((0 (("self" "top-level name")) (("ID495" "top-level name")))
+  (1 (("ID559" "metadata")) (("ID456" "part metadata")))
+  (2 (("ID559" "file content")) (("ID456" "file content")))
+  (3
+   (("ID538" "directory"))
+   (("ID495" "temp directory") ("ID511" "temp directory") ("ID466" "temp directory") ("ID559" "temp directory")))
+  (4 (("ID511" "metadata")) (("ID559" "git repo metadata")))
+  (5 (("ID495" "javascript source code")) (("self" "javascript source code")))
+  (6 (("self" "top-level svg")) (("ID412" "svg") ("ID430" "start")))
+  (7 (("ID466" "file content")) (("ID412" "svg")))
+  (8 (("ID456" "leaf metadata")) (("ID422" "leaf")))
+  (9 (("ID456" "schematic metadata")) (("ID466" "git repo metadata")))
+  (10 (("ID430" "get a part")) (("ID391" "get a part")))
+  (11 (("ID422" "intermediate code")) (("ID495" "intermediate code")))
+  (12 (("ID412" "graph as json")) (("ID422" "composite")))
+  (13 (("ID412" "parts as json objects")) (("ID391" "push object")))
+  (14 (("ID391" "part metadata")) (("ID430" "continue") ("ID511" "git repo metadata")))
+  (15 (("ID391" "no more")) (("ID422" "done") ("ID430" "done")))))

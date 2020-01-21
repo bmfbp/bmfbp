@@ -1,5 +1,21 @@
 (in-package :cl-user)
 
+(defparameter *full-wiring* "
+self.start -> dumper.start,tokenize.start
+dumper.request,strings.request,symbols.request -> tokenize.pull
+tokenize.out -> strings.token
+strings.out -> parens.token
+parens.out -> spaces.token
+spaces.out -> symbols.token
+symbols.out -> integers.token
+integers.out -> dumper.in
+dumper.out -> self.out
+
+dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+")
+
+
+
 (defparameter *no-symbols-no-strings-wiring* "
 self.start -> dumper.start,tokenize.start
 dumper.request,symbols.request -> tokenize.pull
@@ -23,18 +39,6 @@ dumper.out -> self.out
 dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error -> self.error
 ")
 
-(defparameter *full-wiring* "
-self.start -> dumper.start,tokenize.start
-dumper.request,strings.request,symbols.request -> tokenize.pull
-tokenize.out -> strings.token
-strings.out -> parens.token
-parens.out -> spaces.token
-spaces.out -> symbols.token
-symbols.out -> dumper.in
-dumper.out -> self.out
-
-dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error -> self.error
-")
 
 (defparameter *symbols-only-wiring* "
 self.start -> dumper.start,tokenize.start
@@ -114,3 +118,13 @@ dumper.error,tokenize.error,symbols.error -> self.error
  (((DUMPER :OUT)) ((:SELF :OUT)))
  (((DUMPER :ERROR) (TOKENIZE :ERROR) (SYMBOLS :ERROR)) ((:SELF :ERROR))))   
 
+;; tokenize.out -> strings -> parens -> spaces -> symbols -> dumper
+#+nil((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))
+ (((DUMPER :REQUEST) (STRINGS :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
+ (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))
+ (((STRINGS :OUT)) ((PARENS :TOKEN)))
+ (((PARENS :OUT)) ((SPACES :TOKEN)))
+ (((SPACES :OUT)) ((SYMBOLS :TOKEN)))  ;; full
+ (((SYMBOLS :OUT)) ((DUMPER :IN)))
+ (((DUMPER :OUT)) ((:SELF :OUT)))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
