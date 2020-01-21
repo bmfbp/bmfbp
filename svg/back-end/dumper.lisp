@@ -7,7 +7,7 @@
   )
 
 (defmethod dumper-react ((self e/part:part) (e e/event:event))
-  ;(format *standard-output* "~&dumper ~S   ~S ~S~%" *dumper-state* (e/event::sym e) (e/event:data e))
+  (format *standard-output* "~&dumper ~S   ~S ~S~%" *dumper-state* (e/event::sym e) (e/event:data e))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
     (ecase *dumper-state*
