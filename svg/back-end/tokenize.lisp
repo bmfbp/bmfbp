@@ -10,7 +10,7 @@
 (defmethod tokenize-react ((self e/part:part) (e e/event:event))
   (ecase *tokenizer-state*
     (:idle
-     ;(format *standard-output* "~&tokenize in state idle gets :start~%")
+     ;(format *standard-output* "~&tokenize in state idle gets :start~%") ;; see also format below
      (ecase (e/event::sym e)
        (:start
         (let ((str (alexandria:read-file-into-string (e/event:data e))))

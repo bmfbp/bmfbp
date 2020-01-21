@@ -38,7 +38,7 @@
              (clear-buffer))
          )
 
-    ;(format *standard-output* "~&strings in state ~S gets ~S ~S~%" *strings-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" *strings-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
     (ecase *strings-state*
       (:idle
        (ecase (action)

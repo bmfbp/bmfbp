@@ -46,7 +46,7 @@ dumper.out -> self.out
 dumper.error,tokenize.error,symbols.error -> self.error
 ")
 
-(defparameter *wiring* *symbols-only-wiring*)
+(defparameter *wiring* *full-wiring*)
 
 (esrap:defrule <ws> (or #\Space #\Newline))
 (esrap:defrule <arrow> (and "->" (* <ws>)) (:constant :arrow))

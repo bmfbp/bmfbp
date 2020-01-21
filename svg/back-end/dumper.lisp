@@ -8,7 +8,7 @@
 
 (defmethod dumper-react ((self e/part:part) (e e/event:event))
   ;(format *standard-output* "~&dumper ~S   ~S ~S~%" *dumper-state* (e/event::sym e) (e/event:data e))
-  (flet ((pull (id) (send! self :request id)))
+  (flet ((pull (id) (send! self :request id) #+nil(format *standard-output* "~&dumper: pull ~S~%" id)))
     (let ((tok (e/event::data e))
           (no-print '(:ws :newline :eof)))
       (ecase *dumper-state*
