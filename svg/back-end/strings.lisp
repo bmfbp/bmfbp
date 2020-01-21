@@ -15,7 +15,7 @@
 
 (defmethod strings-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *strings-buffer*))
-           (pull () (send! self :request t) (format *standard-output* "~&strings pull~%"))
+           (pull () (send! self :request :strings) (format *standard-output* "~&strings pull~%"))
            (forward-token () (send-event! self :out e) (format *standard-output* "~&strings forwards token ~S ~S~%"
                                                                (e/event::sym e) (e/event::data e)))
            (start-char-p () 

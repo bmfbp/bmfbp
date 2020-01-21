@@ -15,6 +15,14 @@
              (dumper tokenize parens strings symbols spaces) ;; parts
 
 ;; wiring - see wiring.lisp
+#+nil((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))  ;; no symbols, no strings
+ (((DUMPER :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
+ (((TOKENIZE :OUT)) ((PARENS :TOKEN)))
+ (((PARENS :OUT)) ((SPACES :TOKEN)))
+ (((SPACES :OUT)) ((DUMPER :IN)))
+ (((DUMPER :OUT)) ((:SELF :OUT)))
+ (((DUMPER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR)) ((:SELF :ERROR))))
+
 ((((:SELF :START)) ((DUMPER :START) (TOKENIZE :START)))
  (((DUMPER :REQUEST) (STRINGS :REQUEST) (SYMBOLS :REQUEST)) ((TOKENIZE :PULL)))
  (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))

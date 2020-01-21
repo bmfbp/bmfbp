@@ -1,5 +1,16 @@
 (in-package :cl-user)
 
+(defparameter *no-symbols-no-strings-wiring* "
+self.start -> dumper.start,tokenize.start
+dumper.request,symbols.request -> tokenize.pull
+tokenize.out -> parens.token
+parens.out -> spaces.token
+spaces.out -> dumper.in
+dumper.out -> self.out
+
+dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error -> self.error
+")
+
 (defparameter *no-symbols-wiring* "
 self.start -> dumper.start,tokenize.start
 dumper.request,strings.request,symbols.request -> tokenize.pull
@@ -9,7 +20,7 @@ parens.out -> spaces.token
 spaces.out -> dumper.in
 dumper.out -> self.out
 
-dumper.error,tokenize.error,parens.error,strings.error,,symbols.error,spaces.error -> self.error
+dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error -> self.error
 ")
 
 (defparameter *full-wiring* "
@@ -25,7 +36,7 @@ dumper.out -> self.out
 dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error -> self.error
 ")
 
-(defparameter *wiring* *full-wiring*)
+(defparameter *wiring* *no-symbols-no-strings-wiring*)
 
 (esrap:defrule <ws> (or #\Space #\Newline))
 (esrap:defrule <arrow> (and "->" (* <ws>)) (:constant :arrow))
