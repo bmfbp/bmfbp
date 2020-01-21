@@ -10,6 +10,7 @@
 (defmethod tokenize-react ((self e/part:part) (e e/event:event))
   (ecase *tokenizer-state*
     (:idle
+     ;(format *standard-output* "~&tokenize in state idle gets :start~%")
      (ecase (e/event::sym e)
        (:start
         (let ((str (alexandria:read-file-into-string (e/event:data e))))
@@ -20,7 +21,7 @@
     (:running
      (ecase (e/event::sym e)
        (:pull
-        (format *standard-output* "~&tokenize in state idle gets :pull ~S~%" (e/event:data e))
+        ;(format *standard-output* "~&tokenize in state running gets :pull ~S~%" (e/event:data e))
         (let ((c (read-char *tokenizer-stream* nil :EOF)))
           (incf *tokenizer-position*)
           (let ((reached-eof (eq :EOF c)))

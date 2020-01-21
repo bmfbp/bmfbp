@@ -15,9 +15,8 @@
 
 (defmethod strings-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *strings-buffer*))
-           (pull () (send! self :request :strings) (format *standard-output* "~&strings pull~%"))
-           (forward-token () (send-event! self :out e) (format *standard-output* "~&strings forwards token ~S ~S~%"
-                                                               (e/event::sym e) (e/event::data e)))
+           (pull () (send! self :request :strings))
+           (forward-token () (send-event! self :out e))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -33,14 +32,13 @@
              (setf *strings-buffer* nil)
              (setf *strings-start-position* (token-position (e/event:data e))))
            (release-buffer ()
-             (format *standard-output* "~&strings release-buffer~%")
              (send! self :out (make-token :kind :string :text (strings-get-buffer) :position (strings-get-position))))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
          )
 
-    (format *standard-output* "~&strings in state ~S gets ~S ~S~%" *strings-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    ;(format *standard-output* "~&strings in state ~S gets ~S ~S~%" *strings-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
     (ecase *strings-state*
       (:idle
        (ecase (action)
