@@ -36,7 +36,17 @@ dumper.out -> self.out
 dumper.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error -> self.error
 ")
 
-(defparameter *wiring* *no-symbols-no-strings-wiring*)
+(defparameter *symbols-only-wiring* "
+self.start -> dumper.start,tokenize.start
+dumper.request,symbols.request -> tokenize.pull
+tokenize.out -> symbols.token
+symbols.out -> dumper.in
+dumper.out -> self.out
+
+dumper.error,tokenize.error,symbols.error -> self.error
+")
+
+(defparameter *wiring* *symbols-only-wiring*)
 
 (esrap:defrule <ws> (or #\Space #\Newline))
 (esrap:defrule <arrow> (and "->" (* <ws>)) (:constant :arrow))
