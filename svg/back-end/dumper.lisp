@@ -12,12 +12,18 @@
         (no-print '(:ws :newline :eof)))
     (flet ((pull (id) (send! self :request id) #+nil(format *standard-output* "~&dumper: pull ~S~%" id))
            (debug-tok (out-pin msg tok)
-             (send! self out-pin (format nil "~a:~a pos:~a c:~a special:~a"
-                                         msg
-                                         (token-kind tok)
-                                         (token-position tok)
-                                         (if (member (token-kind tok) no-print) "." (token-text tok))
-                                         (token-special tok)))))
+             (if (token-pulled-p tok)
+                 (send! self out-pin (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
+                                             msg
+                                             (token-kind tok)
+                                             (token-position tok)
+                                             (if (member (token-kind tok) no-print) "." (token-text tok))
+                                             (token-pulled-p tok)))
+               (send! self out-pin (format nil "~&~a:~a pos:~a c:~a"
+                                           msg
+                                           (token-kind tok)
+                                           (token-position tok)
+                                           (if (member (token-kind tok) no-print) "." (token-text tok)))))))
       (ecase *dumper-state*
         (:idle
          (ecase (e/event::sym e)
@@ -31,7 +37,7 @@
             (debug-tok :out "dumper: " tok)
             (if (eq :EOF (token-text tok))
                 (setf *dumper-state* :done)
-              (unless (token-special tok)
+              (unless (token-pulled-p tok)
                 (pull :dump2))))))
         
         (:done

@@ -5,7 +5,7 @@
 (defparameter *integers-buffer* nil)
 (defparameter *integers-start-position* 0)
 (defparameter *integers-state* :idle)
-(defparameter *integers-token-special* nil)
+(defparameter *integers-token-pulled-p* nil)
 
 (defun integers-get-buffer () (coerce (reverse *integers-buffer*) 'string))
 (defun integers-get-position () *integers-start-position*)
@@ -17,10 +17,10 @@
 (defmethod integers-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *integers-buffer*))
            (pull () (send! self :request :integers))
-           (forward-token (&key (special nil))
-             (if special
+           (forward-token (&key (pulled-p nil))
+             (if pulled-p
                  (let ((tok (e/event:data e)))
-                   (send! self :out (make-token :kind (token-kind tok) :text (token-text tok) :position (token-position tok) :special nil)))
+                   (send! self :out (make-token :kind (token-kind tok) :text (token-text tok) :position (token-position tok) :pulled-p nil)))
                (send-event! self :out e)))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
@@ -37,13 +37,13 @@
              (setf *integers-buffer* nil)
              (setf *integers-start-position* (token-position (e/event:data e))))
            (release-buffer ()
-             (send! self :out (make-token :kind :integer :text (integers-get-buffer) :position (integers-get-position) :special t)))
+             (send! self :out (make-token :kind :integer :text (integers-get-buffer) :position (integers-get-position) :pulled-p t)))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
          )
 
-    ;(format *standard-output* "~&integers in state ~S gets ~S ~S~%" *integers-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    (format *standard-output* "~&integers in state ~S gets ~S ~S~%" *integers-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
     (ecase *integers-state*
       (:idle
        (ecase (action)
@@ -56,9 +56,9 @@
                 (progn
                   (push-char-into-buffer)
                   (pull)
-                  (next-state :collecting-symbol))
+                  (next-state :collecting-integer))
               (forward-token))))))
-      (:collecting-symbol
+      (:collecting-integer
        (ecase (action)
          (:token
           (if (eof-p)
@@ -72,7 +72,7 @@
                   (pull))
               (progn
                 (release-and-clear-buffer)
-                (forward-token :special t)
+                (forward-token :pulled-p t)
                 (next-state :idle)))))))
       (:done
        (send! self :error (format nil "integers finished, but received ~S" e))))))
