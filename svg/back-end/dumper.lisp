@@ -27,6 +27,5 @@
             (send! self :request :dumper2)))))
       
       (:done
-       (send! self :error (format nil "dumper got an event, when dumper thinks it is done"))
-       (send! self :out (format nil "~a pos:~a c:~a" (token-kind tok) (token-position tok)
+       (send! self :error (format nil "dumper done, but got ~a pos:~a c:~a" (token-kind tok) (token-position tok)
                                 (if (member (token-kind tok) no-print) "." (token-text tok))))))))
