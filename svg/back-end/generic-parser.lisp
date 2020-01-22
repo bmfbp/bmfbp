@@ -66,7 +66,7 @@
         (t (assert nil))))
 
 (defun debug-token (tok)
-  (format *standard-output* "~a (next ~A)~%" (string-token tok) (string-token (first *tstream*))))
+  (format *standard-output* "~a~%" (string-token tok)))
 
 (defun accept (self)
   (declare (ignore self))
