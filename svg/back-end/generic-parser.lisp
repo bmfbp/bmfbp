@@ -183,7 +183,9 @@ parse-ir <- LPAR
 (defun parse-wire-list (self)
   (need self :lpar)
   (let ((wire (parse-wire self)))
-    (need self :rpar)))
+    (need self :rpar)
+    (when (look-ahead-p self :lpar)
+      (cons wire (parse-wire-list self)))))
 
 (defun parse-wire (self)
   (let ((id (need self :integer)))
