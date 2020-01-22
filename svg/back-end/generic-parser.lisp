@@ -75,7 +75,7 @@
   (declare (ignore self))
   (let ((val (first *tstream*)))
     (setf *tstream* (cdr *tstream*))
-    ;(debug-token val)
+    (debug-token val)
     val))
 
 (defun parse-error (self kind)
@@ -107,10 +107,10 @@
     (accept self)))
 
 (defun need-nil-symbol (self)
-  (let ((sym (need self :symbol)))
-    (if (eq (token-text sym) nil)
-        sym
-      (parse-error self nil))))
+  (if (and (look-ahead-p self :symbol)
+           (string= "NIL" (string-upcase (token-text (first *tstream*)))))
+      (accept self)
+    (parse-error self nil)))
 
 (defun emit (fmtstr &rest args)
   (apply #'format *parser-output-stream* fmtstr args))
@@ -157,7 +157,7 @@ parse-ir <- LPAR
     (emit ")")))
 
 (defun parse-pin-list (self)
-  (if (and (look-ahead-p self :symbol))
+  (if (look-ahead-p self :symbol)
       (need-nil-symbol self)
     (progn
       (need self :lpar)
