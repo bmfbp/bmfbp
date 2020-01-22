@@ -83,8 +83,14 @@
       (setf *tstream* (cdr strm)) ;; stream is volatile to help debugging
     nil)))
 
+(defun skip-ws (self)
+  (@:loop
+    (@:exit-when (not (eq :ws (token-kind (first *tstream*)))))
+    (pop *tstream*)))
+
 (defun look-ahead-p (self kind)
   (declare (ignore self))
+  (skip-ws self)
   (and *tstream*
        (eq kind (token-kind (first *tstream*)))))
 
