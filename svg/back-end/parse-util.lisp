@@ -1,7 +1,9 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defparameter *token-stream* nil) ;; an ordered list of tokens
-(defparameter *parser-output-stream* nil)
+(defclass parser ()
+  ((owner :initform nil :accessor owner :initarg :owner)
+   (token-stream :initform nil :accessor token-stream :initarg :token-stream)
+   (output-stream :initform (make-string-output-stream) :accessor output-stream)))
 
 (defun string-token (tok)
   (cond ((eq :lpar (token-kind tok)) "(")
@@ -15,47 +17,44 @@
 (defun debug-token (tok)
   (format *standard-output* "~a~%" (string-token tok)))
 
-(defun accept (self)
-  (declare (ignore self))
-  (let ((val (first *token-stream*)))
-    (setf *token-stream* (cdr *token-stream*))
+(defmethod accept ((self parser))
+  (pop (token-stream self)))
     ;(debug-token val)
-    val))
 
-(defun parse-error (self kind)
-  (let ((strm *token-stream*))
-    (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first *token-stream*))))
+(defmethod parse-error ((self parser) kind)
+  (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first (token-stream self)))))
       (assert nil () msg)
-      (send! self :error msg)
-      (setf *token-stream* (cdr strm)) ;; stream is volatile to help debugging
-      nil)))
+      (send! (owner self) :error msg)
+      (pop (token-stream self)) ;; stream is volatile to help debugging
+      nil))
 
-(defun skip-ws (self)
-  (declare (ignore self))
+(defmethod skip-ws ((self parser))
   (@:loop
-    (@:exit-when (not (eq :ws (token-kind (first *token-stream*)))))
-    (pop *token-stream*)))
+    (@:exit-when (not (eq :ws (token-kind (first (token-stream self))))))
+    (pop (token-stream self))))
 
-(defun look-ahead-p (self kind)
+(defmethod look-ahead-p ((self parser) kind)
   (skip-ws self)
-  (and *token-stream*
-       (eq kind (token-kind (first *token-stream*)))))
+  (and (token-stream self)
+       (eq kind (token-kind (first (token-stream self))))))
 
-(defun need (self kind)
+(defmethod need ((self parser) kind)
   (if (look-ahead-p self kind)
       (accept self)
     (parse-error self kind)))
 
-(defun accept-if (self kind)
+(defmethod accept-if ((self parser) kind)
   (when (look-ahead-p self kind)
     (accept self)))
 
-(defun need-nil-symbol (self)
+(defmethod need-nil-symbol ((self parser))
   (if (and (look-ahead-p self :symbol)
-           (string= "NIL" (string-upcase (token-text (first *token-stream*)))))
+           (string= "NIL" (string-upcase (token-text (first (token-stream self))))))
       (accept self)
     (parse-error self nil)))
 
-(defun emit (fmtstr &rest args)
-  (apply #'format *parser-output-stream* fmtstr args))
+(defmethod emit ((self parser) fmtstr &rest args)
+  (apply #'format (output-stream self) fmtstr args))
 
+(defmethod get-output ((self parser))
+  (get-output-stream-string (output-stream self)))
