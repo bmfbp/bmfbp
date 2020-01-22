@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CompileFolder</key>
-	<string>/Users/tarvydas/quicklisp/local-projects/bmfbp/whitepapers</string>
+	<string>/Users/tarvydas/projects/bmfbp/whitepapers</string>
 	<key>NotesScaleFactor</key>
 	<real>1.5</real>
 	<key>binderSplitFrames</key>
@@ -43,14 +43,14 @@
 		<real>1.5</real>
 	</dict>
 	<key>mainDocumentEditor.scrollRect</key>
-	<string>{{0, 488}, {479.33333333333331, 376}}</string>
+	<string>{{0, 120}, {479.33333333333331, 376}}</string>
 	<key>mainDocumentEditor.textEditorState</key>
 	<dict>
 		<key>textScaleFactor</key>
 		<real>1.5</real>
 	</dict>
 	<key>mainWindowFrame</key>
-	<string>51 242 1000 672 0 0 1920 1057 </string>
+	<string>7 298 1000 672 0 0 1920 1057 </string>
 	<key>supportingDocumentEditor.dockedQRTextSettings</key>
 	<dict>
 		<key>textScaleFactor</key>
