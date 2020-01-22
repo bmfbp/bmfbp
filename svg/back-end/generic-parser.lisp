@@ -3,6 +3,7 @@
 (defparameter *parser-state* nil)
 (defparameter *token-stream* nil) ;; an ordered list of tokens
 (defparameter *tstream* nil)      ;; an ordered list of tokens, used and updated during parse
+(defparameter *parser-output-stream* nil)
 
 (defmethod generic-parser-first-time ((self e/part:part))
   (setf *parser-state* :idle)
@@ -47,7 +48,9 @@
         
         (:ready-to-parse
          (setf *tstream* (reverse *token-stream*))
-         (let ((parsed (parse-ir self)))
+         (setf *parser-output-stream* (make-string-output-stream))
+         (parse-ir self)
+         (let ((parsed (get-output-stream-string *parser-output-stream*)))
            (send! self :generic parsed)
            (setf *parser-state* :done)))
         
@@ -81,15 +84,15 @@
       (assert nil () msg)
       (send! self :error msg)
       (setf *tstream* (cdr strm)) ;; stream is volatile to help debugging
-    nil)))
+      nil)))
 
 (defun skip-ws (self)
+  (declare (ignore self))
   (@:loop
     (@:exit-when (not (eq :ws (token-kind (first *tstream*)))))
     (pop *tstream*)))
 
 (defun look-ahead-p (self kind)
-  (declare (ignore self))
   (skip-ws self)
   (and *tstream*
        (eq kind (token-kind (first *tstream*)))))
@@ -110,6 +113,9 @@
         sym
       (parse-error self nil))))
 
+(defun emit (fmtstr &rest args)
+  (apply #'format *parser-output-stream* fmtstr args))
+
 #|
 input 
   LPAR '('
@@ -124,13 +130,14 @@ parse-ir <- LPAR
 (defun parse-ir (self)
   (need self :lpar)
   (let ((top-name (need self :string)))
+    (emit "(~a~%" (token-text top-name))
     (let ((inputs (parse-inputs self)))
       (let ((outputs (parse-outputs self)))
         (let ((react-function (need self :string)))
           (let ((first-time-function (need self :string)))
             (let ((part-decls (parse-part-declarations self)))
               (let ((wiring (parse-wiring self)))
-              `(,top-name ,inputs ,outputs ,react-function ,first-time-function ,part-decls ,wiring)))))))))
+                (emit ")~%")))))))))
 
 (defun parse-inputs (self)
   (parse-pin-list self))
@@ -142,13 +149,13 @@ parse-ir <- LPAR
   (need self :lpar)
   (let ((part-decl-list (parse-part-decl-list self)))
     (need self :rpar)
-    part-decl-list))
+    (emit ")")))
 
 (defun parse-wiring (self)
   (need self :lpar)
   (let ((wires (parse-wire-list self)))
     (need self :rpar)
-    wires))
+    (emit ")")))
 
 (defun parse-pin-list (self)
   (if (and (look-ahead-p self :symbol))
@@ -157,59 +164,68 @@ parse-ir <- LPAR
       (need self :lpar)
       (let ((ids (parse-ident-list self)))
         (need self :rpar)
-        ids))))
+        (emit ")")))))
 
 (defun parse-ident-list (self)
   (let ((id (accept-if self :string)))
     (when id
-      (cons id (parse-ident-list self)))))
+      (emit "~a " (token-text id))
+      (parse-ident-list self))))
 
 (defun parse-part-decl-list (self)
-  (if (accept-if self :lpar)
-      (let ((part-decl (parse-part-decl self)))
-        (need self :rpar)
-        (cons part-decl (parse-part-decl-list self)))
-    nil))
+  (when (accept-if self :lpar)
+      (progn
+        (emit "(")
+        (let ((part-decl (parse-part-decl self)))
+          (need self :rpar)
+          (emit ")")
+          (parse-part-decl-list self)))))
 
 (defun parse-part-decl (self)
   (let ((part-id (need self :string)))
+    (emit "~a " (token-text part-id))
     (let ((part-kind (need self :string)))
+      (emit "~a " (token-text part-kind))
       (let ((inputs (parse-inputs self)))
         (let ((outputs (parse-outputs self)))
           (let ((react-func (need self :string)))
+            (emit "~a " (token-text react-func))
             (let ((first-time-func (need self :string)))
-              `((,part-id ,part-kind ,inputs ,outputs ,react-func ,first-time-func)))))))))
+              (emit "~a " (token-text first-time-func)))))))))
 
 (defun parse-wire-list (self)
   (need self :lpar)
+  (emit "(")
   (let ((wire (parse-wire self)))
     (need self :rpar)
+    (emit ")")
     (when (look-ahead-p self :lpar)
+      (emit "(")
       (cons wire (parse-wire-list self)))))
 
 (defun parse-wire (self)
   (let ((id (need self :integer)))
+    (emit "~a " (token-text id))
     (let ((ins (parse-part-pin-list self)))
       (let ((outs (parse-part-pin-list self)))
         `(,id ,ins ,outs)))))
 
 (defun parse-part-pin-list (self)
   (need self :lpar)
-  (let ((part-pins (parse-part-pins self)))
-    (need self :rpar)
-    part-pins))
+  (emit "(")
+  (parse-part-pins self)
+  (need self :rpar)
+  (emit ")"))
 
 (defun parse-part-pins (self)
-  (if (look-ahead-p self :lpar)
-      (let ((part-pin (parse-part-pin self)))
-        (if (look-ahead-p self :lpar)
-            (cons part-pin (parse-part-pins self))
-          part-pin))
-    nil))
+  (when (look-ahead-p self :lpar)
+    (parse-part-pin self)
+    (parse-part-pins self)))
 
 (defun parse-part-pin (self)
   (need self :lpar)
+  (emit "(")
   (let ((part (need self :string)))
     (let ((pin (need self :string)))
       (need self :rpar)
-      `(,part ,pin))))
+      (emit "~a ~a)" (token-text part) (token-text pin)))))
