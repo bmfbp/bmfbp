@@ -12,7 +12,7 @@
             (:code integers (:token) (:request :out :error) #'integers-react #'integers-first-time)
             (:code generic-parser (:start :token :doparse) (:go :generic :request :error) #'generic-parser-react #'generic-parser-first-time)
 
-            (:schem parser (:start) (:generic :error)
+            (:schem parser (:start) (:out :error)
              (generic-parser tokenize parens strings symbols spaces integers) ;; parts
 
 ;; wiring - see wiring.lisp
