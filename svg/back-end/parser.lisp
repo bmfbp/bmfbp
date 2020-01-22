@@ -10,31 +10,36 @@
             (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
             (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
             (:code integers (:token) (:request :out :error) #'integers-react #'integers-first-time)
-            (:code generic-parser (:start :token :doparse) (:go :generic :request :error) #'generic-parser-react #'generic-parser-first-time)
-            (:schem scanner (:start) (:out :error)
-             (generic-parser tokenize parens strings symbols spaces integers) ;; parts
+            (:schem scanner (:start :request) (:out :error)
+             (tokenize parens strings symbols spaces integers) ;; parts
              "
-              self.start -> generic-parser.start,tokenize.start
-              generic-parser.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
+              self.start -> tokenize.start
+              self.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
               tokenize.out -> strings.token
               strings.out -> parens.token
               parens.out -> spaces.token
               spaces.out -> symbols.token
               symbols.out -> integers.token
-              integers.out -> generic-parser.token
+              integers.out -> self.out
 
-              generic-parser.go -> generic-parser.doparse
-              generic-parser.generic -> self.out
-
-              generic-parser.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+              tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
              "
              )
-             (:schem parser (:start) (:out :error)
-              (scanner)
+            (:code generic-parser (:start :token :doparse) (:go :generic :request :error) #'generic-parser-react #'generic-parser-first-time)
+            (:schem parser (:start) (:out :error)
+              (scanner generic-parser)
               "
-               self.start -> scanner.start
+               self.start -> scanner.start,generic-parser.start
                scanner.out -> self.out
-               scanner.error -> self.error
+               scanner.error,generic-parser.error -> self.error
+
+               generic-parser.request -> scanner.request
+
+               scanner.out -> generic-parser.token
+
+               generic-parser.go -> generic-parser.doparse
+               generic-parser.generic -> self.out
+
               ")
              )))
 
