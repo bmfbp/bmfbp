@@ -3,6 +3,7 @@
 (defclass parser ()
   ((owner :initform nil :accessor owner :initarg :owner)
    (token-stream :initform nil :accessor token-stream :initarg :token-stream)
+   (indent :initform 0 :accessor indent)
    (output-stream :initform (make-string-output-stream) :accessor output-stream)))
 
 (defun string-token (tok)
@@ -58,3 +59,10 @@
 
 (defmethod get-output ((self parser))
   (get-output-stream-string (output-stream self)))
+
+(defmethod inc ((self parser))
+  (incf (indent self) 2))
+
+(defmethod inc ((self parser))
+  (decf (indent self) 2))
+
