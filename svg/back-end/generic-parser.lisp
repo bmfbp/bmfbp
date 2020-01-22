@@ -1,8 +1,6 @@
 (in-package :arrowgrams/compiler/back-end)
 
 (defparameter *parser-state* nil)
-(defparameter *token-stream* nil) ;; an ordered list of tokens
-(defparameter *parser-output-stream* nil)
 
 (defmethod generic-parser-first-time ((self e/part:part))
   (setf *parser-state* :idle)
