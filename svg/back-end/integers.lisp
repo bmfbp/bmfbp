@@ -17,7 +17,7 @@
 (defmethod integers-react ((self e/part:part) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *integers-buffer*))
            (pull () (send! self :request :integers))
-           (forward-token (&key (pulled-p nil)) (send-event! self :out e))
+           (forward-token (&key (pulled-p nil)) (send-event! self :out e) (format *standard-output* "~&integer forwarding ~S~%" (token-kind (e/event::data e))))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -39,7 +39,7 @@
              (clear-buffer))
          )
 
-    ;(format *standard-output* "~&integers in state ~S gets ~S ~S~%" *integers-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    (format *standard-output* "~&integers in state ~S gets ~S ~S~%" *integers-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
     (ecase *integers-state*
       (:idle
        (ecase (action)

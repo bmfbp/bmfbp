@@ -9,10 +9,10 @@
   )
 
 (defmethod generic-parser-react ((self e/part:part) (e e/event:event))
-  ;(format *standard-output* "~&parser ~S   ~S ~S~%" *parser-state* (e/event::sym e) (e/event:data e))
+  (format *standard-output* "~&generic parser ~S   ~S ~S~%" *parser-state* (e/event::sym e) (e/event:data e))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
-    (flet ((pull (id) (send! self :request id) #+nil(format *standard-output* "~&parser: pull ~S~%" id))
+    (flet ((pull (id) (send! self :request id) #+nil(format *standard-output* "~&generic parser: pull ~S~%" id))
            (debug-tok (out-pin msg tok)
              (if (token-pulled-p tok)
                  (send! self out-pin (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
@@ -35,12 +35,13 @@
         
         (:slurping
          (ecase (e/event::sym e)
-           (:in
+           (:token
             (if (eq :EOF (token-text tok))
                 (progn
                   (setf *parser-state* :ready-to-parse)
                   (send! self :go T))
               (unless (token-pulled-p tok)
+(format *standard-output* "~&pushing ~s~%" tok)
                 (push tok *token-stream*)
                 (pull :parser2))))))
         
@@ -51,19 +52,36 @@
            (setf *parser-state* :done)))
         
         (:done
-         (debug-tok :error (format nil "parser done, but got ") tok))))))
+         (debug-tok :error (format nil "generic parser done, but got ") tok))))))
 
 
+
+(defun string-token (tok)
+  (cond ((eq :lpar (token-kind tok)) "(")
+        ((eq :rpar (token-kind tok)) ")")
+        ((eq :string (token-kind tok)) (format nil "string ~A" (token-text tok)))
+        ((eq :ws (token-kind tok)) " ")
+        ((eq :integer (token-kind tok)) (format nil "integer ~a" (token-text tok)))
+        ((eq :symbol (token-kind tok)) (format nil "symbol ~A" (token-text tok)))
+        (t (assert nil))))
+
+(defun debug-token (tok)
+  (format *standard-output* "~a (next ~A)~%" (string-token tok) (string-token (first *tstream*))))
 
 (defun accept (self)
   (declare (ignore self))
   (let ((val (first *tstream*)))
-    (setf *tstream* (cdr *tstream*))))
+    (setf *tstream* (cdr *tstream*))
+    (debug-token val)
+    val))
 
 (defun parse-error (self kind)
-  (send! self :error (format nil "~&parser error expecting ~S, but got ~S%" kind (first *tstream*)))
-  (setf *tstream* (cdr *tstream*))
-  nil)
+  (let ((strm *tstream*))
+    (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first *tstream*))))
+      (assert nil () msg)
+      (send! self :error msg)
+      (setf *tstream* (cdr strm)) ;; stream is volatile to help debugging
+    nil)))
 
 (defun look-ahead-p (self kind)
   (declare (ignore self))
@@ -85,6 +103,17 @@
     (if (eq (token-text sym) nil)
         sym
       (parse-error self nil))))
+
+#|
+input 
+  LPAR '('
+  RPAR ')'
+  STRING
+  NIL
+end 
+
+parse-ir <- LPAR 
+|#
 
 (defun parse-ir (self)
   (need self :lpar)
@@ -132,9 +161,8 @@
 (defun parse-part-decl-list (self)
   (if (accept-if self :lpar)
       (let ((part-decl (parse-part-decl self)))
-        (if (accept-if self :rpar)
-            part-decl
-          (cons part-decl (parse-part-decl-list self))))
+        (need self :rpar)
+        (cons part-decl (parse-part-decl-list self)))
     nil))
 
 (defun parse-part-decl (self)
@@ -144,7 +172,7 @@
         (let ((outputs (parse-outputs self)))
           (let ((react-func (need self :string)))
             (let ((first-time-func (need self :string)))
-              `(,part-id ,part-kind ,inputs ,outputs ,react-func ,first-time-func))))))))
+              `((,part-id ,part-kind ,inputs ,outputs ,react-func ,first-time-func)))))))))
 
 (defun parse-wire-list (self)
   (need self :lpar)
