@@ -107,11 +107,10 @@
     (accept self)))
 
 (defun need-nil-symbol (self)
-  (need self :symbol)
-  (let ((sym (accept self)))
-    (if (eq (token-text sym) nil)
-        sym
-      (parse-error self nil))))
+  (if (and (look-ahead-p self :symbol)
+           (string= "NIL" (string-upcase (token-text (first *tstream*)))))
+      (accept self)
+    (parse-error self nil)))
 
 (defun emit (fmtstr &rest args)
   (apply #'format *parser-output-stream* fmtstr args))
@@ -158,7 +157,7 @@ parse-ir <- LPAR
     (emit ")")))
 
 (defun parse-pin-list (self)
-  (if (and (look-ahead-p self :symbol))
+  (if (look-ahead-p self :symbol)
       (need-nil-symbol self)
     (progn
       (need self :lpar)

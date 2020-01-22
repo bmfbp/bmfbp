@@ -10,27 +10,39 @@
             (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
             (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
             (:code integers (:token) (:request :out :error) #'integers-react #'integers-first-time)
+            (:schem scanner (:start :request) (:out :error)
+             (tokenize parens strings symbols spaces integers) ;; parts
+             "
+              self.start -> tokenize.start
+              self.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
+              tokenize.out -> strings.token
+              strings.out -> parens.token
+              parens.out -> spaces.token
+              spaces.out -> symbols.token
+              symbols.out -> integers.token
+              integers.out -> self.out
+
+              tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+             "
+             )
             (:code generic-parser (:start :token :doparse) (:go :generic :request :error) #'generic-parser-react #'generic-parser-first-time)
-
             (:schem parser (:start) (:out :error)
-             (generic-parser tokenize parens strings symbols spaces integers) ;; parts
+              (scanner generic-parser)
+              "
+               self.start -> scanner.start,generic-parser.start
+               scanner.out -> self.out
+               scanner.error,generic-parser.error -> self.error
 
-;; wiring - see wiring.lisp
-((((:SELF :START)) ((generic-parser :START) (TOKENIZE :START)))
- (((generic-parser :REQUEST) (spaces :request) (STRINGS :REQUEST) (SYMBOLS :REQUEST) (INTEGERS :REQUEST)) ((TOKENIZE :PULL)))
- (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))
- (((STRINGS :OUT)) ((PARENS :TOKEN)))
- (((PARENS :OUT)) ((SPACES :TOKEN)))
- (((SPACES :OUT)) ((SYMBOLS :TOKEN)))
- (((SYMBOLS :OUT)) ((INTEGERS :TOKEN)))
- (((INTEGERS :OUT)) ((GENERIC-PARSER :token)))
- (((GENERIC-PARSER :go)) ((generic-parser :doparse)))
- (((GENERIC-PARSER :generic)) ((:SELF :OUT)))
- (((GENERIC-PARSER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR) (INTEGERS :ERROR)) ((:SELF :ERROR))))
+               generic-parser.request -> scanner.request
 
+               scanner.out -> generic-parser.token
 
-          ))))
-    
+               generic-parser.go -> generic-parser.doparse
+               generic-parser.generic -> self.out
+
+              ")
+             )))
+
     (cl-event-passing-user:@enable-logging)
     (inject! parser-net :start filename)))
 
