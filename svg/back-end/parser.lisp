@@ -2,7 +2,7 @@
 
 (defun parser (filename)
   (let ((parser-net
-         (cl-event-passing-user::@defnetwork scanner
+         (cl-event-passing-user::@defnetwork parser
 
             (:code tokenize (:start :pull) (:out :error) #'tokenize-react #'tokenize-first-time)
             (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
@@ -13,7 +13,7 @@
             (:code generic-parser (:start :token :doparse) (:go :generic :request :error) #'generic-parser-react #'generic-parser-first-time)
             (:schem scanner (:start) (:out :error)
              (generic-parser tokenize parens strings symbols spaces integers) ;; parts
-"
+             "
               self.start -> generic-parser.start,tokenize.start
               generic-parser.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
               tokenize.out -> strings.token
@@ -27,11 +27,17 @@
               generic-parser.generic -> self.out
 
               generic-parser.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
-"
+             "
+             )
+             (:schem parser (:start) (:out :error)
+              (scanner)
+              "
+               self.start -> scanner.start
+               scanner.out -> self.out
+               scanner.error -> self.error
+              ")
+             )))
 
-
-          ))))
-    
     (cl-event-passing-user:@enable-logging)
     (inject! parser-net :start filename)))
 
