@@ -9,7 +9,7 @@
   )
 
 (defmethod generic-parser-react ((self e/part:part) (e e/event:event))
-  (format *standard-output* "~&generic parser ~S   ~S ~S~%" *parser-state* (e/event::sym e) (e/event:data e))
+  ;(format *standard-output* "~&generic parser ~S   ~S ~S~%" *parser-state* (e/event::sym e) (e/event:data e))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
     (flet ((pull (id) (send! self :request id) #+nil(format *standard-output* "~&generic parser: pull ~S~%" id))
@@ -40,10 +40,10 @@
                 (progn
                   (setf *parser-state* :ready-to-parse)
                   (send! self :go T))
-              (unless (token-pulled-p tok)
-(format *standard-output* "~&pushing ~s~%" tok)
+              (progn
                 (push tok *token-stream*)
-                (pull :parser2))))))
+                (unless (token-pulled-p tok)
+                  (pull :parser2)))))))
         
         (:ready-to-parse
          (setf *tstream* (reverse *token-stream*))
