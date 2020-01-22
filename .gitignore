@@ -15,6 +15,7 @@ temp*
 .DS_Store
 *.sed
 *.json.lisp
+*.out
 time-to-market*
 svg/cl-compiler/rules.lisp
 svg/cl-compiler/output.prolog
