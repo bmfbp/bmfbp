@@ -48,7 +48,7 @@
         (:ready-to-parse
          (setf *tstream* (reverse *token-stream*))
          (let ((parsed (parse-ir self)))
-           (send! self :out parsed)
+           (send! self :generic parsed)
            (setf *parser-state* :done)))
         
         (:done

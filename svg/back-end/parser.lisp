@@ -10,10 +10,10 @@
             (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
             (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
             (:code integers (:token) (:request :out :error) #'integers-react #'integers-first-time)
-            (:code generic-parser (:start :token :doparse) (:go :out :request :error) #'generic-parser-react #'generic-parser-first-time)
+            (:code generic-parser (:start :token :doparse) (:go :generic :request :error) #'generic-parser-react #'generic-parser-first-time)
 
-            (:schem parser (:start) (:out :error)
-             (generic-parser tokenize parens strings symbols spaces integers ) ;; parts
+            (:schem parser (:start) (:generic :error)
+             (generic-parser tokenize parens strings symbols spaces integers) ;; parts
 
 ;; wiring - see wiring.lisp
 ((((:SELF :START)) ((generic-parser :START) (TOKENIZE :START)))
@@ -25,7 +25,7 @@
  (((SYMBOLS :OUT)) ((INTEGERS :TOKEN)))
  (((INTEGERS :OUT)) ((GENERIC-PARSER :token)))
  (((GENERIC-PARSER :go)) ((generic-parser :doparse)))
- (((GENERIC-PARSER :OUT)) ((:SELF :OUT)))
+ (((GENERIC-PARSER :generic)) ((:SELF :OUT)))
  (((GENERIC-PARSER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR) (INTEGERS :ERROR)) ((:SELF :ERROR))))
 
 
