@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defun parser (filename)
+(defun parser (filename generic-filename json-filename lisp-filename)
   (let ((parser-net
          (cl-event-passing-user::@defnetwork parser
 
@@ -28,14 +28,32 @@
             (:code preparse (:start :token) (:out :request :error) #'preparse-react #'preparse-first-time)
             (:code generic-parser (:parse) (:out :error) #'generic-parser-react #'generic-parser-first-time)
             (:code generic-json-parser (:parse) (:out :error) #'generic-json-parser-react #'generic-json-parser-first-time)
-            (:schem parser (:start) (:out :error)
-              (scanner preparse generic-parser generic-json-parser)
+
+            (:code generic-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
+            (:code json-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
+            (:code lisp-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
+
+            (:schem parser (:start :generic-filename :json-filename :lisp-filename) (:out :error)
+              (scanner preparse generic-parser generic-json-parser generic-file-writer json-file-writer lisp-file-writer)
               "
                self.start -> scanner.start,preparse.start
-               scanner.out -> self.out
-               scanner.error,generic-parser.error,generic-json-parser.error,preparse.error -> self.error
+               scanner.out -> preparse.token
+
+               scanner.error,generic-parser.error,generic-json-parser.error,preparse.error,
+                  generic-file-writer.error,
+                  json-file-writer.error,
+                  lisp-file-writer.error
+               -> self.error
+
                scanner.out -> preparse.token
                preparse.request -> scanner.request
+
+               self.generic-filename -> generic-file-writer.filename
+               self.json-filename -> json-file-writer.filename
+               self.lisp-filename -> lisp-file-writer.filename
+
+               generic-parser.out -> generic-file-writer.write
+               generic-json-parser.out -> json-file-writer.write
 
                preparse.out -> generic-parser.parse,generic-json-parser.parse
 
@@ -45,11 +63,17 @@
              )))
 
     (cl-event-passing-user:@enable-logging)
+    (inject! parser-net :generic-filename generic-filename)
+    (inject! parser-net :json-filename json-filename)
+    (inject! parser-net :lisp-filename lisp-filename)
     (inject! parser-net :start filename)))
 
 (defun cl-user::test ()
-  (let ((filename (asdf:system-relative-pathname :arrowgrams "svg/back-end/test.ir")))
-    (arrowgrams/compiler/back-end::parser filename)))
+  (let ((filename (asdf:system-relative-pathname :arrowgrams "svg/back-end/test.ir"))
+        (gfile (asdf:system-relative-pathname :arrowgrams "svg/back-end/generic.out"))
+        (jfile (asdf:system-relative-pathname :arrowgrams "svg/back-end/json.out"))
+        (lfile (asdf:system-relative-pathname :arrowgrams "svg/back-end/lisp.out")))
+    (arrowgrams/compiler/back-end::parser filename gfile jfile lfile)))
 
 (defun cl-user::clear ()
   (esrap::clear-rules)
