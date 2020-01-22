@@ -25,20 +25,20 @@
               tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
              "
              )
-            (:code generic-parser (:start :token :doparse) (:go :generic :request :error) #'generic-parser-react #'generic-parser-first-time)
+            (:code preparse (:start :token) (:out :request :error) #'preparse-react #'preparse-first-time)
+            (:code generic-parser (:parse) (:out :error) #'generic-parser-react #'generic-parser-first-time)
             (:schem parser (:start) (:out :error)
-              (scanner generic-parser)
+              (scanner preparse generic-parser)
               "
-               self.start -> scanner.start,generic-parser.start
+               self.start -> scanner.start,preparse.start
                scanner.out -> self.out
-               scanner.error,generic-parser.error -> self.error
+               scanner.error,generic-parser.error,preparse.error -> self.error
+               scanner.out -> preparse.token
+               preparse.request -> scanner.request
 
-               generic-parser.request -> scanner.request
+               preparse.out -> generic-parser.parse
 
-               scanner.out -> generic-parser.token
-
-               generic-parser.go -> generic-parser.doparse
-               generic-parser.generic -> self.out
+               generic-parser.out -> self.out
 
               ")
              )))

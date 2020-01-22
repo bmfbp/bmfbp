@@ -2,7 +2,6 @@
 
 (defparameter *parser-state* nil)
 (defparameter *token-stream* nil) ;; an ordered list of tokens
-(defparameter *tstream* nil)      ;; an ordered list of tokens, used and updated during parse
 (defparameter *parser-output-stream* nil)
 
 (defmethod generic-parser-first-time ((self e/part:part))
@@ -30,29 +29,14 @@
       (ecase *parser-state*
         (:idle
          (ecase (e/event::sym e)
-           (:start
-            (pull :parser1)
-            (setf *parser-state* :slurping))))
-        
-        (:slurping
-         (ecase (e/event::sym e)
-           (:token
-            (if (eq :EOF (token-text tok))
-                (progn
-                  (setf *parser-state* :ready-to-parse)
-                  (send! self :go T))
-              (progn
-                (push tok *token-stream*)
-                (unless (token-pulled-p tok)
-                  (pull :parser2)))))))
-        
-        (:ready-to-parse
-         (setf *tstream* (reverse *token-stream*))
-         (setf *parser-output-stream* (make-string-output-stream))
-         (parse-ir self)
-         (let ((parsed (get-output-stream-string *parser-output-stream*)))
-           (send! self :generic parsed)
-           (setf *parser-state* :done)))
+           (:parse
+            (let ((tokens (e/event::data e)))
+              (setf *token-stream* tokens)
+              (setf *parser-output-stream* (make-string-output-stream))
+              (parse-ir self)
+              (let ((parsed (get-output-stream-string *parser-output-stream*)))
+                (send! self :out parsed)
+                (setf *parser-state* :done))))))
         
         (:done
          (debug-tok :error (format nil "generic parser done, but got ") tok))))))
@@ -73,29 +57,29 @@
 
 (defun accept (self)
   (declare (ignore self))
-  (let ((val (first *tstream*)))
-    (setf *tstream* (cdr *tstream*))
-    (debug-token val)
+  (let ((val (first *token-stream*)))
+    (setf *token-stream* (cdr *token-stream*))
+    ;(debug-token val)
     val))
 
 (defun parse-error (self kind)
-  (let ((strm *tstream*))
-    (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first *tstream*))))
+  (let ((strm *token-stream*))
+    (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first *token-stream*))))
       (assert nil () msg)
       (send! self :error msg)
-      (setf *tstream* (cdr strm)) ;; stream is volatile to help debugging
+      (setf *token-stream* (cdr strm)) ;; stream is volatile to help debugging
       nil)))
 
 (defun skip-ws (self)
   (declare (ignore self))
   (@:loop
-    (@:exit-when (not (eq :ws (token-kind (first *tstream*)))))
-    (pop *tstream*)))
+    (@:exit-when (not (eq :ws (token-kind (first *token-stream*)))))
+    (pop *token-stream*)))
 
 (defun look-ahead-p (self kind)
   (skip-ws self)
-  (and *tstream*
-       (eq kind (token-kind (first *tstream*)))))
+  (and *token-stream*
+       (eq kind (token-kind (first *token-stream*)))))
 
 (defun need (self kind)
   (if (look-ahead-p self kind)
@@ -108,7 +92,7 @@
 
 (defun need-nil-symbol (self)
   (if (and (look-ahead-p self :symbol)
-           (string= "NIL" (string-upcase (token-text (first *tstream*)))))
+           (string= "NIL" (string-upcase (token-text (first *token-stream*)))))
       (accept self)
     (parse-error self nil)))
 
