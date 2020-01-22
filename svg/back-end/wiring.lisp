@@ -1,6 +1,22 @@
 (in-package :cl-user)
 
 (defparameter *full-wiring* "
+self.start -> generic-parser.start,tokenize.start
+generic-parser.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
+tokenize.out -> strings.token
+strings.out -> parens.token
+parens.out -> spaces.token
+spaces.out -> symbols.token
+symbols.out -> integers.token
+integers.out -> generic-parser.in
+
+generic-parser.go -> generic-parser.doparse
+generic-parser.out -> self.out
+
+generic-parser.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+")
+
+(defparameter *old-full-wiring* "
 self.start -> dumper.start,tokenize.start
 parser.request,spaces.request,dumper.request,strings.request,symbols.request,integers.request -> tokenize.pull
 tokenize.out -> strings.token
