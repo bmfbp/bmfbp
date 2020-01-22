@@ -27,18 +27,19 @@
              )
             (:code preparse (:start :token) (:out :request :error) #'preparse-react #'preparse-first-time)
             (:code generic-parser (:parse) (:out :error) #'generic-parser-react #'generic-parser-first-time)
+            (:code generic-json-parser (:parse) (:out :error) #'generic-json-parser-react #'generic-json-parser-first-time)
             (:schem parser (:start) (:out :error)
-              (scanner preparse generic-parser)
+              (scanner preparse generic-parser generic-json-parser)
               "
                self.start -> scanner.start,preparse.start
                scanner.out -> self.out
-               scanner.error,generic-parser.error,preparse.error -> self.error
+               scanner.error,generic-parser.error,generic-json-parser.error,preparse.error -> self.error
                scanner.out -> preparse.token
                preparse.request -> scanner.request
 
-               preparse.out -> generic-parser.parse
+               preparse.out -> generic-parser.parse,generic-json-parser.parse
 
-               generic-parser.out -> self.out
+               generic-parser.out,generic-json-parser.out -> self.out
 
               ")
              )))
