@@ -14,20 +14,21 @@
 
             (:schem parser (:start) (:out :error)
              (generic-parser tokenize parens strings symbols spaces integers) ;; parts
+"
+self.start -> generic-parser.start,tokenize.start
+generic-parser.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
+tokenize.out -> strings.token
+strings.out -> parens.token
+parens.out -> spaces.token
+spaces.out -> symbols.token
+symbols.out -> integers.token
+integers.out -> generic-parser.token
 
-;; wiring - see wiring.lisp
-((((:SELF :START)) ((generic-parser :START) (TOKENIZE :START)))
- (((generic-parser :REQUEST) (spaces :request) (STRINGS :REQUEST) (SYMBOLS :REQUEST) (INTEGERS :REQUEST)) ((TOKENIZE :PULL)))
- (((TOKENIZE :OUT)) ((STRINGS :TOKEN)))
- (((STRINGS :OUT)) ((PARENS :TOKEN)))
- (((PARENS :OUT)) ((SPACES :TOKEN)))
- (((SPACES :OUT)) ((SYMBOLS :TOKEN)))
- (((SYMBOLS :OUT)) ((INTEGERS :TOKEN)))
- (((INTEGERS :OUT)) ((GENERIC-PARSER :token)))
- (((GENERIC-PARSER :go)) ((generic-parser :doparse)))
- (((GENERIC-PARSER :generic)) ((:SELF :OUT)))
- (((GENERIC-PARSER :ERROR) (TOKENIZE :ERROR) (PARENS :ERROR) (STRINGS :ERROR) (SYMBOLS :ERROR) (SPACES :ERROR) (INTEGERS :ERROR)) ((:SELF :ERROR))))
+generic-parser.go -> generic-parser.doparse
+generic-parser.generic -> self.out
 
+generic-parser.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+"
 
           ))))
     
