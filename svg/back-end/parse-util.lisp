@@ -63,6 +63,14 @@
 (defmethod inc ((self parser))
   (incf (indent self) 2))
 
-(defmethod inc ((self parser))
+(defmethod dec ((self parser))
   (decf (indent self) 2))
 
+(defmethod nl ((self parser))
+  (let ((count (indent self)))
+    (@:loop
+      (@:exit-when (<= 0 count))
+      (emit self " ")
+      (decf count))
+    (emit self "~%")))
+      
