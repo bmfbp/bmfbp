@@ -37,16 +37,11 @@
               (scanner preparse generic-parser generic-json-parser generic-file-writer json-file-writer lisp-file-writer)
               "
                self.start -> scanner.start,preparse.start
-               scanner.out -> preparse.token
-
-               scanner.error,generic-parser.error,generic-json-parser.error,preparse.error,
-                  generic-file-writer.error,
-                  json-file-writer.error,
-                  lisp-file-writer.error
-               -> self.error
 
                scanner.out -> preparse.token
                preparse.request -> scanner.request
+
+               preparse.out -> generic-parser.parse,generic-json-parser.parse
 
                self.generic-filename -> generic-file-writer.filename
                self.json-filename -> json-file-writer.filename
@@ -55,9 +50,11 @@
                generic-parser.out -> generic-file-writer.write
                generic-json-parser.out -> json-file-writer.write
 
-               preparse.out -> generic-parser.parse,generic-json-parser.parse
-
-               generic-parser.out,generic-json-parser.out -> self.out
+               scanner.error,generic-parser.error,generic-json-parser.error,preparse.error,
+                  generic-file-writer.error,
+                  json-file-writer.error,
+                  lisp-file-writer.error
+               -> self.error
 
               ")
              )))
