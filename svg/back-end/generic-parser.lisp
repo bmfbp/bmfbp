@@ -75,7 +75,7 @@
   (declare (ignore self))
   (let ((val (first *tstream*)))
     (setf *tstream* (cdr *tstream*))
-    (debug-token val)
+    ;(debug-token val)
     val))
 
 (defun parse-error (self kind)
@@ -107,8 +107,7 @@
     (accept self)))
 
 (defun need-nil-symbol (self)
-  (need self :symbol)
-  (let ((sym (accept self)))
+  (let ((sym (need self :symbol)))
     (if (eq (token-text sym) nil)
         sym
       (parse-error self nil))))
