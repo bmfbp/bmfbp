@@ -15,19 +15,19 @@
             (:schem parser (:start) (:out :error)
              (generic-parser tokenize parens strings symbols spaces integers) ;; parts
 "
-self.start -> generic-parser.start,tokenize.start
-generic-parser.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
-tokenize.out -> strings.token
-strings.out -> parens.token
-parens.out -> spaces.token
-spaces.out -> symbols.token
-symbols.out -> integers.token
-integers.out -> generic-parser.token
+              self.start -> generic-parser.start,tokenize.start
+              generic-parser.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
+              tokenize.out -> strings.token
+              strings.out -> parens.token
+              parens.out -> spaces.token
+              spaces.out -> symbols.token
+              symbols.out -> integers.token
+              integers.out -> generic-parser.token
 
-generic-parser.go -> generic-parser.doparse
-generic-parser.generic -> self.out
+              generic-parser.go -> generic-parser.doparse
+              generic-parser.generic -> self.out
 
-generic-parser.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+              generic-parser.error,tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
 "
 
           ))))
