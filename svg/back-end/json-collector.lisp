@@ -18,8 +18,8 @@
 (defclass parser (arrowgrams/compiler/back-end::parser)
   ((schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
    (list-stack :accessor list-stack :initform (make-instance 'stack))
+   (table-stack :accessor table-stack :initform (make-instance 'stack))
    (part-stack :accessor part-stack :initform (make-instance 'stack))
-   (wire-stack :accessor wire-stack :initform (make-instance 'stack))
    (top-schematic :accessor top-schematic)
    (parts :initform (make-hash-table :test 'equal) :accessor parts)
    (wires :initform (make-hash-table) :accessor wires)))
@@ -35,8 +35,9 @@
     <outputs>             schematic-set-outputs-from-pin-list-pop
     <react>               schematic-set-react-from-string
     <first-time>          schematic-set-first-time-from-string
-    <part-declarations>   schematic-set-parts-from-part-stack-pop
-    <wiring>              schematic-set-wiring-from-wire-stack-pop
+                          schematic-open-new-table
+    <part-declarations>   schematic-set-parts-from-table-stack-pop
+    <wiring>              
   :rpar
                           schematic-close
 
@@ -185,17 +186,13 @@
       (setf (inputs top-schem) list))))
 
 
-(defmethod schematic-set-parts-from-part-stack-pop ((self parser))
-  (let ((part (stack-pop (part-stack self))))
-    (let ((top-schem (stack-top (schematic-stack self))))
-      (setf (gethash (name part) (parts self))
-            part))))
+(defmethod schematic-open-new-table ((self parser))
+  (stack-push (table-stack self) (make-hash-table :test 'equal)))
 
-(defmethod schematic-set-wires-from-part-stack-pop ((self parser))
-  (let ((part (stack-pop (part-stack self))))
+(defmethod schematic-set-parts-from-table-stack-pop ((self parser))
+  (let ((table (stack-pop (table-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
-      (setf (gethash (name part) (parts self))
-            part))))
+      (setf (parts top-schem) table))))
 
 (defmethod list-open-new ((self parser))
   (stack-push (list-stack self) nil))
@@ -214,8 +211,9 @@
 
 (defmethod part-close-pop ((self parser))
   (let ((part (stack-pop (part-stack self))))
-    (setf (gethash (name part) (parts self))
-          part)))
+    (let ((top-table (stack-top (table-stack self))))
+      (setf (gethash (name part) top-table)
+            part))))
 
 (defmethod part-set-name ((self parser))
   (let ((top (stack-top (part-stack self))))
@@ -233,11 +231,11 @@
   (let ((top (stack-top (part-stack self))))
     (setf (first-time top) (get-accepted-token-text self))))
 
-(defmethod part-set-inputs-from-pin-list ((self parser))
+(defmethod part-set-inputs-from-pin-list-pop ((self parser))
   (let ((top (stack-top (part-stack self))))
     (setf (inputs top) (stack-pop (list-stack self)))))
 
-(defmethod part-set-outputs-from-pin-list ((self parser))
+(defmethod part-set-outputs-from-pin-list-pop ((self parser))
   (let ((top (stack-top (part-stack self))))
     (setf (outputs top) (stack-pop (list-stack self)))))
 
