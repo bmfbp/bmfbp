@@ -140,8 +140,7 @@
 
 
 (defmethod schematic-open ((self parser))
-  (format *standard-output* "~&schematic-open~%")
-  (stack-push (make-instance 'schematic :name "self") (schematic-stack self)))
+  (stack-push (schematic-stack self) (make-instance 'schematic :name "self")))
 
 (defmethod schematic-set-kind-from-string ((self parser))
   (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
@@ -186,7 +185,7 @@
             part))))
 
 (defmethod list-open-new ((self parser))
-  (stack-push nil (list-stack self)))
+  (stack-push (list-stack self) nil))
 
 (defmethod list-close ((self parser))
   ;; noop - leave TOP on stack
