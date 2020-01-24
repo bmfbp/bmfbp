@@ -189,6 +189,8 @@
 				     (:file "file-writer" :depends-on ("util" "token"))
                                      (:file "generic" :depends-on ("util" "token"))
                                      (:file "json" :depends-on ("util" "token"))
+                                     (:file "json-collecter" :depends-on ("util" "token"))
+                                     (:file "json-emitter" :depends-on ("util" "token"))
 				     (:file "generic-parser" :depends-on ("util" "token" "parse-util" "generic"))
 				     (:file "generic-json-parser" :depends-on ("util" "token" "parse-util" "json"))
 				     (:file "scanner" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
