@@ -8,6 +8,7 @@
    #:token-text
    #:accepted-token
    #:accepted-symbol-must-be-nil
+   #:get-accepted-token-text
    #:output-stream))
 
 (defpackage :arrowgrams/compiler/back-end/generic
