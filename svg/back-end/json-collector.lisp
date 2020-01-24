@@ -140,6 +140,7 @@
 
 
 (defmethod schematic-open ((self parser))
+  (format *standard-output* "~&schematic-open~%")
   (stack-push (make-instance 'schematic :name "self") (schematic-stack self)))
 
 (defmethod schematic-set-kind-from-string ((self parser))
