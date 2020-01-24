@@ -23,7 +23,7 @@
 
 (defmethod accept ((self parser))
   (setf (accepted-token self) (pop (token-stream self)))
-  (debug-token (accepted-token self)))
+  #+nil(debug-token (accepted-token self)))
 
 (defmethod parser-error ((self parser) kind)
   (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first (token-stream self)))))
