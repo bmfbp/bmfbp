@@ -17,21 +17,21 @@
 
 
 = <inputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar 'inputs : [' <pin-list> ']' :rpar]
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
 
 = <outputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar 'outputs : [' <pin-list> ']' :rpar]
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
 
 = <part-declarations> 
-  :lpar '{' <part-decl-list> '}' :rpar
+  :lpar <part-decl-list> :rpar
 
 = <wiring> 
   :lpar
-    'wiring : {' <wire-list> '}'
+    <wire-list>
   :rpar
 
 = <pin-list> 
-  '{' <ident-list> '}'
+  <ident-list>
 
 = <ident-list> 
   :string [ ?string <ident-list>]
