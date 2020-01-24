@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end/json-collecter)
+(in-package :arrowgrams/compiler/back-end/json-collector)
 
 (defclass stack ()
   ((stack :initform nil :accessor stack)))
