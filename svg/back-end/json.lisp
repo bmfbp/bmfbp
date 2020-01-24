@@ -5,34 +5,38 @@
 (defparameter *rules*
 "
 = <ir> 
-  :lpar :string 'kindName : ' print-text nl
-              'metaData : \"\"' nl
-  'inputs : {' <inputs> <outputs> <react> <first-time> <part-declarations> <wiring> :rpar '}' nl
+  :lpar
+    :string 'kindName : ' print-text nl
+            'metaData : \"\"' nl
+    'inputs : {' <inputs> <outputs> <react> <first-time> <part-declarations> <wiring> '}'
+  :rpar
 
 
 = <inputs> 
-  :lpar 'inputs : [' <pin-list> ']' :rpar
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar 'inputs : [' <pin-list> ']' :rpar]
 
 = <outputs> 
-  :lpar 'outputs : [' <pin-list> ']' :rpar
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar 'outputs : [' <pin-list> ']' :rpar]
 
 = <part-declarations> 
   :lpar '{' <part-decl-list> '}' :rpar
 
 = <wiring> 
-  :lpar 'wiring : {' <wire-list> '}' :rpar
+  :lpar
+    'wiring : {' <wire-list> '}'
+  :rpar
 
 = <pin-list> 
-  [ ?symbol :symbol symbol-must-be-nil  | ! '{' <ident-list> '}' ]
+  '{' <ident-list> '}'
 
 = <ident-list> 
-  :ident [ ?ident <ident-list>]
+  :string [ ?string <ident-list>]
 
 = <part-decl-list> 
-  :lpar '{' <part-decl> '}' [ ?lpar ', ' <part-decl-list> ] :rpar
+  [ ?lpar '{' <part-decl> '}' [ ?lpar ', ' <part-decl-list> ] | ! ]
 
 = <part-decl>
-  <name> <kind> <inputs> <outputs> <react> <first-time>
+  :lpar <name> <kind> <inputs> <outputs> <react> <first-time> :rpar
 
 = <name>
   :string print-text
@@ -47,25 +51,30 @@
   :string print-text
 
 = <wire-list>
-  :lpar 'wires : [' <wire> [ ?lpar ',' <wire-list> ] ']'
+  <wire> [ ?lpar ',' <wire-list> ] 
 
 = <wire>
-  :lpar '{ wire : ' :integer print-text :lpar <part-pin-list> :rpar :lpar <part-pin-list> :rpar ' }'
+  :lpar '{ wire : '
+    :integer print-text
+    :lpar <part-pin-list> :rpar
+    :lpar <part-pin-list> :rpar
+  :rpar ' }'
 
 = <part-pin-list> 
   :lpar <part> <pin> :rpar 
   [ ?lpar <part-pin-list>]
 
 = <part>
-  :ident print-text
+  :string print-text
 = <pin>
-  :ident print-text
+  :string print-text
 "
 )
 
 ;; this contortion gets rid of SL:: qualifiers and then compiles the result in the current package ...
 
-(eval (read-from-string (cl-ppcre:regex-replace-all "SL::" (cl:write-to-string (sl:parse *rules*)) "")))
+(defparameter *parsed* (read-from-string (cl-ppcre:regex-replace-all "SL::" (cl:write-to-string (sl:parse *rules*)) "")))
+(eval *parsed*)
 
 ;; parser support
 (defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
@@ -85,3 +94,7 @@
 
 (defmethod symbol-must-be-nil ((p parser))
   (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
+
+(defmethod stop-here ((p parser))
+  (format *standard-output* "p is ~A~%" p)
+)

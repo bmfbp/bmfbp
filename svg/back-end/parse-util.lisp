@@ -12,7 +12,7 @@
 (defun string-token (tok)
   (cond ((eq :lpar (token-kind tok)) "(")
         ((eq :rpar (token-kind tok)) ")")
-        ((eq :string (token-kind tok)) (format nil "string ~A" (token-text tok)))
+        ((eq :string (token-kind tok)) (format nil "~A" (token-text tok)))
         ((eq :ws (token-kind tok)) " ")
         ((eq :integer (token-kind tok)) (format nil "integer ~a" (token-text tok)))
         ((eq :symbol (token-kind tok)) (format nil "symbol ~A" (token-text tok)))
