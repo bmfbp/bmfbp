@@ -14,7 +14,7 @@
   (:use :cl))
 (defpackage :arrowgrams/compiler/back-end/json
   (:use :cl))
-(defpackage :arrowgrams/compiler/back-end/json-collector
+(defpackage :arrowgrams/compiler/back-end/json-collecter
   (:use :cl))
 (defpackage :arrowgrams/compiler/back-end/json-emitter
   (:use :cl))
