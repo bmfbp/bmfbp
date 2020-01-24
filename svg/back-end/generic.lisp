@@ -37,7 +37,7 @@
   :string [ ?string <ident-list>]
 
 = <part-decl-list> 
-  [ ?lpar '{' <part-decl> '}' [ ?lpar ', ' <part-decl-list> ] | ! ]
+  [ ?lpar <part-decl> [ ?lpar <part-decl-list> ] | ! ]
 
 = <part-decl>
   :lpar <name> <kind> <inputs> <outputs> <react> <first-time> :rpar
@@ -55,14 +55,14 @@
   :string
 
 = <wire-list>
-  <wire> [ ?lpar ',' <wire-list> ] 
+  <wire> [ ?lpar <wire-list> ] 
 
 = <wire>
-  :lpar '{ wire : '
+  :lpar
     :integer print-text
     :lpar <part-pin-list> :rpar
     :lpar <part-pin-list> :rpar
-  :rpar ' }'
+  :rpar
 
 = <part-pin-list> 
   :lpar <part> <pin> :rpar 
