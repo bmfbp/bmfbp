@@ -69,7 +69,14 @@
   [ ?lpar <part-decl> [ ?lpar <part-decl-list> ] | ! ]
 
 = <part-decl>
-  :lpar <name> <kind> <inputs> <outputs> <react> <first-time> :rpar
+  :lpar
+    <name> 
+    <kind> 
+    <inputs> 
+    <outputs> 
+    <react> 
+    <first-time> 
+  :rpar
 
 = <name>
   :string
@@ -191,3 +198,6 @@
   ;; noop - leave TOP on stack
   )
 
+(defmethod list-add-string ((self parser))
+  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
+    (stack-push (list-stack self) str)))
