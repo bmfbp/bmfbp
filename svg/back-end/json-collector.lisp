@@ -15,10 +15,16 @@
   ((parts :accessor parts)
    (wiring :accessor wiring)))
 
+(defclass wire ()
+  ((index :accessor index)
+   (source-list :accessor source-list)
+   (sink-list :accessor sink-list)))   
+
 (defclass parser (arrowgrams/compiler/back-end::parser)
   ((schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
    (list-stack :accessor list-stack :initform (make-instance 'stack))
    (table-stack :accessor table-stack :initform (make-instance 'stack))
+   (wire-stack :accessor wire-stack :initform (make-instance 'stack))
    (part-stack :accessor part-stack :initform (make-instance 'stack))
    (top-schematic :accessor top-schematic)
    (parts :initform (make-hash-table :test 'equal) :accessor parts)
@@ -97,10 +103,12 @@
   <wire> [ ?lpar <wire-list> ] 
 
 = <wire>
-  :lpar
-    :integer print-text
-    :lpar <part-pin-list> :rpar
-    :lpar <part-pin-list> :rpar
+  :lpar                              wire-open-new
+    :integer print-text              wire-set-index
+                                     list-open-new
+    :lpar <part-pin-list> :rpar      wire-set-sources-from-list-and-pop
+                                     list-open-new
+    :lpar <part-pin-list> :rpar      wire-set-sinks-from-list-and-pop
   :rpar
 
 = <part-pin-list> 
@@ -108,9 +116,9 @@
   [ ?lpar <part-pin-list>]
 
 = <part>
-  :string
+  :string                             list-add-string
 = <pin>
-  :string
+  :string                             list-add-string
 "
 )
 
@@ -142,6 +150,8 @@
   (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
 
 ;; mechanisms
+
+;; top level schematic
 
 (defmethod stack-push ((self stack) item)
   (cl:push item (stack self)))
@@ -194,6 +204,9 @@
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (parts top-schem) table))))
 
+
+;; list mechanism
+
 (defmethod list-open-new ((self parser))
   (stack-push (list-stack self) nil))
 
@@ -201,10 +214,11 @@
   ;; noop - leave TOP on stack
   )
 
-
 (defmethod list-add-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (stack-push (list-stack self) str)))
+
+;; part mechanism
 
 (defmethod part-open-new ((self parser))
   (stack-push (part-stack self) (make-instance 'part)))
@@ -240,3 +254,20 @@
     (setf (outputs top) (stack-pop (list-stack self)))))
 
 
+;; wire mechanism
+(defmethod wire-open-new ((self parser))
+  (stack-push (wire-stack self) (make-instance 'wire)))
+
+(defmethod wire-set-index ((self parser))
+  (let ((top-wire (stack-top (wire-stack self))))
+    (setf (index top-wire) (cl:parse-integer (get-accepted-token-text self)))))
+
+(defmethod wire-set-sources-from-list-and-pop ((self parser))
+  (let ((top-wire (stack-top (wire-stack self))))
+    (let ((list (stack-pop (list-stack self))))
+      (setf (source-list top-wire) list))))
+
+(defmethod wire-set-sinks-from-list-and-pop ((self parser))
+  (let ((top-wire (stack-top (wire-stack self))))
+    (let ((list (stack-pop (list-stack self))))
+      (setf (sink-list top-wire) list))))
