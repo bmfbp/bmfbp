@@ -192,12 +192,12 @@
                                      (:file "json-collector" :depends-on ("util" "token"))
                                      (:file "json-emitter" :depends-on ("util" "token"))
 				     (:file "generic-parser" :depends-on ("util" "token" "parse-util" "generic"))
-				     (:file "generic-json-parser" :depends-on ("util" "token" "parse-util" "json"))
+				     (:file "json-parser" :depends-on ("util" "token" "parse-util" "json"))
 				     (:file "scanner" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
                                                                   "symbols" "integers" "spaces"))
 
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
-                                                                  "generic-parser" "generic-json-parser"))
+                                                                  "generic-parser" "json-parser"))
 
 				     (:file "wiring" :depends-on ("util"))))))
