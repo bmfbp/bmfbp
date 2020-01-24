@@ -51,6 +51,9 @@
   (when (look-ahead-p self kind)
     (accept self)))
 
+(defmethod get-accepted-token-text ((self parser))
+  (token-text (accepted-token self)))
+
 (defmethod accepted-symbol-must-be-nil ((self parser))
   (if (and (eq :symbol (token-kind (accepted-token self)))
            (string= "NIL" (string-upcase (token-text (accepted-token self)))))

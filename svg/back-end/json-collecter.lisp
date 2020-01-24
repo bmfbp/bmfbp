@@ -142,17 +142,17 @@
   (stack-push (make-instance 'schematic :name "self") (schematic-stack self)))
 
 (defmethod schematic-set-kind-from-string ((self parser))
-  (let ((str (get-accepted-token-text self)))
+  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
     (let ((top (top (schematic-stack self))))
       (setf (kind top) str))))
 
 (defmethod schematic-set-react-from-string ((self parser))
-  (let ((str (get-accepted-token-text self)))
+  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
     (let ((top (top (schematic-stack self))))
       (setf (react top) str))))
 
 (defmethod schematic-set-first-time-from-string ((self parser))
-  (let ((str (get-accepted-token-text self)))
+  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
     (let ((top (top (schematic-stack self))))
       (setf (first-time top) str))))
 
