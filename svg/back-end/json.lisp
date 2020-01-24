@@ -8,66 +8,80 @@
   :lpar
     :string 'kindName : ' print-text nl
             'metaData : \"\"' nl
-    'inputs : {' <inputs> <outputs> <react> <first-time> <part-declarations> <wiring> '}'
+    '{' inc nl <inputs> ',' nl <outputs> ',' nl <react> ',' nl <first-time> ',' nl <child-part-declarations> ',' nl <wiring> dec nl '}'
   :rpar
 
 
-= <inputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar 'inputs : [' <pin-list> ']' :rpar]
+= <inputs>
+  '\"inputs\" : ['
+    [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
+  ']'
 
 = <outputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar 'outputs : [' <pin-list> ']' :rpar]
+  '\"outputs\" : ['
+    [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
+  ']'
 
-= <part-declarations> 
-  :lpar '{' <part-decl-list> '}' :rpar
+= <child-part-declarations> 
+  :lpar inc
+    '\"parts\" : [' nl
+      <part-decl-list> 
+    nl ']'
+  :rpar dec
 
 = <wiring> 
-  :lpar
-    'wiring : {' <wire-list> '}'
-  :rpar
+  :lpar inc
+    '\"wiring\" : {' <wire-list> '}'
+  :rpar dec
 
 = <pin-list> 
-  '{' <ident-list> '}'
+  <ident-list>
 
 = <ident-list> 
-  :string [ ?string <ident-list>]
+  :string print-text [ ?string ',' <ident-list>]
 
 = <part-decl-list> 
-  [ ?lpar '{' <part-decl> '}' [ ?lpar ', ' <part-decl-list> ] | ! ]
+  [ ?lpar <part-decl>  [ ?lpar ',' <part-decl-list> ] | ! ]
 
 = <part-decl>
-  :lpar <name> <kind> <inputs> <outputs> <react> <first-time> :rpar
+  '{' inc nl
+    :lpar <name> ',' nl <kind> ',' nl <inputs> ',' nl <outputs> ',' nl <react> ',' nl <first-time> :rpar
+   dec nl '}'
 
 = <name>
-  :string print-text
+  :string '\"name\" :' print-text
 
 = <kind>
-  :string print-text
+  :string '\"kind\" : ' print-text
 
 = <react>
-  :string print-text
+  '\"react\" : ' :string print-text
 
 = <first-time>
-  :string print-text
+  '\"firstTime\" : ':string print-text
 
 = <wire-list>
-  <wire> [ ?lpar ',' <wire-list> ] 
+  <wire> [ ?lpar ',' nl <wire-list> ] 
 
 = <wire>
-  :lpar '{ wire : '
-    :integer print-text
+  inc '{ wire : '
+  :lpar 
+    :integer print-text ', '
+    :lpar <part-pin-list> :rpar ','
     :lpar <part-pin-list> :rpar
-    :lpar <part-pin-list> :rpar
-  :rpar ' }'
+  :rpar
+  dec '}'
 
 = <part-pin-list> 
-  :lpar <part> <pin> :rpar 
-  [ ?lpar <part-pin-list>]
+  '{'
+      :lpar <part> ',' <pin> :rpar 
+  '}'
+  [ ?lpar ',' <part-pin-list>]
 
 = <part>
-  :string print-text
+  :string '\"part\" : ' print-text
 = <pin>
-  :string print-text
+  :string '\"pin\" : ' print-text
 "
 )
 
@@ -89,8 +103,6 @@
   (format (arrowgrams/compiler/back-end:output-stream p)
           "~a"
           (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
-(defmethod nl ((p parser))
-  (format (arrowgrams/compiler/back-end:output-stream p) "~%"))
 
 (defmethod symbol-must-be-nil ((p parser))
   (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
@@ -98,3 +110,7 @@
 (defmethod stop-here ((p parser))
   (format *standard-output* "p is ~A~%" p)
 )
+
+(defmethod inc ((p parser)) (arrowgrams/compiler/back-end::inc p))
+(defmethod dec ((p parser)) (arrowgrams/compiler/back-end::dec p))
+(defmethod nl ((p parser)) (arrowgrams/compiler/back-end::nl p))
