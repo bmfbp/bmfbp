@@ -28,7 +28,8 @@
 (defparameter *rules*
 "
 = <ir> 
-  :lpar                   schematic-open-new
+                          schematic-open
+  :lpar
     <kind>                schematic-set-kind-from-string
     <inputs>              schematic-set-inputs-from-pin-list-pop
     <outputs>             schematic-set-outputs-from-pin-list-pop
@@ -36,8 +37,8 @@
     <first-time>          schematic-set-first-time-from-string
     <part-declarations>   schematic-set-parts-from-part-stack-pop
     <wiring>              schematic-set-wiring-from-wire-stack-pop
-                          schematic-close
   :rpar
+                          schematic-close
 
 
 = <inputs>
@@ -138,7 +139,7 @@
   (first (stack self)))
 
 
-(defmethod schematic-open-new ((self parser))
+(defmethod schematic-open ((self parser))
   (stack-push (make-instance 'schematic :name "self") (schematic-stack self)))
 
 (defmethod schematic-set-kind-from-string ((self parser))
