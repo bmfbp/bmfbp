@@ -69,14 +69,16 @@
   [ ?lpar <part-decl> [ ?lpar <part-decl-list> ] | ! ]
 
 = <part-decl>
+                                        part-open-new
   :lpar
-    <name> 
-    <kind> 
-    <inputs> 
-    <outputs> 
-    <react> 
-    <first-time> 
-  :rpar
+    <name>                              part-set-name
+    <kind>                              part-set-kind
+    <inputs>                            part-set-inputs-from-pin-list-pop
+    <outputs>                           part-set-outputs-from-pin-list-pop
+    <react>                             part-set-react
+    <first-time>                        part-set-first-time
+  :rpar           
+                                        part-close-pop
 
 = <name>
   :string
@@ -123,6 +125,10 @@
 (defmethod call-external ((p parser) func)  (cl:apply func (list p)))
 (defmethod call-rule ((p parser) func)  (cl:apply func (list p)))
 
+;; proxies
+(defmethod get-accepted-token-text ((self part))
+  (arrowgrams/compiler/back-end:get-accepted-token-text self))
+
 ;; mechanisms used in *rules* above
 (defmethod print-text ((p parser))
   (format (arrowgrams/compiler/back-end:output-stream p)
@@ -142,7 +148,7 @@
 (defmethod stack-pop ((self stack))
   (cl:pop (stack self)))
 
-(defmethod top ((self stack))
+(defmethod stack-top ((self stack))
   (first (stack self)))
 
 
@@ -150,18 +156,18 @@
   (stack-push (schematic-stack self) (make-instance 'schematic :name "self")))
 
 (defmethod schematic-set-kind-from-string ((self parser))
-  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
-    (let ((top (top (schematic-stack self))))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top (stack-top (schematic-stack self))))
       (setf (kind top) str))))
 
 (defmethod schematic-set-react-from-string ((self parser))
-  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
-    (let ((top (top (schematic-stack self))))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top (stack-top (schematic-stack self))))
       (setf (react top) str))))
 
 (defmethod schematic-set-first-time-from-string ((self parser))
-  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
-    (let ((top (top (schematic-stack self))))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top (stack-top (schematic-stack self))))
       (setf (first-time top) str))))
 
 (defmethod schematic-close ((self parser))
@@ -170,24 +176,24 @@
 
 (defmethod schematic-set-inputs-from-pin-list-pop ((self parser))
   (let ((list (stack-pop (list-stack self))))
-    (let ((top-schem (top (schematic-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
       (setf (inputs top-schem) list))))
 
 (defmethod schematic-set-outputs-from-pin-list-pop ((self parser))
   (let ((list (stack-pop (list-stack self))))
-    (let ((top-schem (top (schematic-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
       (setf (inputs top-schem) list))))
 
 
 (defmethod schematic-set-parts-from-part-stack-pop ((self parser))
   (let ((part (stack-pop (part-stack self))))
-    (let ((top-schem (top (schematic-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
       (setf (gethash (name part) (parts self))
             part))))
 
 (defmethod schematic-set-wires-from-part-stack-pop ((self parser))
   (let ((part (stack-pop (part-stack self))))
-    (let ((top-schem (top (schematic-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
       (setf (gethash (name part) (parts self))
             part))))
 
@@ -198,6 +204,41 @@
   ;; noop - leave TOP on stack
   )
 
+
 (defmethod list-add-string ((self parser))
-  (let ((str (arrowgrams/compiler/back-end:get-accepted-token-text self)))
+  (let ((str (get-accepted-token-text self)))
     (stack-push (list-stack self) str)))
+
+(defmethod part-open-new ((self parser))
+  (stack-push (part-stack self) (make-instance 'part)))
+
+(defmethod part-close-pop ((self parser))
+  (let ((part (stack-pop (part-stack self))))
+    (setf (gethash (name part) (parts self))
+          part)))
+
+(defmethod part-set-name ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (name top) (get-accepted-token-text self))))
+
+(defmethod part-set-kind ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (kind top) (get-accepted-token-text self))))
+
+(defmethod part-set-react ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (react top) (get-accepted-token-text self))))
+
+(defmethod part-set-first-time ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (first-time top) (get-accepted-token-text self))))
+
+(defmethod part-set-inputs-from-pin-list ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (inputs top) (stack-pop (list-stack self)))))
+
+(defmethod part-set-outputs-from-pin-list ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (outputs top) (stack-pop (list-stack self)))))
+
+
