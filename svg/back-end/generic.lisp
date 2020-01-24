@@ -6,9 +6,13 @@
 "
 = <ir> 
   :lpar
-    :string 'kindName : '
-            'metaData : \"\"'
-    'inputs : {' <inputs> <outputs> <react> <first-time> <part-declarations> <wiring> '}'
+    <kind>
+    <inputs> 
+    <outputs> 
+    <react> 
+    <first-time> 
+    <part-declarations> 
+    <wiring>
   :rpar
 
 
