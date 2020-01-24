@@ -166,7 +166,7 @@
                                      (:file "xform" :depends-on ("package" "ir-grammar" "ir-to-lisp"))))))
 
 (defsystem arrowgrams/compiler/back-end
-  :depends-on (:arrowgrams :cl-event-passing :loops :cl-peg)
+  :depends-on (:arrowgrams :cl-event-passing :sl :cl-ppcre :loops :cl-peg)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -187,8 +187,10 @@
 				     (:file "parse-util" :depends-on ("util" "token"))
 				     (:file "preparse" :depends-on ("util" "token"))
 				     (:file "file-writer" :depends-on ("util" "token"))
-				     (:file "generic-parser" :depends-on ("util" "token" "parse-util"))
-				     (:file "generic-json-parser" :depends-on ("util" "token" "parse-util"))
+                                     (:file "generic" :depends-on ("util" "token"))
+                                     (:file "json" :depends-on ("util" "token"))
+				     (:file "generic-parser" :depends-on ("util" "token" "parse-util" "generic"))
+				     (:file "generic-json-parser" :depends-on ("util" "token" "parse-util" "json"))
 				     (:file "scanner" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
                                                                   "symbols" "integers" "spaces"))
 

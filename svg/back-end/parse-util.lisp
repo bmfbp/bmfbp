@@ -1,10 +1,13 @@
 (in-package :arrowgrams/compiler/back-end)
 
+;; class needed by SL, must be called "parser"
 (defclass parser ()
-  ((owner :initform nil :accessor owner :initarg :owner)
+  ((accepted-token :initform nil :accessor accepted-token)
+   (owner :initform nil :accessor owner :initarg :owner)
    (token-stream :initform nil :accessor token-stream :initarg :token-stream)
    (indent :initform 0 :accessor indent)
-   (output-stream :initform (make-string-output-stream) :accessor output-stream)))
+   (output-stream :initform (make-string-output-stream) :accessor output-stream)
+   (error-stream :initform *error-output* :accessor error-stream)))
 
 (defun string-token (tok)
   (cond ((eq :lpar (token-kind tok)) "(")
@@ -19,8 +22,8 @@
   (format *standard-output* "~a~%" (string-token tok)))
 
 (defmethod accept ((self parser))
-  (pop (token-stream self)))
-    ;(debug-token val)
+  (setf (accepted-token self) (pop (token-stream self)))
+  (debug-token (accepted-token self)))
 
 (defmethod parse-error ((self parser) kind)
   (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first (token-stream self)))))
@@ -48,10 +51,10 @@
   (when (look-ahead-p self kind)
     (accept self)))
 
-(defmethod need-nil-symbol ((self parser))
-  (if (and (look-ahead-p self :symbol)
-           (string= "NIL" (string-upcase (token-text (first (token-stream self))))))
-      (accept self)
+(defmethod accepted-symbol-must-be-nil ((self parser))
+  (if (and (eq :symbol (token-kind (accepted-token self)))
+           (string= "NIL" (string-upcase (token-text (accepted-token self)))))
+      T
     (parse-error self nil)))
 
 (defmethod emit ((self parser) fmtstr &rest args)
