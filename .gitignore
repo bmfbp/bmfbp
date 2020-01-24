@@ -21,7 +21,7 @@ svg/cl-compiler/rules.lisp
 svg/cl-compiler/output.prolog
 svg/cl-compiler/output2.prolog
 *.scrivx
-binders.autosave
+*binder.autosave
 
 svg/cl-compiler/bad.txt
 
