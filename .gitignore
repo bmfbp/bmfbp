@@ -20,6 +20,8 @@ time-to-market*
 svg/cl-compiler/rules.lisp
 svg/cl-compiler/output.prolog
 svg/cl-compiler/output2.prolog
+*.scrivx
+binders.autosave
 
 svg/cl-compiler/bad.txt
 
@@ -34,3 +36,4 @@ svg/back-end/runs.lisp
 svg/back-end/log.lisp
 
 svg/back-end/log2.lisp
+
