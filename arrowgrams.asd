@@ -188,11 +188,10 @@
 				     (:file "preparse" :depends-on ("util" "token"))
 				     (:file "file-writer" :depends-on ("util" "token"))
                                      (:file "generic" :depends-on ("util" "token"))
-                                     (:file "json" :depends-on ("util" "token"))
                                      (:file "json-collector" :depends-on ("util" "token"))
                                      (:file "json-emitter" :depends-on ("util" "token"))
 				     (:file "generic-parser" :depends-on ("util" "token" "parse-util" "generic"))
-				     (:file "json-parser" :depends-on ("util" "token" "parse-util" "json"))
+				     (:file "json-parser" :depends-on ("util" "token" "parse-util" "json-collector" "json-emitter"))
 				     (:file "scanner" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
                                                                   "symbols" "integers" "spaces"))
 

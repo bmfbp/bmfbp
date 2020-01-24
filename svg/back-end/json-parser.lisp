@@ -27,8 +27,8 @@
         (:idle
          (ecase (e/event::sym e)
            (:parse
-            (let ((p (make-instance 'arrowgrams/compiler/back-end/json::parser :owner self :token-stream (e/event::data e))))
-              (arrowgrams/compiler/back-end/json::ir p)
+            (let ((p (make-instance 'arrowgrams/compiler/back-end/json-collector::parser :owner self :token-stream (e/event::data e))))
+              (arrowgrams/compiler/back-end/json-collector::ir p)
               (send! self :out (get-output p))
               (setf *generic-json-parser-state* :done)))))
         

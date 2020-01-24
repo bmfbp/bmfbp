@@ -13,8 +13,6 @@
 
 (defpackage :arrowgrams/compiler/back-end/generic
   (:use :cl))
-(defpackage :arrowgrams/compiler/back-end/json
-  (:use :cl))
 (defpackage :arrowgrams/compiler/back-end/json-collector
   (:use :cl))
 (defpackage :arrowgrams/compiler/back-end/json-emitter
