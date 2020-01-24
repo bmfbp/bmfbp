@@ -25,7 +25,7 @@
   (setf (accepted-token self) (pop (token-stream self)))
   (debug-token (accepted-token self)))
 
-(defmethod parse-error ((self parser) kind)
+(defmethod parser-error ((self parser) kind)
   (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first (token-stream self)))))
       (assert nil () msg)
       (send! (owner self) :error msg)
@@ -45,7 +45,7 @@
 (defmethod need ((self parser) kind)
   (if (look-ahead-p self kind)
       (accept self)
-    (parse-error self kind)))
+    (parser-error self kind)))
 
 (defmethod accept-if ((self parser) kind)
   (when (look-ahead-p self kind)
@@ -55,7 +55,7 @@
   (if (and (eq :symbol (token-kind (accepted-token self)))
            (string= "NIL" (string-upcase (token-text (accepted-token self)))))
       T
-    (parse-error self nil)))
+    (parser-error self nil)))
 
 (defmethod emit ((self parser) fmtstr &rest args)
   (apply #'format (output-stream self) fmtstr args))
