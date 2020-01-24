@@ -11,10 +11,10 @@
 
 
 = <inputs> 
-  'inputs : [' <pin-list> ']'
+  :lpar 'inputs : [' <pin-list> ']' :rpar
 
 = <outputs> 
-  'outputs : [' <pin-list> ']'
+  :lpar 'outputs : [' <pin-list> ']' :rpar
 
 = <part-declarations> 
   :lpar '{' <part-decl-list> '}' :rpar
@@ -23,7 +23,7 @@
   :lpar 'wiring : {' <wire-list> '}' :rpar
 
 = <pin-list> 
-  [ ?symbol :symbol symbol-must-be-nil  | :lpar '{' <ident-list> '}' :rpar ]
+  [ ?symbol :symbol symbol-must-be-nil  | ! '{' <ident-list> '}' ]
 
 = <ident-list> 
   :ident [ ?ident <ident-list>]
