@@ -216,7 +216,11 @@
 
 (defmethod list-add-string ((self parser))
   (let ((str (get-accepted-token-text self)))
-    (stack-push (list-stack self) str)))
+    (let ((top-list (stack-pop (list-stack self))))
+      (let ((result (if (null top-list)
+                        (list str)
+                      (cons str top-list))))
+        (stack-push (list-stack self) result)))))
 
 ;; part mechanism
 
