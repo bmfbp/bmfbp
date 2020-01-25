@@ -120,7 +120,7 @@
   :rpar
 
 = <part-pin-list> 
-  :lpar <part> <pin> :rpar 
+  :lpar <part> <pin> :rpar            
   [ ?lpar <part-pin-list>]
 
 = <part>
@@ -231,7 +231,7 @@
     (let ((top-list (stack-pop (list-stack self))))
       (let ((result (if (null top-list)
                         (list str)
-                      (cons str top-list))))
+                      (append top-list (list str)))))
         (stack-push (list-stack self) result)))))
 
 (defmethod list-add-wire/pop-wire-stack ((self parser))
