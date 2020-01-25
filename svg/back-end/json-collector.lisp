@@ -44,14 +44,10 @@
 
                           table-open-new
     <part-declarations>
-                          schematic-set-parts-from-table
-                          table-pop
-
+                          schematic-set-parts-from-table/pop-table
                           table-open-new
     <wiring>
-                          schematic-set-wiring-from-table
-                          table-pop
-
+                          schematic-set-wiring-from-table/pop-table
   :rpar
                           schematic-close
 
@@ -93,7 +89,8 @@
     <react>                             part-set-react
     <first-time>                        part-set-first-time
   :rpar           
-                                        part-close-pop
+                                        part-add-to-table
+                                        part-close/pop
 
 = <name>
   :string
@@ -118,7 +115,8 @@
     :lpar <part-pin-list> :rpar      wire-set-sources-from-list/pop-list
                                      list-open-new
     :lpar <part-pin-list> :rpar      wire-set-sinks-from-list/pop-list
-                                     wire-close
+                                     wire-add-to-table
+                                     wire-close/pop
   :rpar
 
 = <part-pin-list> 
@@ -205,10 +203,15 @@
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (outputs top-schem) list))))
 
-(defmethod schematic-set-parts-from-table ((self parser))
+(defmethod schematic-set-parts-from-table/pop-table ((self parser))
   (let ((table (stack-pop (table-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (parts top-schem) table))))
+
+(defmethod schematic-set-wiring-from-table/pop-table ((self parser))
+  (let ((table (stack-pop (table-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
+      (setf (wiring top-schem) table))))
 
 
 
@@ -244,10 +247,10 @@
 (defmethod part-open-new ((self parser))
   (stack-push (part-stack self) (make-instance 'part)))
 
-(defmethod part-close-pop ((self parser))
+(defmethod part-close/pop ((self parser))
   (stack-pop (part-stack self)))
 
-(defmethod add-part-to-table ((self parser))
+(defmethod part-add-to-table ((self parser))
   (let ((part (stack-top (part-stack self))))
     (let ((top-table (stack-top (table-stack self))))
       (setf (gethash (name part) top-table)
@@ -282,9 +285,15 @@
 (defmethod wire-open-new ((self parser))
   (stack-push (wire-stack self) (make-instance 'wire)))
 
-(defmethod wire-close ((self parser))
+(defmethod wire-close/pop ((self parser))
   ;; top-wire is finished
-  )
+  (stack-pop (wire-stack self)))
+
+(defmethod wire-add-to-table ((self parser))
+  (let ((top-table (stack-top (table-stack self))))
+    (let ((top-wire (stack-top (wire-stack self))))
+      (setf (gethash (index top-wire) top-table)
+            top-wire))))
 
 (defmethod wire-set-index ((self parser))
   (let ((top-wire (stack-top (wire-stack self))))
@@ -299,11 +308,6 @@
   (let ((top-wire (stack-top (wire-stack self))))
     (let ((list (stack-pop (list-stack self))))
       (setf (sink-list top-wire) list))))
-
-(defmethod schematic-set-wiring-from-table ((self parser))
-  (let ((table (stack-pop (table-stack self))))
-    (let ((top-schem (stack-top (schematic-stack self))))
-      (setf (wiring top-schem) table))))
 
 ;; table
 (defmethod table-open-new ((self parser))
