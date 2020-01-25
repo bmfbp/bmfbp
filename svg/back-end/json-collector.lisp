@@ -37,8 +37,8 @@
                           schematic-open
   :lpar
     <kind>                schematic-set-kind-from-string
-    <inputs>              schematic-set-inputs-from-pin-list-pop
-    <outputs>             schematic-set-outputs-from-pin-list-pop
+    <inputs>              schematic-set-inputs-from-list/pop-list
+    <outputs>             schematic-set-outputs-from-list/pop-list
     <react>               schematic-set-react-from-string
     <first-time>          schematic-set-first-time-from-string
 
@@ -88,8 +88,8 @@
   :lpar
     <name>                              part-set-name
     <kind>                              part-set-kind
-    <inputs>                            part-set-inputs-from-pin-list-pop
-    <outputs>                           part-set-outputs-from-pin-list-pop
+    <inputs>                            part-set-inputs-from-list/pop-list
+    <outputs>                           part-set-outputs-from-list/pop-list
     <react>                             part-set-react
     <first-time>                        part-set-first-time
   :rpar           
@@ -108,16 +108,16 @@
   :string
 
 = <wire-list>
-  <wire>                             list-add-wire-pop-wire-list
+  <wire>                             list-add-wire/pop-wire-stack
   [ ?lpar <wire-list> ] 
 
 = <wire>
   :lpar                              wire-open-new
     :integer print-text              wire-set-index
                                      list-open-new
-    :lpar <part-pin-list> :rpar      wire-set-sources-from-list-and-pop
+    :lpar <part-pin-list> :rpar      wire-set-sources-from-list/pop-list
                                      list-open-new
-    :lpar <part-pin-list> :rpar      wire-set-sinks-from-list-and-pop
+    :lpar <part-pin-list> :rpar      wire-set-sinks-from-list/pop-list
                                      wire-close
   :rpar
 
@@ -195,17 +195,17 @@
   (setf (top-schematic self)
         (stack-pop (schematic-stack self))))
 
-(defmethod schematic-set-inputs-from-pin-list-pop ((self parser))
+(defmethod schematic-set-inputs-from-list/pop-list ((self parser))
   (let ((list (stack-pop (list-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (inputs top-schem) list))))
 
-(defmethod schematic-set-outputs-from-pin-list-pop ((self parser))
+(defmethod schematic-set-outputs-from-list/pop-list ((self parser))
   (let ((list (stack-pop (list-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (outputs top-schem) list))))
 
-(defmethod schematic-set-parts-from-table-stack ((self parser))
+(defmethod schematic-set-parts-from-table ((self parser))
   (let ((table (stack-pop (table-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (parts top-schem) table))))
@@ -229,6 +229,14 @@
       (let ((result (if (null top-list)
                         (list str)
                       (cons str top-list))))
+        (stack-push (list-stack self) result)))))
+
+(defmethod list-add-wire/pop-wire-stack ((self parser))
+  (let ((wire (stack-pop (wire-stack self))))
+    (let ((top-list (stack-pop (list-stack self))))
+      (let ((result (if (null top-list)
+                        (list wire)
+                      (cons wire top-list))))
         (stack-push (list-stack self) result)))))
 
 ;; part mechanism
@@ -261,11 +269,11 @@
   (let ((top (stack-top (part-stack self))))
     (setf (first-time top) (get-accepted-token-text self))))
 
-(defmethod part-set-inputs-from-pin-list-pop ((self parser))
+(defmethod part-set-inputs-from-list/pop-list ((self parser))
   (let ((top (stack-top (part-stack self))))
     (setf (inputs top) (stack-pop (list-stack self)))))
 
-(defmethod part-set-outputs-from-pin-list-pop ((self parser))
+(defmethod part-set-outputs-from-list/pop-list ((self parser))
   (let ((top (stack-top (part-stack self))))
     (setf (outputs top) (stack-pop (list-stack self)))))
 
@@ -282,17 +290,17 @@
   (let ((top-wire (stack-top (wire-stack self))))
     (setf (index top-wire) (cl:parse-integer (get-accepted-token-text self)))))
 
-(defmethod wire-set-sources-from-list-and-pop ((self parser))
+(defmethod wire-set-sources-from-list/pop-list ((self parser))
   (let ((top-wire (stack-top (wire-stack self))))
     (let ((list (stack-pop (list-stack self))))
       (setf (source-list top-wire) list))))
 
-(defmethod wire-set-sinks-from-list-and-pop ((self parser))
+(defmethod wire-set-sinks-from-list/pop-list ((self parser))
   (let ((top-wire (stack-top (wire-stack self))))
     (let ((list (stack-pop (list-stack self))))
       (setf (sink-list top-wire) list))))
 
-(defmethod schematic-set-wires-from-table-stack ((self parser))
+(defmethod schematic-set-wiring-from-table ((self parser))
   (let ((table (stack-pop (table-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (wiring top-schem) table))))
