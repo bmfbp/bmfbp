@@ -27,7 +27,7 @@
         (:idle
          (ecase (e/event::sym e)
            (:parse
-            (let ((p (make-instance 'arrowgrams/compiler/back-end/generic::parser :owner self :token-stream (e/event::data e))))
+            (let ((p (make-instance 'arrowgrams/compiler/back-end/collector::parser :owner self :token-stream (e/event::data e))))
               (arrowgrams/compiler/back-end/collector::ir p)
               (format *standard-output* "COLLECTOR NIY~%")
               #+nil(send! self :out (get-output p))
