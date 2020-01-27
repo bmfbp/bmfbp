@@ -32,6 +32,7 @@
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e))))
               (ir-collector p)
               (let ((schem (top-schematic p)))
+                (unparse-push-unparse p schem)
                 (unparse-schematic-unparse p)
                 (send! self :out (unparsed-token-stream p))
                 (format *standard-output* "COLLECTOR NIY~%")
