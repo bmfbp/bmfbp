@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end/json-emitter)
+(in-package :arrowgrams/compiler/back-end)
 
 (defparameter *json-emitter-state* nil)
 
@@ -34,9 +34,3 @@
         (:done
          (send! self :error (format nil "json emitter done, but received input~%")))))))
 
-;; proxies
-(defun token-kind (tok) (arrowgrams/compiler/back-end:token-kind tok))
-(defun token-text (tok) (arrowgrams/compiler/back-end:token-text tok))
-(defun token-position (tok) (arrowgrams/compiler/back-end:token-position tok))
-(defun token-pulled-p (tok) (arrowgrams/compiler/back-end:token-pulled-p tok))
-(defmethod send! ((p e/part:part) pin data) (arrowgrams/compiler/back-end:send! p pin data))

@@ -1,6 +1,6 @@
-(in-package :arrowgrams/compiler/back-end/collector)
+(in-package :arrowgrams/compiler/back-end)
 
-; (:code collector (:parse) (:out :error) #'arrowgrams/compiler/back-end/collector::collector-react #'arrowgrams/compiler/back-end/collector::collector-first-time)
+; (:code collector (:parse) (:out :error) #'collector-react #'collector-first-time)
 
 (defparameter *collector-state* nil)
 
@@ -29,20 +29,14 @@
         (:idle
          (ecase (e/event::sym e)
            (:parse
-            (let ((p (make-instance 'arrowgrams/compiler/back-end/collector::parser :owner self :token-stream (e/event::data e))))
-              (ir p)
+            (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e))))
+              (ir-collector p)
               (let ((schem (top-schematic p)))
-                (unparse-schematic p)
-                (send! self :out (arrowgrams/compiler/back-end::unparsed-token-stream p))
+                (unparse-push p schem)
+                (unparse-schematic-unparse p)
+                (send! self :out (unparsed-token-stream p))
                 (format *standard-output* "COLLECTOR NIY~%")
                 (setf *collector-state* :done))))))
         
         (:done
          (debug-tok :error (format nil "generic parser done, but got ") tok))))))
-
-;; proxies
-(defun token-kind (tok) (arrowgrams/compiler/back-end:token-kind tok))
-(defun token-text (tok) (arrowgrams/compiler/back-end:token-text tok))
-(defun token-position (tok) (arrowgrams/compiler/back-end:token-position tok))
-(defun token-pulled-p (tok) (arrowgrams/compiler/back-end:token-pulled-p tok))
-(defmethod send! ((p e/part:part) pin data) (arrowgrams/compiler/back-end:send! p pin data))

@@ -1,8 +1,6 @@
-(in-package :arrowgrams/compiler/back-end/generic)
+(in-package :arrowgrams/compiler/back-end)
 
-(defclass parser (arrowgrams/compiler/back-end::parser) ())
-
-(defparameter *rules*
+(defparameter *generic-rules*
 "
 = <ir> 
   :lpar
@@ -75,29 +73,4 @@
 "
 )
 
-(eval
- (read-from-string
-  (cl-ppcre:regex-replace-all "SL::" (cl:write-to-string (sl:parse *rules*)) "")))
-
-;; parser support
-(defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
-(defmethod look-ahead ((p parser) token)   (arrowgrams/compiler/back-end:look-ahead-p p token))
-(defmethod output ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
-(defmethod need-nil-symbol ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
-(defmethod call-external ((p parser) func)  (cl:apply func (list p)))
-(defmethod call-rule ((p parser) func)  (cl:apply func (list p)))
-
-;; mechanisms used in *rules* above
-(defmethod print-text ((p parser))
-  (format (arrowgrams/compiler/back-end:output-stream p)
-          "~a"
-          (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
-(defmethod nl ((p parser))
-  (format (arrowgrams/compiler/back-end:output-stream p) "~%"))
-
-(defmethod symbol-must-be-nil ((p parser))
-  (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
-
-(defmethod stop-here ((p parser))
-  (format *standard-output* "p is ~A~%" p)
-)
+(eval (sl:parse *generic-rules* "-GENERIC"))

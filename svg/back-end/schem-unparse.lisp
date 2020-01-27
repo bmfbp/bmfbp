@@ -1,7 +1,4 @@
-(cl:in-package :arrowgrams/compiler/back-end/collector)
-
-(defclass parser (arrowgrams/compiler/back-end:parser)
-  ())
+(cl:in-package :arrowgrams/compiler/back-end)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
 
@@ -58,12 +55,124 @@
       }
     -
    }
+
+= <unparse-string>
+  :string @send-top
 "
     )
+
+    #+nil(let ((sexpr (sl:unparse *unparse-schem-script* "-UNPARSE")))
+      (pprint sexpr)
+      (eval sexpr)))
+
   
-  (let ((sexpr (sl:unparse *unparse-schem-script*)))
-    #+nil(pprint sexpr)
-    (eval sexpr))
-  )
+(DEFMETHOD UNPARSE-SCHEMATIC-UNPARSE
+           ((U PARSER))
+  (LET ()
+    (UNPARSE-EMIT-TOKEN U :SCHEM)
+    (LET ()
+      (UNPARSE-PUSH U (LET ((NAME (SLOT-VALUE (UNPARSE-TOS U) 'NAME))) NAME))
+      (LET ()
+        (UNPARSE-CALL-RULE U #'UNPARSE-STRING-UNPARSE)
+        (LET ()
+          (UNPARSE-POP U)
+          (LET ()
+            (UNPARSE-PUSH U (LET ((KIND (SLOT-VALUE (UNPARSE-TOS U) 'KIND))) KIND))
+            (LET ()
+              (UNPARSE-CALL-RULE U #'UNPARSE-STRING-UNPARSE)
+              (LET ()
+                (UNPARSE-POP U)
+                (LET ()
+                  (UNPARSE-PUSH U (LET ((INPUTS (SLOT-VALUE (UNPARSE-TOS U) 'INPUTS))) INPUTS))
+                  (LET ()
+                    (UNPARSE-CALL-RULE U #'UNPARSE-INPUTS-UNPARSE)
+                    (LET ()
+                      (UNPARSE-POP U)
+                      (LET ()
+                        (UNPARSE-PUSH U (LET ((OUTPUTS (SLOT-VALUE (UNPARSE-TOS U) 'OUTPUTS))) OUTPUTS))
+                        (LET ()
+                          (UNPARSE-CALL-RULE U #'UNPARSE-OUTPUTS-UNPARSE)
+                          (LET ()
+                            (UNPARSE-POP U)
+                            (LET ()
+                              (UNPARSE-PUSH U (LET ((REACT (SLOT-VALUE (UNPARSE-TOS U) 'REACT))) REACT))
+                              (LET ()
+                                (UNPARSE-CALL-RULE U #'UNPARSE-STRING-UNPARSE)
+                                (LET ()
+                                  (UNPARSE-POP U)
+                                  (LET ()
+                                    (UNPARSE-PUSH U (LET ((FIRST-TIME (SLOT-VALUE (UNPARSE-TOS U) 'FIRST-TIME))) FIRST-TIME))
+                                    (LET ()
+                                      (UNPARSE-CALL-RULE U #'UNPARSE-STRING-UNPARSE)
+                                      (LET ()
+                                        (UNPARSE-POP U)
+                                        (LET ()
+                                          (UNPARSE-PUSH U (LET ((WIRES (SLOT-VALUE (UNPARSE-TOS U) 'WIRES))) WIRES))
+                                          (LET ()
+                                            (UNPARSE-PUSH U (LET ((PARTS (SLOT-VALUE (UNPARSE-TOS U) 'PARTS))) PARTS))
+                                            (LET ()
+                                              (UNPARSE-CALL-RULE U #'UNPARSE-PARTS-UNPARSE)
+                                              (LET () (UNPARSE-POP U) (LET () (UNPARSE-POP U))))))))))))))))))))))))))
+(DEFMETHOD UNPARSE-INPUTS-UNPARSE
+           ((U PARSER))
+  (LET () (UNPARSE-EMIT-TOKEN U :LPAR) (LET () (UNPARSE-CALL-RULE U #'UNPARSE-STRING-LIST-UNPARSE) (LET () (UNPARSE-EMIT-TOKEN U :RPAR)))))
+(DEFMETHOD UNPARSE-OUTPUTS-UNPARSE
+           ((U PARSER))
+  (LET () (UNPARSE-EMIT-TOKEN U :LPAR) (LET () (UNPARSE-CALL-RULE U #'UNPARSE-STRING-LIST-UNPARSE) (LET () (UNPARSE-EMIT-TOKEN U :RPAR)))))
+(DEFMETHOD UNPARSE-STRING-LIST-UNPARSE
+           ((U PARSER))
+  (LET () (UNPARSE-FOREACH-IN-LIST U #'(LAMBDA () (LET () (UNPARSE-EMIT-TOKEN U :STRING) (LET () (UNPARSE-CALL-EXTERNAL U #'SEND-TOP)))))))
+(DEFMETHOD UNPARSE-PARTS-UNPARSE ((U PARSER)) (LET () (UNPARSE-FOREACH-IN-TABLE U #'(LAMBDA () (LET () (UNPARSE-CALL-RULE U #'UNPARSE-PART-UNPARSE))))))
+(DEFMETHOD UNPARSE-PART-UNPARSE
+           ((U PARSER))
+  (LET ((NAME (SLOT-VALUE (UNPARSE-TOS U) 'NAME)))
+    NAME
+    (LET ()
+      (UNPARSE-CALL-RULE U #'UNPARSE-STRING-UNPARSE)
+      (LET ()
+        (UNPARSE-POP U)
+        (LET ((KIND (SLOT-VALUE (UNPARSE-TOS U) 'KIND)))
+          KIND
+          (LET ()
+            (UNPARSE-CALL-RULE U #'UNPARSE-KIND-UNPARSE)
+            (LET ()
+              (UNPARSE-POP U)
+              (LET ((INPUTS (SLOT-VALUE (UNPARSE-TOS U) 'INPUTS)))
+                INPUTS
+                (LET ()
+                  (UNPARSE-CALL-RULE U #'UNPARSE-INPUTS-UNPARSE)
+                  (LET ()
+                    (UNPARSE-POP U)
+                    (LET ((OUTPUTS (SLOT-VALUE (UNPARSE-TOS U) 'OUTPUTS)))
+                      OUTPUTS
+                      (LET ()
+                        (UNPARSE-CALL-RULE U #'UNPARSE-OUTPUTS-UNPARSE)
+                        (LET ()
+                          (UNPARSE-POP U)
+                          (LET ((REACT (SLOT-VALUE (UNPARSE-TOS U) 'REACT)))
+                            REACT
+                            (LET ()
+                              (UNPARSE-CALL-RULE U #'UNPARSE-STRING-UNPARSE)
+                              (LET ()
+                                (UNPARSE-POP U)
+                                (LET ((FIRST-TIME (SLOT-VALUE (UNPARSE-TOS U) 'FIRST-TIME)))
+                                  FIRST-TIME
+                                  (LET () (UNPARSE-CALL-RULE U #'UNPARSE-STRING-UNPARSE) (LET () (UNPARSE-POP U))))))))))))))))))))
+(DEFMETHOD UNPARSE-PARTS-UNPARSE
+           ((U PARSER))
+  (LET ()
+    (UNPARSE-FOREACH-IN-LIST
+     U
+     #'(LAMBDA ()
+         (LET ((INPUTS (SLOT-VALUE (UNPARSE-TOS U) 'INPUTS)))
+           INPUTS
+           (LET ()
+             (UNPARSE-FOREACH-IN-TABLE
+              U
+              #'(LAMBDA ()
+                  (LET ()
+                    (UNPARSE-CALL-EXTERNAL U #'FIND-SINK-PART-PIN-IN-WIRES)
+                    (LET () (UNPARSE-EMIT-TOKEN U :INDEXED-SINK) (LET () (UNPARSE-CALL-EXTERNAL U #'EMIT-IF-INDEXED-SINK))))))
+             (LET () (UNPARSE-POP U))))))))
 
-
+(DEFMETHOD UNPARSE-STRING-UNPARSE ((U PARSER)) (LET () (UNPARSE-EMIT-TOKEN U :STRING) (LET () (UNPARSE-CALL-EXTERNAL U #'SEND-TOP))))

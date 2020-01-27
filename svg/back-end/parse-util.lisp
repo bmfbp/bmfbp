@@ -8,7 +8,17 @@
    (unparsed-token-stream :initform nil :accessor unparsed-token-stream :initarg :token-stream)
    (indent :initform 0 :accessor indent)
    (output-stream :initform (make-string-output-stream) :accessor output-stream)
-   (error-stream :initform *error-output* :accessor error-stream)))
+   (error-stream :initform *error-output* :accessor error-stream)
+   (schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
+   (queue-stack :accessor queue-stack :initform (make-instance 'stack))
+   (table-stack :accessor table-stack :initform (make-instance 'stack))
+   (wire-stack :accessor wire-stack :initform (make-instance 'stack))
+   (part-stack :accessor part-stack :initform (make-instance 'stack))
+   (top-schematic :accessor top-schematic)
+   (parts :initform (make-hash-table :test 'equal) :accessor parts)
+   (wires :initform (make-hash-table) :accessor wires)
+   (unparse-stack :accessor unparse-stack :initform (make-instance 'stack))))
+
 
 (defun string-token (tok)
   (cond ((eq :lpar (token-kind tok)) "(")
@@ -81,3 +91,80 @@
       (decf count))
     (emit self "~%")))
       
+
+
+;; parser support
+(defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
+(defmethod look-ahead ((p parser) token)   (arrowgrams/compiler/back-end:look-ahead-p p token))
+(defmethod output ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
+(defmethod need-nil-symbol ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
+(defmethod call-external ((p parser) func)  (cl:apply func (list p)))
+(defmethod call-rule ((p parser) func)  (cl:apply func (list p)))
+
+;; mechanisms used in *collector-rules* and *generic-rules*
+(defmethod print-text ((p parser))
+  (format (arrowgrams/compiler/back-end:output-stream p)
+          "~a"
+          (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
+(defmethod nl ((p parser))
+  (format (arrowgrams/compiler/back-end:output-stream p) "~%"))
+
+(defmethod symbol-must-be-nil ((p parser))
+  (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
+
+(defmethod stop-here ((p parser))
+  (format *standard-output* "p is ~A~%" p)
+)
+
+;;;;
+
+(defclass stack ()
+  ((stack :initform nil :accessor stack)))
+
+(defmethod stack-push ((self stack) item)
+  (cl:push item (stack self)))
+
+(defmethod stack-pop ((self stack))
+  (cl:pop (stack self)))
+
+(defmethod stack-top ((self stack))
+  (first (stack self)))
+
+;;;;; unparser support
+
+(defmethod unparse-emit ((p parser) item)
+  (setf (unparsed-token-stream p)
+        (cons item (unparsed-token-stream p))))
+  
+(defmethod unparse-emit-token ((p parser) tok)
+  (unparse-emit p tok))
+
+(defmethod unparse-push ((p parser) item)
+  (stack-push (unparse-stack p) item))
+
+(defmethod unparse-pop ((p parser))
+  (stack-pop (unparse-stack p)))
+
+(defmethod unparse-tos ((p parser))
+  (stack-top (unparse-stack p)))
+
+(defmethod unparse-call-external ((p parser) func)
+  (apply func (list p)))
+
+(defmethod unparse-call-rule ((p parser) func)
+  (apply func (list p)))
+
+(defmethod unparse-foreach-in-list ((p parser) func)
+  (dolist (L (unparse-tos p))
+    (apply func (list L))))
+
+(defmethod unparse-foreach-in-table ((p parser) func)
+  (maphash #'(lambda (key val)
+               (apply func (list val)))
+           (unparse-tos p)))
+
+;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
+(defmethod send-top ((p parser))
+  (let ((str (unparse-tos p)))
+    (assert (stringp str))
+    (unparse-emit p str)))
