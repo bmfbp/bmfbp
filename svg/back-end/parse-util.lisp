@@ -132,9 +132,12 @@
 
 ;;;;; unparser support
 
-(defmethod unparse-emit-token ((p parser) tok)
+(defmethod unparse-emit ((p parser) item)
   (setf (unparsed-token-stream p)
-        (cons tok (unparsed-token-stream p))))
+        (cons item (unparsed-token-stream p))))
+  
+(defmethod unparse-emit-token ((p parser) tok)
+  (unparse-emit p tok))
 
 (defmethod unparse-push ((p parser) item)
   (stack-push (unparse-stack p) item))
@@ -159,3 +162,9 @@
   (maphash #'(lambda (key val)
                (apply func (list val)))
            (unparse-tos p)))
+
+;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
+(defmethod send-top ((p parser))
+  (let ((str (unparse-tos p)))
+    (assert (stringp str))
+    (unparse-emit p str)))
