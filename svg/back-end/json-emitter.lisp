@@ -12,26 +12,27 @@
     (flet ((pull (id) (send! self :request id))
            (debug-tok (out-pin msg tok)
              (if (token-pulled-p tok)
-                 (send! self out-pin (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
-                                             msg
-                                             (token-kind tok)
-                                             (token-position tok)
-                                             (if (member (token-kind tok) no-print) "." (token-text tok))
-                                             (token-pulled-p tok)))
-               (send! self out-pin (format nil "~&~a:~a pos:~a c:~a"
-                                           msg
-                                           (token-kind tok)
-                                           (token-position tok)
-                                           (if (member (token-kind tok) no-print) "." (token-text tok)))))))
+                 (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
+                         msg
+                         (token-kind tok)
+                         (token-position tok)
+                         (if (member (token-kind tok) no-print) "." (token-text tok))
+                         (token-pulled-p tok)))
+             (format nil "~&~a:~a pos:~a c:~a"
+                     msg
+                     (token-kind tok)
+                     (token-position tok)
+                     (if (member (token-kind tok) no-print) "." (token-text tok)))))
       (ecase *json-emitter-state*
         (:idle
          (ecase (e/event::sym e)
-           (:parse
+           
+           (:in
             (format *standard-output* "json emitter NIY~%")
             (setf *json-emitter-state* :done))))
         
         (:done
-         (debug-tok :error (format nil "json emitter done, but got ") tok))))))
+         (send! self :error (format nil "json emitter done, but received input~%")))))))
 
 ;; proxies
 (defun token-kind (tok) (arrowgrams/compiler/back-end:token-kind tok))

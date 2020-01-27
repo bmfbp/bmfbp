@@ -1,5 +1,7 @@
 (in-package :arrowgrams/compiler/back-end/collector)
 
+; (:code collector (:parse) (:out :error) #'arrowgrams/compiler/back-end/collector::collector-react #'arrowgrams/compiler/back-end/collector::collector-first-time)
+
 (defparameter *collector-state* nil)
 
 (defmethod collector-first-time ((self e/part:part))
@@ -30,10 +32,10 @@
             (let ((p (make-instance 'arrowgrams/compiler/back-end/collector::parser :owner self :token-stream (e/event::data e))))
               (ir p)
               (let ((schem (top-schematic p)))
-                (unparse-schematic p))
-              (format *standard-output* "COLLECTOR NIY~%")
-              #+nil(send! self :out (get-output p))
-              (setf *collector-state* :done)))))
+                (unparse-schematic p)
+                (send! self :out (arrowgrams/compiler/back-end::unparsed-token-stream p))
+                (format *standard-output* "COLLECTOR NIY~%")
+                (setf *collector-state* :done))))))
         
         (:done
          (debug-tok :error (format nil "generic parser done, but got ") tok))))))
