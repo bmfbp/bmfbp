@@ -166,7 +166,7 @@
                                      (:file "xform" :depends-on ("package" "ir-grammar" "ir-to-lisp"))))))
 
 (defsystem arrowgrams/compiler/back-end
-  :depends-on (:arrowgrams :cl-event-passing :sl :cl-ppcre :loops :cl-peg)
+  :depends-on (:arrowgrams :cl-event-passing :sl :loops :cl-peg)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -178,7 +178,6 @@
 				     (:file "tokenize" :depends-on ("util" "token"))
 				     (:file "parens" :depends-on ("util" "token"))
 				     (:file "ws" :depends-on ("util" "token"))
-				     (:file "eol" :depends-on ("util" "token"))
 				     (:file "spaces" :depends-on ("util" "token"))
 				     (:file "strings" :depends-on ("util" "token"))
 				     (:file "symbols" :depends-on ("util" "token"))
@@ -187,17 +186,13 @@
 				     (:file "parse-util" :depends-on ("util" "token"))
 				     (:file "preparse" :depends-on ("util" "token"))
 				     (:file "file-writer" :depends-on ("util" "token"))
-                                     (:file "generic" :depends-on ("util" "token"))
-                                     (:file "unparse-schem" :depends-on ("util" "token"))
-                                     (:file "json-collector" :depends-on ("util" "token" "unparse-schem"))
-                                     (:file "json-emitter" :depends-on ("util" "token"))
-				     (:file "generic-parser" :depends-on ("util" "token" "parse-util" "generic"))
-				     (:file "json-parser" :depends-on ("util" "token" "parse-util" "json-collector" "json-emitter"))
-				     (:file "scanner" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws" "dumper"
-                                                                  "symbols" "integers" "spaces"))
-
-				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "eol" "ws"
+                                     (:file "generic.sl" :depends-on ("util" "token"))
+                                     (:file "schem.unparse" :depends-on ("util" "token" "parse-util"))
+                                     (:file "collector" :depends-on ("util" "token" "schem.unparse"))
+                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util"))
+				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic.sl"))
+				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
-                                                                  "generic-parser" "json-parser"))
+                                                                  "generic-emitter" "collector" "json-emitter"))
 
 				     (:file "wiring" :depends-on ("util"))))))
