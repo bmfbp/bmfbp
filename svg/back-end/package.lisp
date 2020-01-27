@@ -5,6 +5,8 @@
    #:look-ahead-p
    #:emit
 
+   #:send!
+
    #:token
    #:token-kind
    #:token-text
@@ -18,8 +20,8 @@
 (defpackage :arrowgrams/compiler/back-end/generic
   (:use :cl))
 (defpackage :arrowgrams/compiler/back-end/collector
-  (:use :arrowgrams/compiler/back-end))
+  (:use :cl))
 (defpackage :arrowgrams/compiler/back-end/json-emitter
-  (:use :arrowgrams/compiler/back-end))
+  (:use :cl))
 (defpackage :arrowgrams/compiler/back-end/lisp
   (:use :cl))

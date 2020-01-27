@@ -28,8 +28,14 @@
          (ecase (e/event::sym e)
            (:parse
             (format *standard-output* "json emitter NIY~%")
-            (setf *json-emitter-state* :done)))))
+            (setf *json-emitter-state* :done))))
         
         (:done
-         (debug-tok :error (format nil "json emitter done, but got ") tok)))))
+         (debug-tok :error (format nil "json emitter done, but got ") tok))))))
 
+;; proxies
+(defmethod token-kind ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-kind tok))
+(defmethod token-text ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-text tok))
+(defmethod token-position ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-position tok))
+(defmethod token-pulled-p ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-pulled-p tok))
+(defmethod send! ((p e/part:part) pin data) (arrowgrams/compiler/back-end:send! p pin data))

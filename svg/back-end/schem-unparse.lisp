@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end/collector)
+(cl:in-package :arrowgrams/compiler/back-end)
 
 (defparameter *unparse-schem-script*
 "
