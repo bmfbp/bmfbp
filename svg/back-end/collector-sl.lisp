@@ -1,7 +1,4 @@
-(in-package :arrowgrams/compiler/back-end/collector)
-
-(defclass stack ()
-  ((stack :initform nil :accessor stack)))
+(in-package :arrowgrams/compiler/back-end)
 
 (defclass part ()
   ((name :accessor name :initarg :name)
@@ -20,18 +17,8 @@
    (source-list :accessor source-list)
    (sink-list :accessor sink-list)))   
 
-(defclass parser (arrowgrams/compiler/back-end::parser)
-  ((schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
-   (queue-stack :accessor queue-stack :initform (make-instance 'stack))
-   (table-stack :accessor table-stack :initform (make-instance 'stack))
-   (wire-stack :accessor wire-stack :initform (make-instance 'stack))
-   (part-stack :accessor part-stack :initform (make-instance 'stack))
-   (top-schematic :accessor top-schematic)
-   (parts :initform (make-hash-table :test 'equal) :accessor parts)
-   (wires :initform (make-hash-table) :accessor wires)))
 
-
-(defparameter *rules*
+(defparameter *collector-rules*
 "
 = <ir> 
                           schematic-open
@@ -130,7 +117,7 @@
 "
 )
 
-(eval (sl:parse *rules*))
+(eval (sl:parse *collector-rules* "-COLLECTOR"))
 
 ;; parser support
 (defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
@@ -158,15 +145,6 @@
 ;; mechanisms
 
 ;; top level schematic
-
-(defmethod stack-push ((self stack) item)
-  (cl:push item (stack self)))
-
-(defmethod stack-pop ((self stack))
-  (cl:pop (stack self)))
-
-(defmethod stack-top ((self stack))
-  (first (stack self)))
 
 
 (defmethod schematic-open ((self parser))

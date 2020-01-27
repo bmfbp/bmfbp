@@ -1,7 +1,4 @@
-(cl:in-package :arrowgrams/compiler/back-end/collector)
-
-(defclass parser (arrowgrams/compiler/back-end:parser)
-  ())
+(cl:in-package :arrowgrams/compiler/back-end)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
 
@@ -61,9 +58,10 @@
 "
     )
   
-  (let ((sexpr (sl:unparse *unparse-schem-script*)))
-    #+nil(pprint sexpr)
+  (let ((sexpr (sl:unparse *unparse-schem-script* "-UNPARSE")))
+    ;(pprint sexpr)
     (eval sexpr))
+
   )
 
 
