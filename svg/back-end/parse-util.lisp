@@ -16,7 +16,8 @@
    (part-stack :accessor part-stack :initform (make-instance 'stack))
    (top-schematic :accessor top-schematic)
    (parts :initform (make-hash-table :test 'equal) :accessor parts)
-   (wires :initform (make-hash-table) :accessor wires)))
+   (wires :initform (make-hash-table) :accessor wires)
+   (unparse-stack :accessor unparse-stack :initform (make-instance 'stack))))
 
 
 (defun string-token (tok)
@@ -129,3 +130,32 @@
 (defmethod stack-top ((self stack))
   (first (stack self)))
 
+;;;;; unparser support
+
+(defmethod unparse-emit-token ((p parser) tok)
+  (setf (unparsed-token-stream p)
+        (cons tok (unparsed-token-stream p))))
+
+(defmethod unparse-push ((p parser) item)
+  (stack-push (unparse-stack p) item))
+
+(defmethod unparse-pop ((p parser))
+  (stack-pop (unparse-stack p)))
+
+(defmethod unparse-tos ((p parser))
+  (stack-top (unparse-stack p)))
+
+(defmethod unparse-call-external ((p parser) func)
+  (apply func (list p)))
+
+(defmethod unparse-call-rule ((p parser) func)
+  (apply func (list p)))
+
+(defmethod unparse-foreach-in-list ((p parser) func)
+  (dolist (L (unparse-tos p))
+    (apply func (list L))))
+
+(defmethod unparse-foreach-in-table ((p parser) func)
+  (maphash #'(lambda (key val)
+               (apply func (list val)))
+           (unparse-tos p)))
