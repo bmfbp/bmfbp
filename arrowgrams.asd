@@ -186,11 +186,12 @@
 				     (:file "parse-util" :depends-on ("util" "token"))
 				     (:file "preparse" :depends-on ("util" "token"))
 				     (:file "file-writer" :depends-on ("util" "token"))
-                                     (:file "generic.sl" :depends-on ("util" "token"))
-                                     (:file "schem.unparse" :depends-on ("util" "token" "parse-util"))
-                                     (:file "collector" :depends-on ("util" "token" "schem.unparse"))
+                                     (:file "schem-unparse" :depends-on ("util" "token" "parse-util"))
+                                     (:file "collector-sl" :depends-on ("util" "token"))
+                                     (:file "collector" :depends-on ("util" "token" "collector-sl" "schem-unparse"))
                                      (:file "json-emitter" :depends-on ("util" "token" "parse-util"))
-				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic.sl"))
+                                     (:file "generic-sl" :depends-on ("util" "token"))
+				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic-sl"))
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
                                                                   "generic-emitter" "collector" "json-emitter"))
