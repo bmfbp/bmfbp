@@ -22,7 +22,7 @@
 
 (defclass parser (arrowgrams/compiler/back-end::parser)
   ((schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
-   (list-stack :accessor list-stack :initform (make-instance 'stack))
+   (queue-stack :accessor queue-stack :initform (make-instance 'stack))
    (table-stack :accessor table-stack :initform (make-instance 'stack))
    (wire-stack :accessor wire-stack :initform (make-instance 'stack))
    (part-stack :accessor part-stack :initform (make-instance 'stack))
@@ -53,13 +53,13 @@
 
 
 = <inputs>
-                                        list-open-new
+                                        queue-open-new
   [ ?symbol :symbol symbol-must-be-nil  
-  | ?lpar :lpar <pin-list> :rpar]       list-close
+  | ?lpar :lpar <pin-list> :rpar]       queue-close
 
-= <outputs>                             list-open-new
+= <outputs>                             queue-open-new
   [ ?symbol :symbol symbol-must-be-nil  
-  | ?lpar :lpar <pin-list> :rpar]       list-close
+  | ?lpar :lpar <pin-list> :rpar]       queue-close
 
 = <part-declarations> 
   :lpar <part-decl-list> :rpar
@@ -73,7 +73,7 @@
   <ident-list>
 
 = <ident-list> 
-  :string                               list-add-string
+  :string                               queue-add-string
   [ ?string <ident-list> ]
 
 = <part-decl-list> 
@@ -105,15 +105,15 @@
   :string
 
 = <wire-list>
-  <wire>                             list-add-wire/pop-wire-stack
+  <wire>                             queue-add-wire/pop-wire-stack
   [ ?lpar <wire-list> ] 
 
 = <wire>
   :lpar                              wire-open-new
-    :integer print-text              wire-set-index
-                                     list-open-new
+    :integer                         wire-set-index
+                                     queue-open-new
     :lpar <part-pin-list> :rpar      wire-set-sources-from-list/pop-list
-                                     list-open-new
+                                     queue-open-new
     :lpar <part-pin-list> :rpar      wire-set-sinks-from-list/pop-list
                                      wire-add-to-table
                                      wire-close/pop
@@ -124,15 +124,14 @@
   [ ?lpar <part-pin-list>]
 
 = <part>
-  :string                             list-add-string
+  :string                             queue-add-string
 = <pin>
-  :string                             list-add-string
+  :string                             queue-add-string
 "
 )
 
-(eval
- (read-from-string
-  (cl-ppcre:regex-replace-all "SL::" (cl:write-to-string (sl:parse *rules*)) "")))
+(eval (sl:parse *rules*))
+
 
 ;; parser support
 (defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
@@ -194,12 +193,12 @@
         (stack-pop (schematic-stack self))))
 
 (defmethod schematic-set-inputs-from-list/pop-list ((self parser))
-  (let ((list (stack-pop (list-stack self))))
+  (let ((list (stack-pop (queue-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (inputs top-schem) list))))
 
 (defmethod schematic-set-outputs-from-list/pop-list ((self parser))
-  (let ((list (stack-pop (list-stack self))))
+  (let ((list (stack-pop (queue-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (outputs top-schem) list))))
 
@@ -219,28 +218,28 @@
 
 ;; list mechanism
 
-(defmethod list-open-new ((self parser))
-  (stack-push (list-stack self) nil))
+(defmethod queue-open-new ((self parser))
+  (stack-push (queue-stack self) nil))
 
-(defmethod list-close ((self parser))
+(defmethod queue-close ((self parser))
   ;; noop - leave TOP on stack
   )
 
-(defmethod list-add-string ((self parser))
+(defmethod queue-add-string ((self parser))
   (let ((str (get-accepted-token-text self)))
-    (let ((top-list (stack-pop (list-stack self))))
+    (let ((top-list (stack-pop (queue-stack self))))
       (let ((result (if (null top-list)
                         (list str)
                       (append top-list (list str)))))
-        (stack-push (list-stack self) result)))))
+        (stack-push (queue-stack self) result)))))
 
-(defmethod list-add-wire/pop-wire-stack ((self parser))
+(defmethod queue-add-wire/pop-wire-stack ((self parser))
   (let ((wire (stack-pop (wire-stack self))))
-    (let ((top-list (stack-pop (list-stack self))))
+    (let ((top-list (stack-pop (queue-stack self))))
       (let ((result (if (null top-list)
                         (list wire)
-                      (cons wire top-list))))
-        (stack-push (list-stack self) result)))))
+                      (append top-list wire))))
+        (stack-push (queue-stack self) result)))))
 
 ;; part mechanism
 
@@ -274,11 +273,11 @@
 
 (defmethod part-set-inputs-from-list/pop-list ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (inputs top) (stack-pop (list-stack self)))))
+    (setf (inputs top) (stack-pop (queue-stack self)))))
 
 (defmethod part-set-outputs-from-list/pop-list ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (outputs top) (stack-pop (list-stack self)))))
+    (setf (outputs top) (stack-pop (queue-stack self)))))
 
 
 ;; wire mechanism
@@ -301,12 +300,12 @@
 
 (defmethod wire-set-sources-from-list/pop-list ((self parser))
   (let ((top-wire (stack-top (wire-stack self))))
-    (let ((list (stack-pop (list-stack self))))
+    (let ((list (stack-pop (queue-stack self))))
       (setf (source-list top-wire) list))))
 
 (defmethod wire-set-sinks-from-list/pop-list ((self parser))
   (let ((top-wire (stack-top (wire-stack self))))
-    (let ((list (stack-pop (list-stack self))))
+    (let ((list (stack-pop (queue-stack self))))
       (setf (sink-list top-wire) list))))
 
 ;; table

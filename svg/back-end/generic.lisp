@@ -59,7 +59,7 @@
 
 = <wire>
   :lpar
-    :integer print-text
+    :integer
     :lpar <part-pin-list> :rpar
     :lpar <part-pin-list> :rpar
   :rpar
