@@ -28,7 +28,7 @@
             (:code preparse (:start :token) (:out :request :error) #'preparse-react #'preparse-first-time)
             (:code generic-emitter (:parse) (:out :error) #'generic-emitter-react #'generic-emitter-first-time)
             (:code collector (:parse) (:out :error) #'arrowgrams/compiler/back-end/collector::collector-react #'arrowgrams/compiler/back-end/collector::collector-first-time)
-            (:code json-emitter (:parse) (:out :error) #'arrowgrams/compiler/back-end/json-emitter::json-emitter-react #'arrowgrams/compiler/back-end/json-emitter::json-emitter-first-time)
+            (:code json-emitter (:in) (:out :error) #'arrowgrams/compiler/back-end/json-emitter::json-emitter-react #'arrowgrams/compiler/back-end/json-emitter::json-emitter-first-time)
 
             (:code generic-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
             (:code json-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
@@ -53,7 +53,7 @@
                collector.out -> json-emitter.in
                json-emitter.out -> json-file-writer.write
 
-               scanner.error,generic-parser.error,generic-json-parser.error,preparse.error,
+               scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,
                   generic-file-writer.error,
                   json-file-writer.error,
                   lisp-file-writer.error
