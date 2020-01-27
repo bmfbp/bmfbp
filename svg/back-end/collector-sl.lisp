@@ -127,10 +127,6 @@
 (defmethod call-external ((p parser) func)  (cl:apply func (list p)))
 (defmethod call-rule ((p parser) func)  (cl:apply func (list p)))
 
-;; proxies
-(defmethod get-accepted-token-text ((self parser))
-  (arrowgrams/compiler/back-end:get-accepted-token-text self))
-
 ;; mechanisms used in *rules* above
 (defmethod print-text ((p parser))
   (format (arrowgrams/compiler/back-end:output-stream p)
