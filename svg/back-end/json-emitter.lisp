@@ -34,8 +34,8 @@
          (debug-tok :error (format nil "json emitter done, but got ") tok))))))
 
 ;; proxies
-(defmethod token-kind ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-kind tok))
-(defmethod token-text ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-text tok))
-(defmethod token-position ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-position tok))
-(defmethod token-pulled-p ((tok arrowgrams/compiler/back-end:token)) (arrowgrams/compiler/back-end:token-pulled-p tok))
+(defun token-kind (tok) (arrowgrams/compiler/back-end:token-kind tok))
+(defun token-text (tok) (arrowgrams/compiler/back-end:token-text tok))
+(defun token-position (tok) (arrowgrams/compiler/back-end:token-position tok))
+(defun token-pulled-p (tok) (arrowgrams/compiler/back-end:token-pulled-p tok))
 (defmethod send! ((p e/part:part) pin data) (arrowgrams/compiler/back-end:send! p pin data))

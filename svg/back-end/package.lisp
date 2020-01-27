@@ -1,6 +1,8 @@
 (defpackage :arrowgrams/compiler/back-end
   (:use :cl)
   (:export
+   #:parser
+
    #:need
    #:look-ahead-p
    #:emit

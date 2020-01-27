@@ -1,4 +1,7 @@
-(cl:in-package :arrowgrams/compiler/back-end)
+(cl:in-package :arrowgrams/compiler/back-end/collector)
+
+(defclass unparser (arrowgrams/compiler/back-end:parser)
+  ())
 
 (defparameter *unparse-schem-script*
 "
@@ -56,3 +59,4 @@
 "
 )
 
+(eval (sl:unparse *unparse-schem-script*))
