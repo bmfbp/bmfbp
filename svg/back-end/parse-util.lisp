@@ -266,10 +266,6 @@
   (let ((str (get-accepted-token-text self)))
     (add (stack-top (collection-stack self)) str)))
 
-(defmethod list/add-wire ((self parser))
-  (let ((wire (stack-top (wire-stack self))))
-    (add (stack-top (collection-stack self)) wire)))
-
 ;; wire mechanism
 (defmethod wire/new ((self parser))
   (stack-push (wire-stack self) (make-instance 'wire)))
