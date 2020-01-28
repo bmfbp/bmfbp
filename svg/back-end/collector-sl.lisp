@@ -192,7 +192,7 @@
 ;; pairs
 
 (defmethod pair-open-new ((self parser))
-  (stack-push (pair-stack self) nil))
+  (stack-push (pair-stack self) (make-instance 'pair)))
 
 (defmethod pair-close ((self parser))
   ;; noop - leave TOP on stack
