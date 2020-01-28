@@ -12,6 +12,9 @@
 (defmethod add ((self collection) item)
   (push item (collection self)))
 
+(defmethod as-list ((self collection))
+  (collection self))
+
 ;;;; stack 
 
 (defclass stack ()
@@ -90,7 +93,7 @@
 
 (defmethod accept ((self parser))
   (setf (accepted-token self) (pop (token-stream self)))
-  #+nil(debug-token (accepted-token self)))
+  (debug-token (accepted-token self)))
 
 (defmethod parser-error ((self parser) kind)
   (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first (token-stream self)))))

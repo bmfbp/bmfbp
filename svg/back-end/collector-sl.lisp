@@ -110,6 +110,7 @@
     ?lpar                             part-pin-pair/new
        <part-pin-pair>                part-pin-pair-list/add-pair
                                       part-pin-pair/close-pop
+       <many-part-pin-pairs>
     | !
   ]
 
@@ -126,6 +127,4 @@
 "
 )
 
-
-(pprint (sl:parse *collector-rules* "-COLLECTOR"))
 (eval (sl:parse *collector-rules* "-COLLECTOR"))
