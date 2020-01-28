@@ -11,13 +11,13 @@
 
 (defmethod unparse-inputs ((p parser) string-collection)
   (emit-token p :inputs)
-  (dolist (str (as-list string-list))
+  (dolist (str (as-list string-collection))
     (emit-string p str))
   (emit-token p :end))
 
-(defmethod unparse-outputs ((p parser) string-list)
+(defmethod unparse-outputs ((p parser) string-collection)
   (emit-token p :outputs)
-  (dolist (str string-list)
+  (dolist (str (as-list string-collection))
     (emit-string p str))
   (emit-token p :end))
 
@@ -28,11 +28,11 @@
 
 (defmethod unparse-part ((p parser) part-name part-data wiring-table)
   (emit-token p :inputs)
-  (dolist (pin-name (inputs part-data))
+  (dolist (pin-name (as-list (inputs part-data)))
     (unparse-input-pin p pin-name part-name wiring-table))
   (emit-token p :end)
   (emit-token p :outputs)
-  (dolist (pin-name (outputs p))
+  (dolist (pin-name (as-list (outputs part-data)))
     (unparse-output-pin p pin-name part-name wiring-table))
   (emit-token p :end))
 

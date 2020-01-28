@@ -472,7 +472,7 @@
     result))
 
 (defmethod part-pin-in-wire-sinks-p ((p parser) (wire wire) part-name pin-name)
-  (dolist (sink (sink-list wire))
+  (dolist (sink (as-list (sink-list wire)))
     ;; sink is a pair of strings
     (if (and (string= (pair-first sink) part-name)
                (string= (pair-second sink) pin-name))
@@ -480,7 +480,7 @@
       nil)))
 
 (defmethod part-pin-in-wire-sources-p ((p parser) (wire wire) part-name pin-name)
-  (dolist (source (source-list wire))
+  (dolist (source (as-list (source-list wire)))
     ;; source is a pair of strings
     (if (and (string= (pair-first source) part-name)
                (string= (pair-second source) pin-name))
