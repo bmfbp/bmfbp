@@ -156,11 +156,16 @@
 
 (defmethod unparse-foreach-in-list ((p parser) func)
   (dolist (L (unparse-tos p))
-    (apply func (list L))))
+    (unparse-push p L)
+    (apply func (list p))
+    (unparse-pop p)))
 
 (defmethod unparse-foreach-in-table ((p parser) func)
   (maphash #'(lambda (key val)
-               (apply func (list val)))
+               (declare (ignore key))
+               (unparse-push val)
+               (apply func (list p))
+               (unparse-pop))
            (unparse-tos p)))
 
 ;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
