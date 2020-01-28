@@ -9,9 +9,9 @@
   (emit-string p (slot-value schem 'first-time))
   (unparse-parts  p (slot-value schem 'parts) (slot-value schem 'wiring)))
 
-(defmethod unparse-inputs ((p parser) string-list)
+(defmethod unparse-inputs ((p parser) string-collection)
   (emit-token p :inputs)
-  (dolist (str string-list)
+  (dolist (str (as-list string-list))
     (emit-string p str))
   (emit-token p :end))
 

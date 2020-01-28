@@ -30,7 +30,7 @@
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e))))
-              (ir-collector p)
+              (ir-collector p 0)
               (let ((schem (top-schematic p)))
                 ;(unparse-push p schem)
                 (unparse-schematic p schem)
