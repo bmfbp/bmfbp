@@ -1,5 +1,22 @@
 (in-package :arrowgrams/compiler/back-end)
 
+(defclass part ()
+  ((name :accessor name :initarg :name)
+   (kind :accessor kind)
+   (inputs :accessor inputs)
+   (outputs :accessor outputs)
+   (react :accessor react)
+   (first-time :accessor first-time)))  
+
+(defclass schematic (part)
+  ((parts :accessor parts)
+   (wiring :accessor wiring)))
+
+(defclass wire ()
+  ((index :accessor index)
+   (source-list :accessor source-list)
+   (sink-list :accessor sink-list)))   
+
 ;; class needed by SL, must be called "parser"
 (defclass parser ()
   ((accepted-token :initform nil :accessor accepted-token)
@@ -16,8 +33,8 @@
    (part-stack :accessor part-stack :initform (make-instance 'stack))
    (top-schematic :accessor top-schematic)
    (parts :initform (make-hash-table :test 'equal) :accessor parts)
-   (wires :initform (make-hash-table) :accessor wires)
-   (unparse-stack :accessor unparse-stack :initform (make-instance 'stack))))
+   (wires :initform (make-hash-table) :accessor wires)))
+
 
 
 (defun string-token (tok)
@@ -134,7 +151,7 @@
   (nth n (stack self)))
 
 ;;;;; unparser support
-
+#|
 (defmethod unparse-emit ((p parser) item)
   (setf (unparsed-token-stream p)
         (cons item (unparsed-token-stream p))))
@@ -175,9 +192,53 @@
   (assert (> n 0))
   (let ((item (stack-nth (unparse-stack p) (1- n)))) ;; 1==top
     (unparse-push p item)))
+|#
+
+(defmethod emit-token ((p parser) kind)
+  (send! (owner p) :out (make-token :kind kind)))
+
+(defmethod emit-string ((p parser) str)
+  (send! (owner p) :out (make-token :kind :string :text str)))
+
+(defmethod emit-integer ((p parser) n)
+  (send! (owner p) :out (make-token :kind :integer :text (format nil "~A" n))))
 
 ;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
+#|
 (defmethod send-top ((p parser))
   (let ((str (unparse-tos p)))
     (assert (stringp str))
     (unparse-emit p str)))
+|#
+
+(defmethod lookup-part-pin-in-sinks ((p parser) wiring-table part-name pin-name)
+  (let ((result nil))
+    (maphash #'(lambda (integer-key wire)
+                 (when (part-pin-in-wire-sinks-p p wire part-name pin-name)
+                   (push wire result)))
+             wire-table)
+    result))
+
+(defmethod lookup-part-pin-in-sources ((p parser) wiring-table part-name pin-name)
+  (let ((result nil))
+    (maphash #'(lambda (integer-key wire)
+                 (when (part-pin-in-wire-sources-p p wire part-name pin-name)
+                   (push wire result)))
+             wire-table)
+    result))
+
+(defmethod part-pin-in-wire-sinks-p ((p parser) (wire wire) part-name pin-name)
+  (dolist (sink (sink-list wire))
+    ;; sink is a pair of strings
+    (if (and (string= (first sink) part-name)
+               (string= (second sink) pin-name))
+        T
+      nil)))
+
+(defmethod part-pin-in-wire-sources-p ((p parser) (wire wire) part-name pin-name)
+  (dolist (source (source-list wire))
+    ;; source is a pair of strings
+    (if (and (string= (first source) part-name)
+               (string= (second source) pin-name))
+        T
+      nil)))

@@ -1,23 +1,5 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defclass part ()
-  ((name :accessor name :initarg :name)
-   (kind :accessor kind)
-   (inputs :accessor inputs)
-   (outputs :accessor outputs)
-   (react :accessor react)
-   (first-time :accessor first-time)))  
-
-(defclass schematic (part)
-  ((parts :accessor parts)
-   (wiring :accessor wiring)))
-
-(defclass wire ()
-  ((index :accessor index)
-   (source-list :accessor source-list)
-   (sink-list :accessor sink-list)))   
-
-
 (defparameter *collector-rules*
 "
 = <ir> 
