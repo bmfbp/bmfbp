@@ -103,7 +103,7 @@
 = <wire-sinks>                        sinks-list/new part-pin-pair-list/new
     :lpar <many-part-pin-pairs> :rpar sinks-list/add-part-pin-pair-list
                                       sinks-list/close-pop
-                                      part-pin-pair-list/pop
+                                      part-pin-pair-list/close-pop
 
 = <many-part-pin-pairs>
   [ 
