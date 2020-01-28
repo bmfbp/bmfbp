@@ -62,7 +62,6 @@
    (output-stream :initform (make-string-output-stream) :accessor output-stream)
    (error-stream :initform *error-output* :accessor error-stream)
    (schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
-   (pair-stack :accessor pair-stack :initform (make-instance 'stack))
    (collection-stack :accessor collection-stack :initform (make-instance 'stack))
    (table-stack :accessor table-stack :initform (make-instance 'stack))
    (wire-stack :accessor wire-stack :initform (make-instance 'stack))
@@ -323,24 +322,24 @@
   (stack-pop (part-pin-pair-list-stack self)))
 
 (defmethod part-pin-pair-list/add-pair ((self parser))
-  (let ((pair (stack-pop (pair-stack self))))
+  (let ((pair (stack-pop (part-pin-pair-stack self))))
     (add (stack-top (part-pin-pair-list-stack self)) pair)))
 
-;; pairs
-(defmethod pair/new ((self parser))
-  (stack-push (pair-stack self) (make-instance 'pair)))
+;; part-pin-pairs
+(defmethod part-pin-pair/new ((self parser))
+  (stack-push (part-pin-pair-stack self) (make-instance 'pair)))
 
-(defmethod pair/close-pop ((self parser))
-  (stack-pop (pair-stack self)))
+(defmethod part-pin-pair/close-pop ((self parser))
+  (stack-pop (part-pin-pair-stack self)))
 
-(defmethod pair/add-first-string ((self parser))
+(defmethod part-pin-pair/add-first-string ((self parser))
   (let ((str (get-accepted-token-text self)))
-    (let ((top-pair (stack-top (pair-stack self))))
+    (let ((top-pair (stack-top (part-pin-pair-stack self))))
       (setf (pair-first top-pair) str))))
 
-(defmethod pair/add-second-string ((self parser))
+(defmethod part-pin-pair/add-second-string ((self parser))
   (let ((str (get-accepted-token-text self)))
-    (let ((top-pair (stack-top (pair-stack self))))
+    (let ((top-pair (stack-top (part-pin-pair-stack self))))
       (setf (pair-second top-pair) str))))
 
 ;; table
