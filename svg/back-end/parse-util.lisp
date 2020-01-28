@@ -130,6 +130,9 @@
 (defmethod stack-top ((self stack))
   (first (stack self)))
 
+(defmethod stack-nth ((self stack) n)
+  (nth n (stack self)))
+
 ;;;;; unparser support
 
 (defmethod unparse-emit ((p parser) item)
@@ -167,6 +170,11 @@
                (apply func (list p))
                (unparse-pop))
            (unparse-tos p)))
+
+(defmethod unparse-dupn ((p parser) n)
+  (assert (> n 0))
+  (let ((item (stack-nth (unparse-stack p) (1- n)))) ;; 1==top
+    (unparse-push p item)))
 
 ;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
 (defmethod send-top ((p parser))
