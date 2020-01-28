@@ -96,11 +96,11 @@
                                       wire/close-pop
 
 = <wire-sources>
-                                      part-pin-pair-list/new
+                                      sources-list/new part-pin-pair-list/new
     :lpar <many-part-pin-pairs> :rpar sources-list/add-part-pin-pair-list
                                       part-pin-pair-list/close-pop
 
-= <wire-sinks>                        sinks-list/new
+= <wire-sinks>                        sinks-list/new part-pin-pair-list/new
     :lpar <many-part-pin-pairs> :rpar sinks-list/add-part-pin-pair-list
                                       sinks-list/close-pop
                                       part-pin-pair-list/pop
