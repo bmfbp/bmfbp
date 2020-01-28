@@ -18,8 +18,8 @@
    (sink-list :accessor sink-list)))   
 
 (defclass pair ()
-  ((pair-first :accessor first)
-   (pair-second :accessor second)))
+  ((pair-first :accessor pair-first)
+   (pair-second :accessor pair-second)))
 
 ;; class needed by SL, must be called "parser"
 (defclass parser ()

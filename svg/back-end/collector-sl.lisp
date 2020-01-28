@@ -191,20 +191,21 @@
 
 ;; pairs
 
-(defmethod pair-add-to-list/pop-pair ((self parser))
-  (let ((q (stack-pop (pair-stack self))))
-
 (defmethod pair-add-first-string ((self parser))
-  (let ((str (accepted-token-text self)))
-    (setf (first (stack-top (pair-stack self))) str)))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top-pair (stack-top (pair-stack self))))
+      (set (pair-first top-pair) str))))
 
 (defmethod pair-add-second-string ((self parser))
-  (let ((str (accepted-token-text self)))
-    (setf (second (stack-top (pair-stack self))) str)))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top-pair (stack-top (pair-stack self))))
+      (set (pair-second top-pair) str))))
 
 (defmethod pair-add-to-list/pop-pair ((self parser))
   (let ((pair (stack-pop (pair-stack self))))
-    (push pair (stack-top (list-stack self)))))
+    (let ((top-list (stack-pop (list-stack self))))
+      (let ((new-list (cons pair top-list)))
+        (stack-push (list-stack self) new-list)))))
 
 ;; part mechanism
 
@@ -238,11 +239,11 @@
 
 (defmethod part-set-inputs-from-list/pop-list ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (inputs top) (stack-pop (queue-stack self)))))
+    (setf (inputs top) (stack-pop (list-stack self)))))
 
 (defmethod part-set-outputs-from-list/pop-list ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (outputs top) (stack-pop (queue-stack self)))))
+    (setf (outputs top) (stack-pop (list-stack self)))))
 
 
 ;; wire mechanism
@@ -265,12 +266,12 @@
 
 (defmethod wire-set-sources-from-list/pop-list ((self parser))
   (let ((top-wire (stack-top (wire-stack self))))
-    (let ((list (stack-pop (queue-stack self))))
+    (let ((list (stack-pop (list-stack self))))
       (setf (source-list top-wire) list))))
 
 (defmethod wire-set-sinks-from-list/pop-list ((self parser))
   (let ((top-wire (stack-top (wire-stack self))))
-    (let ((list (stack-pop (queue-stack self))))
+    (let ((list (stack-pop (list-stack self))))
       (setf (sink-list top-wire) list))))
 
 ;; table
