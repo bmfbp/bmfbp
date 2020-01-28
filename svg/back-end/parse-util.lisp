@@ -1,5 +1,40 @@
 (in-package :arrowgrams/compiler/back-end)
 
+(defclass pair ()
+  ((pair-first :accessor pair-first)
+   (pair-second :accessor pair-second)))
+
+;;;;;;; lists
+
+(defclass collection ()
+  ((collection :accessor collection :initform nil)))
+
+(defmethod add ((self collection) item)
+  (push item (collection self)))
+
+;;;; stack 
+
+(defclass stack ()
+  ((stack :initform nil :accessor stack)))
+
+(defmethod stack-push ((self stack) item)
+  (cl:push item (stack self)))
+
+(defmethod stack-pop ((self stack))
+  (cl:pop (stack self)))
+
+(defmethod stack-top ((self stack))
+  (first (stack self)))
+
+(defmethod stack-nth ((self stack) n)
+  (nth n (stack self)))
+
+;;;;;;;;;
+
+(defclass sinks-list (collection) ())
+(defclass sources-list (collection) ())
+(defclass part-pin-pair-list (collection) ())
+
 (defclass part ()
   ((name :accessor name :initarg :name)
    (kind :accessor kind)
@@ -14,12 +49,8 @@
 
 (defclass wire ()
   ((index :accessor index)
-   (source-list :accessor source-list)
-   (sink-list :accessor sink-list)))   
-
-(defclass pair ()
-  ((pair-first :accessor pair-first)
-   (pair-second :accessor pair-second)))
+   (source-list :accessor source-list :initform (make-instance 'collection))
+   (sink-list :accessor sink-list :initform (make-instance 'collection))))
 
 ;; class needed by SL, must be called "parser"
 (defclass parser ()
@@ -32,10 +63,14 @@
    (error-stream :initform *error-output* :accessor error-stream)
    (schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
    (pair-stack :accessor pair-stack :initform (make-instance 'stack))
-   (list-stack :accessor list-stack :initform (make-instance 'stack))
+   (collection-stack :accessor collection-stack :initform (make-instance 'stack))
    (table-stack :accessor table-stack :initform (make-instance 'stack))
    (wire-stack :accessor wire-stack :initform (make-instance 'stack))
    (part-stack :accessor part-stack :initform (make-instance 'stack))
+   (sinks-list-stack :accessor sinks-list-stack :initform (make-instance 'stack))
+   (sources-list-stack :accessor sources-list-stack :initform (make-instance 'stack))
+   (part-pin-pair-list-stack :accessor part-pin-pair-list-stack :initform (make-instance 'stack))
+   (part-pin-pair-stack :accessor part-pin-pair-stack :initform (make-instance 'stack))
    (top-schematic :accessor top-schematic)
    (parts :initform (make-hash-table :test 'equal) :accessor parts)
    (wires :initform (make-hash-table) :accessor wires)))
@@ -128,8 +163,6 @@
   (format (arrowgrams/compiler/back-end:output-stream p)
           "~a"
           (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
-(defmethod nl ((p parser))
-  (format (arrowgrams/compiler/back-end:output-stream p) "~%"))
 
 (defmethod symbol-must-be-nil ((p parser))
   (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
@@ -140,20 +173,195 @@
 
 ;;;;
 
-(defclass stack ()
-  ((stack :initform nil :accessor stack)))
+;; schematic mechanism
 
-(defmethod stack-push ((self stack) item)
-  (cl:push item (stack self)))
+(defmethod schematic/open ((self parser))
+  (stack-push (schematic-stack self) (make-instance 'schematic :name "self")))
 
-(defmethod stack-pop ((self stack))
-  (cl:pop (stack self)))
+(defmethod schematic/set-kind-from-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top (stack-top (schematic-stack self))))
+      (setf (kind top) str))))
 
-(defmethod stack-top ((self stack))
-  (first (stack self)))
+(defmethod schematic/set-react-from-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top (stack-top (schematic-stack self))))
+      (setf (react top) str))))
 
-(defmethod stack-nth ((self stack) n)
-  (nth n (stack self)))
+(defmethod schematic/set-first-time-from-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top (stack-top (schematic-stack self))))
+      (setf (first-time top) str))))
+
+(defmethod schematic/close-pop ((self parser))
+  (setf (top-schematic self)
+        (stack-pop (schematic-stack self))))
+
+(defmethod schematic/set-inputs-from-list-pop-list ((self parser))
+  (let ((list (stack-pop (collection-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
+      (setf (inputs top-schem) list))))
+
+(defmethod schematic/set-outputs-from-list-pop-list ((self parser))
+  (let ((list (stack-pop (list-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
+      (setf (outputs top-schem) list))))
+
+(defmethod schematic/set-parts-from-table-pop-table ((self parser))
+  (let ((table (stack-pop (table-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
+      (setf (parts top-schem) table))))
+
+(defmethod schematic/set-wiring-from-table-pop-table ((self parser))
+  (let ((table (stack-pop (table-stack self))))
+    (let ((top-schem (stack-top (schematic-stack self))))
+      (setf (wiring top-schem) table))))
+
+
+;; part mechanism
+
+(defmethod part/new ((self parser))
+  (stack-push (part-stack self) (make-instance 'part)))
+
+(defmethod part/close-pop ((self parser))
+  (stack-pop (part-stack self)))
+
+(defmethod part/set-name ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (name top) (get-accepted-token-text self))))
+
+(defmethod part/set-kind ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (kind top) (get-accepted-token-text self))))
+
+(defmethod part/set-react ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (react top) (get-accepted-token-text self))))
+
+(defmethod part/set-first-time ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (first-time top) (get-accepted-token-text self))))
+
+(defmethod part/set-inputs-from-list ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (inputs top) (stack-top (list-stack self)))))
+
+(defmethod part/set-outputs-from-list ((self parser))
+  (let ((top (stack-top (part-stack self))))
+    (setf (outputs top) (stack-top (list-stack self)))))
+
+
+;; list mechanism
+
+(defmethod list/new ((self parser))
+  (stack-push (collection-stack self) (make-instance 'collection)))
+
+(defmethod list/close ((self parser))
+  ;; noop - leave TOP on stack
+  )
+
+(defmethod list/pop ((self parser))
+  (stack-pop (collection-stack self)))
+
+(defmethod list/add-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (add (stack-top (collection-stack self)) str)))
+
+(defmethod list/add-wire ((self parser))
+  (let ((wire (stack-top (wire-stack self))))
+    (add (stack-top (collection-stack self)) wire)))
+
+;; wire mechanism
+(defmethod wire/new ((self parser))
+  (stack-push (wire-stack self) (make-instance 'wire)))
+
+(defmethod wire/close-pop ((self parser))
+  (stack-pop (wire-stack self)))
+
+(defmethod wire/set-index ((self parser))
+  (let ((top-wire (stack-top (wire-stack self))))
+    (setf (index top-wire) (cl:parse-integer (get-accepted-token-text self)))))
+
+(defmethod wire/set-sources-list ((self parser))
+  (let ((sources-list (stack-pop (sources-list self))))
+    (let ((top-wire (stack-top (wire-stack self))))
+      (setf (source-list top-wire) sources-list))))
+
+(defmethod wire/set-sinks-list ((self parser))
+  (let ((sink-list (stack-pop (sinks-list self))))
+    (let ((top-wire (stack-top (wire-stack self))))
+      (setf (sink-list top-wire) sink-list))))
+
+;; sources and sinks
+
+(defmethod sources-list/new ((self parser))
+  (stack-push (sources-list-stack self) (make-instance 'sources-list)))
+
+(defmethod sinks-list/new ((self parser))
+  (stack-push (sinks-list-stack self) (make-instance 'sinks-list)))
+
+(defmethod sources-list/add-part-pin-pair-list ((self parser))
+  (let ((sources-list (stack-top (sources-list-stack self))))
+    (add (stack-top (sources-list-stack self)) sources-list))) 
+
+(defmethod sinks-list/add-part-pin-pair-list ((self parser))
+  (let ((sinks-list (stack-top (sinks-list-stack self))))
+    (add (stack-top (sinks-list-stack self)) sinks-list))) 
+
+(defmethod sources-list/close-pop ((self parser))
+  (stack-pop (sources-list-stack self)))
+
+(defmethod sinks-list/close-pop ((self parser))
+  (stack-pop (sinks-list-stack self)))
+
+;; part-pin-pair-lists
+
+(defmethod part-pin-pair-list/new ((self parser))
+  (stack-push (part-pin-pair-list-stack self) (make-instance 'pair-list)))
+
+(defmethod part-pin-pair-list/close-pop ((self parser))
+  (stack-pop (part-pin-pair-list-stack self)))
+
+(defmethod part-pin-pair-list/add-pair ((self parser))
+  (let ((pair (stack-pop (pair-stack self))))
+    (add (stack-top (part-pin-pair-list-stack self)) pair)))
+
+;; pairs
+(defmethod pair/new ((self parser))
+  (stack-push (pair-stack self) (make-instance 'pair)))
+
+(defmethod pair/close-pop ((self parser))
+  (stack-pop (pair-stack self)))
+
+(defmethod pair/add-first-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top-pair (stack-top (pair-stack self))))
+      (setf (pair-first top-pair) str))))
+
+(defmethod pair/add-second-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top-pair (stack-top (pair-stack self))))
+      (setf (pair-second top-pair) str))))
+
+;; table
+(defmethod table/new ((self parser))
+  (stack-push (table-stack self) (make-hash-table :test 'equal)))
+
+(defmethod table/close-pop ((self parser))
+  (stack-pop (table-stack self)))
+
+(defmethod table/add-part ((self parser))
+  (let ((part (stack-top (part-stack self))))
+    (let ((top-table (stack-top (table-stack self))))
+      (setf (gethash (name part) top-table)
+            part))))
+
+(defmethod table/add-wire ((self parser))
+  (let ((top-table (stack-top (table-stack self))))
+    (let ((top-wire (stack-top (wire-stack self))))
+      (setf (gethash (index top-wire) top-table)
+            top-wire))))
+
 
 ;;;;; unparser support
 #|
@@ -220,7 +428,7 @@
   (let ((result nil))
     (maphash #'(lambda (integer-key wire)
                  (when (part-pin-in-wire-sinks-p p wire part-name pin-name)
-                   (push wire result)))
+                   (push integer-key result)))
              wiring-table)
     result))
 
@@ -228,7 +436,7 @@
   (let ((result nil))
     (maphash #'(lambda (integer-key wire)
                  (when (part-pin-in-wire-sources-p p wire part-name pin-name)
-                   (push wire result)))
+                   (push integer-key result)))
              wiring-table)
     result))
 
