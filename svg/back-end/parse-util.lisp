@@ -317,7 +317,7 @@
 ;; part-pin-pair-lists
 
 (defmethod part-pin-pair-list/new ((self parser))
-  (stack-push (part-pin-pair-list-stack self) (make-instance 'pair-list)))
+  (stack-push (part-pin-pair-list-stack self) (make-instance 'part-pin-pair-list)))
 
 (defmethod part-pin-pair-list/close-pop ((self parser))
   (stack-pop (part-pin-pair-list-stack self)))
