@@ -142,20 +142,51 @@
 (defmethod nl ((self parser))
   (let ((count (indent self)))
     (@:loop
-      (@:exit-when (<= 0 count))
+      (@:exit-when (<= count 0))
       (emit self " ")
       (decf count))
     (emit self "~%")))
       
+(defun debug-indent (stream count)
+  (@:loop
+    (@:exit-when (<= count 0))
+    (format stream " ")
+    (decf count)))
 
+(defun debug-calling (depth caller)
+  (format *error-output* "~&")
+  (debug-indent *error-output* depth)
+  (format *error-output* "~a calling~%" caller))
+
+(defun debug-return (depth caller)
+  (format *error-output* "~&")
+  (debug-indent *error-output* depth)
+  (format *error-output* "return to ~a~%" caller))
+
+(defun debug-in (depth rule)
+  (format *error-output* "~&")
+  (debug-indent *error-output* depth)
+  (format *error-output* "~a~%" rule))
 
 ;; parser support
 (defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
 (defmethod look-ahead ((p parser) token)   (arrowgrams/compiler/back-end:look-ahead-p p token))
 (defmethod output ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
 (defmethod need-nil-symbol ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
-(defmethod call-external ((p parser) func)  (cl:apply func (list p)))
-(defmethod call-rule ((p parser) func)  (cl:apply func (list p)))
+
+(defmethod call-external ((p parser) func depth caller)
+  (debug-calling depth 'mechanism)
+  (cl:apply func (list p))
+  (debug-return depth 'mechanism))
+
+(defmethod call-rule ((p parser) func depth caller)
+  (debug-calling depth caller)
+  (cl:apply func (list p (1+ depth)))
+  (debug-return depth caller))
+
+(defmethod in-rule ((p parser) depth rule-sym)
+  (declare (ignore p))
+  (debug-in depth rule-sym))
 
 ;; mechanisms used in *collector-rules* and *generic-rules*
 (defmethod print-text ((p parser))
@@ -270,7 +301,9 @@
 (defmethod wire/new ((self parser))
   (stack-push (wire-stack self) (make-instance 'wire)))
 
-(defmethod wire/close-pop ((self parser))
+(defmethod wire/close((self parser)))
+
+(defmethod wire/pop ((self parser))
   (stack-pop (wire-stack self)))
 
 (defmethod wire/set-index ((self parser))

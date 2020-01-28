@@ -77,7 +77,7 @@
   :rpar
 
 = <wire-list>
-  <wire>                              table/add-wire  wire/close-pop
+  <wire>                              table/add-wire  wire/pop
   [ ?lpar <wire-list> ] 
 
 = <wire>
@@ -93,7 +93,7 @@
                                       sinks-list/close-pop
 
   :rpar                               table/add-wire
-                                      wire/close-pop
+                                      wire/close
 
 = <wire-sources>
                                       sources-list/new part-pin-pair-list/new
@@ -126,4 +126,6 @@
 "
 )
 
+
+(pprint (sl:parse *collector-rules* "-COLLECTOR"))
 (eval (sl:parse *collector-rules* "-COLLECTOR"))
