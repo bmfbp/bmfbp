@@ -201,12 +201,12 @@
 (defmethod pair-add-first-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top-pair (stack-top (pair-stack self))))
-      (set (pair-first top-pair) str))))
+      (setf (pair-first top-pair) str))))
 
 (defmethod pair-add-second-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top-pair (stack-top (pair-stack self))))
-      (set (pair-second top-pair) str))))
+      (setf (pair-second top-pair) str))))
 
 (defmethod pair-add-to-list/pop-pair ((self parser))
   (let ((pair (stack-pop (pair-stack self))))
