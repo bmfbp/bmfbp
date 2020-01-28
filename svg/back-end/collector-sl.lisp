@@ -36,11 +36,6 @@
 = <part-declarations> 
   :lpar <part-decl-list> :rpar
 
-= <wiring> 
-  :lpar
-    <wire-list>
-  :rpar
-
 = <pin-list> 
   <ident-list>
 
@@ -76,8 +71,13 @@
 = <first-time>
   :string
 
+= <wiring>                            % stack=[table]
+  :lpar                                 
+    <wire-list>
+  :rpar
+
 = <wire-list>
-  <wire>                              list/add-wire  wire/close-pop
+  <wire>                              table/add-wire  wire/close-pop
   [ ?lpar <wire-list> ] 
 
 = <wire>
