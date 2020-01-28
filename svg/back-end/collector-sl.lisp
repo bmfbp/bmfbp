@@ -178,9 +178,18 @@
 (defmethod list-open-new ((self parser))
   (stack-push (list-stack self) nil))
 
+
 (defmethod list-close ((self parser))
   ;; noop - leave TOP on stack
   )
+
+(defmethod list-add-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top-list (stack-pop (list-stack self))))
+      (let ((new-list (cons str top-list)))
+        (stack-push (list-stack self) new-list)))))
+
+;; pairs
 
 (defmethod pair-open-new ((self parser))
   (stack-push (pair-stack self) nil))
@@ -188,8 +197,6 @@
 (defmethod pair-close ((self parser))
   ;; noop - leave TOP on stack
   )
-
-;; pairs
 
 (defmethod pair-add-first-string ((self parser))
   (let ((str (get-accepted-token-text self)))
