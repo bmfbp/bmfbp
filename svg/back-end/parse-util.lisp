@@ -17,6 +17,10 @@
    (source-list :accessor source-list)
    (sink-list :accessor sink-list)))   
 
+(defclass pair ()
+  ((first :accessor first)
+   (second :accessor second)))
+
 ;; class needed by SL, must be called "parser"
 (defclass parser ()
   ((accepted-token :initform nil :accessor accepted-token)
@@ -27,7 +31,8 @@
    (output-stream :initform (make-string-output-stream) :accessor output-stream)
    (error-stream :initform *error-output* :accessor error-stream)
    (schematic-stack :accessor schematic-stack :initform (make-instance 'stack))
-   (queue-stack :accessor queue-stack :initform (make-instance 'stack))
+   (pair-stack :accessor pair-stack :initform (make-instance 'stack))
+   (list-stack :accessor list-stack :initform (make-instance 'stack))
    (table-stack :accessor table-stack :initform (make-instance 'stack))
    (wire-stack :accessor wire-stack :initform (make-instance 'stack))
    (part-stack :accessor part-stack :initform (make-instance 'stack))
@@ -216,7 +221,7 @@
     (maphash #'(lambda (integer-key wire)
                  (when (part-pin-in-wire-sinks-p p wire part-name pin-name)
                    (push wire result)))
-             wire-table)
+             wiring-table)
     result))
 
 (defmethod lookup-part-pin-in-sources ((p parser) wiring-table part-name pin-name)
@@ -224,7 +229,7 @@
     (maphash #'(lambda (integer-key wire)
                  (when (part-pin-in-wire-sources-p p wire part-name pin-name)
                    (push wire result)))
-             wire-table)
+             wiring-table)
     result))
 
 (defmethod part-pin-in-wire-sinks-p ((p parser) (wire wire) part-name pin-name)

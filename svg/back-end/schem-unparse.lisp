@@ -23,13 +23,12 @@
 
 (defmethod unparse-parts ((p parser) parts-table wiring-table)
   (maphash #'(lambda (part-name part-data)
-               (declare (ignore part-data))
-               (unparse-part p part-name wiring-table))
+               (unparse-part p part-name part-data wiring-table))
            parts-table))
 
-(defmethod unparse-part ((p parser) part-name wiring-table)
+(defmethod unparse-part ((p parser) part-name part-data wiring-table)
   (emit-token p :inputs)
-  (dolist (pin-name (inputs p))
+  (dolist (pin-name (inputs part-data))
     (unparse-input-pin p pin-name part-name wiring-table))
   (emit-token p :end)
   (emit-token p :outputs)

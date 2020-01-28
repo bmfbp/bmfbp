@@ -22,13 +22,13 @@
 
 
 = <inputs>
-                                        queue-open-new
+                                        list-open-new
   [ ?symbol :symbol symbol-must-be-nil  
-  | ?lpar :lpar <pin-list> :rpar]       queue-close
+  | ?lpar :lpar <pin-list> :rpar]       list-close
 
-= <outputs>                             queue-open-new
+= <outputs>                             list-open-new
   [ ?symbol :symbol symbol-must-be-nil  
-  | ?lpar :lpar <pin-list> :rpar]       queue-close
+  | ?lpar :lpar <pin-list> :rpar]       list-close
 
 = <part-declarations> 
   :lpar <part-decl-list> :rpar
@@ -42,7 +42,7 @@
   <ident-list>
 
 = <ident-list> 
-  :string                               queue-add-string
+  :string                               list-add-string
   [ ?string <ident-list> ]
 
 = <part-decl-list> 
@@ -74,28 +74,30 @@
   :string
 
 = <wire-list>
-  <wire>                             queue-add-wire/pop-wire-stack
+  <wire>                             list-add-wire/pop-wire-stack
   [ ?lpar <wire-list> ] 
 
 = <wire>
   :lpar                              wire-open-new
     :integer                         wire-set-index
-                                     queue-open-new
+                                     list-open-new
     :lpar <part-pin-list> :rpar      wire-set-sources-from-list/pop-list
-                                     queue-open-new
+                                     list-open-new
     :lpar <part-pin-list> :rpar      wire-set-sinks-from-list/pop-list
                                      wire-add-to-table
                                      wire-close/pop
   :rpar
 
 = <part-pin-list> 
-  :lpar <part> <pin> :rpar            
+  :lpar                              pair-open-new
+    <part> <pin> 
+  :rpar                              pair-close pair-add-to-list/pop-pair
   [ ?lpar <part-pin-list>]
 
 = <part>
-  :string                             queue-add-string
+  :string                             pair-add-first-string
 = <pin>
-  :string                             queue-add-string
+  :string                             pair-add-second-string
 "
 )
 
@@ -148,12 +150,12 @@
         (stack-pop (schematic-stack self))))
 
 (defmethod schematic-set-inputs-from-list/pop-list ((self parser))
-  (let ((list (stack-pop (queue-stack self))))
+  (let ((list (stack-pop (list-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (inputs top-schem) list))))
 
 (defmethod schematic-set-outputs-from-list/pop-list ((self parser))
-  (let ((list (stack-pop (queue-stack self))))
+  (let ((list (stack-pop (list-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (outputs top-schem) list))))
 
@@ -173,28 +175,36 @@
 
 ;; list mechanism
 
-(defmethod queue-open-new ((self parser))
-  (stack-push (queue-stack self) nil))
+(defmethod list-open-new ((self parser))
+  (stack-push (list-stack self) nil))
 
-(defmethod queue-close ((self parser))
+(defmethod list-close ((self parser))
   ;; noop - leave TOP on stack
   )
 
-(defmethod queue-add-string ((self parser))
-  (let ((str (get-accepted-token-text self)))
-    (let ((top-list (stack-pop (queue-stack self))))
-      (let ((result (if (null top-list)
-                        (list str)
-                      (append top-list (list str)))))
-        (stack-push (queue-stack self) result)))))
+(defmethod pair-open-new ((self parser))
+  (stack-push (pair-stack self) nil))
 
-(defmethod queue-add-wire/pop-wire-stack ((self parser))
-  (let ((wire (stack-pop (wire-stack self))))
-    (let ((top-list (stack-pop (queue-stack self))))
-      (let ((result (if (null top-list)
-                        (list wire)
-                      (append top-list wire))))
-        (stack-push (queue-stack self) result)))))
+(defmethod pair-close ((self parser))
+  ;; noop - leave TOP on stack
+  )
+
+;; pairs
+
+(defmethod pair-add-to-list/pop-pair ((self parser))
+  (let ((q (stack-pop (pair-stack self))))
+
+(defmethod pair-add-first-string ((self parser))
+  (let ((str (accepted-token-text self)))
+    (setf (first (stack-top (pair-stack self))) str)))
+
+(defmethod pair-add-second-string ((self parser))
+  (let ((str (accepted-token-text self)))
+    (setf (second (stack-top (pair-stack self))) str)))
+
+(defmethod pair-add-to-list/pop-pair ((self parser))
+  (let ((pair (stack-pop (pair-stack self))))
+    (push pair (stack-top (list-stack self)))))
 
 ;; part mechanism
 
