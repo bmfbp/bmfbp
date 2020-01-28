@@ -18,8 +18,8 @@
    (sink-list :accessor sink-list)))   
 
 (defclass pair ()
-  ((first :accessor first)
-   (second :accessor second)))
+  ((pair-first :accessor first)
+   (pair-second :accessor second)))
 
 ;; class needed by SL, must be called "parser"
 (defclass parser ()
@@ -235,15 +235,15 @@
 (defmethod part-pin-in-wire-sinks-p ((p parser) (wire wire) part-name pin-name)
   (dolist (sink (sink-list wire))
     ;; sink is a pair of strings
-    (if (and (string= (first sink) part-name)
-               (string= (second sink) pin-name))
+    (if (and (string= (pair-first sink) part-name)
+               (string= (pair-second sink) pin-name))
         T
       nil)))
 
 (defmethod part-pin-in-wire-sources-p ((p parser) (wire wire) part-name pin-name)
   (dolist (source (source-list wire))
     ;; source is a pair of strings
-    (if (and (string= (first source) part-name)
-               (string= (second source) pin-name))
+    (if (and (string= (pair-first source) part-name)
+               (string= (pair-second source) pin-name))
         T
       nil)))
