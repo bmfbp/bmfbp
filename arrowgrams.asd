@@ -187,7 +187,7 @@
 				     (:file "preparse" :depends-on ("util" "token"))
 				     (:file "file-writer" :depends-on ("util" "token"))
                                      (:file "schem-unparse" :depends-on ("util" "token" "parse-util"))
-                                     (:file "collector-sl" :depends-on ("util" "token" "parse-uil"))
+                                     (:file "collector-sl" :depends-on ("util" "token" "parse-util"))
                                      (:file "collector" :depends-on ("util" "token" "parse-util" "collector-sl" "schem-unparse"))
                                      (:file "json-emitter" :depends-on ("util" "token" "parse-util"))
                                      (:file "generic-sl" :depends-on ("util" "token"))

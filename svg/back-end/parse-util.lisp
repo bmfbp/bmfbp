@@ -197,13 +197,13 @@
   (setf (top-schematic self)
         (stack-pop (schematic-stack self))))
 
-(defmethod schematic/set-inputs-from-list-pop-list ((self parser))
+(defmethod schematic/set-inputs-from-list ((self parser))
   (let ((list (stack-pop (collection-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (inputs top-schem) list))))
 
-(defmethod schematic/set-outputs-from-list-pop-list ((self parser))
-  (let ((list (stack-pop (list-stack self))))
+(defmethod schematic/set-outputs-from-list ((self parser))
+  (let ((list (stack-pop (collection-stack self))))
     (let ((top-schem (stack-top (schematic-stack self))))
       (setf (outputs top-schem) list))))
 
@@ -244,11 +244,11 @@
 
 (defmethod part/set-inputs-from-list ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (inputs top) (stack-top (list-stack self)))))
+    (setf (inputs top) (stack-top (collection-stack self)))))
 
 (defmethod part/set-outputs-from-list ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (outputs top) (stack-top (list-stack self)))))
+    (setf (outputs top) (stack-top (collection-stack self)))))
 
 
 ;; list mechanism
@@ -283,12 +283,12 @@
     (setf (index top-wire) (cl:parse-integer (get-accepted-token-text self)))))
 
 (defmethod wire/set-sources-list ((self parser))
-  (let ((sources-list (stack-pop (sources-list self))))
+  (let ((sources-list (stack-pop (sources-list-stack self))))
     (let ((top-wire (stack-top (wire-stack self))))
       (setf (source-list top-wire) sources-list))))
 
 (defmethod wire/set-sinks-list ((self parser))
-  (let ((sink-list (stack-pop (sinks-list self))))
+  (let ((sink-list (stack-pop (sinks-list-stack self))))
     (let ((top-wire (stack-top (wire-stack self))))
       (setf (sink-list top-wire) sink-list))))
 
