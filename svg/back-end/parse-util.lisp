@@ -505,3 +505,5 @@
 (defmethod uemit-integer ((self parser) n)
   (push (make-token :kind :integer :text (format nil "~A" n)) (unparsed-token-stream self)))
 
+(defmethod uget-unparsed-token-stream ((self parser))
+  (reverse (unparsed-token-stream self)))

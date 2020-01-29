@@ -34,7 +34,7 @@
               (let ((schem (top-schematic p)))
                 ;(unparse-push p schem)
                 (unparse-schematic p schem)
-                (send! self :out (unparsed-token-stream p))
+                (send! self :out (uget-unparsed-token-stream p))
                 (format *standard-output* "COLLECTOR NIY~%")
                 (setf *collector-state* :done))))))
         
