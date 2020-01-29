@@ -338,12 +338,12 @@
 
 (defmethod sources-list/becomes-part-pin-pair-list ((self parser))
   (let ((sources-list (stack-top (sources-list-stack self))))
-    (let ((part-pin-pair-list (stack-top (part-pin-pair-list self))))
+    (let ((part-pin-pair-list (stack-top (part-pin-pair-list-stack self))))
     (become sources-list part-pin-pair-list))))
 
 (defmethod sinks-list/becomes-part-pin-pair-list ((self parser))
   (let ((sinks-list (stack-top (sinks-list-stack self))))
-    (let ((part-pin-pair-list (stack-top (part-pin-pair-list self))))
+    (let ((part-pin-pair-list (stack-top (part-pin-pair-list-stack self))))
     (become sinks-list part-pin-pair-list))))
 
 (defmethod sources-list/close-pop ((self parser))
