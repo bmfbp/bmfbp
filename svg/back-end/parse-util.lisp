@@ -65,7 +65,7 @@
   ((accepted-token :initform nil :accessor accepted-token)
    (owner :initform nil :accessor owner :initarg :owner)
    (token-stream :initform nil :accessor token-stream :initarg :token-stream)
-   (unparsed-token-stream :initform nil :accessor unparsed-token-stream :initarg :token-stream)
+   (unparsed-token-stream :initform nil :accessor unparsed-token-stream)
    (indent :initform 0 :accessor indent)
    (output-stream :initform (make-string-output-stream) :accessor output-stream)
    (error-stream :initform *error-output* :accessor error-stream)
