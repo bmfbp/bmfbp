@@ -493,3 +493,15 @@
                (string= (pair-second source) pin-name))
         T
       nil)))
+
+;; unparse emission
+
+(defmethod uemit-token ((self parser) kind)
+  (push (make-token :kind kind) (unparsed-token-stream self)))
+
+(defmethod uemit-string ((self parser) str)
+  (push (make-token :kind :string :text str) (unparsed-token-stream self)))
+
+(defmethod uemit-integer ((self parser) n)
+  (push (make-token :kind :integer :text (format nil "~A" n)) (unparsed-token-stream self)))
+
