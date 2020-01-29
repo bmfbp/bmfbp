@@ -80,8 +80,8 @@
   <wire>                              table/add-wire  wire/pop
   [ ?lpar <wire-list> ] 
 
-= <wire>
-  :lpar                               wire/new
+= <wire>                                                                 % stacks:{table} <- puts a wire into the tos table
+  :lpar                               wire/new                           % stacks:{wire,table}
     :integer                          wire/set-index
   
                                       sources-list/new
@@ -95,20 +95,16 @@
   :rpar                               table/add-wire
                                       wire/close
 
-= <wire-sources>
-                                      part-pin-pair-list/new
-    :lpar <many-part-pin-pairs> :rpar sources-list/add-part-pin-pair-list
-                                      part-pin-pair-list/close-pop
+= <wire-sources>                                                          % stacks:{sources-list,wire,table}
+                                      part-pin-pair-list/new              % stacks:{part-pin-pair-list, sources-list, wire, table}
+    :lpar <many-part-pin-pairs> :rpar sources-list/becomes-part-pin-pair-list
+                                      part-pin-pair-list/close-pop        % stacks:{sources-list, table}
 
-= <wire-sinks>                        part-pin-pair-list/new
-    :lpar <many-part-pin-pairs> :rpar sinks-list/add-part-pin-pair-list
-                                      part-pin-pair-list/close-pop
-
-= <many-part-pin-pairs>
+= <many-part-pin-pairs>                                                   % stacks:{part-pin-pair-list, sources-list, wire,table}
   [ 
-    ?lpar                             part-pin-pair/new
-       <part-pin-pair>                part-pin-pair-list/add-pair
-                                      part-pin-pair/close-pop
+    ?lpar                             part-pin-pair/new                   % stacks:{part-pin-pair, part-pin-pair-list, sources-list, wire, table}
+       <part-pin-pair>                part-pin-pair-list/add-pair         % stacks:{part-pin-pair, part-pin-pair-list, sources-list, wire,table}
+                                      part-pin-pair/close-pop             % stacks:{part-pin-pair-list, sources-list, wire, table}
        <many-part-pin-pairs>
     | !
   ]
@@ -123,6 +119,11 @@
   :string                             part-pin-pair/add-first-string
 = <pin>
   :string                             part-pin-pair/add-second-string
+
+= <wire-sinks>                        part-pin-pair-list/new
+    :lpar <many-part-pin-pairs> :rpar sinks-list/becomes-part-pin-pair-list
+                                      part-pin-pair-list/close-pop
+
 "
 )
 

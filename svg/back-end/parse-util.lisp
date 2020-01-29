@@ -15,6 +15,11 @@
 (defmethod as-list ((self collection))
   (collection self))
 
+(defmethod become ((self collection) (other collection))
+  ;; overwrite the self-list with the other-list
+  ;; essentially the other-class becomes the self-list, used for making a part-pair-list, then moving it to a sinks-list or a sources-list
+  (setf (collection self) (collection other)))
+
 ;;;; stack 
 
 (defclass stack ()
@@ -331,13 +336,15 @@
 (defmethod sinks-list/new ((self parser))
   (stack-push (sinks-list-stack self) (make-instance 'sinks-list)))
 
-(defmethod sources-list/add-part-pin-pair-list ((self parser))
+(defmethod sources-list/becomes-part-pin-pair-list ((self parser))
   (let ((sources-list (stack-top (sources-list-stack self))))
-    (add (stack-top (sources-list-stack self)) sources-list))) 
+    (let ((part-pin-pair-list (stack-top (part-pin-pair-list self))))
+    (become sources-list part-pin-pair-list))))
 
-(defmethod sinks-list/add-part-pin-pair-list ((self parser))
+(defmethod sinks-list/becomes-part-pin-pair-list ((self parser))
   (let ((sinks-list (stack-top (sinks-list-stack self))))
-    (add (stack-top (sinks-list-stack self)) sinks-list))) 
+    (let ((part-pin-pair-list (stack-top (part-pin-pair-list self))))
+    (become sinks-list part-pin-pair-list))))
 
 (defmethod sources-list/close-pop ((self parser))
   (stack-pop (sources-list-stack self)))
