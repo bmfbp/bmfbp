@@ -64,4 +64,4 @@
 "
 )
 
-(eval (sl:parse *generic-emitter-pass2-rules* "-GENERIC-EMITTER-PASS2-GENERIC"))
+(eval (sl:parse *generic-emitter-pass2-rules* "-EMITTER-PASS2-GENERIC"))

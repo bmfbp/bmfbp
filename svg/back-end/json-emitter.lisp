@@ -32,7 +32,7 @@
             (let ((tokens (e/event:data e)))
               (let ((p (make-instance 'parser :token-stream tokens)))
                 (debug-sl t)
-                (schematic-emitter-pass2-generic p)
+(assert nil)                
                 (debug-sl nil)
                 (send! self :out (get-output p))
                 (setf *json-emitter-state* :done))))))
