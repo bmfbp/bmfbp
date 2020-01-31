@@ -28,6 +28,7 @@
             (:code preparse (:start :token) (:out :request :error) #'preparse-react #'preparse-first-time)
             (:code generic-emitter (:parse) (:out :error) #'generic-emitter-react #'generic-emitter-first-time)
             (:code collector (:parse) (:out :error) #'collector-react #'collector-first-time)
+            (:code emitter-pass2-generic (:in) (:out :error) #'emitter-pass2-generic-react #'emitter-pass2-generic-first-time)
             (:code json-emitter (:in) (:out :error) #'json-emitter-react #'json-emitter-first-time)
 
             (:code generic-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
@@ -48,9 +49,10 @@
                self.json-filename -> json-file-writer.filename
                self.lisp-filename -> lisp-file-writer.filename
 
-               generic-emitter.out -> generic-file-writer.write
+               emitter-pass2-generic -> generic-file-writer.write
 
-               collector.out -> json-emitter.in
+               collector.out -> json-emitter.in,emitter-pass2-generic.in
+
                json-emitter.out -> json-file-writer.write
 
                scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,

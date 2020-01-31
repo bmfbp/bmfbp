@@ -190,12 +190,14 @@
                                      (:file "collector-sl" :depends-on ("util" "token" "parse-util"))
                                      (:file "collector" :depends-on ("util" "token" "parse-util" "collector-sl" "schem-unparse"))
                                      (:file "emitter-pass2-generic-sl" :depends-on ("util" "token" "parse-util"))
+                                     (:file "emitter-pass2-generic" :depends-on ("util" "token" "parse-util" "emitter-pass2-generic-sl"))
                                      (:file "json-emitter-sl" :depends-on ("util" "token" "parse-util"))
-                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util" "emitter-pass2-generic-sl" "json-emitter-sl"))
+                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util" "json-emitter-sl"))
                                      (:file "generic-sl" :depends-on ("util" "token"))
 				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic-sl"))
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
-                                                                  "generic-emitter" "collector" "json-emitter"))
+                                                                  "generic-emitter" "collector"
+                                                                  "emitter-pass2-generic" "json-emitter"))
 
 				     (:file "wiring" :depends-on ("util"))))))
