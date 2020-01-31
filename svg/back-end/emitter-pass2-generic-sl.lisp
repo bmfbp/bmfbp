@@ -1,9 +1,6 @@
 (in-package :arrowgrams/compiler/back-end)
 
 (defparameter *generic-emitter-pass2-rules*
-(in-package :arrowgrams/compiler/back-end)
-
-(defparameter *generic-emitter-pass2-rules*
 "
 = <schematic>
   <name> 
@@ -67,4 +64,4 @@
 "
 )
 
-(eval (sl:parse *json-emitter-rules* "-GENERIC-EMITTER-PASS2-GENERIC"))
+(eval (sl:parse *generic-emitter-pass2-rules* "-GENERIC-EMITTER-PASS2-GENERIC"))
