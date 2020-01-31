@@ -27,6 +27,8 @@
            parts-table))
 
 (defmethod unparse-part ((p parser) part-name part-data wiring-table)
+  (uemit-string p part-name)
+  (uemit-string p (kind part-data))
   (uemit-token p :inputs)
   (dolist (pin-name (as-list (inputs part-data)))
     (unparse-input-pin p pin-name part-name wiring-table))

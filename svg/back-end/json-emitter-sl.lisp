@@ -6,7 +6,7 @@
   <name> 
   <kind>
   <inputs>
-  <ouputs>
+  <outputs>
   <react>
   <first-time>
   <parts>
@@ -34,23 +34,31 @@
   :end
 
 = <list-of-strings>
-  :string 
   [ ?string :string <list-of-strings>
   | ! ]
 
 = <parts>
-  :inputs <inline-input-indices> :end
-  :outputs <inline-ouput-indices> :end
+  :string
+  :string
+  :inputs <multiple-pins-with-indices> :end
+  :outputs <muliple-pins-with-indices> :end
 
-= <inline-input-indices>
-    :string <wire-indices> :end
+= <muliple-pins-with-indices>
+  [ ?string
+    <single-pin-with-indices>
+  | ?symbol
+    :symbol <symbol-must-be-nil>
+  | !]
 
-= <wire-indices> 
-   [ ?integer :integer <wire-indices>
-   | ! ]
+= <single-pin-with-indices>
+    :string
+      <wire-indices>
+    :end
 
-= <inline-ouput-indices>
-    :string <wire-indices> :end
+= <wire-indices>
+  [ ?integer :integer
+  | ! ]
+
 "
 )
 

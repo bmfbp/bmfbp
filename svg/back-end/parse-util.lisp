@@ -180,20 +180,27 @@
     (format stream " ")
     (decf count)))
 
+(defparameter *debug-sl* nil)
+
+(defun debug-sl (bool) (setf *debug-sl* bool))
+
 (defun debug-calling (depth caller)
-  (format *error-output* "~&")
-  (debug-indent *error-output* depth)
-  (format *error-output* "~a calling~%" caller))
+  (when *debug-sl*
+    (format *error-output* "~&")
+    (debug-indent *error-output* depth)
+    (format *error-output* "~a calling~%" caller)))
 
 (defun debug-return (depth caller)
-  (format *error-output* "~&")
-  (debug-indent *error-output* depth)
-  (format *error-output* "return to ~a~%" caller))
+  (when *debug-sl*
+    (format *error-output* "~&")
+    (debug-indent *error-output* depth)
+    (format *error-output* "return to ~a~%" caller)))
 
 (defun debug-in (depth rule)
-  (format *error-output* "~&")
-  (debug-indent *error-output* depth)
-  (format *error-output* "~a~%" rule))
+  (when *debug-sl*
+    (format *error-output* "~&")
+    (debug-indent *error-output* depth)
+    (format *error-output* "~a~%" rule)))
 
 ;; parser support
 (defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
@@ -205,7 +212,7 @@
   (debug-calling depth 'mechanism)
   (cl:apply func (list p))
   (debug-return depth 'mechanism))
-
+  
 (defmethod call-rule ((p parser) func depth caller)
   (debug-calling depth caller)
   (cl:apply func (list p (1+ depth)))
