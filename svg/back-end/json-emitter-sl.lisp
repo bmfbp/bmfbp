@@ -43,7 +43,7 @@
   :inputs <multiple-pins-with-indices> :end
   :outputs <muliple-pins-with-indices> :end
 
-= <muliple-pins-with-indices>
+= <multiple-pins-with-indices>
   [ ?string
     <single-pin-with-indices>
   | ?symbol
