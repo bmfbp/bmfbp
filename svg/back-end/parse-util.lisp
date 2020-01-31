@@ -128,6 +128,7 @@
 
 (defmethod skip-ws ((self parser))
   (@:loop
+    (@:exit-when (null (token-stream self)))
     (@:exit-when (not (eq :ws (token-kind (first (token-stream self))))))
     (pop (token-stream self))))
 
