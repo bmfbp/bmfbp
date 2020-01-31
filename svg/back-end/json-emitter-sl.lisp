@@ -35,7 +35,7 @@
 
 = <list-of-strings>
   :string 
-  [ ? :string <list-of-strings>
+  [ ?string :string <list-of-strings>
   | ! ]
 
 = <parts>
@@ -47,11 +47,11 @@
 
 = <wire-indices> 
    [ ?integer :integer <wire-indices>
-   | ]
+   | ! ]
 
 = <inline-ouput-indices>
     :string <wire-indices> :end
 "
 )
 
-(eval (sl:parse *collector-rules* "-JSON-EMITTER"))
+(eval (sl:parse *json-emitter-rules* "-JSON-EMITTER"))

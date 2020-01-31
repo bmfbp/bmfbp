@@ -29,7 +29,10 @@
            
            (:in
             (format *standard-output* "json emitter NIY~%")
-            (setf *json-emitter-state* :done))))
+            (let ((tokens (e/event:data e))
+                  (emitter-p (make-instance parser :token-stream tokens)))
+              (schematic-json-emitter p)
+              (setf *json-emitter-state* :done)))))
         
         (:done
          (send! self :error (format nil "json emitter done, but received input~%")))))))
