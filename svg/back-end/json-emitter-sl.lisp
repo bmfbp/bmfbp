@@ -50,7 +50,7 @@
     <single-pin-with-indices>
   | ?symbol
     :symbol <symbol-must-be-nil>
-  | !]
+  | ! ]
 
 = <single-pin-with-indices>
     :string

@@ -1,46 +1,70 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defparameter *json-emitter-rules*
-"
-= <reparse-schematic>
-    <name>
-    <kind>
-    <reparse-inputs>
-    <reparse-outputs>
-    <react>
-    <first-time>
-    <reparse-parts>
+(defparameter *generic-emitter-pass2-rules*
+(in-package :arrowgrams/compiler/back-end)
 
-= <name>       :string
-= <kind>       :string
-= <react>      :string
-= <first-time> :string
-  
-= <reparse-inputs>
-  :inputs <list-of-strings> :end
-= <reparse-outputs>
-  :inputs <list-of-strings> :end
+(defparameter *generic-emitter-pass2-rules*
+"
+= <schematic>
+  <name> 
+  <kind>
+  <inputs>
+  <outputs>
+  <react>
+  <first-time>
+  <parts>
+
+= <name>
+  :string
+
+= <kind>
+  :string
+
+= <react>
+  :string
+
+= <first-time>
+  :string
+
+= <inputs>
+  :inputs
+  <list-of-strings>
+  :end
+
+= <outputs>
+  :outputs
+  <list-of-strings>
+  :end
 
 = <list-of-strings>
   [ ?string :string <list-of-strings>
-  | ]
+  | ! ]
 
-= <reparse-parts>
-  [ ?string <reparse-part>
-  | ]
+= <parts>
+  :string
+  :string
+  :inputs <multiple-pins-with-indices> :end
+  :outputs <muliple-pins-with-indices> :end
+  [ ?string <parts>
+  | ! ]
 
-= <reparse-part>
-  <name>
-  <kind>
-  :inputs :string <list-of-wire-indices> :end
-  :outputs :sring <list-of-wire-indices> :end
-  <react>
-  <first-time>
+= <multiple-pins-with-indices>
+  [ ?string
+    <single-pin-with-indices>
+  | ?symbol
+    :symbol <symbol-must-be-nil>
+  | ! ]
 
-= <list-of-wire-indices>
-  [ ?integer :integer <list-of-inputs>
-  | ]
+= <single-pin-with-indices>
+    :string
+      <wire-indices>
+    :end
+
+= <wire-indices>
+  [ ?integer :integer
+  | ! ]
+
 "
 )
 
-(eval (sl:parse *json-emitter-rules* "-EMITTER-PASS2-GENERIC"))
+(eval (sl:parse *json-emitter-rules* "-GENERIC-EMITTER-PASS2-GENERIC"))
