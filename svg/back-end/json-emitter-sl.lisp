@@ -3,7 +3,7 @@
 (defparameter *json-emitter-rules*
 "
 = <schematic>
-  <name>
+  <name> 
   <kind>
   <inputs>
   <ouputs>
