@@ -189,7 +189,8 @@
                                      (:file "schem-unparse" :depends-on ("util" "token" "parse-util"))
                                      (:file "collector-sl" :depends-on ("util" "token" "parse-util"))
                                      (:file "collector" :depends-on ("util" "token" "parse-util" "collector-sl" "schem-unparse"))
-                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util"))
+                                     (:file "json-emitter-sl" :depends-on ("util" "token" "parse-util"))
+                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util" "json-emitter-sl"))
                                      (:file "generic-sl" :depends-on ("util" "token"))
 				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic-sl"))
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
