@@ -103,6 +103,13 @@
         ((eq :ws (token-kind tok)) " ")
         ((eq :integer (token-kind tok)) (format nil "integer ~a" (token-text tok)))
         ((eq :symbol (token-kind tok)) (format nil "symbol ~A" (token-text tok)))
+
+        ;; additions to json-emitter-sl.lisp
+        ((eq :inputs (token-kind tok)) (format nil ":inputs"))
+        ((eq :outputs (token-kind tok)) (format nil ":outputs"))
+        ((eq :end (token-kind tok)) (format nil ":end"))
+        ;;
+
         (t (assert nil))))
 
 (defun debug-token (tok)
