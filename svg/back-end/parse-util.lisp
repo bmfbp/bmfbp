@@ -1,3 +1,15 @@
+;;
+;; sl mechanisms used (see ~/attic/json.sl.lisp)
+;;
+;; :string print-text
+;; :integer print-text
+;; inc dec
+;; nl
+;; symbol-must-be-nil
+;;
+
+
+
 (in-package :arrowgrams/compiler/back-end)
 
 (defclass pair ()
