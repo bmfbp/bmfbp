@@ -49,7 +49,7 @@
                self.json-filename -> json-file-writer.filename
                self.lisp-filename -> lisp-file-writer.filename
 
-               emitter-pass2-generic -> generic-file-writer.write
+               emitter-pass2-generic.out -> generic-file-writer.write
 
                collector.out -> json-emitter.in,emitter-pass2-generic.in
 
