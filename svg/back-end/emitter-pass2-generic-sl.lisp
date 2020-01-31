@@ -38,7 +38,6 @@
   | ! ]
 
 = <parts>
-  break-here
   :string
   :string
   :inputs <multiple-pins-with-indices> :end
@@ -55,7 +54,8 @@
 
 = <single-pin-with-indices>
     :string
-      <wire-indices>
+      [ ?integer <wire-indices>
+      | ! ]
     :end
 
 = <wire-indices>
