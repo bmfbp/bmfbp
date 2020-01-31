@@ -38,6 +38,7 @@
   | ! ]
 
 = <parts>
+  break-here
   :string
   :string
   :inputs <multiple-pins-with-indices> :end

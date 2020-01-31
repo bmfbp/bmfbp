@@ -231,8 +231,9 @@
 (defmethod symbol-must-be-nil ((p parser))
   (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
 
-(defmethod stop-here ((p parser))
+(defmethod break-here ((p parser))
   (format *standard-output* "p is ~A~%" p)
+  (break)
 )
 
 ;;;;

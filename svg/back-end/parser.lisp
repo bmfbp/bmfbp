@@ -36,7 +36,8 @@
             (:code lisp-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
 
             (:schem parser (:start :generic-filename :json-filename :lisp-filename) (:out :error)
-              (scanner preparse generic-emitter collector json-emitter generic-file-writer json-file-writer lisp-file-writer)
+              (scanner preparse generic-emitter collector json-emitter emitter-pass2-generic
+                       generic-file-writer json-file-writer lisp-file-writer)
               "
                self.start -> scanner.start,preparse.start
 
