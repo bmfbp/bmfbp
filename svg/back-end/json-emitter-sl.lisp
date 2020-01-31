@@ -41,27 +41,28 @@
   :string
   :string
   :inputs <multiple-pins-with-indices> :end
-  :outputs <muliple-pins-with-indices> :end
+  :outputs <multiple-pins-with-indices> :end
   [ ?string <parts>
   | ! ]
 
 = <multiple-pins-with-indices>
   [ ?string
     <single-pin-with-indices>
+    <multiple-pins-with-indices>
   | ?symbol
     :symbol <symbol-must-be-nil>
   | ! ]
 
 = <single-pin-with-indices>
     :string
-      <wire-indices>
+      [ ?integer <wire-indices>
+      | ! ]
     :end
 
 = <wire-indices>
   [ ?integer :integer
   | ! ]
 
-"
-)
+")
 
 (eval (sl:parse *json-emitter-rules* "-JSON-EMITTER"))

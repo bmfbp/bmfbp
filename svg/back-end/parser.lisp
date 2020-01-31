@@ -52,7 +52,7 @@
 
                emitter-pass2-generic.out -> generic-file-writer.write
 
-               collector.out -> emitter-pass2-generic.in
+               collector.out -> json-emitter.in,emitter-pass2-generic.in
 
                json-emitter.out -> json-file-writer.write
 
