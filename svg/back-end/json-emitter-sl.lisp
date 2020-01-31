@@ -42,6 +42,8 @@
   :string
   :inputs <multiple-pins-with-indices> :end
   :outputs <muliple-pins-with-indices> :end
+  [ ?string <parts>
+  | ! ]
 
 = <multiple-pins-with-indices>
   [ ?string

@@ -31,7 +31,7 @@
             (format *standard-output* "json emitter NIY~%")
             (let ((tokens (e/event:data e)))
               (let ((p (make-instance 'parser :token-stream tokens)))
-                (debug-sl nil)
+                (debug-sl t)
                 (schematic-json-emitter p)
                 (debug-sl nil)
                 (send! self :out (get-output p))
