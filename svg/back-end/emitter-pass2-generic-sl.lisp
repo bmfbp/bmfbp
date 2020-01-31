@@ -48,7 +48,7 @@
 = <multiple-pins-with-indices>
   [ ?string
     <single-pin-with-indices>
-    <muliple-pins-with-indices>
+    <multiple-pins-with-indices>
   | ?symbol
     :symbol <symbol-must-be-nil>
   | ! ]
