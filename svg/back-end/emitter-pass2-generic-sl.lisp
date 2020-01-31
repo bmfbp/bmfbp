@@ -2,65 +2,44 @@
 
 (defparameter *json-emitter-rules*
 "
-= <schematic>
-  <name> 
-  <kind>
-  <inputs>
-  <outputs>
-  <react>
-  <first-time>
-  <parts>
+= <reparse-schematic>
+    <name>
+    <kind>
+    <reparse-inputs>
+    <reparse-outputs>
+    <react>
+    <first-time>
+    <reparse-parts>
 
-= <name>
-  :string
-
-= <kind>
-  :string
-
-= <react>
-  :string
-
-= <first-time>
-  :string
-
-= <inputs>
-  :inputs
-  <list-of-strings>
-  :end
-
-= <outputs>
-  :outputs
-  <list-of-strings>
-  :end
+= <name>       :string
+= <kind>       :string
+= <react>      :string
+= <first-time> :string
+  
+= <reparse-inputs>
+  :inputs <list-of-strings> :end
+= <reparse-outputs>
+  :inputs <list-of-strings> :end
 
 = <list-of-strings>
   [ ?string :string <list-of-strings>
-  | ! ]
+  | ]
 
-= <parts>
-  :string
-  :string
-  :inputs <multiple-pins-with-indices> :end
-  :outputs <muliple-pins-with-indices> :end
-  [ ?string <parts>
-  | ! ]
+= <reparse-parts>
+  [ ?string <reparse-part>
+  | ]
 
-= <multiple-pins-with-indices>
-  [ ?string
-    <single-pin-with-indices>
-  | ?symbol
-    :symbol <symbol-must-be-nil>
-  | !]
+= <reparse-part>
+  <name>
+  <kind>
+  :inputs :string <list-of-wire-indices> :end
+  :outputs :sring <list-of-wire-indices> :end
+  <react>
+  <first-time>
 
-= <single-pin-with-indices>
-    :string
-      <wire-indices>
-    :end
-
-= <wire-indices>
-  [ ?integer :integer
-  | ! ]
-
+= <list-of-wire-indices>
+  [ ?integer :integer <list-of-inputs>
+  | ]
 "
 )
 
