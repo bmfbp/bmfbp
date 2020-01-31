@@ -3,13 +3,15 @@
 (defparameter *json-emitter-rules*
 "
 = <schematic>
-  <name> 
-  <kind>
+'{' nl
+  <name>  '\"name\" : ' print-text ',' nl
+  <kind>  '\"kind\" : ' print-text ',' nl
   <inputs>
   <outputs>
   <react>
   <first-time>
   <parts>
+'}'
 
 = <name>
   :string
