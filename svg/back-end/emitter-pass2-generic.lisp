@@ -30,7 +30,7 @@
            (:in
             (let ((tokens (e/event:data e)))
               (let ((p (make-instance 'parser :token-stream tokens)))
-                (debug-sl t)
+                (debug-sl nil)
                 (schematic-emitter-pass2-generic p)
                 (debug-sl nil)
                 (send! self :out (get-output p))

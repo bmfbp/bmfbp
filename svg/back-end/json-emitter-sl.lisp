@@ -12,7 +12,8 @@
   <first-time>
   '\"parts\" : {' inc nl
   <parts>
-               dec nl '}' nl
+               dec nl '}'
+dec nl
 '}'
 
 = <name>
@@ -47,12 +48,15 @@
   :string '\"kindName\" : ' print-text ',' nl
   <incount>
   <inmap>
-  :inputs <multiple-pins-with-indices> :end
+  :inputs '\"inPins\" : [' <multiple-pins-with-indices> '],' nl :end
   <outcount>
   <outmap>
-  :outputs <multiple-pins-with-indices> :end
+  :outputs '\"outPins\" : [' <multiple-pins-with-indices> ']' :end
   [ ?string dec nl '},' nl <parts>
-  | ! ]
+  | !
+    dec nl 
+    '}'
+  ]
 
 = <incount>
   :integer '\"inCount\" : ' print-text ',' nl
@@ -66,20 +70,20 @@
   :end
                            dec nl '},' nl
 
+= <outmap>
+  :outmap                  '\"outMap\" : {' inc nl
+    <mapping>
+  :end
+                           dec nl '},' nl
+
 = <mapping>
   [ ?string
     :string               '\"' print-text '\" : '
-    :integer              print-text ',' nl
+    :integer              print-text
+    [ ?string             ',' nl
+    | ! ]                
     <mapping>
-  | ! ]
-
-= <outmap>
-  :outmap
-    :string               '\"' print-text'\" : ' inc nl
-    :integer              print-text ',' nl
-    <mapping>
-  :end
-                          dec nl '},' nl
+  | ! ]                  
 
 = <multiple-pins-with-indices>
   [ ?string
@@ -90,16 +94,15 @@
   | ! ]
 
 = <single-pin-with-indices>
-    :string
+    :string                      '['                
       [ ?integer <wire-indices>
       | ! ]
-    :end
+    :end                         ']' [ ?string ',' | ! ]
 
 = <wire-indices>
-  [ ?integer :integer
+  [ ?integer :integer            print-integer [ ?integer ',' | ! ]
   | ! ]
 
 ")
 
-(eval (sl:parse *json-emitter-rules* "-JSON-EMITTER"))
-
+(eval (sl:parse arrowgrams/compiler/back-end::*json-emitter-rules* "-JSON-EMITTER"))

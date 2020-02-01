@@ -40,7 +40,7 @@
   <ident-list>
 
 = <ident-list> 
-  :string                               list/add-string-as-ident
+  :string                               rm-quotes list/add-string
   [ ?string <ident-list> ]
 
 = <part-decl-list> 
@@ -49,12 +49,12 @@
 = <part-decl>
                                         part/new
   :lpar
-    <name>                              part/set-name
-    <kind>                              part/set-kind
+    <name>                              rm-quotes part/set-name
+    <kind>                              rm-quotes part/set-kind
     <inputs>                            part/set-inputs-from-list list/pop
     <outputs>                           part/set-outputs-from-list list/pop
-    <react>                             part/set-react
-    <first-time>                        part/set-first-time
+    <react>                             rm-quotes part/set-react
+    <first-time>                        rm-quotes part/set-first-time
   :rpar           
                                         table/add-part
                                         part/close-pop
@@ -116,9 +116,9 @@
     :rpar                             
 
 = <part>
-  :string                             part-pin-pair/add-first-string-as-ident
+  :string                             rm-quotes part-pin-pair/add-first-string
 = <pin>
-  :string                             part-pin-pair/add-second-string-as-ident
+  :string                             rm-quotes part-pin-pair/add-second-string
 
 = <wire-sinks>                        part-pin-pair-list/new
     :lpar <many-part-pin-pairs> :rpar sinks-list/becomes-part-pin-pair-list

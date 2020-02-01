@@ -99,13 +99,13 @@
 
 
 
-(defun string-token (tok)
+(defun stringify-token (tok)
   (cond ((eq :lpar (token-kind tok)) "(")
         ((eq :rpar (token-kind tok)) ")")
-        ((eq :string (token-kind tok)) (format nil "~A" (token-text tok)))
+        ((eq :string (token-kind tok)) (format nil ":string /~A/" (token-text tok)))
         ((eq :ws (token-kind tok)) " ")
-        ((eq :integer (token-kind tok)) (format nil "integer ~a" (token-text tok)))
-        ((eq :symbol (token-kind tok)) (format nil "symbol ~A" (token-text tok)))
+        ((eq :integer (token-kind tok)) (format nil ":integer ~a" (token-text tok)))
+        ((eq :symbol (token-kind tok)) (format nil ":symbol ~A" (token-text tok)))
 
         ;; additions to json-emitter-sl.lisp
         ((eq :inputs (token-kind tok)) (format nil ":inputs"))
@@ -117,8 +117,15 @@
 
         (t (assert nil))))
 
+(defparameter *debug-sl* nil)
+(defparameter *debug-accept* nil)
+
+(defun debug-sl (bool) (setf *debug-sl* bool))
+(defun debug-accept (bool) (setf *debug-accept* bool))
+
 (defun debug-token (tok)
-  (format *standard-output* "~a~%" (string-token tok)))
+  (when (or *debug-sl* *debug-accept*)
+    (format *standard-output* "~a~%" (stringify-token tok))))
 
 (defmethod accept ((self parser))
   (setf (accepted-token self) (pop (token-stream self)))
@@ -153,6 +160,10 @@
 
 (defmethod get-accepted-token-text ((self parser))
   (token-text (accepted-token self)))
+
+(defmethod rm-quotes ((self parser))
+  (setf (token-text (accepted-token self))
+        (strip-quotes (token-text (accepted-token self)))))
 
 (defmethod accepted-symbol-must-be-nil ((self parser))
   (if (and (eq :symbol (token-kind (accepted-token self)))
@@ -189,9 +200,6 @@
     (format stream " ")
     (decf count)))
 
-(defparameter *debug-sl* nil)
-
-(defun debug-sl (bool) (setf *debug-sl* bool))
 
 (defun debug-calling (depth caller)
   (when *debug-sl*
@@ -236,6 +244,9 @@
   (format (arrowgrams/compiler/back-end:output-stream p)
           "~a"
           (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
+
+(defmethod print-integer ((p parser))
+  (print-text p))
 
 (defmethod symbol-must-be-nil ((p parser))
   (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
@@ -337,7 +348,7 @@
 (defmethod list/pop ((self parser))
   (stack-pop (collection-stack self)))
 
-(defmethod list/add-string-as-ident ((self parser))
+(defmethod list/add-string ((self parser))
   (let ((str (strip-quotes (get-accepted-token-text self))))
     (add (stack-top (collection-stack self)) str)))
 
@@ -407,12 +418,12 @@
 (defmethod part-pin-pair/close-pop ((self parser))
   (stack-pop (part-pin-pair-stack self)))
 
-(defmethod part-pin-pair/add-first-string-as-ident ((self parser))
+(defmethod part-pin-pair/add-first-string ((self parser))
   (let ((str (strip-quotes (get-accepted-token-text self))))
     (let ((top-pair (stack-top (part-pin-pair-stack self))))
       (setf (pair-first top-pair) str))))
 
-(defmethod part-pin-pair/add-second-string-as-ident ((self parser))
+(defmethod part-pin-pair/add-second-string ((self parser))
   (let ((str (strip-quotes (get-accepted-token-text self))))
     (let ((top-pair (stack-top (part-pin-pair-stack self))))
       (setf (pair-second top-pair) str))))
@@ -460,26 +471,34 @@
 (defmethod lookup-part-pin-in-sources ((p parser) wiring-table part-name pin-name)
   (let ((result nil))
     (maphash #'(lambda (integer-key wire)
-                 (when (part-pin-in-wire-sources-p p wire part-name pin-name)
-                   (push integer-key result)))
+                 (format *standard-output* "wire int ~A~%" integer-key)
+                 (let ((bool (part-pin-in-wire-sources-p p wire part-name pin-name)))
+(format *standard-output* "bool = ~A~%" bool)
+                   (when bool 
+                     (format *standard-output* "~&pushing ~A~%" integer-key)
+                     (push integer-key result))))
              wiring-table)
     result))
 
 (defmethod part-pin-in-wire-sinks-p ((p parser) (wire wire) part-name pin-name)
   (dolist (sink (as-list (sink-list wire)))
     ;; sink is a pair of strings
-    (if (and (string= (pair-first sink) part-name)
+    (when (and (string= (pair-first sink) part-name)
                (string= (pair-second sink) pin-name))
-        T
-      nil)))
+      (return-from part-pin-in-wire-sinks-p t))))
 
 (defmethod part-pin-in-wire-sources-p ((p parser) (wire wire) part-name pin-name)
   (dolist (source (as-list (source-list wire)))
     ;; source is a pair of strings
-    (if (and (string= (pair-first source) part-name)
-               (string= (pair-second source) pin-name))
-        T
-      nil)))
+    (format *standard-output* "part /~A/ pin /~A/ against [~a,~a] --> ~a~%" 
+            part-name pin-name (pair-first source) (pair-second source)
+            (and (string= (pair-first source) part-name)
+               (string= (pair-second source) pin-name)))
+    (let ((ret (and (string= (pair-first source) part-name)
+                    (string= (pair-second source) pin-name))))
+      (format *standard-output* "ret = ~A~%" ret)
+      (when ret
+        (return-from part-pin-in-wire-sources-p t)))))
 
 ;; unparse emission
 
@@ -498,6 +517,7 @@
 ;;; utility functions ;;;
 
 (defun strip-quotes (str)
-  (when (and (char= #\" (char str 0))
-             (char= #\" (char str (1- (length str)))))
-    (subseq str 1 (1- (length str)))))
+  (if (and (char= #\" (char str 0))
+           (char= #\" (char str (1- (length str)))))
+      (subseq str 1 (1- (length str)))
+    str))
