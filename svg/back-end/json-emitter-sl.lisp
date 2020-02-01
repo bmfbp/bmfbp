@@ -42,12 +42,14 @@
   | ! ]
 
 = <parts>
-  '{' nl
+  '{' inc nl
   :string '\"partName\" : ' print-text ',' nl
   :string '\"kindName\" : ' print-text ',' nl
+  :integer
   :inputs <multiple-pins-with-indices> :end
+  :integer
   :outputs <multiple-pins-with-indices> :end
-  [ ?string dec nl '},' nl<parts>
+  [ ?string dec nl '},' nl <parts>
   | ! ]
 
 = <multiple-pins-with-indices>

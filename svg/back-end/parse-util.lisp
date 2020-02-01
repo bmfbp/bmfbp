@@ -27,6 +27,9 @@
 (defmethod as-list ((self collection))
   (collection self))
 
+(defmethod collection-length ((self collection))
+  (length (as-list self)))
+
 (defmethod become ((self collection) (other collection))
   ;; overwrite the self-list with the other-list
   ;; essentially the other-class becomes the self-list, used for making a part-pair-list, then moving it to a sinks-list or a sources-list

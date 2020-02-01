@@ -40,7 +40,9 @@
 = <parts>
   :string
   :string
+  :integer
   :inputs <multiple-pins-with-indices> :end
+  :integer
   :outputs <multiple-pins-with-indices> :end
   [ ?string <parts>
   | ! ]
