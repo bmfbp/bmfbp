@@ -23,9 +23,23 @@
 = <first-time>
   :string
 
+= <inmap>
+  :inmap
+    <mapping>
+  :end
+
+= <mapping>
+  [ ?string :string :integer <mapping>
+  | ! ]
+
 = <inputs>
   :inputs
   <list-of-strings>
+  :end
+
+= <outmap>
+  :outmap
+    <mapping>
   :end
 
 = <outputs>
@@ -41,8 +55,10 @@
   :string
   :string
   :integer
+  <inmap>
   :inputs <multiple-pins-with-indices> :end
   :integer
+  <outmap>
   :outputs <multiple-pins-with-indices> :end
   [ ?string <parts>
   | ! ]

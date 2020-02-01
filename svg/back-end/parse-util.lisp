@@ -110,6 +110,8 @@
         ;; additions to json-emitter-sl.lisp
         ((eq :inputs (token-kind tok)) (format nil ":inputs"))
         ((eq :outputs (token-kind tok)) (format nil ":outputs"))
+        ((eq :inmap (token-kind tok)) (format nil ":inmap"))
+        ((eq :outmap (token-kind tok)) (format nil ":outmap"))
         ((eq :end (token-kind tok)) (format nil ":end"))
         ;;
 
