@@ -45,9 +45,9 @@
   '{' inc nl
   :string '\"partName\" : ' print-text ',' nl
   :string '\"kindName\" : ' print-text ',' nl
-  :integer
+  :integer '\"inCount\" : ' print-text ',' nl
   :inputs <multiple-pins-with-indices> :end
-  :integer
+  :integer '\"outCount\" : ' print-text ',' nl
   :outputs <multiple-pins-with-indices> :end
   [ ?string dec nl '},' nl <parts>
   | ! ]
