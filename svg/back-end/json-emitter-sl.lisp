@@ -45,14 +45,20 @@
   '{' inc nl
   :string '\"partName\" : ' print-text ',' nl
   :string '\"kindName\" : ' print-text ',' nl
-  :integer '\"inCount\" : ' print-text ',' nl
+  <incount>
   <inmap>
   :inputs <multiple-pins-with-indices> :end
+  <outcount>
   <outmap>
-  :integer '\"outCount\" : ' print-text ',' nl
   :outputs <multiple-pins-with-indices> :end
   [ ?string dec nl '},' nl <parts>
   | ! ]
+
+= <incount>
+  :integer '\"inCount\" : ' print-text ',' nl
+
+= <outcount>
+  :integer '\"outCount\" : ' print-text ',' nl
 
 = <inmap>
   :inmap
@@ -60,7 +66,7 @@
   :end
 
 = <mapping>
-  [ ?string :string :integer <inmap>
+  [ ?string :string :integer <mapping>
   | ! ]
 
 = <outmap>
