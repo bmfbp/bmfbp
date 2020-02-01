@@ -167,13 +167,16 @@
 (defmethod dec ((self parser))
   (decf (indent self) 2))
 
-(defmethod nl ((self parser))
+(defmethod print-indent ((self parser))
   (let ((count (indent self)))
     (@:loop
       (@:exit-when (<= count 0))
       (emit self " ")
-      (decf count))
-    (emit self "~%")))
+      (decf count))))
+
+(defmethod nl ((self parser))
+  (emit self "~%")
+  (print-indent self))
       
 (defun debug-indent (stream count)
   (@:loop
@@ -225,6 +228,7 @@
 
 ;; mechanisms used in *collector-rules* and *generic-rules*
 (defmethod print-text ((p parser))
+  (print-indent p)
   (format (arrowgrams/compiler/back-end:output-stream p)
           "~a"
           (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))

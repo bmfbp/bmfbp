@@ -10,7 +10,9 @@
   <outputs>
   <react>
   <first-time>
+  '\"parts\" : {' inc nl
   <parts>
+               dec nl '}' nl
 '}'
 
 = <name>
@@ -40,11 +42,12 @@
   | ! ]
 
 = <parts>
-  :string
-  :string
+  '{' nl
+  :string '\"partName\" : ' print-text ',' nl
+  :string '\"kindName\" : ' print-text ',' nl
   :inputs <multiple-pins-with-indices> :end
   :outputs <multiple-pins-with-indices> :end
-  [ ?string <parts>
+  [ ?string dec nl '},' nl<parts>
   | ! ]
 
 = <multiple-pins-with-indices>
@@ -68,3 +71,4 @@
 ")
 
 (eval (sl:parse *json-emitter-rules* "-JSON-EMITTER"))
+
