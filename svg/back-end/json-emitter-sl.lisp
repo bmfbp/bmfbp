@@ -3,8 +3,8 @@
 (defparameter *json-emitter-rules*
 "
 = <schematic>
-'{' nl
-  <name>  '\"name\" : ' print-text ',' nl
+'{' inc nl
+  <name>
   <kind>  '\"kind\" : ' print-text ',' nl
   <inputs>
   <outputs>
@@ -61,18 +61,25 @@
   :integer '\"outCount\" : ' print-text ',' nl
 
 = <inmap>
-  :inmap
+  :inmap                  '\"inMap\" : {' inc nl
     <mapping>
   :end
+                           dec nl '},' nl
 
 = <mapping>
-  [ ?string :string :integer <mapping>
+  [ ?string
+    :string               '\"' print-text '\" : '
+    :integer              print-text ',' nl
+    <mapping>
   | ! ]
 
 = <outmap>
   :outmap
+    :string               '\"' print-text'\" : ' inc nl
+    :integer              print-text ',' nl
     <mapping>
   :end
+                          dec nl '},' nl
 
 = <multiple-pins-with-indices>
   [ ?string

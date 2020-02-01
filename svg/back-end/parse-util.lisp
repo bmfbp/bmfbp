@@ -233,7 +233,6 @@
 
 ;; mechanisms used in *collector-rules* and *generic-rules*
 (defmethod print-text ((p parser))
-  (print-indent p)
   (format (arrowgrams/compiler/back-end:output-stream p)
           "~a"
           (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
@@ -338,8 +337,8 @@
 (defmethod list/pop ((self parser))
   (stack-pop (collection-stack self)))
 
-(defmethod list/add-string ((self parser))
-  (let ((str (get-accepted-token-text self)))
+(defmethod list/add-string-as-ident ((self parser))
+  (let ((str (strip-quotes (get-accepted-token-text self))))
     (add (stack-top (collection-stack self)) str)))
 
 ;; wire mechanism
@@ -408,13 +407,13 @@
 (defmethod part-pin-pair/close-pop ((self parser))
   (stack-pop (part-pin-pair-stack self)))
 
-(defmethod part-pin-pair/add-first-string ((self parser))
-  (let ((str (get-accepted-token-text self)))
+(defmethod part-pin-pair/add-first-string-as-ident ((self parser))
+  (let ((str (strip-quotes (get-accepted-token-text self))))
     (let ((top-pair (stack-top (part-pin-pair-stack self))))
       (setf (pair-first top-pair) str))))
 
-(defmethod part-pin-pair/add-second-string ((self parser))
-  (let ((str (get-accepted-token-text self)))
+(defmethod part-pin-pair/add-second-string-as-ident ((self parser))
+  (let ((str (strip-quotes (get-accepted-token-text self))))
     (let ((top-pair (stack-top (part-pin-pair-stack self))))
       (setf (pair-second top-pair) str))))
 
@@ -438,49 +437,6 @@
             top-wire))))
 
 
-;;;;; unparser support
-#|
-(defmethod unparse-emit ((p parser) item)
-  (setf (unparsed-token-stream p)
-        (cons item (unparsed-token-stream p))))
-  
-(defmethod unparse-emit-token ((p parser) tok)
-  (unparse-emit p tok))
-
-(defmethod unparse-push ((p parser) item)
-  (stack-push (unparse-stack p) item))
-
-(defmethod unparse-pop ((p parser))
-  (stack-pop (unparse-stack p)))
-
-(defmethod unparse-tos ((p parser))
-  (stack-top (unparse-stack p)))
-
-(defmethod unparse-call-external ((p parser) func)
-  (apply func (list p)))
-
-(defmethod unparse-call-rule ((p parser) func)
-  (apply func (list p)))
-
-(defmethod unparse-foreach-in-list ((p parser) func)
-  (dolist (L (unparse-tos p))
-    (unparse-push p L)
-    (apply func (list p))
-    (unparse-pop p)))
-
-(defmethod unparse-foreach-in-table ((p parser) func)
-  (maphash #'(lambda (key val)
-               (declare (ignore key))
-               (unparse-push val)
-               (apply func (list p))
-               (unparse-pop))
-           (unparse-tos p)))
-
-(defmethod unparse-dupn ((p parser) n)
-  (assert (> n 0))
-  (let ((item (stack-nth (unparse-stack p) (1- n)))) ;; 1==top
-    (unparse-push p item)))
-|#
 
 (defmethod emit-token ((p parser) kind)
   (send! (owner p) :out (make-token :kind kind)))
@@ -492,12 +448,6 @@
   (send! (owner p) :out (make-token :kind :integer :text (format nil "~A" n))))
 
 ;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
-#|
-(defmethod send-top ((p parser))
-  (let ((str (unparse-tos p)))
-    (assert (stringp str))
-    (unparse-emit p str)))
-|#
 
 (defmethod lookup-part-pin-in-sinks ((p parser) wiring-table part-name pin-name)
   (let ((result nil))
@@ -544,3 +494,10 @@
 
 (defmethod uget-unparsed-token-stream ((self parser))
   (reverse (unparsed-token-stream self)))
+
+;;; utility functions ;;;
+
+(defun strip-quotes (str)
+  (when (and (char= #\" (char str 0))
+             (char= #\" (char str (1- (length str)))))
+    (subseq str 1 (1- (length str)))))

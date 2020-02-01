@@ -40,7 +40,7 @@
   <ident-list>
 
 = <ident-list> 
-  :string                               list/add-string
+  :string                               list/add-string-as-ident
   [ ?string <ident-list> ]
 
 = <part-decl-list> 
@@ -116,9 +116,9 @@
     :rpar                             
 
 = <part>
-  :string                             part-pin-pair/add-first-string
+  :string                             part-pin-pair/add-first-string-as-ident
 = <pin>
-  :string                             part-pin-pair/add-second-string
+  :string                             part-pin-pair/add-second-string-as-ident
 
 = <wire-sinks>                        part-pin-pair-list/new
     :lpar <many-part-pin-pairs> :rpar sinks-list/becomes-part-pin-pair-list
