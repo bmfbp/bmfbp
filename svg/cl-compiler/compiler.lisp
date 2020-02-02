@@ -103,7 +103,7 @@
 		  #'arrowgrams/compiler/input-pins::react #'arrowgrams/compiler/input-pins::first-time)
 	   (:code output-pins (:fb :go) (:add-fact :done :request-fb :error)
 		  #'arrowgrams/compiler/output-pins::react #'arrowgrams/compiler/output-pins::first-time)
-	   (:code ir-emitter (:fb :go) (:out :done :request-fb :error)
+	   (:code ir-emitter (:fb :go) (:out :basename :done :request-fb :error)
 		  #'arrowgrams/compiler/ir-emitter::react #'arrowgrams/compiler/ir-emitter::first-time)
 
 

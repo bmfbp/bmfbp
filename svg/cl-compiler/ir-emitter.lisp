@@ -136,14 +136,12 @@
           
           (let ((self-plist (gethash :self parts)))
             (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
-              (format *standard-output* "~&final: ~S~%" final)
               (let ((filename (asdf:system-relative-pathname :arrowgrams (format nil "svg/cl-compiler/~a.ir" top-name))))
                 (with-open-file (f filename :direction :output :if-exists :supersede)
                   (let ((*print-right-margin* 120))
                     (pprint final f)))
-                #+nil(arrowgrams/compiler/xform::parse-ir filename)
                 (cl-event-passing-user::@send self :out final)
-                #+nil(arrowgrams/compiler/xform::convert-ir-to-lisp filename)))))))))
+                (cl-event-passing-user::@send self :basename top-name)))))))))
 
 (defun replace-ellipse (id ellipse-list)
   (if (member id ellipse-list)
