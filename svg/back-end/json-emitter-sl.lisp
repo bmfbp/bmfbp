@@ -3,13 +3,18 @@
 (defparameter *json-emitter-rules*
 "
 = <schematic>
-  <name> 
-  <kind>
+'{' inc nl
+  <name>
+  <kind>  '\"kind\" : ' print-text ',' nl
   <inputs>
   <outputs>
   <react>
   <first-time>
+  '\"parts\" : {' inc nl
   <parts>
+               dec nl '}'
+dec nl
+'}'
 
 = <name>
   :string
@@ -38,12 +43,47 @@
   | ! ]
 
 = <parts>
-  :string
-  :string
-  :inputs <multiple-pins-with-indices> :end
-  :outputs <multiple-pins-with-indices> :end
-  [ ?string <parts>
-  | ! ]
+  '{' inc nl
+  :string '\"partName\" : ' print-text ',' nl
+  :string '\"kindName\" : ' print-text ',' nl
+  <incount>
+  <inmap>
+  :inputs '\"inPins\" : [' <multiple-pins-with-indices> '],' nl :end
+  <outcount>
+  <outmap>
+  :outputs '\"outPins\" : [' <multiple-pins-with-indices> ']' :end
+  [ ?string dec nl '},' nl <parts>
+  | !
+    dec nl 
+    '}'
+  ]
+
+= <incount>
+  :integer '\"inCount\" : ' print-text ',' nl
+
+= <outcount>
+  :integer '\"outCount\" : ' print-text ',' nl
+
+= <inmap>
+  :inmap                  '\"inMap\" : {' inc nl
+    <mapping>
+  :end
+                           dec nl '},' nl
+
+= <outmap>
+  :outmap                  '\"outMap\" : {' inc nl
+    <mapping>
+  :end
+                           dec nl '},' nl
+
+= <mapping>
+  [ ?string
+    :string               '\"' print-text '\" : '
+    :integer              print-text
+    [ ?string             ',' nl
+    | ! ]                
+    <mapping>
+  | ! ]                  
 
 = <multiple-pins-with-indices>
   [ ?string
@@ -54,15 +94,15 @@
   | ! ]
 
 = <single-pin-with-indices>
-    :string
+    :string                      '['                
       [ ?integer <wire-indices>
       | ! ]
-    :end
+    :end                         ']' [ ?string ',' | ! ]
 
 = <wire-indices>
-  [ ?integer :integer
+  [ ?integer :integer            print-integer [ ?integer ',' | ! ]
   | ! ]
 
 ")
 
-(eval (sl:parse *json-emitter-rules* "-JSON-EMITTER"))
+(eval (sl:parse arrowgrams/compiler/back-end::*json-emitter-rules* "-JSON-EMITTER"))

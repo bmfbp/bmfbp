@@ -29,10 +29,31 @@
 (defmethod unparse-part ((p parser) part-name part-data wiring-table)
   (uemit-string p part-name)
   (uemit-string p (kind part-data))
+  (uemit-integer p (collection-length (inputs part-data)))
+
+  (uemit-token p :inmap)
+  (let ((pin-number 0))
+    (dolist (pin-name (as-list (inputs part-data)))
+      (uemit-string p pin-name)
+      (uemit-integer p pin-number)
+      (incf pin-number)))
+  (uemit-token p :end)
+
   (uemit-token p :inputs)
-  (dolist (pin-name (as-list (inputs part-data)))
+  (dolist (pin-name (as-list (outputs part-data)))
     (unparse-input-pin p pin-name part-name wiring-table))
   (uemit-token p :end)
+
+  (uemit-integer p (collection-length (outputs part-data)))
+
+  (uemit-token p :outmap)
+  (let ((pin-number 0))
+    (dolist (pin-name (as-list (outputs part-data)))
+      (uemit-string p pin-name)
+      (uemit-integer p pin-number)
+      (incf pin-number)))
+  (uemit-token p :end)
+
   (uemit-token p :outputs)
   (dolist (pin-name (as-list (outputs part-data)))
     (unparse-output-pin p pin-name part-name wiring-table))

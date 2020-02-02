@@ -3,6 +3,7 @@
 (defparameter *generic-emitter-pass2-rules*
 "
 = <schematic>
+' generic ' nl
   <name> 
   <kind>
   <inputs>
@@ -23,9 +24,23 @@
 = <first-time>
   :string
 
+= <inmap>
+  :inmap
+    <mapping>
+  :end
+
+= <mapping>
+  [ ?string :string :integer <mapping>
+  | ! ]
+
 = <inputs>
   :inputs
   <list-of-strings>
+  :end
+
+= <outmap>
+  :outmap
+    <mapping>
   :end
 
 = <outputs>
@@ -40,11 +55,19 @@
 = <parts>
   :string
   :string
+  <incount>
+  <inmap>
   :inputs <multiple-pins-with-indices> :end
+  <outcount>
+  <outmap>
   :outputs <multiple-pins-with-indices> :end
   [ ?string <parts>
   | ! ]
 
+= <incount>
+  :integer
+= <outcount>
+  :integer
 = <multiple-pins-with-indices>
   [ ?string
     <single-pin-with-indices>
