@@ -199,10 +199,76 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 
              ))
            
+
+;;;; back end
+
+            (:code tokenize (:start :pull) (:out :error) #'be:tokenize-react #'be:tokenize-first-time)
+            (:code parens (:token) (:out :error) #'be:parens-react #'be:parens-first-time)
+            (:code spaces (:token) (:request :out :error) #'be:spaces-react #'be:spaces-first-time)
+            (:code strings (:token) (:request :out :error) #'be:strings-react #'be:strings-first-time)
+            (:code symbols (:token) (:request :out :error) #'be:symbols-react #'be:symbols-first-time)
+            (:code integers (:token) (:request :out :error) #'be:integers-react #'be:integers-first-time)
+            (:schem scanner (:start :request) (:out :error)
+             (tokenize parens strings symbols spaces integers) ;; parts
+             "
+              self.start -> tokenize.start
+              self.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
+              tokenize.out -> strings.token
+              strings.out -> parens.token
+              parens.out -> spaces.token
+              spaces.out -> symbols.token
+              symbols.out -> integers.token
+              integers.out -> self.out
+
+              tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+             "
+             )
+            (:code preparse (:start :token) (:out :request :error) #'be:preparse-react #'be:preparse-first-time)
+            (:code generic-emitter (:parse) (:out :error) #'be:generic-emitter-react #'be:generic-emitter-first-time)
+            (:code collector (:parse) (:out :error) #'be:collector-react #'be:collector-first-time)
+            (:code emitter-pass2-generic (:in) (:out :error) #'be:emitter-pass2-generic-react #'be:emitter-pass2-generic-first-time)
+            (:code json-emitter (:in) (:out :error) #'be:json-emitter-react #'be:json-emitter-first-time)
+
+            (:code generic-file-writer (:filename :write) (:error) #'be:file-writer-react #'be:file-writer-first-time)
+            (:code json-file-writer (:filename :write) (:error) #'be:file-writer-react #'be:file-writer-first-time)
+            (:code lisp-file-writer (:filename :write) (:error) #'be:file-writer-react #'be:file-writer-first-time)
+
+            (:schem back-end (:start :generic-filename :json-filename :lisp-filename) (:out :error)
+              (scanner preparse generic-emitter collector json-emitter emitter-pass2-generic
+                       generic-file-writer json-file-writer lisp-file-writer)
+              "
+               self.start -> scanner.start,preparse.start
+
+               scanner.out -> preparse.token
+               preparse.request -> scanner.request
+
+               preparse.out -> generic-emitter.parse,collector.parse
+
+               self.generic-filename -> generic-file-writer.filename
+               self.json-filename -> json-file-writer.filename
+               self.lisp-filename -> lisp-file-writer.filename
+
+               emitter-pass2-generic.out -> generic-file-writer.write
+
+               collector.out -> json-emitter.in,emitter-pass2-generic.in
+
+               json-emitter.out -> json-file-writer.write
+
+               scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,
+                  generic-file-writer.error,
+                  json-file-writer.error,
+                  lisp-file-writer.error
+               -> self.error
+
+              ")
+
+;;;;;
+
+
            
            (:schem compiler (:prolog-factbase-filename :prolog-output-filename :dump) (:error)
             ;; parts
-            (compiler-testbed passes)
+            (compiler-testbed passes back-end)
             ;; wiring
             
 "
