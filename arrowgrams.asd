@@ -81,7 +81,7 @@
                                      (:file "input-pins" :depends-on ("package" "classes"))
                                      (:file "output-pins" :depends-on ("package" "classes"))
 
-                                     (:file "emitter" :depends-on ("package" "classes"))
+                                     (:file "ir-emitter" :depends-on ("package" "classes"))
 
                                      (:file "rules-util" :depends-on ("package"))
 
@@ -117,7 +117,7 @@
                                                    "input-pins"
                                                    "output-pins"
 
-						   "emitter"
+						   "ir-emitter"
 
                                                    "rules-util"
                                                    ))))))
