@@ -264,11 +264,12 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 
 ;;;;;
 
+            (:code FILE-NAMER (:in) (:json-filename :generic-filename :lisp-filename :error) #'BE:file-namer-react #'BE:file-namer-first-time)
 
            
            (:schem compiler (:prolog-factbase-filename :prolog-output-filename :dump) (:error)
             ;; parts
-            (compiler-testbed passes back-end)
+            (compiler-testbed passes back-end file-namer)
             ;; wiring
             
 "
@@ -289,6 +290,7 @@ compiler-testbed.error, passes.error -> self.error
 
             ))))
     
+
     (e/util::enable-logging 1)
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug

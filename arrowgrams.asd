@@ -95,6 +95,7 @@
 				     (:file "file-writer" :depends-on ("util" "token"))
                                      (:file "schem-unparse" :depends-on ("util" "token" "parse-util"))
                                      (:file "collector-sl" :depends-on ("util" "token" "parse-util"))
+                                     (:file "file-namer" :depends-on ("package"))
                                      (:file "collector" :depends-on ("util" "token" "parse-util" "collector-sl" "schem-unparse"))
                                      (:file "emitter-pass2-generic-sl" :depends-on ("util" "token" "parse-util"))
                                      (:file "emitter-pass2-generic" :depends-on ("util" "token" "parse-util" "emitter-pass2-generic-sl"))
@@ -105,7 +106,7 @@
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
                                                                   "generic-emitter" "collector"
-                                                                  "emitter-pass2-generic" "json-emitter"))
+                                                                  "emitter-pass2-generic" "json-emitter" "file-namer"))
 
 				     (:file "wiring" :depends-on ("util"))))))
 
@@ -166,7 +167,6 @@
 
                                      (:file "rules-util" :depends-on ("package"))
 
-                                     (:file "file-namer" :depends-on ("package"))
 
                                      (:file "compiler"
                                       :depends-on ("package" "classes"
@@ -203,8 +203,6 @@
 						   "ir-emitter"
 
                                                    "rules-util"
-
-                                                   "file-namer"
 
                                                    ))))))
 
