@@ -136,7 +136,7 @@
           
           (let ((self-plist (gethash :self parts)))
             (let (( final `("self" ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
-              (let ((filename (asdf:system-relative-pathname :arrowgrams (format nil "svg/cl-compiler/~a.ir" top-name))))
+              (let ((filename (asdf:system-relative-pathname :arrowgrams (format nil "svg/cl-compiler/~a.ir" top-name)))) ;; redundant write ir to file for debug
                 (with-open-file (f filename :direction :output :if-exists :supersede)
                   (let ((*print-right-margin* 120))
                     (pprint final f)))

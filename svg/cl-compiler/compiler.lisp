@@ -18,7 +18,32 @@
             ;; parts
             (reader fb writer converter sequencer)
             ;; wiring
-            ((((:self :prolog-factbase-filename)) ((reader :file-name)))
+"
+self.prolog-factbase-filename -> reader.file-name
+self.prolog-output-filename -> writer.filename
+self.dump -> sequencer.finished-pipeline
+self.request-fb -> fb.fb-request
+self.retract-fact -> fb.retract
+
+reader.string-fact -> converter.string-fact
+reader.eof -> converter.eof
+
+converter.converted, self.add-fact -> fb.lisp-fact
+converter.done -> sequencer.finished-reading
+
+sequencer.show -> fb.show
+sequencer.run-pipeline, self.done -> self.go
+sequencer.write -> fb.iterate, writer.start
+
+fb.fb -> self.fb
+fb.next -> writer.next
+fb.no-more -> writer.no-more, sequencer.finished-writing
+
+writer.request -> fb.get-next
+
+converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
+"
+            #+nil((((:self :prolog-factbase-filename)) ((reader :file-name)))
              (((:self :prolog-output-filename)) ((writer :filename)))
              (((:self :dump)) ((sequencer :finished-pipeline)))
              (((:self :request-fb)) ((fb :fb-request)))
