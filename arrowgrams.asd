@@ -166,6 +166,8 @@
 
                                      (:file "rules-util" :depends-on ("package"))
 
+                                     (:file "file-namer" :depends-on ("package"))
+
                                      (:file "compiler"
                                       :depends-on ("package" "classes"
                                                    "reader" "fb" "writer" "convert-to-keywords" "sequencer"
@@ -201,5 +203,8 @@
 						   "ir-emitter"
 
                                                    "rules-util"
+
+                                                   "file-namer"
+
                                                    ))))))
 
