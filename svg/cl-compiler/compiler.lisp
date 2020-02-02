@@ -43,32 +43,7 @@ writer.request -> fb.get-next
 
 converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
 "
-            #+nil((((:self :prolog-factbase-filename)) ((reader :file-name)))
-             (((:self :prolog-output-filename)) ((writer :filename)))
-             (((:self :dump)) ((sequencer :finished-pipeline)))
-             (((:self :request-fb)) ((fb :fb-request)))
-             (((:self :retract-fact)) ((fb :retract)))
-
-             (((reader :string-fact)) ((converter :string-fact)))
-             (((reader :eof)) ((converter :eof)))
-
-             (((converter :converted) (:self :add-fact)) ((fb :lisp-fact)))
-             (((converter :done)) ((sequencer :finished-reading)))
-
-             (((sequencer :show)) ((fb :show)))
-             (((sequencer :run-pipeline) (:self :done)) ((:self :go)))
-             (((sequencer :write))  ((fb :iterate) (writer :start)))
-
-             (((fb :fb)) ((:self :fb)))
-             (((fb :next)) ((writer :next)))
-             (((fb :no-more)) ((writer :no-more) (sequencer :finished-writing)))
-
-
-             (((writer :request)) ((fb :get-next)))
-
-             (((converter :error) (writer :error) (fb :error) (reader :error) (sequencer :error) )
-              ((:self :error)))))
-        
+)        
            (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error)
 		  #'arrowgrams/compiler/ellipse-bounding-boxes::react #'arrowgrams/compiler/ellipse-bounding-boxes::first-time)
 
@@ -230,21 +205,23 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
             (compiler-testbed passes)
             ;; wiring
             
-            (
-             (((:self :prolog-factbase-filename)) ((compiler-testbed :prolog-factbase-filename)))
-             (((:self :prolog-output-filename))   ((compiler-testbed :prolog-output-filename)))
-             (((:self :dump))   ((compiler-testbed :dump)))
-             
-             (((compiler-testbed :go)) ((passes :go)))
-             (((compiler-testbed :fb)) ((passes :fb)))
-             
-             (((passes :request-fb)) ((compiler-testbed :request-fb)))
-             (((passes :add-fact)) ((compiler-testbed :add-fact)))
-             (((passes :retract-fact)) ((compiler-testbed :retract-fact)))
-             (((passes :done)) ((compiler-testbed :done)))
-             
-             (((compiler-testbed :error) (passes :error)) ((:self :error)))
-             )))))
+"
+self.prolog-factbase-filename -> compiler-testbed.prolog-factbase-filename
+self.prolog-output-filename -> compiler-testbed.prolog-output-filename
+self.dump -> compiler-testbed.dump
+
+compiler-testbed.go -> passes.go
+compiler-testbed.fb -> passes.fb
+
+passes.request-fb -> compiler-testbed.request-fb
+passes.add-fact -> compiler-testbed.add-fact
+passes.retract-fact -> compiler-testbed.retract-fact
+passes.done -> compiler-testbed.done
+
+compiler-testbed.error, passes.error -> self.error
+"
+
+            ))))
     
     (e/util::enable-logging 1)
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
