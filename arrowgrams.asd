@@ -29,6 +29,87 @@
                         :components ((:file "test")))))
 
 
+
+(defsystem :arrowgrams/compiler/test
+  :depends-on (:arrowgrams :arrowgrams/clparts :cl-holm-prolog :cl-ppcre)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "cl-compiler-rule-tests"
+                        :pathname "./svg/cl-compiler/"
+                        :components ((:file "package")
+                                     (:file "rules.lisp" :depends-on ("package"))
+                                     (:file "test.lisp" :depends-on ("rules.lisp"))))))
+
+(defsystem arrowgrams/parser
+  :depends-on (:arrowgrams :esrap :cl-event-passing :loops)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/prolog2lisp3"
+			:components ((:file "package")
+                                     (:file "../cl-compiler/package")
+                                     (:file "low-level" :depends-on ("package"))
+                                     (:file "mid-level" :depends-on ("package" "low-level"))
+                                     (:file "ignore" :depends-on ("package"))
+                                     (:file "prolog-rules" :depends-on ("package" "../cl-compiler/package"))
+                                     (:file "test-rule1" :depends-on ("package" "../cl-compiler/package"))
+                                     (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules" "test-rule1"))
+                                     (:file "facts" :depends-on ("package"))
+                                     (:file "gprolog-to-hprolog" :depends-on ("prolog-peg" "facts"))
+                                     (:file "test" :depends-on ("gprolog-to-hprolog" "prolog-peg" "facts"))))))
+
+(defsystem arrowgrams/compiler/xform
+  :depends-on (:arrowgrams :esrap :cl-event-passing :loops :cl-peg)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/xform"
+			:components ((:file "package")
+				     (:file "ir-grammar")
+				     (:file "ir-to-lisp" :depends-on ("ir-grammar"))
+                                     (:file "xform" :depends-on ("package" "ir-grammar" "ir-to-lisp"))))))
+
+(defsystem arrowgrams/compiler/back-end
+  :depends-on (:arrowgrams :cl-event-passing :sl :loops :cl-peg)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./svg/back-end"
+			:components ((:file "package")
+				     (:file "util" :depends-on ("package"))
+				     (:file "token" :depends-on ("package"))
+				     (:file "tokenize" :depends-on ("util" "token"))
+				     (:file "parens" :depends-on ("util" "token"))
+				     (:file "ws" :depends-on ("util" "token"))
+				     (:file "spaces" :depends-on ("util" "token"))
+				     (:file "strings" :depends-on ("util" "token"))
+				     (:file "symbols" :depends-on ("util" "token"))
+				     (:file "integers" :depends-on ("util" "token"))
+				     (:file "dumper" :depends-on ("util" "token"))
+				     (:file "parse-util" :depends-on ("util" "token"))
+				     (:file "preparse" :depends-on ("util" "token"))
+				     (:file "file-writer" :depends-on ("util" "token"))
+                                     (:file "schem-unparse" :depends-on ("util" "token" "parse-util"))
+                                     (:file "collector-sl" :depends-on ("util" "token" "parse-util"))
+                                     (:file "collector" :depends-on ("util" "token" "parse-util" "collector-sl" "schem-unparse"))
+                                     (:file "emitter-pass2-generic-sl" :depends-on ("util" "token" "parse-util"))
+                                     (:file "emitter-pass2-generic" :depends-on ("util" "token" "parse-util" "emitter-pass2-generic-sl"))
+                                     (:file "json-emitter-sl" :depends-on ("util" "token" "parse-util"))
+                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util" "json-emitter-sl"))
+                                     (:file "generic-sl" :depends-on ("util" "token"))
+				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic-sl"))
+				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
+                                                                  "symbols" "integers" "spaces" "preparse" "file-writer"
+                                                                  "generic-emitter" "collector"
+                                                                  "emitter-pass2-generic" "json-emitter"))
+
+				     (:file "wiring" :depends-on ("util"))))))
+
+
 ;;;; 
 ;;;; compiler rev 2, in CL, using Holm prolog
 ;;;;
@@ -122,82 +203,3 @@
                                                    "rules-util"
                                                    ))))))
 
-
-(defsystem :arrowgrams/compiler/test
-  :depends-on (:arrowgrams :arrowgrams/clparts :cl-holm-prolog :cl-ppcre)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-                    (funcall next))
-  :components ((:module "cl-compiler-rule-tests"
-                        :pathname "./svg/cl-compiler/"
-                        :components ((:file "package")
-                                     (:file "rules.lisp" :depends-on ("package"))
-                                     (:file "test.lisp" :depends-on ("rules.lisp"))))))
-
-(defsystem arrowgrams/parser
-  :depends-on (:arrowgrams :esrap :cl-event-passing :loops)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-                    (funcall next))
-  :components ((:module contents
-			:pathname "./svg/prolog2lisp3"
-			:components ((:file "package")
-                                     (:file "../cl-compiler/package")
-                                     (:file "low-level" :depends-on ("package"))
-                                     (:file "mid-level" :depends-on ("package" "low-level"))
-                                     (:file "ignore" :depends-on ("package"))
-                                     (:file "prolog-rules" :depends-on ("package" "../cl-compiler/package"))
-                                     (:file "test-rule1" :depends-on ("package" "../cl-compiler/package"))
-                                     (:file "prolog-peg" :depends-on ("mid-level" "low-level" "ignore" "prolog-rules" "test-rule1"))
-                                     (:file "facts" :depends-on ("package"))
-                                     (:file "gprolog-to-hprolog" :depends-on ("prolog-peg" "facts"))
-                                     (:file "test" :depends-on ("gprolog-to-hprolog" "prolog-peg" "facts"))))))
-
-(defsystem arrowgrams/compiler/xform
-  :depends-on (:arrowgrams :esrap :cl-event-passing :loops :cl-peg)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-                    (funcall next))
-  :components ((:module contents
-			:pathname "./svg/xform"
-			:components ((:file "package")
-				     (:file "ir-grammar")
-				     (:file "ir-to-lisp" :depends-on ("ir-grammar"))
-                                     (:file "xform" :depends-on ("package" "ir-grammar" "ir-to-lisp"))))))
-
-(defsystem arrowgrams/compiler/back-end
-  :depends-on (:arrowgrams :cl-event-passing :sl :loops :cl-peg)
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-                    (funcall next))
-  :components ((:module contents
-			:pathname "./svg/back-end"
-			:components ((:file "package")
-				     (:file "util" :depends-on ("package"))
-				     (:file "token" :depends-on ("package"))
-				     (:file "tokenize" :depends-on ("util" "token"))
-				     (:file "parens" :depends-on ("util" "token"))
-				     (:file "ws" :depends-on ("util" "token"))
-				     (:file "spaces" :depends-on ("util" "token"))
-				     (:file "strings" :depends-on ("util" "token"))
-				     (:file "symbols" :depends-on ("util" "token"))
-				     (:file "integers" :depends-on ("util" "token"))
-				     (:file "dumper" :depends-on ("util" "token"))
-				     (:file "parse-util" :depends-on ("util" "token"))
-				     (:file "preparse" :depends-on ("util" "token"))
-				     (:file "file-writer" :depends-on ("util" "token"))
-                                     (:file "schem-unparse" :depends-on ("util" "token" "parse-util"))
-                                     (:file "collector-sl" :depends-on ("util" "token" "parse-util"))
-                                     (:file "collector" :depends-on ("util" "token" "parse-util" "collector-sl" "schem-unparse"))
-                                     (:file "emitter-pass2-generic-sl" :depends-on ("util" "token" "parse-util"))
-                                     (:file "emitter-pass2-generic" :depends-on ("util" "token" "parse-util" "emitter-pass2-generic-sl"))
-                                     (:file "json-emitter-sl" :depends-on ("util" "token" "parse-util"))
-                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util" "json-emitter-sl"))
-                                     (:file "generic-sl" :depends-on ("util" "token"))
-				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic-sl"))
-				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
-                                                                  "symbols" "integers" "spaces" "preparse" "file-writer"
-                                                                  "generic-emitter" "collector"
-                                                                  "emitter-pass2-generic" "json-emitter"))
-
-				     (:file "wiring" :depends-on ("util"))))))
