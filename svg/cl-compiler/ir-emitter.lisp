@@ -1,6 +1,6 @@
-(in-package :arrowgrams/compiler/emitter)
+(in-package :arrowgrams/compiler/ir-emitter)
 
-; (:code EMITTER (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/EMITTER::react #'arrowgrams/compiler/EMITTER::first-time)
+; (:code IR-EMITTER (:fb :go) (:out :add-fact :done :request-fb :error) #'arrowgrams/compiler/EMITTER::react #'arrowgrams/compiler/EMITTER::first-time)
 
 (defmethod first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
@@ -141,8 +141,9 @@
                 (with-open-file (f filename :direction :output :if-exists :supersede)
                   (let ((*print-right-margin* 120))
                     (pprint final f)))
-                (arrowgrams/compiler/xform::parse-ir filename)
-                (arrowgrams/compiler/xform::convert-ir-to-lisp filename)))))))))
+                #+nil(arrowgrams/compiler/xform::parse-ir filename)
+                (cl-event-passing-user::@send self :out final)
+                #+nil(arrowgrams/compiler/xform::convert-ir-to-lisp filename)))))))))
 
 (defun replace-ellipse (id ellipse-list)
   (if (member id ellipse-list)
