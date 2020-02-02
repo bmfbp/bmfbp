@@ -28,11 +28,10 @@
          (ecase (e/event::sym e)
            
            (:in
-            (format *standard-output* "json emitter NIY~%")
             (let ((tokens (e/event:data e)))
               (let ((p (make-instance 'parser :token-stream tokens)))
                 (debug-sl nil)
-                (debug-accept t)
+                (debug-accept nil)
                 (schematic-json-emitter p)
                 (debug-accept nil)
                 (debug-sl nil)

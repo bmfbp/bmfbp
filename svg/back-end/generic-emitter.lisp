@@ -28,7 +28,6 @@
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e))))
-              (format *error-output* " generic~%" )
               (ir-generic p)
               (send! self :out (get-output p))
               (setf *emitter-state* :done)))))

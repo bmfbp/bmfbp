@@ -471,11 +471,8 @@
 (defmethod lookup-part-pin-in-sources ((p parser) wiring-table part-name pin-name)
   (let ((result nil))
     (maphash #'(lambda (integer-key wire)
-                 (format *standard-output* "wire int ~A~%" integer-key)
                  (let ((bool (part-pin-in-wire-sources-p p wire part-name pin-name)))
-(format *standard-output* "bool = ~A~%" bool)
                    (when bool 
-                     (format *standard-output* "~&pushing ~A~%" integer-key)
                      (push integer-key result))))
              wiring-table)
     result))
@@ -490,13 +487,8 @@
 (defmethod part-pin-in-wire-sources-p ((p parser) (wire wire) part-name pin-name)
   (dolist (source (as-list (source-list wire)))
     ;; source is a pair of strings
-    (format *standard-output* "part /~A/ pin /~A/ against [~a,~a] --> ~a~%" 
-            part-name pin-name (pair-first source) (pair-second source)
-            (and (string= (pair-first source) part-name)
-               (string= (pair-second source) pin-name)))
     (let ((ret (and (string= (pair-first source) part-name)
                     (string= (pair-second source) pin-name))))
-      (format *standard-output* "ret = ~A~%" ret)
       (when ret
         (return-from part-pin-in-wire-sources-p t)))))
 
