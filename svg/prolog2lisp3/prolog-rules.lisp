@@ -2,6 +2,16 @@
 
 (defparameter *all-prolog*
 "
+wspc :-
+    write(user_error,' '),!.
+
+nle :- nl(user_error),!.
+
+we(WE_ARG) :- write(user_error,WE_ARG),!.
+
+wen(WEN_arg):- we(WEN_arg),nle,!.
+
+
 :- initialization(main).
 :- include('head').
 

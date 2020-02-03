@@ -42,10 +42,12 @@
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
         (goal '((:coincidentSinks (:? A) (:? B)))))
+(format *standard-output* ":coinincidentSinks~%")
     (arrowgrams/compiler/util::run-prolog self goal fb))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb)))
         (goal '((:coincidentSources (:? A) (:? B)))))
+(format *standard-output* ":coinincidetSource~%")
     (arrowgrams/compiler/util::run-prolog self goal fb)))
