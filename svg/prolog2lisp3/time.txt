@@ -26,3 +26,12 @@ Allocation   = 6653175584 bytes
 82061 Page faults
 Calls to %EVAL    104143
 NIL
+
+portIntersection with !'s
+User time    =       17.077
+System time  =        0.910
+Elapsed time =       18.095
+Allocation   = 4317159696 bytes
+67724 Page faults
+Calls to %EVAL    104143
+NIL

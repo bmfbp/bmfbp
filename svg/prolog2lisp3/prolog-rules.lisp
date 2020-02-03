@@ -746,14 +746,14 @@ assign_parent_for_port(PortID) :-
     !.
 
 portIntersection(PortID,ParentID):-
-    bounding_box_left(PortID, Left),
-    bounding_box_top(PortID, Top),
-    bounding_box_right(PortID, Right),
-    bounding_box_bottom(PortID, Bottom),
-    bounding_box_left(ParentID, PLeft),
-    bounding_box_top(ParentID, PTop),
-    bounding_box_right(ParentID, PRight),
-    bounding_box_bottom(ParentID, PBottom),
+    bounding_box_left(PortID, Left),!,
+    bounding_box_top(PortID, Top),!,
+    bounding_box_right(PortID, Right),!,
+    bounding_box_bottom(PortID, Bottom),!,
+    bounding_box_left(ParentID, PLeft),!,
+    bounding_box_top(ParentID, PTop),!,
+    bounding_box_right(ParentID, PRight),!,
+    bounding_box_bottom(ParentID, PBottom),!,
     intersects(Left, Top, Right, Bottom, PLeft, PTop, PRight, PBottom).
 
 intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, ParentRight, ParentBottom) :-
@@ -765,6 +765,7 @@ intersects(PortLeft, PortTop, PortRight, PortBottom, ParentLeft, ParentTop, Pare
     PortRight >= ParentLeft,
     PortTop =< ParentBottom,
     PortBottom >= ParentTop.
+
 
 :- include('tail').
 
