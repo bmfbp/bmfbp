@@ -103,14 +103,14 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 		  #'arrowgrams/compiler/input-pins::react #'arrowgrams/compiler/input-pins::first-time)
 	   (:code output-pins (:fb :go) (:add-fact :done :request-fb :error)
 		  #'arrowgrams/compiler/output-pins::react #'arrowgrams/compiler/output-pins::first-time)
-	   (:code ir-emitter (:fb :go) (:out :basename :done :request-fb :error)
+	   (:code ir-emitter (:fb :go) (:ir :basename :done :request-fb :error)
 		  #'arrowgrams/compiler/ir-emitter::react #'arrowgrams/compiler/ir-emitter::first-time)
 
 
            (:code demux (:go) (1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 :error)
             #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
 
-           (:schem passes (:fb :go) (:request-fb :add-fact :retract-fact :done :error)
+           (:schem passes (:fb :go) (:ir :request-fb :add-fact :retract-fact :done :error)
             ;; parts
             (ellipse-bb rectangle-bb text-bb speechbubble-bb assign-parents-to-ellipses
                         find-comments find-metadata add-kinds add-self-ports
@@ -121,6 +121,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 
             ;; wiring
             (
+             (((ir-emitter :ir)) ((:self :ir)))
 
              (((:self :go)) ((demux :go)))
 
@@ -310,3 +311,14 @@ compiler-testbed.error, passes.error -> self.error
                                           (e/part::get-input-pin compiler-net :dump)
                                           T))))))
                                                                  
+
+(defun ctest ()
+  (system:run-shell-command "rm -rf ~/.cache/common-lisp")
+  (load "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/package.lisp")
+  (format *standard-output* "running (cl-user::ppp)~%")
+  (cl-user::ppp)
+  (ql:quickload :arrowgrams/compiler)
+  (hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/")
+  (format *standard-output* "running (arrowgrams/compiler::compiler)~%")
+  (arrowgrams/compiler::compiler))
+(defun cl-user::ctest () (arrowgrams/compiler::ctest))

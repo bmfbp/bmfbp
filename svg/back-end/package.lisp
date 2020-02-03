@@ -48,7 +48,7 @@
    #:file-writer-react
    #:file-writer-first-time
 
-   #:file-namer-writer-react
-   #:file-namer-writer-first-time
+   #:file-namer-react
+   #:file-namer-first-time
 
 ))
