@@ -4,15 +4,16 @@
   (let ((parser-net
          (cl-event-passing-user::@defnetwork parser
 
-            (:code tokenize (:start :pull) (:out :error) #'tokenize-react #'tokenize-first-time)
+            (:code tokenize (:start :ir :pull) (:out :error) #'tokenize-react #'tokenize-first-time)
             (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
             (:code spaces (:token) (:request :out :error) #'spaces-react #'spaces-first-time)
             (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
             (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
             (:code integers (:token) (:request :out :error) #'integers-react #'integers-first-time)
-            (:schem scanner (:start :request) (:out :error)
+            (:schem scanner (:start :request :ir) (:out :error)
              (tokenize parens strings symbols spaces integers) ;; parts
              "
+              self.ir -> tokenize.ir
               self.start -> tokenize.start
               self.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
               tokenize.out -> strings.token
@@ -35,10 +36,12 @@
             (:code json-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
             (:code lisp-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
 
-            (:schem parser (:start :generic-filename :json-filename :lisp-filename) (:out :error)
+            (:schem parser (:start :ir :generic-filename :json-filename :lisp-filename) (:out :error)
               (scanner preparse generic-emitter collector json-emitter emitter-pass2-generic
                        generic-file-writer json-file-writer lisp-file-writer)
               "
+               self.ir -> scanner.ir,preparse.start
+
                self.start -> scanner.start,preparse.start
 
                scanner.out -> preparse.token

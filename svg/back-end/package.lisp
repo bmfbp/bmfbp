@@ -51,4 +51,7 @@
    #:file-namer-react
    #:file-namer-first-time
 
+   #:synchronizer-react
+   #:synchronizer-first-time
+
 ))

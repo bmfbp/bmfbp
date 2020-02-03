@@ -17,6 +17,11 @@
         (let ((str (alexandria:read-file-into-string (e/event:data e))))
           (setf *tokenizer-stream* (make-string-input-stream str))
           (setf *tokenizer-position* 0)
+          (setf *tokenizer-state* :running)))
+       (:ir
+        (let ((str (write-to-string (e/event:data e))))
+          (setf *tokenizer-stream* (make-string-input-stream str))
+          (setf *tokenizer-position* 0)
           (setf *tokenizer-state* :running)))))
 
     (:running

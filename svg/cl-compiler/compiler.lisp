@@ -204,15 +204,17 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 
 ;;;; back end
 
-            (:code tokenize (:start :pull) (:out :error) #'be:tokenize-react #'be:tokenize-first-time)
+            (:code tokenize (:start :ir :pull) (:out :error) #'be:tokenize-react #'be:tokenize-first-time)
             (:code parens (:token) (:out :error) #'be:parens-react #'be:parens-first-time)
             (:code spaces (:token) (:request :out :error) #'be:spaces-react #'be:spaces-first-time)
             (:code strings (:token) (:request :out :error) #'be:strings-react #'be:strings-first-time)
             (:code symbols (:token) (:request :out :error) #'be:symbols-react #'be:symbols-first-time)
             (:code integers (:token) (:request :out :error) #'be:integers-react #'be:integers-first-time)
-            (:schem scanner (:start :request) (:out :error)
+
+            (:schem scanner (:start :ir :request) (:out :error)
              (tokenize parens strings symbols spaces integers) ;; parts
              "
+              self.ir -> tokenize.ir
               self.start -> tokenize.start
               self.request,spaces.request,strings.request,symbols.request,integers.request -> tokenize.pull
               tokenize.out -> strings.token
@@ -235,11 +237,13 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
             (:code json-file-writer (:filename :write) (:error) #'be:file-writer-react #'be:file-writer-first-time)
             (:code lisp-file-writer (:filename :write) (:error) #'be:file-writer-react #'be:file-writer-first-time)
 
-            (:schem back-end (:start :generic-filename :json-filename :lisp-filename) (:out :error)
+
+            (:schem back-end-parser (:start :ir :generic-filename :json-filename :lisp-filename) (:out :error)
               (scanner preparse generic-emitter collector json-emitter emitter-pass2-generic
                        generic-file-writer json-file-writer lisp-file-writer)
               "
                self.start -> scanner.start,preparse.start
+               self.ir -> scanner.ir,preparse.start
 
                scanner.out -> preparse.token
                preparse.request -> scanner.request
@@ -264,9 +268,31 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 
               ")
 
+            (:code synchronizer (:ir :json-filename :generic-filename :lisp-filename) (:ir :json-filename :generic-filename :lisp-filename :error)
+             #'BE:synchronizer-react #'BE:synchronizer-first-time)
+
+            ;; see back-end.drawio / back end
+            (:schem back-end (:ir :json-filename :generic-filename :lisp-filename) (:out :error)
+             (synchronizer back-end-parser)
+             "
+self.ir -> synchronizer.ir
+self.json-filename -> synchronizer.json-filename
+self.generic-filename -> synchronizer.generic-filename
+self.lisp-filename -> synchronizer.lisp-filename
+
+synchronizer.ir -> back-end-parser.ir
+synchronizer.json-filename -> back-end-parser.json-filename
+synchronizer.generic-filename -> back-end-parser.generic-filename
+synchronizer.lisp-filename -> back-end-parser.lisp-filename
+
+back-end-parser.out -> self.out
+back-end-parser.error -> self.error
+")
+
 ;;;;;
 
             (:code file-namer (:basename) (:basename :json-filename :generic-filename :lisp-filename :error) #'BE:file-namer-react #'BE:file-namer-first-time)
+
 
            
            (:schem compiler (:prolog-factbase-filename :prolog-output-filename :dump) (:error)
@@ -276,6 +302,10 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
             
 "
 passes.basename -> file-namer.basename
+passes.ir -> back-end.ir
+file-namer.json-filename -> back-end.json-filename
+file-namer.generic-filename -> back-end.generic-filename
+file-namer.lisp-filename -> back-end.lisp-filename
 
 self.prolog-factbase-filename -> compiler-testbed.prolog-factbase-filename
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename
@@ -289,7 +319,7 @@ passes.add-fact -> compiler-testbed.add-fact
 passes.retract-fact -> compiler-testbed.retract-fact
 passes.done -> compiler-testbed.done
 
-compiler-testbed.error, passes.error -> self.error
+compiler-testbed.error, passes.error, back-end.error -> self.error
 "
 
             ))))
@@ -316,12 +346,23 @@ compiler-testbed.error, passes.error -> self.error
                                                                  
 
 (defun ctest ()
-  (system:run-shell-command "rm -rf ~/.cache/common-lisp")
+  #+lispworks(system:run-shell-command "rm -rf ~/.cache/common-lisp")
   (load "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/package.lisp")
   (format *standard-output* "running (cl-user::ppp)~%")
   (cl-user::ppp)
   (ql:quickload :arrowgrams/compiler)
-  (hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/")
+  #+lispworks(hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/")
   (format *standard-output* "running (arrowgrams/compiler::compiler)~%")
   (arrowgrams/compiler::compiler))
 (defun cl-user::ctest () (arrowgrams/compiler::ctest))
+
+(defun cl-user::ppp ()
+  (load "~/quicklisp/local-projects/bmfbp/svg/prolog2lisp3/package.lisp")
+  #+lispworks(system:run-shell-command "rm -rf ~/.cache/common-lisp")
+  (ql:register-local-projects)
+  (ql:quickload :arrowgrams/parser)
+  (format *standard-output* "~&~%test~%~%")
+  #+lispworks(hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/prolog2lisp3")
+  (arrowgrams/parser::create))
+(defun arrowgrams/parser::ppp ()
+  (cl-user::ppp))

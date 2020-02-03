@@ -82,6 +82,7 @@
 			:components ((:file "package")
 				     (:file "util" :depends-on ("package"))
 				     (:file "token" :depends-on ("package"))
+				     (:file "synchronizer" :depends-on ("util" "token"))
 				     (:file "tokenize" :depends-on ("util" "token"))
 				     (:file "parens" :depends-on ("util" "token"))
 				     (:file "ws" :depends-on ("util" "token"))
@@ -106,7 +107,7 @@
 				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
                                                                   "generic-emitter" "collector"
-                                                                  "emitter-pass2-generic" "json-emitter" "file-namer"))
+                                                                  "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))
 
 				     (:file "wiring" :depends-on ("util"))))))
 
