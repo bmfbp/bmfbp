@@ -110,7 +110,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
            (:code demux (:go) (1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 :error)
             #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
 
-           (:schem passes (:fb :go) (:ir :request-fb :add-fact :retract-fact :done :error)
+           (:schem passes (:fb :go) (:ir :basename :request-fb :add-fact :retract-fact :done :error)
             ;; parts
             (ellipse-bb rectangle-bb text-bb speechbubble-bb assign-parents-to-ellipses
                         find-comments find-metadata add-kinds add-self-ports
@@ -122,6 +122,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
             ;; wiring
             (
              (((ir-emitter :ir)) ((:self :ir)))
+             (((ir-emitter :basename)) ((:self :basename)))
 
              (((:self :go)) ((demux :go)))
 
@@ -265,7 +266,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 
 ;;;;;
 
-            (:code FILE-NAMER (:in) (:json-filename :generic-filename :lisp-filename :error) #'BE:file-namer-react #'BE:file-namer-first-time)
+            (:code file-namer (:basename) (:basename :json-filename :generic-filename :lisp-filename :error) #'BE:file-namer-react #'BE:file-namer-first-time)
 
            
            (:schem compiler (:prolog-factbase-filename :prolog-output-filename :dump) (:error)
@@ -274,6 +275,8 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
             ;; wiring
             
 "
+passes.basename -> file-namer.basename
+
 self.prolog-factbase-filename -> compiler-testbed.prolog-factbase-filename
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename
 self.dump -> compiler-testbed.dump
