@@ -12,9 +12,9 @@
       (:idle
        (if (eq pin :basename)
            (let ((basename (e/event:data e)))
-             (let ((jsonf (asdf:system-relative-pathname :arrowgrams/compiler (format nil "~a.json" basename)))
-                   (genericf (asdf:system-relative-pathname :arrowgrams/compiler (format nil "~a.generic" basename)))
-                   (lispf (asdf:system-relative-pathname :arrowgrams/compiler(format nil "~a.lisp" basename))))
+             (let ((jsonf (asdf:system-relative-pathname :arrowgrams/compiler (format nil "svg/cl-compiler/~a.json" basename)))
+                   (genericf (asdf:system-relative-pathname :arrowgrams/compiler (format nil "svg/cl-compiler/~a.generic" basename)))
+                   (lispf (asdf:system-relative-pathname :arrowgrams/compiler(format nil "svg/cl-compiler/~a.lisp" basename))))
              (cl-event-passing-user::@send self :json-filename jsonf)
              (cl-event-passing-user::@send self :generic-filename genericf)
              (cl-event-passing-user::@send self :lisp-filename lispf)))

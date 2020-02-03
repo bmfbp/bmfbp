@@ -14,32 +14,29 @@
 (defmethod synchronizer-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (flet ((change-state-to-running-if-ready () ;; example of dataflow where all inputs must be satisfied before proceeding
+    (flet ((run-if-ready () ;; example of dataflow where all inputs must be satisfied before proceeding
              (when (and (cl-event-passing-user:@get-instance-var self :ir)
                         (cl-event-passing-user:@get-instance-var self :json-filename)
                         (cl-event-passing-user:@get-instance-var self :generic-filename)
                         (cl-event-passing-user:@get-instance-var self :lisp-filename))
-               (cl-event-passing-user:@set-instance-var self :state :running))))
+               (cl-event-passing-user:@set-instance-var self :state :running)
+               (cl-event-passing-user:@send self :json-filename (cl-event-passing-user:@get-instance-var self :json-filename))
+               (cl-event-passing-user:@send self :generic-filename (cl-event-passing-user:@get-instance-var self :generic-filename))
+               (cl-event-passing-user:@send self :lisp-filename (cl-event-passing-user:@get-instance-var self :lisp-filename))
+               (cl-event-passing-user:@send self :ir (cl-event-passing-user:@get-instance-var self :ir))
+               (cl-event-passing-user:@set-instance-var self :state :done))))
       (format *standard-output* "synchronizer gets ~A~%" pin)
       (ecase (cl-event-passing-user::@get-instance-var self :state)
         (:idle
          (ecase pin
            (:ir (cl-event-passing-user:@set-instance-var self :ir (e/event:data e))
-            (change-state-to-running-if-ready))
+            (run-if-ready))
            (:json-filename (cl-event-passing-user:@set-instance-var self :json-filename (e/event:data e))
-            (change-state-to-running-if-ready))
+            (run-if-ready))
            (:generic-filename (cl-event-passing-user:@set-instance-var self :generic-filename (e/event:data e))
-            (change-state-to-running-if-ready))
+            (run-if-ready))
            (:lisp-filename (cl-event-passing-user:@set-instance-var self :lisp-filename (e/event:data e))
-            (change-state-to-running-if-ready))))
-         
-         (:running
-          (cl-event-passing-user:@send self :json-filename (cl-event-passing-user:@get-instance-var self :json-filename))
-          (cl-event-passing-user:@send self :generic-filename (cl-event-passing-user:@get-instance-var self :generic-filename))
-          (cl-event-passing-user:@send self :lisp-filename (cl-event-passing-user:@get-instance-var self :lisp-filename))
-          (cl-event-passing-user:@send self :ir (cl-event-passing-user:@get-instance-var self :ir))
-          (cl-event-passing-user:@set-instance-var self :state :done))
-         
+            (run-if-ready))))
          
          (:done
           (cl-event-passing-user::@send

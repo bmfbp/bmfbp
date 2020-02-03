@@ -356,13 +356,15 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
   (arrowgrams/compiler::compiler))
 (defun cl-user::ctest () (arrowgrams/compiler::ctest))
 
+#|
 (defun cl-user::ppp ()
   (load "~/quicklisp/local-projects/bmfbp/svg/prolog2lisp3/package.lisp")
   #+lispworks(system:run-shell-command "rm -rf ~/.cache/common-lisp")
-  (ql:register-local-projects)
+  ;(ql:register-local-projects)
   (ql:quickload :arrowgrams/parser)
   (format *standard-output* "~&~%test~%~%")
   #+lispworks(hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/prolog2lisp3")
   (arrowgrams/parser::create))
 (defun arrowgrams/parser::ppp ()
   (cl-user::ppp))
+|#

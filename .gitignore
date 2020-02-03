@@ -41,3 +41,7 @@ svg/back-end/log2.lisp
 
 
 *.autosave
+
+svg/cl-compiler/BUILD_PROCESS.generic
+
+svg/cl-compiler/BUILD_PROCESS.json

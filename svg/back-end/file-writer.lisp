@@ -15,5 +15,5 @@
     (:write
      (let ((str (e/event:data e)))
        (assert (stringp str))
-       (with-open-file (f (cl-event-passing-user:@get-instance-var self :filename) :direction :output :if-exists :supersede)
+       (with-open-file (f (cl-event-passing-user:@get-instance-var self :filename) :direction :output :if-exists :supersede :if-does-not-exist :create)
          (write-string str f))))))

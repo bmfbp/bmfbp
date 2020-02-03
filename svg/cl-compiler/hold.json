@@ -1,0 +1,160 @@
+{
+  "kind" : "self",
+  "parts" : {
+    {
+      "partName" : ID412,
+      "kindName" : compile composite,
+      "inCount" : 1,
+      "inMap" : {
+        "svg" : 0
+      },
+      "inPins" : [[],[]],
+      "outCount" : 2,
+      "outMap" : {
+        "graph as json" : 0,
+        "parts as json objects" : 1
+      },
+      "outPins" : [[12],[13]]
+    },
+    {
+      "partName" : ID430,
+      "kindName" : iterator,
+      "inCount" : 3,
+      "inMap" : {
+        "start" : 0,
+        "done" : 1,
+        "continue" : 2
+      },
+      "inPins" : [[]],
+      "outCount" : 1,
+      "outMap" : {
+        "get a part" : 0
+      },
+      "outPins" : [[10]]
+    },
+    {
+      "partName" : ID538,
+      "kindName" : prepare temp directory,
+      "inCount" : 0,
+      "inMap" : {
+        
+      },
+      "inPins" : [[]],
+      "outCount" : 1,
+      "outMap" : {
+        "directory" : 0
+      },
+      "outPins" : [[3]]
+    },
+    {
+      "partName" : ID456,
+      "kindName" : determine kindType,
+      "inCount" : 2,
+      "inMap" : {
+        "part metadata" : 0,
+        "file content" : 1
+      },
+      "inPins" : [[],[]],
+      "outCount" : 2,
+      "outMap" : {
+        "leaf metadata" : 0,
+        "schematic metadata" : 1
+      },
+      "outPins" : [[8],[9]]
+    },
+    {
+      "partName" : ID559,
+      "kindName" : get file content in repo,
+      "inCount" : 2,
+      "inMap" : {
+        "temp directory" : 0,
+        "git repo metadata" : 1
+      },
+      "inPins" : [[],[]],
+      "outCount" : 2,
+      "outMap" : {
+        "metadata" : 0,
+        "file content" : 1
+      },
+      "outPins" : [[1],[2]]
+    },
+    {
+      "partName" : ID422,
+      "kindName" : collector,
+      "inCount" : 3,
+      "inMap" : {
+        "leaf" : 0,
+        "composite" : 1,
+        "done" : 2
+      },
+      "inPins" : [[]],
+      "outCount" : 1,
+      "outMap" : {
+        "intermediate code" : 0
+      },
+      "outPins" : [[11]]
+    },
+    {
+      "partName" : ID495,
+      "kindName" : javascript builder,
+      "inCount" : 3,
+      "inMap" : {
+        "top-level name" : 0,
+        "temp directory" : 1,
+        "intermediate code" : 2
+      },
+      "inPins" : [[]],
+      "outCount" : 1,
+      "outMap" : {
+        "javascript source code" : 0
+      },
+      "outPins" : [[5]]
+    },
+    {
+      "partName" : ID391,
+      "kindName" : json object stacker,
+      "inCount" : 2,
+      "inMap" : {
+        "get a part" : 0,
+        "push object" : 1
+      },
+      "inPins" : [[],[]],
+      "outCount" : 2,
+      "outMap" : {
+        "no more" : 0,
+        "part metadata" : 1
+      },
+      "outPins" : [[15],[14]]
+    },
+    {
+      "partName" : ID511,
+      "kindName" : fetch git repo,
+      "inCount" : 2,
+      "inMap" : {
+        "temp directory" : 0,
+        "git repo metadata" : 1
+      },
+      "inPins" : [[]],
+      "outCount" : 1,
+      "outMap" : {
+        "metadata" : 0
+      },
+      "outPins" : [[4]]
+    },
+    {
+      "partName" : ID466,
+      "kindName" : get file content in repo,
+      "inCount" : 2,
+      "inMap" : {
+        "temp directory" : 0,
+        "git repo metadata" : 1
+      },
+      "inPins" : [[]],
+      "outCount" : 1,
+      "outMap" : {
+        "file content" : 0
+      },
+      "outPins" : [[7]]
+    }
+  }
+}
