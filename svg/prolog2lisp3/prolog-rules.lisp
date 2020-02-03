@@ -590,15 +590,15 @@ coincidentPorts_main :-
 %     forall(sink(_,B),findCoincidentSink(A,B)).
 
 findCoincidentSink(A,B):-
-    center_y(A,Ay),
-    center_y(B,By),
+    % A \\== B,
+    %sink(_,B),
+    notNamedSink(B),
+    prolog_not_equal_equal(A,B),
     center_x(A,Ax),
     center_x(B,Bx),
-    prolog_not_equal_equal(A,B),
-    % A \\== B,
-    sink(_,B),
-    notNamedSink(B),
     closeTogether(Ax,Bx),
+    center_y(A,Ay),
+    center_y(B,By),
     closeTogether(Ay,By),
     portName(A,N),
     asserta(log(coincidentsink,A,B,N)),

@@ -1,0 +1,28 @@
+vanilla:
+
+User time    =       34.928
+System time  =        0.741
+Elapsed time =       35.317
+Allocation   = 7,964,380,584 bytes
+75791 Page faults
+Calls to %EVAL    105311
+NIL
+
+coincidentsink rewritten:
+
+User time    =       31.293
+System time  =        0.816
+Elapsed time =       31.620
+Allocation   = 7,096,960,592 bytes
+86237 Page faults
+Calls to %EVAL    106479
+NIL
+
+coincidentsink rewritten, to exclude     %sink(_,B),
+User time    =       30.111
+System time  =        0.814
+Elapsed time =       30.171
+Allocation   = 6653175584 bytes
+82061 Page faults
+Calls to %EVAL    104143
+NIL
