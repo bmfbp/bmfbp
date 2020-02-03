@@ -625,15 +625,15 @@ findAllCoincidentSources(A,B) :- source(_,B),findCoincidentSource(A,B),fail.
 %     forall(source(_,B),findCoincidentSource(A,B)).
 
 findCoincidentSource(A,B):-
-    center_y(A,Ay),
-    center_y(B,By),
+    notNamedSource(B),
+    prolog_not_equal_equal(A,B),
     center_x(A,Ax),
     center_x(B,Bx),
-    prolog_not_equal_equal(A,B),
     % A \\== B,
-    source(_,B),
-    notNamedSource(B),
+    % source(_,B),
     closeTogether(Ax,Bx),
+    center_y(A,Ay),
+    center_y(B,By),
     closeTogether(Ay,By),
     portName(A,N),
     asserta(log(coincidentsource,A,B,N)),
