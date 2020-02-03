@@ -35,3 +35,21 @@ Allocation   = 4317159696 bytes
 67724 Page faults
 Calls to %EVAL    104143
 NIL
+
+coincidentSource with !'s
+User time    =       16.518
+System time  =        0.706
+Elapsed time =       16.932
+Allocation   = 4306419560 bytes
+66045 Page faults
+Calls to %EVAL    105311
+NIL
+
+coincidentSinks with !'s
+User time    =       16.658
+System time  =        0.702
+Elapsed time =       17.042
+Allocation   = 4379556944 bytes
+70077 Page faults
+Calls to %EVAL    106175
+NIL

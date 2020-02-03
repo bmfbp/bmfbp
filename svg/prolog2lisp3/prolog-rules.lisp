@@ -592,17 +592,17 @@ coincidentPorts_main :-
 findCoincidentSink(A,B):-
     % A \\== B,
     %sink(_,B),
-    notNamedSink(B),
-    prolog_not_equal_equal(A,B),
-    center_x(A,Ax),
-    center_x(B,Bx),
+    notNamedSink(B),!,
+    prolog_not_equal_equal(A,B),!,
+    center_x(A,Ax),!,
+    center_x(B,Bx),!,
     closeTogether(Ax,Bx),
-    center_y(A,Ay),
-    center_y(B,By),
+    center_y(A,Ay),!,
+    center_y(B,By),!,
     closeTogether(Ay,By),
     portName(A,N),
     asserta(log(coincidentsink,A,B,N)),
-    asserta(portName(B,N)).
+    asserta(portName(B,N)).!.
 
 notNamedSink(X) :-
     prolog_not_proven(namedSink(X)).
@@ -627,17 +627,17 @@ findAllCoincidentSources(A,B) :- source(_,B),findCoincidentSource(A,B),fail.
 findCoincidentSource(A,B):-
     notNamedSource(B),
     prolog_not_equal_equal(A,B),
-    center_x(A,Ax),
-    center_x(B,Bx),
+    center_x(A,Ax),!,
+    center_x(B,Bx),!,
     % A \\== B,
     % source(_,B),
     closeTogether(Ax,Bx),
-    center_y(A,Ay),
-    center_y(B,By),
+    center_y(A,Ay),!,
+    center_y(B,By),!,
     closeTogether(Ay,By),
-    portName(A,N),
+    portName(A,N),!,
     asserta(log(coincidentsource,A,B,N)),
-    asserta(portName(B,N)).
+    asserta(portName(B,N)),!.
 
 notNamedSource(X) :-
     namedSource(X),
