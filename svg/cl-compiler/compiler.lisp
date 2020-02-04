@@ -107,7 +107,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 		  #'arrowgrams/compiler/ir-emitter::react #'arrowgrams/compiler/ir-emitter::first-time)
 
 
-           (:code demux (:go) (1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 :error)
+           (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error)
             #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
 
            (:schem passes (:fb :go) (:ir :basename :request-fb :add-fact :retract-fact :done :error)
@@ -120,86 +120,83 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
                         demux ir-emitter)
 
             ;; wiring
-            (
-             (((ir-emitter :ir)) ((:self :ir)))
-             (((ir-emitter :basename)) ((:self :basename)))
+"
+             ir-emitter.ir -> self.ir
+             ir-emitter.basename -> self.basename
 
-             (((:self :go)) ((demux :go)))
+             self.go -> demux.go
 
-             (((:self :fb)) ((ellipse-bb :fb) (rectangle-bb :fb) (text-bb :fb) (speechbubble-bb :fb) (assign-parents-to-ellipses :fb) (find-comments :fb) (find-metadata :fb) (add-kinds :fb) (add-self-ports :fb) (make-unknown-port-names :fb) (create-centers :fb) (calculate-distances :fb) (assign-portnames :fb) (mark-indexed-ports :fb) (coincident-ports :fb) (mark-directions :fb) (mark-nc :fb) (match-ports-to-components :fb) (pinless :fb) (sem-parts-have-some-ports :fb) (sem-ports-have-sink-or-source :fb) (sem-no-duplicate-kinds :fb) (sem-speech-vs-comments :fb) (assign-wire-numbers-to-edges :fb) (self-input-pins :fb) (self-output-pins :fb) (input-pins :fb) (output-pins :fb) (ir-emitter :fb)))
+             self.fb -> ellipse-bb.fb,rectangle-bb.fb,text-bb.fb,speechbubble-bb.fb,assign-parents-to-ellipses.fb,find-comments.fb,find-metadata.fb,add-kinds.fb,add-self-ports.fb,make-unknown-port-names.fb,create-centers.fb,calculate-distances.fb,assign-portnames.fb,mark-indexed-ports.fb,coincident-ports.fb,mark-directions.fb,mark-nc.fb,match-ports-to-components.fb,pinless.fb,sem-parts-have-some-ports.fb,sem-ports-have-sink-or-source.fb,sem-no-duplicate-kinds.fb,sem-speech-vs-comments.fb,assign-wire-numbers-to-edges.fb,self-input-pins.fb,self-output-pins.fb,input-pins.fb,output-pins.fb,ir-emitter.fb
 
-             (((find-metadata :retract-fact)) ((:self :retract-fact)))
+             find-metadata.retract-fact -> self.retract-fact
 
-             (((ellipse-bb :request-fb) (rectangle-bb :request-fb) (text-bb :request-fb) (speechbubble-bb :request-fb) (assign-parents-to-ellipses :request-fb) (find-comments :request-fb) (find-metadata :request-fb) (add-kinds :request-fb) (add-self-ports :request-fb) (make-unknown-port-names :request-fb) (create-centers :request-fb) (calculate-distances :request-fb) (assign-portnames :request-fb) (mark-indexed-ports :request-fb) (coincident-ports :request-fb) (mark-directions :request-fb) (mark-nc :request-fb) (match-ports-to-components :request-fb) (pinless :request-fb) (sem-parts-have-some-ports :request-fb) (sem-ports-have-sink-or-source :request-fb) (sem-no-duplicate-kinds :request-fb) (sem-speech-vs-comments :request-fb) (assign-wire-numbers-to-edges :request-fb) (self-input-pins :request-fb) (self-output-pins :request-fb) (input-pins :request-fb) (output-pins :request-fb) (ir-emitter :request-fb))
-              ((:self :request-fb)))
+             ellipse-bb.request-fb,rectangle-bb.request-fb,text-bb.request-fb,speechbubble-bb.request-fb,assign-parents-to-ellipses.request-fb,find-comments.request-fb,find-metadata.request-fb,add-kinds.request-fb,add-self-ports.request-fb,make-unknown-port-names.request-fb,create-centers.request-fb,calculate-distances.request-fb,assign-portnames.request-fb,mark-indexed-ports.request-fb,coincident-ports.request-fb,mark-directions.request-fb,mark-nc.request-fb,match-ports-to-components.request-fb,pinless.request-fb,sem-parts-have-some-ports.request-fb,sem-ports-have-sink-or-source.request-fb,sem-no-duplicate-kinds.request-fb,sem-speech-vs-comments.request-fb,assign-wire-numbers-to-edges.request-fb,self-input-pins.request-fb,self-output-pins.request-fb,input-pins.request-fb,output-pins.request-fb,ir-emitter.request-fb -> self.request-fb
 
-             (((ellipse-bb :add-fact) (rectangle-bb :add-fact) (text-bb :add-fact) (speechbubble-bb :add-fact) (assign-parents-to-ellipses :add-fact) (find-comments :add-fact) (find-metadata :add-fact) (add-kinds :add-fact) (add-self-ports :add-fact) (make-unknown-port-names :add-fact) (create-centers :add-fact) (calculate-distances :add-fact) (assign-portnames :add-fact) (mark-indexed-ports :add-fact) (coincident-ports :add-fact) (mark-directions :add-fact) (mark-nc :add-fact) (match-ports-to-components :add-fact) (pinless :add-fact) (sem-parts-have-some-ports :add-fact) (sem-ports-have-sink-or-source :add-fact) (sem-no-duplicate-kinds :add-fact) (sem-speech-vs-comments :add-fact) (assign-wire-numbers-to-edges :add-fact) (self-input-pins :add-fact) (self-output-pins :add-fact) (input-pins :add-fact) (output-pins :add-fact)) ((:self :add-fact)))
+             ellipse-bb.add-fact,rectangle-bb.add-fact,text-bb.add-fact,speechbubble-bb.add-fact,assign-parents-to-ellipses.add-fact,find-comments.add-fact,find-metadata.add-fact,add-kinds.add-fact,add-self-ports.add-fact,make-unknown-port-names.add-fact,create-centers.add-fact,calculate-distances.add-fact,assign-portnames.add-fact,mark-indexed-ports.add-fact,coincident-ports.add-fact,mark-directions.add-fact,mark-nc.add-fact,match-ports-to-components.add-fact,pinless.add-fact,sem-parts-have-some-ports.add-fact,sem-ports-have-sink-or-source.add-fact,sem-no-duplicate-kinds.add-fact,sem-speech-vs-comments.add-fact,assign-wire-numbers-to-edges.add-fact,self-input-pins.add-fact,self-output-pins.add-fact,input-pins.add-fact,output-pins.add-fact -> self.add-fact
 
-             (((ellipse-bb :done)
-               (rectangle-bb :done)
-               (text-bb :done)
-               (speechbubble-bb :done)
-               (assign-parents-to-ellipses :done)
-               (find-comments :done)
-               (find-metadata :done)
-               (add-kinds :done)
-               (add-self-ports :done)
-               (make-unknown-port-names :done)
-               (create-centers :done)
-               (calculate-distances :done)
-               (assign-portnames :done)
-               (mark-indexed-ports :done)
-               (coincident-ports :done)
-               (mark-directions :done)
-               (match-ports-to-components :done)
-               (mark-nc :done)
-               (pinless :done)
-               (sem-parts-have-some-ports :done)
-               (sem-ports-have-sink-or-source :done)
-               (sem-no-duplicate-kinds :done)
-               (sem-speech-vs-comments :done)
-               (assign-wire-numbers-to-edges :done)
-               (self-input-pins :done)
-               (self-output-pins :done)
-               (input-pins :done)
-	       (output-pins :done)
-	       (ir-emitter :done))
+ellipse-bb.done,
+               rectangle-bb.done,
+               text-bb.done,
+               speechbubble-bb.done,
+               assign-parents-to-ellipses.done,
+               find-comments.done,
+               find-metadata.done,
+               add-kinds.done,
+               add-self-ports.done,
+               make-unknown-port-names.done,
+               create-centers.done,
+               calculate-distances.done,
+               assign-portnames.done,
+               mark-indexed-ports.done,
+               coincident-ports.done,
+               mark-directions.done,
+               match-ports-to-components.done,
+               mark-nc.done,
+               pinless.done,
+               sem-parts-have-some-ports.done,
+               sem-ports-have-sink-or-source.done,
+               sem-no-duplicate-kinds.done,
+               sem-speech-vs-comments.done,
+               assign-wire-numbers-to-edges.done,
+               self-input-pins.done,
+              self-output-pins.done,
+              input-pins.done,output-pins.done,ir-emitter.done
+-> self.done
 
-	      ((:self :done)))
-	     
-             (((demux 1)) ((ellipse-bb :go)))
-             (((demux 2)) ((rectangle-bb :go)))
-             (((demux 3)) ((text-bb :go)))
-             (((demux 4)) ((speechbubble-bb :go)))
-             (((demux 5)) ((assign-parents-to-ellipses :go)))
-             (((demux 6)) ((find-comments :go)))
-             (((demux 7)) ((find-metadata :go)))
-             (((demux 8)) ((add-kinds :go)))
-             (((demux 9)) ((add-self-ports :go)))
-             (((demux 10)) ((make-unknown-port-names :go)))
-             (((demux 11)) ((create-centers :go)))
-             (((demux 12)) ((calculate-distances :go)))
-             (((demux 13)) ((assign-portnames :go)))
-             (((demux 14)) ((mark-indexed-ports :go))) ;; start here
-             (((demux 15)) ((coincident-ports :go)))
-             (((demux 16)) ((mark-directions :go)))
-             (((demux 17)) ((match-ports-to-components :go)))
-             (((demux 18)) ((mark-nc :go)))
-             (((demux 19)) ((pinless :go)))
-             (((demux 20)) ((sem-parts-have-some-ports :go)))
-             (((demux 21)) ((sem-ports-have-sink-or-source :go)))
-             (((demux 22)) ((sem-no-duplicate-kinds :go)))
-             (((demux 23)) ((sem-speech-vs-comments :go)))
-             (((demux 24)) ((assign-wire-numbers-to-edges :go)))
-             (((demux 25)) ((self-input-pins :go)))
-             (((demux 26)) ((self-output-pins :go)))
-             (((demux 27)) ((input-pins :go)))
-             (((demux 28)) ((output-pins :go)))
-             (((demux 29)) ((ir-emitter :go)))
+            demux.o1 -> ellipse-bb.go
+             demux.o2 -> rectangle-bb.go
+             demux.o3 -> text-bb.go
+             demux.o4 -> speechbubble-bb.go
+             demux.o5 -> assign-parents-to-ellipses.go
+             demux.o6 -> find-comments.go
+             demux.o7 -> find-metadata.go
+             demux.o8 -> add-kinds.go
+             demux.o9 -> add-self-ports.go
+             demux.o10 -> make-unknown-port-names.go
+             demux.o11 -> create-centers.go
+             demux.o12 -> calculate-distances.go
+             demux.o13 -> assign-portnames.go
+             demux.o14 -> mark-indexed-ports.go
+             demux.o15 -> coincident-ports.go
+             demux.o16 -> mark-directions.go
+             demux.o17 -> match-ports-to-components.go
+             demux.o18 -> mark-nc.go
+             demux.o19 -> pinless.go
+             demux.o20 -> sem-parts-have-some-ports.go
+             demux.o21 -> sem-ports-have-sink-or-source.go
+             demux.o22 -> sem-no-duplicate-kinds.go
+             demux.o23 -> sem-speech-vs-comments.go
+             demux.o24 -> assign-wire-numbers-to-edges.go
+             demux.o25 -> self-input-pins.go
+             demux.o26 -> self-output-pins.go
+             demux.o27 -> input-pins.go
+             demux.o28 -> output-pins.go
+             demux.o29 -> ir-emitter.go
 
-             (((ellipse-bb :error) (rectangle-bb :error) (text-bb :error) (speechbubble-bb :error) (assign-parents-to-ellipses :error) (find-comments :error) (find-metadata :error) (add-kinds :error) (add-self-ports :error) (make-unknown-port-names :error) (create-centers :error) (calculate-distances :error) (assign-portnames :error) (mark-indexed-ports :error) (coincident-ports :error) (mark-directions :error) (match-ports-to-components :error) (pinless :error) (sem-parts-have-some-ports :error) (sem-ports-have-sink-or-source :error) (sem-no-duplicate-kinds :error) (sem-speech-vs-comments :error) (assign-wire-numbers-to-edges :error) (self-input-pins :error) (self-output-pins :error) (input-pins :error) (output-pins :error) (ir-emitter :error) (demux :error)) ((:self :error)))
-
-             ))
+             ellipse-bb.error,rectangle-bb.error,text-bb.error,speechbubble-bb.error,assign-parents-to-ellipses.error,find-comments.error,find-metadata.error,add-kinds.error,add-self-ports.error,make-unknown-port-names.error,create-centers.error,calculate-distances.error,assign-portnames.error,mark-indexed-ports.error,coincident-ports.error,mark-directions.error,match-ports-to-components.error,pinless.error,sem-parts-have-some-ports.error,sem-ports-have-sink-or-source.error,sem-no-duplicate-kinds.error,sem-speech-vs-comments.error,assign-wire-numbers-to-edges.error,self-input-pins.error,self-output-pins.error,input-pins.error,output-pins.error,ir-emitter.error,demux.error
+   -> self.error
+"
+            )
            
 
 ;;;; back end

@@ -2,6 +2,21 @@
 
 (defparameter *all-prolog*
 "
+%
+% manually defined
+%
+
+not_same(X,X) :- !, fail.
+not_same(X,Y).
+
+not_used(X) :- used(X),!,fail.
+not_used(X).
+
+not_namedSink(X) :- namedSink(X),!,fail.
+not_namedSink(X).
+
+% debug output
+
 wspc :-
     write(user_error,' '),!.
 
@@ -1227,19 +1242,6 @@ find_wire(ParentID1,PortID1,PortName1,ParentID2,PortID2,PortName2) :-
   portName(PortID1,PortName1),
   parent(ParentID2,PortID2),
   parent(ParentID1,PortID1).
-
-%
-% manually defined
-%
-
-not_same(X,X) :- !, fail.
-not_same(X,Y).
-
-not_used(X) :- used(X),!,fail.
-not_used(X).
-
-not_namedSink(X) :- namedSink(X),!,fail.
-not_namedSink(X).
 
 
 ")

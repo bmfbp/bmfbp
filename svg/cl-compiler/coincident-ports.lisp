@@ -37,17 +37,22 @@
           (format nil "COINCIDENT-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod coincident-ports ((self e/part:part))
-  (let ((fb
-         (append
-          arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb)))
-        (goal '((:coincidentSinks (:? A) (:? B)))))
+  (let ((local-fb (arrowgrams/compiler/util::fb-keep '(:not_namedsink :namedsink :coincidentsinks :findallcoincidentsinks :sink
+                                                       :not_namedsource :namedsource :coincidentsources :findallcoincidentsources :source
+                                                       :center_x :center_y :portName)
+                   (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((fb
+           (append
+            arrowgrams/compiler::*rules*
+            local-fb))
+          (goal '((:coincidentSinks (:? A) (:? B)))))
 (format *standard-output* ":coinincidentSinks~%")
-    (arrowgrams/compiler/util::run-prolog self goal fb))
+    (arrowgrams/compiler/util::run-prolog self goal local-fb))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb)))
+          local-fb))
         (goal '((:coincidentSources (:? A) (:? B)))))
-(format *standard-output* ":coinincidetSource~%")
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+(format *standard-output* ":coincidentSource~%")
+    (arrowgrams/compiler/util::run-prolog self goal fb))))
+

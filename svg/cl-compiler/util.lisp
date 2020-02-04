@@ -70,3 +70,11 @@
   (format *standard-output* "~&printf ~S~%" arg)
   (values T l g r e n c result))
 
+(defun fb-keep (keep-list fb)
+  ;; return a list that only has items from keep-list on it
+  (let ((result (remove-if-not #'(lambda (fact)
+                                   (and (listp fact)
+                                        (member (caar fact) keep-list)))
+                               fb)))
+    (format *standard-output* "~&len fb ~a len filtered ~a~%" (length fb) (length result))
+    result))

@@ -40,6 +40,11 @@
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb)))
+          (arrowgrams/compiler/util::fb-keep '(:eltype :parent :ellipse :rect
+                                               :bounding_box_left :bounding_box_top :bounding_box_right :bounding_box_bottom
+                                               :wen :nle :we :nl :wspc) (cl-event-passing-user::@get-instance-var self :fb))
+                   #+nil(cl-event-passing-user::@get-instance-var self :fb)
+                   ))
         (goal '((:match_ports_to_components (:? A)))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))
+
