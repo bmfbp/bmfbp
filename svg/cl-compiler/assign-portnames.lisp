@@ -36,70 +36,76 @@
           :error
           (format nil "ASSIGN-PORTNAMES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
-(defstruct join
-  id
-  text-id
-  port-id
-  str-id
-  distance)
-
 (defmethod assign-portnames ((self e/part:part))
+  (let ((all-port-bbs (find-all-port-bounding-boxes self)))
+    (let ((all-text-bbs (find-all-unused-text-bounding-boxes self))
+          (port-vs-text-hash-table (make-hash-table)))
+      (dolist (port-plus-bb all-port-bbs)
+        (multiple-value-bind (id left top right bottom)
+            (get-port-details self port-plus-bb)
+          (format *standard-output* "~&port ~A~%" id)
+          (let ((distance-list nil))
+            (dolist (text-plus-bb all-text-bbs)
+              (multiple-value-bind (tid tstr tleft ttop tright tbottom)
+                  (get-text-details self text-plus-bb)
+                (let ((c (closest left top right bottom tleft ttop tright tbottom)))
+                  (format *standard-output* "~&tid ~a tstr/~a/ side ~a distance ~a~%" tid tstr (side c) (distance c))arrowgrams/compiler/back-end
+                  (push (list tid tstr c) distance-list))))
+            (let ((closest (find-minimum self distance-list)))
+              (format *standard-output* "~&port ~a closest ~A~%" id closest)
+              (setf (gethash id port-vs-text-hash-table) closest)))))
+      (asserta-portnames self port-vs-text-hash-table))))
+
+(defmethod asserta-portnames ((self e/part:part) h)
+  (maphash #'(lambda (port text-id-str-closest)
+               (destructuring-bind (id str closest)
+                   text-id-str-closest
+                 (declare (ignore closest))
+                 (arrowgrams/compiler/util::asserta self (list :portNameByID port id) nil nil nil nil nil nil nil)
+                 (arrowgrams/compiler/util::asserta self (list :portName port str) nil nil nil nil nil nil nil)))
+           h))
+
+(defmethod find-all-port-bounding-boxes ((self e/part:part))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb))))
-    (let ((goal '((:collect_joins (:? join) (:? text) (:? port) (:? distance) (:? str)))))
-      (let ((join-results (arrowgrams/compiler/util::run-prolog self goal fb)))
-        #+nil(format *standard-output* "~&join results=~S~%" join-results)
-        
-        (let ((port-join-list-hash (make-hash-table))
-              (text-used-up (make-hash-table))
-              (port-join-hash (make-hash-table)))
-          
-          (mapc #'(lambda (alist)
-                    (let ((port-id (cdr (assoc 'port alist)))
-                          (distance (cdr (assoc 'distance alist)))
-                          (text-id (cdr (assoc 'text alist)))
-                          (str-id (cdr (assoc 'str alist)))
-                          (join-id (cdr (assoc 'join alist))))
-                      (let ((join-data (make-join :id join-id :port-id port-id :text-id text-id :str-id str-id :distance distance)))
-                        (let ((list-for-port (gethash port-id port-join-list-hash)))
-                          (let ((new-list (cons join-data list-for-port)))
-                            #+nil(format *standard-output* "port-id ~S new-list length ~A~%" port-id (length new-list))
-                            (setf (gethash port-id port-join-list-hash) new-list))))))
-                join-results)
-          
-          (maphash #'(lambda (port-id join-list-for-port)
-                       (let ((join (find-minimum-distance join-list-for-port)))
-                         (format *standard-output* "~&join-data ~S~%" join)
-                         (assert-text-not-used text-used-up (join-text-id join) join)
-                         (setf (gethash port-id port-join-hash) join)))
-                   port-join-list-hash)
-          
-          (asserta-portnames self port-join-hash))))))
+    (let ((goal '((:collect_ports (:? portid) (:? left) (:? top) (:? right) (:? bottom)))))
+      (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+        results))))
 
-(defun find-minimum-distance (L)
-  (let ((min-join nil))
-    (assert (listp L))
-    (dolist (join L)
-      (assert (>= (join-distance join) 0))
-      (when (or (null min-join)
-                (< (join-distance join) (join-distance min-join)))
-            (setf min-join join)))
-    min-join))
-    
-(defmethod asserta-portnames ((self e/part:part) h)
-  (maphash #'(lambda (port join)
-               (arrowgrams/compiler/util::asserta self (list :portNameByID port (join-text-id join)) nil nil nil nil nil nil nil)
-               (arrowgrams/compiler/util::asserta self (list :portName port (join-str-id join)) nil nil nil nil nil nil nil))
-           h))
+(defmethod find-all-unused-text-bounding-boxes ((self e/part:part))
+  (let ((fb
+         (append
+          arrowgrams/compiler::*rules*
+          (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((goal '((:collect_unused_text (:? textid) (:? str) (:? left) (:? top) (:? right) (:? bottom)))))
+      (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+        results))))
 
-(defun assert-text-not-used (text-used-up-hash text-id join)
-  (assert (not (null text-id)))
-  (multiple-value-bind (val success)
-      (gethash text-id text-used-up-hash)
-    (when success
-      (format *standard-output* "~&duplicate port name~%~S~%~S~%" val join)
-      #+nil(assert nil))
-    (setf (gethash text-id text-used-up-hash) join)))
+(defmethod get-port-details ((self e/part:part) alist)
+  (declare (ignore self))
+  (let ((id     (cdr (assoc 'portid alist)))
+        (left   (cdr (assoc 'left   alist)))
+        (top    (cdr (assoc 'top    alist)))
+        (right  (cdr (assoc 'right  alist)))
+        (bottom (cdr (assoc 'bottom alist))))
+    (values id left top right bottom)))
 
+(defmethod get-text-details ((self e/part:part) plist)
+  (declare (ignore self))
+  (let ((id     (cdr (assoc 'textid plist)))
+        (str    (cdr (assoc 'str    plist)))
+        (left   (cdr (assoc 'left   plist)))
+        (top    (cdr (assoc 'top    plist)))
+        (right  (cdr (assoc 'right  plist)))
+        (bottom (cdr (assoc 'bottom plist))))
+    (values id str left top right bottom)))
+
+(defmethod find-minimum ((self e/part:part) list-id-vs-str-vs-distance-list)
+  (declare (ignore self))
+  (let ((minimum (first list-id-vs-str-vs-distance-list)))
+    (dolist (triple list-id-vs-str-vs-distance-list)
+      (when (less-than-p (third triple) (third minimum))
+        (setf minimum triple)))
+    minimum))
