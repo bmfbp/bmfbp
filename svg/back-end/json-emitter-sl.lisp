@@ -10,6 +10,7 @@
   <outputs>
   <react>
   <first-time>
+  :integer '\"wireCount\" : ' print-integer ', ' nl
   '\"parts\" : {' inc nl
   <parts>
                dec nl '}'

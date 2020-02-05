@@ -95,7 +95,8 @@
    (part-pin-pair-stack :accessor part-pin-pair-stack :initform (make-instance 'stack))
    (top-schematic :accessor top-schematic)
    (parts :initform (make-hash-table :test 'equal) :accessor parts)
-   (wires :initform (make-hash-table) :accessor wires)))
+   (wires :initform (make-hash-table) :accessor wires)
+   (name :initform "" :accessor name :initarg :name)))
 
 
 
@@ -132,7 +133,7 @@
   (debug-token (accepted-token self)))
 
 (defmethod parser-error ((self parser) kind)
-  (let ((msg (format nil "~&parser error expecting ~S, but got ~S ~%~%" kind (first (token-stream self)))))
+  (let ((msg (format nil "~&parser error ~S expecting ~S, but got ~S ~%~%" (name self) kind (first (token-stream self)))))
       (assert nil () msg)
       (send! (owner self) :error msg)
       (pop (token-stream self)) ;; stream is volatile to help debugging
@@ -479,7 +480,6 @@
 
 (defmethod part-pin-in-wire-sinks-p ((p parser) (wire wire) part-name pin-name)
   (dolist (sink (as-list (sink-list wire)))
-    (format *standard-output* "~&searching sinks for ~A ~A <> ~A ~A)~%" part-name pin-name (pair-first sink) (pair-second sink))
     ;; sink is a pair of strings
     (when (and (string= (pair-first sink) part-name)
                (string= (pair-second sink) pin-name))

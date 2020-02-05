@@ -10,6 +10,7 @@
   <outputs>
   <react>
   <first-time>
+  :integer
   <parts>
 
 = <name>

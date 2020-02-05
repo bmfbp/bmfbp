@@ -22,6 +22,7 @@
   (uemit-token p :end))
 
 (defmethod unparse-parts ((p parser) parts-table wiring-table)
+  (uemit-integer p (hash-table-count wiring-table))
   (maphash #'(lambda (part-name part-data)
                (unparse-part p part-name part-data wiring-table))
            parts-table))
@@ -40,7 +41,7 @@
   (uemit-token p :end)
 
   (uemit-token p :inputs)
-  (dolist (pin-name (as-list (outputs part-data)))
+  (dolist (pin-name (as-list (inputs part-data)))
     (unparse-input-pin p pin-name part-name wiring-table))
   (uemit-token p :end)
 

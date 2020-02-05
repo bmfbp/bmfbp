@@ -29,7 +29,7 @@
            
            (:in
             (let ((tokens (e/event:data e)))
-              (let ((p (make-instance 'parser :token-stream tokens)))
+              (let ((p (make-instance 'parser :token-stream tokens :name "json emitter")))
                 (debug-sl nil)
                 (debug-accept nil)
                 (schematic-json-emitter p)
