@@ -267,6 +267,7 @@ add_selfPorts_main :-
 %
 %%%%%%%
 
+
 condEllipses :-
     ellipse(EllipseID),
     port(PortID),
@@ -530,6 +531,21 @@ makePairID(PortID,NewID) :-
 % new
 %
 %%%%%%%%%%%
+
+collect_ports(PortID,Left,Top,Right,Bottom) :-
+  port(PortID),
+  bounding_box_left(PortID,Left),
+  bounding_box_top(PortID,Top),
+  bounding_box_right(PortID,Right),
+  bounding_box_bottom(PortID,Bottom).
+
+collect_unused_text(TextID,Str,Left,Top,Right,Bottom) :-
+  text(TextID,Str),
+  unused_text(TextID),
+  bounding_box_left(TextID,Left),
+  bounding_box_top(TextID,Top),
+  bounding_box_right(TextID,Right),
+  bounding_box_bottom(TextID,Bottom).
 
 collect_unassigned_text(TextID,StrID) :- text(TextID,StrID), unassigned(TextID).
 
