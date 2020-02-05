@@ -12,3 +12,9 @@ To use the part:
 ~/bin/part_compile ../../test_cases/composites/top_level.svg
 
 which has a single output to stdout
+
+-----
+
+if unmapping .pro files, replace all \ with \\ in unmap-sed.sed, and use:
+
+sed -f unmap-sed.sed <temp14.pro >xx14.pro
