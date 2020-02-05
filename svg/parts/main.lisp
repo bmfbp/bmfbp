@@ -144,7 +144,7 @@ So, for metadata, emit:
 					     (mapcar #'create-text-objects 
 						     list)))))))
 	(to-prolog fixed *standard-output*)
-	(write-string-map "temp-string-map.lisp" "strings.sed")))))
+	(write-string-map "temp-string-map.lisp" "strings.sed" "unmap-sed.sed")))))
 
 #-lispworks
 (defun main (argv)
