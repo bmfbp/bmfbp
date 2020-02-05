@@ -27,8 +27,8 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&create-centers~%")
-             (create-centers self)
+             (format *standard-output* "~&create-centers COMMENTED OUT~%")
+             ;(create-centers self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send

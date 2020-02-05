@@ -27,8 +27,8 @@
        (if (eq pin :fb)
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (format *standard-output* "~&calculate-distances~%")
-             (calculate-distances self)
+             (format *standard-output* "~&calculate-distances COMMENTED OUT~%")
+             ;(calculate-distances self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
