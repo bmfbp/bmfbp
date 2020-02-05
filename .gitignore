@@ -45,3 +45,13 @@ svg/back-end/log2.lisp
 svg/cl-compiler/BUILD_PROCESS.generic
 
 svg/cl-compiler/BUILD_PROCESS.json
+
+svg/cl-compiler/IDE.json
+
+svg/cl-compiler/IDE.ir
+
+svg/cl-compiler/IDE.generic
+
+svg/cl-compiler/hold.ir
+
+svg/cl-compiler/old-assign-portnames.lisp
