@@ -327,7 +327,9 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (cl-event-passing-user::@with-dispatch
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
-      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/medium-test14.prolog")))
+      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp14.pro")))
+      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/xx13.pro")))
+      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/medium-test14.prolog")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/test.prolog")))
         (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
         ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/very-small.prolog")))
@@ -353,15 +355,3 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
   (arrowgrams/compiler::compiler))
 (defun cl-user::ctest () (arrowgrams/compiler::ctest))
 
-#|
-(defun cl-user::ppp ()
-  (load "~/quicklisp/local-projects/bmfbp/svg/prolog2lisp3/package.lisp")
-  #+lispworks(system:run-shell-command "rm -rf ~/.cache/common-lisp")
-  ;(ql:register-local-projects)
-  (ql:quickload :arrowgrams/parser)
-  (format *standard-output* "~&~%test~%~%")
-  #+lispworks(hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/prolog2lisp3")
-  (arrowgrams/parser::create))
-(defun arrowgrams/parser::ppp ()
-  (cl-user::ppp))
-|#

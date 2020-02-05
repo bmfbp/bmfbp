@@ -11,7 +11,7 @@
 (defmethod collector-react ((self e/part:part) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
-    (flet ((pull (id) (send! self :request id) #+nil(format *standard-output* "~&generic emitter: pull ~S~%" id))
+    (flet ((pull (id) (send! self :request id))
            (debug-tok (out-pin msg tok)
              (if (token-pulled-p tok)
                  (send! self out-pin (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
@@ -30,6 +30,7 @@
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e))))
+              (debug-accept nil)
               (ir-collector p 0)
               (let ((schem (top-schematic p)))
                 (unparse-schematic p schem)

@@ -69,7 +69,7 @@
   (uemit-string p pin-name)
   (let ((wire-list (lookup-part-pin-in-sinks p wiring-table part-name pin-name)))
     (dolist (wire wire-list)
-      (uemit-integer wire)))
+      (uemit-integer p wire)))
   (uemit-token p :end))
 
 (defmethod unparse-output-pin ((p parser) pin-name part-name wiring-table)
