@@ -328,7 +328,7 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
     (cl-event-passing-user::@with-dispatch
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp14.pro")))
-      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/xx13.pro")))
+      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/xx5.pro")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/medium-test14.prolog")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/test.prolog")))
         (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))

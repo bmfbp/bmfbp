@@ -37,22 +37,19 @@
           (format nil "ASSIGN-PORTNAMES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod assign-portnames ((self e/part:part))
-  (let ((all-port-bbs (find-all-port-bounding-boxes self)))
+  (let ((all-port-bbs (find-all-nameless-port-bounding-boxes self)))
     (let ((all-text-bbs (find-all-unused-text-bounding-boxes self))
           (port-vs-text-hash-table (make-hash-table)))
       (dolist (port-plus-bb all-port-bbs)
         (multiple-value-bind (id left top right bottom)
             (get-port-details self port-plus-bb)
-          (format *standard-output* "~&port ~A~%" id)
           (let ((distance-list nil))
             (dolist (text-plus-bb all-text-bbs)
               (multiple-value-bind (tid tstr tleft ttop tright tbottom)
                   (get-text-details self text-plus-bb)
                 (let ((c (closest left top right bottom tleft ttop tright tbottom)))
-                  (format *standard-output* "~&tid ~a tstr/~a/ side ~a distance ~a~%" tid tstr (side c) (distance c))arrowgrams/compiler/back-end
                   (push (list tid tstr c) distance-list))))
             (let ((closest (find-minimum self distance-list)))
-              (format *standard-output* "~&port ~a closest ~A~%" id closest)
               (setf (gethash id port-vs-text-hash-table) closest)))))
       (asserta-portnames self port-vs-text-hash-table))))
 
@@ -65,12 +62,12 @@
                  (arrowgrams/compiler/util::asserta self (list :portName port str) nil nil nil nil nil nil nil)))
            h))
 
-(defmethod find-all-port-bounding-boxes ((self e/part:part))
+(defmethod find-all-nameless-port-bounding-boxes ((self e/part:part))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           (cl-event-passing-user::@get-instance-var self :fb))))
-    (let ((goal '((:collect_ports (:? portid) (:? left) (:? top) (:? right) (:? bottom)))))
+    (let ((goal '((:collect_nameless_ports (:? portid) (:? left) (:? top) (:? right) (:? bottom)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         results))))
 

@@ -479,6 +479,7 @@
 
 (defmethod part-pin-in-wire-sinks-p ((p parser) (wire wire) part-name pin-name)
   (dolist (sink (as-list (sink-list wire)))
+    (format *standard-output* "~&searching sinks for ~A ~A <> ~A ~A)~%" part-name pin-name (pair-first sink) (pair-second sink))
     ;; sink is a pair of strings
     (when (and (string= (pair-first sink) part-name)
                (string= (pair-second sink) pin-name))

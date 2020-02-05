@@ -44,8 +44,8 @@ dec nl
 
 = <parts>
   '{' inc nl
-  :string '\"partName\" : ' print-text ',' nl
-  :string '\"kindName\" : ' print-text ',' nl
+  :string '\"partName\" : \"' print-text '\", ' nl
+  :string '\"kindName\" : \"' print-text '\", ' nl
   <incount>
   <inmap>
   :inputs '\"inPins\" : [' <multiple-pins-with-indices> '],' nl :end
@@ -65,22 +65,22 @@ dec nl
   :integer '\"outCount\" : ' print-text ',' nl
 
 = <inmap>
-  :inmap                  '\"inMap\" : {' inc nl
+  :inmap                  '\"inMap\" : {' inc
     <mapping>
   :end
-                           dec nl '},' nl
+                           dec  '},' nl
 
 = <outmap>
-  :outmap                  '\"outMap\" : {' inc nl
+  :outmap                  '\"outMap\" : {' inc 
     <mapping>
   :end
-                           dec nl '},' nl
+                           dec '},' nl
 
 = <mapping>
   [ ?string
     :string               '\"' print-text '\" : '
     :integer              print-text
-    [ ?string             ',' nl
+    [ ?string             ', '
     | ! ]                
     <mapping>
   | ! ]                  

@@ -3,7 +3,7 @@
 (defparameter *counter* 0)
 
 (defmethod first-time ((self e/part:part))
-  (setf *counter* 12)
+  (setf *counter* 0)
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 

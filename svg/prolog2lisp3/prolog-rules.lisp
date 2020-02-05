@@ -6,6 +6,9 @@
 % manually defined
 %
 
+noname(Port) :- portNameByID(Port,NameID), !, fail.
+noname(Port).
+
 not_same(X,X) :- !, fail.
 not_same(X,Y).
 
@@ -532,8 +535,9 @@ makePairID(PortID,NewID) :-
 %
 %%%%%%%%%%%
 
-collect_ports(PortID,Left,Top,Right,Bottom) :-
+collect_nameless_ports(PortID,Left,Top,Right,Bottom) :-
   port(PortID),
+  noname(PortID),
   bounding_box_left(PortID,Left),
   bounding_box_top(PortID,Top),
   bounding_box_right(PortID,Right),
