@@ -48,6 +48,8 @@
               (multiple-value-bind (tid tstr tleft ttop tright tbottom)
                   (get-text-details self text-plus-bb)
                 (let ((c (closest left top right bottom tleft ttop tright tbottom)))
+                  (when (eq :ontop (side c))
+                    (format *error-output* "~&assign-portnames warning: text ~a /~a/ on top of port ~a~%" tid tstr (first port-plus-bb)))
                   (push (list tid tstr c) distance-list))))
             (let ((closest (find-minimum self distance-list)))
               (setf (gethash id port-vs-text-hash-table) closest)))))

@@ -49,12 +49,17 @@
                  ((text-to-right-p port-center-x port-center-y text-left text-top text-right text-bottom)
                   (make-instance 'close :side :left
                                  :distance (min (calc-distance port-center-x port-center-y text-left text-bottom)
-                                                (calc-distance port-center-x port-center-y text-right text-top))))
+                                                (calc-distance port-center-x port-center-y text-left text-top))))
                  ((text-to-left-p port-center-x port-center-y text-left text-top text-right text-bottom)
                   (make-instance 'close :side :right
-                                 :distance (min (calc-distance port-center-x port-center-y text-left text-bottom)
+                                 :distance (min (calc-distance port-center-x port-center-y text-right text-bottom)
                                                 (calc-distance port-center-x port-center-y text-right text-top))))
-                 (t (assert nil)))))
+                 (t
+                  (make-instance 'close :side :ontop
+                                :distance (min (calc-distance port-center-x port-center-y text-left text-bottom)
+                                               (calc-distance port-center-x port-center-y text-left text-top)
+                                               (calc-distance port-center-x port-center-y text-right text-top)
+                                               (calc-distance port-center-x port-center-y text-right text-bottom)))))))
       c)))
     
 (defmethod less-than-p ((a close) (b close))
