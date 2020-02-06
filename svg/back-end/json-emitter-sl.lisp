@@ -3,10 +3,10 @@
 (defparameter *json-emitter-rules*
 "
 = <schematic>
-'{' inc nl
-  <name>
-  <metadata>
-  <kind>  '\"kind\" : ' print-text ',' nl
+                   '{' inc nl
+  <name>               '\"name\" : ' print-text ',' nl
+  <metadata>       '\"metadata\" : ' print-text ',' nl
+  <kind>               '\"kind\" : ' print-text ',' nl
   <inputs>
   <outputs>
   <react>
