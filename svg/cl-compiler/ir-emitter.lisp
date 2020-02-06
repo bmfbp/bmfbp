@@ -42,8 +42,7 @@
           (cl-event-passing-user::@get-instance-var self :fb)))
         (parts (make-hash-table :test 'equal))
         (wires nil)
-        (ellipses nil)
-        (top-name nil))
+        (ellipses nil))
 
     (let ((goal '((:match_top_name (:? N)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -53,21 +52,6 @@
             (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
               #+nil(setf metadata-string (cdr (assoc 'Str (car result))))
               (setf (gethash :self parts) `(:id self :name ,top-name :metadata ""))))
-          
-          (let ((goal '((:find_ellipse (:? E)))))
-            (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
-              (mapc #'(lambda (lecons)
-                        (assert (and (listp lecons) (= 1 (length lecons))))
-                        (let ((econs (car lecons)))
-                          (pushnew (cdr econs) ellipses)))
-                    result)))
-          
-          (let ((goal '((:find_parts (:? ID) (:? Strid)))))
-            (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
-              (dolist (result results)
-                (let ((id (cdr (assoc 'ID result)))
-                      (str (cdr (assoc 'Strid result))))
-                  (setf (gethash id parts) `(:id ,id :kind ,str))))))
           
           (let ((goal '((:find_self_input_pins (:? PortID) (:? Strid)))))
             (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -91,6 +75,22 @@
                           (inputs (getf plist :inputs))
                           (outputs (getf plist :outputs)))
                       (setf (gethash :self parts) `(:id self :kind ,name :inputs ,inputs :outputs ,(pushnew strid outputs)))))))))
+
+          (let ((goal '((:find_ellipse (:? E)))))
+            (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+              (mapc #'(lambda (lecons)
+                        (assert (and (listp lecons) (= 1 (length lecons))))
+                        (let ((econs (car lecons)))
+                          (pushnew (cdr econs) ellipses)))
+                    result)))
+          
+          (let ((goal '((:find_parts (:? ID) (:? Strid)))))
+            (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+              (dolist (result results)
+                (let ((id (cdr (assoc 'ID result)))
+                      (str (cdr (assoc 'Strid result))))
+                  (setf (gethash id parts) `(:id ,id :kind ,str))))))
+          
           
           (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
             (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
