@@ -65,7 +65,7 @@
                       (let ((id (cdr (assoc 'PortID result)))
                             (strid (cdr (assoc 'Strid result))))
                         (declare (ignore id))
-                        (pushnew strid output)))))
+                        (pushnew strid outputs)))))
                 (setf (gethash :self parts) `(:id self :name ,top-name :metadata ,metadata :inputs ,inputs :outputs ,outputs)))))
 
           (let ((goal '((:find_ellipse (:? E)))))
