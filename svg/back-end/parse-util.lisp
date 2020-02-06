@@ -263,7 +263,7 @@
 ;; schematic mechanism
 
 (defmethod schematic/open ((self parser))
-  (stack-push (schematic-stack self) (make-instance 'schematic :name "self")))
+  (stack-push (schematic-stack self) (make-instance 'schematic :name "\"self\"")))
 
 (defmethod schematic/set-meta-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))

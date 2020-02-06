@@ -5,8 +5,8 @@
 = <schematic>
 ' generic ' nl
   <name> 
-  <metadata>
   <kind>
+  <metadata>
   <inputs>
   <outputs>
   <react>

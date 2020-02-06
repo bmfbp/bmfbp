@@ -4,8 +4,8 @@
 "
 = <ir> 
   :lpar
-    <metadata>
     <kind>
+    <metadata>
     <inputs> 
     <outputs> 
     <react> 

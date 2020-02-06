@@ -58,6 +58,7 @@
                     (dolist (result results)
                       (let ((id (cdr (assoc 'PortID result)))
                             (strid (cdr (assoc 'Strid result))))
+                        (declare (ignore id))
                         (pushnew strid inputs)))))
                 (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
                   (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -130,8 +131,13 @@
               (let ((wires (insert-wire-number (collapse-fan-out edges))))
                 
                 (let ((self-plist (gethash :self parts)))
-                  (let (( final `(,(symbol-name (getf self-plist :name)) ,(getf self-plist :metadata)
-                                                                         ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
+                  (let (( final `(,(symbol-name (getf self-plist :name))
+                                  ,(getf self-plist :metadata)
+                                  ,(getf self-plist :inputs)
+                                  ,(getf self-plist :outputs)
+                                  "react"
+                                  "first-time"
+                                  ,(make-parts-list parts) ,wires)))
                     (let ((filename (asdf:system-relative-pathname :arrowgrams (format nil "svg/cl-compiler/~a.ir" top-name)))) ;; redundant write ir to file for debug
                       (with-open-file (f filename :direction :output :if-exists :supersede)
                         (let ((*print-right-margin* 120))
