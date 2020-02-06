@@ -105,7 +105,7 @@ dec nl
     :end                         ']' [ ?string ',' | ! ]
 
 = <wire-indices>
-  [ ?integer :integer            print-integer [ ?integer ',' | ! ]
+  [ ?integer :integer            print-integer [ ?integer ',' <wire-indices> | ! ]
   | ! ]
 
 ")

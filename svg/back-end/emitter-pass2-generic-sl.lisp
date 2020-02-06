@@ -88,7 +88,7 @@
     :end
 
 = <wire-indices>
-  [ ?integer :integer
+  [ ?integer :integer <wire-indices>
   | ! ]
 
 "
