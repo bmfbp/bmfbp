@@ -51,8 +51,6 @@
           (let ((goal '((:fetch_metadata (:? ID) (:? TextID) (:? Str)))))
             (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
               (let (( metadata (cdr (assoc 'Str (car result)))))
-                (setf (gethash :self parts) `(:id self :name ,top-name :metadata ""))
-                
                 (let ((goal '((:find_self_input_pins (:? PortID) (:? Strid)))))
                   (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
                     (dolist (result results)
@@ -63,7 +61,6 @@
                                 (inputs (getf plist :inputs))
                                 (outputs (getf plist :outputs)))
                             (setf (gethash :self parts) `(:id self :kind ,name :inputs ,(pushnew strid inputs) :outputs ,outputs))))))))
-                
                 (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
                   (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
                     (dolist (result results)
@@ -74,7 +71,8 @@
                           (let ((name (getf plist :name))
                                 (inputs (getf plist :inputs))
                                 (outputs (getf plist :outputs)))
-                            (setf (gethash :self parts) `(:id self :kind ,name :inputs ,inputs :outputs ,(pushnew strid outputs))))))))))))
+                            (setf (gethash :self parts) `(:id self :kind ,name :inputs ,inputs :outputs ,(pushnew strid outputs)))))))))
+                (setf (gethash :self parts) `(:id self :name ,top-name :metadata ,metadata)))))
 
           (let ((goal '((:find_ellipse (:? E)))))
             (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
