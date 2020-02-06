@@ -5,8 +5,8 @@
 = <schematic>
                    '{' inc nl
   <name>               '\"name\" : ' print-text ',' nl
-  <metadata>       '\"metadata\" : ' print-text ',' nl
   <kind>               '\"kind\" : ' print-text ',' nl
+  <metadata>       '\"metadata\" : ' print-text ',' nl
   <inputs>
   <outputs>
   <react>
