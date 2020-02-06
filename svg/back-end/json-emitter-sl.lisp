@@ -7,8 +7,8 @@
   <name>               '\"name\" : ' print-text ',' nl
   <kind>           '\"kindName\" : ' print-text ',' nl
   <metadata>       '\"metadata\" : ' print-text ',' nl
-  <inputs>
-  <outputs>
+  <top-level-inputs>
+  <top-level-outputs>
   <react>
   <first-time>
   :integer '\"wireCount\" : ' print-integer ', ' nl
@@ -32,6 +32,23 @@ dec nl
 
 = <first-time>
   :string
+
+= <top-level-inputs>
+  :inputs                     '\"inputs\" : ['
+  <top-level-list-of-strings>
+  :end                        '],' nl
+
+= <top-level-outputs>
+  :outputs                    '\"outputs\" : ['
+  <top-level-list-of-strings>
+  :end                        '],' nl
+
+= <top-level-list-of-strings>
+  [ ?string :string           '\"' print-text '\"' [ ?string ',' | ! ]
+    <top-level-list-of-strings>
+  | ! ]
+
+
 
 = <inputs>
   :inputs

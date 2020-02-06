@@ -7,8 +7,8 @@
   <name> 
   <kind>
   <metadata>
-  <inputs>
-  <outputs>
+  <top-level-inputs>
+  <top-level-outputs>
   <react>
   <first-time>
   :integer
@@ -28,6 +28,22 @@
 
 = <first-time>
   :string
+
+= <top-level-inputs>
+  :inputs
+  <top-level-list-of-strings>
+  :end
+
+= <top-level-outputs>
+  :outputs
+  <top-level-list-of-strings>
+  :end
+
+= <top-level-list-of-strings>
+  [ ?string :string <top-level-list-of-strings>
+  | ! ]
+
+
 
 = <inmap>
   :inmap
