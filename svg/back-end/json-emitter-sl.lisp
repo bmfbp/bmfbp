@@ -5,6 +5,7 @@
 = <schematic>
 '{' inc nl
   <name>
+  <metadata>
   <kind>  '\"kind\" : ' print-text ',' nl
   <inputs>
   <outputs>
@@ -18,6 +19,9 @@ dec nl
 '}'
 
 = <name>
+  :string
+
+= <metadata>
   :string
 
 = <kind>

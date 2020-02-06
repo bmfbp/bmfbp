@@ -5,6 +5,7 @@
 = <schematic>
 ' generic ' nl
   <name> 
+  <metadata>
   <kind>
   <inputs>
   <outputs>
@@ -14,6 +15,9 @@
   <parts>
 
 = <name>
+  :string
+
+= <metadata>
   :string
 
 = <kind>

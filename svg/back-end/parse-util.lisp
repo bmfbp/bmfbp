@@ -68,7 +68,8 @@
 
 (defclass schematic (part)
   ((parts :accessor parts)
-   (wiring :accessor wiring)))
+   (wiring :accessor wiring)
+   (metadata :accessor metadata)))
 
 (defclass wire ()
   ((index :accessor index)
@@ -263,6 +264,11 @@
 
 (defmethod schematic/open ((self parser))
   (stack-push (schematic-stack self) (make-instance 'schematic :name "self")))
+
+(defmethod schematic/set-meta-from-string ((self parser))
+  (let ((str (get-accepted-token-text self)))
+    (let ((top (stack-top (schematic-stack self))))
+      (setf (metadata top) str))))
 
 (defmethod schematic/set-kind-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))

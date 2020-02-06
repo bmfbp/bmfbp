@@ -5,6 +5,7 @@
 = <ir> 
                           schematic/open
   :lpar
+    <meta>                schematic/set-meta-from-string
     <kind>                schematic/set-kind-from-string
     <inputs>              schematic/set-inputs-from-list list/pop
     <outputs>             schematic/set-outputs-from-list list/pop
@@ -60,6 +61,9 @@
                                         part/close-pop
 
 = <name>
+  :string
+
+= <meta>
   :string
 
 = <kind>

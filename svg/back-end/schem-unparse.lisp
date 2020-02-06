@@ -2,6 +2,7 @@
 
 (defmethod unparse-schematic ((p parser) schem)
   (uemit-string p (slot-value schem 'name))
+  (uemit-string p (slot-value schem 'metadata))
   (uemit-string p (slot-value schem 'kind))
   (unparse-inputs p (slot-value schem 'inputs))
   (unparse-outputs p (slot-value schem 'outputs))

@@ -49,7 +49,10 @@
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
         (assert (and (listp result) (= 1 (length (car result)))))
         (setf top-name (cdr (assoc 'N (car result))))
-          (setf (gethash :self parts) `(:id self :name ,top-name))))
+        (let ((goal '((:fetch_metadata (:? ID) (:? TextID) (:? Str)))))
+          (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+            (setf metadata-string (cdr (assoc 'Str (car result))))
+            (setf (gethash :self parts) `(:id self :name ,top-name :metadata ,metadata-string))))))
 
     (let ((goal '((:find_ellipse (:? E)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
@@ -135,7 +138,8 @@
         (let ((wires (insert-wire-number (collapse-fan-out edges))))
           
           (let ((self-plist (gethash :self parts)))
-            (let (( final `(,(symbol-name (getf self-plist :name)) ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
+            (let (( final `(,(symbol-name (getf self-plist :name)) ,(getf self-plist :metadata)
+                            ,(getf self-plist :inputs) ,(getf self-plist :outputs) "react" "first-time" ,(make-parts-list parts) ,wires)))
               (let ((filename (asdf:system-relative-pathname :arrowgrams (format nil "svg/cl-compiler/~a.ir" top-name)))) ;; redundant write ir to file for debug
                 (with-open-file (f filename :direction :output :if-exists :supersede)
                   (let ((*print-right-margin* 120))

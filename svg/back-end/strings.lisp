@@ -25,6 +25,10 @@
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
                  (not (char= c #\")))))
+           (escape-char-p ()
+             (when (eq :character (token-kind (e/event:data e)))
+               (let ((c (token-text (e/event:data e))))
+                 (char= c #\\))))
            (action () (e/event::sym e))
            (next-state (x) (setf *strings-state* x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
@@ -51,9 +55,9 @@
                 (progn
                   (push-char-into-buffer)
                   (pull)
-                  (next-state :collecting-symbol))
+                  (next-state :collecting-string))
               (forward-token))))))
-      (:collecting-symbol
+      (:collecting-string
        (ecase (action)
          (:token
           (if (eof-p)
@@ -61,14 +65,30 @@
                 (release-and-clear-buffer)
                 (forward-token)
                 (next-state :done))
-            (if (follow-char-p)
+            (if (escape-char-p)
+                (progn
+                  (next-state :escape)
+                  (pull))
+              (if (follow-char-p)
+                  (progn
+                    (push-char-into-buffer)
+                    (pull))
                 (progn
                   (push-char-into-buffer)
-                  (pull))
+                  (release-and-clear-buffer)
+                  (next-state :idle))))))))
+      (:escape
+       (ecase (action)
+         (:token
+          (if (eof-p)
               (progn
-                (push-char-into-buffer)
                 (release-and-clear-buffer)
-                (next-state :idle)))))))
+                (forward-token)
+                (next-state :done))
+            (progn
+              (push-char-into-buffer)
+              (pull)
+              (next-state :collecting-string))))))
       (:done
        (send! self :error (format nil "strings finished, but received ~S" e))))))
 

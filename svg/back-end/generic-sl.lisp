@@ -4,6 +4,7 @@
 "
 = <ir> 
   :lpar
+    <metadata>
     <kind>
     <inputs> 
     <outputs> 
@@ -41,6 +42,9 @@
   :lpar <name> <kind> <inputs> <outputs> <react> <first-time> :rpar
 
 = <name>
+  :string
+
+= <metadata>
   :string
 
 = <kind>

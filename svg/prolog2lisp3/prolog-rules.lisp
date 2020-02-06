@@ -1263,5 +1263,8 @@ find_wire(ParentID1,PortID1,PortName1,ParentID2,PortID2,PortName2) :-
   parent(ParentID2,PortID2),
   parent(ParentID1,PortID1).
 
+fetch_metadata(ID,TextID,Str):-
+    metadata(ID,TextID),
+    text(TextID,Str).
 
 ")
