@@ -5,7 +5,6 @@
 (defparameter *symbols-buffer* nil)
 (defparameter *symbols-start-position* 0)
 (defparameter *symbols-state* :idle)
-(defparameter *symbols-token-pulled-p* nil)
 
 (defun symbols-get-buffer () (coerce (reverse *symbols-buffer*) 'string))
 (defun symbols-get-position () *symbols-start-position*)
