@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/text-bounding-boxes)
+(in-package :arrowgrams/compiler)
 
 ; (:code text-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler::text-bb-react #'arrowgrams/compiler::text-bb-first-time)
 
