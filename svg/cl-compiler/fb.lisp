@@ -1,18 +1,16 @@
-(in-package :arrowgrams/compiler/fb)
+(in-package :arrowgrams/compiler)
 
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
-; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next :show) (:fb :no-more :next :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next :show) (:fb :no-more :next :error))
 
-(defparameter *show-additions* nil)
-
-(defmethod first-time ((self e/part:part))
-  (setf *show-additions* nil)
+(defmethod fb-first-time ((self e/part:part))
+  (cl-event-passing-user::@set-instance-var self :show-additions nil)
   (cl-event-passing-user::@set-instance-var self :state :idle)
   (cl-event-passing-user::@set-instance-var self :fb-as-iterable-list nil)
   (cl-event-passing-user::@set-instance-var self :factbase nil))
 
-(defmethod react ((self e/part:part) e)
+(defmethod fb-react ((self e/part:part) e)
   (flet ((idle-reaction (action state) (declare (ignorable state))
            (if (eq action :retract)
                (progn
@@ -31,7 +29,7 @@
                  (if (eq action :go)
                      (assert nil)
                    (if (eq action :show)
-                       (setf *show-additions* (e/event:data e))
+		       (cl-event-passing-user::@set-instance-var self :show-additions (e/event:data e))
                      (if (eq action :fb-request)
                          (cl-event-passing-user::@send self :fb (cl-event-passing-user::@get-instance-var self :factbase))
                        (if (eq action :iterate)
@@ -93,7 +91,7 @@
            (cl-event-passing-user::@set-instance-var self :factbase (cons
                                                                      (cons fact nil) ;; rules are lists of lists, facts are a list of a list
                                                                      fb))))
-    (when *show-additions*
+    (when (cl-event-passing-user::@get-instance-var self :show-additions)
       (format *standard-output* "~&add-fact ~S~%" fact))
     (let ((fb (cl-event-passing-user::@get-instance-var self :factbase)))
       (let ((existing-fact-lis (find-fact fact fb)))

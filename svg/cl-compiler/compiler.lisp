@@ -3,20 +3,14 @@
 (defun compiler ()
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
-           (:code reader (:file-name) (:string-fact :eof :error)
-            #'arrowgrams/compiler/reader::react #'arrowgrams/compiler/reader::first-time)
-           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error)
-            #'arrowgrams/compiler/fb::react #'arrowgrams/compiler/fb::first-time)
-           (:code writer (:filename :start :next :no-more) (:request :error)
-            #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
-           (:code converter (:string-fact :eof) (:done :converted :error)
-            #'arrowgrams/compiler/convert-to-keywords::react #'arrowgrams/compiler/convert-to-keywords::first-time)
-           (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error :show)
-            #'arrowgrams/compiler/sequencer::react #'arrowgrams/compiler/sequencer::first-time)
-
+           (:code reader (:file-name) (:string-fact :eof :error))
+           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error))
+           (:code writer (:filename :start :next :no-more) (:request :error))
+           (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
+           (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error :show))
            (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
             ;; parts
-            (reader fb writer converter sequencer)
+            (reader fb writer convert-to-keywords sequencer)
             ;; wiring
 "
 self.prolog-factbase-filename -> reader.file-name
@@ -25,11 +19,11 @@ self.dump -> sequencer.finished-pipeline
 self.request-fb -> fb.fb-request
 self.retract-fact -> fb.retract
 
-reader.string-fact -> converter.string-fact
-reader.eof -> converter.eof
+reader.string-fact -> convert-to-keywords.string-fact
+reader.eof -> convert-to-keywords.eof
 
-converter.converted, self.add-fact -> fb.lisp-fact
-converter.done -> sequencer.finished-reading
+convert-to-keywords.converted, self.add-fact -> fb.lisp-fact
+convert-to-keywords.done -> sequencer.finished-reading
 
 sequencer.show -> fb.show
 sequencer.run-pipeline, self.done -> self.go
@@ -41,7 +35,7 @@ fb.no-more -> writer.no-more, sequencer.finished-writing
 
 writer.request -> fb.get-next
 
-converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
+convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
 "
 )        
            (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error))
@@ -75,8 +69,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 	   (:code ir-emitter (:fb :go) (:ir :basename :done :request-fb :error))
 
 
-           (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error)
-            #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
+           (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error))
 
            (:schem passes (:fb :go) (:ir :basename :request-fb :add-fact :retract-fact :done :error)
             ;; parts

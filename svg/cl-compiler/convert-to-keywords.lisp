@@ -1,14 +1,14 @@
-(in-package :arrowgrams/compiler/convert-to-keywords)
+(in-package :arrowgrams/compiler)
 
-; (:code reader (:string-fact :eof) (:done :converted :error) #'arrowgrams/compiler/convert-to-keywords::react #'arrowgrams/compiler/convert-to-keywords::first-time)
+; (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
 
 ;; read a string fact, output as a lisp fact with all symbols converted to keywords
 
-(defmethod first-time ((self e/part:part))
+(defmethod convert-to-keywords-first-time ((self e/part:part))
   ;; nothing
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod convert-to-keywords-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (string-fact (e/event:data e))
         (new-list nil))
@@ -25,7 +25,7 @@
           (cl-event-passing-user::@send self :converted new-list))))
       (if (eq pin :eof)
           (cl-event-passing-user::@send self :done t)
-        (cl-event-passing-user::@send self :error (format nil "~&convert-to-keywords unexpected input pin ~S~%" pin))))))
+        (cl-event-passing-user::@send self :error (format nil "~&convert to keywords unexpected input pin ~S~%" pin))))))
 
         
 
