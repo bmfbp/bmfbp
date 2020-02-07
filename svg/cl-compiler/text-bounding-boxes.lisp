@@ -1,22 +1,22 @@
 (in-package :arrowgrams/compiler)
 
-; (:code text-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler::text-bb-react #'arrowgrams/compiler::text-bb-first-time)
+; (:code text-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler::react #'arrowgrams/compiler::first-time)
 
 (defmethod text-bb-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :text-bb-state :idle)
+  (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
 (defmethod text-bb-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :text-bb-state)
+    (ecase (cl-event-passing-user::@get-instance-var self :state)
       (:idle
        (if (eq pin :fb)
            (cl-event-passing-user::@set-instance-var self :fb data)
          (if (eq pin :go)
              (progn
                (cl-event-passing-user::@send self :request-fb t)
-               (cl-event-passing-user::@set-instance-var self :text-bb-state :waiting-for-new-fb))
+               (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
            (cl-event-passing-user::@send
             self
             :error
@@ -29,7 +29,7 @@
              (format *standard-output* "~&text-bounding-boxes~%")
              (text-bb-make-bounding-boxes self)
              (cl-event-passing-user::@send self :done t)
-             (cl-event-passing-user::@set-instance-var self :text-bb-state :idle))
+             (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
           self
           :error
