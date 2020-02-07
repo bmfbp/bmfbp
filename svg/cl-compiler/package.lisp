@@ -49,6 +49,4 @@
 (defpackage :arrowgrams/compiler/sem-ports-have-sink-or-source (:use :cl))
 (defpackage :arrowgrams/compiler/sem-no-duplicate-kinds (:use :cl))
 (defpackage :arrowgrams/compiler/sem-speech-vs-comments (:use :cl))
-(defpackage :arrowgrams/compiler/assign-wire-numbers-to-edges (:use :cl))
-(defpackage :arrowgrams/compiler/self-input-pins (:use :cl))
 
