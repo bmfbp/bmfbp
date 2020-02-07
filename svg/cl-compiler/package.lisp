@@ -42,7 +42,5 @@
 (defpackage :arrowgrams/compiler/mark-indexed-ports (:use :cl))
 (defpackage :arrowgrams/compiler/coincident-ports (:use :cl))
 (defpackage :arrowgrams/compiler/mark-directions (:use :cl))
-(defpackage :arrowgrams/compiler/mark-nc (:use :cl))
 (defpackage :arrowgrams/compiler/match-ports-to-components (:use :cl))
-(defpackage :arrowgrams/compiler/pinless (:use :cl))
 
