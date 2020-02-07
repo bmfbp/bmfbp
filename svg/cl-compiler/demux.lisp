@@ -1,9 +1,8 @@
 (in-package :arrowgrams/compiler/demux)
 
-(defparameter *counter* 0)
 
 (defmethod first-time ((self e/part:part))
-  (setf *counter* 0)
+  (cl-event-passing-user::@set-instance-var self :counter 0)
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
@@ -14,8 +13,10 @@
       (:idle
        (if  (eq pin :go)
            (progn
-             (incf *counter*)
-             (ecase *counter*
+	     (let ((counter (cl-event-passing-user::@get-instance-var self :counter)))
+               (incf counter)
+	       (cl-event-passing-user::@set-instance-var self :counter counter)
+             (ecase counter
                (1 (cl-event-passing-user::@send self (e/part::get-output-pin self :o1) T))
                (2 (cl-event-passing-user::@send self (e/part::get-output-pin self :o2) T))
                (3 (cl-event-passing-user::@send self (e/part::get-output-pin self :o3) T))
@@ -45,7 +46,7 @@
                (27 (cl-event-passing-user::@send self (e/part::get-output-pin self :o27) T))
                (28 (cl-event-passing-user::@send self (e/part::get-output-pin self :o28) T))
                (29 (cl-event-passing-user::@send self (e/part::get-output-pin self :o29) T))
-               (30 (format *standard-output* "~&demux done~%"))))
+               (30 (format *standard-output* "~&demux done~%")))))
          (cl-event-passing-user::@send
             self
             :error
