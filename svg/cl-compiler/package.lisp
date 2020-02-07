@@ -53,5 +53,4 @@
 (defpackage :arrowgrams/compiler/self-input-pins (:use :cl))
 (defpackage :arrowgrams/compiler/self-output-pins (:use :cl))
 (defpackage :arrowgrams/compiler/input-pins (:use :cl))
-(defpackage :arrowgrams/compiler/output-pins (:use :cl))
 
