@@ -1,12 +1,12 @@
-(in-package :arrowgrams/compiler/reader)
+(in-package :arrowgrams/compiler)
 
 ; (:code reader (:file-name) (:string-fact :eof :error) #'arrowgrams/compiler/reader::react)
 
-(defmethod first-time ((self e/part:part))
+(defmethod reader-first-time ((self e/part:part))
   ;; nothing
   )
 
-(defmethod react ((self e/part:part) ev-file-name)
+(defmethod reader-react ((self e/part:part) ev-file-name)
   (read-prolog-fb self (e/event:data ev-file-name)))
 
 (defmethod read-prolog-fb ((self e/part:part) file-name)

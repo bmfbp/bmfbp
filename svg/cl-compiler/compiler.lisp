@@ -3,10 +3,9 @@
 (defun compiler ()
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
-           (:code reader (:file-name) (:string-fact :eof :error)
-            #'arrowgrams/compiler/reader::react #'arrowgrams/compiler/reader::first-time)
+           (:code reader (:file-name) (:string-fact :eof :error))
            (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error)
-            #'arrowgrams/compiler/fb::react #'arrowgrams/compiler/fb::first-time)
+            #'arrowgrams/compiler/fb::fb-react #'arrowgrams/compiler/fb::fb-first-time)
            (:code writer (:filename :start :next :no-more) (:request :error)
             #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
            (:code converter (:string-fact :eof) (:done :converted :error)
