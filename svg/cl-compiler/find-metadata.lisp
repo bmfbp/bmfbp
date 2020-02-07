@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/FIND-METADATA)
+(in-package :arrowgrams/compiler)
 
-; (:code FIND-METADATA (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/FIND-METADATA::react #'arrowgrams/compiler/FIND-METADATA::first-time)
+; (:code FIND-METADATA (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod FIND-METADATA-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod FIND-METADATA-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

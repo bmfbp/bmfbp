@@ -54,10 +54,8 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
            (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error)
 		  #'arrowgrams/compiler/assign-parents-to-ellipses::react #'arrowgrams/compiler/assign-parents-to-ellipses::first-time)
 
-	   (:code find-comments (:fb :go) (:add-fact :done :request-fb :error)
-		  #'arrowgrams/compiler/find-comments::react #'arrowgrams/compiler/find-comments::first-time)
-	   (:code find-metadata (:fb :go) (:add-fact :retract-fact :done :request-fb :error)
-		  #'arrowgrams/compiler/find-metadata::react #'arrowgrams/compiler/find-metadata::first-time)
+	   (:code find-comments (:fb :go) (:add-fact :done :request-fb :error))
+	   (:code find-metadata (:fb :go) (:add-fact :retract-fact :done :request-fb :error))
 	   (:code add-kinds (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code add-self-ports (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code make-unknown-port-names (:fb :go) (:add-fact :done :request-fb :error))

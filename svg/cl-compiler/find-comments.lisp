@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/FIND-COMMENTS)
+(in-package :arrowgrams/compiler)
 
-; (:code FIND-COMMENTS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/FIND-COMMENTS::react #'arrowgrams/compiler/FIND-COMMENTS::first-time)
+; (:code FIND-COMMENTS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod FIND-COMMENTS-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod FIND-COMMENTS-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

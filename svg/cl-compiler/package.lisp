@@ -31,8 +31,6 @@
 (defpackage :arrowgrams/compiler/assign-parents-to-ellipses
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/find-comments (:use :cl))
-(defpackage :arrowgrams/compiler/find-metadata (:use :cl))
 
 
 
