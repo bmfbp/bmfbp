@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-; (:code text-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler::react #'arrowgrams/compiler::first-time)
+; (:code text-bb (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod text-bb-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
