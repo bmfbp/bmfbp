@@ -1,8 +1,8 @@
-(in-package :arrowgrams/compiler/fb)
+(in-package :arrowgrams/compiler)
 
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
-; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next :show) (:fb :no-more :next :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next :show) (:fb :no-more :next :error))
 
 (defmethod fb-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :show-additions nil)

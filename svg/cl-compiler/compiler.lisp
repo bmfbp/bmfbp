@@ -4,8 +4,7 @@
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
            (:code reader (:file-name) (:string-fact :eof :error))
-           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error)
-            #'arrowgrams/compiler/fb::fb-react #'arrowgrams/compiler/fb::fb-first-time)
+           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error))
            (:code writer (:filename :start :next :no-more) (:request :error)
             #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
            (:code converter (:string-fact :eof) (:done :converted :error)
