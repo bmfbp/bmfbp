@@ -3,13 +3,15 @@
 ; (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
 
 (defparameter *strings-buffer* nil)
-(defparameter *strings-start-position* 0)
 
 (defun strings-get-buffer () (coerce (reverse *strings-buffer*) 'string))
-(defun strings-get-position () *strings-start-position*)
+
+(defmethod strings-get-position ((self e/part:part))
+  (cl-event-passing-user::@get-instance-var self :start-position))
 
 (defmethod strings-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
+  (cl-event-passing-user::@set-instance-var self :start-position 0)
   )
 
 (defmethod strings-react ((self e/part:part) (e e/event:event))
@@ -33,9 +35,9 @@
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
              (setf *strings-buffer* nil)
-             (setf *strings-start-position* (token-position (e/event:data e))))
+             (cl-event-passing-user::@set-instance-var self :start-position (token-position (e/event:data e))))
            (release-buffer ()
-             (send! self :out (make-token :kind :string :text (strings-get-buffer) :position (strings-get-position))))
+             (send! self :out (make-token :kind :string :text (strings-get-buffer) :position (strings-get-position self))))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
