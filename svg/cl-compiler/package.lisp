@@ -34,7 +34,6 @@
 (defpackage :arrowgrams/compiler/find-comments (:use :cl))
 (defpackage :arrowgrams/compiler/find-metadata (:use :cl))
 (defpackage :arrowgrams/compiler/add-kinds (:use :cl))
-(defpackage :arrowgrams/compiler/add-self-ports (:use :cl))
-(defpackage :arrowgrams/compiler/make-unknown-port-names (:use :cl))
+
 
 
