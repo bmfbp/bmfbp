@@ -36,7 +36,5 @@
 (defpackage :arrowgrams/compiler/add-kinds (:use :cl))
 (defpackage :arrowgrams/compiler/add-self-ports (:use :cl))
 (defpackage :arrowgrams/compiler/make-unknown-port-names (:use :cl))
-(defpackage :arrowgrams/compiler/create-centers (:use :cl))
-(defpackage :arrowgrams/compiler/calculate-distances (:use :cl))
 
 
