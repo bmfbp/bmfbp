@@ -4,13 +4,12 @@
 
 (defparameter *strings-buffer* nil)
 (defparameter *strings-start-position* 0)
-(defparameter *strings-state* :idle)
 
 (defun strings-get-buffer () (coerce (reverse *strings-buffer*) 'string))
 (defun strings-get-position () *strings-start-position*)
 
 (defmethod strings-first-time ((self e/part:part))
-  (setf *strings-state* :idle)
+  (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
 (defmethod strings-react ((self e/part:part) (e e/event:event))
@@ -30,7 +29,7 @@
                (let ((c (token-text (e/event:data e))))
                  (char= c #\\))))
            (action () (e/event::sym e))
-           (next-state (x) (setf *strings-state* x))
+           (next-state (x) (cl-event-passing-user::@set-instance-var self :state x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
              (setf *strings-buffer* nil)
@@ -42,8 +41,9 @@
              (clear-buffer))
          )
 
-    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" *strings-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
-    (ecase *strings-state*
+    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" (cl-event-passing-user::@get-instance-var self :state)
+                 (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    (ecase (cl-event-passing-user::@get-instance-var self :state)
       (:idle
        (ecase (action)
          (:token
