@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/MARK-DIRECTIONS)
+(in-package :arrowgrams/compiler)
 
-; (:code MARK-DIRECTIONS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/MARK-DIRECTIONS::react #'arrowgrams/compiler/MARK-DIRECTIONS::first-time)
+; (:code MARK-DIRECTIONS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod MARK-DIRECTIONS-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod MARK-DIRECTIONS-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)
