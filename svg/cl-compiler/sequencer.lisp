@@ -1,14 +1,14 @@
-(in-package :arrowgrams/compiler/sequencer)
+(in-package :arrowgrams/compiler)
 
-; (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error) #'arrowgrams/compiler/sequencer::react #'arrowgrams/compiler/sequencer::first-time)
+; (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error))
 
 ;; read a string fact, output as a lisp fact with all symbols converted to keywords
 
-(defmethod first-time ((self e/part:part))
+(defmethod sequencer-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod sequencer-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (string-fact (e/event:data e))
         (new-list nil))
