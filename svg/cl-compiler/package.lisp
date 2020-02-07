@@ -39,6 +39,5 @@
 (defpackage :arrowgrams/compiler/create-centers (:use :cl))
 (defpackage :arrowgrams/compiler/calculate-distances (:use :cl))
 (defpackage :arrowgrams/compiler/assign-portnames (:use :cl))
-(defpackage :arrowgrams/compiler/mark-indexed-ports (:use :cl))
-(defpackage :arrowgrams/compiler/coincident-ports (:use :cl))
+
 

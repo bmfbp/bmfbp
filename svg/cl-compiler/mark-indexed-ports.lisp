@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/MARK-INDEXED-PORTS)
+(in-package :arrowgrams/compiler)
 
-; (:code MARK-INDEXED-PORTS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/MARK-INDEXED-PORTS::react #'arrowgrams/compiler/MARK-INDEXED-PORTS::first-time)
+; (:code MARK-INDEXED-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod MARK-INDEXED-PORTS-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod MARK-INDEXED-PORTS-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)
