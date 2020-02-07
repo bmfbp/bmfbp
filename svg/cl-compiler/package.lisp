@@ -45,8 +45,4 @@
 (defpackage :arrowgrams/compiler/mark-nc (:use :cl))
 (defpackage :arrowgrams/compiler/match-ports-to-components (:use :cl))
 (defpackage :arrowgrams/compiler/pinless (:use :cl))
-(defpackage :arrowgrams/compiler/sem-parts-have-some-ports (:use :cl))
-(defpackage :arrowgrams/compiler/sem-ports-have-sink-or-source (:use :cl))
-(defpackage :arrowgrams/compiler/sem-no-duplicate-kinds (:use :cl))
-(defpackage :arrowgrams/compiler/sem-speech-vs-comments (:use :cl))
 
