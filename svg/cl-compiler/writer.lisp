@@ -1,13 +1,13 @@
-(in-package :arrowgrams/compiler/writer)
+(in-package :arrowgrams/compiler)
 
-; (:code writer (:filename :start :next :no-more) (:request :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+; (:code writer (:filename :start :next :no-more) (:request :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod writer-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   (cl-event-passing-user::@set-instance-var self :filename nil)
   (cl-event-passing-user::@set-instance-var self :stream *standard-output*))
 
-(defmethod react ((self e/part:part) (e e/event:event))
+(defmethod writer-react ((self e/part:part) (e e/event:event))
   (let ((action (e/event::sym e))
         (state (cl-event-passing-user::@get-instance-var self :state)))
     (ecase state

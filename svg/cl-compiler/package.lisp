@@ -16,17 +16,9 @@
 (defpackage :arrowgrams/compiler/convert-to-keywords
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/writer
-  (:use :cl))
-
-(defpackage :arrowgrams/compiler/fb
-  (:use :cl))
-
 (defpackage :arrowgrams/compiler/sequencer
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/speechbubble-bounding-boxes
-  (:use :cl))
 
 
 
