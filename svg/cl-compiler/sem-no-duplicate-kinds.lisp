@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/SEM-NO-DUPLICATE-KINDS)
+(in-package :arrowgrams/compiler)
 
-; (:code SEM-NO-DUPLICATE-KINDS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/SEM-NO-DUPLICATE-KINDS::react #'arrowgrams/compiler/SEM-NO-DUPLICATE-KINDS::first-time)
+; (:code SEM-NO-DUPLICATE-KINDS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod SEM-NO-DUPLICATE-KINDS-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod SEM-NO-DUPLICATE-KINDS-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

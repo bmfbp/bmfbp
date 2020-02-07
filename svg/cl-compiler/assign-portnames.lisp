@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/ASSIGN-PORTNAMES)
+(in-package :arrowgrams/compiler)
 
-; (:code ASSIGN-PORTNAMES (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/ASSIGN-PORTNAMES::react #'arrowgrams/compiler/ASSIGN-PORTNAMES::first-time)
+; (:code ASSIGN-PORTNAMES (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod ASSIGN-PORTNAMES-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod ASSIGN-PORTNAMES-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

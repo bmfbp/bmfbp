@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/COINCIDENT-PORTS)
+(in-package :arrowgrams/compiler)
 
-; (:code COINCIDENT-PORTS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/COINCIDENT-PORTS::react #'arrowgrams/compiler/COINCIDENT-PORTS::first-time)
+; (:code COINCIDENT-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod COINCIDENT-PORTS-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod COINCIDENT-PORTS-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

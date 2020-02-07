@@ -30,7 +30,8 @@
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e) :name "collector" )))
-              (debug-accept nil)
+              (format *standard-output* "~&collector~%")
+              (debug-accept t)
               (ir-collector p 0)
               (let ((schem (top-schematic p)))
                 (unparse-schematic p schem)

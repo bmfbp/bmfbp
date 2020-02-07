@@ -1,12 +1,12 @@
-(in-package :arrowgrams/compiler/text-bounding-boxes)
+(in-package :arrowgrams/compiler)
 
-; (:code text-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/text-bounding-boxes::react #'arrowgrams/compiler/text-bounding-boxes::first-time)
+; (:code text-bb (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod text-bb-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod text-bb-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)
@@ -27,7 +27,7 @@
            (progn
              (cl-event-passing-user::@set-instance-var self :fb data)
              (format *standard-output* "~&text-bounding-boxes~%")
-             (make-bounding-boxes self)
+             (text-bb-make-bounding-boxes self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
@@ -36,7 +36,7 @@
           (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
              
 
-(defmethod make-bounding-boxes ((self e/part:part))
+(defmethod text-bb-make-bounding-boxes ((self e/part:part))
   (let ((bounding-box-rules '((:text-geometry (:? id) (:? str) (:? cx) (:? y) (:? hw) (:? h))
                               (:text (:? id) (:? str))
                               (:geometry_center_x (:? id) (:? cx))

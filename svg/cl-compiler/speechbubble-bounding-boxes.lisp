@@ -1,12 +1,12 @@
-(in-package :arrowgrams/compiler/speechbubble-bounding-boxes)
+(in-package :arrowgrams/compiler)
 
-; (:code speechbubble-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/speechbubble-bounding-boxes::react #'arrowgrams/compiler/speechbubble-bounding-boxes::first-time)
+; (:code speechbubble-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod speechbubble-bb-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod speechbubble-bb-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)
@@ -20,23 +20,23 @@
            (cl-event-passing-user::@send
             self
             :error
-            (format nil "BOUNDING-BOXES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
+            (format nil "speech bubble BOUNDING-BOXES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
 
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
              (format *standard-output* "~&speechbubble-bounding-boxes~%")
              (cl-event-passing-user::@set-instance-var self :fb data)
-             (make-bounding-boxes self)
+             (make-speechbubble-bounding-boxes self)
              (cl-event-passing-user::@send self :done t)
              (cl-event-passing-user::@set-instance-var self :state :idle))
          (cl-event-passing-user::@send
           self
           :error
-          (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+          (format nil "speech bubble BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
              
 
-(defmethod make-bounding-boxes ((self e/part:part))
+(defmethod make-speechbubble-bounding-boxes ((self e/part:part))
   ;; same as rect, but matches speechbubble
   (let ((bounding-box-rules '((:speechbubble-geometry (:? id) (:? cx) (:? cy) (:? w) (:? h))
                               (:speechbubble (:? id))

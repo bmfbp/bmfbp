@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/SEM-SPEECH-VS-COMMENTS)
+(in-package :arrowgrams/compiler)
 
-; (:code SEM-SPEECH-VS-COMMENTS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/SEM-SPEECH-VS-COMMENTS::react #'arrowgrams/compiler/SEM-SPEECH-VS-COMMENTS::first-time)
+; (:code SEM-SPEECH-VS-COMMENTS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod SEM-SPEECH-VS-COMMENTS-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod SEM-SPEECH-VS-COMMENTS-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

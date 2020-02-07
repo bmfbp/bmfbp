@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/INPUT-PINS)
+(in-package :arrowgrams/compiler)
 
-; (:code INPUT-PINS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/INPUT-PINS::react #'arrowgrams/compiler/INPUT-PINS::first-time)
+; (:code INPUT-PINS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod input-pins-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod input-pins-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

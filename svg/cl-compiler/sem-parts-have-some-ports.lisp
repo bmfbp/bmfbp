@@ -1,13 +1,13 @@
 
-(in-package :arrowgrams/compiler/SEM-PARTS-HAVE-SOME-PORTS)
+(in-package :arrowgrams/compiler)
 
-; (:code SEM-PARTS-HAVE-SOME-PORTS (:fb :go) (:add-fact :done :request-fb :error) #'arrowgrams/compiler/SEM-PARTS-HAVE-SOME-PORTS::react #'arrowgrams/compiler/SEM-PARTS-HAVE-SOME-PORTS::first-time)
+; (:code SEM-PARTS-HAVE-SOME-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod first-time ((self e/part:part))
+(defmethod sem-parts-have-some-ports-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod sem-parts-have-some-ports-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)
