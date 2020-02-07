@@ -44,15 +44,12 @@ writer.request -> fb.get-next
 converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
 "
 )        
-           (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error)
-		  #'arrowgrams/compiler/ellipse-bounding-boxes::react #'arrowgrams/compiler/ellipse-bounding-boxes::first-time)
-
-           (:code rectangle-bb (:fb :go) (:add-fact :request-fb :done :error)
-		  #'arrowgrams/compiler/rectangle-bounding-boxes::react #'arrowgrams/compiler/rectangle-bounding-boxes::first-time)
+           (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error))
+           (:code rectangle-bb (:fb :go) (:add-fact :request-fb :done :error))
            (:code text-bb (:fb :go) (:add-fact :request-fb :done :error)
-		  #'arrowgrams/compiler/text-bounding-boxes::react #'arrowgrams/compiler/text-bounding-boxes::first-time)
+		  #'arrowgrams/compiler/text-bounding-boxes::text-bb-react #'arrowgrams/compiler/text-bounding-boxes::text-bb-first-time)
            (:code speechbubble-bb (:fb :go) (:add-fact :request-fb :done :error)
-		  #'arrowgrams/compiler/speechbubble-bounding-boxes::react #'arrowgrams/compiler/speechbubble-bounding-boxes::first-time)
+		  #'arrowgrams/compiler/speechbubble-bounding-boxes::speechbubble-bb-react #'arrowgrams/compiler/speechbubble-bounding-boxes::speechbubble-bb-first-time)
 
            (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error)
 		  #'arrowgrams/compiler/assign-parents-to-ellipses::react #'arrowgrams/compiler/assign-parents-to-ellipses::first-time)

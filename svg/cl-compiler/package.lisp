@@ -25,12 +25,6 @@
 (defpackage :arrowgrams/compiler/sequencer
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/ellipse-bounding-boxes
-  (:use :cl))
-
-(defpackage :arrowgrams/compiler/rectangle-bounding-boxes
-  (:use :cl))
-
 (defpackage :arrowgrams/compiler/speechbubble-bounding-boxes
   (:use :cl))
 
