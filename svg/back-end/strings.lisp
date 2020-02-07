@@ -2,20 +2,28 @@
 
 ; (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
 
-(defparameter *strings-buffer* nil)
+(defmethod strings-get-ordered-buffer ((self e/part:part))
+  (coerce (reverse (cl-event-passing-user::@get-instance-var self :buffer))
+          'string))
 
-(defun strings-get-buffer () (coerce (reverse *strings-buffer*) 'string))
+(defmethod strings-put-buffer ((self e/part:part) item)
+  (let ((buffer (cl-event-passing-user::@get-instance-var self :buffer)))
+    (cl-event-passing-user::@set-instance-var self :buffer (cons item buffer))))
 
 (defmethod strings-get-position ((self e/part:part))
   (cl-event-passing-user::@get-instance-var self :start-position))
 
+(defmethod strings-clear-buffer ((self e/part:part))
+  (cl-event-passing-user::@set-instance-var self :buffer nil))
+
 (defmethod strings-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   (cl-event-passing-user::@set-instance-var self :start-position 0)
+  (strings-clear-buffer self)
   )
 
 (defmethod strings-react ((self e/part:part) (e e/event:event))
-  (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *strings-buffer*))
+  (labels ((push-char-into-buffer () (strings-put-buffer self (token-text (e/event:data e))))
            (pull () (send! self :request :strings))
            (forward-token () (send-event! self :out e))
            (start-char-p () 
@@ -34,10 +42,9 @@
            (next-state (x) (cl-event-passing-user::@set-instance-var self :state x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
-             (setf *strings-buffer* nil)
-             (cl-event-passing-user::@set-instance-var self :start-position (token-position (e/event:data e))))
+             (strings-clear-buffer self))
            (release-buffer ()
-             (send! self :out (make-token :kind :string :text (strings-get-buffer) :position (strings-get-position self))))
+             (send! self :out (make-token :kind :string :text (strings-get-ordered-buffer self) :position (strings-get-position self))))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
