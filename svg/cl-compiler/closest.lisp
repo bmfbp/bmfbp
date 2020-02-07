@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/ASSIGN-PORTNAMES)
+(in-package :arrowgrams/compiler)
 
 (defclass close-to ()
   ((side :initarg :side :accessor side)

@@ -38,6 +38,5 @@
 (defpackage :arrowgrams/compiler/make-unknown-port-names (:use :cl))
 (defpackage :arrowgrams/compiler/create-centers (:use :cl))
 (defpackage :arrowgrams/compiler/calculate-distances (:use :cl))
-(defpackage :arrowgrams/compiler/assign-portnames (:use :cl))
 
 
