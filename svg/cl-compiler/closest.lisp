@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler/ASSIGN-PORTNAMES)
 
-(defclass close ()
+(defclass close-to ()
   ((side :initarg :side :accessor side)
    (distance :accessor distance :initarg :distance)))
 
@@ -33,36 +33,36 @@
         (port-center-y (+ port-top (/ (- port-bottom port-top) 2))))
     (let ((c 
            (cond ((text-above-p port-center-x port-center-y text-left text-top text-right text-bottom)
-                  (make-instance 'close :side :bottom
+                  (make-instance 'close-to :side :bottom
                                  :distance (min (calc-distance port-center-x port-center-y text-left text-bottom)
                                                 (calc-distance port-center-x port-center-y
                                                                (+ text-left (/ (- text-right text-left) 2))
                                                                text-bottom) ;; middle
                                                 (calc-distance port-center-x port-center-y text-right text-bottom))))
                  ((text-below-p port-center-x port-center-y text-left text-top text-right text-bottom)
-                  (make-instance 'close :side :top
+                  (make-instance 'close-to :side :top
                                  :distance (min (calc-distance port-center-x port-center-y text-left text-top)
                                                 (calc-distance port-center-x port-center-y
                                                                (+ text-left (/ (- text-right text-left) 2))
                                                                text-top) ;; middle
                                                 (calc-distance port-center-x port-center-y text-right text-top))))
                  ((text-to-right-p port-center-x port-center-y text-left text-top text-right text-bottom)
-                  (make-instance 'close :side :left
+                  (make-instance 'close-to :side :left
                                  :distance (min (calc-distance port-center-x port-center-y text-left text-bottom)
                                                 (calc-distance port-center-x port-center-y text-left text-top))))
                  ((text-to-left-p port-center-x port-center-y text-left text-top text-right text-bottom)
-                  (make-instance 'close :side :right
+                  (make-instance 'close-to :side :right
                                  :distance (min (calc-distance port-center-x port-center-y text-right text-bottom)
                                                 (calc-distance port-center-x port-center-y text-right text-top))))
                  (t
-                  (make-instance 'close :side :ontop
+                  (make-instance 'close-to :side :ontop
                                 :distance (min (calc-distance port-center-x port-center-y text-left text-bottom)
                                                (calc-distance port-center-x port-center-y text-left text-top)
                                                (calc-distance port-center-x port-center-y text-right text-top)
                                                (calc-distance port-center-x port-center-y text-right text-bottom)))))))
       c)))
     
-(defmethod less-than-p ((a close) (b close))
+(defmethod less-than-p ((a close-to) (b close-to))
   (< (distance a) (distance b)))
 
 #+nil(defun distance-test ()
