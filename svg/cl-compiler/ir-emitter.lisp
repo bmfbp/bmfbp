@@ -1,6 +1,6 @@
-(in-package :arrowgrams/compiler/ir-emitter)
+(in-package :arrowgrams/compiler)
 
-; (:code IR-EMITTER (:fb :go) (:ir :basename :add-fact :done :request-fb :error) #'arrowgrams/compiler/EMITTER::react #'arrowgrams/compiler/EMITTER::first-time)
+; (:code IR-EMITTER (:fb :go) (:ir :basename :add-fact :done :request-fb :error))
 
 (defmethod ir-emitter-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)

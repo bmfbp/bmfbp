@@ -100,8 +100,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 		  #'arrowgrams/compiler/input-pins::react #'arrowgrams/compiler/input-pins::first-time)
 	   (:code output-pins (:fb :go) (:add-fact :done :request-fb :error)
 		  #'arrowgrams/compiler/output-pins::react #'arrowgrams/compiler/output-pins::first-time)
-	   (:code ir-emitter (:fb :go) (:ir :basename :done :request-fb :error)
-		  #'arrowgrams/compiler/ir-emitter::ir-emitter-react #'arrowgrams/compiler/ir-emitter::ir-emitter-first-time)
+	   (:code ir-emitter (:fb :go) (:ir :basename :done :request-fb :error))
 
 
            (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error)
