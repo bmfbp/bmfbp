@@ -50,10 +50,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
            (:code speechbubble-bb (:fb :go) (:add-fact :request-fb :done :error)
 ;		  #'arrowgrams/compiler::speechbubble-bb-react #'arrowgrams/compiler::speechbubble-bb-first-time)
 		  #'arrowgrams/compiler/speechbubble-bounding-boxes::speechbubble-bb-react #'arrowgrams/compiler/speechbubble-bounding-boxes::speechbubble-bb-first-time)
-
-           (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error)
-		  #'arrowgrams/compiler/assign-parents-to-ellipses::react #'arrowgrams/compiler/assign-parents-to-ellipses::first-time)
-
+           (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code find-comments (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code find-metadata (:fb :go) (:add-fact :retract-fact :done :request-fb :error))
 	   (:code add-kinds (:fb :go) (:add-fact :done :request-fb :error))

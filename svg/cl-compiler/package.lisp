@@ -28,8 +28,7 @@
 (defpackage :arrowgrams/compiler/speechbubble-bounding-boxes
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/assign-parents-to-ellipses
-  (:use :cl))
+
 
 
 
