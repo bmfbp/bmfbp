@@ -69,8 +69,7 @@ convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error
 	   (:code ir-emitter (:fb :go) (:ir :basename :done :request-fb :error))
 
 
-           (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error)
-            #'arrowgrams/compiler/demux::react #'arrowgrams/compiler/demux::first-time)
+           (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error))
 
            (:schem passes (:fb :go) (:ir :basename :request-fb :add-fact :retract-fact :done :error)
             ;; parts

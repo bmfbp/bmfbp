@@ -1,12 +1,12 @@
-(in-package :arrowgrams/compiler/demux)
+(in-package :arrowgrams/compiler)
 
 
-(defmethod first-time ((self e/part:part))
+(defmethod demux-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :counter 0)
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod demux-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)
