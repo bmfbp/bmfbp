@@ -5,16 +5,14 @@
 
            (:code reader (:file-name) (:string-fact :eof :error))
            (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error))
-           (:code writer (:filename :start :next :no-more) (:request :error)
-            #'arrowgrams/compiler/writer::react #'arrowgrams/compiler/writer::first-time)
-           (:code converter (:string-fact :eof) (:done :converted :error)
-            #'arrowgrams/compiler/convert-to-keywords::react #'arrowgrams/compiler/convert-to-keywords::first-time)
+           (:code writer (:filename :start :next :no-more) (:request :error))
+           (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error :show)
             #'arrowgrams/compiler/sequencer::react #'arrowgrams/compiler/sequencer::first-time)
 
            (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
             ;; parts
-            (reader fb writer converter sequencer)
+            (reader fb writer convert-to-keywords sequencer)
             ;; wiring
 "
 self.prolog-factbase-filename -> reader.file-name
@@ -23,11 +21,11 @@ self.dump -> sequencer.finished-pipeline
 self.request-fb -> fb.fb-request
 self.retract-fact -> fb.retract
 
-reader.string-fact -> converter.string-fact
-reader.eof -> converter.eof
+reader.string-fact -> convert-to-keywords.string-fact
+reader.eof -> convert-to-keywords.eof
 
-converter.converted, self.add-fact -> fb.lisp-fact
-converter.done -> sequencer.finished-reading
+convert-to-keywords.converted, self.add-fact -> fb.lisp-fact
+convert-to-keywords.done -> sequencer.finished-reading
 
 sequencer.show -> fb.show
 sequencer.run-pipeline, self.done -> self.go
@@ -39,7 +37,7 @@ fb.no-more -> writer.no-more, sequencer.finished-writing
 
 writer.request -> fb.get-next
 
-converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
+convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
 "
 )        
            (:code ellipse-bb (:fb :go) (:add-fact :request-fb :done :error))

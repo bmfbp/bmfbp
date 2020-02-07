@@ -10,12 +10,6 @@
 (defpackage :arrowgrams/compiler/classes
   (:use :cl))
 
-(defpackage :arrowgrams/compiler/reader
-  (:use :cl))
-
-(defpackage :arrowgrams/compiler/convert-to-keywords
-  (:use :cl))
-
 (defpackage :arrowgrams/compiler/sequencer
   (:use :cl))
 
