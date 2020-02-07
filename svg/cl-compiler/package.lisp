@@ -33,7 +33,6 @@
 
 (defpackage :arrowgrams/compiler/find-comments (:use :cl))
 (defpackage :arrowgrams/compiler/find-metadata (:use :cl))
-(defpackage :arrowgrams/compiler/add-kinds (:use :cl))
 
 
 
