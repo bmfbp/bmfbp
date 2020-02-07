@@ -2,11 +2,11 @@
 
 ; (:code IR-EMITTER (:fb :go) (:ir :basename :add-fact :done :request-fb :error) #'arrowgrams/compiler/EMITTER::react #'arrowgrams/compiler/EMITTER::first-time)
 
-(defmethod first-time ((self e/part:part))
+(defmethod ir-emitter-first-time ((self e/part:part))
   (cl-event-passing-user::@set-instance-var self :state :idle)
   )
 
-(defmethod react ((self e/part:part) e)
+(defmethod ir-emitter-react ((self e/part:part) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
     (ecase (cl-event-passing-user::@get-instance-var self :state)

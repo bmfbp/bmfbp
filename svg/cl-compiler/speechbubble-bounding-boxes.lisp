@@ -20,7 +20,7 @@
            (cl-event-passing-user::@send
             self
             :error
-            (format nil "BOUNDING-BOXES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
+            (format nil "speech bubble BOUNDING-BOXES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
 
       (:waiting-for-new-fb
        (if (eq pin :fb)

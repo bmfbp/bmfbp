@@ -48,6 +48,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
            (:code rectangle-bb (:fb :go) (:add-fact :request-fb :done :error))
            (:code text-bb (:fb :go) (:add-fact :request-fb :done :error))
            (:code speechbubble-bb (:fb :go) (:add-fact :request-fb :done :error)
+;		  #'arrowgrams/compiler::speechbubble-bb-react #'arrowgrams/compiler::speechbubble-bb-first-time)
 		  #'arrowgrams/compiler/speechbubble-bounding-boxes::speechbubble-bb-react #'arrowgrams/compiler/speechbubble-bounding-boxes::speechbubble-bb-first-time)
 
            (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error)
@@ -100,7 +101,7 @@ converter.error, writer.error, fb.error, reader.error, sequencer.error -> self.e
 	   (:code output-pins (:fb :go) (:add-fact :done :request-fb :error)
 		  #'arrowgrams/compiler/output-pins::react #'arrowgrams/compiler/output-pins::first-time)
 	   (:code ir-emitter (:fb :go) (:ir :basename :done :request-fb :error)
-		  #'arrowgrams/compiler/ir-emitter::react #'arrowgrams/compiler/ir-emitter::first-time)
+		  #'arrowgrams/compiler/ir-emitter::ir-emitter-react #'arrowgrams/compiler/ir-emitter::ir-emitter-first-time)
 
 
            (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error)
@@ -341,7 +342,8 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
                                                                  
 
 (defun ctest ()
-  #+lispworks(system:run-shell-command "rm -rf ~/.cache/common-lisp")
+  #+nil#(system:run-shell-command "rm -rf ~/.cache/common-lisp")
+  (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (load "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/package.lisp")
   (ql:quickload :arrowgrams/parser)
   (format *standard-output* "~&~%test~%~%")
