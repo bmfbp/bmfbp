@@ -51,6 +51,4 @@
 (defpackage :arrowgrams/compiler/sem-speech-vs-comments (:use :cl))
 (defpackage :arrowgrams/compiler/assign-wire-numbers-to-edges (:use :cl))
 (defpackage :arrowgrams/compiler/self-input-pins (:use :cl))
-(defpackage :arrowgrams/compiler/self-output-pins (:use :cl))
-(defpackage :arrowgrams/compiler/input-pins (:use :cl))
 
