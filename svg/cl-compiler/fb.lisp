@@ -11,7 +11,7 @@
   (cl-event-passing-user::@set-instance-var self :factbase nil))
 
 (defmethod fb-react ((self e/part:part) e)
-  (flet ((idle-reaction (action state) (declare (ignorable state))
+  (flet ((idle-handler (action state) (declare (ignorable state))
            (if (eq action :retract)
                (progn
                  (format *standard-output* "~&retract ~S~%" (e/event:data e))
@@ -44,11 +44,11 @@
                  (state (cl-event-passing-user::@get-instance-var self :state)))    
              (ecase state
                (:idle
-                (idle-reaction action state))
+                (idle-handler action state))
                (:idle-with-cleanup ;; might get one more request after going back to :idle
                 (if (eq action :get-next)
                     (cl-event-passing-user::@set-instance-var self :state :idle)
-                  (idle-reaction action state)))
+                  (idle-handler action state)))
         (:iterating
          (if (eq action :get-next)
              (send-next self)
