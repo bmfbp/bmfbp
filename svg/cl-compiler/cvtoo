@@ -1,0 +1,19 @@
+#!/bin/sh
+
+CLASS=`basename $1 .lisp`
+
+cp $1 $1.old
+
+sed -e "3i\\
+(defclass ${CLASS} (e/part:part) ())" <$1 >temp2.lisp
+
+sed -e "4i\\
+(defmethod e/part:busy-p ((self ${CLASS})) (call-next-method))" <temp2.lisp >temp.lisp
+
+sed -e "s~self e/part:part~self ${CLASS}~" <temp.lisp >temp3.lisp
+
+sed -e "s~[-a-zA-Z]*-first-time~e/part:first-time~" <temp3.lisp >temp2.lisp
+
+sed -e "s~[-a-zA-Z]*-react~e/part:react~" <temp2.lisp >temp.lisp
+
+sed -e 's/cl-event-passing-user::@send/@send/g' temp.lisp | sed -e s/cl-event-passing-user::@set-instance-var/@set/g | sed -e s/cl-event-passing-user::@get-instance-var/@get/g >$1
