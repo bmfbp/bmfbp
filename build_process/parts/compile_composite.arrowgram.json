@@ -130,7 +130,7 @@
                 }
             },
             "kindName": "split metadata",
-            "manifestPath": "split_metadata.json",
+            "manifestPath": "split_metadata.manifest.json",
             "sinkPinName": "",
             "sourcePinName": ""
         },

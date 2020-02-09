@@ -8,6 +8,10 @@ exports.main = (pin, packet, send) => {
           state = 'started';
           break;
 
+        case 'continue':
+console.log('kktest-6479', packet);
+          break;
+
         default:
           // No action needed
       }
@@ -16,11 +20,12 @@ exports.main = (pin, packet, send) => {
     case 'started':
       switch (pin) {
         case 'continue':
+console.log('kktest-6480', packet);
           send('get one', true);
           break;
 
         case 'done':
-          state = 'stopped';
+          //state = 'stopped';
           break;
 
         default:

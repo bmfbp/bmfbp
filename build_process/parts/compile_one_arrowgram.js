@@ -58,6 +58,7 @@ async function compile2(arrowgram, send) {
         return;
       }
 
+console.log('kktest-0273', stdout);
       send('out', JSON.parse(stdout), true);
     });
   });

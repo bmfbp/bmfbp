@@ -44,7 +44,7 @@ const flushKindRefs = async (send) => {
   // refs because the kernel takes an array of kind refs and we want to make
   // sure the entrypoint is pointing to a definition file rather than an
   // arrowgram file.
-console.log('kktet-7264', compositeDefs);
+console.log('kktet-7263', compositeDefs);
   await Object.keys(compositeDefs).forEach(async (kindName) => {
     const def = compositeDefs[kindName];
     const kindRef = partKindRefs[kindName];
@@ -57,6 +57,7 @@ console.log('kktet-7264', compositeDefs);
         return path.resolve(contextPath, manifest.entrypoint);
       })
       .then((entrypointPath) => {
+console.log('kktet-7255', entrypointPath, def);
         fs.writeFile(entrypointPath, def, (err, data) => {
           if (err) {
             Promise.reject(err);

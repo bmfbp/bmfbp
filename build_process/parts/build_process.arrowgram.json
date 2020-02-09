@@ -929,7 +929,7 @@
                 }
             },
             "kindName": "nodejs builder",
-            "manifestPath": "javascript_builder.manifest.json",
+            "manifestPath": "nodejs_builder.manifest.json",
             "sinkPinName": "",
             "sourcePinName": ""
         },
