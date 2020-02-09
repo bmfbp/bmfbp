@@ -67,6 +67,7 @@ const processKindRef = (kindRef, send) => {
       return;
     }
 
+console.log('kktest-2638', tempDir, kindIdHash, kindRef.gitRef, targetDir);
     const cmd = [
       `cd ${tempDir}`,
       `&& git clone ${kindRef.gitUrl} ${kindIdHash}`,
@@ -76,6 +77,7 @@ const processKindRef = (kindRef, send) => {
     ].join(' ');
 
     child_process.exec(cmd, {}, function (error, stdout, stderr) {
+      console.error(stderr);
       if (error) {
         console.error(new Error(error));
         return;
