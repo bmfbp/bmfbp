@@ -25,7 +25,7 @@
          (@send
           self
           :error
-          (format nil "SEQUENCER in state :idle expected :finished-reading, but got action ~S data ~S" pin (e/event:data self e)))))
+          (format nil "SEQUENCER in state :idle expected :finished-reading, but got action ~S data ~S" pin (@data self e)))))
       
          (:waiting-for-pipeline
           (if (eq pin :finished-pipeline)
