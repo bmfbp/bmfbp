@@ -145,8 +145,6 @@
                                      (:file "add-kinds" :depends-on ("package" "classes" "rules"))
                                      (:file "add-self-ports" :depends-on ("package" "classes" "rules"))
                                      (:file "make-unknown-port-names" :depends-on ("package" "classes"))
-                                     (:file "create-centers" :depends-on ("package" "classes"))
-                                     (:file "calculate-distances" :depends-on ("package" "classes"))
                                      (:file "closest" :depends-on ("package" "classes"))
                                      (:file "assign-portnames" :depends-on ("package" "classes" "closest"))
                                      (:file "mark-indexed-ports" :depends-on ("package" "classes"))
@@ -183,8 +181,6 @@
                                                    "add-kinds"
                                                    "add-self-ports"
                                                    "make-unknown-port-names"
-                                                   "create-centers"
-                                                   "calculate-distances"
                                                    "assign-portnames"
                                                    "mark-indexed-ports"
                                                    "coincident-ports"
