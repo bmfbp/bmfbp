@@ -143,6 +143,8 @@
                                      (:file "find-metadata" :depends-on ("package" "classes" "util"))
                                      (:file "add-kinds" :depends-on ("package" "classes" "rules"))
                                      (:file "add-self-ports" :depends-on ("package" "classes" "rules"))
+                                     (:file "create-centers" :depends-on ("package" "rules"))
+                                     (:file "calculate-distances" :depends-on ("package" "rules"))
                                      (:file "make-unknown-port-names" :depends-on ("package" "classes"))
                                      (:file "closest" :depends-on ("package" "classes"))
                                      (:file "assign-portnames" :depends-on ("package" "classes" "closest"))
@@ -196,6 +198,9 @@
                                                    "self-output-pins"
                                                    "input-pins"
                                                    "output-pins"
+
+                                                   "create-centers"
+                                                   "calculate-distances"
 
 						   "ir-emitter"
 
