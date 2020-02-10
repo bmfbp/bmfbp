@@ -10,7 +10,7 @@
 (defmethod e/part:first-time ((self reader))
   (call-next-method))
   
-(defmethod e/part:react ((self reader) (e/event:event ev-file-name))
+(defmethod e/part:react ((self reader) (ev-file-name e/event:event))
   (read-prolog-fb self (@data self ev-file-name))
   (call-next-method))
 
