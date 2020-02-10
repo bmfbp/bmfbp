@@ -63,7 +63,7 @@
    (kind :accessor kind)
    (inputs :accessor inputs)
    (outputs :accessor outputs)
-   (e/part:react :accessor part-react)
+   (part-react :accessor part-react)
    (first-time :accessor first-time)))  
 
 (defclass schematic (part)
@@ -136,7 +136,7 @@
 (defmethod parser-error ((self parser) kind)
   (let ((msg (format nil "~&parser error ~S expecting ~S, but got ~S ~%~%" (name self) kind (first (token-stream self)))))
       (assert nil () msg)
-      (send! (owner self) :error msg)
+      (@send (owner self) :error msg)
       (pop (token-stream self)) ;; stream is volatile to help debugging
       nil))
 
@@ -275,10 +275,10 @@
     (let ((top (stack-top (schematic-stack self))))
       (setf (kind top) str))))
 
-(defmethod schematic/set0react-from-string ((self parser))
+(defmethod schematic/set-react-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top (stack-top (schematic-stack self))))
-      (setf (e/part:react top) str))))
+      (setf (part-react top) str))))
 
 (defmethod schematic/set-first-time-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
@@ -328,7 +328,7 @@
 
 (defmethod part/set-react ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (e/part:react top) (get-accepted-token-text self))))
+    (setf (part-react top) (get-accepted-token-text self))))
 
 (defmethod part/set-first-time ((self parser))
   (let ((top (stack-top (part-stack self))))
@@ -457,13 +457,13 @@
 
 
 (defmethod emit-token ((p parser) kind)
-  (send! (owner p) :out (make-token :kind kind)))
+  (@send (owner p) :out (make-token :kind kind)))
 
 (defmethod emit-string ((p parser) str)
-  (send! (owner p) :out (make-token :kind :string :text str)))
+  (@send (owner p) :out (make-token :kind :string :text str)))
 
 (defmethod emit-integer ((p parser) n)
-  (send! (owner p) :out (make-token :kind :integer :text (format nil "~A" n))))
+  (@send (owner p) :out (make-token :kind :integer :text (format nil "~A" n))))
 
 ;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
 

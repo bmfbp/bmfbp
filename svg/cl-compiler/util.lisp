@@ -7,7 +7,7 @@
                           (:bounding-box_top (:? id) (:? bb-top))
                           (:bounding-box_right (:? id) (:? bb-right))
                           (:bounding-box_bottom (:? id) (:? bb-bottom)))))
-    (let ((fb (cons all-text-rules (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((fb (cons all-text-rules (cl-event-passing-user::@get self :fb))))
       (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil self))))
 
 (defmethod find-all-speechbubbles ((self e/part:part))
@@ -17,7 +17,7 @@
                                   (:bounding-box_top (:? id) (:? bb-top))
                                   (:bounding-box_right (:? id) (:? bb-right))
                                   (:bounding-box_bottom (:? id) (:? bb-bottom)))))
-    (let ((fb (cons all-speechbubble-rules (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((fb (cons all-speechbubble-rules (cl-event-passing-user::@get self :fb))))
       (hprolog:prove nil '((:text-id (:? tid) (:? str))) fb hprolog:*empty* 1 nil fb nil self))))
 
 (defun bb-contains (left top right bottom L2 T2 R2 B2)
@@ -53,8 +53,8 @@
 
 (defmethod retract ((self e/part:part) arg1 l g r e n c result)
   ;; TODO: rewrite complete-fb in the return values ; make the change immediate so it affects the current searches
-  (let ((local-fb (cl-event-passing-user::@get-instance-var self :fb)))
-    (cl-event-passing-user::@set-instance-var self :fb (remove-fact arg1 local-fb)))
+  (let ((local-fb (cl-event-passing-user::@get self :fb)))
+    (cl-event-passing-user::@set self :fb (remove-fact arg1 local-fb)))
   (cl-event-passing-user::@send self :retract-fact arg1)
   (values T l g r e n c result))
 

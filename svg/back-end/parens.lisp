@@ -15,14 +15,14 @@
        (flet ((new-lpar () (make-token :kind :lpar :text #\( :position (token-position tok)))
               (new-rpar () (make-token :kind :rpar :text #\) :position (token-position tok)))
               (forward-token ()
-                (send-event! self :out e)))
+                (@send-event self :out e)))
          (cond ((eq :character (token-kind tok))
                 (let ((c (token-text tok)))
                   (case c
                     (#\(
-                     (send! self :out (new-lpar)))
+                     (@send self :out (new-lpar)))
                     (#\)
-                     (send! self :out (new-rpar)))
+                     (@send self :out (new-rpar)))
                     (otherwise (forward-token)))))
                (t (forward-token)))))))
   (call-next-method))

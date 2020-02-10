@@ -43,15 +43,13 @@ convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error
            (:code ellipse-bounding-boxes (:fb :go) (:add-fact :request-fb :done :error))
            (:code rectangle-bounding-boxes (:fb :go) (:add-fact :request-fb :done :error))
            (:code text-bounding-boxes (:fb :go) (:add-fact :request-fb :done :error))
-           (:code speech-bubble-bounding-boxes (:fb :go) (:add-fact :request-fb :done :error))
+           (:code speechbubble-bounding-boxes (:fb :go) (:add-fact :request-fb :done :error))
            (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code find-comments (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code find-metadata (:fb :go) (:add-fact :retract-fact :done :request-fb :error))
 	   (:code add-kinds (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code add-self-ports (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code make-unknown-port-names (:fb :go) (:add-fact :done :request-fb :error))
-	   (:code create-centers (:fb :go) (:add-fact :done :request-fb :error))
-	   (:code calculate-distances (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code assign-portnames (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code mark-indexed-ports (:fb :go) (:add-fact :done :request-fb :error))
 	   (:code coincident-ports (:fb :go) (:add-fact :done :request-fb :error))
@@ -75,9 +73,9 @@ convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error
 
            (:schem passes (:fb :go) (:ir :basename :request-fb :add-fact :retract-fact :done :error)
             ;; parts
-            (ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speech-bubble-bounding-boxes assign-parents-to-ellipses
+            (ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes assign-parents-to-ellipses
                         find-comments find-metadata add-kinds add-self-ports
-                        make-unknown-port-names create-centers calculate-distances assign-portnames mark-indexed-ports coincident-ports mark-directions mark-nc
+                        make-unknown-port-names assign-portnames mark-indexed-ports coincident-ports mark-directions mark-nc
                         match-ports-to-components pinless sem-parts-have-some-ports sem-ports-have-sink-or-source sem-no-duplicate-kinds
                         sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins
                         demux ir-emitter)
@@ -89,26 +87,24 @@ convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error
 
              self.go -> demux.go
 
-             self.fb -> ellipse-bounding-boxes.fb,rectangle-bounding-boxes.fb,text-bounding-boxes.fb,speech-bubble-bounding-boxes.fb,assign-parents-to-ellipses.fb,find-comments.fb,find-metadata.fb,add-kinds.fb,add-self-ports.fb,make-unknown-port-names.fb,create-centers.fb,calculate-distances.fb,assign-portnames.fb,mark-indexed-ports.fb,coincident-ports.fb,mark-directions.fb,mark-nc.fb,match-ports-to-components.fb,pinless.fb,sem-parts-have-some-ports.fb,sem-ports-have-sink-or-source.fb,sem-no-duplicate-kinds.fb,sem-speech-vs-comments.fb,assign-wire-numbers-to-edges.fb,self-input-pins.fb,self-output-pins.fb,input-pins.fb,output-pins.fb,ir-emitter.fb
+             self.fb -> ellipse-bounding-boxes.fb,rectangle-bounding-boxes.fb,text-bounding-boxes.fb,speechbubble-bounding-boxes.fb,assign-parents-to-ellipses.fb,find-comments.fb,find-metadata.fb,add-kinds.fb,add-self-ports.fb,make-unknown-port-names.fb,assign-portnames.fb,mark-indexed-ports.fb,coincident-ports.fb,mark-directions.fb,mark-nc.fb,match-ports-to-components.fb,pinless.fb,sem-parts-have-some-ports.fb,sem-ports-have-sink-or-source.fb,sem-no-duplicate-kinds.fb,sem-speech-vs-comments.fb,assign-wire-numbers-to-edges.fb,self-input-pins.fb,self-output-pins.fb,input-pins.fb,output-pins.fb,ir-emitter.fb
 
              find-metadata.retract-fact -> self.retract-fact
 
-             ellipse-bounding-boxes.request-fb,rectangle-bounding-boxes.request-fb,text-bounding-boxes.request-fb,speech-bubble-bounding-boxes.request-fb,assign-parents-to-ellipses.request-fb,find-comments.request-fb,find-metadata.request-fb,add-kinds.request-fb,add-self-ports.request-fb,make-unknown-port-names.request-fb,create-centers.request-fb,calculate-distances.request-fb,assign-portnames.request-fb,mark-indexed-ports.request-fb,coincident-ports.request-fb,mark-directions.request-fb,mark-nc.request-fb,match-ports-to-components.request-fb,pinless.request-fb,sem-parts-have-some-ports.request-fb,sem-ports-have-sink-or-source.request-fb,sem-no-duplicate-kinds.request-fb,sem-speech-vs-comments.request-fb,assign-wire-numbers-to-edges.request-fb,self-input-pins.request-fb,self-output-pins.request-fb,input-pins.request-fb,output-pins.request-fb,ir-emitter.request-fb -> self.request-fb
+             ellipse-bounding-boxes.request-fb,rectangle-bounding-boxes.request-fb,text-bounding-boxes.request-fb,speechbubble-bounding-boxes.request-fb,assign-parents-to-ellipses.request-fb,find-comments.request-fb,find-metadata.request-fb,add-kinds.request-fb,add-self-ports.request-fb,make-unknown-port-names.request-fb,assign-portnames.request-fb,mark-indexed-ports.request-fb,coincident-ports.request-fb,mark-directions.request-fb,mark-nc.request-fb,match-ports-to-components.request-fb,pinless.request-fb,sem-parts-have-some-ports.request-fb,sem-ports-have-sink-or-source.request-fb,sem-no-duplicate-kinds.request-fb,sem-speech-vs-comments.request-fb,assign-wire-numbers-to-edges.request-fb,self-input-pins.request-fb,self-output-pins.request-fb,input-pins.request-fb,output-pins.request-fb,ir-emitter.request-fb -> self.request-fb
 
-             ellipse-bounding-boxes.add-fact,rectangle-bounding-boxes.add-fact,text-bounding-boxes.add-fact,speech-bubble-bounding-boxes.add-fact,assign-parents-to-ellipses.add-fact,find-comments.add-fact,find-metadata.add-fact,add-kinds.add-fact,add-self-ports.add-fact,make-unknown-port-names.add-fact,create-centers.add-fact,calculate-distances.add-fact,assign-portnames.add-fact,mark-indexed-ports.add-fact,coincident-ports.add-fact,mark-directions.add-fact,mark-nc.add-fact,match-ports-to-components.add-fact,pinless.add-fact,sem-parts-have-some-ports.add-fact,sem-ports-have-sink-or-source.add-fact,sem-no-duplicate-kinds.add-fact,sem-speech-vs-comments.add-fact,assign-wire-numbers-to-edges.add-fact,self-input-pins.add-fact,self-output-pins.add-fact,input-pins.add-fact,output-pins.add-fact -> self.add-fact
+             ellipse-bounding-boxes.add-fact,rectangle-bounding-boxes.add-fact,text-bounding-boxes.add-fact,speechbubble-bounding-boxes.add-fact,assign-parents-to-ellipses.add-fact,find-comments.add-fact,find-metadata.add-fact,add-kinds.add-fact,add-self-ports.add-fact,make-unknown-port-names.add-fact,assign-portnames.add-fact,mark-indexed-ports.add-fact,coincident-ports.add-fact,mark-directions.add-fact,mark-nc.add-fact,match-ports-to-components.add-fact,pinless.add-fact,sem-parts-have-some-ports.add-fact,sem-ports-have-sink-or-source.add-fact,sem-no-duplicate-kinds.add-fact,sem-speech-vs-comments.add-fact,assign-wire-numbers-to-edges.add-fact,self-input-pins.add-fact,self-output-pins.add-fact,input-pins.add-fact,output-pins.add-fact -> self.add-fact
 
 ellipse-bounding-boxes.done,
                rectangle-bounding-boxes.done,
                text-bounding-boxes.done,
-               speech-bubble-bounding-boxes.done,
+               speechbubble-bounding-boxes.done,
                assign-parents-to-ellipses.done,
                find-comments.done,
                find-metadata.done,
                add-kinds.done,
                add-self-ports.done,
                make-unknown-port-names.done,
-               create-centers.done,
-               calculate-distances.done,
                assign-portnames.done,
                mark-indexed-ports.done,
                coincident-ports.done,
@@ -129,15 +125,15 @@ ellipse-bounding-boxes.done,
             demux.o1 -> ellipse-bounding-boxes.go
              demux.o2 -> rectangle-bounding-boxes.go
              demux.o3 -> text-bounding-boxes.go
-             demux.o4 -> speech-bubble-bounding-boxes.go
+             demux.o4 -> speechbubble-bounding-boxes.go
              demux.o5 -> assign-parents-to-ellipses.go
              demux.o6 -> find-comments.go
              demux.o7 -> find-metadata.go
              demux.o8 -> add-kinds.go
              demux.o9 -> add-self-ports.go
              demux.o10 -> make-unknown-port-names.go
-             demux.o11 -> create-centers.go
-             demux.o12 -> calculate-distances.go
+             demux.o11 -> self.done
+             demux.o12 -> self.done
              demux.o13 -> assign-portnames.go
              demux.o14 -> mark-indexed-ports.go
              demux.o15 -> coincident-ports.go
@@ -156,7 +152,7 @@ ellipse-bounding-boxes.done,
              demux.o28 -> output-pins.go
              demux.o29 -> ir-emitter.go
 
-             ellipse-bounding-boxes.error,rectangle-bounding-boxes.error,text-bounding-boxes.error,speech-bubble-bounding-boxes.error,assign-parents-to-ellipses.error,find-comments.error,find-metadata.error,add-kinds.error,add-self-ports.error,make-unknown-port-names.error,create-centers.error,calculate-distances.error,assign-portnames.error,mark-indexed-ports.error,coincident-ports.error,mark-directions.error,match-ports-to-components.error,pinless.error,sem-parts-have-some-ports.error,sem-ports-have-sink-or-source.error,sem-no-duplicate-kinds.error,sem-speech-vs-comments.error,assign-wire-numbers-to-edges.error,self-input-pins.error,self-output-pins.error,input-pins.error,output-pins.error,ir-emitter.error,demux.error
+             ellipse-bounding-boxes.error,rectangle-bounding-boxes.error,text-bounding-boxes.error,speechbubble-bounding-boxes.error,assign-parents-to-ellipses.error,find-comments.error,find-metadata.error,add-kinds.error,add-self-ports.error,make-unknown-port-names.error,assign-portnames.error,mark-indexed-ports.error,coincident-ports.error,mark-directions.error,match-ports-to-components.error,pinless.error,sem-parts-have-some-ports.error,sem-ports-have-sink-or-source.error,sem-no-duplicate-kinds.error,sem-speech-vs-comments.error,assign-wire-numbers-to-edges.error,self-input-pins.error,self-output-pins.error,input-pins.error,output-pins.error,ir-emitter.error,demux.error
    -> self.error
 "
             )

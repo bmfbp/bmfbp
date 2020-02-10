@@ -36,10 +36,10 @@
           (let ((reached-eof (eq :EOF c)))
           (let ((tok (make-token :position (@get self :position)
 				 :kind (if reached-eof :EOF :character) :text c)))
-            (send! self :out tok)
+            (@send self :out tok)
             (when reached-eof
 	      (@set self :state :done))))))))
 
     (:done
-     (send! self :error (format nil "tokenizer done, but received ~S ~S" (e/event::sym e) (e/event:data e)))))
+     (@send self :error (format nil "tokenizer done, but received ~S ~S" (e/event::sym e) (e/event:data e)))))
   (call-next-method))

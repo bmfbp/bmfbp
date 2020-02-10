@@ -26,8 +26,8 @@
 
 (defmethod e/part:react ((self strings) (e e/event:event))
   (labels ((push-char-into-buffer () (strings-put-buffer self (token-text (e/event:data e))))
-           (pull () (send! self :request :strings))
-           (forward-token () (send-event! self :out e))
+           (pull () (@send self :request :strings))
+           (forward-token () (@send-event self :out e))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -46,7 +46,7 @@
            (clear-buffer ()
              (strings-clear-buffer self))
            (release-buffer ()
-             (send! self :out (make-token :kind :string :text (strings-get-ordered-buffer self) :position (strings-get-position self))))
+             (@send self :out (make-token :kind :string :text (strings-get-ordered-buffer self) :position (strings-get-position self))))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
@@ -101,5 +101,5 @@
               (pull)
               (next-state :collecting-string))))))
       (:done
-       (send! self :error (format nil "strings finished, but received ~S" e)))))
+       (@send self :error (format nil "strings finished, but received ~S" e)))))
   (call-next-method))

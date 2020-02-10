@@ -11,7 +11,7 @@
 (defmethod e/part:react ((self json-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
-    (flet ((pull (id) (send! self :request id))
+    (flet ((pull (id) (@send self :request id))
            (debug-tok (out-pin msg tok)
              (if (token-pulled-p tok)
                  (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
@@ -37,9 +37,9 @@
                 (schematic-json-emitter p)
                 (debug-accept nil)
                 (debug-sl nil)
-                (send! self :out (get-output p))
+                (@send self :out (get-output p))
                 (setf *json-emitter-state* :done))))))
         
         (:done
-         (send! self :error (format nil "json emitter done, but received input~%"))))))
+         (@send self :error (format nil "json emitter done, but received input~%"))))))
   (call-next-method))

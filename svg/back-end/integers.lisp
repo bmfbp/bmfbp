@@ -18,8 +18,8 @@
 
 (defmethod e/part:react ((self integers) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *integers-buffer*))
-           (pull () (send! self :request :integers))
-           (forward-token (&key (pulled-p nil)) (send-event! self :out e)
+           (pull () (@send self :request :integers))
+           (forward-token (&key (pulled-p nil)) (@send-event self :out e)
              #+nil(format *standard-output* "~&integer forwarding ~S~%" (token-kind (e/event::data e))))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
@@ -36,7 +36,7 @@
              (setf *integers-buffer* nil)
              (setf *integers-start-position* (token-position (e/event:data e))))
            (release-buffer ()
-             (send! self :out (make-token :kind :integer :text (integers-get-buffer) :position (integers-get-position) :pulled-p t)))
+             (@send self :out (make-token :kind :integer :text (integers-get-buffer) :position (integers-get-position) :pulled-p t)))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
@@ -74,6 +74,6 @@
                 (forward-token :pulled-p t)
                 (next-state :idle)))))))
       (:done
-       (send! self :error (format nil "integers finished, but received ~S" e)))))
+       (@send self :error (format nil "integers finished, but received ~S" e)))))
   (call-next-method))
 

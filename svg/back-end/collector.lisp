@@ -13,16 +13,16 @@
 (defmethod e/part:react ((self collector) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
-    (flet ((pull (id) (send! self :request id))
+    (flet ((pull (id) (@send self :request id))
            (debug-tok (out-pin msg tok)
              (if (token-pulled-p tok)
-                 (send! self out-pin (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
+                 (@send self out-pin (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
                                              msg
                                              (token-kind tok)
                                              (token-position tok)
                                              (if (member (token-kind tok) no-print) "." (token-text tok))
                                              (token-pulled-p tok)))
-               (send! self out-pin (format nil "~&~a:~a pos:~a c:~a"
+               (@send self out-pin (format nil "~&~a:~a pos:~a c:~a"
                                            msg
                                            (token-kind tok)
                                            (token-position tok)
@@ -37,7 +37,7 @@
               (ir-collector p 0)
               (let ((schem (top-schematic p)))
                 (unparse-schematic p schem)
-                (send! self :out (uget-unparsed-token-stream p))
+                (@send self :out (uget-unparsed-token-stream p))
                 (setf *collector-state* :done))))))
         
         (:done

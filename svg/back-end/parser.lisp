@@ -69,10 +69,11 @@
              )))
 
     (cl-event-passing-user:@enable-logging)
-    (inject! parser-net :generic-filename generic-filename)
-    (inject! parser-net :json-filename json-filename)
-    (inject! parser-net :lisp-filename lisp-filename)
-    (inject! parser-net :start filename)))
+    (@with-dispatch
+      (@inject parser-net :generic-filename generic-filename)
+      (@inject parser-net :json-filename json-filename)
+      (@inject parser-net :lisp-filename lisp-filename)
+      (@inject parser-net :start filename))))
 
 (defun cl-user::test ()
   (let ((filename (asdf:system-relative-pathname :arrowgrams "svg/back-end/test.ir"))

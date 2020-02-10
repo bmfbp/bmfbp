@@ -1,5 +1,5 @@
 (defpackage :arrowgrams/compiler/back-end
-  (:use :cl)
+  (:use :cl :cl-event-passing-user)
   (:nicknames "BE")
   (:export
    #:parser
@@ -7,8 +7,6 @@
    #:need
    #:look-ahead-p
    #:emit
-
-   #:send!
 
    #:token
    #:token-kind
