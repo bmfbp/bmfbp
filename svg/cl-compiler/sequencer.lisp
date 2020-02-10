@@ -11,8 +11,8 @@
   (call-next-method))
 
 (defmethod e/part:react ((self sequencer) e)
-  (let ((pin (@pin e))
-        (string-fact (@data e))
+  (let ((pin (@pin self e))
+        (string-fact (@data self e))
         (new-list nil))
     (ecase (@get self :state)
       (:idle

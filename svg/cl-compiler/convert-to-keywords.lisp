@@ -13,7 +13,7 @@
   (call-next-method))
 
 (defmethod react ((self convert-to-keywords) e)
-  (let ((pin (@pin e))
+  (let ((pin (@pin self e))
         (string-fact (e/event:data e))
         (new-list nil))
     (if (eq pin :string-fact)

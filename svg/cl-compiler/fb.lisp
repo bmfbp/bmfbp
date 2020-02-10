@@ -42,7 +42,7 @@
                          (@send self :error
                                 (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e))))))))))))
   
-           (let ((action (@pin e))
+           (let ((action (@pin self e))
                  (state (@get self :state)))    
              (ecase state
                (:idle

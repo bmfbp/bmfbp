@@ -9,8 +9,8 @@
   (call-next-method))
 
 (defmethod e/part:react ((self ellipse-bounding-boxes) e)
-  (let ((pin (@pin e))
-        (data (@data e)))
+  (let ((pin (@pin self e))
+        (data (@data self e)))
     (ecase (@get self :state)
       (:idle
        (if (eq pin :fb)
