@@ -10,7 +10,6 @@
 ./cvtoo closest.lisp
 ./cvtoo coincident-ports.lisp
 ./cvtoo compiler.lisp
-./cvtoo convert-to-keywords.lisp
 ./cvtoo create-centers.lisp
 ./cvtoo demux.lisp
 ./cvtoo ellipse-bounding-boxes.lisp
@@ -31,7 +30,6 @@
 ./cvtoo package.lisp
 ./cvtoo pass.lisp
 ./cvtoo pinless.lisp
-./cvtoo reader.lisp
 ./cvtoo rectangle-bounding-boxes.lisp
 ./cvtoo rules-util.lisp
 ./cvtoo rules.lisp

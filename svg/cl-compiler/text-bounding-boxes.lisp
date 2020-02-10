@@ -1,23 +1,25 @@
 (in-package :arrowgrams/compiler)
 
+(defclass text-bounding-boxes (e/part:part) ())
+(defmethod e/part:busy-p ((self text-bounding-boxes)) (call-next-method))
 ; (:code text-bb (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod text-bb-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  )
+(defmethod e/part:first-time ((self text-bounding-boxes))
+  (@set self :state :idle)
+  (call-next-method))
 
-(defmethod text-bb-react ((self e/part:part) e)
-  (let ((pin (e/event::sym e))
-        (data (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+(defmethod e/part:react ((self text-bounding-boxes) e)
+  (let ((pin (@pin e))
+        (data (@data e)))
+    (ecase (@get self :state)
       (:idle
        (if (eq pin :fb)
-           (cl-event-passing-user::@set-instance-var self :fb data)
+           (@set self :fb data)
          (if (eq pin :go)
              (progn
-               (cl-event-passing-user::@send self :request-fb t)
-               (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
-           (cl-event-passing-user::@send
+               (@send self :request-fb t)
+               (@set self :state :waiting-for-new-fb))
+           (@send
             self
             :error
             (format nil "BOUNDING-BOXES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
@@ -25,25 +27,26 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (cl-event-passing-user::@set-instance-var self :fb data)
+             (@set self :fb data)
              (format *standard-output* "~&text-bounding-boxes~%")
              (text-bb-make-bounding-boxes self)
-             (cl-event-passing-user::@send self :done t)
-             (cl-event-passing-user::@set-instance-var self :state :idle))
-         (cl-event-passing-user::@send
+             (@send self :done t)
+             (@set self :state :idle))
+         (@send
           self
           :error
-          (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+          (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
+    (call-next-method)))
              
 
-(defmethod text-bb-make-bounding-boxes ((self e/part:part))
+(defmethod text-bb-make-bounding-boxes ((self text-bounding-boxes))
   (let ((bounding-box-rules '((:text-geometry (:? id) (:? str) (:? cx) (:? y) (:? hw) (:? h))
                               (:text (:? id) (:? str))
                               (:geometry_center_x (:? id) (:? cx))
                               (:geometry_top_y (:? id) (:? y))
                               (:geometry_w (:? id) (:? hw))
                               (:geometry_h (:? id) (:? h)))))
-    (let ((fb (cons bounding-box-rules (cl-event-passing-user::@get-instance-var self :fb))))
+    (let ((fb (cons bounding-box-rules (@get self :fb))))
       (let ((r (hprolog:prove nil '((:text-geometry (:? id) (:? str) (:? cx) (:? y) (:? hw) (:? h))) fb hprolog:*empty* 1 nil fb nil self)))
         (mapcar #'(lambda (lis)
                     (assert (= 6 (length lis)))
@@ -53,9 +56,9 @@
                           (y (cdr (fourth lis)))
                           (hw (cdr (fifth lis)))
                           (h (cdr (sixth lis))))
-                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_left id (- cx hw)))
-                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_top id y))
-                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_right id (+ cx hw)))
-                      (cl-event-passing-user::@send self :add-fact (list :bounding_box_bottom id (+ y h)))))
+                      (@send self :add-fact (list :bounding_box_left id (- cx hw)))
+                      (@send self :add-fact (list :bounding_box_top id y))
+                      (@send self :add-fact (list :bounding_box_right id (+ cx hw)))
+                      (@send self :add-fact (list :bounding_box_bottom id (+ y h)))))
                 r)))))
 

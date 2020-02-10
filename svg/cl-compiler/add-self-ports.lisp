@@ -1,24 +1,26 @@
 
 (in-package :arrowgrams/compiler)
+(defclass add-self-ports (e/part:part) ())
+(defmethod e/part:busy-p ((self add-self-ports)) (call-next-method))
 
 ; (:code ADD-SELF-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod ADD-SELF-PORTS-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  )
+(defmethod e/part:first-time ((self add-self-ports))
+  (@set self :state :idle)
+  (call-next-method))
 
-(defmethod ADD-SELF-PORTS-react ((self e/part:part) e)
+(defmethod e/part:react ((self add-self-ports) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get self :state)
       (:idle
        (if (eq pin :fb)
-           (cl-event-passing-user::@set-instance-var self :fb data)
+           (@set self :fb data)
          (if (eq pin :go)
              (progn
-               (cl-event-passing-user::@send self :request-fb t)
-               (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
-           (cl-event-passing-user::@send
+               (@send self :request-fb t)
+               (@set self :state :waiting-for-new-fb))
+           (@send
             self
             :error
             (format nil "ADD-SELF-PORTS in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
@@ -26,19 +28,18 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (cl-event-passing-user::@set-instance-var self :fb data)
+             (@set self :fb data)
              (format *standard-output* "~&add-self-ports~%")
              (create-self-ports self)
-             (cl-event-passing-user::@send self :done t)
-             (cl-event-passing-user::@set-instance-var self :state :idle))
-         (cl-event-passing-user::@send
+             (@send self :done t)
+             (@set self :state :idle))
+         (@send
           self
           :error
-          (format nil "ADD-SELF-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+          (format nil "ADD-SELF-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
+    (call-next-method)))
 
-
-
-(defmethod create-self-ports ((self e/part:part))
+(defmethod create-self-ports ((self add-self-ports))
   ;;;     % find one port that touches the ellispe (if there are more, then the "coincidentPorts"
   ;;;     % pass will find them), asserta all facts needed by ports downstream - portIndex, sink,
   ;;;     % source, parent
@@ -46,6 +47,6 @@
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb)))
+          (@get self :fb)))
         (goal '((:add_selfports_main))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))

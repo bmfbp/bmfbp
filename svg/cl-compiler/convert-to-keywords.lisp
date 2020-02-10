@@ -1,15 +1,19 @@
 (in-package :arrowgrams/compiler)
 
+(defclass convert-to-keywords (e/part:part) ())
+
 ; (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
 
 ;; read a string fact, output as a lisp fact with all symbols converted to keywords
 
-(defmethod convert-to-keywords-first-time ((self e/part:part))
-  ;; nothing
-  )
+(defmethod e/part:busy-p ((self convert-to-keywords))
+  (call-next-method))
 
-(defmethod convert-to-keywords-react ((self e/part:part) e)
-  (let ((pin (e/event::sym e))
+(defmethod e/part:first-time ((self convert-to-keywords))
+  (call-next-method))
+
+(defmethod react ((self convert-to-keywords) e)
+  (let ((pin (@pin e))
         (string-fact (e/event:data e))
         (new-list nil))
     (if (eq pin :string-fact)
@@ -22,12 +26,11 @@
               (if (eq 3 len)
                   (setf new-list `(,(keyword-ize (first flat-list)) ,(keyword-ize (second flat-list)) ,(keyword-ize (third flat-list))))
                 (setf new-list `(,(keyword-ize (first flat-list)) ,(keyword-ize (second flat-list)))))
-          (cl-event-passing-user::@send self :converted new-list))))
+          (@send self :converted new-list))))
       (if (eq pin :eof)
-          (cl-event-passing-user::@send self :done t)
-        (cl-event-passing-user::@send self :error (format nil "~&convert to keywords unexpected input pin ~S~%" pin))))))
-
-        
+          (@send self :done t)
+        (@send self :error (format nil "~&convert to keywords unexpected input pin ~S~%" pin)))))
+  (call-next-method))        
 
 (defun keyword-ize (x)
   (if (symbolp x)

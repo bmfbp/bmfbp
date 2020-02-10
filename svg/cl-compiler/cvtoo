@@ -12,10 +12,16 @@ sed -e "4i\\
 
 sed -e "s~self e/part:part~self ${CLASS}~" | \
 
-sed -e "s~[-a-zA-Z]*-first-time~e/part:first-time~" | \
+sed -e "s~[-a-zA-Z0-9]*-first-time~e/part:first-time~" | \
 
-sed -e "s~[-a-zA-Z]*-react~e/part:react~"  | \
+sed -e "s~[-a-zA-Z0-9]*-react~e/part:react~"  | \
 
 sed -e 's/cl-event-passing-user::@send/@send/g' | \
+sed -e 's/cl-event-passing-user:@send/@send/g' | \
+
 sed -e 's/cl-event-passing-user::@set-instance-var/@set/g' |  \
-sed -e 's/cl-event-passing-user::@get-instance-var/@get/g' >$1.oo
+sed -e 's/cl-event-passing-user:@set-instance-var/@set/g' |  \
+    
+sed -e 's/cl-event-passing-user::@get-instance-var/@get/g' | \
+sed -e 's/cl-event-passing-user:@get-instance-var/@get/g' \
+    >new/$1
