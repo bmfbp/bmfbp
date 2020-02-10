@@ -37,7 +37,7 @@
           self
           :error
           (format nil "MARK-INDEXED-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method))
+    (call-next-method)))
 
 (defmethod mark-indexed-ports ((self mark-indexed-ports))
   (let ((fb

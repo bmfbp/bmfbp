@@ -7,7 +7,7 @@
 
 (defmethod e/part:first-time ((self add-kinds))
   (@set self :state :idle)
-  (call-next-method)
+  (call-next-method))
 
 (defmethod e/part:react ((self add-kinds) e)
   (let ((pin (e/event::sym e))

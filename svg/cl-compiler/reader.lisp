@@ -2,12 +2,12 @@
 
 (defclass reader (e/part:part) ())
 
-; (:code reader (:file-name) (:string-fact :eof :error) #'arrowgrams/compiler/reader::react)
+; (:code reader (:file-name) (:string-fact :eof :error))
 
 (defmethod e/part:busy-p ((self reader))
   (call-next-method))
 
-(defmethod e/part:time ((self reader))
+(defmethod e/part:first-time ((self reader))
   (call-next-method))
   
 (defmethod e/part:react ((self reader) ev-file-name)

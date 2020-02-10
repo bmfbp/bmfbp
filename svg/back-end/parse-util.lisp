@@ -275,12 +275,12 @@
     (let ((top (stack-top (schematic-stack self))))
       (setf (kind top) str))))
 
-(defmethod schematic/e/part:react-from-string ((self parser))
+(defmethod schematic/set0react-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top (stack-top (schematic-stack self))))
       (setf (e/part:react top) str))))
 
-(defmethod schematic/e/part:first-time-from-string ((self parser))
+(defmethod schematic/set-first-time-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top (stack-top (schematic-stack self))))
       (setf (first-time top) str))))
@@ -326,11 +326,11 @@
   (let ((top (stack-top (part-stack self))))
     (setf (kind top) (get-accepted-token-text self))))
 
-(defmethod part/e/part:react ((self parser))
+(defmethod part/set-react ((self parser))
   (let ((top (stack-top (part-stack self))))
     (setf (e/part:react top) (get-accepted-token-text self))))
 
-(defmethod part/e/part:first-time ((self parser))
+(defmethod part/set-first-time ((self parser))
   (let ((top (stack-top (part-stack self))))
     (setf (first-time top) (get-accepted-token-text self))))
 

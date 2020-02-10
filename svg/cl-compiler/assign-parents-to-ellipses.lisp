@@ -35,8 +35,8 @@
          (@send
           self
           :error
-          (format nil "ASSIGN PARENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)
+          (format nil "ASSIGN PARENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e)))))))
+  (call-next-method))
 
 (defmethod assign-parents ((self assign-parents-to-ellipses))
   (let ((rule '(

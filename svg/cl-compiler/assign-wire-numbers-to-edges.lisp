@@ -37,7 +37,7 @@
           self
           :error
           (format nil "ASSIGN-WIRE-NUMBERS-TO-EDGES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method))
+    (call-next-method)))
 
 (defmethod assign-wire-numbers-to-edges ((self assign-wire-numbers-to-edges))
   (let ((fb

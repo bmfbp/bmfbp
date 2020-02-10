@@ -62,7 +62,7 @@
 	     (call-next-method))))
   
 (defmethod begin-iteration ((self fb))
-  (@set self:fb-as-iterable-list (@get self :factbase))
+  (@set self :fb-as-iterable-list (@get self :factbase))
   (send-next self))
 
 (defmethod send-next ((self fb))

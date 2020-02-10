@@ -190,7 +190,7 @@ ellipse-bounding-boxes.done,
             (:code preparse (:start :token) (:out :request :error))
             (:code generic-emitter (:parse) (:out :error))
             (:code collector (:parse) (:out :error))
-            (:code emitter-pass2-generic (:in) (:out :error)
+            (:code emitter-pass2-generic (:in) (:out :error))
             (:code json-emitter (:in) (:out :error))
             (:code generic-file-writer (:filename :write) (:error))
             (:code json-file-writer (:filename :write) (:error))
@@ -286,7 +286,7 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (@with-dispatch
-      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
+					;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp14.pro")))
       (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/xx5.pro")))
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/medium-test14.prolog")))
