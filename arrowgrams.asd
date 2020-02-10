@@ -80,7 +80,6 @@
   :components ((:module contents
 			:pathname "./svg/back-end"
 			:components ((:file "package")
-				     (:file "util" :depends-on ("package"))
 				     (:file "token" :depends-on ("package"))
 				     (:file "synchronizer" :depends-on ("util" "token"))
 				     (:file "tokenize" :depends-on ("util" "token"))
