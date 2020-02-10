@@ -25,7 +25,7 @@
          (@send
           self
           :error
-          (format nil "SEQUENCER in state :idle expected :finished-reading, but got action ~S data ~S" pin (e/event:data e)))))
+          (format nil "SEQUENCER in state :idle expected :finished-reading, but got action ~S data ~S" pin (e/event:data self e)))))
       
          (:waiting-for-pipeline
           (if (eq pin :finished-pipeline)
@@ -35,7 +35,7 @@
             (@send
              self
              :error
-             (format nil "SEQUENCER in state :waiting-for-pipeline expected :finished-pipeline, but got action ~S data ~S" pin (@data e)))))
+             (format nil "SEQUENCER in state :waiting-for-pipeline expected :finished-pipeline, but got action ~S data ~S" pin (@data self e)))))
 
          (:waiting-for-write
           (if (eq pin :finished-writing)
@@ -44,7 +44,7 @@
             (@send
              self
              :error
-             (format nil "SEQUENCER in state :waiting-for-write expected :finished-writing, but got action ~S data ~S" pin (@data e)))))
+             (format nil "SEQUENCER in state :waiting-for-write expected :finished-writing, but got action ~S data ~S" pin (@data self e)))))
          
          )
     (call-next-method)))

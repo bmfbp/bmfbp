@@ -58,7 +58,7 @@
 			(begin-iteration self)
 			(@send self :error
                                (format nil "FB in state :iterating expected :get-next or :iterate, but got action ~S data ~S"
-                                       action (@data e)))))))
+                                       action (@data self e)))))))
 	     (call-next-method))))
   
 (defmethod begin-iteration ((self fb))
