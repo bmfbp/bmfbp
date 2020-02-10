@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass json-emitter (e/part:part) ())
 (defmethod e/part:busy-p ((self json-emitter)) (call-next-method))

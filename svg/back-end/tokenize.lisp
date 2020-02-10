@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass tokenize (e/part:part) ())
 

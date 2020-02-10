@@ -1,4 +1,4 @@
-(cl:in-package :arrowgrams/compiler/back-end)
+(cl:in-package :arrowgrams/compiler)
 
 (defun parser (filename generic-filename json-filename lisp-filename)
   (let ((parser-net
@@ -80,7 +80,7 @@
         (gfile (asdf:system-relative-pathname :arrowgrams "svg/back-end/generic.out"))
         (jfile (asdf:system-relative-pathname :arrowgrams "svg/back-end/json.out"))
         (lfile (asdf:system-relative-pathname :arrowgrams "svg/back-end/lisp.out")))
-    (arrowgrams/compiler/back-end::parser filename gfile jfile lfile)))
+    (parser filename gfile jfile lfile)))
 
 (defun cl-user::clear ()
   (esrap::clear-rules)

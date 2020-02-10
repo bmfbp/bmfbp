@@ -79,8 +79,8 @@
                     (funcall next))
   :components ((:module contents
 			:pathname "./svg/back-end"
-			:components ((:file "package")
-				     (:file "token" :depends-on ("package"))
+			:components ((:file "../cl-compiler/package")
+				     (:file "token" :depends-on ("../cl-compiler/package"))
 				     (:file "synchronizer" :depends-on ("token"))
 				     (:file "tokenize" :depends-on ("token"))
 				     (:file "parens" :depends-on ("token"))
@@ -95,7 +95,7 @@
 				     (:file "file-writer" :depends-on ("token"))
                                      (:file "schem-unparse" :depends-on ("token" "parse-util"))
                                      (:file "collector-sl" :depends-on ("token" "parse-util"))
-                                     (:file "file-namer" :depends-on ("package"))
+                                     (:file "file-namer" :depends-on ("../cl-compiler/package"))
                                      (:file "collector" :depends-on ("token" "parse-util" "collector-sl" "schem-unparse"))
                                      (:file "emitter-pass2-generic-sl" :depends-on ("token" "parse-util"))
                                      (:file "emitter-pass2-generic" :depends-on ("token" "parse-util" "emitter-pass2-generic-sl"))
@@ -103,12 +103,12 @@
                                      (:file "json-emitter" :depends-on ("token" "parse-util" "json-emitter-sl"))
                                      (:file "generic-sl" :depends-on ("token"))
 				     (:file "generic-emitter" :depends-on ("token" "parse-util" "generic-sl"))
-				     (:file "parser" :depends-on ("package" "token" "tokenize" "strings" "ws"
+				     (:file "parser" :depends-on ("../cl-compiler/package" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
                                                                   "generic-emitter" "collector"
                                                                   "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))
 
-				     (:file "wiring" :depends-on ("package"))))))
+				     (:file "wiring" :depends-on ("../cl-compiler/package"))))))
 
 
 ;;;; 

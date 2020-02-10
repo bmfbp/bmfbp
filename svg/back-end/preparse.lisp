@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass preparse (e/part:part) ())
 (defmethod e/part:busy-p ((self preparse)) (call-next-method))

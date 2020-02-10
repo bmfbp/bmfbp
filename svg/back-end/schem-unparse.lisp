@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defmethod unparse-schematic ((p parser) schem)
   (uemit-string p (slot-value schem 'name))

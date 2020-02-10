@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass emitter-pass2-generic (e/part:part) ())
 (defmethod e/part:busy-p ((self emitter-pass2-generic)) (call-next-method))

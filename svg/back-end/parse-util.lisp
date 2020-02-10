@@ -10,7 +10,7 @@
 
 
 
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass pair ()
   ((pair-first :accessor pair-first)
@@ -222,10 +222,10 @@
     (format *error-output* "~a~%" rule)))
 
 ;; parser support
-(defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
-(defmethod look-ahead ((p parser) token)   (arrowgrams/compiler/back-end:look-ahead-p p token))
-(defmethod output ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
-(defmethod need-nil-symbol ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
+(defmethod must-see ((p parser) token)   (need p token))
+(defmethod look-ahead ((p parser) token)   (look-ahead-p p token))
+(defmethod output ((p parser) str)   (emit p str))
+(defmethod need-nil-symbol ((p parser) str)   (emit p str))
 
 (defmethod call-external ((p parser) func depth caller)
   (debug-calling depth 'mechanism)
@@ -243,15 +243,15 @@
 
 ;; mechanisms used in *collector-rules* and *generic-rules*
 (defmethod print-text ((p parser))
-  (format (arrowgrams/compiler/back-end:output-stream p)
+  (format (output-stream p)
           "~a"
-          (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
+          (token-text (accepted-token p))))
 
 (defmethod print-integer ((p parser))
   (print-text p))
 
 (defmethod symbol-must-be-nil ((p parser))
-  (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
+  (accepted-symbol-must-be-nil p))
 
 (defmethod break-here ((p parser))
   (format *standard-output* "p is ~A~%" p)

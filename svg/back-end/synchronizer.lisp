@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass synchronizer (e/part:part) ())
 (defmethod e/part:busy-p ((self synchronizer)) (call-next-method))

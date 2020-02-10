@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass file-namer (e/part:part) ())
 (defmethod e/part:busy-p ((self file-namer)) (call-next-method))

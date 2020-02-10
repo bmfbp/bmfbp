@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass symbols (e/part:part) ())
 (defmethod e/part:busy-p ((self symbols)) (call-next-method))
