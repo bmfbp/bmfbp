@@ -1,12 +1,14 @@
 (in-package :arrowgrams/compiler/back-end)
 
+(defclass generic-emitter (e/part:part) ())
+(defmethod e/part:busy-p ((self generic-emitter)) (call-next-method))
 (defparameter *emitter-state* nil)
 
-(defmethod generic-emitter-first-time ((self e/part:part))
+(defmethod e/part:first-time ((self generic-emitter))
   (setf *emitter-state* :idle)
-  )
+  (call-next-method))
 
-(defmethod generic-emitter-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self generic-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
     (flet ((pull (id) (send! self :request id) #+nil(format *standard-output* "~&generic emitter: pull ~S~%" id))
@@ -33,4 +35,5 @@
               (setf *emitter-state* :done)))))
         
         (:done
-         (debug-tok :error (format nil "generic parser done, but got ") tok))))))
+         (debug-tok :error (format nil "generic parser done, but got ") tok)))))
+  (call-next-method))

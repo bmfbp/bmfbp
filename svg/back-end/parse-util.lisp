@@ -63,7 +63,7 @@
    (kind :accessor kind)
    (inputs :accessor inputs)
    (outputs :accessor outputs)
-   (part-react :accessor part-react)
+   (e/part:react :accessor part-react)
    (first-time :accessor first-time)))  
 
 (defclass schematic (part)
@@ -275,12 +275,12 @@
     (let ((top (stack-top (schematic-stack self))))
       (setf (kind top) str))))
 
-(defmethod schematic/set-react-from-string ((self parser))
+(defmethod schematic/e/part:react-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top (stack-top (schematic-stack self))))
-      (setf (part-react top) str))))
+      (setf (e/part:react top) str))))
 
-(defmethod schematic/set-first-time-from-string ((self parser))
+(defmethod schematic/e/part:first-time-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top (stack-top (schematic-stack self))))
       (setf (first-time top) str))))
@@ -326,11 +326,11 @@
   (let ((top (stack-top (part-stack self))))
     (setf (kind top) (get-accepted-token-text self))))
 
-(defmethod part/set-react ((self parser))
+(defmethod part/e/part:react ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (part-react top) (get-accepted-token-text self))))
+    (setf (e/part:react top) (get-accepted-token-text self))))
 
-(defmethod part/set-first-time ((self parser))
+(defmethod part/e/part:first-time ((self parser))
   (let ((top (stack-top (part-stack self))))
     (setf (first-time top) (get-accepted-token-text self))))
 

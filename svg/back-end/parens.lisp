@@ -1,12 +1,14 @@
 (in-package :arrowgrams/compiler/back-end)
 
-; (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
+(defclass parens (e/part:part) ())
+(defmethod e/part:busy-p ((self parens)) (call-next-method))
+; (:code parens (:token) (:out :error) #'e/part:react #'e/part:first-time)
 
 
-(defmethod parens-first-time ((self e/part:part))
-  )
+(defmethod e/part:first-time ((self parens))
+  (call-next-method))
 
-(defmethod parens-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self parens) (e e/event:event))
   (ecase (e/event::sym e)
     (:token
      (let ((tok (e/event:data e)))
@@ -22,4 +24,5 @@
                     (#\)
                      (send! self :out (new-rpar)))
                     (otherwise (forward-token)))))
-               (t (forward-token))))))))
+               (t (forward-token)))))))
+  (call-next-method))

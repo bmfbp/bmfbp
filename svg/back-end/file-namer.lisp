@@ -1,24 +1,27 @@
 (in-package :arrowgrams/compiler/back-end)
 
-; (:code FILE-NAMER (:basename) (:json-filename :generic-filename :lisp-filename :error) #'BE:file-namer-react #'BE:file-namer-first-time)
+(defclass file-namer (e/part:part) ())
+(defmethod e/part:busy-p ((self file-namer)) (call-next-method))
+; (:code FILE-NAMER (:basename) (:json-filename :generic-filename :lisp-filename :error) #'BE:e/part:react #'BE:e/part:first-time)
 
-(defmethod file-namer-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle))
+(defmethod e/part:first-time ((self file-namer))
+  (@set self :state :idle)
+  (call-next-method))
 
-(defmethod file-namer-react ((self e/part:part) e)
+(defmethod e/part:react ((self file-namer) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get self :state)
       (:idle
        (if (eq pin :basename)
            (let ((basename (e/event:data e)))
              (let ((jsonf (asdf:system-relative-pathname :arrowgrams/compiler (format nil "svg/cl-compiler/~a.json" basename)))
                    (genericf (asdf:system-relative-pathname :arrowgrams/compiler (format nil "svg/cl-compiler/~a.generic" basename)))
                    (lispf (asdf:system-relative-pathname :arrowgrams/compiler(format nil "svg/cl-compiler/~a.lisp" basename))))
-             (cl-event-passing-user::@send self :json-filename jsonf)
-             (cl-event-passing-user::@send self :generic-filename genericf)
-             (cl-event-passing-user::@send self :lisp-filename lispf)))
+             (@send self :json-filename jsonf)
+             (@send self :generic-filename genericf)
+             (@send self :lisp-filename lispf)))
 
-           (cl-event-passing-user::@send self :error
-                                         (format nil "file-namer in state :idle expected :basename, but got action ~S data ~S" pin (e/event:data e))))))))
-
+           (@send self :error
+                                         (format nil "file-namer in state :idle expected :basename, but got action ~S data ~S" pin (e/event:data e)))))))
+  (call-next-method))

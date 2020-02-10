@@ -1,42 +1,45 @@
 (in-package :arrowgrams/compiler/back-end)
 
-(defmethod tokenize-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  (cl-event-passing-user::@set-instance-var self :position 0)
-  (cl-event-passing-user::@set-instance-var self :stream nil)
-  )
+(defclass tokenize (e/part:part) ())
 
-(defmethod tokenize-react ((self e/part:part) (e e/event:event))
-  (ecase (cl-event-passing-user::@get-instance-var self :state)
+(defmethod e/part:busy-p ((self tokenize)) (call-next-method))
+
+(defmethod e/part:first-time ((self tokenize))
+  (@set self :state :idle)
+  (@set self :position 0)
+  (@set self :stream nil)
+  (call-next-method))
+
+(defmethod e/part:react ((self tokenize) (e e/event:event))
+  (ecase (@get self :state)
     (:idle
      #+nil(format *standard-output* "~&tokenize in state idle gets :start~%") ;; see also format below
      (ecase (e/event::sym e)
        (:start
         (let ((str (alexandria:read-file-into-string (e/event:data e))))
-	  (cl-event-passing-user::@set-instance-var self :stream (make-string-input-stream str))
-	  (cl-event-passing-user::@set-instance-var self :position 0)
-	  (cl-event-passing-user::@set-instance-var self :state :running)))
+	  (@set self :stream (make-string-input-stream str))
+	  (@set self :position 0)
+	  (@set self :state :running)))
        (:ir
         (let ((str (write-to-string (e/event:data e))))
-	  (cl-event-passing-user::@set-instance-var self :stream (make-string-input-stream str))
-	  (cl-event-passing-user::@set-instance-var self :position 0)
-	  (cl-event-passing-user::@set-instance-var self :state :running)))))
+	  (@set self :stream (make-string-input-stream str))
+	  (@set self :position 0)
+	  (@set self :state :running)))))
 
     (:running
      (ecase (e/event::sym e)
        (:pull
         #+nil(format *standard-output* "~&tokenize in state running gets :pull ~S~%" (e/event:data e))
-        (let ((c (read-char (cl-event-passing-user::@get-instance-var self :stream) nil :EOF)))
-	  (cl-event-passing-user::@set-instance-var self :position
-						    (1+ (cl-event-passing-user::@get-instance-var self :position)))
+        (let ((c (read-char (@get self :stream) nil :EOF)))
+	  (@set self :position
+						    (1+ (@get self :position)))
           (let ((reached-eof (eq :EOF c)))
-          (let ((tok (make-token :position (cl-event-passing-user::@get-instance-var self :position)
+          (let ((tok (make-token :position (@get self :position)
 				 :kind (if reached-eof :EOF :character) :text c)))
             (send! self :out tok)
             (when reached-eof
-	      (cl-event-passing-user::@set-instance-var self :state :done))))))))
+	      (@set self :state :done))))))))
 
     (:done
-     (send! self :error (format nil "tokenizer done, but received ~S ~S" (e/event::sym e) (e/event:data e))))))
-
-    
+     (send! self :error (format nil "tokenizer done, but received ~S ~S" (e/event::sym e) (e/event:data e)))))
+  (call-next-method))

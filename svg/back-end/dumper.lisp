@@ -4,7 +4,7 @@
 
 (defmethod dumper-first-time ((self e/part:part))
   (setf *dumper-state* :idle)
-  )
+  (call-next-method))
 
 (defmethod dumper-react ((self e/part:part) (e e/event:event))
   ;(format *standard-output* "~&dumper ~S   ~S ~S~%" *dumper-state* (e/event::sym e) (e/event:data e))
@@ -41,4 +41,5 @@
                 (pull :dump2))))))
         
         (:done
-         (debug-tok :error (format nil "dumper done, but got ") tok))))))
+         (debug-tok :error (format nil "dumper done, but got ") tok))))
+    (call-next-method)))

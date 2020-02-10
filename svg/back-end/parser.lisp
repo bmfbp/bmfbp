@@ -4,12 +4,12 @@
   (let ((parser-net
          (cl-event-passing-user::@defnetwork parser
 
-            (:code tokenize (:start :ir :pull) (:out :error) #'tokenize-react #'tokenize-first-time)
-            (:code parens (:token) (:out :error) #'parens-react #'parens-first-time)
-            (:code spaces (:token) (:request :out :error) #'spaces-react #'spaces-first-time)
-            (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
-            (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
-            (:code integers (:token) (:request :out :error) #'integers-react #'integers-first-time)
+            (:code tokenize (:start :ir :pull) (:out :error))
+            (:code parens (:token) (:out :error))
+            (:code spaces (:token) (:request :out :error))
+            (:code strings (:token) (:request :out :error))
+            (:code symbols (:token) (:request :out :error))
+            (:code integers (:token) (:request :out :error))
             (:schem scanner (:start :request :ir) (:out :error)
              (tokenize parens strings symbols spaces integers) ;; parts
              "
@@ -26,11 +26,11 @@
               tokenize.error,parens.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
              "
              )
-            (:code preparse (:start :token) (:out :request :error) #'preparse-react #'preparse-first-time)
-            (:code generic-emitter (:parse) (:out :error) #'generic-emitter-react #'generic-emitter-first-time)
-            (:code collector (:parse) (:out :error) #'collector-react #'collector-first-time)
-            (:code emitter-pass2-generic (:in) (:out :error) #'emitter-pass2-generic-react #'emitter-pass2-generic-first-time)
-            (:code json-emitter (:in) (:out :error) #'json-emitter-react #'json-emitter-first-time)
+            (:code preparse (:start :token) (:out :request :error))
+            (:code generic-emitter (:parse) (:out :error))
+            (:code collector (:parse) (:out :error))
+            (:code emitter-pass2-generic (:in) (:out :error))
+            (:code json-emitter (:in) (:out :error))
 
             (:code generic-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)
             (:code json-file-writer (:filename :write) (:error) #'file-writer-react #'file-writer-first-time)

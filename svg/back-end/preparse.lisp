@@ -1,13 +1,16 @@
 (in-package :arrowgrams/compiler/back-end)
 
+(defclass preparse (e/part:part) ())
+(defmethod e/part:busy-p ((self preparse)) (call-next-method))
+
 (defparameter *preparse-state* nil)
 (defparameter *preparse-token-stream* nil) ;; an ordered list of tokens
 
-(defmethod preparse-first-time ((self e/part:part))
+(defmethod e/part:first-time ((self preparse))
   (setf *preparse-state* :idle)
-  )
+  (call-next-method))
 
-(defmethod preparse-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self preparse) (e e/event:event))
   ;(format *standard-output* "~&preparse ~S   ~S ~S~%" *preparse-state* (e/event::sym e) (e/event:data e))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
@@ -45,4 +48,5 @@
                   (pull :preparse2)))))))
 
         (:done
-         (debug-tok :error (format nil "preparse done, but got ") tok))))))
+         (debug-tok :error (format nil "preparse done, but got ") tok)))))
+  (call-next-method))

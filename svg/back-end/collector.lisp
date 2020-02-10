@@ -1,14 +1,16 @@
 (in-package :arrowgrams/compiler/back-end)
 
-; (:code collector (:parse) (:out :error) #'collector-react #'collector-first-time)
+(defclass collector (e/part:part) ())
+(defmethod e/part:busy-p ((self collector)) (call-next-method))
+; (:code collector (:parse) (:out :error) #'e/part:react #'e/part:first-time)
 
 (defparameter *collector-state* nil)
 
-(defmethod collector-first-time ((self e/part:part))
+(defmethod e/part:first-time ((self collector))
   (setf *collector-state* :idle)
-  )
+  (call-next-method))
 
-(defmethod collector-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self collector) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
     (flet ((pull (id) (send! self :request id))
@@ -39,4 +41,5 @@
                 (setf *collector-state* :done))))))
         
         (:done
-         (debug-tok :error (format nil "generic parser done, but got ") tok))))))
+         (debug-tok :error (format nil "generic parser done, but got ") tok))))
+    (call-next-method)))

@@ -1,21 +1,24 @@
 (in-package :arrowgrams/compiler/back-end)
 
-; (:code spaces (:token) (:request :out :error) #'spaces-react #'spaces-first-time)
+(defclass spaces (e/part:part) ())
+(defmethod e/part:busy-p ((self spaces)) (call-next-method))
 
-(defmethod spaces-get-position ((self e/part:part))
-  (cl-event-passing-user::@get-instance-var self :position))
+; (:code spaces (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defmethod spaces-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :buffer nil)
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  (cl-event-passing-user::@set-instance-var self :position 0)
-  )
+(defmethod spaces-get-position ((self spaces))
+  (@get self :position))
 
-(defmethod spaces-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:first-time ((self spaces))
+  (@set self :buffer nil)
+  (@set self :state :idle)
+  (@set self :position 0)
+  (call-next-method))
+
+(defmethod e/part:react ((self spaces) (e e/event:event))
   (labels ((push-char-into-buffer () 
-	     (let ((buffer (cl-event-passing-user::@get-instance-var self :buffer)))
+	     (let ((buffer (@get self :buffer)))
 	       (push (token-text (e/event:data e)) buffer)
-	       (cl-event-passing-user::@set-instance-var self :buffer buffer)))
+	       (@set self :buffer buffer)))
            (pull () (send! self :request :spaces))
            (forward-token (&key (pulled-p nil)) (send-event! self :out e))
            (start-char-p () 
@@ -27,11 +30,11 @@
                (let ((c (token-text (e/event:data e))))
                  (member c '(#\Space #\Newline #\Tab #\Page)))))
            (action () (e/event::sym e))
-           (next-state (x) (cl-event-passing-user::@set-instance-var self :state x))
+           (next-state (x) (@set self :state x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
-	     (cl-event-passing-user::@set-instance-var self :buffer nil)
-	     (cl-event-passing-user::@set-instance-var self :position (token-position (e/event:data e))))
+	     (@set self :buffer nil)
+	     (@set self :position (token-position (e/event:data e))))
            (release-buffer ()
              (send! self :out (make-token :kind :ws :text " " :position (spaces-get-position self) :pulled-p t)))
            (release-and-clear-buffer ()
@@ -40,7 +43,7 @@
          )
 
     ;(format *standard-output* "~&spaces in state ~S gets ~S ~S~%" *spaces-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get self :state)
       (:idle
        (ecase (action)
          (:token
@@ -71,5 +74,5 @@
                 (forward-token :pulled-p t)
                 (next-state :idle)))))))
       (:done
-       (send! self :error (format nil "spaces finished, but received ~S" e))))))
-
+       (send! self :error (format nil "spaces finished, but received ~S" e)))))
+  (call-next-method))

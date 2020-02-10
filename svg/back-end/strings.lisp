@@ -1,28 +1,30 @@
 (in-package :arrowgrams/compiler/back-end)
 
-; (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
+(defclass strings (e/part:part) ())
+(defmethod e/part:busy-p ((self strings)) (call-next-method))
+; (:code strings (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defmethod strings-get-ordered-buffer ((self e/part:part))
-  (coerce (reverse (cl-event-passing-user::@get-instance-var self :buffer))
+(defmethod strings-get-ordered-buffer ((self strings))
+  (coerce (reverse (@get self :buffer))
           'string))
 
-(defmethod strings-put-buffer ((self e/part:part) item)
-  (let ((buffer (cl-event-passing-user::@get-instance-var self :buffer)))
-    (cl-event-passing-user::@set-instance-var self :buffer (cons item buffer))))
+(defmethod strings-put-buffer ((self strings) item)
+  (let ((buffer (@get self :buffer)))
+    (@set self :buffer (cons item buffer))))
 
-(defmethod strings-get-position ((self e/part:part))
-  (cl-event-passing-user::@get-instance-var self :start-position))
+(defmethod strings-get-position ((self strings))
+  (@get self :start-position))
 
-(defmethod strings-clear-buffer ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :buffer nil))
+(defmethod strings-clear-buffer ((self strings))
+  (@set self :buffer nil))
 
-(defmethod strings-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  (cl-event-passing-user::@set-instance-var self :start-position 0)
+(defmethod e/part:first-time ((self strings))
+  (@set self :state :idle)
+  (@set self :start-position 0)
   (strings-clear-buffer self)
-  )
+  (call-next-method))
 
-(defmethod strings-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self strings) (e e/event:event))
   (labels ((push-char-into-buffer () (strings-put-buffer self (token-text (e/event:data e))))
            (pull () (send! self :request :strings))
            (forward-token () (send-event! self :out e))
@@ -39,7 +41,7 @@
                (let ((c (token-text (e/event:data e))))
                  (char= c #\\))))
            (action () (e/event::sym e))
-           (next-state (x) (cl-event-passing-user::@set-instance-var self :state x))
+           (next-state (x) (@set self :state x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
              (strings-clear-buffer self))
@@ -50,9 +52,9 @@
              (clear-buffer))
          )
 
-    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" (cl-event-passing-user::@get-instance-var self :state)
+    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" (@get self :state)
                  (token-kind (e/event:data e)) (token-text (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get self :state)
       (:idle
        (ecase (action)
          (:token
@@ -99,5 +101,5 @@
               (pull)
               (next-state :collecting-string))))))
       (:done
-       (send! self :error (format nil "strings finished, but received ~S" e))))))
-
+       (send! self :error (format nil "strings finished, but received ~S" e)))))
+  (call-next-method))

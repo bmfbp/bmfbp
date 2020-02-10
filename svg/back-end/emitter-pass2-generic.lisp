@@ -1,12 +1,14 @@
 (in-package :arrowgrams/compiler/back-end)
 
+(defclass emitter-pass2-generic (e/part:part) ())
+(defmethod e/part:busy-p ((self emitter-pass2-generic)) (call-next-method))
 (defparameter *emitter-pass2-generic-state* nil)
 
-(defmethod emitter-pass2-generic-first-time ((self e/part:part))
+(defmethod e/part:first-time ((self emitter-pass2-generic))
   (setf *emitter-pass2-generic-state* :idle)
-  )
+  (call-next-method))
 
-(defmethod emitter-pass2-generic-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self emitter-pass2-generic) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
     (flet ((pull (id) (send! self :request id))
@@ -39,5 +41,5 @@
                 (setf *emitter-pass2-generic-state* :done))))))
         
         (:done
-         (send! self :error (format nil "generic emitter pass2 done, but received input~%")))))))
-
+         (send! self :error (format nil "generic emitter pass2 done, but received input~%"))))))
+  (call-next-method))

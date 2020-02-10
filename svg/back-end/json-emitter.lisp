@@ -1,12 +1,14 @@
 (in-package :arrowgrams/compiler/back-end)
 
+(defclass json-emitter (e/part:part) ())
+(defmethod e/part:busy-p ((self json-emitter)) (call-next-method))
 (defparameter *json-emitter-state* nil)
 
-(defmethod json-emitter-first-time ((self e/part:part))
+(defmethod e/part:first-time ((self json-emitter))
   (setf *json-emitter-state* :idle)
-  )
+  (call-next-method))
 
-(defmethod json-emitter-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self json-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
     (flet ((pull (id) (send! self :request id))
@@ -39,5 +41,5 @@
                 (setf *json-emitter-state* :done))))))
         
         (:done
-         (send! self :error (format nil "json emitter done, but received input~%")))))))
-
+         (send! self :error (format nil "json emitter done, but received input~%"))))))
+  (call-next-method))

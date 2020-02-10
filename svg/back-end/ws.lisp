@@ -1,6 +1,8 @@
 (in-package :arrowgrams/compiler/back-end)
 
-; (:code ws (:token) (:request :out :error) #'ws-react #'ws-first-time)
+(defclass ws (e/part:part) ())
+(defmethod e/part:busy-p ((self ws)) (call-next-method))
+; (:code ws (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defparameter *ws-buffer* nil)
 (defparameter *ws-position* 0)
@@ -16,11 +18,11 @@
 (defun get-buffer () (coerce (reverse *ws-buffer*) 'string))
 (defun get-position () *ws-position*)
 
-(defmethod ws-first-time ((self e/part:part))
+(defmethod e/part:first-time ((self ws))
   (setf *ws-state* :idle)
-  )
+  (call-next-method))
 
-(defmethod ws-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self ws) (e e/event:event))
   (labels ((pull ()
              (send! self :request t))
            (check-eof ()
@@ -67,7 +69,5 @@
                (t (release-buffer)
                   (check-eof))))
         (:done
-         (send! self :error (format nil "ws done, but received ~S" tok)))))))
-     
-
-     
+         (send! self :error (format nil "ws done, but received ~S" tok))))))
+  (call-next-method))
