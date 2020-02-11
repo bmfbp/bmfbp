@@ -7,8 +7,7 @@
 (defparameter *preparse-token-stream* nil) ;; an ordered list of tokens
 
 (defmethod e/part:first-time ((self preparse))
-  (setf *preparse-state* :idle)
-  (call-next-method))
+  (setf *preparse-state* :idle))
 
 (defmethod e/part:react ((self preparse) (e e/event:event))
   ;(format *standard-output* "~&preparse ~S   ~S ~S~%" *preparse-state* (e/event::sym e) (e/event:data e))
@@ -48,5 +47,4 @@
                   (pull :preparse2)))))))
 
         (:done
-         (debug-tok :error (format nil "preparse done, but got ") tok)))))
-  (call-next-method))
+         (debug-tok :error (format nil "preparse done, but got ") tok))))))
