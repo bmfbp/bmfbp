@@ -126,6 +126,7 @@
                                      (:file "classes" :depends-on ("package"))
                                      (:file "fb" :depends-on ("package" "util"))
                                      (:file "sequencer" :depends-on ("package"))
+                                     (:file "unmapper" :depends-on ("package"))
                                      (:file "reader" :depends-on ("package"))
                                      (:file "writer" :depends-on ("package"))
                                      (:file "convert-to-keywords" :depends-on ("package"))
@@ -171,7 +172,7 @@
 
                                      (:file "compiler"
                                       :depends-on ("package" "classes"
-                                                   "reader" "fb" "writer" "convert-to-keywords" "sequencer"
+                                                   "reader" "unmapper" "fb" "writer" "convert-to-keywords" "sequencer"
                                                    "ellipse-bounding-boxes" "rectangle-bounding-boxes"
                                                    "speechbubble-bounding-boxes" "text-bounding-boxes"
                                                    "assign-parents-to-ellipses"
@@ -181,6 +182,7 @@
                                                    "find-metadata"
                                                    "add-kinds"
                                                    "add-self-ports"
+
                                                    "make-unknown-port-names"
                                                    "assign-portnames"
                                                    "mark-indexed-ports"

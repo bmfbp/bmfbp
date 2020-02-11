@@ -56,3 +56,5 @@ svg/cl-compiler/IDE.generic
 svg/cl-compiler/hold.ir
 
 svg/cl-compiler/old-assign-portnames.lisp
+
+*.ir

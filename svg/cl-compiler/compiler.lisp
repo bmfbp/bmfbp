@@ -9,23 +9,32 @@
            (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error))
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
+           (:code unmapper (:in :map-filename :done) (:out :done :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error :show))
-           (:schem compiler-testbed (:prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
+           (:schem compiler-testbed (:map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
             ;; parts
-            (reader fb writer convert-to-keywords sequencer)
+            (reader fb writer convert-to-keywords sequencer unmapper)
             ;; wiring
 "
+self.map-filename -> unmapper.map-filename
 self.prolog-factbase-filename -> reader.file-name
 self.prolog-output-filename -> writer.filename
 self.dump -> sequencer.finished-pipeline
 self.request-fb -> fb.fb-request
 self.retract-fact -> fb.retract
 
+self.map-filename -> unmapper.map-filename
+
+
 reader.string-fact -> convert-to-keywords.string-fact
 reader.eof -> convert-to-keywords.eof
 
-convert-to-keywords.converted, self.add-fact -> fb.lisp-fact
-convert-to-keywords.done -> sequencer.finished-reading
+convert-to-keywords.converted, self.add-fact -> unmapper.in
+
+unmapper.out -> fb.lisp-fact
+
+convert-to-keywords.done -> unmapper.done
+unmapper.done -> sequencer.finished-reading
 
 sequencer.show -> fb.show
 sequencer.run-pipeline, self.done -> self.go
@@ -37,7 +46,7 @@ fb.no-more -> writer.no-more, sequencer.finished-writing
 
 writer.request -> fb.get-next
 
-convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
+convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error, unmapper.error -> self.error
 "
 )        
            (:code ellipse-bounding-boxes (:fb :go) (:add-fact :request-fb :done :error))
@@ -254,7 +263,7 @@ back-end-parser.error -> self.error
 
 
            
-           (:schem compiler (:prolog-factbase-filename :prolog-output-filename :dump) (:error)
+           (:schem compiler (:map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:error)
             ;; parts
             (compiler-testbed passes back-end file-namer)
             ;; wiring
@@ -266,6 +275,7 @@ file-namer.json-filename -> back-end.json-filename
 file-namer.generic-filename -> back-end.generic-filename
 file-namer.lisp-filename -> back-end.lisp-filename
 
+self.map-filename -> compiler-testbed.map-filename
 self.prolog-factbase-filename -> compiler-testbed.prolog-factbase-filename
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename
 self.dump -> compiler-testbed.dump
@@ -288,23 +298,22 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (@with-dispatch
-      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
-      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp14.pro")))
-      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/xx5.pro")))
-      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/medium-test14.prolog")))
-      ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/test.prolog")))
-        (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
-        ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/very-small.prolog")))
-          (@enable-logging)
-          (@inject compiler-net
-                   (e/part::get-input-pin compiler-net :prolog-output-filename)
-                   output-filename)
-          (@inject compiler-net
-                   (e/part::get-input-pin compiler-net :prolog-factbase-filename)
-                   filename)
-          (@inject compiler-net
-                   (e/part::get-input-pin compiler-net :dump)
-                   T))))))
+      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk5.pro")))
+	(let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk-temp-string-map.lisp")))
+          (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
+            (@enable-logging)
+            (@inject compiler-net
+                     (e/part::get-input-pin compiler-net :map-filename)
+                     map-filename)
+            (@inject compiler-net
+                     (e/part::get-input-pin compiler-net :prolog-output-filename)
+                     output-filename)
+            (@inject compiler-net
+                     (e/part::get-input-pin compiler-net :prolog-factbase-filename)
+                     filename)
+            (@inject compiler-net
+                     (e/part::get-input-pin compiler-net :dump)
+                     T)))))))
 
 (defmethod busy-p ((self convert-to-keywords))
   (assert nil)) ;; must not happen - check if part has e/part:busy-p
