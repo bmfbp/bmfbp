@@ -10,7 +10,6 @@
 (defmethod e/part:first-time ((self reader)))
   
 (defmethod e/part:react ((self reader) (ev-file-name e/event:event))
-(format *standard-output* "~&reader gets /~S/~%" (@data self ev-file-name))
   (read-prolog-fb self (@data self ev-file-name)))
 
 (defmethod read-prolog-fb ((self reader) file-name)
@@ -28,6 +27,5 @@
   ;;ex. (cl-ppcre:regex-replace "(a)(b)(c)" "abc" (list 2 1 0)) --> "cba"
   (let ((rw1 (cl-ppcre:regex-replace "^([^\\(]+)\\(([^\\)]+)\\)\\." prolog-line (list "(" 0 " " 1 ")"))))
     (let ((rw2 (cl-ppcre:regex-replace-all "," rw1 " ")))
-      (format *standard-output* "~&reader sends /~S/~%" rw2)
       (@send self :string-fact rw2))))
 

@@ -13,7 +13,6 @@
   (let ((pin (@pin self e))
         (string-fact (@data self e))
         (new-list nil))
-(format *standard-output* "~&sequencer in state ~a gets /~S/./~S/~%" (@get self :state) (@pin self e) (@data self e))
     (ecase (@get self :state)
       (:idle
        (if (eq pin :finished-reading)

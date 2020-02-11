@@ -27,7 +27,6 @@
                (@send self :lisp-filename (@get self :lisp-filename))
                (@send self :ir (@get self :ir))
                (@set self :state :done))))
-      (format *standard-output* "synchronizer gets ~A~%" pin)
       (ecase (@get self :state)
         (:idle
          (ecase pin

@@ -296,15 +296,12 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
         (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
         ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/very-small.prolog")))
           (@enable-logging)
-(format *standard-output* "~&compiler injecting ~S~%" output-filename)          
           (@inject compiler-net
                    (e/part::get-input-pin compiler-net :prolog-output-filename)
                    output-filename)
-(format *standard-output* "~&compiler injecting ~S~%" filename)          
           (@inject compiler-net
                    (e/part::get-input-pin compiler-net :prolog-factbase-filename)
                    filename)
-(format *standard-output* "~&compiler injecting ~S~%" "dump-T")          
           (@inject compiler-net
                    (e/part::get-input-pin compiler-net :dump)
                    T))))))

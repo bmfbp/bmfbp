@@ -32,7 +32,7 @@
             (let ((tokens (e/event:data e)))
               (let ((p (make-instance 'parser :token-stream tokens :name "emitter pass2 generic")))
                 (debug-sl nil)
-                (debug-accept t)
+                (debug-accept nil)
                 (schematic-emitter-pass2-generic p)
                 (debug-accept nil)
                 (debug-sl nil)
