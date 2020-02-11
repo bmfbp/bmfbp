@@ -6,8 +6,7 @@
 ; (:code COINCIDENT-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self coincident-ports))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self coincident-ports) e)
   (let ((pin (e/event::sym e))
@@ -36,8 +35,7 @@
          (@send
           self
           :error
-          (format nil "COINCIDENT-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+          (format nil "COINCIDENT-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod coincident-ports ((self coincident-ports))
   (let ((local-fb (arrowgrams/compiler/util::fb-keep '(:not_namedsink :namedsink :coincidentsinks :findallcoincidentsinks :sink

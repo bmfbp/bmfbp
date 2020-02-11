@@ -6,8 +6,7 @@
 ; (:code SEM-NO-DUPLICATE-KINDS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self sem-no-duplicate-kinds))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self sem-no-duplicate-kinds) e)
   (let ((pin (e/event::sym e))
@@ -36,6 +35,5 @@
          (@send
           self
           :error
-          (format nil "SEM-NO-DUPLICATE-KINDS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+          (format nil "SEM-NO-DUPLICATE-KINDS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 

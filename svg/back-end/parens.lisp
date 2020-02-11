@@ -5,8 +5,7 @@
 ; (:code parens (:token) (:out :error) #'e/part:react #'e/part:first-time)
 
 
-(defmethod e/part:first-time ((self parens))
-  (call-next-method))
+(defmethod e/part:first-time ((self parens)))
 
 (defmethod e/part:react ((self parens) (e e/event:event))
   (ecase (e/event::sym e)
@@ -24,5 +23,4 @@
                     (#\)
                      (@send self :out (new-rpar)))
                     (otherwise (forward-token)))))
-               (t (forward-token)))))))
-  (call-next-method))
+               (t (forward-token))))))))

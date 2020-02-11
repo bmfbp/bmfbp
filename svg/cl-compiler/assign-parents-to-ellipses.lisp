@@ -5,8 +5,7 @@
 ; (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self assign-parents-to-ellipses))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self assign-parents-to-ellipses) e)
   (let ((pin (@pin self e))
@@ -35,8 +34,7 @@
          (@send
           self
           :error
-          (format nil "ASSIGN PARENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e)))))))
-  (call-next-method))
+          (format nil "ASSIGN PARENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod assign-parents ((self assign-parents-to-ellipses))
   (let ((rule '(

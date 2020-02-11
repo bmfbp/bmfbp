@@ -7,8 +7,7 @@
 (defparameter *collector-state* nil)
 
 (defmethod e/part:first-time ((self collector))
-  (setf *collector-state* :idle)
-  (call-next-method))
+  (setf *collector-state* :idle))
 
 (defmethod e/part:react ((self collector) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -41,5 +40,4 @@
                 (setf *collector-state* :done))))))
         
         (:done
-         (debug-tok :error (format nil "generic parser done, but got ") tok))))
-    (call-next-method)))
+         (debug-tok :error (format nil "generic parser done, but got ") tok))))))

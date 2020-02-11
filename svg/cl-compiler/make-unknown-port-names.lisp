@@ -6,8 +6,7 @@
 ; (:code MAKE-UNKNOWN-PORT-NAMES (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self make-unknown-port-names))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self make-unknown-port-names) e)
   (let ((pin (e/event::sym e))
@@ -36,8 +35,7 @@
          (@send
           self
           :error
-          (format nil "MAKE-UNKNOWN-PORT-NAMES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+          (format nil "MAKE-UNKNOWN-PORT-NAMES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod make-unknown-port-names ((self make-unknown-port-names))
   (let ((fb

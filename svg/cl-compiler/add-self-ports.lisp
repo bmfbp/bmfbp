@@ -6,8 +6,7 @@
 ; (:code ADD-SELF-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self add-self-ports))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self add-self-ports) e)
   (let ((pin (e/event::sym e))
@@ -36,8 +35,7 @@
          (@send
           self
           :error
-          (format nil "ADD-SELF-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+          (format nil "ADD-SELF-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod create-self-ports ((self add-self-ports))
   ;;;     % find one port that touches the ellispe (if there are more, then the "coincidentPorts"

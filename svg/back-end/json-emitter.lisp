@@ -5,8 +5,7 @@
 (defparameter *json-emitter-state* nil)
 
 (defmethod e/part:first-time ((self json-emitter))
-  (setf *json-emitter-state* :idle)
-  (call-next-method))
+  (setf *json-emitter-state* :idle))
 
 (defmethod e/part:react ((self json-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -41,5 +40,4 @@
                 (setf *json-emitter-state* :done))))))
         
         (:done
-         (@send self :error (format nil "json emitter done, but received input~%"))))))
-  (call-next-method))
+         (@send self :error (format nil "json emitter done, but received input~%")))))))

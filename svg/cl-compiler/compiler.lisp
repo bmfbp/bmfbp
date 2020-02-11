@@ -295,16 +295,26 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
       ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/test.prolog")))
         (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
         ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/very-small.prolog")))
+          (@enable-logging)
+(format *standard-output* "~&compiler injecting ~S~%" output-filename)          
           (@inject compiler-net
                    (e/part::get-input-pin compiler-net :prolog-output-filename)
                    output-filename)
+(format *standard-output* "~&compiler injecting ~S~%" filename)          
           (@inject compiler-net
                    (e/part::get-input-pin compiler-net :prolog-factbase-filename)
                    filename)
+(format *standard-output* "~&compiler injecting ~S~%" "dump-T")          
           (@inject compiler-net
                    (e/part::get-input-pin compiler-net :dump)
                    T))))))
-                                                                 
+
+(defmethod busy-p ((self convert-to-keywords))
+  (assert nil)) ;; must not happen - check if part has e/part:busy-p
+(defmethod first-time ((self convert-to-keywords))
+  (assert nil)) ;; must not happen - check if part has e/part:first-time-p
+(defmethod react ((self convert-to-keywords) e)
+  (assert nil)) ;; must not happen - check if part has e/part:react-p
 
 (defun ctest ()
   #+nil#(system:run-shell-command "rm -rf ~/.cache/common-lisp")

@@ -7,13 +7,13 @@
 ;; read a string fact, output as a lisp fact with all symbols converted to keywords
 
 (defmethod e/part:first-time ((self sequencer))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self sequencer) e)
   (let ((pin (@pin self e))
         (string-fact (@data self e))
         (new-list nil))
+(format *standard-output* "~&sequencer in state ~a gets /~S/./~S/~%" (@get self :state) (@pin self e) (@data self e))
     (ecase (@get self :state)
       (:idle
        (if (eq pin :finished-reading)
@@ -46,5 +46,4 @@
              :error
              (format nil "SEQUENCER in state :waiting-for-write expected :finished-writing, but got action ~S data ~S" pin (@data self e)))))
          
-         )
-    (call-next-method)))
+         )))

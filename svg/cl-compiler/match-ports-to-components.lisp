@@ -6,8 +6,7 @@
 ; (:code MATCH-PORTS-TO-COMPONENTS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self match-ports-to-components))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self match-ports-to-components) e)
   (let ((pin (e/event::sym e))
@@ -36,8 +35,7 @@
          (@send
           self
           :error
-          (format nil "MATCH-PORTS-TO-COMPONENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+          (format nil "MATCH-PORTS-TO-COMPONENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod match-ports-to-components ((self match-ports-to-components))
   (let ((fb

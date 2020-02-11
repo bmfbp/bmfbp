@@ -5,8 +5,7 @@
 (defparameter *emitter-pass2-generic-state* nil)
 
 (defmethod e/part:first-time ((self emitter-pass2-generic))
-  (setf *emitter-pass2-generic-state* :idle)
-  (call-next-method))
+  (setf *emitter-pass2-generic-state* :idle))
 
 (defmethod e/part:react ((self emitter-pass2-generic) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -41,5 +40,4 @@
                 (setf *emitter-pass2-generic-state* :done))))))
         
         (:done
-         (@send self :error (format nil "generic emitter pass2 done, but received input~%"))))))
-  (call-next-method))
+         (@send self :error (format nil "generic emitter pass2 done, but received input~%")))))))

@@ -12,8 +12,7 @@
 (defun symbols-get-position () *symbols-start-position*)
 
 (defmethod e/part:first-time ((self symbols))
-  (setf *symbols-state* :idle)
-  (call-next-method))
+  (setf *symbols-state* :idle))
 
 (defmethod e/part:react ((self symbols) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *symbols-buffer*))
@@ -75,5 +74,4 @@
                 (forward-token :pulled-p t)
                 (next-state :idle)))))))
       (:done
-       (@send self :error (format nil "symbols finished, but received ~S" e)))))
-  (call-next-method))
+       (@send self :error (format nil "symbols finished, but received ~S" e))))))

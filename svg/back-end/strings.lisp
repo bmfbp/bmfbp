@@ -21,8 +21,7 @@
 (defmethod e/part:first-time ((self strings))
   (@set self :state :idle)
   (@set self :start-position 0)
-  (strings-clear-buffer self)
-  (call-next-method))
+  (strings-clear-buffer self))
 
 (defmethod e/part:react ((self strings) (e e/event:event))
   (labels ((push-char-into-buffer () (strings-put-buffer self (token-text (e/event:data e))))
@@ -101,5 +100,4 @@
               (pull)
               (next-state :collecting-string))))))
       (:done
-       (@send self :error (format nil "strings finished, but received ~S" e)))))
-  (call-next-method))
+       (@send self :error (format nil "strings finished, but received ~S" e))))))

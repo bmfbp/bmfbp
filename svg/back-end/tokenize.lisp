@@ -7,8 +7,7 @@
 (defmethod e/part:first-time ((self tokenize))
   (@set self :state :idle)
   (@set self :position 0)
-  (@set self :stream nil)
-  (call-next-method))
+  (@set self :stream nil))
 
 (defmethod e/part:react ((self tokenize) (e e/event:event))
   (ecase (@get self :state)
@@ -41,5 +40,4 @@
 	      (@set self :state :done))))))))
 
     (:done
-     (@send self :error (format nil "tokenizer done, but received ~S ~S" (e/event::sym e) (e/event:data e)))))
-  (call-next-method))
+     (@send self :error (format nil "tokenizer done, but received ~S ~S" (e/event::sym e) (e/event:data e))))))

@@ -5,8 +5,7 @@
 (defparameter *emitter-state* nil)
 
 (defmethod e/part:first-time ((self generic-emitter))
-  (setf *emitter-state* :idle)
-  (call-next-method))
+  (setf *emitter-state* :idle))
 
 (defmethod e/part:react ((self generic-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -35,5 +34,4 @@
               (setf *emitter-state* :done)))))
         
         (:done
-         (debug-tok :error (format nil "generic parser done, but got ") tok)))))
-  (call-next-method))
+         (debug-tok :error (format nil "generic parser done, but got ") tok))))))

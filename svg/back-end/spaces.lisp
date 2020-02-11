@@ -11,8 +11,7 @@
 (defmethod e/part:first-time ((self spaces))
   (@set self :buffer nil)
   (@set self :state :idle)
-  (@set self :position 0)
-  (call-next-method))
+  (@set self :position 0))
 
 (defmethod e/part:react ((self spaces) (e e/event:event))
   (labels ((push-char-into-buffer () 
@@ -74,5 +73,4 @@
                 (forward-token :pulled-p t)
                 (next-state :idle)))))))
       (:done
-       (@send self :error (format nil "spaces finished, but received ~S" e)))))
-  (call-next-method))
+       (@send self :error (format nil "spaces finished, but received ~S" e))))))

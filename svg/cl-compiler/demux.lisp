@@ -5,8 +5,7 @@
 
 (defmethod e/part:first-time ((self demux))
   (@set self :counter 0)
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self demux) e)
   (let ((pin (e/event::sym e))
@@ -52,5 +51,4 @@
          (@send
             self
             :error
-            (format nil "DEMUX in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+            (format nil "DEMUX in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))))

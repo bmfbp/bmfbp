@@ -5,8 +5,7 @@
 ; (:code text-bb (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self text-bounding-boxes))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self text-bounding-boxes) e)
   (let ((pin (@pin self e))
@@ -35,8 +34,8 @@
          (@send
           self
           :error
-          (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+          (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
+
              
 
 (defmethod text-bb-make-bounding-boxes ((self text-bounding-boxes))

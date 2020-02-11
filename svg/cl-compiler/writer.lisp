@@ -7,8 +7,7 @@
 (defmethod e/part:first-time ((self writer))
   (@set self :state :idle)
   (@set self :filename nil)
-  (@set self :stream *standard-output*)
-  (call-next-method))
+  (@set self :stream *standard-output*))
 
 (defmethod e/part:react ((self writer) (e e/event:event))
   (let ((action (e/event::sym e))
@@ -31,8 +30,7 @@
           (@set self :state :idle))
          (:next
           (write-fact self (e/event:data e))
-          (@send self :request t)))))
-    (call-next-method)))
+          (@send self :request t))))))
 
 (defmethod open-stream ((self writer))
   (let ((filename (@get self :filename)))

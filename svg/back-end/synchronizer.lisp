@@ -11,8 +11,7 @@
   (@set self :json-filename nil)
   (@set self :generic-filename nil)
   (@set self :lisp-filename nil)
-  (@set self :ir nil)
-  (call-next-method))
+  (@set self :ir nil))
 
 (defmethod e/part:react ((self synchronizer) e)
   (let ((pin (e/event::sym e))
@@ -44,5 +43,4 @@
          (:done
           (@send
            self :error
-           (format nil "synchronizer in state :done expected <nothing>, but got action ~S data ~S" pin (e/event:data e)))))))
-  (call-next-method))
+           (format nil "synchronizer in state :done expected <nothing>, but got action ~S data ~S" pin (e/event:data e))))))))

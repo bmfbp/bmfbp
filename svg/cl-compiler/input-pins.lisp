@@ -6,8 +6,7 @@
 ; (:code INPUT-PINS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self input-pins))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self input-pins) e)
   (let ((pin (e/event::sym e))
@@ -36,8 +35,7 @@
          (@send
           self
           :error
-          (format nil "INPUT-PINS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
+          (format nil "INPUT-PINS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod input-pins ((self input-pins))
   (let ((fb

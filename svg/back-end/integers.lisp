@@ -13,8 +13,7 @@
 (defun integers-get-position () *integers-start-position*)
 
 (defmethod e/part:first-time ((self integers))
-  (setf *integers-state* :idle)
-  (call-next-method))
+  (setf *integers-state* :idle))
 
 (defmethod e/part:react ((self integers) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *integers-buffer*))
@@ -74,6 +73,5 @@
                 (forward-token :pulled-p t)
                 (next-state :idle)))))))
       (:done
-       (@send self :error (format nil "integers finished, but received ~S" e)))))
-  (call-next-method))
+       (@send self :error (format nil "integers finished, but received ~S" e))))))
 

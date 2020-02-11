@@ -5,8 +5,7 @@
 ; (:code FILE-NAMER (:basename) (:json-filename :generic-filename :lisp-filename :error) #'BE:e/part:react #'BE:e/part:first-time)
 
 (defmethod e/part:first-time ((self file-namer))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self file-namer) e)
   (let ((pin (e/event::sym e))
@@ -23,5 +22,5 @@
              (@send self :lisp-filename lispf)))
 
            (@send self :error
-                                         (format nil "file-namer in state :idle expected :basename, but got action ~S data ~S" pin (e/event:data e)))))))
-  (call-next-method))
+                                         (format nil "file-namer in state :idle expected :basename, but got action ~S data ~S" pin (e/event:data e))))))))
+

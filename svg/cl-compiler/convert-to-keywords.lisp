@@ -9,9 +9,9 @@
 (defmethod e/part:busy-p ((self convert-to-keywords))
   (call-next-method))
 
-(defmethod e/part:first-time ((self convert-to-keywords))
-  (call-next-method))
+(defmethod e/part:first-time ((self convert-to-keywords)))
 
+;(defmethod e/part:react ((self convert-to-keywords) e)
 (defmethod react ((self convert-to-keywords) e)
   (let ((pin (@pin self e))
         (string-fact (e/event:data e))
@@ -29,8 +29,7 @@
           (@send self :converted new-list))))
       (if (eq pin :eof)
           (@send self :done t)
-        (@send self :error (format nil "~&convert to keywords unexpected input pin ~S~%" pin)))))
-  (call-next-method))        
+        (@send self :error (format nil "~&convert to keywords unexpected input pin ~S~%" pin))))))
 
 (defun keyword-ize (x)
   (if (symbolp x)

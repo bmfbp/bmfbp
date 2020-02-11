@@ -10,8 +10,7 @@
   (@set self :show-additions nil)
   (@set self :state :idle)
   (@set self :fb-as-iterable-list nil)
-  (@set self :factbase nil)
-  (call-next-method))
+  (@set self :factbase nil))
 
 (defmethod e/part:react ((self fb) e)
   (flet ((idle-handler (action state) (declare (ignorable state))
@@ -58,8 +57,7 @@
 			(begin-iteration self)
 			(@send self :error
                                (format nil "FB in state :iterating expected :get-next or :iterate, but got action ~S data ~S"
-                                       action (@data self e)))))))
-	     (call-next-method))))
+                                       action (@data self e))))))))))
   
 (defmethod begin-iteration ((self fb))
   (@set self :fb-as-iterable-list (@get self :factbase))

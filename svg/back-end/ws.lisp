@@ -19,8 +19,7 @@
 (defun get-position () *ws-position*)
 
 (defmethod e/part:first-time ((self ws))
-  (setf *ws-state* :idle)
-  (call-next-method))
+  (setf *ws-state* :idle))
 
 (defmethod e/part:react ((self ws) (e e/event:event))
   (labels ((pull ()
@@ -69,5 +68,4 @@
                (t (release-buffer)
                   (check-eof))))
         (:done
-         (@send self :error (format nil "ws done, but received ~S" tok))))))
-  (call-next-method))
+         (@send self :error (format nil "ws done, but received ~S" tok)))))))
