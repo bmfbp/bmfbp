@@ -7,13 +7,11 @@
 (defmethod e/part:busy-p ((self reader))
   (call-next-method))
 
-(defmethod e/part:first-time ((self reader))
-  (call-next-method))
+(defmethod e/part:first-time ((self reader)))
   
 (defmethod e/part:react ((self reader) (ev-file-name e/event:event))
 (format *standard-output* "~&reader gets /~S/~%" (@data self ev-file-name))
-  (read-prolog-fb self (@data self ev-file-name))
-  (call-next-method))
+  (read-prolog-fb self (@data self ev-file-name)))
 
 (defmethod read-prolog-fb ((self reader) file-name)
   (let ((prolog-line nil))

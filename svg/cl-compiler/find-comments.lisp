@@ -5,8 +5,7 @@
 ; (:code FIND-COMMENTS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self find-comments))
-  (@set self :state :idle)
-  (call-next-method))
+  (@set self :state :idle))
 
 (defmethod e/part:react ((self find-comments) e)
   (let ((pin (e/event::sym e))
@@ -35,9 +34,7 @@
          (@send
           self
           :error
-          (format nil "FIND-COMMENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))
-    (call-next-method)))
-
+          (format nil "FIND-COMMENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod find-comments ((self find-comments))
   (let ((text-bbs (arrowgrams/compiler/util::find-all-text self)))
