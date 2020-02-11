@@ -35,7 +35,7 @@
          (@send
           self
           :error
-          (format nil "ADD-KINDS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e)))))))
+          (format nil "ADD-KINDS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod text-completely-inside-box ((self add-kinds) text-id tL tT box-id bL bT bR bB
                                        l g r e n c result)

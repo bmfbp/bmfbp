@@ -35,7 +35,7 @@
          (@send
           self
           :error
-          (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e)))))))         
+          (format nil "BOUNDING-BOXES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))  
 
 (defmethod send-rules ((self ellipse-bounding-boxes))
   ; nothing - deprecated

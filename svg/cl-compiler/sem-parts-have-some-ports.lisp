@@ -35,7 +35,7 @@
          (@send
           self
           :error
-          (format nil "SEM-PARTS-HAVE-SOME-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e)))))))
+          (format nil "SEM-PARTS-HAVE-SOME-PORTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod sem-parts-have-some-ports ((self sem-parts-have-some-ports))
   (let ((fb

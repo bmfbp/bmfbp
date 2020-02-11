@@ -30,7 +30,7 @@
           (@set self :state :idle))
          (:next
           (write-fact self (e/event:data e))
-          (@send self :request t))))))
+          (@send self :request t)))))))
 
 (defmethod open-stream ((self writer))
   (let ((filename (@get self :filename)))
