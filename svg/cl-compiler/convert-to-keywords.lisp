@@ -11,8 +11,7 @@
 
 (defmethod e/part:first-time ((self convert-to-keywords)))
 
-;(defmethod e/part:react ((self convert-to-keywords) e)
-(defmethod react ((self convert-to-keywords) e)
+(defmethod e/part:react ((self convert-to-keywords) e)
   (let ((pin (@pin self e))
         (string-fact (e/event:data e))
         (new-list nil))
