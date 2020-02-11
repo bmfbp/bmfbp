@@ -13,8 +13,7 @@
      (let ((tok (e/event:data e)))
        (flet ((new-lpar () (make-token :kind :lpar :text #\( :position (token-position tok)))
               (new-rpar () (make-token :kind :rpar :text #\) :position (token-position tok)))
-              (forward-token ()
-                (@send-event self :out e)))
+              (forward-token () (@send self :out (@data self e))))
          (cond ((eq :character (token-kind tok))
                 (let ((c (token-text tok)))
                   (case c
