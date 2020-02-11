@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defparameter *json-emitter-rules*
 "
@@ -127,4 +127,4 @@ dec nl
 
 ")
 
-(eval (sl:parse arrowgrams/compiler/back-end::*json-emitter-rules* "-JSON-EMITTER"))
+(eval (sl:parse *json-emitter-rules* "-JSON-EMITTER"))

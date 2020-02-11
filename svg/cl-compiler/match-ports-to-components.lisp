@@ -1,24 +1,25 @@
 
 (in-package :arrowgrams/compiler)
+(defclass match-ports-to-components (e/part:part) ())
+(defmethod e/part:busy-p ((self match-ports-to-components)) (call-next-method))
 
 ; (:code MATCH-PORTS-TO-COMPONENTS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod MATCH-PORTS-TO-COMPONENTS-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  )
+(defmethod e/part:first-time ((self match-ports-to-components))
+  (@set self :state :idle))
 
-(defmethod MATCH-PORTS-TO-COMPONENTS-react ((self e/part:part) e)
+(defmethod e/part:react ((self match-ports-to-components) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get self :state)
       (:idle
        (if (eq pin :fb)
-           (cl-event-passing-user::@set-instance-var self :fb data)
+           (@set self :fb data)
          (if (eq pin :go)
              (progn
-               (cl-event-passing-user::@send self :request-fb t)
-               (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
-           (cl-event-passing-user::@send
+               (@send self :request-fb t)
+               (@set self :state :waiting-for-new-fb))
+           (@send
             self
             :error
             (format nil "MATCH-PORTS-TO-COMPONENTS in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
@@ -26,24 +27,24 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (cl-event-passing-user::@set-instance-var self :fb data)
+             (@set self :fb data)
              (format *standard-output* "~&match-ports-to-components~%")
              (match-ports-to-components self)
-             (cl-event-passing-user::@send self :done t)
-             (cl-event-passing-user::@set-instance-var self :state :idle))
-         (cl-event-passing-user::@send
+             (@send self :done t)
+             (@set self :state :idle))
+         (@send
           self
           :error
           (format nil "MATCH-PORTS-TO-COMPONENTS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
-(defmethod match-ports-to-components ((self e/part:part))
+(defmethod match-ports-to-components ((self match-ports-to-components))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           (arrowgrams/compiler/util::fb-keep '(:eltype :parent :ellipse :rect
                                                :bounding_box_left :bounding_box_top :bounding_box_right :bounding_box_bottom
-                                               :wen :nle :we :nl :wspc) (cl-event-passing-user::@get-instance-var self :fb))
-                   #+nil(cl-event-passing-user::@get-instance-var self :fb)
+                                               :wen :nle :we :nl :wspc) (@get self :fb))
+                   #+nil(@get self :fb)
                    ))
         (goal '((:match_ports_to_components (:? A)))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))

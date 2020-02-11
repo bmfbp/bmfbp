@@ -1,24 +1,25 @@
 
 (in-package :arrowgrams/compiler)
+(defclass add-kinds (e/part:part) ())
+(defmethod e/part:busy-p ((self add-kinds)) (call-next-method))
 
 ; (:code ADD-KINDS (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod ADD-KINDS-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  )
+(defmethod e/part:first-time ((self add-kinds))
+  (@set self :state :idle))
 
-(defmethod ADD-KINDS-react ((self e/part:part) e)
+(defmethod e/part:react ((self add-kinds) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get self :state)
       (:idle
        (if (eq pin :fb)
-           (cl-event-passing-user::@set-instance-var self :fb data)
+           (@set self :fb data)
          (if (eq pin :go)
              (progn
-               (cl-event-passing-user::@send self :request-fb t)
-               (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
-           (cl-event-passing-user::@send
+               (@send self :request-fb t)
+               (@set self :state :waiting-for-new-fb))
+           (@send
             self
             :error
             (format nil "ADD-KINDS in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
@@ -26,17 +27,17 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (cl-event-passing-user::@set-instance-var self :fb data)
+             (@set self :fb data)
              (format *standard-output* "~&add-kinds~%")
              (add-kinds self)
-             (cl-event-passing-user::@send self :done t)
-             (cl-event-passing-user::@set-instance-var self :state :idle))
-         (cl-event-passing-user::@send
+             (@send self :done t)
+             (@set self :state :idle))
+         (@send
           self
           :error
           (format nil "ADD-KINDS in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
-(defmethod text-completely-inside-box ((self e/part:part) text-id tL tT box-id bL bT bR bB
+(defmethod text-completely-inside-box ((self add-kinds) text-id tL tT box-id bL bT bR bB
                                        l g r e n c result)
   (declare (ignore self))
   ;; LT point completely inside bb
@@ -47,7 +48,7 @@
 ;;
 ;; used always refers to a text-id, e.g. text(text-id,str-id)
 
-#+nil (defmethod old-add-kinds ((self e/part:part))
+#+nil (defmethod old-add-kinds ((self add-kinds))
   (let ((add-kinds-rule '(
                           (:add-kinds (:? box-id))
                           (:rect (:? box-id))
@@ -78,23 +79,23 @@
                             ))
         (let ((fb (cons not-used-rule1 ;; order matters!
                         (cons not-used-rule2
-                              (cons add-kinds-rule (cl-event-passing-user::@get-instance-var self :fb))))))
+                              (cons add-kinds-rule (@get self :fb))))))
           (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))
       
 
-(defmethod add-kinds ((self e/part:part))
+(defmethod add-kinds ((self add-kinds))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb)))
+          (@get self :fb)))
        ;(goal '((:trace-on 1) (:add_kinds_main))))
         (goal '((:add_kinds_main))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))
 
-#+nil (defmethod add-kinds ((self e/part:part))
+#+nil (defmethod add-kinds ((self add-kinds))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb)))
+          (@get self :fb)))
         (goal '((:printall))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))

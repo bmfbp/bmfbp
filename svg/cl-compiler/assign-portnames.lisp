@@ -1,24 +1,25 @@
 
 (in-package :arrowgrams/compiler)
+(defclass assign-portnames (e/part:part) ())
+(defmethod e/part:busy-p ((self assign-portnames)) (call-next-method))
 
 ; (:code ASSIGN-PORTNAMES (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod ASSIGN-PORTNAMES-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  )
+(defmethod e/part:first-time ((self assign-portnames))
+  (@set self :state :idle))
 
-(defmethod ASSIGN-PORTNAMES-react ((self e/part:part) e)
+(defmethod e/part:react ((self assign-portnames) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (cl-event-passing-user::@get-instance-var self :state)
+    (ecase (@get self :state)
       (:idle
        (if (eq pin :fb)
-           (cl-event-passing-user::@set-instance-var self :fb data)
+           (@set self :fb data)
          (if (eq pin :go)
              (progn
-               (cl-event-passing-user::@send self :request-fb t)
-               (cl-event-passing-user::@set-instance-var self :state :waiting-for-new-fb))
-           (cl-event-passing-user::@send
+               (@send self :request-fb t)
+               (@set self :state :waiting-for-new-fb))
+           (@send
             self
             :error
             (format nil "ASSIGN-PORTNAMES in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))
@@ -26,17 +27,17 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (cl-event-passing-user::@set-instance-var self :fb data)
+             (@set self :fb data)
              (format *standard-output* "~&assign-portnames~%")
              (assign-portnames self)
-             (cl-event-passing-user::@send self :done t)
-             (cl-event-passing-user::@set-instance-var self :state :idle))
-         (cl-event-passing-user::@send
+             (@send self :done t)
+             (@set self :state :idle))
+         (@send
           self
           :error
           (format nil "ASSIGN-PORTNAMES in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
-(defmethod assign-portnames ((self e/part:part))
+(defmethod assign-portnames ((self assign-portnames))
   (let ((all-port-bbs (find-all-nameless-port-bounding-boxes self)))
     (let ((all-text-bbs (find-all-unused-text-bounding-boxes self))
           (port-vs-text-hash-table (make-hash-table)))
@@ -55,7 +56,7 @@
               (setf (gethash id port-vs-text-hash-table) closest)))))
       (asserta-portnames self port-vs-text-hash-table))))
 
-(defmethod asserta-portnames ((self e/part:part) h)
+(defmethod asserta-portnames ((self assign-portnames) h)
   (maphash #'(lambda (port text-id-str-closest)
                (destructuring-bind (id str closest)
                    text-id-str-closest
@@ -64,25 +65,25 @@
                  (arrowgrams/compiler/util::asserta self (list :portName port str) nil nil nil nil nil nil nil)))
            h))
 
-(defmethod find-all-nameless-port-bounding-boxes ((self e/part:part))
+(defmethod find-all-nameless-port-bounding-boxes ((self assign-portnames))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb))))
+          (@get self :fb))))
     (let ((goal '((:collect_nameless_ports (:? portid) (:? left) (:? top) (:? right) (:? bottom)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         results))))
 
-(defmethod find-all-unused-text-bounding-boxes ((self e/part:part))
+(defmethod find-all-unused-text-bounding-boxes ((self assign-portnames))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (cl-event-passing-user::@get-instance-var self :fb))))
+          (@get self :fb))))
     (let ((goal '((:collect_unused_text (:? textid) (:? str) (:? left) (:? top) (:? right) (:? bottom)))))
       (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
         results))))
 
-(defmethod get-port-details ((self e/part:part) alist)
+(defmethod get-port-details ((self assign-portnames) alist)
   (declare (ignore self))
   (let ((id     (cdr (assoc 'portid alist)))
         (left   (cdr (assoc 'left   alist)))
@@ -91,7 +92,7 @@
         (bottom (cdr (assoc 'bottom alist))))
     (values id left top right bottom)))
 
-(defmethod get-text-details ((self e/part:part) plist)
+(defmethod get-text-details ((self assign-portnames) plist)
   (declare (ignore self))
   (let ((id     (cdr (assoc 'textid plist)))
         (str    (cdr (assoc 'str    plist)))
@@ -101,7 +102,7 @@
         (bottom (cdr (assoc 'bottom plist))))
     (values id str left top right bottom)))
 
-(defmethod find-minimum ((self e/part:part) list-id-vs-str-vs-distance-list)
+(defmethod find-minimum ((self assign-portnames) list-id-vs-str-vs-distance-list)
   (declare (ignore self))
   (let ((minimum (first list-id-vs-str-vs-distance-list)))
     (dolist (triple list-id-vs-str-vs-distance-list)

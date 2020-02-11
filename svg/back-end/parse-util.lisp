@@ -10,7 +10,7 @@
 
 
 
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defclass pair ()
   ((pair-first :accessor pair-first)
@@ -63,7 +63,7 @@
    (kind :accessor kind)
    (inputs :accessor inputs)
    (outputs :accessor outputs)
-   (react :accessor react)
+   (part-react :accessor part-react)
    (first-time :accessor first-time)))  
 
 (defclass schematic (part)
@@ -136,7 +136,7 @@
 (defmethod parser-error ((self parser) kind)
   (let ((msg (format nil "~&parser error ~S expecting ~S, but got ~S ~%~%" (name self) kind (first (token-stream self)))))
       (assert nil () msg)
-      (send! (owner self) :error msg)
+      (@send (owner self) :error msg)
       (pop (token-stream self)) ;; stream is volatile to help debugging
       nil))
 
@@ -222,10 +222,10 @@
     (format *error-output* "~a~%" rule)))
 
 ;; parser support
-(defmethod must-see ((p parser) token)   (arrowgrams/compiler/back-end:need p token))
-(defmethod look-ahead ((p parser) token)   (arrowgrams/compiler/back-end:look-ahead-p p token))
-(defmethod output ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
-(defmethod need-nil-symbol ((p parser) str)   (arrowgrams/compiler/back-end:emit p str))
+(defmethod must-see ((p parser) token)   (need p token))
+(defmethod look-ahead ((p parser) token)   (look-ahead-p p token))
+(defmethod output ((p parser) str)   (emit p str))
+(defmethod need-nil-symbol ((p parser) str)   (emit p str))
 
 (defmethod call-external ((p parser) func depth caller)
   (debug-calling depth 'mechanism)
@@ -243,15 +243,15 @@
 
 ;; mechanisms used in *collector-rules* and *generic-rules*
 (defmethod print-text ((p parser))
-  (format (arrowgrams/compiler/back-end:output-stream p)
+  (format (output-stream p)
           "~a"
-          (arrowgrams/compiler/back-end:token-text (arrowgrams/compiler/back-end:accepted-token p))))
+          (token-text (accepted-token p))))
 
 (defmethod print-integer ((p parser))
   (print-text p))
 
 (defmethod symbol-must-be-nil ((p parser))
-  (arrowgrams/compiler/back-end:accepted-symbol-must-be-nil p))
+  (accepted-symbol-must-be-nil p))
 
 (defmethod break-here ((p parser))
   (format *standard-output* "p is ~A~%" p)
@@ -278,7 +278,7 @@
 (defmethod schematic/set-react-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
     (let ((top (stack-top (schematic-stack self))))
-      (setf (react top) str))))
+      (setf (part-react top) str))))
 
 (defmethod schematic/set-first-time-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
@@ -328,7 +328,7 @@
 
 (defmethod part/set-react ((self parser))
   (let ((top (stack-top (part-stack self))))
-    (setf (react top) (get-accepted-token-text self))))
+    (setf (part-react top) (get-accepted-token-text self))))
 
 (defmethod part/set-first-time ((self parser))
   (let ((top (stack-top (part-stack self))))
@@ -457,13 +457,13 @@
 
 
 (defmethod emit-token ((p parser) kind)
-  (send! (owner p) :out (make-token :kind kind)))
+  (@send (owner p) :out (make-token :kind kind)))
 
 (defmethod emit-string ((p parser) str)
-  (send! (owner p) :out (make-token :kind :string :text str)))
+  (@send (owner p) :out (make-token :kind :string :text str)))
 
 (defmethod emit-integer ((p parser) n)
-  (send! (owner p) :out (make-token :kind :integer :text (format nil "~A" n))))
+  (@send (owner p) :out (make-token :kind :integer :text (format nil "~A" n))))
 
 ;;;;;;;; mechanisms for schem-unparse.lisp ;;;;;;;
 

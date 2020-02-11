@@ -5,6 +5,7 @@ misc
 *fsl
 *fasl
 *64xfasl
+*.old
 .AppleDouble
 *.pro
 [0-9]*

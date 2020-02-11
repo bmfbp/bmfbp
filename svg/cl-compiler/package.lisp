@@ -1,12 +1,11 @@
 (defpackage :arrowgrams/compiler
-  (:use :cl))
+  (:use :cl :cl-event-passing-user))
 
 (defpackage :arrowgrams/compiler/util
-  (:use :cl))
-
+  (:use :cl :cl-event-passing-user))
 
 (defpackage :arrowgrams/compiler/classes
-  (:use :cl))
+  (:use :cl :cl-event-passing-user))
 
 
 

@@ -79,37 +79,36 @@
                     (funcall next))
   :components ((:module contents
 			:pathname "./svg/back-end"
-			:components ((:file "package")
-				     (:file "util" :depends-on ("package"))
-				     (:file "token" :depends-on ("package"))
-				     (:file "synchronizer" :depends-on ("util" "token"))
-				     (:file "tokenize" :depends-on ("util" "token"))
-				     (:file "parens" :depends-on ("util" "token"))
-				     (:file "ws" :depends-on ("util" "token"))
-				     (:file "spaces" :depends-on ("util" "token"))
-				     (:file "strings" :depends-on ("util" "token"))
-				     (:file "symbols" :depends-on ("util" "token"))
-				     (:file "integers" :depends-on ("util" "token"))
-				     (:file "dumper" :depends-on ("util" "token"))
-				     (:file "parse-util" :depends-on ("util" "token"))
-				     (:file "preparse" :depends-on ("util" "token"))
-				     (:file "file-writer" :depends-on ("util" "token"))
-                                     (:file "schem-unparse" :depends-on ("util" "token" "parse-util"))
-                                     (:file "collector-sl" :depends-on ("util" "token" "parse-util"))
-                                     (:file "file-namer" :depends-on ("package"))
-                                     (:file "collector" :depends-on ("util" "token" "parse-util" "collector-sl" "schem-unparse"))
-                                     (:file "emitter-pass2-generic-sl" :depends-on ("util" "token" "parse-util"))
-                                     (:file "emitter-pass2-generic" :depends-on ("util" "token" "parse-util" "emitter-pass2-generic-sl"))
-                                     (:file "json-emitter-sl" :depends-on ("util" "token" "parse-util"))
-                                     (:file "json-emitter" :depends-on ("util" "token" "parse-util" "json-emitter-sl"))
-                                     (:file "generic-sl" :depends-on ("util" "token"))
-				     (:file "generic-emitter" :depends-on ("util" "token" "parse-util" "generic-sl"))
-				     (:file "parser" :depends-on ("package" "util" "token" "tokenize" "strings" "ws"
+			:components ((:file "../cl-compiler/package")
+				     (:file "token" :depends-on ("../cl-compiler/package"))
+				     (:file "synchronizer" :depends-on ("token"))
+				     (:file "tokenize" :depends-on ("token"))
+				     (:file "parens" :depends-on ("token"))
+				     (:file "ws" :depends-on ("token"))
+				     (:file "spaces" :depends-on ("token"))
+				     (:file "strings" :depends-on ("token"))
+				     (:file "symbols" :depends-on ("token"))
+				     (:file "integers" :depends-on ("token"))
+				     (:file "dumper" :depends-on ("token"))
+				     (:file "parse-util" :depends-on ("token"))
+				     (:file "preparse" :depends-on ("token"))
+				     (:file "file-writer" :depends-on ("token"))
+                                     (:file "schem-unparse" :depends-on ("token" "parse-util"))
+                                     (:file "collector-sl" :depends-on ("token" "parse-util"))
+                                     (:file "file-namer" :depends-on ("../cl-compiler/package"))
+                                     (:file "collector" :depends-on ("token" "parse-util" "collector-sl" "schem-unparse"))
+                                     (:file "emitter-pass2-generic-sl" :depends-on ("token" "parse-util"))
+                                     (:file "emitter-pass2-generic" :depends-on ("token" "parse-util" "emitter-pass2-generic-sl"))
+                                     (:file "json-emitter-sl" :depends-on ("token" "parse-util"))
+                                     (:file "json-emitter" :depends-on ("token" "parse-util" "json-emitter-sl"))
+                                     (:file "generic-sl" :depends-on ("token"))
+				     (:file "generic-emitter" :depends-on ("token" "parse-util" "generic-sl"))
+				     (:file "parser" :depends-on ("../cl-compiler/package" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
                                                                   "generic-emitter" "collector"
                                                                   "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))
 
-				     (:file "wiring" :depends-on ("util"))))))
+				     (:file "wiring" :depends-on ("../cl-compiler/package"))))))
 
 
 ;;;; 
@@ -144,9 +143,9 @@
                                      (:file "find-metadata" :depends-on ("package" "classes" "util"))
                                      (:file "add-kinds" :depends-on ("package" "classes" "rules"))
                                      (:file "add-self-ports" :depends-on ("package" "classes" "rules"))
+                                     (:file "create-centers" :depends-on ("package" "rules"))
+                                     (:file "calculate-distances" :depends-on ("package" "rules"))
                                      (:file "make-unknown-port-names" :depends-on ("package" "classes"))
-                                     (:file "create-centers" :depends-on ("package" "classes"))
-                                     (:file "calculate-distances" :depends-on ("package" "classes"))
                                      (:file "closest" :depends-on ("package" "classes"))
                                      (:file "assign-portnames" :depends-on ("package" "classes" "closest"))
                                      (:file "mark-indexed-ports" :depends-on ("package" "classes"))
@@ -183,8 +182,6 @@
                                                    "add-kinds"
                                                    "add-self-ports"
                                                    "make-unknown-port-names"
-                                                   "create-centers"
-                                                   "calculate-distances"
                                                    "assign-portnames"
                                                    "mark-indexed-ports"
                                                    "coincident-ports"
@@ -201,6 +198,9 @@
                                                    "self-output-pins"
                                                    "input-pins"
                                                    "output-pins"
+
+                                                   "create-centers"
+                                                   "calculate-distances"
 
 						   "ir-emitter"
 

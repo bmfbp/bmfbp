@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
 (defmethod unparse-schematic ((p parser) schem)
   (uemit-string p (slot-value schem 'name))
@@ -6,7 +6,7 @@
   (uemit-string p (slot-value schem 'kind))
   (unparse-inputs p (slot-value schem 'inputs))
   (unparse-outputs p (slot-value schem 'outputs))
-  (uemit-string p (slot-value schem 'react))
+  (uemit-string p (slot-value schem 'part-react))
   (uemit-string p (slot-value schem 'first-time))
   (unparse-parts  p (slot-value schem 'parts) (slot-value schem 'wiring)))
 

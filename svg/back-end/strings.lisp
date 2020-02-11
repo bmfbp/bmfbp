@@ -1,22 +1,32 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
-; (:code strings (:token) (:request :out :error) #'strings-react #'strings-first-time)
+(defclass strings (e/part:part) ())
+(defmethod e/part:busy-p ((self strings)) (call-next-method))
+; (:code strings (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defparameter *strings-buffer* nil)
-(defparameter *strings-start-position* 0)
-(defparameter *strings-state* :idle)
+(defmethod strings-get-ordered-buffer ((self strings))
+  (coerce (reverse (@get self :buffer))
+          'string))
 
-(defun strings-get-buffer () (coerce (reverse *strings-buffer*) 'string))
-(defun strings-get-position () *strings-start-position*)
+(defmethod strings-put-buffer ((self strings) item)
+  (let ((buffer (@get self :buffer)))
+    (@set self :buffer (cons item buffer))))
 
-(defmethod strings-first-time ((self e/part:part))
-  (setf *strings-state* :idle)
-  )
+(defmethod strings-get-position ((self strings))
+  (@get self :start-position))
 
-(defmethod strings-react ((self e/part:part) (e e/event:event))
-  (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *strings-buffer*))
-           (pull () (send! self :request :strings))
-           (forward-token () (send-event! self :out e))
+(defmethod strings-clear-buffer ((self strings))
+  (@set self :buffer nil))
+
+(defmethod e/part:first-time ((self strings))
+  (@set self :state :idle)
+  (@set self :start-position 0)
+  (strings-clear-buffer self))
+
+(defmethod e/part:react ((self strings) (e e/event:event))
+  (labels ((push-char-into-buffer () (strings-put-buffer self (token-text (e/event:data e))))
+           (pull () (@send self :request :strings))
+           (forward-token () (@send self :out (@data self e)))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -30,20 +40,20 @@
                (let ((c (token-text (e/event:data e))))
                  (char= c #\\))))
            (action () (e/event::sym e))
-           (next-state (x) (setf *strings-state* x))
+           (next-state (x) (@set self :state x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
-             (setf *strings-buffer* nil)
-             (setf *strings-start-position* (token-position (e/event:data e))))
+             (strings-clear-buffer self))
            (release-buffer ()
-             (send! self :out (make-token :kind :string :text (strings-get-buffer) :position (strings-get-position))))
+             (@send self :out (make-token :kind :string :text (strings-get-ordered-buffer self) :position (strings-get-position self))))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
          )
 
-    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" *strings-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
-    (ecase *strings-state*
+    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" (@get self :state)
+                 (token-kind (e/event:data e)) (token-text (e/event:data e)))
+    (ecase (@get self :state)
       (:idle
        (ecase (action)
          (:token
@@ -90,5 +100,4 @@
               (pull)
               (next-state :collecting-string))))))
       (:done
-       (send! self :error (format nil "strings finished, but received ~S" e))))))
-
+       (@send self :error (format nil "strings finished, but received ~S" e))))))

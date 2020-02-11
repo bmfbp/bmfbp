@@ -1,23 +1,23 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
-; (:code symbols (:token) (:request :out :error) #'symbols-react #'symbols-first-time)
+(defclass symbols (e/part:part) ())
+(defmethod e/part:busy-p ((self symbols)) (call-next-method))
+; (:code symbols (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defparameter *symbols-buffer* nil)
 (defparameter *symbols-start-position* 0)
 (defparameter *symbols-state* :idle)
-(defparameter *symbols-token-pulled-p* nil)
 
 (defun symbols-get-buffer () (coerce (reverse *symbols-buffer*) 'string))
 (defun symbols-get-position () *symbols-start-position*)
 
-(defmethod symbols-first-time ((self e/part:part))
-  (setf *symbols-state* :idle)
-  )
+(defmethod e/part:first-time ((self symbols))
+  (setf *symbols-state* :idle))
 
-(defmethod symbols-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self symbols) (e e/event:event))
   (labels ((push-char-into-buffer () (push (token-text (e/event:data e)) *symbols-buffer*))
-           (pull () (send! self :request :symbols))
-           (forward-token (&key (pulled-p nil)) (send-event! self :out e))
+           (pull () (@send self :request :symbols))
+           (forward-token (&key (pulled-p nil)) (@send self :out (@data self e)))
            (start-char-p () 
              (when (eq :character (token-kind (e/event:data e)))
                (let ((c (token-text (e/event:data e))))
@@ -36,7 +36,7 @@
              (setf *symbols-buffer* nil)
              (setf *symbols-start-position* (token-position (e/event:data e))))
            (release-buffer ()
-             (send! self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position) :pulled-p t)))
+             (@send self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position) :pulled-p t)))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))
@@ -74,5 +74,4 @@
                 (forward-token :pulled-p t)
                 (next-state :idle)))))))
       (:done
-       (send! self :error (format nil "symbols finished, but received ~S" e))))))
-
+       (@send self :error (format nil "symbols finished, but received ~S" e))))))

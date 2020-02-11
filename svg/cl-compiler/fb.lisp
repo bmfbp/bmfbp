@@ -1,27 +1,29 @@
 (in-package :arrowgrams/compiler)
 
+(defclass fb (e/part:part) ())
+(defmethod e/part:busy-p ((self fb)) (call-next-method))
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
 ; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next :show) (:fb :no-more :next :error))
 
-(defmethod fb-first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :show-additions nil)
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  (cl-event-passing-user::@set-instance-var self :fb-as-iterable-list nil)
-  (cl-event-passing-user::@set-instance-var self :factbase nil))
+(defmethod e/part:first-time ((self fb))
+  (@set self :show-additions nil)
+  (@set self :state :idle)
+  (@set self :fb-as-iterable-list nil)
+  (@set self :factbase nil))
 
-(defmethod fb-react ((self e/part:part) e)
-  (flet ((idle-reaction (action state) (declare (ignorable state))
+(defmethod e/part:react ((self fb) e)
+  (flet ((idle-handler (action state) (declare (ignorable state))
            (if (eq action :retract)
                (progn
                  (format *standard-output* "~&retract ~S~%" (e/event:data e))
-                 (cl-event-passing-user::@set-instance-var
+                 (@set
                   self
                   :factbase
                   (arrowgrams/compiler/util::remove-fact
                    (e/event:data e)
-                   (cl-event-passing-user::@get-instance-var self :factbase)))
-                 (cl-event-passing-user::@send self :fb (cl-event-passing-user::@get-instance-var self :factbase)))
+                   (@get self :factbase)))
+                 (@send self :fb (@get self :factbase)))
              (if (eq action :string-fact)
                  (add-string-fact self (e/event:data e))
                (if (eq action :lisp-fact)
@@ -29,71 +31,66 @@
                  (if (eq action :go)
                      (assert nil)
                    (if (eq action :show)
-		       (cl-event-passing-user::@set-instance-var self :show-additions (e/event:data e))
+		       (@set self :show-additions (e/event:data e))
                      (if (eq action :fb-request)
-                         (cl-event-passing-user::@send self :fb (cl-event-passing-user::@get-instance-var self :factbase))
+                         (@send self :fb (@get self :factbase))
                        (if (eq action :iterate)
                            (progn
                              (begin-iteration self)
-                             (cl-event-passing-user::@set-instance-var self :state :iterating))
-                         (cl-event-passing-user:@send self
-                                                      :error
-                                                      (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e))))))))))))
+                             (@set self :state :iterating))
+                         (@send self :error
+                                (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e))))))))))))
   
-           (let ((action (e/event::sym e))
-                 (state (cl-event-passing-user::@get-instance-var self :state)))    
+           (let ((action (@pin self e))
+                 (state (@get self :state)))    
              (ecase state
                (:idle
-                (idle-reaction action state))
+                (idle-handler action state))
                (:idle-with-cleanup ;; might get one more request after going back to :idle
                 (if (eq action :get-next)
-                    (cl-event-passing-user::@set-instance-var self :state :idle)
-                  (idle-reaction action state)))
-        (:iterating
-         (if (eq action :get-next)
-             (send-next self)
-           (if (eq action :iterate) ;; restart iteration from beginning
-               (begin-iteration self)
-             (cl-event-passing-user:@send self
-                                          :error
-                                          (format nil "FB in state :iterating expected :get-next or :iterate, but got action ~S data ~S"
-                                                  action (e/event:data e))))))))))
+                    (@set self :state :idle)
+                  (idle-handler action state)))
+               (:iterating
+		(if (eq action :get-next)
+		    (send-next self)
+		    (if (eq action :iterate) ;; restart iteration from beginning
+			(begin-iteration self)
+			(@send self :error
+                               (format nil "FB in state :iterating expected :get-next or :iterate, but got action ~S data ~S"
+                                       action (@data self e))))))))))
   
-(defmethod begin-iteration ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var
-   self
-   :fb-as-iterable-list
-   (cl-event-passing-user::@get-instance-var self :factbase))
+(defmethod begin-iteration ((self fb))
+  (@set self :fb-as-iterable-list (@get self :factbase))
   (send-next self))
 
-(defmethod send-next ((self e/part:part))
-  (let ((fact-list (cl-event-passing-user::@get-instance-var self :fb-as-iterable-list)))
+(defmethod send-next ((self fb))
+  (let ((fact-list (@get self :fb-as-iterable-list)))
     (let ((fact (pop fact-list)))
-      (cl-event-passing-user::@set-instance-var self :fb-as-iterable-list fact-list)
+      (@set self :fb-as-iterable-list fact-list)
       (if (null fact)
           (progn
-            (cl-event-passing-user::@send self :no-more t)
-            (cl-event-passing-user::@set-instance-var self :state :idle-with-cleanup))
-        (cl-event-passing-user::@send self :next fact)))))
+            (@send self :no-more t)
+            (@set self :state :idle-with-cleanup))
+        (@send self :next fact)))))
        
       
                            
-(defmethod add-string-fact ((self e/part:part) fact-string)
+(defmethod add-string-fact ((self fb) fact-string)
   (declare (ignore self))
   (with-input-from-string (fact-stream fact-string)
     (let ((fact (read fact-stream nil :EOF)))
       (if (not (listp fact))
-          (cl-event-passing-user:@send self :error (format nil "db: expected a list, but got ~S" fact-string))
+          (@send self :error (format nil "db: expected a list, but got ~S" fact-string))
         (add-lisp-fact self fact)))))
 
-(defmethod add-lisp-fact ((self e/part:part) fact)
+(defmethod add-lisp-fact ((self fb) fact)
   (flet ((writefb (fb)
-           (cl-event-passing-user::@set-instance-var self :factbase (cons
-                                                                     (cons fact nil) ;; rules are lists of lists, facts are a list of a list
-                                                                     fb))))
-    (when (cl-event-passing-user::@get-instance-var self :show-additions)
+           (@set self :factbase (cons
+				 (cons fact nil) ;; rules are lists of lists, facts are a list of a list
+                                 fb))))
+    (when (@get self :show-additions)
       (format *standard-output* "~&add-fact ~S~%" fact))
-    (let ((fb (cl-event-passing-user::@get-instance-var self :factbase)))
+    (let ((fb (@get self :factbase)))
       (let ((existing-fact-lis (find-fact fact fb)))
         (if existing-fact-lis
             (let ((existing-fact (first existing-fact-lis)))
@@ -104,17 +101,17 @@
                   (writefb fb))))
           (writefb fb))))))
 
-(defmethod fb-warning ((self e/part:part) format-string &rest format-args)
-  (cl-event-passing-user::@send self :error (apply #'cl:format
-                                                   nil
-                                                   (concatenate 'string "WARNING FB: " format-string)
-                                                   format-args)))
-                                
-(defmethod fb-error ((self e/part:part) format-string &rest format-args)
-  (cl-event-passing-user::@send self :error (apply #'cl:format
-                                                   nil
-                                                   (concatenate 'string "ERROR FB: " format-string)
-                                                   format-args)))
+(defmethod fb-warning ((self fb) format-string &rest format-args)
+  (@send self :error (apply #'cl:format
+                            nil
+                            (concatenate 'string "WARNING FB: " format-string)
+                            format-args)))
+
+(defmethod fb-error ((self fb) format-string &rest format-args)
+  (@send self :error (apply #'cl:format
+                            nil
+                            (concatenate 'string "ERROR FB: " format-string)
+                            format-args)))
 
 
 (defun find-fact (fact factbase)
@@ -123,4 +120,4 @@
                (let ((f (first f-list)))
                  (and (equal (first fact) (first f))
                       (equal (second fact) (second f)))))
-            factbase))
+           factbase))

@@ -1,6 +1,8 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
-; (:code ws (:token) (:request :out :error) #'ws-react #'ws-first-time)
+(defclass ws (e/part:part) ())
+(defmethod e/part:busy-p ((self ws)) (call-next-method))
+; (:code ws (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defparameter *ws-buffer* nil)
 (defparameter *ws-position* 0)
@@ -16,22 +18,20 @@
 (defun get-buffer () (coerce (reverse *ws-buffer*) 'string))
 (defun get-position () *ws-position*)
 
-(defmethod ws-first-time ((self e/part:part))
-  (setf *ws-state* :idle)
-  )
+(defmethod e/part:first-time ((self ws))
+  (setf *ws-state* :idle))
 
-(defmethod ws-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self ws) (e e/event:event))
   (labels ((pull ()
-             (send! self :request t))
+             (@send self :request t))
            (check-eof ()
              (when (eq :eof (token-kind (e/event:data e)))
                (setf *ws-state* :done)))
-           (forward-token ()
-             (send-event! self :out e))
+           (forward-token () (@send self :out (@data self e)))
            (release-buffer ()
              (let ((ws-token (make-token :kind :ws :text (get-buffer) :position (get-position))))
                (clear-buffer (token-position (e/event::data e)))
-               (send! self :out ws-token)
+               (@send self :out ws-token)
                (forward-token)
                (setf *ws-state* :idle))))
     (let ((tok (e/event:data e)))
@@ -67,7 +67,4 @@
                (t (release-buffer)
                   (check-eof))))
         (:done
-         (send! self :error (format nil "ws done, but received ~S" tok)))))))
-     
-
-     
+         (@send self :error (format nil "ws done, but received ~S" tok)))))))

@@ -1,15 +1,16 @@
-(in-package :arrowgrams/compiler/back-end)
+(in-package :arrowgrams/compiler)
 
+(defclass emitter-pass2-generic (e/part:part) ())
+(defmethod e/part:busy-p ((self emitter-pass2-generic)) (call-next-method))
 (defparameter *emitter-pass2-generic-state* nil)
 
-(defmethod emitter-pass2-generic-first-time ((self e/part:part))
-  (setf *emitter-pass2-generic-state* :idle)
-  )
+(defmethod e/part:first-time ((self emitter-pass2-generic))
+  (setf *emitter-pass2-generic-state* :idle))
 
-(defmethod emitter-pass2-generic-react ((self e/part:part) (e e/event:event))
+(defmethod e/part:react ((self emitter-pass2-generic) (e e/event:event))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
-    (flet ((pull (id) (send! self :request id))
+    (flet ((pull (id) (@send self :request id))
            (debug-tok (out-pin msg tok)
              (if (token-pulled-p tok)
                  (format nil "~&~a:~a pos:~a c:~a pulled-p:~a"
@@ -31,13 +32,12 @@
             (let ((tokens (e/event:data e)))
               (let ((p (make-instance 'parser :token-stream tokens :name "emitter pass2 generic")))
                 (debug-sl nil)
-                (debug-accept t)
+                (debug-accept nil)
                 (schematic-emitter-pass2-generic p)
                 (debug-accept nil)
                 (debug-sl nil)
-                (send! self :out (get-output p))
+                (@send self :out (get-output p))
                 (setf *emitter-pass2-generic-state* :done))))))
         
         (:done
-         (send! self :error (format nil "generic emitter pass2 done, but received input~%")))))))
-
+         (@send self :error (format nil "generic emitter pass2 done, but received input~%")))))))
