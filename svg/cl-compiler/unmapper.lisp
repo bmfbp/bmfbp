@@ -44,7 +44,7 @@
 		(@:loop
 		  (@:exit-when (eq :eof sexpr))
 		  (assert (listp sexpr))
-		  (let ((sym (first sexpr))
+		  (let ((sym (intern (symbol-name (first sexpr)) "KEYWORD"))
 			(str (second sexpr)))
 		    (assert (symbolp sym))
 		    (assert (stringp str))
@@ -78,8 +78,8 @@
 		     (multiple-value-bind (v2 success2) (gethash f2 (mapping self))
 		       (multiple-value-bind (v3 success3) (gethash f3 (mapping self))
 			 (let ((new-fact (list (if success1 v1 f1) (if success2 v2 f2) (if success3 v3 f3))))
-			   (@send self :out new-fact)))))))))
-          (@send self :out fact)))
-
+			   (@send self :out new-fact))))))))
+            (@send self :out fact))))
+       
        (:done
         (@send self :done t))))))
