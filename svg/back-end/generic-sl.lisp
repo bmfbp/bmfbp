@@ -1,7 +1,9 @@
 (in-package :arrowgrams/compiler)
 
-(defparameter *generic-rules*
-"
+(eval-when (:compile-toplevel)
+
+  (defparameter *generic-rules*
+    "
 = <ir> 
   :lpar
     <kind>
@@ -75,6 +77,8 @@
 = <pin>
   :string
 "
-)
+    )
 
-(eval (sl:parse *generic-rules* "-GENERIC"))
+  (defmacro xxx () (sl:parse *generic-rules* "-GENERIC")))
+
+(xxx)

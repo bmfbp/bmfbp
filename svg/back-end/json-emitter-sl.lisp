@@ -1,7 +1,9 @@
-(in-package :arrowgrams/compiler)
+(In-package :arrowgrams/compiler)
 
-(defparameter *json-emitter-rules*
-"
+(eval-when (:compile-toplevel)
+  
+  (defparameter *json-emitter-rules*
+    "
 = <schematic>
                    '{' inc nl
   <name>               '\"name\" : ' print-text ',' nl
@@ -127,4 +129,6 @@ dec nl
 
 ")
 
-(eval (sl:parse *json-emitter-rules* "-JSON-EMITTER"))
+  (defmacro xxx () (sl:parse *json-emitter-rules* "-JSON-EMITTER")))
+
+(xxx)

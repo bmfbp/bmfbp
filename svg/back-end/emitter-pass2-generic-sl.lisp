@@ -1,7 +1,9 @@
 (in-package :arrowgrams/compiler)
 
-(defparameter *generic-emitter-pass2-rules*
-"
+(eval-when (:compile-toplevel)
+
+  (defparameter *generic-emitter-pass2-rules*
+    "
 = <schematic>
 ' generic ' nl
   <name> 
@@ -108,6 +110,8 @@
   | ! ]
 
 "
-)
+    )
 
-(eval (sl:parse *generic-emitter-pass2-rules* "-EMITTER-PASS2-GENERIC"))
+  (defmacro xxx () (sl:parse *generic-emitter-pass2-rules* "-EMITTER-PASS2-GENERIC")))
+
+(xxx)

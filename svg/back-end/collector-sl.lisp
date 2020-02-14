@@ -1,7 +1,9 @@
 (in-package :arrowgrams/compiler)
 
-(defparameter *collector-rules*
-"
+(eval-when (:compile-toplevel)
+
+  (defparameter *collector-rules*
+    "
 = <ir> 
                           schematic/open
   :lpar
@@ -129,6 +131,10 @@
                                       part-pin-pair-list/close-pop
 
 "
-)
+    )
 
-(eval (sl:parse *collector-rules* "-COLLECTOR"))
+
+    (defmacro xxx () (sl:parse *collector-rules* "-COLLECTOR")))
+
+(xxx)
+
