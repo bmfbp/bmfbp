@@ -47,13 +47,11 @@
             arrowgrams/compiler::*rules*
             local-fb))
           (goal '((:coincidentSinks (:? A) (:? B)))))
-(format *standard-output* ":coinincidentSinks~%")
     (arrowgrams/compiler/util::run-prolog self goal local-fb))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
           local-fb))
         (goal '((:coincidentSources (:? A) (:? B)))))
-(format *standard-output* ":coincidentSource~%")
     (arrowgrams/compiler/util::run-prolog self goal fb))))
 

@@ -76,5 +76,4 @@
                                    (and (listp fact)
                                         (member (caar fact) keep-list)))
                                fb)))
-    (format *standard-output* "~&len fb ~a len filtered ~a~%" (length fb) (length result))
     result))
