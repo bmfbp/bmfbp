@@ -2,7 +2,17 @@
 
 (defclass compiler (e/part:part) ())
 (defmethod e/part:busy-p ((self compiler)) (call-next-method))
-(defun compiler ()
+
+
+(defun main ()
+  (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk5.pro")))
+    (let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk-temp-string-map.lisp")))
+      (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
+        (format *standard-output* "~&calling compiler-ep~%")
+	(compiler-ep filename map-filename output-filename)))))
+
+(defun compiler-ep (filename map-filename output-filename)
+(format *standard-output* "~&in compiler-ep~%")
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
            (:code reader (:file-name) (:string-fact :eof :error))
@@ -298,9 +308,6 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (@with-dispatch
-      (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk5.pro")))
-	(let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk-temp-string-map.lisp")))
-          (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
             (@enable-logging)
             (@inject compiler-net
                      (e/part::get-input-pin compiler-net :map-filename)
@@ -313,7 +320,7 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
                      filename)
             (@inject compiler-net
                      (e/part::get-input-pin compiler-net :dump)
-                     T)))))))
+                     T))))
 
 (defmethod busy-p ((self convert-to-keywords))
   (assert nil)) ;; must not happen - check if part has e/part:busy-p
@@ -331,6 +338,6 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
   (ql:quickload :arrowgrams/compiler)
   #+lispworks(hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/")
   (format *standard-output* "running (arrowgrams/compiler::compiler)~%")
-  (arrowgrams/compiler::compiler))
+  (arrowgrams/compiler::main))
 (defun cl-user::ctest () (arrowgrams/compiler::ctest))
 
