@@ -73,7 +73,7 @@
                                      (:file "xform" :depends-on ("package" "ir-grammar" "ir-to-lisp"))))))
 
 (defsystem arrowgrams/compiler/back-end
-  :depends-on (:arrowgrams :cl-event-passing :sl :loops :cl-peg)
+  :depends-on (:arrowgrams :cl-event-passing :sl :loops :cl-holm-prolog)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -116,7 +116,7 @@
 ;;;;
 
 (defsystem :arrowgrams/compiler
-  :depends-on (:arrowgrams :arrowgrams/clparts :cl-holm-prolog :cl-ppcre :arrowgrams/compiler/back-end)
+  :depends-on (:arrowgrams :cl-holm-prolog :cl-ppcre :arrowgrams/compiler/back-end)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
