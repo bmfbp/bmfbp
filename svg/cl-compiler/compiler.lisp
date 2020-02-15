@@ -4,11 +4,24 @@
 (defmethod e/part:busy-p ((self compiler)) (call-next-method))
 
 
+#+lispworks
 (defun main ()
+  (let ((argv system:*line-arguments-list*))
+    (format *standard-output* "~&lwargs = /~S/~%" argv)
+    (if (>= (length argv) 2)
+        (let ((filename (and (>= (length argv) 2) (second argv)))
+              (map-filename (and (>= (length argv) 3) (third argv)))
+              (output-filename (and (>= (length argv) 4) (fourth argv))))
+          (format *standard-output* "~& using argv ~a ~a ~a~%" filename map-filename output-filename)
+          (compiler-ep filename map-filename output-filename))
+      (progn
+        (format *standard-output* "~& using builtin args~%")
+        (old-main)))))
+
+(defun old-main ()
   (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk5.pro")))
     (let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk-temp-string-map.lisp")))
       (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
-        (format *standard-output* "~&calling compiler-ep~%")
 	(compiler-ep filename map-filename output-filename)))))
 
 (defun compiler-ep (filename map-filename output-filename)
@@ -20,7 +33,7 @@
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
            (:code unmapper (:in :map-filename :done) (:out :done :error))
-           (:code sequencer (:finished-reading :finished-pipeline :finished-writing) (:poke-fb :run-pipeline :write :error :show))
+           (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename) (:write-to-filename :poke-fb :run-pipeline :write :error :show))
            (:schem compiler-testbed (:map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
             ;; parts
             (reader fb writer convert-to-keywords sequencer unmapper)
@@ -28,7 +41,7 @@
 "
 self.map-filename -> unmapper.map-filename
 self.prolog-factbase-filename -> reader.file-name
-self.prolog-output-filename -> writer.filename
+self.prolog-output-filename -> sequencer.prolog-output-filename
 self.dump -> sequencer.finished-pipeline
 self.request-fb -> fb.fb-request
 self.retract-fact -> fb.retract
@@ -49,6 +62,7 @@ unmapper.done -> sequencer.finished-reading
 sequencer.show -> fb.show
 sequencer.run-pipeline, self.done -> self.go
 sequencer.write -> fb.iterate, writer.start
+sequencer.write-to-filename -> writer.filename
 
 fb.fb -> self.fb
 fb.next -> writer.next

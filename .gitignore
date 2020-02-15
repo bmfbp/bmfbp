@@ -62,3 +62,7 @@ svg/cl-compiler/old-assign-portnames.lisp
 *.generic
 
 svg/cl-compiler/COMPILE-COMPOSITE.json
+
+*.zaps
+
+svg/compiler3/lwacomp3
