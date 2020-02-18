@@ -222,6 +222,7 @@ ellipse-bounding-boxes.done,
              )
             (:code preparse (:start :token) (:out :request :error))
             (:code generic-emitter (:parse) (:out :error))
+            (:code lisp-emitter (:parse) (:out :error))
             (:code collector (:parse) (:out :error))
             (:code emitter-pass2-generic (:in) (:out :error))
             (:code json-emitter (:in) (:out :error))
@@ -232,7 +233,7 @@ ellipse-bounding-boxes.done,
 
 
             (:schem back-end-parser (:start :ir :generic-filename :json-filename :lisp-filename) (:out :error)
-              (scanner preparse generic-emitter collector json-emitter emitter-pass2-generic
+              (scanner preparse generic-emitter collector json-emitter lisp-emitter emitter-pass2-generic
                        generic-file-writer json-file-writer lisp-file-writer)
               "
                self.start -> scanner.start,preparse.start
@@ -241,7 +242,7 @@ ellipse-bounding-boxes.done,
                scanner.out -> preparse.token
                preparse.request -> scanner.request
 
-               preparse.out -> generic-emitter.parse,collector.parse
+               preparse.out -> generic-emitter.parse,collector.parse,lisp-emitter.parse
 
                self.generic-filename -> generic-file-writer.filename
                self.json-filename -> json-file-writer.filename
@@ -251,9 +252,11 @@ ellipse-bounding-boxes.done,
 
                collector.out -> json-emitter.in,emitter-pass2-generic.in
 
+               lisp-emitter.out -> lisp-file-writer.write
+
                json-emitter.out -> json-file-writer.write
 
-               scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,
+               scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,lisp-emitter.error,
                   generic-file-writer.error,
                   json-file-writer.error,
                   lisp-file-writer.error
@@ -335,13 +338,6 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
             (@inject compiler-net
                      (e/part::get-input-pin compiler-net :dump)
                      T))))
-
-(defmethod busy-p ((self convert-to-keywords))
-  (assert nil)) ;; must not happen - check if part has e/part:busy-p
-(defmethod first-time ((self convert-to-keywords))
-  (assert nil)) ;; must not happen - check if part has e/part:first-time-p
-(defmethod react ((self convert-to-keywords) e)
-  (assert nil)) ;; must not happen - check if part has e/part:react-p
 
 (defun ctest ()
   #+nil#(system:run-shell-command "rm -rf ~/.cache/common-lisp")
