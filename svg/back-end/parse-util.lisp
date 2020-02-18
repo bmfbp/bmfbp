@@ -286,14 +286,14 @@
 
 
 ;; memo - map invented symbol names to kind-names - assume that kinds are used only once, hence, symbol-name can be the kind-name
-;; (this makes manual debugging easier)
+;; (this should make manual debugging easier)
 
 (defmethod memo-symbol ((p parser))
   (let ((sym (convert-accepted-text-to-symbol p)))
     (multiple-value-bind (val success)
         (gethash sym (memo-mapping p))
       (declare (ignore val))
-      (assert (not success)) ;; symbol must not already be in the mapping table ; this error can happen if using a schematic that uses a KIND more than once
+      (assert (not success)) ;; symbol must not already be in the mapping table ; this error can happen if using a schematic that uses a KIND more than once (see "memo" comment above)
       (setf (memo p) sym)
       (setf (gethash sym (memo-mapping p)) nil))))
   
