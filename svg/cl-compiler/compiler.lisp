@@ -18,9 +18,15 @@
         (format *standard-output* "~& using builtin args~%")
         (old-main)))))
 
-(defun old-main ()
+(defun kk-main ()
   (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk5.pro")))
     (let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk-temp-string-map.lisp")))
+      (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
+	(compiler-ep filename map-filename output-filename)))))
+
+(defun old-main ()
+  (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
+    (let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp-string-map.lisp")))
       (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
 	(compiler-ep filename map-filename output-filename)))))
 

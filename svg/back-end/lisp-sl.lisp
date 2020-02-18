@@ -2,14 +2,18 @@
 
 (eval-when (:compile-toplevel)
 
+;; this version assumes that there is only one part with a given kind
+;; and uses the kind as the part-name (whereas it should use a GENSYM or invented symbol)
+
+
   (defparameter *lisp-rules*
     "
 = <ir> 
   :lpar                   '(' inc
-    <kind>                inc
+    <kind>                
     <metadata>
-    <inputs> 
-    <outputs> 
+    <inputs>               nl
+    <outputs>              nl
     <react> 
     <first-time> 
     <part-declarations> 
@@ -19,16 +23,16 @@
 
 
 = <inputs> 
-  [ ?symbol :symbol symbol-must-be-nil  '()' | ?lpar :lpar inc '(' <pin-list> :rpar dec ')']
+  [ ?symbol :symbol symbol-must-be-nil  ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
 
 = <outputs> 
-  [ ?symbol :symbol symbol-must-be-nil '()' | ?lpar :lpar inc '(' <pin-list> :rpar dec ')']
+  [ ?symbol :symbol symbol-must-be-nil ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
 
 = <part-declarations> 
-  :lpar <part-decl-list> :rpar
+  :lpar nl <part-decl-list> :rpar
 
 = <wiring> 
-  :lpar                '\"' inc
+  :lpar                '\"' inc nl
     <wire-list>
   :rpar                '\"' dec
 
@@ -36,15 +40,16 @@
   <ident-list>
 
 = <ident-list> 
-  :string [ ?string <ident-list>]
+  :string                 print-text-as-keyword-symbol
+  [ ?string ' ' <ident-list>]
 
 = <part-decl-list> 
   [ ?lpar <part-decl> [ ?lpar <part-decl-list> ] | ! ]
 
 = <part-decl>
-  :lpar                  '(' inc
-  <name>
-  <kind>
+  :lpar                  '(:code ' inc
+  <name>                 memo-symbol
+  <kind>                 print-text-as-symbol associate-kind-name-with-memo
   <inputs> 
   <outputs> 
   <react> 
@@ -52,13 +57,13 @@
   :rpar                   dec ')' nl
 
 = <name>
-  :string                print-text
+  :string                
 
 = <metadata>
-  :string                ':metadata ' print-text ' '
+  :string                nl ':metadata ' print-text-as-string nl nl
 
 = <kind>
-  :string                ':kind ' print-text ' '
+  :string
 
 = <react>
   :string
@@ -73,18 +78,19 @@
   :lpar
     :integer
     :lpar <part-pin-list> :rpar
+                                 ' -> '
     :lpar <part-pin-list> :rpar  
-                          nl
+                                  nl
   :rpar
 
 = <part-pin-list> 
   :lpar <part> <pin> :rpar 
-  [ ?lpar <part-pin-list> ', ' ]
+  [ ?lpar ',' <part-pin-list> ]
 
 = <part>
-  :string                 print-text
+  :string                 print-kind-instead-of-symbol
 = <pin>
-  :string                 '.' print-text
+  :string                 '.' print-text-as-symbol
 "
     )
 

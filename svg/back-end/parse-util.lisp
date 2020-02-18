@@ -97,9 +97,9 @@
    (top-schematic :accessor top-schematic)
    (parts :initform (make-hash-table :test 'equal) :accessor parts)
    (wires :initform (make-hash-table) :accessor wires)
-   (name :initform "" :accessor name :initarg :name)))
-
-
+   (name :initform "" :accessor name :initarg :name)
+   (memo :initform nil :accessor memo)
+   (memo-mapping :accessor memo-mapping :initform (make-hash-table))))
 
 (defun stringify-token (tok)
   (cond ((eq :lpar (token-kind tok)) "(")
@@ -258,6 +258,59 @@
   (break)
 )
 
+
+
+(defmethod print-text-as-quoted-symbol ((p parser))
+  (format (output-stream p)
+          "'~a"
+          (token-text (accepted-token p))))
+
+(defmethod convert-accepted-text-to-symbol ((p parser))
+  (let ((name (string-upcase
+               (cl-ppcre:regex-replace-all "\""
+                                           (cl-ppcre:regex-replace-all " " (token-text (accepted-token p)) "-")
+                                           ""))))
+    (let ((sym (intern name "CL-USER")))
+      sym)))
+
+(defmethod print-text-as-symbol ((p parser))
+  (let ((sym (convert-accepted-text-to-symbol p)))
+      (write sym :stream (output-stream p))))
+
+(defmethod print-text-as-keyword-symbol ((p parser))
+  (let ((sym (convert-accepted-text-to-symbol p)))
+    (write sym :stream (output-stream p))))
+
+(defmethod print-text-as-string ((p parser))
+  (format (output-stream p) "~s" (token-text (accepted-token p))))
+
+
+;; memo - map invented symbol names to kind-names - assume that kinds are used only once, hence, symbol-name can be the kind-name
+;; (this makes manual debugging easier)
+
+(defmethod memo-symbol ((p parser))
+  (let ((sym (convert-accepted-text-to-symbol p)))
+    (multiple-value-bind (val success)
+        (gethash sym (memo-mapping p))
+      (declare (ignore val))
+      (assert (not success)) ;; symbol must not already be in the mapping table ; this error can happen if using a schematic that uses a KIND more than once
+      (setf (memo p) sym)
+      (setf (gethash sym (memo-mapping p)) nil))))
+  
+
+(defmethod associate-kind-name-with-memo ((p parser))
+  (let ((kind (convert-accepted-text-to-symbol p)))
+    (setf (gethash (memo p) (memo-mapping p)) kind)))
+
+(defmethod print-kind-instead-of-symbol ((p parser))
+  (let ((sym (convert-accepted-text-to-symbol p)))
+    (cond ((eq 'cl-user::self sym)
+           (write 'cl-user::self :stream (output-stream p)))
+          (t (multiple-value-bind (kind-sym success)
+                 (gethash sym (memo-mapping p))
+               (assert success)
+               (write kind-sym :stream (output-stream p)))))))
+    
 ;;;;
 
 ;; schematic mechanism
@@ -520,3 +573,6 @@
            (char= #\" (char str (1- (length str)))))
       (subseq str 1 (1- (length str)))
     str))
+
+
+

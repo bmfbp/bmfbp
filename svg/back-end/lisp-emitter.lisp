@@ -1,11 +1,12 @@
 (in-package :arrowgrams/compiler)
 
-(defclass lisp-emitter (e/part:part) ())
+(defclass lisp-emitter (e/part:part) 
+  ((state :accessor state)))
+
 (defmethod e/part:busy-p ((self lisp-emitter)) (call-next-method))
-(defparameter *emitter-state* nil)
 
 (defmethod e/part:first-time ((self lisp-emitter))
-  (setf *emitter-state* :idle))
+  (setf (state self) :idle))
 
 (defmethod e/part:react ((self lisp-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -24,14 +25,14 @@
                                            (token-kind tok)
                                            (token-position tok)
                                            (if (member (token-kind tok) no-print) "." (token-text tok)))))))
-      (ecase *emitter-state*
+      (ecase (state self)
         (:idle
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e) :name "lisp emitter")))
               (ir-lisp p)
               (@send self :out (get-output p))
-              (setf *emitter-state* :done)))))
+              (setf (state self) :done)))))
         
         (:done
-         (debug-tok :error (format nil "lisp emitter done, but got ~s ~s") (@pin self e) (@data self e)))))))
+         (debug-tok :error (format nil "lisp emitter done, but got ") tok))))))
