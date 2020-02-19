@@ -261,7 +261,7 @@ ellipse-bounding-boxes.done,
 
                lisp-emitter.out -> lisp-file-writer.write
 
-               json-emitter.out -> json-file-writer.write
+               json-emitter.out -> json-file-writer.write,self.out
 
                scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,lisp-emitter.error,
                   generic-file-writer.error,
@@ -298,7 +298,7 @@ back-end-parser.error -> self.error
 
 
            
-           (:schem compiler (:map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :error)
+           (:schem compiler (:map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :json :error)
             ;; parts
             (compiler-testbed passes back-end file-namer)
             ;; wiring
@@ -311,6 +311,7 @@ file-namer.generic-filename -> back-end.generic-filename
 file-namer.lisp-filename -> back-end.lisp-filename
 
 back-end.metadata -> self.metadata
+back-end.out -> self.json
 
 self.map-filename -> compiler-testbed.map-filename
 self.prolog-factbase-filename -> compiler-testbed.prolog-factbase-filename
