@@ -249,7 +249,7 @@ ellipse-bounding-boxes.done,
                scanner.out -> preparse.token
                preparse.request -> scanner.request
 
-               preparse.out -> generic-emitter.parse,collector.parse,lisp-emitter.parse
+               preparse.out -> generic-emitter.parse,collector.parse,lisp-emitter.parse,json1-emitter.parse
 
                self.generic-filename -> generic-file-writer.filename
                self.json-filename -> json-file-writer.filename
@@ -258,7 +258,6 @@ ellipse-bounding-boxes.done,
                emitter-pass2-generic.out -> generic-file-writer.write
 
                collector.out -> json-emitter.in,emitter-pass2-generic.in
-               collector.metadata -> self.metadata
 
                lisp-emitter.out -> lisp-file-writer.write
 
@@ -364,3 +363,8 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
   (arrowgrams/compiler::main))
 (defun cl-user::ctest () (arrowgrams/compiler::ctest))
 
+
+(defun cl-user::cc ()
+  (compile-file "~/quicklisp/local-projects/bmfbp/svg/back-end/json1-sl.lisp")
+  (load "~/quicklisp/local-projects/bmfbp/svg/back-end/json1-sl")
+  (arrowgrams/compiler::main))
