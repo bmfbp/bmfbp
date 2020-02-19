@@ -26,10 +26,10 @@
   :rpar
 
 = <toplevel-inputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list> :rpar dec ']']
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list-for-part-decl> :rpar dec ']']
 
 = <toplevel-outputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list> :rpar dec ']']
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list-for-part-decl> :rpar dec ']']
 
 = <part-declarations> 
   :lpar
@@ -42,6 +42,13 @@
   :lpar                '\"' inc nl
     <wire-list>
   :rpar                '\"' dec
+
+= <pin-list-for-part-decl> 
+  <ident-list-for-part-decl>
+
+= <ident-list-for-part-decl> 
+  :string                 '\"' print-text-as-symbol '\"'
+  [ ?string ', ' <ident-list-for-part-decl>]
 
 = <pin-list> 
   <ident-list>
@@ -58,7 +65,7 @@
                          '{ \"partName\" : '
   <name>                 memo-symbol
   <kind>
-                         '\"' print-text-as-symbol '\"' associate-kind-name-with-memo
+                         '\"' print-text-as-symbol '\",' associate-kind-name-with-memo
                          ' \"kindName\" : ' print-text-as-symbol '},' nl
   <inputs> 
   <outputs> 
