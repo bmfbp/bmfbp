@@ -22,7 +22,7 @@
     <first-time>
     <part-declarations> 
     <wiring>
-                          '}' dec
+                          nl dec '}'
   :rpar
 
 = <toplevel-inputs> 
@@ -45,9 +45,10 @@
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
 
 = <wiring> 
-  :lpar                '\"' inc nl
+  :lpar                '\"wiring\" :' inc nl
+                            '{' nl
     <wire-list>
-  :rpar                '\"' dec
+  :rpar                nl '}' dec
 
 = <pin-list> 
   <ident-list>
