@@ -105,9 +105,11 @@
 				     (:file "generic-emitter" :depends-on ("token" "parse-util" "generic-sl"))
                                      (:file "lisp-sl" :depends-on ("token"))
 				     (:file "lisp-emitter" :depends-on ("token" "parse-util" "lisp-sl"))
+                                     (:file "json1-sl" :depends-on ("token"))
+				     (:file "json1-emitter" :depends-on ("token" "parse-util" "json1-sl"))
 				     (:file "parser" :depends-on ("../cl-compiler/package" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
-                                                                  "generic-emitter" "collector" "lisp-emitter"
+                                                                  "generic-emitter" "collector" "lisp-emitter" "json1-emitter"
                                                                   "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))
 
 				     (:file "wiring" :depends-on ("../cl-compiler/package"))))))

@@ -13,7 +13,7 @@
               (map-filename (and (>= (length argv) 3) (third argv)))
               (output-filename (and (>= (length argv) 4) (fourth argv))))
           (format *standard-output* "~& using argv ~a ~a ~a~%" filename map-filename output-filename)
-          (compiler-ep filename map-filename output-filename))
+          (compiler-event-passing filename map-filename output-filename))
       (progn
         (format *standard-output* "~& using builtin args~%")
         (old-main)))))
@@ -22,16 +22,16 @@
   (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk5.pro")))
     (let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk-temp-string-map.lisp")))
       (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
-	(compiler-ep filename map-filename output-filename)))))
+	(compiler-event-passing filename map-filename output-filename)))))
 
 (defun old-main ()
   (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp5.pro")))
     (let ((map-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/js-compiler/temp-string-map.lisp")))
       (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
-	(compiler-ep filename map-filename output-filename)))))
+	(compiler-event-passing filename map-filename output-filename)))))
 
-(defun compiler-ep (filename map-filename output-filename)
-(format *standard-output* "~&in compiler-ep~%")
+(defun compiler-event-passing (filename map-filename output-filename)
+(format *standard-output* "~&in compiler-event-passing~%")
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
            (:code reader (:file-name) (:string-fact :eof :error))
@@ -229,6 +229,7 @@ ellipse-bounding-boxes.done,
             (:code preparse (:start :token) (:out :request :error))
             (:code generic-emitter (:parse) (:out :error))
             (:code lisp-emitter (:parse) (:out :error))
+            (:code json1-emitter (:parse) (:out :error))
             (:code collector (:parse) (:out :metadata :error))
             (:code emitter-pass2-generic (:in) (:out :error))
             (:code json-emitter (:in) (:out :error))
@@ -239,7 +240,7 @@ ellipse-bounding-boxes.done,
 
 
             (:schem back-end-parser (:start :ir :generic-filename :json-filename :lisp-filename) (:out :metadata :error)
-              (scanner preparse generic-emitter collector json-emitter lisp-emitter emitter-pass2-generic
+              (scanner preparse generic-emitter collector json1-emitter json-emitter lisp-emitter emitter-pass2-generic
                        generic-file-writer json-file-writer lisp-file-writer)
               "
                self.start -> scanner.start,preparse.start
@@ -261,7 +262,8 @@ ellipse-bounding-boxes.done,
 
                lisp-emitter.out -> lisp-file-writer.write
 
-               json-emitter.out -> json-file-writer.write,self.out
+               json-emitter.out -> json-file-writer.write
+               json1-emitter.out -> self.out
 
                scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,lisp-emitter.error,
                   generic-file-writer.error,
