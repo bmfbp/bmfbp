@@ -12,20 +12,24 @@
   :lpar                   '{' inc nl '\"name\" : \"self\",' nl
     <kind>                
     <metadata>
-    <toplevel-inputs>               nl
-    <toplevel-outputs>              nl
+                          '\"inputs\" : '
+    <toplevel-inputs>
+                          ',' nl
+                          '\"outputs\" : '
+    <toplevel-outputs>
+                          ',' nl
     <react> 
-    <first-time> 
+    <first-time>
     <part-declarations> 
     <wiring>
-                          ')' dec
+                          '}' dec
   :rpar
 
 = <toplevel-inputs> 
-  [ ?symbol :symbol symbol-must-be-nil  ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list> :rpar dec ']']
 
 = <toplevel-outputs> 
-  [ ?symbol :symbol symbol-must-be-nil ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list> :rpar dec ']']
 
 = <inputs> 
   [ ?symbol :symbol symbol-must-be-nil  ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
@@ -34,7 +38,11 @@
   [ ?symbol :symbol symbol-must-be-nil ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
 
 = <part-declarations> 
-  :lpar nl <part-decl-list> :rpar
+  :lpar
+                       '\"parts\" : {' inc nl
+  <part-decl-list>
+  :rpar 
+                       dec '},' nl
 
 = <wiring> 
   :lpar                '\"' inc nl
@@ -45,21 +53,24 @@
   <ident-list>
 
 = <ident-list> 
-  :string                 print-text-as-keyword-symbol
-  [ ?string ' ' <ident-list>]
+  :string                 '\"' print-text-as-symbol '\"'
+  [ ?string ', ' <ident-list>]
 
 = <part-decl-list> 
   [ ?lpar <part-decl> [ ?lpar <part-decl-list> ] | ! ]
 
 = <part-decl>
-  :lpar                  '(:code ' inc
+  :lpar                  
+                         '{ \"partName\" : '
   <name>                 memo-symbol
-  <kind>                 print-text-as-symbol associate-kind-name-with-memo
+  <kind>
+                         '\"' print-text-as-symbol '\"' associate-kind-name-with-memo
+                         ' \"kindName\" : ' print-text-as-symbol '},' nl
   <inputs> 
   <outputs> 
   <react> 
   <first-time> 
-  :rpar                   dec ')' nl
+  :rpar                   
 
 = <name>
   :string                
