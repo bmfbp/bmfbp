@@ -36,7 +36,6 @@
               (ir-collector p 0)
               (let ((schem (top-schematic p)))
                 (@send self :metadata (metadata schem))
-                (setf (metadata schem) "")  ;; clear metadata - not used in later emit passes
                 (unparse-schematic p schem)
                 (@send self :out (uget-unparsed-token-stream p))
                 (setf *collector-state* :done))))))
