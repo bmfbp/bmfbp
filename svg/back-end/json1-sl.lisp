@@ -38,17 +38,16 @@
   :rpar 
                        dec '},' nl
 
+= <inputs> 
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
+
+= <outputs> 
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
+
 = <wiring> 
   :lpar                '\"' inc nl
     <wire-list>
   :rpar                '\"' dec
-
-= <pin-list-for-part-decl> 
-  <ident-list-for-part-decl>
-
-= <ident-list-for-part-decl> 
-  :string                 '\"' print-text-as-symbol '\"'
-  [ ?string ', ' <ident-list-for-part-decl>]
 
 = <pin-list> 
   <ident-list>
@@ -67,17 +66,24 @@
   <kind>
                          '\"' print-text-as-symbol '\",' associate-kind-name-with-memo
                          ' \"kindName\" : ' print-text-as-symbol '},' nl
-  <inputs> 
-  <outputs> 
+  <inputs-for-part-decl> 
+  <outputs-for-part-decl> 
   <react> 
   <first-time> 
   :rpar                   
 
-= <inputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
+= <inputs-for-part-decl> 
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list-for-part-decl> :rpar]
 
-= <outputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
+= <outputs-for-part-decl> 
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list-for-part-decl> :rpar]
+
+= <pin-list-for-part-decl> 
+  <ident-list-for-part-decl>
+
+= <ident-list-for-part-decl> 
+  :string
+  [ ?string <ident-list-for-part-decl>]
 
 = <name>
   :string                
