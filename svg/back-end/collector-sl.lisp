@@ -7,8 +7,8 @@
 = <ir> 
                           schematic/open
   :lpar
-    <meta>                schematic/set-meta-from-string
     <kind>                schematic/set-kind-from-string
+    <meta>                schematic/set-meta-from-string
     <inputs>              schematic/set-inputs-from-list list/pop
     <outputs>             schematic/set-outputs-from-list list/pop
     <react>               schematic/set-react-from-string
