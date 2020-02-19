@@ -37,52 +37,6 @@
           :error
           (format nil "FIND-METADATA in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
-#|
-
-(defmethod metadata-inside-bounding-box ((self find-metadata)
-                                          bID bL bT bR bB
-                                          tID tL tT tR tB
-                                          l g r e n c result)
-
-  (assert (and (numberp bL) (numberp bT) (numberp bR) (numberp bB) 
-               (numberp tL) (numberp tT) (numberp tR) (numberp tB)))
-
-  ;; centerCompletelyInsideBoundingBox - text center inside bb of box
-  (let ((cx (+ tL (- tR tL)))
-        (cy (+ tT (- tB tT))))
-    (if (and (<= bL cx bR)
-             (<= bT cy bB))
-        (values T l g r e n c result)
-      (values nil l g r e n c result))))
-
-
-(defmethod find-metadata ((self find-metadata))
-  (let ((rule '(
-                (:find-metadata (:? text-id))
-                (:metadata (:? meta-id) (:? text-id))
-                (:rect (:? box-id))
-                (:bounding_box_left (:? box-id) (:? bL))
-                (:bounding_box_top (:? box-id) (:? bT))
-                (:bounding_box_right (:? box-id) (:? bR))
-                (:bounding_box_bottom (:? box-id) (:? bB))
-                (:bounding_box_left (:? text-id) (:? tL))
-                (:bounding_box_top (:? text-id) (:? tT))
-                (:bounding_box_right (:? text-id) (:? tR))
-                (:bounding_box_bottom (:? text-id) (:? tB))
-                (:lisp-method (metadata-inside-bounding-box
-                        (:? box-id) (:? bL) (:? bT) (:? bR) (:? bB)
-                        (:? text-id) (:? tL) (:? tT) (:? tR) (:? tB)))
-                (:component (:? main-id))
-                (:lisp-method (arrowgrams/compiler/util::retract (:rect (:? box-id))))
-                (:lisp-method (arrowgrams/compiler/util::asserta (:used (:? text-id))))
-                (:lisp-method (arrowgrams/compiler/util::asserta (:log (:? text-id) :is-metadata)))
-                (:lisp-method (arrowgrams/compiler/util::asserta (:roundedrect (:? box-id))))
-                (:lisp-method (arrowgrams/compiler/util::asserta (:parent (:? main-id) (:? box-id)))))))
-    (let ((fb (cons rule (@get self :fb))))
-      (arrowgrams/compiler/util::run-prolog self '((:find-metadata (:? text-id))) fb))))
-
-|#
-
 (defmethod find-metadata ((self find-metadata))
   (let ((fb
          (append
