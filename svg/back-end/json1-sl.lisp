@@ -45,10 +45,10 @@
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
 
 = <wiring> 
-  :lpar                '\"wiring\" :' inc nl
+  :lpar                '\"wiring\" :' inc nl inc
                             '{' nl
     <wire-list>
-  :rpar                nl '}' dec
+  :rpar                dec nl '}' dec
 
 = <pin-list> 
   <ident-list>
@@ -102,14 +102,15 @@
   :string
 
 = <wire-list>
-  <wire> [ ?lpar <wire-list> ] 
+  '{' <wire> '}'
+  [ ?lpar ',' <wire-list> ] 
 
 = <wire>
   :lpar
-    :integer
-    :lpar <part-pin-list> :rpar
+    :integer 
+    :lpar '\"sources\" : [' <part-pin-list> :rpar ']'
                                  ' -> '
-    :lpar <part-pin-list> :rpar  
+    :lpar '\"receivers\" : [' <part-pin-list> :rpar ']'  
                                   nl
   :rpar
 
