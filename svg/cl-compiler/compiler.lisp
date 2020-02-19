@@ -229,7 +229,7 @@ ellipse-bounding-boxes.done,
             (:code preparse (:start :token) (:out :request :error))
             (:code generic-emitter (:parse) (:out :error))
             (:code lisp-emitter (:parse) (:out :error))
-            (:code collector (:parse) (:out :error))
+            (:code collector (:parse) (:out :metadata :error))
             (:code emitter-pass2-generic (:in) (:out :error))
             (:code json-emitter (:in) (:out :error))
 
@@ -238,7 +238,7 @@ ellipse-bounding-boxes.done,
             (:code lisp-file-writer (:filename :write) (:error))
 
 
-            (:schem back-end-parser (:start :ir :generic-filename :json-filename :lisp-filename) (:out :error)
+            (:schem back-end-parser (:start :ir :generic-filename :json-filename :lisp-filename) (:out :metadata :error)
               (scanner preparse generic-emitter collector json-emitter lisp-emitter emitter-pass2-generic
                        generic-file-writer json-file-writer lisp-file-writer)
               "
@@ -257,6 +257,7 @@ ellipse-bounding-boxes.done,
                emitter-pass2-generic.out -> generic-file-writer.write
 
                collector.out -> json-emitter.in,emitter-pass2-generic.in
+               collector.metadata -> self.metadata
 
                lisp-emitter.out -> lisp-file-writer.write
 
@@ -273,7 +274,7 @@ ellipse-bounding-boxes.done,
             (:code synchronizer (:ir :json-filename :generic-filename :lisp-filename) (:ir :json-filename :generic-filename :lisp-filename :error))
 
             ;; see back-end.drawio / back end
-            (:schem back-end (:ir :json-filename :generic-filename :lisp-filename) (:out :error)
+            (:schem back-end (:ir :json-filename :generic-filename :lisp-filename) (:out :metadata :error)
              (synchronizer back-end-parser)
              "
 self.ir -> synchronizer.ir
@@ -287,6 +288,7 @@ synchronizer.generic-filename -> back-end-parser.generic-filename
 synchronizer.lisp-filename -> back-end-parser.lisp-filename
 
 back-end-parser.out -> self.out
+back-end-parser.metadata -> self.metadata
 back-end-parser.error -> self.error
 ")
 
@@ -296,7 +298,7 @@ back-end-parser.error -> self.error
 
 
            
-           (:schem compiler (:map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:error)
+           (:schem compiler (:map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :error)
             ;; parts
             (compiler-testbed passes back-end file-namer)
             ;; wiring
@@ -307,6 +309,8 @@ passes.ir -> back-end.ir
 file-namer.json-filename -> back-end.json-filename
 file-namer.generic-filename -> back-end.generic-filename
 file-namer.lisp-filename -> back-end.lisp-filename
+
+back-end.metadata -> self.metadata
 
 self.map-filename -> compiler-testbed.map-filename
 self.prolog-factbase-filename -> compiler-testbed.prolog-factbase-filename

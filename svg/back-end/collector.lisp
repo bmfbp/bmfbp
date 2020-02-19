@@ -2,7 +2,7 @@
 
 (defclass collector (e/part:part) ())
 (defmethod e/part:busy-p ((self collector)) (call-next-method))
-; (:code collector (:parse) (:out :error) #'e/part:react #'e/part:first-time)
+; (:code collector (:parse) (:out :metadata :error))
 
 (defparameter *collector-state* nil)
 
@@ -35,6 +35,8 @@
               (debug-accept nil)
               (ir-collector p 0)
               (let ((schem (top-schematic p)))
+                (@send self :metadata (metadata schem))
+                (setf (metadata schem) "")  ;; clear metadata - not used in later emit passes
                 (unparse-schematic p schem)
                 (@send self :out (uget-unparsed-token-stream p))
                 (setf *collector-state* :done))))))
