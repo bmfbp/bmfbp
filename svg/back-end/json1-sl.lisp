@@ -33,10 +33,10 @@
 
 = <part-declarations> 
   :lpar
-                       '\"parts\" : {' inc nl
+                       '\"parts\" :' nl '{' inc nl
   <part-decl-list>
   :rpar 
-                       dec '},' nl
+                       dec nl '},'
 
 = <inputs> 
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
@@ -57,7 +57,7 @@
   [ ?string ', ' <ident-list>]
 
 = <part-decl-list> 
-  [ ?lpar <part-decl> [ ?lpar <part-decl-list> ] | ! ]
+  [ ?lpar <part-decl> [ ?lpar ',' nl <part-decl-list> ] | ! ]
 
 = <part-decl>
   :lpar                  
@@ -65,7 +65,7 @@
   <name>                 memo-symbol
   <kind>
                          '\"' print-text-as-symbol '\",' associate-kind-name-with-memo
-                         ' \"kindName\" : ' print-text-as-symbol '},' nl
+                         ' \"kindName\" : \"' print-text-as-symbol '\"}'
   <inputs-for-part-decl> 
   <outputs-for-part-decl> 
   <react> 
