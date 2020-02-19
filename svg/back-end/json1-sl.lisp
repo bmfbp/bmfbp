@@ -31,12 +31,6 @@
 = <toplevel-outputs> 
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list> :rpar dec ']']
 
-= <inputs> 
-  [ ?symbol :symbol symbol-must-be-nil  ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
-
-= <outputs> 
-  [ ?symbol :symbol symbol-must-be-nil ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
-
 = <part-declarations> 
   :lpar
                        '\"parts\" : {' inc nl
@@ -71,6 +65,12 @@
   <react> 
   <first-time> 
   :rpar                   
+
+= <inputs> 
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
+
+= <outputs> 
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
 
 = <name>
   :string                
