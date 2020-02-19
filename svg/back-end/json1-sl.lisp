@@ -12,8 +12,8 @@
   :lpar                   '{' inc nl '\"name\" : \"self\",' nl
     <kind>                
     <metadata>
-    <inputs>               nl
-    <outputs>              nl
+    <toplevel-inputs>               nl
+    <toplevel-outputs>              nl
     <react> 
     <first-time> 
     <part-declarations> 
@@ -21,6 +21,11 @@
                           ')' dec
   :rpar
 
+= <toplevel-inputs> 
+  [ ?symbol :symbol symbol-must-be-nil  ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
+
+= <toplevel-outputs> 
+  [ ?symbol :symbol symbol-must-be-nil ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
 
 = <inputs> 
   [ ?symbol :symbol symbol-must-be-nil  ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
@@ -60,7 +65,7 @@
   :string                
 
 = <metadata>
-  :string                nl ':metadata ' print-text-as-string nl nl
+  :string                nl '\"metadata\" : ' print-text-as-string nl nl
 
 = <kind>
   :string
