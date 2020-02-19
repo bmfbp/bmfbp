@@ -9,7 +9,7 @@
   (defparameter *json1-rules*
     "
 = <ir> 
-  :lpar                   '(' inc
+  :lpar                   '{' inc nl '\"name\" : \"self\",' nl
     <kind>                
     <metadata>
     <inputs>               nl
