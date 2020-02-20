@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/front-end)
+(in-package :arrowgrams/compiler)
 
 #|
 In temp1.lisp, we see 2 kinds of lines
@@ -151,7 +151,7 @@ So, for metadata, emit:
 	(write-string-map "temp-string-map.lisp" "strings.sed" "unmap-sed.sed")))))
 
 #-lispworks
-(defun main (argv)
+(defun xx-main (argv)
   (declare (ignore argv))
   (handler-case
       (progn
@@ -164,15 +164,18 @@ So, for metadata, emit:
       (format *error-output* "FATAL error in main /~S/~%" c))))
 
 #+nil-lispworks-old-main
-(defun main (fname)
+(defun xx-main (fname)
   (with-open-file (f fname :direction :input)
     (run f)))
 
 #+lispworks
-(defun main (svg-filename)
+(defun front-end-main (svg-filename)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
     (let ((str (with-output-to-string (s)
-                 (system:call-system-showing-output (format nil "~a <~a" command-svg-to-lisp svg-filename) :output-stream s))))
+                 (system:call-system-showing-output
+                  (format nil "~a <~a" command-svg-to-lisp svg-filename) :output-stream s
+                  :show-cmd nil
+                  :prefix ""))))
       (with-input-from-string (strm str)
         (run strm)))))
 
