@@ -7,22 +7,26 @@
 (defmethod compiler-part-initially ((self reader))
   )
   
-(defmethod compiler-part-run ((self reader) (ev-file-name e/event:event))
-  (read-prolog-fb self (@data self ev-file-name)))
+(defmethod compiler-part-run ((self reader) (e e/event:event))
+  (ecase (@pin self e)
+    (:file-name
+     (read-prolog-fb self (@data self e)))
+    (:in-stream
+     (read-prolog-stream self (@data self e)))))
 
 (defmethod read-prolog-fb ((self reader) file-name)
-  (let ((prolog-line nil))
-    (with-open-file (f file-name :direction :input)
-      (read-prolog-stream self f))))
+  (with-open-file (f file-name :direction :input)
+      (read-prolog-stream self f)))
 
 (defmethod read-prolog-stream ((self reader) f)
-      (flet ((rdline () (setf prolog-line (read-line f nil :EOF))))
-        (rdline)
-        (@:loop
-          (@:exit-when (eq :EOF prolog-line))
-          (add-prolog-fact self prolog-line)
-          (rdline)))
-      (@send self :eof :eof))
+  (let ((prolog-line nil))
+    (flet ((rdline () (setf prolog-line (read-line f nil :EOF))))
+      (rdline)
+      (@:loop
+        (@:exit-when (eq :EOF prolog-line))
+        (add-prolog-fact self prolog-line)
+        (rdline)))
+    (@send self :eof :eof)))
 
 (defun add-prolog-fact (self prolog-line)
   ;;ex. (cl-ppcre:regex-replace "(a)(b)(c)" "abc" (list 2 1 0)) --> "cba"
