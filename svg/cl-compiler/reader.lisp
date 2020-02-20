@@ -1,15 +1,13 @@
 (in-package :arrowgrams/compiler)
 
-(defclass reader (e/part:part) ())
+(defclass reader (compiler-part) ())
 
 ; (:code reader (:file-name) (:string-fact :eof :error))
 
-(defmethod e/part:busy-p ((self reader))
-  (call-next-method))
-
-(defmethod e/part:first-time ((self reader)))
+(defmethod compiler-part-initially ((self reader))
+  )
   
-(defmethod e/part:react ((self reader) (ev-file-name e/event:event))
+(defmethod compiler-part-run ((self reader) (ev-file-name e/event:event))
   (read-prolog-fb self (@data self ev-file-name)))
 
 (defmethod read-prolog-fb ((self reader) file-name)
