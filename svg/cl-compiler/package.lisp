@@ -9,6 +9,9 @@
 (defpackage :arrowgrams/compiler/classes
   (:use :cl :cl-event-passing-user))
 
+(defpackage :arrowgrams/compiler/front-end
+  (:use :cl :cl-event-passing-user))
+
 
 
 

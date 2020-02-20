@@ -119,8 +119,26 @@
 ;;;; compiler rev 2, in CL, using Holm prolog
 ;;;;
 
+(defsystem :arrowgrams/compiler/part
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "compiler-part-class-definition"
+                        :pathname "./svg/cl-compiler/"
+                        :components ((:file "package")
+                                     (:file "compiler-part" :depends-on ("package"))))))
+
+(defsystem :arrowgrams/compiler/front-end
+  :depends-on (:arrowgrams :arrowgrams/compiler/part)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "front-end"
+                        :pathname "./svg/front-end/"
+                        :components ((:file "../cl-compiler/package")
+                                     (:file "drawio" :depends-on ("../cl-compiler/package"))))))
 (defsystem :arrowgrams/compiler
-  :depends-on (:arrowgrams :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/back-end)
+  :depends-on (:arrowgrams :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/back-end :arrowgrams/compiler/part :arrowgrams/compiler/front-end)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
