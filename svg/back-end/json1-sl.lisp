@@ -33,10 +33,10 @@
 
 = <part-declarations> 
   :lpar
-                       '\"parts\" :' nl '{' inc nl
+                       '\"parts\" :' nl '[' inc nl
   <part-decl-list>
   :rpar 
-                       dec nl '},'
+                       dec nl '],'
 
 = <inputs> 
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
@@ -45,10 +45,10 @@
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
 
 = <wiring> 
-  :lpar                '\"wiring\" :' inc nl inc
-                            '{' nl
+  :lpar                nl '\"wiring\" :' inc nl inc
+                            '[' nl
     <wire-list>
-  :rpar                dec nl '}' dec
+  :rpar                dec nl ']' dec
 
 = <pin-list> 
   <ident-list>
@@ -90,7 +90,7 @@
   :string                
 
 = <metadata>
-  :string                nl '\"metadata\" : ' print-text-as-string nl nl
+  :string                nl '\"metadata\" : ' print-text-as-string ',' nl nl
 
 = <kind>
   :string
@@ -103,25 +103,31 @@
 
 = <wire-list>
   '{' <wire> '}'
-  [ ?lpar ',' <wire-list> ] 
+  [ ?lpar ',' nl <wire-list> ]
+  
 
 = <wire>
   :lpar
-    :integer 
-    :lpar '\"sources\" : [' <part-pin-list> :rpar ']'
-                                 ' -> '
-    :lpar '\"receivers\" : [' <part-pin-list> :rpar ']'  
-                                  nl
+    :integer  '\"wire-index\" : ' print-text 
+    :lpar ', \"sources\" : [' <part-pin-list> :rpar ']'
+                         
+    :lpar ', \"receivers\" : [' <part-pin-list> :rpar ']'  
   :rpar
 
 = <part-pin-list> 
-  :lpar <part> <pin> :rpar 
+  :lpar 
+                       '{\"part\" : \"' 
+  <part>
+                       '\", \"pin\" : \"'
+  <pin> 
+  :rpar 
+                       '\"}'
   [ ?lpar ',' <part-pin-list> ]
 
 = <part>
   :string                 print-kind-instead-of-symbol
 = <pin>
-  :string                 '.' print-text-as-symbol
+  :string                 print-text-as-symbol
 "
     )
 
