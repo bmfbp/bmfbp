@@ -136,7 +136,8 @@
   :components ((:module "front-end"
                         :pathname "./svg/front-end/"
                         :components ((:file "../cl-compiler/package")
-                                     (:file "drawio" :depends-on ("../cl-compiler/package"))))))
+                                     (:file "main" :depends-on ("../cl-compiler/package"))
+                                     (:file "drawio" :depends-on ("../cl-compiler/package" "main"))))))
 (defsystem :arrowgrams/compiler
   :depends-on (:arrowgrams :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/back-end :arrowgrams/compiler/part :arrowgrams/compiler/front-end)
   :around-compile (lambda (next)
