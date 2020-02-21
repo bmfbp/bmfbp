@@ -343,7 +343,7 @@ So, for metadata, emit:
 			(format strm "geometry_h(~A,~A).~%" rr-id fake-h))
 		      
 		      ;; text
-		      (format strm "text(~A,\"~A\").~%" text-id strid)
+		      (format strm "text(~A,~S).~%" text-id strid)
 		      (format strm "geometry_center_x(~A,~A).~%" text-id (+ x (/ w 2)))
 		      (format strm "geometry_top_y(~A,~A).~%" text-id y)
 		      (format strm "geometry_w(~A,~A).~%" text-id w)
@@ -380,7 +380,7 @@ So, for metadata, emit:
 	   (let ((strid (if (all-digits-p str) 
 			    str 
 			    (string-to-map str))))
-             (format strm "text(~A,~A).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
+             (format strm "text(~A,~s).~%geometry_center_x(~A,~A).~%geometry_top_y(~A,~A).~%geometry_w(~A,~A).~%geometry_h(~A,~A).~%"
                      new-id strid new-id x1 new-id y1 new-id w new-id h))))
 
 	(ellipse
