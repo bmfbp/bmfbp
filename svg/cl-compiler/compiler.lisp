@@ -44,33 +44,26 @@
            (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error))
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
-           (:code unmapper (:in :map-filename :done) (:out :done :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename) (:write-to-filename :poke-fb :run-pipeline :write :error :show))
            (:schem compiler-testbed (:prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
             ;; parts
-            (reader fb writer convert-to-keywords sequencer unmapper)
+            (reader fb writer convert-to-keywords sequencer)
             ;; wiring
 "
 self.prolog-factbase-string-stream -> reader.in-stream
 
-self.map-filename -> unmapper.map-filename
 self.prolog-factbase-filename -> reader.file-name
 self.prolog-output-filename -> sequencer.prolog-output-filename
 self.dump -> sequencer.finished-pipeline
 self.request-fb -> fb.fb-request
 self.retract-fact -> fb.retract
 
-self.map-filename -> unmapper.map-filename
-
-
 reader.string-fact -> convert-to-keywords.string-fact
 reader.eof -> convert-to-keywords.eof
 
-convert-to-keywords.converted, self.add-fact -> unmapper.in
+convert-to-keywords.converted, self.add-fact -> fb.lisp-fact
 
-unmapper.out -> fb.lisp-fact
-
-convert-to-keywords.done -> unmapper.done
+convert-to-keywords.done -> sequence.finished-reading
 unmapper.done -> sequencer.finished-reading
 
 sequencer.show -> fb.show
@@ -359,7 +352,7 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
             (@inject compiler-net
                      (e/part::get-input-pin compiler-net :svg-filename)
                      filename)
-            (@inject compiler-net
+            #+nil(@inject compiler-net
                      (e/part::get-input-pin compiler-net :dump)
                      T))))
 
