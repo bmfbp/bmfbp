@@ -12,10 +12,9 @@
 (defmethod compiler-part-run ((self front-end) e)
   (ecase (state self)
     (:idle
-     (let ((filename (@data self e)))
-       (let ((component-name (pathname-name filename)))
-         (let ((str (concatenate 'string
-                                 (format nil "(COMPONENT ~a)~%" (string-upcase component-name))
-                                 (cl-user::front-end-main filename))))          
-           (with-input-from-string  (strm str)
-             (@send self :output-string-stream strm))))))))
+     (let ((filename (cl-event-passing-user:@data self e)))
+       (let ((s (cl-user::front-end-main filename)))
+         (let ((strm (cl:make-string-input-stream s)))
+           (with-open-file (f "/Users/tarvydas/test.pro" :direction :output :if-exists :supersede)
+             (write s :stream f))
+           (cl-event-passing-user:@send self :output-string-stream strm)))))))
