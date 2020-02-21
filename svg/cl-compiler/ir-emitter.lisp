@@ -47,7 +47,8 @@
 
     (let ((goal '((:match_top_name (:? N)))))
       (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
-        (assert (and (listp result) (= 1 (length (car result)))))
+        (unless (and (listp result) (= 1 (length (car result))))
+          (error "~&rule :match_top-name failed"))
         (let ((top-name (cdr (assoc 'N (car result)))))
           (let ((goal '((:fetch_metadata (:? ID) (:? TextID) (:? Str)))))
             (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
