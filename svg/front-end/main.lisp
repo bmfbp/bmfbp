@@ -591,7 +591,6 @@ So, for metadata, emit:
 
 (defun create-text-objects (list)
   (assert (listp list))
-  (format *error-output* "~&create-text-objects list: ~S~%" list)
   (if (listp (car list))
       (mapcar #'create-text-objects list)
       (if (stringp (car list))
