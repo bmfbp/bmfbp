@@ -12,7 +12,10 @@
 (defmethod compiler-part-run ((self front-end) e)
   (ecase (state self)
     (:idle
-     ;(let ((str (arrowgrams/compiler/front-end::front-end-main (@data self e))))
-     (let ((str (cl-user::front-end-main (@data self e))))
-       (with-input-from-string  (strm str)
-         (@send self :output-string-stream strm))))))
+     (let ((filename (@data self e)))
+       (let ((component-name (pathname-name filename)))
+         (let ((str (concatenate 'string
+                                 (format nil "(COMPONENT ~a)~%" (string-upcase component-name))
+                                 (cl-user::front-end-main filename))))          
+           (with-input-from-string  (strm str)
+             (@send self :output-string-stream strm))))))))

@@ -126,7 +126,7 @@ So, for metadata, emit:
 |#
 
 
-(defun run (strm)
+(defun run (strm output-stream)
   (init-string-map)
   (let ((lst (read strm nil nil)))
     ;; bug fix
@@ -148,30 +148,11 @@ So, for metadata, emit:
 				     (mapcar #'fix-lines
 					     (mapcar #'create-text-objects 
 						     list)))))))
-	(to-prolog fixed *standard-output*)
+	(to-prolog fixed output-stream)
 ;; this does nothing in the V3 front-end - it used to remove strings from the gprolog factbase in V2
 ;; for V3, we simply leave the strings as strings - everything is handled in Lisp
-	(write-string-map "temp-string-map.lisp" "strings.sed" "unmap-sed.sed")))))
+        #+nil(write-string-map "temp-string-map.lisp" "strings.sed" "unmap-sed.sed")))))
 
-#-lispworks
-(defun xx-main (argv)
-  (declare (ignore argv))
-  (handler-case
-      (progn
-	(run *standard-input*))
-    (end-of-file (c)
-      (format *error-output* "FATAL 'end of file error; in main /~S/~%" c))
-    (simple-error (c)
-      (format *error-output* "FATAL error in main /~S/~%" c))
-    (error (c)
-      (format *error-output* "FATAL error in main /~S/~%" c))))
-
-#+nil-lispworks-old-main
-(defun xx-main (fname)
-  (with-open-file (f fname :direction :input)
-    (run f)))
-
-#+lispworks
 (defun front-end-main (svg-filename)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
     (let ((str (with-output-to-string (s)
@@ -180,7 +161,9 @@ So, for metadata, emit:
                   :show-cmd nil
                   :prefix ""))))
       (with-input-from-string (strm str)
-        (run strm)))))
+        (with-output-to-string (output-stream)
+          (let ((result-string (run strm output-stream)))
+            result-string))))))
 
 ;;;; util.lisp
 
