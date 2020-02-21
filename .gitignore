@@ -66,3 +66,9 @@ svg/cl-compiler/COMPILE-COMPOSITE.json
 *.zaps
 
 svg/compiler3/lwacomp3
+
+svg/cl-compiler/BUILD_PROCESS.lisp
+
+svg/cl-compiler/COMPILE-COMPOSITE.lisp
+
+svg/cl-compiler/IDE.lisp
