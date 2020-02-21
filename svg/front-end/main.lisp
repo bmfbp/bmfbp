@@ -155,15 +155,25 @@ So, for metadata, emit:
 
 (defun front-end-main (svg-filename)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
-    (let ((str (with-output-to-string (s)
-                 (system:call-system-showing-output
-                  (format nil "~a <~a" command-svg-to-lisp svg-filename) :output-stream s
-                  :show-cmd nil
-                  :prefix ""))))
-      (with-input-from-string (strm str)
-        (with-output-to-string (output-stream)
-          (let ((result-string (run strm output-stream)))
-            result-string))))))
+    (let ((temp1-str (with-output-to-string (s)
+                       (system:call-system-showing-output
+                        (format nil "~a <~a" command-svg-to-lisp svg-filename)
+                        :output-stream s
+                        :show-cmd nil
+                        :prefix ""))))
+      ;; this is silly, but mimics the on-disk behaviour of the V2 compiler (which used temp files)
+      ;; rewrite in the future
+      (let ((lis (read-from-string temp1-str nil nil)))
+        (assert lis)
+        (let ((top-name (pathname-name svg-filename)))
+          (let ((new-lis (cons `(component ,top-name) lis)))
+            (let ((temp2-str (with-output-to-string (s)
+                               (write new-lis :stream s))))
+              (let ((instream (make-string-input-stream temp2-str)))
+                (let ((output-stream (make-string-output-stream)))
+                  (run instream output-stream)
+                  (let ((result-string (get-output-stream-string output-stream)))
+                    result-string))))))))))
 
 ;;;; util.lisp
 
@@ -261,7 +271,7 @@ So, for metadata, emit:
 	(nothing nil)
 
 	(component
-	 (format strm "component('~A').~%" (second list)))
+	 (format strm "component(~A).~%" (second list)))
 
         (line
 	 (let ((begin-id (next-id))
