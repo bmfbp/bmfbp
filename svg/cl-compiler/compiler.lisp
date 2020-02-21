@@ -40,7 +40,7 @@
 (format *standard-output* "~&in compiler-event-passing~%")
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
-           (:code reader (:file-name) (:string-fact :eof :error))
+           (:code reader (:file-name :in-stream) (:string-fact :eof :error))
            (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error))
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
@@ -51,6 +51,8 @@
             (reader fb writer convert-to-keywords sequencer unmapper)
             ;; wiring
 "
+self.prolog-factbase-string-stream -> reader.in-stream
+
 self.map-filename -> unmapper.map-filename
 self.prolog-factbase-filename -> reader.file-name
 self.prolog-output-filename -> sequencer.prolog-output-filename
@@ -310,7 +312,7 @@ back-end-parser.error -> self.error
             ;; to massage the code and to supply a filename to the testbed
             (:code front-end (:svg-filename) (:output-string-stream :error))
            
-           (:schem compiler (:svg-filename :map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :json :error)
+           (:schem compiler (:svg-filename :prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :json :error)
             ;; parts
             (front-end compiler-testbed passes back-end file-namer)
             ;; wiring
