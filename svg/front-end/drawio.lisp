@@ -14,4 +14,5 @@
     (:idle
      ;(let ((str (arrowgrams/compiler/front-end::front-end-main (@data self e))))
      (let ((str (cl-user::front-end-main (@data self e))))
-       (@send self :output-string-stream str)))))
+       (with-input-from-string  (strm str)
+         (@send self :output-string-stream strm))))))
