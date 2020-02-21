@@ -15,8 +15,8 @@
           (format *standard-output* "~& using argv ~a ~a ~a~%" filename map-filename output-filename)
           (compiler-event-passing filename map-filename output-filename))
       (progn
-        (format *standard-output* "~& using builtin args~%")
-        (old-main)))))
+        (format *standard-output* "~& using new builtin args~%")
+        (new-main)))))
 
 (defun kk-main ()
   (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/kk5.pro")))
@@ -30,6 +30,12 @@
       (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
 	(compiler-event-passing filename map-filename output-filename)))))
 
+(defun new-main ()
+  (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/build_process.svg")))
+    (let ((map-filename nil))
+      (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
+	(compiler-event-passing filename map-filename output-filename)))))
+
 (defun compiler-event-passing (filename map-filename output-filename)
 (format *standard-output* "~&in compiler-event-passing~%")
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
@@ -40,7 +46,7 @@
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
            (:code unmapper (:in :map-filename :done) (:out :done :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename) (:write-to-filename :poke-fb :run-pipeline :write :error :show))
-           (:schem compiler-testbed (:map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
+           (:schem compiler-testbed (:prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
             ;; parts
             (reader fb writer convert-to-keywords sequencer unmapper)
             ;; wiring
@@ -298,13 +304,21 @@ back-end-parser.error -> self.error
             (:code file-namer (:basename) (:basename :json-filename :generic-filename :lisp-filename :error))
 
 
+            ;; front-end is a kludgy Part that takes an SVG filename (exported from Drawio), run HS on it, then
+            ;; runs a bunch of Lisp (see ../front-end/drawio.lisp) to massage the factbase into something that can be 
+            ;; used by the compiler-testbed->passes-back-end ; it replaces the manual method(s) of using a shell script
+            ;; to massage the code and to supply a filename to the testbed
+            (:code front-end (:svg-filename) (:output-string-stream :error))
            
-           (:schem compiler (:map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :json :error)
+           (:schem compiler (:svg-filename :map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :json :error)
             ;; parts
-            (compiler-testbed passes back-end file-namer)
+            (front-end compiler-testbed passes back-end file-namer)
             ;; wiring
             
 "
+self.svg-filename -> front-end.svg-filename
+front-end.output-string-stream -> compiler-testbed.prolog-factbase-string-stream
+
 passes.basename -> file-namer.basename
 passes.ir -> back-end.ir
 file-namer.json-filename -> back-end.json-filename
@@ -314,8 +328,6 @@ file-namer.lisp-filename -> back-end.lisp-filename
 back-end.metadata -> self.metadata
 back-end.out -> self.json
 
-self.map-filename -> compiler-testbed.map-filename
-self.prolog-factbase-filename -> compiler-testbed.prolog-factbase-filename
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename
 self.dump -> compiler-testbed.dump
 
@@ -336,16 +348,14 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
     (e/util::enable-logging 1)
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
+    (assert (null map-filename)) ;; new version does not use string mapping
     (@with-dispatch
             (@enable-logging)
-            (@inject compiler-net
-                     (e/part::get-input-pin compiler-net :map-filename)
-                     map-filename)
             (@inject compiler-net
                      (e/part::get-input-pin compiler-net :prolog-output-filename)
                      output-filename)
             (@inject compiler-net
-                     (e/part::get-input-pin compiler-net :prolog-factbase-filename)
+                     (e/part::get-input-pin compiler-net :svg-filename)
                      filename)
             (@inject compiler-net
                      (e/part::get-input-pin compiler-net :dump)

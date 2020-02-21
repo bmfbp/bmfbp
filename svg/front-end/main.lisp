@@ -1,4 +1,7 @@
-(in-package :arrowgrams/compiler)
+;(in-package :arrowgrams/compiler/front-end)
+(in-package :cl-user)
+
+(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 #|
 In temp1.lisp, we see 2 kinds of lines
@@ -226,7 +229,7 @@ So, for metadata, emit:
 
 (defun die (msg)
   (format *error-output* "~%~S~%" msg)
-  #+lispworks (lispworks:quit)
+  #+lispworks (error msg) ;(lispworks:quit)
   #+sbcl (exit)
   )
   
@@ -588,7 +591,7 @@ So, for metadata, emit:
 
 (defun create-text-objects (list)
   (assert (listp list))
-  ;(format *error-output* "list: ~S~%" list)
+  (format *error-output* "~&create-text-objects list: ~S~%" list)
   (if (listp (car list))
       (mapcar #'create-text-objects list)
       (if (stringp (car list))
