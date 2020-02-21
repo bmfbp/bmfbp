@@ -205,6 +205,7 @@ So, for metadata, emit:
   s)
 
 (defun write-string-map (fname sed-fname pure-sed-fname)
+  (declare (ignore fname sed-fname pure-sed-fname))
   #+nil(with-open-file (f fname :direction :output :if-exists :supersede)
     (with-open-file (sed sed-fname :direction :output :if-exists :supersede)
       (with-open-file (u pure-sed-fname :direction :output :if-exists :supersede)
@@ -342,7 +343,7 @@ So, for metadata, emit:
 			(format strm "geometry_h(~A,~A).~%" rr-id fake-h))
 		      
 		      ;; text
-		      (format strm "text(~A,~A).~%" text-id strid)
+		      (format strm "text(~A,\"~A\").~%" text-id strid)
 		      (format strm "geometry_center_x(~A,~A).~%" text-id (+ x (/ w 2)))
 		      (format strm "geometry_top_y(~A,~A).~%" text-id y)
 		      (format strm "geometry_w(~A,~A).~%" text-id w)
@@ -588,7 +589,6 @@ So, for metadata, emit:
       (mapcar #'create-text-objects list)
       (if (stringp (car list))
 	  (progn
-	    ;(format *error-output* "fixed text as car of list~%")
 	    (mapcar #'create-text-objects (rest list)))
 	  (case (car list)
 	    
@@ -596,21 +596,10 @@ So, for metadata, emit:
 	     (flet ((failure () (die (format nil "badly formed translate /~A/~%" list))))
 	       (let ((pair (second list))
 		     (tail (third list)))
-		 
-		 ;; (when (and
-		 ;; 	    (= 1 (length tail))
-		 ;; 	    (listp (first tail))
-		 ;; 	    (stringp (first (first tail)))
-		 ;; 	    (null  (second (first tail))))
-		 ;;   (format *error-output* "~%~%fixed bug2 in create-text-objects.lisp~%~%")
-		 ;;   (setf tail (first tail)))
-		 
 		 (cond ((list-of-lists-p tail)
 			`(translate ,pair ,(mapcar #'create-text-objects tail)))
 		       
 		       ((matches-not-supported-p tail)
-			; (TRANSLATE (588.0 47.0) ("[Not supported by viewer]"))) --> nothing
-			; (format *error-output* "~%[Not supported by viewer] becomes (nothing)~%")
 			'(nothing))
 		       
 		       ((matches-text-item-p tail)
