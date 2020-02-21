@@ -258,6 +258,7 @@ ellipse-bounding-boxes.done,
                emitter-pass2-generic.out -> generic-file-writer.write
 
                collector.out -> json-emitter.in,emitter-pass2-generic.in
+               collector.metadata -> self.metadata
 
                lisp-emitter.out -> lisp-file-writer.write,self.lisp-out
 
