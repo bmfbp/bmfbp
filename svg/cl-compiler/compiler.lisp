@@ -63,8 +63,7 @@ reader.eof -> convert-to-keywords.eof
 
 convert-to-keywords.converted, self.add-fact -> fb.lisp-fact
 
-convert-to-keywords.done -> sequence.finished-reading
-unmapper.done -> sequencer.finished-reading
+convert-to-keywords.done -> sequencer.finished-reading
 
 sequencer.show -> fb.show
 sequencer.run-pipeline, self.done -> self.go
@@ -77,7 +76,7 @@ fb.no-more -> writer.no-more, sequencer.finished-writing
 
 writer.request -> fb.get-next
 
-convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error, unmapper.error -> self.error
+convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error -> self.error
 "
 )        
            (:code ellipse-bounding-boxes (:fb :go) (:add-fact :request-fb :done :error))
