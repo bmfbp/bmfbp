@@ -12,5 +12,6 @@
 (defmethod compiler-part-run ((self front-end) e)
   (ecase (state self)
     (:idle
-       (let ((str (front-end-main (@data self e))))
-       (@send self :out str)))))
+     ;(let ((str (arrowgrams/compiler/front-end::front-end-main (@data self e))))
+     (let ((str (cl-user::front-end-main (@data self e))))
+       (@send self :output-string-stream str)))))
