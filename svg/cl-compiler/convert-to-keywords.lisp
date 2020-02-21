@@ -15,7 +15,6 @@
   (let ((pin (@pin self e))
         (string-fact (e/event:data e))
         (new-list nil))
-(format *standard-output* "~&convert to keywords gets ~S ~s~%" (@pin self e) (@data self e))
     (if (eq pin :string-fact)
         (unless (string= "" string-fact)
           (with-input-from-string (str string-fact)
