@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass writer (e/part:part) ())
+(defclass writer (e/part:code) ())
 (defmethod e/part:busy-p ((self writer)) (call-next-method))
+(defmethod e/part:clone ((self writer)) (call-next-method))
 ; (:code writer (:filename :start :next :no-more) (:request :error))
 
 (defmethod e/part:first-time ((self writer))
