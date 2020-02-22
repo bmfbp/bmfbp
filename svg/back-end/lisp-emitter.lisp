@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass lisp-emitter (e/part:part) 
+(defclass lisp-emitter (e/part:code) 
   ((state :accessor state)))
 
 (defmethod e/part:busy-p ((self lisp-emitter)) (call-next-method))

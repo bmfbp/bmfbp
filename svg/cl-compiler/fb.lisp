@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass fb (e/part:part) ())
+(defclass fb (e/part:code) ())
 (defmethod e/part:busy-p ((self fb)) (call-next-method))
+(defmethod e/part:clone ((self fb)) (call-next-method))
 ;; create an in-memory factbase, given single facts sent in on pins :string-fact or :lisp-fact
 
 ; (:code fb (:string-fact :lisp-fact :retract :go :fb-request :iterate :get-next :show) (:fb :no-more :next :error))

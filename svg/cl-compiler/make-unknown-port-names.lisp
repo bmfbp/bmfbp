@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass make-unknown-port-names (e/part:part) ())
+(defclass make-unknown-port-names (e/part:code) ())
 (defmethod e/part:busy-p ((self make-unknown-port-names)) (call-next-method))
+(defmethod e/part:clone ((self make-unknown-port-names)) (call-next-method))
 
 ; (:code MAKE-UNKNOWN-PORT-NAMES (:fb :go) (:add-fact :done :request-fb :error))
 

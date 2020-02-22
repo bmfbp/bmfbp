@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass demux (e/part:part) ())
+(defclass demux (e/part:code) ())
 (defmethod e/part:busy-p ((self demux)) (call-next-method))
+(defmethod e/part:clone ((self demux)) (call-next-method))
 
 (defmethod e/part:first-time ((self demux))
   (@set self :counter 0)

@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass synchronizer (e/part:part) ())
+(defclass synchronizer (e/part:code) ())
 (defmethod e/part:busy-p ((self synchronizer)) (call-next-method))
 ; (:code synchronizer (:ir :json-filename :generic-filename :lisp-filename)
 ;                     (:ir :json-filename :generic-filename :lisp-filename :error)

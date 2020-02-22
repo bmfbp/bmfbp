@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass mark-directions (e/part:part) ())
+(defclass mark-directions (e/part:code) ())
 (defmethod e/part:busy-p ((self mark-directions)) (call-next-method))
+(defmethod e/part:clone ((self mark-directions)) (call-next-method))
 
 ; (:code MARK-DIRECTIONS (:fb :go) (:add-fact :done :request-fb :error))
 

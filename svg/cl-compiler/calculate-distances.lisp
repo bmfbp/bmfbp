@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass calculate-distances (e/part:part) ())
+(defclass calculate-distances (e/part:code) ())
 (defmethod e/part:busy-p ((self calculate-distances)) (call-next-method))
+(defmethod e/part:clone ((self calculate-distances)) (call-next-method))
 
 ; (:code CALCULATE-DISTANCES (:fb :go) (:add-fact :done :request-fb :error)
 

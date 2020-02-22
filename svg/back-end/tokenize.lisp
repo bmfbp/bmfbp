@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass tokenize (e/part:part) ())
+(defclass tokenize (e/part:code) ())
 
 (defmethod e/part:busy-p ((self tokenize)) (call-next-method))
 

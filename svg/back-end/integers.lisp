@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass integers (e/part:part) ())
+(defclass integers (e/part:code) ())
 (defmethod e/part:busy-p ((self integers)) (call-next-method))
 ; (:code integers (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 

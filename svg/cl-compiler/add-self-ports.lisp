@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass add-self-ports (e/part:part) ())
+(defclass add-self-ports (e/part:code) ())
 (defmethod e/part:busy-p ((self add-self-ports)) (call-next-method))
+(defmethod e/part:clone ((self add-self-ports)) (call-next-method))
 
 ; (:code ADD-SELF-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 

@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass assign-portnames (e/part:part) ())
+(defclass assign-portnames (e/part:code) ())
 (defmethod e/part:busy-p ((self assign-portnames)) (call-next-method))
+(defmethod e/part:clone ((self assign-portnames)) (call-next-method))
 
 ; (:code ASSIGN-PORTNAMES (:fb :go) (:add-fact :done :request-fb :error))
 

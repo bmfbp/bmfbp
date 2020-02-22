@@ -1,8 +1,9 @@
 (in-package :arrowgrams/compiler)
 
-(defclass compiler-part (e/part:part) ())
+(defclass compiler-part (e/part:code) ())
 
 (defmethod e/part:busy-p ((self compiler-part)) (call-next-method))
+(defmethod e/part:clone ((self compiler-part)) (call-next-method))
 
 (defmethod e/part:first-time ((self compiler-part))
   (@set self :state :idle))

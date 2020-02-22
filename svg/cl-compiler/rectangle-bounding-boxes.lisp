@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass rectangle-bounding-boxes (e/part:part) ())
+(defclass rectangle-bounding-boxes (e/part:code) ())
 (defmethod e/part:busy-p ((self rectangle-bounding-boxes)) (call-next-method))
+(defmethod e/part:clone ((self rectangle-bounding-boxes)) (call-next-method))
 ; (:code rectangle-bb (:fb :go) (:add-fact :done :request-fb :error) )
 
 (defmethod e/part:first-time ((self rectangle-bounding-boxes))

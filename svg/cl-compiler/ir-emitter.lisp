@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass ir-emitter (e/part:part) ())
+(defclass ir-emitter (e/part:code) ())
 (defmethod e/part:busy-p ((self ir-emitter)) (call-next-method))
+(defmethod e/part:clone ((self ir-emitter)) (call-next-method))
 ; (:code IR-EMITTER (:fb :go) (:ir :basename :add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self ir-emitter))

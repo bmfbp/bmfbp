@@ -1,12 +1,15 @@
 (in-package :arrowgrams/compiler)
 
-(defclass convert-to-keywords (e/part:part) ())
+(defclass convert-to-keywords (e/part:code) ())
 
 ; (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
 
 ;; read a string fact, output as a lisp fact with all symbols converted to keywords
 
 (defmethod e/part:busy-p ((self convert-to-keywords))
+  (call-next-method))
+
+(defmethod e/part:clone ((self convert-to-keywords))
   (call-next-method))
 
 (defmethod e/part:first-time ((self convert-to-keywords)))

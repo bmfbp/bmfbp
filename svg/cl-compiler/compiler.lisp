@@ -2,8 +2,9 @@
 
 (defparameter *compiler-net* nil)
 
-(defclass compiler (e/part:part) ())
+(defclass compiler (e/part:code) ())
 (defmethod e/part:busy-p ((self compiler)) (call-next-method))
+(defmethod e/part:clone ((self compiler)) (call-next-method))
 
 
 #+lispworks
@@ -33,8 +34,7 @@
 	(compiler-event-passing filename map-filename output-filename)))))
 
 (defun new-main ()
-  ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/build_process.svg")))
-  (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/ide.svg")))
+  (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/build_process.svg")))
     (let ((map-filename nil))
       (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
 	(compiler-event-passing filename map-filename output-filename)))))

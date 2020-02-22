@@ -1,6 +1,7 @@
 (in-package :arrowgrams/compiler)
-(defclass find-comments (e/part:part) ())
+(defclass find-comments (e/part:code) ())
 (defmethod e/part:busy-p ((self find-comments)) (call-next-method))
+(defmethod e/part:clone ((self find-comments)) (call-next-method))
 
 ; (:code FIND-COMMENTS (:fb :go) (:add-fact :done :request-fb :error))
 

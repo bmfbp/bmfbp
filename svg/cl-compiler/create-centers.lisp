@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass create-centers (e/part:part) ())
+(defclass create-centers (e/part:code) ())
 (defmethod e/part:busy-p ((self create-centers)) (call-next-method))
+(defmethod e/part:clone ((self create-centers)) (call-next-method))
 
 ; (:code CREATE-CENTERS (:fb :go) (:add-fact :done :request-fb :error))
 

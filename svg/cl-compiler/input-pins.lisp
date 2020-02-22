@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass input-pins (e/part:part) ())
+(defclass input-pins (e/part:code) ())
 (defmethod e/part:busy-p ((self input-pins)) (call-next-method))
+(defmethod e/part:clone ((self input-pins)) (call-next-method))
 
 ; (:code INPUT-PINS (:fb :go) (:add-fact :done :request-fb :error))
 

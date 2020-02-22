@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass pinless (e/part:part) ())
+(defclass pinless (e/part:code) ())
 (defmethod e/part:busy-p ((self pinless)) (call-next-method))
+(defmethod e/part:clone ((self pinless)) (call-next-method))
 
 ; (:code PINLESS (:fb :go) (:add-fact :done :request-fb :error))
 

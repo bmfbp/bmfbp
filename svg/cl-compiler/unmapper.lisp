@@ -17,7 +17,7 @@
 
 (in-package :arrowgrams/compiler)
 
-(defclass unmapper (e/part:part)
+(defclass unmapper (e/part:code)
   ((state :initform :waiting-for-map :accessor state)
    (mapping :accessor mapping)
    (mapping-p :accessor mapping-p))) ;; T if we are doing unmapping, else NIL
@@ -26,6 +26,9 @@
 ; (:code unmapper (:file-name) (:string-fact :eof :error))
 
 (defmethod e/part:busy-p ((self unmapper))
+  (call-next-method))
+
+(defmethod e/part:clone ((self unmapper))
   (call-next-method))
 
 (defmethod e/part:first-time ((self unmapper)))

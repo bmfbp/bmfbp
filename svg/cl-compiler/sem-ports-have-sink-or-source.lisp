@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass sem-ports-have-sink-or-source (e/part:part) ())
+(defclass sem-ports-have-sink-or-source (e/part:code) ())
 (defmethod e/part:busy-p ((self sem-ports-have-sink-or-source)) (call-next-method))
+(defmethod e/part:clone ((self sem-ports-have-sink-or-source)) (call-next-method))
 
 ; (:code SEM-PORTS-HAVE-SINK-OR-SOURCE (:fb :go) (:add-fact :done :request-fb :error))
 

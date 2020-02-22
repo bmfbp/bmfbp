@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass assign-wire-numbers-to-edges (e/part:part) ())
+(defclass assign-wire-numbers-to-edges (e/part:code) ())
 (defmethod e/part:busy-p ((self assign-wire-numbers-to-edges)) (call-next-method))
+(defmethod e/part:clone ((self assign-wire-numbers-to-edges)) (call-next-method))
 
 ; (:code ASSIGN-WIRE-NUMBERS-TO-EDGES (:fb :go) (:add-fact :done :request-fb :error))
 

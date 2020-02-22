@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass mark-nc (e/part:part) ())
+(defclass mark-nc (e/part:code) ())
 (defmethod e/part:busy-p ((self mark-nc)) (call-next-method))
+(defmethod e/part:clone ((self mark-nc)) (call-next-method))
 
 ; (:code MARK-NC (:fb :go) (:add-fact :done :request-fb :error))
 

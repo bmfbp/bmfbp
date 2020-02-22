@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass ellipse-bounding-boxes (e/part:part) ())
+(defclass ellipse-bounding-boxes (e/part:code) ())
 (defmethod e/part:busy-p ((self ellipse-bounding-boxes)) (call-next-method))
+(defmethod e/part:clone ((self ellipse-bounding-boxes)) (call-next-method))
 ; (:code ellipse-bb (:fb :go) (:add-fact :done :request-fb :error)
 
 (defmethod e/part:first-time ((self ellipse-bounding-boxes))

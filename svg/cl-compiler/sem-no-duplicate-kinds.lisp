@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass sem-no-duplicate-kinds (e/part:part) ())
+(defclass sem-no-duplicate-kinds (e/part:code) ())
 (defmethod e/part:busy-p ((self sem-no-duplicate-kinds)) (call-next-method))
+(defmethod e/part:clone ((self sem-no-duplicate-kinds)) (call-next-method))
 
 ; (:code SEM-NO-DUPLICATE-KINDS (:fb :go) (:add-fact :done :request-fb :error))
 

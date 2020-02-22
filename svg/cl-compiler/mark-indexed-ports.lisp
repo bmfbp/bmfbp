@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass mark-indexed-ports (e/part:part) ())
+(defclass mark-indexed-ports (e/part:code) ())
 (defmethod e/part:busy-p ((self mark-indexed-ports)) (call-next-method))
+(defmethod e/part:clone ((self mark-indexed-ports)) (call-next-method))
 
 ; (:code MARK-INDEXED-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 

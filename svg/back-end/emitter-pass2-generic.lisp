@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass emitter-pass2-generic (e/part:part) ())
+(defclass emitter-pass2-generic (e/part:code) ())
 (defmethod e/part:busy-p ((self emitter-pass2-generic)) (call-next-method))
 (defparameter *emitter-pass2-generic-state* nil)
 

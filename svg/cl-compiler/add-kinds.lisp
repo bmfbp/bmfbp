@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass add-kinds (e/part:part) ())
+(defclass add-kinds (e/part:code) ())
 (defmethod e/part:busy-p ((self add-kinds)) (call-next-method))
+(defmethod e/part:clone ((self add-kinds)) (call-next-method))
 
 ; (:code ADD-KINDS (:fb :go) (:add-fact :done :request-fb :error))
 

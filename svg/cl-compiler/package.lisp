@@ -1,7 +1,8 @@
 (defpackage :arrowgrams/compiler
   (:use :cl :cl-event-passing-user)
   (:export
-   #:main))
+   #:main
+   #:get-compiler-net))
 
 (defpackage :arrowgrams/compiler/util
   (:use :cl :cl-event-passing-user))

@@ -1,8 +1,9 @@
 (in-package :arrowgrams/compiler)
 
-(defclass speechbubble-bounding-boxes (e/part:part) ())
+(defclass speechbubble-bounding-boxes (e/part:code) ())
 
 (defmethod e/part:busy-p ((self speechbubble-bounding-boxes)) (call-next-method))
+(defmethod e/part:clone ((self speechbubble-bounding-boxes)) (call-next-method))
 ; (:code speechbubble-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self speechbubble-bounding-boxes))

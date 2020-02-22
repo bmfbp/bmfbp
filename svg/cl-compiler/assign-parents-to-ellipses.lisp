@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass assign-parents-to-ellipses (e/part:part) ())
+(defclass assign-parents-to-ellipses (e/part:code) ())
 (defmethod e/part:busy-p ((self assign-parents-to-ellipses)) (call-next-method))
+(defmethod e/part:clone ((self assign-parents-to-ellipses)) (call-next-method))
 ; (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self assign-parents-to-ellipses))

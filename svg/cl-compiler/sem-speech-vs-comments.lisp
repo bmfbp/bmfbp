@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass sem-speech-vs-comments (e/part:part) ())
+(defclass sem-speech-vs-comments (e/part:code) ())
 (defmethod e/part:busy-p ((self sem-speech-vs-comments)) (call-next-method))
+(defmethod e/part:clone ((self sem-speech-vs-comments)) (call-next-method))
 
 ; (:code SEM-SPEECH-VS-COMMENTS (:fb :go) (:add-fact :done :request-fb :error))
 

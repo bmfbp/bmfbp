@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass match-ports-to-components (e/part:part) ())
+(defclass match-ports-to-components (e/part:code) ())
 (defmethod e/part:busy-p ((self match-ports-to-components)) (call-next-method))
+(defmethod e/part:clone ((self match-ports-to-components)) (call-next-method))
 
 ; (:code MATCH-PORTS-TO-COMPONENTS (:fb :go) (:add-fact :done :request-fb :error))
 

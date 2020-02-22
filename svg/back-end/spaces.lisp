@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass spaces (e/part:part) ())
+(defclass spaces (e/part:code) ())
 (defmethod e/part:busy-p ((self spaces)) (call-next-method))
 
 ; (:code spaces (:token) (:request :out :error) #'e/part:react #'e/part:first-time)

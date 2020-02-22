@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass sem-parts-have-some-ports (e/part:part) ())
+(defclass sem-parts-have-some-ports (e/part:code) ())
 (defmethod e/part:busy-p ((self sem-parts-have-some-ports)) (call-next-method))
+(defmethod e/part:clone ((self sem-parts-have-some-ports)) (call-next-method))
 
 ; (:code SEM-PARTS-HAVE-SOME-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 

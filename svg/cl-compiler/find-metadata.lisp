@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass find-metadata (e/part:part) ())
+(defclass find-metadata (e/part:code) ())
 (defmethod e/part:busy-p ((self find-metadata)) (call-next-method))
+(defmethod e/part:clone ((self find-metadata)) (call-next-method))
 
 ; (:code FIND-METADATA (:fb :go) (:add-fact :done :request-fb :error))
 

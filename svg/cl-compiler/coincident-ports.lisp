@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass coincident-ports (e/part:part) ())
+(defclass coincident-ports (e/part:code) ())
 (defmethod e/part:busy-p ((self coincident-ports)) (call-next-method))
+(defmethod e/part:clone ((self coincident-ports)) (call-next-method))
 
 ; (:code COINCIDENT-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 

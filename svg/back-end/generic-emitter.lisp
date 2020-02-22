@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass generic-emitter (e/part:part) ())
+(defclass generic-emitter (e/part:code) ())
 (defmethod e/part:busy-p ((self generic-emitter)) (call-next-method))
 (defparameter *emitter-state* nil)
 

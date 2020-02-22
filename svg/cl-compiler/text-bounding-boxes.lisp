@@ -1,7 +1,8 @@
 (in-package :arrowgrams/compiler)
 
-(defclass text-bounding-boxes (e/part:part) ())
+(defclass text-bounding-boxes (e/part:code) ())
 (defmethod e/part:busy-p ((self text-bounding-boxes)) (call-next-method))
+(defmethod e/part:clone ((self text-bounding-boxes)) (call-next-method))
 ; (:code text-bb (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self text-bounding-boxes))

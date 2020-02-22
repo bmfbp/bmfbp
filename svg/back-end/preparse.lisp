@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass preparse (e/part:part) ())
+(defclass preparse (e/part:code) ())
 (defmethod e/part:busy-p ((self preparse)) (call-next-method))
 
 (defparameter *preparse-state* nil)

@@ -1,7 +1,8 @@
 
 (in-package :arrowgrams/compiler)
-(defclass self-output-pins (e/part:part) ())
+(defclass self-output-pins (e/part:code) ())
 (defmethod e/part:busy-p ((self self-output-pins)) (call-next-method))
+(defmethod e/part:clone ((self self-output-pins)) (call-next-method))
 
 ; (:code SELF-OUTPUT-PINS (:fb :go) (:add-fact :done :request-fb :error))
 

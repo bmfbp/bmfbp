@@ -1,7 +1,11 @@
 (in-package :arrowgrams/compiler)
 
-(defclass file-namer (e/part:part) ())
+(defclass file-namer (e/part:code) ())
+
 (defmethod e/part:busy-p ((self file-namer)) (call-next-method))
+
+(defmethod e/part:clone ((self file-namer)) (call-next-method))
+
 ; (:code FILE-NAMER (:basename) (:json-filename :generic-filename :lisp-filename :error) #'BE:e/part:react #'BE:e/part:first-time)
 
 (defmethod e/part:first-time ((self file-namer))

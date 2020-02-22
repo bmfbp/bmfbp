@@ -1,12 +1,15 @@
 (in-package :arrowgrams/compiler)
 
-(defclass file-writer (e/part:part) ())
+(defclass file-writer (e/part:code) ())
 
 (defclass generic-file-writer (file-writer) ())
 (defclass json-file-writer (file-writer) ())
 (defclass lisp-file-writer (file-writer) ())
 
 (defmethod e/part:busy-p ((self file-writer)) (call-next-method))
+
+(defmethod e/part:clone ((self file-writer)) (call-next-method))
+
 ; (:code file-writer (:token) (:out :error) #'e/part:react #'e/part:first-time)
 
 

@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass collector (e/part:part) ())
+(defclass collector (e/part:code) ())
 (defmethod e/part:busy-p ((self collector)) (call-next-method))
 ; (:code collector (:parse) (:out :metadata :error))
 

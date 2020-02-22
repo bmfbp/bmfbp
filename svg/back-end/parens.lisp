@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass parens (e/part:part) ())
+(defclass parens (e/part:code) ())
 (defmethod e/part:busy-p ((self parens)) (call-next-method))
 ; (:code parens (:token) (:out :error) #'e/part:react #'e/part:first-time)
 

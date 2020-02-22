@@ -1,9 +1,10 @@
 (in-package :arrowgrams/compiler)
 
-(defclass sequencer (e/part:part)
+(defclass sequencer (e/part:code)
   ((prolog-output-filename :accessor prolog-output-filename)))
 
 (defmethod e/part:busy-p ((self sequencer)) (call-next-method))
+(defmethod e/part:clone ((self sequencer)) (call-next-method))
 ; (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename)
 ;     (:write-to-filename :poke-fb :run-pipeline :write :error))
 

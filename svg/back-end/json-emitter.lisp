@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass json-emitter (e/part:part) ())
+(defclass json-emitter (e/part:code) ())
 (defmethod e/part:busy-p ((self json-emitter)) (call-next-method))
 (defparameter *json-emitter-state* nil)
 
