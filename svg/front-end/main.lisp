@@ -156,11 +156,13 @@ So, for metadata, emit:
 (defun front-end-main (svg-filename)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
     (let ((temp1-str (with-output-to-string (s)
-                       (system:call-system-showing-output
-                        (format nil "~a <~a" command-svg-to-lisp svg-filename)
-                        :output-stream s
-                        :show-cmd nil
-                        :prefix ""))))
+                       (let ((status (system:call-system-showing-output
+                                      (format nil "~a <~a" command-svg-to-lisp svg-filename)
+                                      :output-stream s
+                                      :show-cmd nil
+                                      :prefix "")))
+                         (unless (zerop status)
+                           (error "~&call failed status=~a~%" status))))))
       ;; this is silly, but mimics the on-disk behaviour of the V2 compiler (which used temp files)
       ;; rewrite in the future
       (let ((lis (read-from-string temp1-str nil nil)))
