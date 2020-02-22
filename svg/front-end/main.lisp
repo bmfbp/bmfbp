@@ -156,6 +156,7 @@ So, for metadata, emit:
           #+nil(write-string-map "temp-string-map.lisp" "strings.sed" "unmap-sed.sed"))))))
 
 (defun front-end-main (svg-filename)
+  (setf *metadata-already-seen* nil)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
     (let ((temp1-str (with-output-to-string (s)
                        (let ((status (system:call-system-showing-output
