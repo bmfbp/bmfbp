@@ -1,5 +1,7 @@
 (in-package :arrowgrams/compiler)
 
+(defparameter *compiler-net* nil)
+
 (defclass compiler (e/part:part) ())
 (defmethod e/part:busy-p ((self compiler)) (call-next-method))
 
@@ -31,12 +33,13 @@
 	(compiler-event-passing filename map-filename output-filename)))))
 
 (defun new-main ()
-  (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/build_process.svg")))
+  ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/build_process.svg")))
+  (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/ide.svg")))
     (let ((map-filename nil))
       (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
 	(compiler-event-passing filename map-filename output-filename)))))
 
-(defun compiler-event-passing (filename map-filename output-filename)
+(defun get-compiler-net ()
 (format *standard-output* "~&in compiler-event-passing~%")
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
@@ -340,23 +343,26 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
 "
 
             ))))
+    compiler-net))
     
 
+(defun compiler-event-passing (filename map-filename output-filename)
+  (let ((compiler-net (get-compiler-net)))
     (e/util::enable-logging 1)
     #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (assert (null map-filename)) ;; new version does not use string mapping
     (@with-dispatch
-            (@enable-logging)
-            (@inject compiler-net
-                     (e/part::get-input-pin compiler-net :prolog-output-filename)
-                     output-filename)
-            (@inject compiler-net
-                     (e/part::get-input-pin compiler-net :svg-filename)
-                     filename)
-            #+nil(@inject compiler-net
-                     (e/part::get-input-pin compiler-net :dump)
-                     T))))
+      (@enable-logging)
+      (@inject compiler-net
+               (e/part::get-input-pin compiler-net :prolog-output-filename)
+               output-filename)
+      (@inject compiler-net
+               (e/part::get-input-pin compiler-net :svg-filename)
+               filename)
+      #+nil(@inject compiler-net
+                    (e/part::get-input-pin compiler-net :dump)
+                    T))))
 
 (defun ctest ()
   #+nil#(system:run-shell-command "rm -rf ~/.cache/common-lisp")
