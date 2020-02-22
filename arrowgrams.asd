@@ -233,3 +233,16 @@
 
                                                    ))))))
 
+
+
+(defsystem :arrowgrams/build
+
+  :depends-on (:arrowgrams :arrowgrams/compiler :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/part :sl :loops :cl-event-passing)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "arrowgrams-builder"
+                        :pathname "./build_process/cl-build/"
+                        :components ((:file "package")
+				     (:file "build" :depends-on ("package"))
+				     ))))
