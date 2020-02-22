@@ -236,7 +236,6 @@
 
 
 (defsystem :arrowgrams/build
-
   :depends-on (:arrowgrams :arrowgrams/compiler :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/part :sl :loops :cl-event-passing)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
@@ -244,5 +243,7 @@
   :components ((:module "arrowgrams-builder"
                         :pathname "./build_process/cl-build/"
                         :components ((:file "package")
-				     (:file "build" :depends-on ("package"))
+                                     (:file "json-array-splitter" :depends-on ("package"))
+                                     (:file "part-namer" :depends-on ("package"))
+				     (:file "build" :depends-on ("package" "part-namer" "json-array-splitter"))
 				     ))))
