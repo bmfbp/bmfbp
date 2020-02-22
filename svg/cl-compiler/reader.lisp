@@ -31,6 +31,10 @@
 (defun add-prolog-fact (self prolog-line)
   ;;ex. (cl-ppcre:regex-replace "(a)(b)(c)" "abc" (list 2 1 0)) --> "cba"
   (let ((rw1 (cl-ppcre:regex-replace "^([^\\(]+)\\(([^\\)]+)\\)\\." prolog-line (list "(" 0 " " 1 ")"))))
-    (let ((rw2 (cl-ppcre:regex-replace-all "," rw1 " ")))
+    (let ((rw2
+           (if (and (> (length prolog-line) 3)
+                    (string= "text" (subseq prolog-line 0 4)))
+               (cl-ppcre:regex-replace "," rw1 " ")
+             (cl-ppcre:regex-replace-all "," rw1 " "))))
       (@send self :string-fact rw2))))
 
