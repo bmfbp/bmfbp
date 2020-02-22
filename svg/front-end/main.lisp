@@ -1,5 +1,6 @@
 ;(in-package :arrowgrams/compiler/front-end)
 (in-package :cl-user)
+(defparameter *pname* "CL-USER")
 
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
@@ -128,30 +129,31 @@ So, for metadata, emit:
 
 (defun run (strm output-stream)
   (init-string-map)
-  (let ((lst (read strm nil nil)))
-    ;; bug fix
-    (let ((list (if
-                 (and
-                  (= 3 (length lst))
-                  (null (third lst))
-                  (listp (second lst)))
-		 (progn
-		   (format *error-output* "~%~%bug fixed in temp1.lisp~%~%")
-                   (cons (first lst) (second lst)))
-                 lst)))
-      ;; end bug fix
-      (assert (listp list) () "run not a list list=/~a/" list)
-      (let ((fixed 
-             (mapcar #'fix-translates
-		     (mapcar #'collapse-lines
-			     (mapcar #'fix-arrows
-				     (mapcar #'fix-lines
-					     (mapcar #'create-text-objects 
-						     list)))))))
-	(to-prolog fixed output-stream)
-;; this does nothing in the V3 front-end - it used to remove strings from the gprolog factbase in V2
-;; for V3, we simply leave the strings as strings - everything is handled in Lisp
-        #+nil(write-string-map "temp-string-map.lisp" "strings.sed" "unmap-sed.sed")))))
+  (let ((*package* (find-package *pname*)))
+    (let ((lst (read strm nil nil)))
+      ;; bug fix
+      (let ((list (if
+                      (and
+                       (= 3 (length lst))
+                       (null (third lst))
+                       (listp (second lst)))
+                      (progn
+                        (format *error-output* "~%~%bug fixed in temp1.lisp~%~%")
+                        (cons (first lst) (second lst)))
+                    lst)))
+        ;; end bug fix
+        (assert (listp list) () "run not a list list=/~a/" list)
+        (let ((fixed 
+               (mapcar #'fix-translates
+                       (mapcar #'collapse-lines
+                               (mapcar #'fix-arrows
+                                       (mapcar #'fix-lines
+                                               (mapcar #'create-text-objects 
+                                                       list)))))))
+          (to-prolog fixed output-stream)
+          ;; this does nothing in the V3 front-end - it used to remove strings from the gprolog factbase in V2
+          ;; for V3, we simply leave the strings as strings - everything is handled in Lisp
+          #+nil(write-string-map "temp-string-map.lisp" "strings.sed" "unmap-sed.sed"))))))
 
 (defun front-end-main (svg-filename)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
@@ -165,17 +167,18 @@ So, for metadata, emit:
                            (error "~&call failed status=~a~%" status))))))
       ;; this is silly, but mimics the on-disk behaviour of the V2 compiler (which used temp files)
       ;; rewrite in the future
-      (let ((lis (read-from-string temp1-str nil nil)))
-        (assert lis)
-        (let ((top-name (pathname-name svg-filename)))
-          (let ((new-lis (cons `(component ,top-name) lis)))
-            (let ((temp2-str (with-output-to-string (s)
-                               (write new-lis :stream s))))
-              (let ((instream (make-string-input-stream temp2-str)))
-                (let ((output-stream (make-string-output-stream)))
-                  (run instream output-stream)
-                  (let ((result-string (get-output-stream-string output-stream)))
-                    result-string))))))))))
+      (let ((*package* (find-package *pname*)))
+        (let ((lis (read-from-string temp1-str nil nil)))
+          (assert lis)
+          (let ((top-name (pathname-name svg-filename)))
+            (let ((new-lis (cons `(component ,top-name) lis)))
+              (let ((temp2-str (with-output-to-string (s)
+                                 (write new-lis :stream s))))
+                (let ((instream (make-string-input-stream temp2-str)))
+                  (let ((output-stream (make-string-output-stream)))
+                    (run instream output-stream)
+                    (let ((result-string (get-output-stream-string output-stream)))
+                      result-string)))))))))))
 
 ;;;; util.lisp
 
