@@ -48,8 +48,7 @@
 
          (:waiting-for-write
           (if (eq pin :finished-writing)
-              (progn
-                (@set self :state :idle))
+              (@set self :state :idle)
             (@send
              self
              :error
