@@ -49,7 +49,7 @@
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename) (:write-to-filename :poke-fb :run-pipeline :write :error :show))
-           (:schem compiler-testbed (:prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :dump) (:fb :go :error)
+           (:schem compiler-testbed (:prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :finished-pipeline) (:fb :go :error)
             ;; parts
             (reader fb writer convert-to-keywords sequencer)
             ;; wiring
@@ -58,7 +58,7 @@ self.prolog-factbase-string-stream -> reader.in-stream
 
 self.prolog-factbase-filename -> reader.file-name
 self.prolog-output-filename -> sequencer.prolog-output-filename
-self.dump -> sequencer.finished-pipeline
+self.finished-pipeline -> sequencer.finished-pipeline
 self.request-fb -> fb.fb-request
 self.retract-fact -> fb.retract
 
@@ -310,7 +310,7 @@ back-end-parser.error -> self.error
             ;; to massage the code and to supply a filename to the testbed
             (:code front-end (:svg-filename) (:output-string-stream :error))
            
-           (:schem compiler (:svg-filename :prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :dump) (:metadata :json :lisp :error)
+           (:schem compiler (:svg-filename :prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :finished-pipeline) (:metadata :json :lisp :error)
             ;; parts
             (front-end compiler-testbed passes back-end file-namer)
             ;; wiring
@@ -330,7 +330,7 @@ back-end.json -> self.json
 back-end.lisp -> self.lisp
 
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename
-self.dump -> compiler-testbed.dump
+self.finished-pipeline -> compiler-testbed.finished-pipeline
 
 compiler-testbed.go -> passes.go
 compiler-testbed.fb -> passes.fb
@@ -362,7 +362,7 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
                (e/part::get-input-pin compiler-net :svg-filename)
                filename)
       #+nil(@inject compiler-net
-                    (e/part::get-input-pin compiler-net :dump)
+                    (e/part::get-input-pin compiler-net :finished-pipeline)
                     T))))
 
 (defun ctest ()
