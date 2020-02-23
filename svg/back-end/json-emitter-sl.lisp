@@ -6,7 +6,7 @@
     "
 = <schematic>
                    '{' inc nl
-  <name>               '\"name\" : ' print-text ',' nl
+  <top-name>       '\"name\" : ' print-text ',' nl
   <kind>           '\"kindName\" : ' print-text ',' nl
   <metadata>       '\"metadata\" : ' print-text ',' nl
   <top-level-inputs>
@@ -20,7 +20,7 @@
 dec nl
 '}'
 
-= <name>
+= <top-name>
   :string
 
 = <metadata>

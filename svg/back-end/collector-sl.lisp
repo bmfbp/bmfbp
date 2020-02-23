@@ -7,6 +7,7 @@
 = <ir> 
                           schematic/open
   :lpar
+    <top-name>            schematic/set-name-from-string
     <kind>                schematic/set-kind-from-string
     <meta>                schematic/set-meta-from-string
     <inputs>              schematic/set-inputs-from-list list/pop
@@ -25,7 +26,8 @@
                           table/close-pop
   :rpar
                           schematic/close-pop
-
+= <top-name>
+  :string
 
 = <inputs>
                                         list/new

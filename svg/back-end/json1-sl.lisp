@@ -9,7 +9,10 @@
   (defparameter *json1-rules*
     "
 = <ir> 
-  :lpar                   '{' inc nl '\"name\" : \"self\",' nl
+  :lpar                   
+                          '{' inc nl '\"name\" : '
+    <top-name>
+                          ',' nl
     <kind>                
     <metadata>
                           '\"inputs\" : '
@@ -24,6 +27,9 @@
     <wiring>
                           nl dec '}'
   :rpar
+
+= <top-name>
+  :string                 print-text-as-symbol
 
 = <toplevel-inputs> 
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list-for-part-decl> :rpar dec ']']

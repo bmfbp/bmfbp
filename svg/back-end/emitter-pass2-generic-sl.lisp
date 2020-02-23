@@ -6,7 +6,7 @@
     "
 = <schematic>
 ' generic ' nl
-  <name> 
+  <top-name> 
   <kind>
   <metadata>
   <top-level-inputs>
@@ -16,7 +16,7 @@
   :integer
   <parts>
 
-= <name>
+= <top-name>
   :string
 
 = <metadata>

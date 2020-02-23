@@ -6,6 +6,7 @@
     "
 = <ir> 
   :lpar
+    <top-name>
     <kind>
     <metadata>
     <inputs> 
@@ -16,6 +17,8 @@
     <wiring>
   :rpar
 
+= <top-name>
+  :string
 
 = <inputs> 
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar <pin-list> :rpar]
