@@ -245,5 +245,8 @@
                         :components ((:file "package")
                                      (:file "json-array-splitter" :depends-on ("package"))
                                      (:file "part-namer" :depends-on ("package"))
-				     (:file "build" :depends-on ("package" "part-namer" "json-array-splitter"))
+                                     (:file "schematic-fetcher" :depends-on ("package"))
+                                     (:file "schematic-or-leaf" :depends-on ("package"))
+				     (:file "build" :depends-on ("package" "part-namer" "json-array-splitter" "schematic-fetcher"
+                                                                 "schematic-or-leaf"))
 				     ))))
