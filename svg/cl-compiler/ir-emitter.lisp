@@ -146,7 +146,7 @@
                         (let ((*print-right-margin* 120))
                           (pprint final f)))
                       (@send self :basename top-name)
-                      (@send self :ir final))))))))))))
+                      (@send self :ir (cons (symbol-name top-name) final)))))))))))))
 
 (defun replace-ellipse (id ellipse-list)
   (if (member id ellipse-list)

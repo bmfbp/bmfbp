@@ -30,6 +30,8 @@
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e) :name "lisp emitter")))
+              (debug-accept nil)
+              (debug-sl nil)
               (ir-lisp p)
               (@send self :out (get-output p))
               (setf (state self) :done)))))

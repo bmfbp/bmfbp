@@ -10,6 +10,7 @@
     "
 = <ir> 
   :lpar                   '(' inc
+    <top-name>
     <kind>                
     <metadata>
     <inputs>               nl
@@ -21,6 +22,8 @@
                           ')' dec
   :rpar
 
+= <top-name>
+  :string                 print-text-as-symbol
 
 = <inputs> 
   [ ?symbol :symbol symbol-must-be-nil  ' ()' | ?lpar :lpar inc ' (' <pin-list> :rpar dec ')']
