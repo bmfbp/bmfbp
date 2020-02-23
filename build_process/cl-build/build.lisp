@@ -36,7 +36,10 @@
             compile-single-diagram.graph -> self.graph
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
-            schematic-or-leaf.schematic-json-ref, schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
+            schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
+            schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
+
+            schematic-fetcher.filename -> compile-single-diagram.svg-filename
 
             compile-single-diagram.error, schematic-fetcher.error, schematic-or-leaf.error -> self.error 
             ")

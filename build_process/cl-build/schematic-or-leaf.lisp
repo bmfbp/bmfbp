@@ -1,6 +1,6 @@
 (in-package :arrowgrams/build)
 
-(defparameter *src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/clparts/"))
+(defparameter *src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/"))
 
 (defclass schematic-or-leaf (e/part:code)
   ())
@@ -21,15 +21,14 @@
          (let ((file-ref-alist (json:decode-json json-ref)))
            ;(format *standard-output* "~&file ref list ~S~%" file-ref-alist)
            (let ((file-ref (cdr (assoc :file file-ref-alist))))
-             (format *standard-output* "~&file ref ~S name ~S~%" file-ref (pathname-name file-ref))
-             (let ((fname (fixup-filename file-ref)))
+             (let ((fname (fixup-filename (pathname-name file-ref))))
                (let ((svg-filename (merge-pathnames (format nil "~a.svg" fname) *src-dir* )))
                  (if (probe-file svg-filename)
                      (@send self :schematic-json-ref svg-filename)
                    (let ((lisp-filename (merge-pathnames (format nil "~a.lisp" fname) *src-dir*)))
                      (if (probe-file lisp-filename)
                          (@send self :leaf-json-ref lisp-filename)
-                       (@send self :error (format nil "no file /~s/ or /~s/~%" svg-filename lisp-filename)))))))))))))
+                       (@send self :error (format nil "no file /~s/ (.svg or .lisp)" fname))))))))))))) 
     
 
 (defun fixup-filename (s)
