@@ -49,14 +49,13 @@
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename) (:write-to-filename :poke-fb :run-pipeline :write :error :show))
-           (:schem compiler-testbed (:prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :request-fb :add-fact :retract-fact :done :finished-pipeline) (:fb :go :error)
+           (:schem compiler-testbed (:prolog-factbase-string-stream :prolog-output-filename :request-fb :add-fact :retract-fact :done :finished-pipeline) (:fb :go :error)
             ;; parts
             (reader fb writer convert-to-keywords sequencer)
             ;; wiring
 "
 self.prolog-factbase-string-stream -> reader.in-stream
 
-self.prolog-factbase-filename -> reader.file-name
 self.prolog-output-filename -> sequencer.prolog-output-filename
 self.finished-pipeline -> sequencer.finished-pipeline
 self.request-fb -> fb.fb-request
@@ -330,7 +329,6 @@ back-end.json -> self.json
 back-end.lisp -> self.lisp
 
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename
-self.finished-pipeline -> compiler-testbed.finished-pipeline
 
 compiler-testbed.go -> passes.go
 compiler-testbed.fb -> passes.fb
