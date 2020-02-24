@@ -50,7 +50,8 @@
                (29 (@send self (e/part::get-output-pin self :o29) T))
                (30 
 		(format *standard-output* "~&demux done~%")
-		(e/part::first-time self)))))
+		(e/part::first-time self)
+		(@send self (e/part::get-output-pin self :finished-pipeline) T)))))
          (@send
             self
             :error

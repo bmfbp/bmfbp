@@ -113,7 +113,7 @@ convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error
 	   (:code ir-emitter (:fb :go) (:ir :basename :done :request-fb :error))
 
 
-           (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error))
+           (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :finished-pipeline :error))
 
            (:schem passes (:fb :step) (:ir :basename :request-fb :add-fact :retract-fact :done-step :finished-pipeline :error)
             ;; parts
@@ -165,9 +165,9 @@ ellipse-bounding-boxes.done,
                assign-wire-numbers-to-edges.done,
                self-input-pins.done,
               self-output-pins.done,
-              input-pins.done,output-pins.done -> self.done-step
+              input-pins.done,output-pins.done,ir-emitter.done
+ -> self.done-step
 
-               ir-emitter.done -> self.finished-pipeline
 
             demux.o1 -> ellipse-bounding-boxes.go
              demux.o2 -> rectangle-bounding-boxes.go
@@ -198,6 +198,8 @@ ellipse-bounding-boxes.done,
              demux.o27 -> input-pins.go
              demux.o28 -> output-pins.go
              demux.o29 -> ir-emitter.go
+
+             demux.finished-pipeline -> self.finished-pipeline
 
              ellipse-bounding-boxes.error,rectangle-bounding-boxes.error,text-bounding-boxes.error,speechbubble-bounding-boxes.error,assign-parents-to-ellipses.error,find-comments.error,find-metadata.error,add-kinds.error,add-self-ports.error,make-unknown-port-names.error,create-centers.error,calculate-distances.error,assign-portnames.error,mark-indexed-ports.error,coincident-ports.error,mark-directions.error,match-ports-to-components.error,pinless.error,sem-parts-have-some-ports.error,sem-ports-have-sink-or-source.error,sem-no-duplicate-kinds.error,sem-speech-vs-comments.error,assign-wire-numbers-to-edges.error,self-input-pins.error,self-output-pins.error,input-pins.error,output-pins.error,ir-emitter.error,demux.error
    -> self.error
