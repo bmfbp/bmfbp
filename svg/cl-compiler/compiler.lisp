@@ -167,7 +167,7 @@ ellipse-bounding-boxes.done,
               self-output-pins.done,
               input-pins.done,output-pins.done -> self.done-step
 
-               ir-emitter.done -> self.finished-pipeline, self.done-step
+               ir-emitter.done -> self.finished-pipeline
 
             demux.o1 -> ellipse-bounding-boxes.go
              demux.o2 -> rectangle-bounding-boxes.go
@@ -316,6 +316,8 @@ back-end-parser.error -> self.error
             ;; wiring
             
 "
+passes.finished-pipeline -> compiler-testbed.finished-pipeline
+
 self.svg-filename -> front-end.svg-filename
 front-end.output-string-stream -> compiler-testbed.prolog-factbase-string-stream
 
