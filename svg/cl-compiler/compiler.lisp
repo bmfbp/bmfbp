@@ -49,7 +49,7 @@
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename) (:write-to-filename :poke-fb :run-pipeline :write :error :show))
-           (:schem compiler-testbed (:prolog-factbase-string-stream :prolog-output-filename :request-fb :add-fact :retract-fact :done :finished-pipeline) (:fb :go :error)
+           (:schem compiler-testbed (:prolog-factbase-string-stream :prolog-output-filename :request-fb :add-fact :retract-fact :done-step :finished-pipeline) (:fb :step :error)
             ;; parts
             (reader fb writer convert-to-keywords sequencer)
             ;; wiring
@@ -69,7 +69,7 @@ convert-to-keywords.converted, self.add-fact -> fb.lisp-fact
 convert-to-keywords.done -> sequencer.finished-reading
 
 sequencer.show -> fb.show
-sequencer.run-pipeline, self.done -> self.go
+sequencer.run-pipeline, self.done-step -> self.step
 sequencer.write -> fb.iterate, writer.start
 sequencer.write-to-filename -> writer.filename
 
@@ -115,7 +115,7 @@ convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error
 
            (:code demux (:go) (:o1 :o2 :o3 :o4 :o5 :o6 :o7 :o8 :o9 :o10 :o11 :o12 :o13 :o14 :o15 :o16 :o17 :o18 :o19 :o20 :o21 :o22 :o23 :o24 :o25 :o26 :o27 :o28 :o29 :error))
 
-           (:schem passes (:fb :go) (:ir :basename :request-fb :add-fact :retract-fact :done :error)
+           (:schem passes (:fb :step) (:ir :basename :request-fb :add-fact :retract-fact :done-step :finished-pipeline :error)
             ;; parts
             (ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes assign-parents-to-ellipses
                         find-comments find-metadata add-kinds add-self-ports
@@ -129,7 +129,7 @@ convert-to-keywords.error, writer.error, fb.error, reader.error, sequencer.error
              ir-emitter.ir -> self.ir
              ir-emitter.basename -> self.basename
 
-             self.go -> demux.go
+             self.step -> demux.go
 
              self.fb -> ellipse-bounding-boxes.fb,rectangle-bounding-boxes.fb,text-bounding-boxes.fb,speechbubble-bounding-boxes.fb,assign-parents-to-ellipses.fb,find-comments.fb,find-metadata.fb,add-kinds.fb,add-self-ports.fb,make-unknown-port-names.fb,create-centers.fb,calculate-distances.fb,assign-portnames.fb,mark-indexed-ports.fb,coincident-ports.fb,mark-directions.fb,mark-nc.fb,match-ports-to-components.fb,pinless.fb,sem-parts-have-some-ports.fb,sem-ports-have-sink-or-source.fb,sem-no-duplicate-kinds.fb,sem-speech-vs-comments.fb,assign-wire-numbers-to-edges.fb,self-input-pins.fb,self-output-pins.fb,input-pins.fb,output-pins.fb,ir-emitter.fb
 
@@ -165,8 +165,9 @@ ellipse-bounding-boxes.done,
                assign-wire-numbers-to-edges.done,
                self-input-pins.done,
               self-output-pins.done,
-              input-pins.done,output-pins.done,ir-emitter.done
--> self.done
+              input-pins.done,output-pins.done -> self.done-step
+
+               ir-emitter.done -> self.finished-pipeline, self.done-step
 
             demux.o1 -> ellipse-bounding-boxes.go
              demux.o2 -> rectangle-bounding-boxes.go
@@ -330,13 +331,13 @@ back-end.lisp -> self.lisp
 
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename
 
-compiler-testbed.go -> passes.go
+compiler-testbed.step -> passes.step
 compiler-testbed.fb -> passes.fb
 
 passes.request-fb -> compiler-testbed.request-fb
 passes.add-fact -> compiler-testbed.add-fact
 passes.retract-fact -> compiler-testbed.retract-fact
-passes.done -> compiler-testbed.done
+passes.done-step -> compiler-testbed.done-step
 
 compiler-testbed.error, passes.error, back-end.error -> self.error
 "
