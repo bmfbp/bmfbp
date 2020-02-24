@@ -26,7 +26,7 @@
                (@send self :generic-filename (@get self :generic-filename))
                (@send self :lisp-filename (@get self :lisp-filename))
                (@send self :ir (@get self :ir))
-               (@set self :state :done))))
+               (e/part:first-time self))))
       (ecase (@get self :state)
         (:idle
          (ecase pin
@@ -40,6 +40,6 @@
             (run-if-ready))))
          
          (:done
-          (@send
-           self :error
-           (format nil "synchronizer in state :done expected <nothing>, but got action ~S data ~S" pin (e/event:data e))))))))
+          (let ((msg (format nil "synchronizer in state :done expected <nothing>, but got action ~S data ~S" pin (e/event:data e))))
+            (@send self :error msg)
+            (format *standard-output* "~&~s~%" msg)))))))
