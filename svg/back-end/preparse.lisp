@@ -40,7 +40,7 @@
             (if (eq :EOF (token-text tok))
                 (progn
                   (@send self :out (reverse *preparse-token-stream*))
-                  (setf *preparse-state* :done))
+                  (e/part:first-time self))
               (progn
                 (push tok *preparse-token-stream*)
                 (unless (token-pulled-p tok)
