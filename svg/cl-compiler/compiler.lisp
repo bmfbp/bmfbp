@@ -310,7 +310,7 @@ back-end-parser.error -> self.error
             ;; to massage the code and to supply a filename to the testbed
             (:code front-end (:svg-filename) (:output-string-stream :error))
            
-           (:schem compiler (:svg-filename :prolog-factbase-string-stream :map-filename :prolog-factbase-filename :prolog-output-filename :finished-pipeline) (:metadata :json :lisp :error)
+           (:schem compiler (:svg-filename :prolog-output-filename) (:metadata :json :lisp :error)
             ;; parts
             (front-end compiler-testbed passes back-end file-namer)
             ;; wiring
