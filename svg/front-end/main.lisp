@@ -165,7 +165,7 @@ So, for metadata, emit:
                                       :show-cmd nil
                                       :prefix "")))
                          (unless (zerop status)
-                           (error "~&call failed status=~a~%" status))))))
+                           (error "~&call failed status=~a (~a <~a)~%" status command-svg-to-lisp svg-filename))))))
       ;; this is silly, but mimics the on-disk behaviour of the V2 compiler (which used temp files)
       ;; rewrite in the future
       (let ((*package* (find-package *pname*)))
