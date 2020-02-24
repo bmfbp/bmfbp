@@ -45,15 +45,17 @@
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
            (:code reader (:file-name :in-stream) (:string-fact :eof :error))
-           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show) (:fb :next :no-more :error))
+           (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show :reset) (:fb :next :no-more :error))
            (:code writer (:filename :start :next :no-more) (:request :error))
            (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
            (:code sequencer (:finished-reading :finished-pipeline :finished-writing :prolog-output-filename) (:write-to-filename :poke-fb :run-pipeline :write :error :show))
-           (:schem compiler-testbed (:prolog-factbase-string-stream :prolog-output-filename :request-fb :add-fact :retract-fact :done-step :finished-pipeline) (:fb :step :error)
+           (:schem compiler-testbed (:prolog-factbase-string-stream :prolog-output-filename :request-fb :add-fact :retract-fact :done-step :finished-pipeline :reset) (:fb :step :error)
             ;; parts
             (reader fb writer convert-to-keywords sequencer)
             ;; wiring
 "
+self.reset -> fb.reset
+
 self.prolog-factbase-string-stream -> reader.in-stream
 
 self.prolog-output-filename -> sequencer.prolog-output-filename
@@ -318,7 +320,7 @@ back-end-parser.error -> self.error
             ;; wiring
             
 "
-passes.finished-pipeline -> compiler-testbed.finished-pipeline
+passes.finished-pipeline -> compiler-testbed.finished-pipeline,compiler-testbed.reset
 
 self.svg-filename -> front-end.svg-filename
 front-end.output-string-stream -> compiler-testbed.prolog-factbase-string-stream
