@@ -32,7 +32,4 @@
               (debug-accept nil)
               (ir-generic p)
               (@send self :out (get-output p))
-              (setf *emitter-state* :done)))))
-        
-        (:done
-         (debug-tok :error (format nil "generic parser done, but got ") tok))))))
+              (e/part::first-time self)))))))))

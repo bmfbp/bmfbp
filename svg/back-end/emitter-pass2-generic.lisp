@@ -37,7 +37,4 @@
                 (debug-accept nil)
                 (debug-sl nil)
                 (@send self :out (get-output p))
-                (setf *emitter-pass2-generic-state* :done))))))
-        
-        (:done
-         (@send self :error (format nil "generic emitter pass2 done, but received input~%")))))))
+                (e/part::first-time self))))))))))

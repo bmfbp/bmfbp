@@ -34,7 +34,4 @@
               (debug-sl nil)
               (ir-lisp p)
               (@send self :out (get-output p))
-              (setf (state self) :done)))))
-        
-        (:done
-         (debug-tok :error (format nil "lisp emitter done, but got ") tok))))))
+              (e/part::first-time self)))))))))
