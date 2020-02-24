@@ -8,12 +8,11 @@
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:in) (:out))
-           (:schem compile-single-diagram (:svg-filename :finished-pipeline) (:name :json-file-ref :json-graph :lisp :error)
+           (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :json-graph :lisp :error)
             (compiler part-namer json-array-splitter)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
-            self.finished-pipeline -> compile-single-diagram.finished-pipeline
 
             compiler.metadata -> json-array-splitter.in
             compiler.json -> self.json-graph
@@ -28,29 +27,28 @@
            (:code schematic-fetcher (:json-ref) (:filename :error))
            (:code schematic-or-leaf (:json-ref) (:schematic-json-ref :leaf-json-ref :error))
 
+           ;self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
            (:schem build (:svg-filename) (:name :graph :leaf-json-ref :error)
-            (compile-single-diagram schematic-fetcher schematic-or-leaf)
+            (compile-single-diagram schematic-or-leaf)
             "
-            self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
+            self.svg-filename -> compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
-            compile-single-diagram.json-graph -> self.graph,compile-single-diagram.finished-pipeline
+            compile-single-diagram.json-graph -> self.graph
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
             schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
 
-            schematic-fetcher.filename -> compile-single-diagram.svg-filename
-
-            compile-single-diagram.error, schematic-fetcher.error, schematic-or-leaf.error -> self.error 
+            compile-single-diagram.error, schematic-or-leaf.error -> self.error 
             ")
 
 	   )))
 
     (@with-dispatch
       (@enable-logging)
-      (@inject build-net
-               (e/part::get-input-pin build-net :svg-filename)
-               filename))))
+      (let ((pin (e/part::get-input-pin build-net :svg-filename)))
+        (@inject build-net pin filename)
+        (@inject build-net pin filename)))))
     
 (defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-process.svg")))
