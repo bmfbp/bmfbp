@@ -51,6 +51,8 @@
                 (if (eq action :get-next)
                     (@set self :state :idle)
                   (idle-handler action state)))
+	       (:reset
+		(e/part::first-time self))
                (:iterating
 		(if (eq action :get-next)
 		    (send-next self)
