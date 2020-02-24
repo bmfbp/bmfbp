@@ -31,13 +31,12 @@
            (:schem build (:svg-filename) (:name :graph :leaf-json-ref :error)
             (compile-single-diagram schematic-fetcher schematic-or-leaf)
             "
-            self.svg-filename ->compile-single-diagram.svg-filename
+            self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
             compile-single-diagram.json-graph -> self.graph,compile-single-diagram.finished-pipeline
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
-            schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
             schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
 
             schematic-fetcher.filename -> compile-single-diagram.svg-filename
@@ -54,7 +53,7 @@
                filename))))
     
 (defun btest ()
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/kk/ide.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-process.svg")))
 
 (defun cl-user::btest ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
