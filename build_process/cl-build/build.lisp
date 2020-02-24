@@ -8,14 +8,15 @@
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:in) (:out))
-           (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :graph :lisp :error)
+           (:schem compile-single-diagram (:svg-filename :finished-pipeline) (:name :json-file-ref :json-graph :lisp :error)
             (compiler part-namer json-array-splitter)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
+            self.finished-pipeline -> compile-single-diagram.finished-pipeline
 
             compiler.metadata -> json-array-splitter.in
-            compiler.json -> self.graph
+            compiler.json -> self.json-graph
 
             json-array-splitter.out -> self.json-file-ref
             part-namer.out -> self.name
@@ -33,7 +34,7 @@
             self.svg-filename ->compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
-            compile-single-diagram.graph -> self.graph
+            compile-single-diagram.json-graph -> self.graph,compile-single-diagram.finished-pipeline
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
             schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
