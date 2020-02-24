@@ -38,7 +38,4 @@
                 (@send self :metadata (metadata schem))
                 (unparse-schematic p schem)
                 (@send self :out (uget-unparsed-token-stream p))
-                (setf *collector-state* :done))))))
-        
-        (:done
-         (debug-tok :error (format nil "generic parser done, but got ") tok))))))
+                (e/part::first-time self))))))))))
