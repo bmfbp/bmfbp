@@ -48,7 +48,9 @@
                (27 (@send self (e/part::get-output-pin self :o27) T))
                (28 (@send self (e/part::get-output-pin self :o28) T))
                (29 (@send self (e/part::get-output-pin self :o29) T))
-               (30 (format *standard-output* "~&demux done~%")))))
+               (30 
+		(format *standard-output* "~&demux done~%")
+		(e/part::first-time self)))))
          (@send
             self
             :error
