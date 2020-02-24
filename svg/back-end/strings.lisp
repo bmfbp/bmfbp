@@ -60,7 +60,7 @@
           (if (eof-p)
               (progn
                 (forward-token)
-                (next-state :done))
+		(e/part:first-time self))
             (if (start-char-p)
                 (progn
                   (push-char-into-buffer)
@@ -98,6 +98,4 @@
             (progn
               (push-char-into-buffer)
               (pull)
-              (next-state :collecting-string))))))
-      (:done
-       (@send self :error (format nil "strings finished, but received ~S" e))))))
+              (next-state :collecting-string)))))))))

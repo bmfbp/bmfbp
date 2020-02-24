@@ -48,7 +48,7 @@
           (if (eof-p)
               (progn
                 (forward-token)
-                (next-state :done))
+		(e/part:first-time self))
             (if (start-char-p)
                 (progn
                   (push-char-into-buffer)
@@ -70,7 +70,6 @@
               (progn
                 (release-and-clear-buffer)
                 (forward-token :pulled-p t)
-                (next-state :idle)))))))
-      (:done
-       (@send self :error (format nil "integers finished, but received ~S" e))))))
+                (next-state :idle))))))))))
+
 
