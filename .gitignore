@@ -72,3 +72,7 @@ svg/cl-compiler/BUILD_PROCESS.lisp
 svg/cl-compiler/COMPILE-COMPOSITE.lisp
 
 svg/cl-compiler/IDE.lisp
+
+svg/cl-compiler/BUILD-PROCESS.json
+
+svg/cl-compiler/BUILD-PROCESS.lisp
