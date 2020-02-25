@@ -1,26 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass calculate-distances (e/part:code) ())
+(defclass calculate-distances (compiler-part) ())
 (defmethod e/part:busy-p ((self calculate-distances)) (call-next-method))
 (defmethod e/part:clone ((self calculate-distances)) (call-next-method))
 
 ; (:code CALCULATE-DISTANCES (:fb :go) (:add-fact :done :request-fb :error)
 
 (defmethod e/part:first-time ((self calculate-distances))
-  (@set self :state :idle)
-  )
+  (call-next-method))
 
 (defmethod e/part:react ((self calculate-distances) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -33,7 +32,7 @@
              (format *standard-output* "~&calculate-distances COMMENTED OUT~%")
              ;(calculate-distances self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part::first-time self))
          (@send
           self
           :error
@@ -43,6 +42,6 @@
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (@get self :fb)))
+          (fb self)))
         (goal '((:calculate_distances_main))))
     (arrowgrams/compiler/util::run-prolog self goal fb)))

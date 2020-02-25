@@ -1,25 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass assign-portnames (e/part:code) ())
+(defclass assign-portnames (compiler-part) ())
 (defmethod e/part:busy-p ((self assign-portnames)) (call-next-method))
 (defmethod e/part:clone ((self assign-portnames)) (call-next-method))
 
 ; (:code ASSIGN-PORTNAMES (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self assign-portnames))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self assign-portnames) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,11 +28,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&assign-portnames~%")
              (assign-portnames self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part::first-time self))
          (@send
           self
           :error
@@ -62,26 +62,26 @@
                (destructuring-bind (id str closest)
                    text-id-str-closest
                  (declare (ignore closest))
-                 (arrowgrams/compiler/util::asserta self (list :portNameByID port id) nil nil nil nil nil nil nil)
-                 (arrowgrams/compiler/util::asserta self (list :portName port str) nil nil nil nil nil nil nil)))
+                 (asserta self (list :portNameByID port id) nil nil nil nil nil nil nil)
+                 (asserta self (list :portName port str) nil nil nil nil nil nil nil)))
            h))
 
 (defmethod find-all-nameless-port-bounding-boxes ((self assign-portnames))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (@get self :fb))))
+          (fb self)))
     (let ((goal '((:collect_nameless_ports (:? portid) (:? left) (:? top) (:? right) (:? bottom)))))
-      (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+      (let ((results (run-prolog self goal fb)))
         results))))
 
 (defmethod find-all-unused-text-bounding-boxes ((self assign-portnames))
   (let ((fb
          (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb))))
+          *rules*
+          (fb self))))
     (let ((goal '((:collect_unused_text (:? textid) (:? str) (:? left) (:? top) (:? right) (:? bottom)))))
-      (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+      (let ((results (run-prolog self goal fb)))
         results))))
 
 (defmethod get-port-details ((self assign-portnames) alist)

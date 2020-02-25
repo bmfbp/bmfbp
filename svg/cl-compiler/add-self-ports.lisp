@@ -1,21 +1,21 @@
 
 (in-package :arrowgrams/compiler)
-(defclass add-self-ports (e/part:code) ())
+(defclass add-self-ports (compiler-part) ())
 (defmethod e/part:busy-p ((self add-self-ports)) (call-next-method))
 (defmethod e/part:clone ((self add-self-ports)) (call-next-method))
 
 ; (:code ADD-SELF-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self add-self-ports))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self add-self-ports) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
@@ -32,7 +32,7 @@
              (format *standard-output* "~&add-self-ports~%")
              (create-self-ports self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error

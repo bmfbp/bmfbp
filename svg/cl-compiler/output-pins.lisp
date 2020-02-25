@@ -1,25 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass output-pins (e/part:code) ())
+(defclass output-pins (compiler-part) ())
 (defmethod e/part:busy-p ((self output-pins)) (call-next-method))
 (defmethod e/part:clone ((self output-pins)) (call-next-method))
 
 ; (:code OUTPUT-PINS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self output-pins))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self output-pins) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,11 +28,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&output-pins~%")
              (output-pins self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -41,7 +41,7 @@
 (defmethod output-pins ((self output-pins))
   (let ((fb
          (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb)))
+          *rules*
+          (fb self)))
         (goal '((:source_rect (:? E)))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))

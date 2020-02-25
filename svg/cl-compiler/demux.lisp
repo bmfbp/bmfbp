@@ -1,24 +1,24 @@
 (in-package :arrowgrams/compiler)
 
-(defclass demux (e/part:code) ())
+(defclass demux (compiler-part)
+  ((counter :accessor counter)))
+
 (defmethod e/part:busy-p ((self demux)) (call-next-method))
 (defmethod e/part:clone ((self demux)) (call-next-method))
 
 (defmethod e/part:first-time ((self demux))
-  (@set self :counter 0)
-  (@set self :state :idle))
+  (setf (counter self) 0)
+  (call-next-method)
 
 (defmethod e/part:react ((self demux) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if  (eq pin :go)
            (progn
-	     (let ((counter (@get self :counter)))
-               (incf counter)
-	       (@set self :counter counter)
-             (ecase counter
+             (incf (counter self))
+             (ecase (counter self)
                (1 (@send self (e/part::get-output-pin self :o1) T))
                (2 (@send self (e/part::get-output-pin self :o2) T))
                (3 (@send self (e/part::get-output-pin self :o3) T))

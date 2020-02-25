@@ -1,25 +1,25 @@
 (in-package :arrowgrams/compiler)
 
-(defclass ellipse-bounding-boxes (e/part:code) ())
+(defclass ellipse-bounding-boxes (compiler-part) ())
 (defmethod e/part:busy-p ((self ellipse-bounding-boxes)) (call-next-method))
 (defmethod e/part:clone ((self ellipse-bounding-boxes)) (call-next-method))
 ; (:code ellipse-bb (:fb :go) (:add-fact :done :request-fb :error)
 
 (defmethod e/part:first-time ((self ellipse-bounding-boxes))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self ellipse-bounding-boxes) e)
   (let ((pin (@pin self e))
         (data (@data self e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (send-rules self)
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -29,10 +29,10 @@
        (if (eq pin :fb)
            (progn
              (format *standard-output* "~&ellipse-bounding-boxes~%")
-             (@set self :fb data)
+             (setf (fb self) data)
              (make-bounding-boxes self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -49,7 +49,7 @@
                               (:geometry_center_y (:? id) (:? cy))
                               (:geometry_w (:? id) (:? hw))
                               (:geometry_h (:? id) (:? hh)))))
-    (let ((fb (cons bounding-box-rules (@get self :fb))))
+    (let ((fb (cons bounding-box-rules (fb self))))
       (let ((r (hprolog:prove nil '((:ellipse-geometry (:? eid) (:? cx) (:? cy) (:? hw) (:? hh))) fb hprolog:*empty* 1 nil fb nil self)))
         (mapcar #'(lambda (lis)
                     (assert (= 5 (length lis)))

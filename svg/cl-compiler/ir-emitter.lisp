@@ -1,24 +1,24 @@
 (in-package :arrowgrams/compiler)
 
-(defclass ir-emitter (e/part:code) ())
+(defclass ir-emitter (compiler-part) ())
 (defmethod e/part:busy-p ((self ir-emitter)) (call-next-method))
 (defmethod e/part:clone ((self ir-emitter)) (call-next-method))
 ; (:code IR-EMITTER (:fb :go) (:ir :basename :add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self ir-emitter))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self ir-emitter) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -27,11 +27,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&emitter~%")
              (emitter self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -40,8 +40,8 @@
 (defmethod emitter ((self ir-emitter))
   (let ((fb
          (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb)))
+          *rules*
+          (fb self)))
         (parts (make-hash-table :test 'equal))
         (wires nil)
         (ellipses nil))

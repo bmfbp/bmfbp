@@ -2,7 +2,7 @@
 
 (defparameter *compiler-net* nil)
 
-(defclass compiler (e/part:code) ())
+(defclass compiler (compiler-part) ())
 (defmethod e/part:busy-p ((self compiler)) (call-next-method))
 (defmethod e/part:clone ((self compiler)) (call-next-method))
 

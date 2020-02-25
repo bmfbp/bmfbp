@@ -4,15 +4,5 @@
    #:main
    #:get-compiler-net))
 
-(defpackage :arrowgrams/compiler/util
-  (:use :cl :cl-event-passing-user))
-
-(defpackage :arrowgrams/compiler/classes
-  (:use :cl :cl-event-passing-user))
-
-(defpackage :arrowgrams/compiler/front-end
-  (:use :cl :cl-event-passing-user))
-
-
 
 

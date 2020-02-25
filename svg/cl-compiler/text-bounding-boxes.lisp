@@ -1,12 +1,9 @@
 (in-package :arrowgrams/compiler)
 
-(defclass text-bounding-boxes (e/part:code) ())
+(defclass text-bounding-boxes (compiler-part) ())
 (defmethod e/part:busy-p ((self text-bounding-boxes)) (call-next-method))
 (defmethod e/part:clone ((self text-bounding-boxes)) (call-next-method))
 ; (:code text-bb (:fb :go) (:add-fact :done :request-fb :error))
-
-(defmethod e/part:first-time ((self text-bounding-boxes))
-  (@set self :state :idle))
 
 (defmethod e/part:react ((self text-bounding-boxes) e)
   (let ((pin (@pin self e))
@@ -14,7 +11,7 @@
     (ecase (@get self :state)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
@@ -27,11 +24,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&text-bounding-boxes~%")
              (text-bb-make-bounding-boxes self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error

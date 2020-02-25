@@ -1,25 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass sem-ports-have-sink-or-source (e/part:code) ())
+(defclass sem-ports-have-sink-or-source (compiler-part) ())
 (defmethod e/part:busy-p ((self sem-ports-have-sink-or-source)) (call-next-method))
 (defmethod e/part:clone ((self sem-ports-have-sink-or-source)) (call-next-method))
 
 ; (:code SEM-PORTS-HAVE-SINK-OR-SOURCE (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self sem-ports-have-sink-or-source))
-  (@set self :state :idle))
+  (call-next-method)
 
 (defmethod e/part:react ((self sem-ports-have-sink-or-source) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,11 +28,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&sem-ports-have-sink-or-source~%")
              ;; put code here
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
