@@ -8,7 +8,7 @@
 ; (:code strings (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defmethod strings-get-ordered-buffer ((self strings))
-  (coerce (reverse (buffer self) 'string))
+  (coerce (reverse (buffer self) 'string)))
 
 (defmethod strings-put-buffer ((self strings) item)
   (push item (buffer self)))

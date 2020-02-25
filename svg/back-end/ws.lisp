@@ -2,20 +2,20 @@
 
 (defclass ws (compiler-part)
   ((buffer :accessor buffer)
-   (position :accessor position)))
+   (tposition :accessor tposition)))
 
 (defmethod e/part:busy-p ((self ws)) (call-next-method))
 ; (:code ws (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defun clear-buffer (pos)
   (setf (buffer self) nil)
-  (setf (position self) pos))
+  (setf (tposition self) pos))
 
 (defun push-char-into-buffer (c)
-  (push c *ws-buffer*))
+  (push c (buffer self)))
 
-(defun get-buffer () (coerce (reverse *ws-buffer*) 'string))
-(defun get-position () *ws-position*)
+(defmethod get-buffer ((self ws)) (coerce (reverse (buffer self)) 'string))
+(defmethod get-position ((self ws)) (tposition self))
 
 (defmethod e/part:first-time ((self ws))
   (clear-buffer 0)
@@ -29,11 +29,11 @@
                (e/part:first-time self)))
            (forward-token () (@send self :out (@data self e)))
            (release-buffer ()
-             (let ((ws-token (make-token :kind :ws :text (get-buffer) :position (get-position))))
+             (let ((ws-token (make-token :kind :ws :text (get-buffer self) :position (get-position self))))
                (clear-buffer (token-position (e/event::data e)))
                (@send self :out ws-token)
                (forward-token)
-               (e/part:first-time self)))
+               (e/part:first-time self))))
     (let ((tok (e/event:data e)))
       (format *standard-output* "~&ws ~s kind=~s pos=~s text=~s~%" (state self) (token-kind tok) (token-position tok) (token-text tok)))
     (let ((tok (e/event:data e)))
@@ -65,6 +65,4 @@
                      (release-buffer)
                      (check-eof)))))
                (t (release-buffer)
-                  (check-eof))))
-        (:done
-         (@send self :error (format nil "ws done, but received ~S" tok)))))))
+                  (check-eof))))))))

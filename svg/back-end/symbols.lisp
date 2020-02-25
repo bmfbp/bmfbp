@@ -7,7 +7,7 @@
 (defmethod e/part:busy-p ((self symbols)) (call-next-method))
 ; (:code symbols (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defun symbols-get-buffer () (coerce (reverse (buffer self) 'string))
+(defun symbols-get-buffer () (coerce (reverse (buffer self) 'string)))
 (defun symbols-get-position () (start-position self))
 
 (defmethod e/part:first-time ((self symbols))

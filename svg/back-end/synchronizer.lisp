@@ -29,7 +29,7 @@
                (@send self :lisp-filename (lisp-filename self))
                (@send self :ir (ir self))
                (e/part:first-time self))))
-      (ecase (@get self :state)
+      (ecase (state self)
         (:idle
          (ecase pin
            (:ir (setf (ir self) (e/event:data e))

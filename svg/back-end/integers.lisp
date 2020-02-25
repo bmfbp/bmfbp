@@ -3,18 +3,18 @@
 (defclass integers (compiler-part)
   ((buffer :accessor buffer)
    (start-position :accessor start-position)
-   (token-pulled-p :accessor token-pulled-p)))
+   (ttoken-pulled-p :accessor ttoken-pulled-p)))
 
 (defmethod e/part:busy-p ((self integers)) (call-next-method))
 ; (:code integers (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defun integers-get-buffer () (coerce (reverse (buffer self) 'string))
+(defun integers-get-buffer () (coerce (reverse (buffer self) 'string)))
 (defun integers-get-position () (start-position self))
 
 (defmethod e/part:first-time ((self integers))
   (setf (buffer self) nil)
   (setf (start-position self) 0)
-  (setf (token-pulled-p self) nil)
+  (setf (ttoken-pulled-p self) nil)
   (call-next-method))
 
 (defmethod e/part:react ((self integers) (e e/event:event))

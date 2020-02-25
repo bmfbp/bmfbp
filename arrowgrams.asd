@@ -110,9 +110,7 @@
 				     (:file "parser" :depends-on ("../cl-compiler/package" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
                                                                   "generic-emitter" "collector" "lisp-emitter" "json1-emitter"
-                                                                  "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))
-
-				     (:file "wiring" :depends-on ("../cl-compiler/package"))))))
+                                                                  "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))))))
 
 
 ;;;; 

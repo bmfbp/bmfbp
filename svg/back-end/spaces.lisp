@@ -2,18 +2,18 @@
 
 (defclass spaces (e/part:code)
   ((buffer :accessor buffer)
-   (position :accessor position)))
+   (tposition :accessor tposition)))
 
 (defmethod e/part:busy-p ((self spaces)) (call-next-method))
 
 ; (:code spaces (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defmethod spaces-get-position ((self spaces))
-  (position self))
+  (tposition self))
 
 (defmethod e/part:first-time ((self spaces))
   (setf (buffer self) nil)
-  (setf (position self) 0)
+  (setf (tposition self) 0)
   (call-next-method))
 
 (defmethod e/part:react ((self spaces) (e e/event:event))
@@ -34,7 +34,7 @@
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
              (setf (buffer self) nil)
-	     (setf (position self) (token-position (e/event:data e))))
+	     (setf (tposition self) (token-position (e/event:data e))))
            (release-buffer ()
              (@send self :out (make-token :kind :ws :text " " :position (spaces-get-position self) :pulled-p t)))
            (release-and-clear-buffer ()

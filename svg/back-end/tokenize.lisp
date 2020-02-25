@@ -1,13 +1,13 @@
 (in-package :arrowgrams/compiler)
 
 (defclass tokenize (compiler-part)
-  ((position :accesssor position)
+  ((tposition :accessor tposition)
    (stream :accessor stream)))
 
 (defmethod e/part:busy-p ((self tokenize)) (call-next-method))
 
 (defmethod e/part:first-time ((self tokenize))
-  (setf (position self) 0)
+  (setf (tposition self) 0)
   (setf (stream self) nil)
   (call-next-method))
 
@@ -19,22 +19,22 @@
        (:start
         (let ((str (alexandria:read-file-into-string (e/event:data e))))
 	  (setf (stream self) (make-string-input-stream str))
-	  (setf (position self) 0)
+	  (setf (tposition self) 0)
 	  (setf (state self) :running)))
        (:ir
         (let ((str (write-to-string (e/event:data e))))
 	  (setf (stream self) (make-string-input-stream str))
-	  (setf (position self) 0)
-	  (setf (state self):running)))))
+	  (setf (tposition self) 0)
+	  (setf (state self) :running)))))
 
     (:running
      (ecase (e/event::sym e)
        (:pull
         #+nil(format *standard-output* "~&tokenize in state running gets :pull ~S~%" (e/event:data e))
         (let ((c (read-char (stream self) nil :EOF)))
-          (incf (position self))
+          (incf (tposition self))
           (let ((reached-eof (eq :EOF c)))
-            (let ((tok (make-token :position (@get self :position)
+            (let ((tok (make-token :position (tposition self)
 				   :kind (if reached-eof :EOF :character) :text c)))
               (@send self :out tok)
               (when reached-eof

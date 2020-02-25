@@ -1,11 +1,11 @@
 (in-package :arrowgrams/compiler)
 
-(class dumper (compiler-part) ()
+(defclass dumper (compiler-part) ())
 
-(defmethod first-time ((self dumper)
+(defmethod e/part:first-time ((self dumper))
   (call-next-method))
 
-(defmethod react ((self dumper) (e e/event:event))
+(defmethod e/part:react ((self dumper) (e e/event:event))
   ;(format *standard-output* "~&dumper ~S   ~S ~S~%" *dumper-state* (e/event::sym e) (e/event:data e))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
