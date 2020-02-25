@@ -24,7 +24,9 @@
              (let ((fname (fixup-filename (pathname-name file-ref))))
                (let ((svg-filename (merge-pathnames (format nil "~a.svg" fname) *src-dir* )))
                  (if (probe-file svg-filename)
-                     (@send self :schematic-json-ref svg-filename)
+                     (progn
+                       (@send self :schematic-json-ref svg-filename)
+                       (format *standard-output* "~&schematic >>> ~s~%" svg-filename))
                    (let ((lisp-filename (merge-pathnames (format nil "~a.lisp" fname) *src-dir*)))
                      (if (probe-file lisp-filename)
                          (@send self :leaf-json-ref lisp-filename)

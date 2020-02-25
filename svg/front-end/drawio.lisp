@@ -10,6 +10,7 @@
   (set (state self) :idle))
 
 (defmethod compiler-part-run ((self front-end) e)
+(format *standard-output* "~&drawio ~s ~S~%" (@pin self e) (@data self e))
   (ecase (state self)
     (:idle
      (let ((filename (cl-event-passing-user:@data self e)))
