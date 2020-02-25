@@ -76,3 +76,5 @@ svg/cl-compiler/IDE.lisp
 svg/cl-compiler/BUILD-PROCESS.json
 
 svg/cl-compiler/BUILD-PROCESS.lisp
+
+svg/cl-compiler/COMPILE_COMPOSITE.json
