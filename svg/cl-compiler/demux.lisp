@@ -8,7 +8,7 @@
 
 (defmethod e/part:first-time ((self demux))
   (setf (counter self) 0)
-  (call-next-method)
+  (call-next-method))
 
 (defmethod e/part:react ((self demux) e)
   (let ((pin (e/event::sym e))
@@ -51,8 +51,8 @@
                (30 
 		(format *standard-output* "~&demux done~%")
 		(e/part::first-time self)
-		(@send self (e/part::get-output-pin self :finished-pipeline) T)))))
+		(@send self (e/part::get-output-pin self :finished-pipeline) T))))
          (@send
-            self
-            :error
-            (format nil "DEMUX in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))))
+          self
+          :error
+          (format nil "DEMUX in state :idle expected :fb or :go, but got action ~S data ~S" pin (e/event:data e))))))))

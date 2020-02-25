@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass file-writer (e/part:code)
+(defclass file-writer (compiler-part)
   ((filename :accessor filename)))
 
 (defclass generic-file-writer (file-writer) ())

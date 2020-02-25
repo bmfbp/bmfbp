@@ -1,14 +1,14 @@
 (in-package :arrowgrams/compiler)
 
-(defclass symbols (e/part:code)
+(defclass symbols (compiler-part)
   ((buffer :accessor buffer)
    (start-position :accessor start-position)))
 
 (defmethod e/part:busy-p ((self symbols)) (call-next-method))
 ; (:code symbols (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defun symbols-get-buffer () (coerce (reverse (buffer self) 'string)))
-(defun symbols-get-position () (start-position self))
+(defmethod symbols-get-buffer ((self symbols)) (coerce (reverse (buffer self)) 'string))
+(defmethod symbols-get-position ((self symbols)) (start-position self))
 
 (defmethod e/part:first-time ((self symbols))
   (setf (buffer self) nil)
@@ -37,7 +37,7 @@
              (setf (buffer self) nil)
              (setf (start-position self) (token-position (e/event:data e))))
            (release-buffer ()
-             (@send self :out (make-token :kind :symbol :text (symbols-get-buffer) :position (symbols-get-position) :pulled-p t)))
+             (@send self :out (make-token :kind :symbol :text (symbols-get-buffer self) :position (symbols-get-position self) :pulled-p t)))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))

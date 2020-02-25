@@ -6,7 +6,7 @@
 (defmethod e/part:busy-p ((self preparse)) (call-next-method))
 
 (defmethod e/part:first-time ((self preparse))
-  (setf (token-stream self) nil)
+  (setf (stream self) nil)
   (call-next-method))
 
 (defmethod e/part:react ((self preparse) (e e/event:event))
@@ -39,9 +39,9 @@
            (:token
             (if (eq :EOF (token-text tok))
                 (progn
-                  (@send self :out (reverse (token-stream self)))
+                  (@send self :out (reverse (stream self)))
                   (e/part:first-time self))
               (progn
-                (push tok (token-stream self))
+                (push tok (stream self))
                 (unless (token-pulled-p tok)
                   (pull :preparse2)))))))))))

@@ -8,8 +8,8 @@
 (defmethod e/part:busy-p ((self integers)) (call-next-method))
 ; (:code integers (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defun integers-get-buffer () (coerce (reverse (buffer self) 'string)))
-(defun integers-get-position () (start-position self))
+(defmethod integers-get-buffer ((self integers)) (coerce (reverse (buffer self)) 'string))
+(defmethod integers-get-position ((self integers)) (start-position self))
 
 (defmethod e/part:first-time ((self integers))
   (setf (buffer self) nil)
@@ -36,7 +36,7 @@
              (setf (buffer self) nil)
              (setf (start-position self) (token-position (e/event:data e))))
            (release-buffer ()
-             (@send self :out (make-token :kind :integer :text (integers-get-buffer) :position (integers-get-position) :pulled-p t)))
+             (@send self :out (make-token :kind :integer :text (integers-get-buffer self) :position (integers-get-position self) :pulled-p t)))
            (release-and-clear-buffer ()
              (release-buffer)
              (clear-buffer))

@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass spaces (e/part:code)
+(defclass spaces (compiler-part)
   ((buffer :accessor buffer)
    (tposition :accessor tposition)))
 

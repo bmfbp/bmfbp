@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass synchronizer (e/part:code)
+(defclass synchronizer (compiler-part)
   ((json-filename :accessor json-filename)
    (generic-filename :accessor generic-filename)
    (lisp-filename :accessor lisp-filename)

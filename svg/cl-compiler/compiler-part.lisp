@@ -9,6 +9,7 @@
 
 (defmethod e/part:first-time ((self compiler-part))
   (setf (fb self) nil)
+  (setf (state self) :idle)
   (call-next-method))
 
 

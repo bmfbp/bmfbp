@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass file-namer (e/part:code) ())
+(defclass file-namer (compiler-part) ())
 
 (defmethod e/part:busy-p ((self file-namer)) (call-next-method))
 
@@ -26,5 +26,5 @@
              (@send self :lisp-filename lispf)))
 
            (@send self :error
-                                         (format nil "file-namer in state :idle expected :basename, but got action ~S data ~S" pin (e/event:data e))))))))
+                  (format nil "file-namer in state :idle expected :basename, but got action ~S data ~S" pin (e/event:data e))))))))
 
