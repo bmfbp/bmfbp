@@ -39,9 +39,13 @@
                            (progn
                              (begin-iteration self)
                              (@set self :state :iterating))
-                         (@send self :error
-                                (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e))))))))))))
-  
+                         (if (eq action :reset)
+                             (progn
+                               (format *standard-output* "~&FB RESET~%")
+                               (e/part::first-time self))
+                           (@send self :error
+                                  (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e)))))))))))))
+         
            (let ((action (@pin self e))
                  (state (@get self :state)))    
              (ecase state
@@ -51,8 +55,6 @@
                 (if (eq action :get-next)
                     (@set self :state :idle)
                   (idle-handler action state)))
-	       (:reset
-		(e/part::first-time self))
                (:iterating
 		(if (eq action :get-next)
 		    (send-next self)
