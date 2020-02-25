@@ -1,12 +1,12 @@
 (in-package :arrowgrams/compiler)
 
-(defclass json1-emitter (e/part:code) 
-  ((state :accessor state)))
+(defclass json1-emitter (compiler-part) 
+  ())
 
 (defmethod e/part:busy-p ((self json1-emitter)) (call-next-method))
 
 (defmethod e/part:first-time ((self json1-emitter))
-  (setf (state self) :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self json1-emitter) (e e/event:event))
   (let ((tok (e/event::data e))

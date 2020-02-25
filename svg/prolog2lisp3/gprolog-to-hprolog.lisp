@@ -228,9 +228,9 @@
    ((eq (car x) :readfb)
     `(:lisp (arrowgrams/compiler::true)))
    ((eq (car x) :asserta)
-    `(:lisp-method (arrowgrams/compiler/util::asserta ,(second x))))
+    `(:lisp-method (arrowgrams/compiler::asserta ,(second x))))
    ((eq (car x) :retract)
-    `(:lisp-method (arrowgrams/compiler/util::retract ,(second x))))
+    `(:lisp-method (arrowgrams/compiler::retract ,(second x))))
    
    ((eq (car x) :prolog_not_proven)
     (let ((clause (second x)))

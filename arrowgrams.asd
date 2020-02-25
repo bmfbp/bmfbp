@@ -110,9 +110,7 @@
 				     (:file "parser" :depends-on ("../cl-compiler/package" "token" "tokenize" "strings" "ws"
                                                                   "symbols" "integers" "spaces" "preparse" "file-writer"
                                                                   "generic-emitter" "collector" "lisp-emitter" "json1-emitter"
-                                                                  "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))
-
-				     (:file "wiring" :depends-on ("../cl-compiler/package"))))))
+                                                                  "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))))))
 
 
 ;;;; 
@@ -147,54 +145,56 @@
                         :pathname "./svg/cl-compiler/"
                         :components ((:file "package")
                                      (:file "classes" :depends-on ("package"))
-                                     (:file "fb" :depends-on ("package" "util"))
-                                     (:file "sequencer" :depends-on ("package"))
-                                     (:file "unmapper" :depends-on ("package"))
-                                     (:file "reader" :depends-on ("package"))
-                                     (:file "writer" :depends-on ("package"))
-                                     (:file "convert-to-keywords" :depends-on ("package"))
-                                     (:file "ellipse-bounding-boxes" :depends-on ("package"))
-                                     (:file "rectangle-bounding-boxes" :depends-on ("package"))
-                                     (:file "speechbubble-bounding-boxes" :depends-on ("package"))
-                                     (:file "text-bounding-boxes" :depends-on ("package"))
-                                     (:file "assign-parents-to-ellipses" :depends-on ("package"))
-                                     (:file "util" :depends-on ("package"))
+				     (:file "compiler-part" :depends-on ("package" "classes"))
 
-                                     (:file "rules" :depends-on ("package"))
+                                     (:file "fb" :depends-on ("compiler-part" "util"))
+                                     (:file "sequencer" :depends-on ("compiler-part"))
+                                     (:file "unmapper" :depends-on ("compiler-part"))
+                                     (:file "reader" :depends-on ("compiler-part"))
+                                     (:file "writer" :depends-on ("compiler-part"))
+                                     (:file "convert-to-keywords" :depends-on ("compiler-part"))
+                                     (:file "ellipse-bounding-boxes" :depends-on ("compiler-part"))
+                                     (:file "rectangle-bounding-boxes" :depends-on ("compiler-part"))
+                                     (:file "speechbubble-bounding-boxes" :depends-on ("compiler-part"))
+                                     (:file "text-bounding-boxes" :depends-on ("compiler-part"))
+                                     (:file "assign-parents-to-ellipses" :depends-on ("compiler-part"))
+                                     (:file "util" :depends-on ("compiler-part"))
 
-                                     (:file "demux" :depends-on ("package"))
-                                     (:file "find-comments" :depends-on ("package" "classes"))
-                                     (:file "find-metadata" :depends-on ("package" "classes" "util"))
-                                     (:file "add-kinds" :depends-on ("package" "classes" "rules"))
-                                     (:file "add-self-ports" :depends-on ("package" "classes" "rules"))
-                                     (:file "create-centers" :depends-on ("package" "rules"))
-                                     (:file "calculate-distances" :depends-on ("package" "rules"))
-                                     (:file "make-unknown-port-names" :depends-on ("package" "classes"))
-                                     (:file "closest" :depends-on ("package" "classes"))
-                                     (:file "assign-portnames" :depends-on ("package" "classes" "closest"))
-                                     (:file "mark-indexed-ports" :depends-on ("package" "classes"))
-                                     (:file "coincident-ports" :depends-on ("package" "classes"))
-                                     (:file "mark-directions" :depends-on ("package" "classes"))
-                                     (:file "mark-nc" :depends-on ("package" "classes"))
-                                     (:file "match-ports-to-components" :depends-on ("package" "classes"))
-                                     (:file "pinless" :depends-on ("package" "classes"))
-                                     (:file "sem-parts-have-some-ports" :depends-on ("package" "classes"))
-                                     (:file "sem-ports-have-sink-or-source" :depends-on ("package" "classes"))
-                                     (:file "sem-no-duplicate-kinds" :depends-on ("package" "classes"))
-                                     (:file "sem-speech-vs-comments" :depends-on ("package" "classes"))
-                                     (:file "assign-wire-numbers-to-edges" :depends-on ("package" "classes" "rules-util" "util"))
-                                     (:file "self-input-pins" :depends-on ("package" "classes"))
-                                     (:file "self-output-pins" :depends-on ("package" "classes"))
-                                     (:file "input-pins" :depends-on ("package" "classes"))
-                                     (:file "output-pins" :depends-on ("package" "classes"))
+                                     (:file "rules" :depends-on ("compiler-part"))
 
-                                     (:file "ir-emitter" :depends-on ("package" "classes"))
+                                     (:file "demux" :depends-on ("compiler-part"))
+                                     (:file "find-comments" :depends-on ("compiler-part"))
+                                     (:file "find-metadata" :depends-on ("compiler-part" "util"))
+                                     (:file "add-kinds" :depends-on ("compiler-part" "rules"))
+                                     (:file "add-self-ports" :depends-on ("compiler-part" "rules"))
+                                     (:file "create-centers" :depends-on ("compiler-part" "rules"))
+                                     (:file "calculate-distances" :depends-on ("compiler-part" "rules"))
+                                     (:file "make-unknown-port-names" :depends-on ("compiler-part"))
+                                     (:file "closest" :depends-on ("compiler-part"))
+                                     (:file "assign-portnames" :depends-on ("compiler-part" "closest"))
+                                     (:file "mark-indexed-ports" :depends-on ("compiler-part"))
+                                     (:file "coincident-ports" :depends-on ("compiler-part"))
+                                     (:file "mark-directions" :depends-on ("compiler-part"))
+                                     (:file "mark-nc" :depends-on ("compiler-part"))
+                                     (:file "match-ports-to-components" :depends-on ("compiler-part"))
+                                     (:file "pinless" :depends-on ("compiler-part"))
+                                     (:file "sem-parts-have-some-ports" :depends-on ("compiler-part"))
+                                     (:file "sem-ports-have-sink-or-source" :depends-on ("compiler-part"))
+                                     (:file "sem-no-duplicate-kinds" :depends-on ("compiler-part"))
+                                     (:file "sem-speech-vs-comments" :depends-on ("compiler-part"))
+                                     (:file "assign-wire-numbers-to-edges" :depends-on ("compiler-part" "rules-util" "util"))
+                                     (:file "self-input-pins" :depends-on ("compiler-part"))
+                                     (:file "self-output-pins" :depends-on ("compiler-part"))
+                                     (:file "input-pins" :depends-on ("compiler-part"))
+                                     (:file "output-pins" :depends-on ("compiler-part"))
 
-                                     (:file "rules-util" :depends-on ("package"))
+                                     (:file "ir-emitter" :depends-on ("compiler-part"))
+
+                                     (:file "rules-util" :depends-on ("compiler-part"))
 
 
                                      (:file "compiler"
-                                      :depends-on ("package" "classes"
+                                      :depends-on ("package" "classes" "compiler-part"
                                                    "reader" "unmapper" "fb" "writer" "convert-to-keywords" "sequencer"
                                                    "ellipse-bounding-boxes" "rectangle-bounding-boxes"
                                                    "speechbubble-bounding-boxes" "text-bounding-boxes"

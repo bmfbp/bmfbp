@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass sequencer (e/part:code)
+(defclass sequencer (compiler-part)
   ((prolog-output-filename :accessor prolog-output-filename)))
 
 (defmethod e/part:busy-p ((self sequencer)) (call-next-method))
@@ -12,19 +12,18 @@
 
 (defmethod e/part:first-time ((self sequencer))
   (setf (prolog-output-filename self) nil)
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self sequencer) e)
   (let ((pin (@pin self e))
         (string-fact (@data self e))
         (new-list nil))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (cond ((eq pin :finished-reading)
               (@send self :poke-fb t)
               (@send self :run-pipeline t)
-             ;(@send self :show t)
-              (@set self :state :waiting-for-pipeline))
+              (setf (state self) :waiting-for-pipeline))
              ((eq pin :prolog-output-filename)
               (@send self :write-to-filename (@data self e))
               (setf (prolog-output-filename self) (@data self e)))
@@ -39,8 +38,8 @@
               (if (writing-p self)
                   (progn
                     (@send self :write t)
-                    (@set self :state :waiting-for-write))
-                (@set self :state :idle))
+                    (setf (state self) :waiting-for-write))
+                (e/part:first-time self))
             (@send
              self
              :error
@@ -48,7 +47,7 @@
 
          (:waiting-for-write
           (if (eq pin :finished-writing)
-              (@set self :state :idle)
+              (e/part:first-time self)
             (@send
              self
              :error

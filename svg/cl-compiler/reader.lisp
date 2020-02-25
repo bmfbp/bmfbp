@@ -4,10 +4,10 @@
 
 ; (:code reader (:file-name) (:string-fact :eof :error))
 
-(defmethod compiler-part-initially ((self reader))
-  )
+(defmethod e/part:first-time ((self reader))
+  (call-next-method))
   
-(defmethod compiler-part-run ((self reader) (e e/event:event))
+(defmethod e/part:react ((self reader) (e e/event:event))
   (ecase (@pin self e)
     (:file-name
      (read-prolog-fb self (@data self e)))

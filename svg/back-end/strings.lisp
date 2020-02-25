@@ -1,27 +1,28 @@
 (in-package :arrowgrams/compiler)
 
-(defclass strings (e/part:code) ())
+(defclass strings (compiler-part)
+  ((buffer :accessor buffer)
+   (start-position :accessor start-position)))
+
 (defmethod e/part:busy-p ((self strings)) (call-next-method))
 ; (:code strings (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defmethod strings-get-ordered-buffer ((self strings))
-  (coerce (reverse (@get self :buffer))
-          'string))
+  (coerce (reverse (buffer self)) 'string))
 
 (defmethod strings-put-buffer ((self strings) item)
-  (let ((buffer (@get self :buffer)))
-    (@set self :buffer (cons item buffer))))
+  (push item (buffer self)))
 
 (defmethod strings-get-position ((self strings))
-  (@get self :start-position))
+  (start-position self))
 
 (defmethod strings-clear-buffer ((self strings))
-  (@set self :buffer nil))
+  (setf (buffer self) nil))
 
 (defmethod e/part:first-time ((self strings))
-  (@set self :state :idle)
-  (@set self :start-position 0)
-  (strings-clear-buffer self))
+  (setf (start-position self) 0)
+  (strings-clear-buffer self)
+  (call-next-method))
 
 (defmethod e/part:react ((self strings) (e e/event:event))
   (labels ((push-char-into-buffer () (strings-put-buffer self (token-text (e/event:data e))))
@@ -40,7 +41,7 @@
                (let ((c (token-text (e/event:data e))))
                  (char= c #\\))))
            (action () (e/event::sym e))
-           (next-state (x) (@set self :state x))
+           (next-state (x) (setf (state self) x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
              (strings-clear-buffer self))
@@ -51,9 +52,7 @@
              (clear-buffer))
          )
 
-    #+nil(format *standard-output* "~&strings in state ~S gets ~S ~S~%" (@get self :state)
-                 (token-kind (e/event:data e)) (token-text (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (ecase (action)
          (:token

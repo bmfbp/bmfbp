@@ -1,25 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass add-kinds (e/part:code) ())
+(defclass add-kinds (compiler-part) ())
 (defmethod e/part:busy-p ((self add-kinds)) (call-next-method))
 (defmethod e/part:clone ((self add-kinds)) (call-next-method))
 
 ; (:code ADD-KINDS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self add-kinds))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self add-kinds) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,11 +28,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&add-kinds~%")
              (add-kinds self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -49,54 +49,12 @@
 ;;
 ;; used always refers to a text-id, e.g. text(text-id,str-id)
 
-#+nil (defmethod old-add-kinds ((self add-kinds))
-  (let ((add-kinds-rule '(
-                          (:add-kinds (:? box-id))
-                          (:rect (:? box-id))
-                          (:bounding_box_left (:? box-id) (:? bL))
-                          (:bounding_box_top (:? box-id) (:? bT))
-                          (:bounding_box_right (:? box-id) (:? bR))
-                          (:bounding_box_bottom (:? box-id) (:? bB))
-                          (:text (:? text-id) (:? str-id))
-                          (:bounding_box_left (:? text-id) (:? tL))
-                          (:bounding_box_top (:? text-id) (:? tT))
-                          (:not-used (:? text-id))
-                          (:lisp (text-completely-inside-box (:? text-id) (:? tL) (:? tT)
-                                                             (:? box-id) (:? bL) (:? bT) (:? bR) (:? bB)))
-                          (:lisp (arrowgrams/compiler/util::asserta (:used (:? text-id))))
-                          (:lisp (arrowgrams/compiler/util::asserta (:kind (:? box-id) (:? text-id))))
-                          )
-                        ))
-    (let ((not-used-rule1 '(
-                            (:not-used (:? text-id))
-                            (:used (:? text-id))
-                            :!
-                            :fail)
-                          )
-          )
-      (let ((not-used-rule2 '(
-                              (:not-used (:? text-id))
-                              )
-                            ))
-        (let ((fb (cons not-used-rule1 ;; order matters!
-                        (cons not-used-rule2
-                              (cons add-kinds-rule (@get self :fb))))))
-          (arrowgrams/compiler/util::run-prolog self '((:add-kinds (:? box-id))) fb))))))
-      
-
 (defmethod add-kinds ((self add-kinds))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (@get self :fb)))
+          (fb self)))
        ;(goal '((:trace-on 1) (:add_kinds_main))))
         (goal '((:add_kinds_main))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))
 
-#+nil (defmethod add-kinds ((self add-kinds))
-  (let ((fb
-         (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb)))
-        (goal '((:printall))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))

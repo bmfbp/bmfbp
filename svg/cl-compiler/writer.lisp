@@ -1,49 +1,52 @@
 (in-package :arrowgrams/compiler)
 
-(defclass writer (e/part:code) ())
+(defclass writer (compiler-part)
+  ((filename :accessor filename)
+   (stream :accessor stream)))
+
 (defmethod e/part:busy-p ((self writer)) (call-next-method))
 (defmethod e/part:clone ((self writer)) (call-next-method))
 ; (:code writer (:filename :start :next :no-more) (:request :error))
 
 (defmethod e/part:first-time ((self writer))
-  (@set self :state :idle)
-  (@set self :filename nil)
-  (@set self :stream *standard-output*))
+  (setf (filename self) nil)
+  (setf (stream self) *standard-output*)
+  (call-next-method))
 
 (defmethod e/part:react ((self writer) (e e/event:event))
   (let ((action (e/event::sym e))
-        (state (@get self :state)))
+        (state (state self)))
     (ecase state
       (:idle
        (ecase action
          (:filename
-          (@set self :filename (e/event:data e))
+          (setf (filename self) (e/event:data e))
           (open-stream self))
          
          (:start
           (@send self :request t)
-          (@set self :state :writing))))
+          (setf (state self) :writing))))
 
       (:writing
        (ecase action
          (:no-more
           (close-stream self)
-          (@set self :state :idle))
+          (e/part:first-time self))
          (:next
           (write-fact self (e/event:data e))
           (@send self :request t)))))))
 
 (defmethod open-stream ((self writer))
-  (let ((filename (@get self :filename)))
+  (let ((filename (filename self)))
     (when filename
       (let ((stream (open filename :direction :output :if-exists :supersede)))
         (if stream
-            (@set self :stream stream)
+            (setf (stream self) stream)
           (@send self :error (format nil "can't open file ~S" filename)))))))
 
 (defmethod close-stream ((self writer))
-  (let ((filename (@get self :filename))
-        (stream (@get self :stream)))
+  (let ((filename (filename self))
+        (stream (stream self)))
     (when (and filename
                stream
                (not (eq *standard-output* stream)))
@@ -51,7 +54,7 @@
   
 
 (defmethod write-fact ((self writer) lfact)
-  (let ((stream (@get self :stream)))
+  (let ((stream (stream self)))
     (unless (listp lfact)
       (@send self :error (format nil "facts must be a list, but got ~S" lfact)))
     (let ((fact (car lfact)))

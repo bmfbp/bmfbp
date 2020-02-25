@@ -1,6 +1,6 @@
 (in-package :arrowgrams/compiler)
 
-(defclass convert-to-keywords (e/part:code) ())
+(defclass convert-to-keywords (compiler-part) ())
 
 ; (:code convert-to-keywords (:string-fact :eof) (:done :converted :error))
 
@@ -12,7 +12,8 @@
 (defmethod e/part:clone ((self convert-to-keywords))
   (call-next-method))
 
-(defmethod e/part:first-time ((self convert-to-keywords)))
+(defmethod e/part:first-time ((self convert-to-keywords))
+  (call-next-method))
 
 (defmethod e/part:react ((self convert-to-keywords) e)
   (let ((pin (@pin self e))

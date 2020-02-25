@@ -1,11 +1,10 @@
 (in-package :arrowgrams/compiler)
 
-(defclass json-emitter (e/part:code) ())
+(defclass json-emitter (compiler-part) ())
 (defmethod e/part:busy-p ((self json-emitter)) (call-next-method))
-(defparameter *json-emitter-state* nil)
 
 (defmethod e/part:first-time ((self json-emitter))
-  (setf *json-emitter-state* :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self json-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -24,7 +23,7 @@
                      (token-kind tok)
                      (token-position tok)
                      (if (member (token-kind tok) no-print) "." (token-text tok)))))
-      (ecase *json-emitter-state*
+      (ecase (state self)
         (:idle
          (ecase (e/event::sym e)
            

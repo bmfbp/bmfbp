@@ -1,25 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass find-metadata (e/part:code) ())
+(defclass find-metadata (compiler-part) ())
 (defmethod e/part:busy-p ((self find-metadata)) (call-next-method))
 (defmethod e/part:clone ((self find-metadata)) (call-next-method))
 
 ; (:code FIND-METADATA (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self find-metadata))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self find-metadata) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,21 +28,18 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&find-metadata~%")
              (find-metadata self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
           (format nil "FIND-METADATA in state :waiting-for-new-fb expected :fb, but got action ~S data ~S" pin (e/event:data e))))))))
 
 (defmethod find-metadata ((self find-metadata))
-  (let ((fb
-         (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb)))
+  (let ((fb (append *rules* (fb self)))
         (goal '((:find_metadata_main))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))
 

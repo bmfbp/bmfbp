@@ -1,25 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass add-self-ports (e/part:code) ())
+(defclass add-self-ports (compiler-part) ())
 (defmethod e/part:busy-p ((self add-self-ports)) (call-next-method))
 (defmethod e/part:clone ((self add-self-ports)) (call-next-method))
 
 ; (:code ADD-SELF-PORTS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self add-self-ports))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self add-self-ports) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,11 +28,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&add-self-ports~%")
              (create-self-ports self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -45,7 +45,7 @@
 
   (let ((fb
          (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb)))
+          *rules*
+          (fb self)))
         (goal '((:add_selfports_main))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))

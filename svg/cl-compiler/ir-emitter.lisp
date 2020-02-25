@@ -1,24 +1,24 @@
 (in-package :arrowgrams/compiler)
 
-(defclass ir-emitter (e/part:code) ())
+(defclass ir-emitter (compiler-part) ())
 (defmethod e/part:busy-p ((self ir-emitter)) (call-next-method))
 (defmethod e/part:clone ((self ir-emitter)) (call-next-method))
 ; (:code IR-EMITTER (:fb :go) (:ir :basename :add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self ir-emitter))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self ir-emitter) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -27,11 +27,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&emitter~%")
              (emitter self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -40,31 +40,31 @@
 (defmethod emitter ((self ir-emitter))
   (let ((fb
          (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb)))
+          *rules*
+          (fb self)))
         (parts (make-hash-table :test 'equal))
         (wires nil)
         (ellipses nil))
 
     (let ((goal '((:match_top_name (:? N)))))
-      (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+      (let ((result (run-prolog self goal fb)))
         (unless (and (listp result) (= 1 (length (car result))))
           (error "~&rule :match_top-name failed"))
         (let ((top-name (cdr (assoc 'N (car result)))))
           (let ((goal '((:fetch_metadata (:? ID) (:? TextID) (:? Str)))))
-            (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+            (let ((result (run-prolog self goal fb)))
               (let (( metadata (cdr (assoc 'Str (car result))))
                     (inputs nil)
                     (outputs nil))
                 (let ((goal '((:find_self_input_pins (:? PortID) (:? Strid)))))
-                  (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+                  (let ((results (run-prolog self goal fb)))
                     (dolist (result results)
                       (let ((id (cdr (assoc 'PortID result)))
                             (strid (cdr (assoc 'Strid result))))
                         (declare (ignore id))
                         (pushnew strid inputs)))))
                 (let ((goal '((:find_self_output_pins (:? PortID) (:? Strid)))))
-                  (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+                  (let ((results (run-prolog self goal fb)))
                     (dolist (result results)
                       (let ((id (cdr (assoc 'PortID result)))
                             (strid (cdr (assoc 'Strid result))))
@@ -73,7 +73,7 @@
                 (setf (gethash :self parts) `(:id self :name ,top-name :metadata ,metadata :inputs ,inputs :outputs ,outputs)))))
 
           (let ((goal '((:find_ellipse (:? E)))))
-            (let ((result (arrowgrams/compiler/util::run-prolog self goal fb)))
+            (let ((result (run-prolog self goal fb)))
               (mapc #'(lambda (lecons)
                         (assert (and (listp lecons) (= 1 (length lecons))))
                         (let ((econs (car lecons)))
@@ -81,7 +81,7 @@
                     result)))
           
           (let ((goal '((:find_parts (:? ID) (:? Strid)))))
-            (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+            (let ((results (run-prolog self goal fb)))
               (dolist (result results)
                 (let ((id (cdr (assoc 'ID result)))
                       (str (cdr (assoc 'Strid result))))
@@ -89,7 +89,7 @@
           
           
           (let ((goal '((:find_part_input_pins (:? RectID) (:? PortID) (:? Strid)))))
-            (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+            (let ((results (run-prolog self goal fb)))
               (dolist (result results)
                 (let ((rectid (cdr (assoc 'RectID result)))
                       (PortID (cdr (assoc 'PortID result)))
@@ -103,7 +103,7 @@
                       (setf (gethash rectid parts) `(:id ,rectid :kind ,kind :inputs ,(pushnew strid inputs) :outputs ,outputs))))))))
           
           (let ((goal '((:find_part_output_pins (:? RectID) (:? PortID) (:? Strid)))))
-            (let ((results (arrowgrams/compiler/util::run-prolog self goal fb)))
+            (let ((results (run-prolog self goal fb)))
               (dolist (result results)
                 (let ((rectid (cdr (assoc 'RectID result)))
                       (PortID (cdr (assoc 'PortID result)))
@@ -117,7 +117,7 @@
                       (setf (gethash rectid parts) `(:id ,id :kind ,kind :inputs ,inputs :outputs ,(pushnew strid outputs)))))))))
           
           (let ((goal '((:find_wire (:? RectID1) (:? PortID1) (:? PortName1) (:? RectID2) (:? PortID2) (:? PortName2)))))
-            (let ((results (arrowgrams/compiler/util::run-prolog self goal fb))
+            (let ((results (run-prolog self goal fb))
                   (edges nil))
               (dolist (result results)
                 (let ((rectid1 (cdr (assoc 'RectID1 result)))

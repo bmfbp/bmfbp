@@ -1,13 +1,11 @@
 (in-package :arrowgrams/compiler)
 
-(defclass collector (e/part:code) ())
+(defclass collector (compiler-part) ())
 (defmethod e/part:busy-p ((self collector)) (call-next-method))
 ; (:code collector (:parse) (:out :metadata :error))
 
-(defparameter *collector-state* nil)
-
 (defmethod e/part:first-time ((self collector))
-  (setf *collector-state* :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self collector) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -26,7 +24,7 @@
                                            (token-kind tok)
                                            (token-position tok)
                                            (if (member (token-kind tok) no-print) "." (token-text tok)))))))
-      (ecase *collector-state*
+      (ecase (state self)
         (:idle
          (ecase (e/event::sym e)
            (:parse

@@ -1,23 +1,24 @@
 (in-package :arrowgrams/compiler)
 
-(defclass spaces (e/part:code) ())
+(defclass spaces (compiler-part)
+  ((buffer :accessor buffer)
+   (tposition :accessor tposition)))
+
 (defmethod e/part:busy-p ((self spaces)) (call-next-method))
 
 ; (:code spaces (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
 (defmethod spaces-get-position ((self spaces))
-  (@get self :position))
+  (tposition self))
 
 (defmethod e/part:first-time ((self spaces))
-  (@set self :buffer nil)
-  (@set self :state :idle)
-  (@set self :position 0))
+  (setf (buffer self) nil)
+  (setf (tposition self) 0)
+  (call-next-method))
 
 (defmethod e/part:react ((self spaces) (e e/event:event))
   (labels ((push-char-into-buffer () 
-	     (let ((buffer (@get self :buffer)))
-	       (push (token-text (e/event:data e)) buffer)
-	       (@set self :buffer buffer)))
+	       (push (token-text (e/event:data e)) (buffer self)))
            (pull () (@send self :request :spaces))
            (forward-token (&key (pulled-p nil)) (@send self :out (@data self e)))
            (start-char-p () 
@@ -29,11 +30,11 @@
                (let ((c (token-text (e/event:data e))))
                  (member c '(#\Space #\Newline #\Tab #\Page)))))
            (action () (e/event::sym e))
-           (next-state (x) (@set self :state x))
+           (next-state (x) (setf (state self) x))
            (eof-p () (eq :eof (token-kind (e/event:data e))))
            (clear-buffer ()
-	     (@set self :buffer nil)
-	     (@set self :position (token-position (e/event:data e))))
+             (setf (buffer self) nil)
+	     (setf (tposition self) (token-position (e/event:data e))))
            (release-buffer ()
              (@send self :out (make-token :kind :ws :text " " :position (spaces-get-position self) :pulled-p t)))
            (release-and-clear-buffer ()
@@ -42,7 +43,7 @@
          )
 
     ;(format *standard-output* "~&spaces in state ~S gets ~S ~S~%" *spaces-state* (token-kind (e/event:data e)) (token-text (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (ecase (action)
          (:token

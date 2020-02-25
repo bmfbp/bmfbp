@@ -2,7 +2,7 @@
 
 (defparameter *compiler-net* nil)
 
-(defclass compiler (e/part:code) ())
+(defclass compiler (compiler-part) ())
 (defmethod e/part:busy-p ((self compiler)) (call-next-method))
 (defmethod e/part:clone ((self compiler)) (call-next-method))
 
@@ -355,7 +355,6 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
 (defun compiler-event-passing (filename map-filename output-filename)
   (let ((compiler-net (get-compiler-net)))
     (e/util::enable-logging 1)
-    #+nil(e/util::log-part (second (reverse (e/part::internal-parts compiler-net))))
     (setq arrowgrams/compiler::*top* compiler-net) ;; for early debug
     (assert (null map-filename)) ;; new version does not use string mapping
     (@with-dispatch

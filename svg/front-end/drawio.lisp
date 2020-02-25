@@ -1,15 +1,11 @@
 (in-package :arrowgrams/compiler)
 
-(defclass front-end (compiler-part)
-  ((state :accessor state :initform :idle)))
+(defclass front-end (compiler-part) ())
 
-(defmethod compiler-part-name ((self front-end))
-  "FRONT-END")
+(defmethod e/part:first-time ((self front-end))
+  (call-next-method))
 
-(defmethod compiler-part-initially ((self front-end))
-  (set (state self) :idle))
-
-(defmethod compiler-part-run ((self front-end) e)
+(defmethod e/part:react ((self front-end) e)
 (format *standard-output* "~&drawio ~s ~S~%" (@pin self e) (@data self e))
   (ecase (state self)
     (:idle

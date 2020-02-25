@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler/classes)
+(in-package :arrowgrams/compiler)
 
 (defmacro with-speechbubble-bb (id-list bb &body body)
   (declare (ignore id-list))

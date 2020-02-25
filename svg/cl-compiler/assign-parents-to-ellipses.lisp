@@ -1,24 +1,24 @@
 (in-package :arrowgrams/compiler)
 
-(defclass assign-parents-to-ellipses (e/part:code) ())
+(defclass assign-parents-to-ellipses (compiler-part) ())
 (defmethod e/part:busy-p ((self assign-parents-to-ellipses)) (call-next-method))
 (defmethod e/part:clone ((self assign-parents-to-ellipses)) (call-next-method))
 ; (:code assign-parents-to-ellipses (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self assign-parents-to-ellipses))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self assign-parents-to-ellipses) e)
   (let ((pin (@pin self e))
         (data (@data self e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -27,11 +27,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&assign-parents-to-ellipses~%")
              (assign-parents self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -42,7 +42,7 @@
                 (:make-parent-for-ellipse (:? id) (:? main))
                 (:ellipse (:? id))
                 (:component (:? main))
-                (:lisp-method (arrowgrams/compiler/util::asserta (:parent (:? main) (:? id))))
+                (:lisp-method (asserta (:parent (:? main) (:? id))))
                 )))
-    (let ((fb (cons rule (@get self :fb))))
+    (let ((fb (cons rule (fb self))))
       (hprolog:prove nil '((:make-parent-for-ellipse (:? eid) (:? main-id))) fb hprolog:*empty* 1 nil fb nil self))))

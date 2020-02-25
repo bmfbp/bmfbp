@@ -1,11 +1,10 @@
 (in-package :arrowgrams/compiler)
 
-(defclass emitter-pass2-generic (e/part:code) ())
+(defclass emitter-pass2-generic (compiler-part) ())
 (defmethod e/part:busy-p ((self emitter-pass2-generic)) (call-next-method))
-(defparameter *emitter-pass2-generic-state* nil)
 
 (defmethod e/part:first-time ((self emitter-pass2-generic))
-  (setf *emitter-pass2-generic-state* :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self emitter-pass2-generic) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -24,7 +23,7 @@
                      (token-kind tok)
                      (token-position tok)
                      (if (member (token-kind tok) no-print) "." (token-text tok)))))
-      (ecase *emitter-pass2-generic-state*
+      (ecase (state self)
         (:idle
          (ecase (e/event::sym e)
            

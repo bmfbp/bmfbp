@@ -1,25 +1,25 @@
 (in-package :arrowgrams/compiler)
 
-(defclass speechbubble-bounding-boxes (e/part:code) ())
+(defclass speechbubble-bounding-boxes (compiler-part) ())
 
 (defmethod e/part:busy-p ((self speechbubble-bounding-boxes)) (call-next-method))
 (defmethod e/part:clone ((self speechbubble-bounding-boxes)) (call-next-method))
 ; (:code speechbubble-bounding-boxes (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self speechbubble-bounding-boxes))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self speechbubble-bounding-boxes) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -29,10 +29,10 @@
        (if (eq pin :fb)
            (progn
              (format *standard-output* "~&speechbubble-bounding-boxes~%")
-             (@set self :fb data)
+             (setf (fb self) data)
              (make-speechbubble-bounding-boxes self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -47,7 +47,7 @@
                               (:geometry_top_y (:? id) (:? cy))
                               (:geometry_w (:? id) (:? w))
                               (:geometry_h (:? id) (:? h)))))
-    (let ((fb (cons bounding-box-rules (@get self :fb))))
+    (let ((fb (cons bounding-box-rules (fb self))))
         (let ((r (hprolog:prove nil '((:speechbubble-geometry (:? id) (:? cx) (:? cy) (:? w) (:? h))) fb hprolog:*empty* 1 nil fb nil self)))
           (mapcar #'(lambda (lis)
                       (assert (= 5 (length lis)))

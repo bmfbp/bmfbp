@@ -1,24 +1,21 @@
 (in-package :arrowgrams/compiler)
 
-(defclass text-bounding-boxes (e/part:code) ())
+(defclass text-bounding-boxes (compiler-part) ())
 (defmethod e/part:busy-p ((self text-bounding-boxes)) (call-next-method))
 (defmethod e/part:clone ((self text-bounding-boxes)) (call-next-method))
 ; (:code text-bb (:fb :go) (:add-fact :done :request-fb :error))
 
-(defmethod e/part:first-time ((self text-bounding-boxes))
-  (@set self :state :idle))
-
 (defmethod e/part:react ((self text-bounding-boxes) e)
   (let ((pin (@pin self e))
         (data (@data self e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -27,11 +24,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&text-bounding-boxes~%")
              (text-bb-make-bounding-boxes self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -46,7 +43,7 @@
                               (:geometry_top_y (:? id) (:? y))
                               (:geometry_w (:? id) (:? hw))
                               (:geometry_h (:? id) (:? h)))))
-    (let ((fb (cons bounding-box-rules (@get self :fb))))
+    (let ((fb (cons bounding-box-rules (fb self))))
       (let ((r (hprolog:prove nil '((:text-geometry (:? id) (:? str) (:? cx) (:? y) (:? hw) (:? h))) fb hprolog:*empty* 1 nil fb nil self)))
         (mapcar #'(lambda (lis)
                     (assert (= 6 (length lis)))

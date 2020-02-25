@@ -1,11 +1,10 @@
 (in-package :arrowgrams/compiler)
 
-(defclass generic-emitter (e/part:code) ())
+(defclass generic-emitter (compiler-part) ())
 (defmethod e/part:busy-p ((self generic-emitter)) (call-next-method))
-(defparameter *emitter-state* nil)
 
 (defmethod e/part:first-time ((self generic-emitter))
-  (setf *emitter-state* :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self generic-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
@@ -24,7 +23,7 @@
                                            (token-kind tok)
                                            (token-position tok)
                                            (if (member (token-kind tok) no-print) "." (token-text tok)))))))
-      (ecase *emitter-state*
+      (ecase (state self)
         (:idle
          (ecase (e/event::sym e)
            (:parse

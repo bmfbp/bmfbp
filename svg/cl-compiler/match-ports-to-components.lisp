@@ -1,25 +1,25 @@
 
 (in-package :arrowgrams/compiler)
-(defclass match-ports-to-components (e/part:code) ())
+(defclass match-ports-to-components (compiler-part) ())
 (defmethod e/part:busy-p ((self match-ports-to-components)) (call-next-method))
 (defmethod e/part:clone ((self match-ports-to-components)) (call-next-method))
 
 ; (:code MATCH-PORTS-TO-COMPONENTS (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self match-ports-to-components))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self match-ports-to-components) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
-           (@set self :fb data)
+           (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,11 +28,11 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (state self) data)
              (format *standard-output* "~&match-ports-to-components~%")
              (match-ports-to-components self)
              (@send self :done t)
-             (@set self :state :idle))
+             (e/part:first-time self))
          (@send
           self
           :error
@@ -42,11 +42,11 @@
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (arrowgrams/compiler/util::fb-keep '(:eltype :parent :ellipse :rect
+          (fb-keep '(:eltype :parent :ellipse :rect
                                                :bounding_box_left :bounding_box_top :bounding_box_right :bounding_box_bottom
-                                               :wen :nle :we :nl :wspc) (@get self :fb))
-                   #+nil(@get self :fb)
+                                               :wen :nle :we :nl :wspc)
+                                             (fb self))
                    ))
         (goal '((:match_ports_to_components (:? A)))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))
 
