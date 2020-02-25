@@ -2,7 +2,7 @@
 
 (defparameter *compiler-net* (arrowgrams/compiler:get-compiler-net))
 
-(defun build (filename1 filename2)
+(defun build (filename)
   (let ((build-net (@defnetwork build
 
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
@@ -27,11 +27,10 @@
            (:code schematic-fetcher (:json-ref) (:filename :error))
            (:code schematic-or-leaf (:json-ref) (:schematic-json-ref :leaf-json-ref :error))
 
-           ;self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
            (:schem build (:svg-filename) (:name :graph :leaf-json-ref :error)
             (compile-single-diagram schematic-or-leaf)
             "
-           self.svg-filename -> compile-single-diagram.svg-filename
+            self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
             compile-single-diagram.json-graph -> self.graph
@@ -47,16 +46,14 @@
     (@with-dispatch
       (@enable-logging)
       (let ((pin (e/part::get-input-pin build-net :svg-filename)))
-        (@inject build-net pin filename1)
-        (@inject build-net pin filename2)))))
+        (@inject build-net pin filename)))))
     
 (defun btest ()
-  (build
-   (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-process.svg")
-   (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-composite.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/ide.svg")))
+   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build_process.svg")))
    ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/ide.svg")))
-   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-composite.svg")
-   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-process.svg")))
+   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile_composite.svg")
+   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build_process.svg")))
 
 (defun cl-user::btest ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
