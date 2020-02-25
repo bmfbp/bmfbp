@@ -1,12 +1,12 @@
 (in-package :arrowgrams/compiler)
 
-(defclass lisp-emitter (e/part:code) 
-  ((state :accessor state)))
+(defclass lisp-emitter (compiler-part) 
+  ())
 
 (defmethod e/part:busy-p ((self lisp-emitter)) (call-next-method))
 
 (defmethod e/part:first-time ((self lisp-emitter))
-  (setf (state self) :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self lisp-emitter) (e e/event:event))
   (let ((tok (e/event::data e))
