@@ -7,7 +7,7 @@
 ; (:code SEM-PORTS-HAVE-SINK-OR-SOURCE (:fb :go) (:add-fact :done :request-fb :error))
 
 (defmethod e/part:first-time ((self sem-ports-have-sink-or-source))
-  (call-next-method)
+  (call-next-method))
 
 (defmethod e/part:react ((self sem-ports-have-sink-or-source) e)
   (let ((pin (e/event::sym e))

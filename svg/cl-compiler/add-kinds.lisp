@@ -49,54 +49,12 @@
 ;;
 ;; used always refers to a text-id, e.g. text(text-id,str-id)
 
-#+nil (defmethod old-add-kinds ((self add-kinds))
-  (let ((add-kinds-rule '(
-                          (:add-kinds (:? box-id))
-                          (:rect (:? box-id))
-                          (:bounding_box_left (:? box-id) (:? bL))
-                          (:bounding_box_top (:? box-id) (:? bT))
-                          (:bounding_box_right (:? box-id) (:? bR))
-                          (:bounding_box_bottom (:? box-id) (:? bB))
-                          (:text (:? text-id) (:? str-id))
-                          (:bounding_box_left (:? text-id) (:? tL))
-                          (:bounding_box_top (:? text-id) (:? tT))
-                          (:not-used (:? text-id))
-                          (:lisp (text-completely-inside-box (:? text-id) (:? tL) (:? tT)
-                                                             (:? box-id) (:? bL) (:? bT) (:? bR) (:? bB)))
-                          (:lisp (asserta (:used (:? text-id))))
-                          (:lisp (asserta (:kind (:? box-id) (:? text-id))))
-                          )
-                        ))
-    (let ((not-used-rule1 '(
-                            (:not-used (:? text-id))
-                            (:used (:? text-id))
-                            :!
-                            :fail)
-                          )
-          )
-      (let ((not-used-rule2 '(
-                              (:not-used (:? text-id))
-                              )
-                            ))
-        (let ((fb (cons not-used-rule1 ;; order matters!
-                        (cons not-used-rule2
-                              (cons add-kinds-rule (fb self))))))
-          (run-prolog self '((:add-kinds (:? box-id))) fb))))))
-      
-
 (defmethod add-kinds ((self add-kinds))
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (fb self))))
+          (fb self)))
        ;(goal '((:trace-on 1) (:add_kinds_main))))
         (goal '((:add_kinds_main))))
     (run-prolog self goal fb)))
 
-#+nil (defmethod add-kinds ((self add-kinds))
-  (let ((fb
-         (append
-          arrowgrams/compiler::*rules*
-          (fb self))))
-        (goal '((:printall))))
-    (run-prolog self goal fb)))

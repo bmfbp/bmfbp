@@ -44,4 +44,4 @@
           arrowgrams/compiler::*rules*
           (fb self)))
         (goal '((:create_centers_main))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))

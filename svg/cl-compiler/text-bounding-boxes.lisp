@@ -8,14 +8,14 @@
 (defmethod e/part:react ((self text-bounding-boxes) e)
   (let ((pin (@pin self e))
         (data (@data self e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :fb)
            (setf (fb self) data)
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -43,7 +43,7 @@
                               (:geometry_top_y (:? id) (:? y))
                               (:geometry_w (:? id) (:? hw))
                               (:geometry_h (:? id) (:? h)))))
-    (let ((fb (cons bounding-box-rules (@get self :fb))))
+    (let ((fb (cons bounding-box-rules (fb self))))
       (let ((r (hprolog:prove nil '((:text-geometry (:? id) (:? str) (:? cx) (:? y) (:? hw) (:? h))) fb hprolog:*empty* 1 nil fb nil self)))
         (mapcar #'(lambda (lis)
                     (assert (= 6 (length lis)))

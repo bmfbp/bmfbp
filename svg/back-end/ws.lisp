@@ -1,16 +1,15 @@
 (in-package :arrowgrams/compiler)
 
-(defclass ws (e/part:code) ())
+(defclass ws (compiler-part)
+  ((buffer :accessor buffer)
+   (position :accessor position)))
+
 (defmethod e/part:busy-p ((self ws)) (call-next-method))
 ; (:code ws (:token) (:request :out :error) #'e/part:react #'e/part:first-time)
 
-(defparameter *ws-buffer* nil)
-(defparameter *ws-position* 0)
-(defparameter *ws-state* :idle)
-
 (defun clear-buffer (pos)
-  (setf *ws-buffer* nil)
-  (setf *ws-position* pos))
+  (setf (buffer self) nil)
+  (setf (position self) pos))
 
 (defun push-char-into-buffer (c)
   (push c *ws-buffer*))
@@ -19,25 +18,26 @@
 (defun get-position () *ws-position*)
 
 (defmethod e/part:first-time ((self ws))
-  (setf *ws-state* :idle))
+  (clear-buffer 0)
+  (call-next-method))
 
 (defmethod e/part:react ((self ws) (e e/event:event))
   (labels ((pull ()
              (@send self :request t))
            (check-eof ()
              (when (eq :eof (token-kind (e/event:data e)))
-               (setf *ws-state* :done)))
+               (e/part:first-time self)))
            (forward-token () (@send self :out (@data self e)))
            (release-buffer ()
              (let ((ws-token (make-token :kind :ws :text (get-buffer) :position (get-position))))
                (clear-buffer (token-position (e/event::data e)))
                (@send self :out ws-token)
                (forward-token)
-               (setf *ws-state* :idle))))
+               (e/part:first-time self)))
     (let ((tok (e/event:data e)))
-      (format *standard-output* "~&ws ~s kind=~s pos=~s text=~s~%" *ws-state* (token-kind tok) (token-position tok) (token-text tok)))
+      (format *standard-output* "~&ws ~s kind=~s pos=~s text=~s~%" (state self) (token-kind tok) (token-position tok) (token-text tok)))
     (let ((tok (e/event:data e)))
-      (ecase *ws-state*
+      (ecase (state self)
         (:idle
          (ecase (e/event::sym e)
            (:token
@@ -47,7 +47,7 @@
                        ((#\Space #\Newline)
                         (clear-buffer (token-position tok))
                         (push-char-into-buffer c)
-                        (setf *ws-state* :collecting-spaces)
+                        (setf (state self) :collecting-spaces)
                         (pull)
                         (check-eof))
                        (otherwise (forward-token)))))

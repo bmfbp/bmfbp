@@ -28,7 +28,7 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&calculate-distances COMMENTED OUT~%")
              ;(calculate-distances self)
              (@send self :done t)
@@ -41,7 +41,7 @@
 (defmethod calculate-distances ((self calculate-distances))
   (let ((fb
          (append
-          arrowgrams/compiler::*rules*
+          *rules*
           (fb self)))
         (goal '((:calculate_distances_main))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))

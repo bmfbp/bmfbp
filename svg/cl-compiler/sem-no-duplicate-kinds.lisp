@@ -32,7 +32,7 @@
              (format *standard-output* "~&COMMENTED OUT sem-no-duplicate-kinds~%")
              ;; put code here
              (@send self :done t)
-             (e/part:first-time self)
+             (e/part:first-time self))
          (@send
           self
           :error

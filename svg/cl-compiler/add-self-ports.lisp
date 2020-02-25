@@ -19,7 +19,7 @@
          (if (eq pin :go)
              (progn
                (@send self :request-fb t)
-               (@set self :state :waiting-for-new-fb))
+               (setf (state self) :waiting-for-new-fb))
            (@send
             self
             :error
@@ -28,7 +28,7 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (@set self :fb data)
+             (setf (fb self) data)
              (format *standard-output* "~&add-self-ports~%")
              (create-self-ports self)
              (@send self :done t)
@@ -45,7 +45,7 @@
 
   (let ((fb
          (append
-          arrowgrams/compiler::*rules*
-          (@get self :fb)))
+          *rules*
+          (fb self)))
         (goal '((:add_selfports_main))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))

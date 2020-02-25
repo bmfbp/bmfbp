@@ -9,12 +9,12 @@
 ; (:code FILE-NAMER (:basename) (:json-filename :generic-filename :lisp-filename :error) #'BE:e/part:react #'BE:e/part:first-time)
 
 (defmethod e/part:first-time ((self file-namer))
-  (@set self :state :idle))
+  (call-next-method))
 
 (defmethod e/part:react ((self file-namer) e)
   (let ((pin (e/event::sym e))
         (data (e/event:data e)))
-    (ecase (@get self :state)
+    (ecase (state self)
       (:idle
        (if (eq pin :basename)
            (let ((basename (e/event:data e)))

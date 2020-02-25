@@ -45,4 +45,4 @@
           arrowgrams/compiler::*rules*
           (fb self)))
         (goal '((:make_unknown_port_names_main))))
-    (arrowgrams/compiler/util::run-prolog self goal fb)))
+    (run-prolog self goal fb)))

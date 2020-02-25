@@ -70,7 +70,7 @@
   (let ((fb
          (append
           arrowgrams/compiler::*rules*
-          (fb self)))
+          (fb self))))
     (let ((goal '((:collect_nameless_ports (:? portid) (:? left) (:? top) (:? right) (:? bottom)))))
       (let ((results (run-prolog self goal fb)))
         results))))

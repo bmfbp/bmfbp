@@ -1,11 +1,11 @@
 (in-package :arrowgrams/compiler)
 
-(defparameter *dumper-state* nil)
+(class dumper (compiler-part) ()
 
-(defmethod dumper-first-time ((self e/part:part))
-  (setf *dumper-state* :idle))
+(defmethod first-time ((self dumper)
+  (call-next-method))
 
-(defmethod dumper-react ((self e/part:part) (e e/event:event))
+(defmethod react ((self dumper) (e e/event:event))
   ;(format *standard-output* "~&dumper ~S   ~S ~S~%" *dumper-state* (e/event::sym e) (e/event:data e))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
@@ -23,21 +23,19 @@
                                            (token-kind tok)
                                            (token-position tok)
                                            (if (member (token-kind tok) no-print) "." (token-text tok)))))))
-      (ecase *dumper-state*
+      (ecase (state self)
         (:idle
          (ecase (e/event::sym e)
            (:start
             (pull :dumper1)
-            (setf *dumper-state* :dumping))))
+            (setf (state self) :dumping))))
         
         (:dumping
          (ecase (e/event::sym e)
            (:in
             (debug-tok :out "" tok)
             (if (eq :EOF (token-text tok))
-                (setf *dumper-state* :done)
+                (e/part:first-time self)
               (unless (token-pulled-p tok)
-                (pull :dump2))))))
-        
-        (:done
-         (debug-tok :error (format nil "dumper done, but got ") tok))))))
+                (pull :dump2))))))))))
+
