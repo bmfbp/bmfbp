@@ -35,5 +35,4 @@
 
 (defun fixup-filename (s)
   (let ((r1 (cl-ppcre:regex-replace-all " " s "-")))
-    (let ((r2 (cl-ppcre:regex-replace-all "_" r1 "-")))
-      r2)))
+    r1))
