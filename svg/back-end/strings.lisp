@@ -74,7 +74,7 @@
               (progn
                 (release-and-clear-buffer)
                 (forward-token)
-                (next-state :done))
+                (next-state :idle))
             (if (escape-char-p)
                 (progn
                   (next-state :escape)
@@ -94,7 +94,7 @@
               (progn
                 (release-and-clear-buffer)
                 (forward-token)
-                (next-state :done))
+                (next-state :idle))
             (progn
               (push-char-into-buffer)
               (pull)
