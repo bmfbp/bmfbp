@@ -64,7 +64,7 @@
               (progn
                 (release-and-clear-buffer)
                 (forward-token)
-                (next-state :done))
+                (next-state :idle))
             (if (follow-char-p)
                 (progn
                   (push-char-into-buffer)

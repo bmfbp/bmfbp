@@ -63,7 +63,7 @@
               (progn
                 (release-and-clear-buffer)
                 (forward-token)
-                (next-state :done))
+                (next-state :idle))
             (if (follow-char-p)
                 (progn
                   (push-char-into-buffer)
@@ -71,6 +71,4 @@
               (progn
                 (release-and-clear-buffer)
                 (forward-token :pulled-p t)
-                (next-state :idle)))))))
-      (:done
-       (@send self :error (format nil "spaces finished, but received ~S" e))))))
+                (next-state :idle))))))))))
