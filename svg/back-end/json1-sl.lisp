@@ -15,12 +15,12 @@
                           ',' nl
     <kind>                
     <metadata>
-                          '\"inputs\" : '
+                          '\"inputs\" : ['
     <toplevel-inputs>
-                          ',' nl
-                          '\"outputs\" : '
+                          '],' nl
+                          '\"outputs\" : ['
     <toplevel-outputs>
-                          ',' nl
+                          '],' nl
     <react> 
     <first-time>
     <part-declarations> 
@@ -32,10 +32,10 @@
   :string                 print-text
 
 = <toplevel-inputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list-for-part-decl> :rpar dec ']']
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc <pin-list-for-part-decl> :rpar dec]
 
 = <toplevel-outputs> 
-  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list-for-part-decl> :rpar dec ']']
+  [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc <pin-list-for-part-decl> :rpar dec]
 
 = <part-declarations> 
   :lpar
