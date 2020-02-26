@@ -2,16 +2,11 @@
 
 (defparameter *src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/"))
 
-(defclass schematic-or-leaf (e/part:code)
+(defclass schematic-or-leaf (builder)
   ())
 
-(defmethod e/part:busy-p ((self schematic-or-leaf))
+(defmethod e/part:first-time ((self schematic-or-leaf))
   (call-next-method))
-
-(defmethod e/part:clone ((self schematic-or-leaf))
-  (call-next-method))
-
-(defmethod e/part:first-time ((self schematic-or-leaf)))
 
 (defmethod e/part:react ((self schematic-or-leaf) e)
   (ecase (@pin self e)

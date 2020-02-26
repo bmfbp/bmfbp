@@ -243,10 +243,13 @@
   :components ((:module "arrowgrams-builder"
                         :pathname "./build_process/cl-build/"
                         :components ((:file "package")
-                                     (:file "json-array-splitter" :depends-on ("package"))
-                                     (:file "part-namer" :depends-on ("package"))
-                                     (:file "schematic-fetcher" :depends-on ("package"))
-                                     (:file "schematic-or-leaf" :depends-on ("package"))
-				     (:file "build" :depends-on ("package" "part-namer" "json-array-splitter" "schematic-fetcher"
-                                                                 "schematic-or-leaf"))
+                                     (:file "classes" :depends-on ("package"))
+                                     (:file "json-array-splitter" :depends-on ("package" "classes"))
+                                     (:file "part-namer" :depends-on ("package" "classes"))
+                                     (:file "schematic-fetcher" :depends-on ("package" "classes"))
+                                     (:file "schematic-or-leaf" :depends-on ("package" "classes"))
+                                     (:file "collector" :depends-on ("package" "classes"))
+				     (:file "build" :depends-on ("package" "classes"
+                                                                 "part-namer" "json-array-splitter" "schematic-fetcher"
+                                                                 "schematic-or-leaf" "collector"))
 				     ))))

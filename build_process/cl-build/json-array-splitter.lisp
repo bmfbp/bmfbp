@@ -1,13 +1,7 @@
 (in-package :arrowgrams/build)
 
-(defclass json-array-splitter (e/part:code)
+(defclass json-array-splitter (builder)
   ())
-
-(defmethod e/part:busy-p ((self json-array-splitter))
-  (call-next-method))
-
-(defmethod e/part:clone ((self json-array-splitter))
-  (call-next-method))
 
 (defmethod e/part:first-time ((self json-array-splitter))
 )

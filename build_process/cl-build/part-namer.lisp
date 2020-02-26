@@ -1,13 +1,7 @@
 (in-package :arrowgrams/build)
 
-(defclass part-namer (e/part:code)
+(defclass part-namer (builder)
   ((counter :accessor counter)))
-
-(defmethod e/part:busy-p ((self part-namer))
-  (call-next-method))
-
-(defmethod e/part:clone ((self part-namer))
-  (call-next-method))
 
 (defmethod e/part:first-time ((self part-namer))
   (setf (counter self) 0))
