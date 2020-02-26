@@ -64,10 +64,12 @@
 
 (defmethod finalize-leaf ((self collector) file-ref-pathname json-stream)
   ;; file-ref is a pathname like #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/split_diagram.lisp"
+  ;; result is a dotted pair (alist)
   (let ((file-ref-str (coerce 'string file-ref-pathaname)))
     (json:encode-json (cons :file file-ref) json-stream)))
 
 (defmethod finalize-graph ((self collector) name-graph-dotted-pair json-stream)
+  ;; result is a dotted pair ("graph" . <object>)
   (let ((graph-string (arrowgrams/compiler:strip-quotes (cdr name-graph-dotted-pair))))
     (let ((name (car name-graph-dotted-pair)))
       (with-input-from-string (s graph-string)
