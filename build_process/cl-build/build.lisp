@@ -70,10 +70,6 @@
     
 (defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/ide.svg")))
-   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build_process.svg")))
-   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/ide.svg")))
-   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile_composite.svg")
-   ;(asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build_process.svg")))
 
 (defun cl-user::btest ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
