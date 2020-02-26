@@ -47,26 +47,16 @@
 
 (defmethod finalize-and-send-collection ((self collector))
   (let ((list (collection self)))
-    (let ((jstring (with-output-to-string (stream)
-                     (@:loop
-                       (@:exit-when (null list))
-                       (let ((pair (pop list)))
-                         (let ((kind (first pair)))
-                           (let ((data (second pair)))
-                             (ecase kind
-                               (:leaf
-                                (finalize-leaf self data stream))
-                               (:graph
-                                (finalize-graph self data stream))))))))))
-      (@send self :json-collection jstring)
-      (e/part:first-time self))))
+    (format *standard-output* "~&finalize ~S~%" list)
+    ;(@send self :json-collection jstring)
+    (e/part:first-time self)))
 
 
 (defmethod finalize-leaf ((self collector) file-ref-pathname json-stream)
   ;; file-ref is a pathname like #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/split_diagram.lisp"
   ;; result is a dotted pair (alist)
-  (let ((file-ref-str (namestring file-ref-pathname)))
-    (json:encode-json (cons :file file-ref) json-stream)))
+  #+nil(let ((file-ref-str (namestring file-ref-pathname)))
+    (json:encode-json (cons :file file-ref-str) json-stream)))
 
 (defmethod finalize-graph ((self collector) name-graph-dotted-pair json-stream)
   ;; result is a dotted pair ("graph" . <object>)
