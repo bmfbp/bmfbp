@@ -96,7 +96,7 @@
   :string                
 
 = <metadata>
-  :string                nl '\"metadata\" : ' print-text-as-string ',' nl nl
+  :string
 
 = <kind>
   :string
