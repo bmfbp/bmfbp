@@ -29,7 +29,7 @@
   :rpar
 
 = <top-name>
-  :string                 print-text-as-symbol
+  :string                 print-text
 
 = <toplevel-inputs> 
   [ ?symbol :symbol symbol-must-be-nil | ?lpar :lpar inc '[' <pin-list-for-part-decl> :rpar dec ']']
