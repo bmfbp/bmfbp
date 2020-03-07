@@ -13,17 +13,20 @@ A netlist is a routing table.  Each element of a netlist is a Wire.  A Wire has 
 
 Kinds are built during the definition phase, using OO inheritance plus the following methods:
 
-- add-input-pin(name)
-- add-output-pin(name)
+- definition/add-input-pin(name)
+- definition/add-output-pin(name)
 
 - add-named-part(name,OtherKind) - associates a part with some other Kind and a local name.  The name is unique within the Kind being defined and cannot leak out of the ESA (i.e. the Kind being defined is that "package" that contains and hides the name).
 
-- create-wire >> wire  - creates an empty wire
+- definition/create-wire >> wire  - creates an empty wire
 
-- set-source-to-wire(local-part-name,pin-name-of-part) - set the source of the wire to be the given part/pin ; local-part-name is the name of a child (in which case the pin-name must be an output pin of the child) or SELF (in which case the pin name must be the input pin of SELF)
+- definition/set-source(wire,local-part-name,pin-name-of-part) - set the source of the wire to be the given part/pin ; local-part-name is the name of a child (in which case the pin-name must be an output pin of the child) or SELF (in which case the pin name must be the input pin of SELF)
 
-- add-destination-to-wire(local-part-name,pin-name) - add the part/pin pair to the destinations of the Wire ; the part name can be that of a child (in which case the pin-name must be an input pin of the child) or it can be SELF (in which case the pin-name must be an output pin of SELF).
+- definition/add-destination(wire,local-part-name,pin-name) - add the part/pin pair to the destinations of the Wire ; the part name can be that of a child (in which case the pin-name must be an input pin of the child) or it can be SELF (in which case the pin-name must be an output pin of SELF).
 
 Wires are added to a Kind using:
 
-- add-wire-to-kind(w) - adds the Wire w to SELF's netlist.
+- definition/add-wire(self,w) - adds the Wire w to SELF's netlist.
+
+
+(in the future, we would also like to scope Kinds - associate a set of Kinds to a given layer - import?)
