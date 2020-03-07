@@ -1,3 +1,5 @@
+=========== definition ============
+
 A "kind" is a prototype - a class that must be augmented at runtime with enough information to build an Arrowgrams ESA (Encapsulated Software Asset).
 
 An Arrograms application is a tree of ESA's.
@@ -30,3 +32,37 @@ Wires are added to a Kind using:
 
 
 (in the future, we would also like to scope Kinds - associate a set of Kinds to a given layer - import?)
+
+When using an OO language, we want to make a class for Code parts that inherits from esa-prototype-kind, then have specific parts inherit from that (while adding instance variables and methods "intially" and "react" in the usual OO manner).
+
+Similarly, Schematics should inherit from esa-prototype-kind and provide no instance variables and shared behaviour for "initially" and "react" methods.
+
+
+=========== load ============
+
+The Load phase creates runtime parts from the definition(s).
+
+Most of the required information is already present in the definition of the part.  We create only enough new information to allow the tree of parts to run, e.g. we instantiate all parts, recursively.
+
+1. Each runtime part has exactly one input queue and exactly one output queue.
+
+2. Each runtime part has one parent (a Schematic (aka Composite)).  The Top part of the tree has nil as its parent.
+
+3. A local scope of named parts is created.  We create an instance for each part (using its Kind) and put the instance into the appropriate named slot.  For the bootstrap, we use a hashmap of name X instance.
+
+4. For the bootstrap, we do not copy the netlist (wires, routing table), but interpret it during runtime.  It is easy to see that the parts in the routing table could be resolved once in a JIT-like manner during Load time (or during Runtime).  We want to see this work before we optimize it.
+
+=========== Runtime ============
+
+The runtime consists of a Dispatcher which loops and invokes ready parts (at random).
+
+A part is ready if it has a non-empty input queue and the busy() method returns nil. (All Leaf (aka Code, aka parts with no children) are always not busy, whereas any Schematic (aka Composite, aka any part that contains children) is not busy only if ALL of its children are not busy (again, we calculate this recursively at Runtime, leaving optimizations for a later date).
+
+When invoked, a Part reacts to exactly one input event and pops the event from its input queue.
+
+When an invoked Part finishes, the Dispatcher is resumed (for now, we implement this as CALL/RETURN - the Dispatcher calls a Part, the Part RETURNs when it is done).
+
+During invocation, a Part may call SEND() zero or more times.  SEND creates an output event and enqueues it on its output queue.  SENDs are "deferred" and are not immediately distributed.
+
+Upon resumption, the Dispatcher first distributes all generated output events to the appropriate receivers (as defined by the netlist), then, starts at the beginning calling one ready part at random.  Note that parts may become ready as a result of SEND being called during invocation of some part, and, the Dispatcher must refresh its idea of which parts are ready after each invocation.
+
