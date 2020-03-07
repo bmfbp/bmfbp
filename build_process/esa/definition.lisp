@@ -43,7 +43,7 @@
   (setf (gethash name (parts self)) part-kind))
 
 
-;;;;;;; utilitites ;;;;
+;;;;;;; utilitites an error checking ;;;;;;;;;
 
 (defun sequal (self other)
   (if (stringp self)
