@@ -2,7 +2,7 @@
 
 ;======  class definition/part-pin ======
 
-(defclass definition/part-pin () {
+(defclass definition/part-pin ()
   ((part :accessor part :initarg :part)
    (pin  :accessor pin  :initarg :pin)))
 
@@ -16,9 +16,9 @@
   ((source :accessor source)
    (destinations :accessor destinations :initform nil)))
 
-(defgeneric definition/set-source (wire part-pin))
+(defgeneric definition/set-source (wire part pin))
 
-(defgeneric definition/add-destination (wire part-pin))
+(defgeneric definition/add-destination (wire part pin))
 
 (defgeneric query/get-source (wire))
 

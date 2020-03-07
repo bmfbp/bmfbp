@@ -1,6 +1,6 @@
 (in-package :arrowgrams)
 
-(defclass runtime/part ()
+(defclass runtime/node ()
   ((kind :accessor kind :initarg :kind)
    (input-queue :accessor input-queue :initform nil)
    (output-queue :accessor output-queue :initform nil)

@@ -1,10 +1,10 @@
 (in-package :arrowgrams)
 
-(defclass esa-prototype-kind ()
+(defclass definition/node ()
   ((input-pins :accessor input-pins :initform (make-hash-table :test 'equal))
    (output-pins :accessor output-pins :initform (make-hash-table :test 'equal))
    (parts :accessor parts :initform (make-hash-table :test 'equal))
-   (wires :accessor wires :iniform nil)))
+   (wires :accessor wires :initform nil)))
 
 ;; in this version, we are using OO to do as much work for us as possible
 ;; all prototypes must have methods "initially" and "react"
