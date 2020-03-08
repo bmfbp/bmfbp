@@ -1,0 +1,46 @@
+= esa-dsl
+  @types
+  @kinds
+  @auxmethods
+  @scripts
+  EOF
+
+= types
+  SYMBOL/types
+  {[ ?SYMBOL/type @type
+   | * >
+  ]}
+  SYMBOL/end SYMBOL/types
+
+= type
+  SYMBOL/type SYMBOL
+
+= kinds
+  {[ ?SYMBOL/kind @kind
+   | * >
+  ]}
+
+= auxmethods
+  {[ ?SYMBOL/auxmethod @auxmethod
+   | * >
+  ]}
+
+= scripts
+  {[ ?SYMBOL/script @script-definition
+   | * >
+  ]}
+
+= kind
+  SYMBOL/kind
+  {[ ?SYMBOL/struct @struct-decl
+   | ?SYMBOL/method @method-decl
+   | ?SYMBOL/script @script-decl
+   | * >
+  ]}
+  SYMBOL/end SYMBOL/kind
+
+= auxmethod
+= script-definition
+= struct-decl
+= method-decl
+= script-decl
