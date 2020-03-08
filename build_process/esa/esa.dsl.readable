@@ -1,0 +1,69 @@
+use "esa.dsl"
+
+script main(tree-def dispatcher)
+  %% build graph (definition) for tree
+  let tree = @tree-def.loader {
+    @tree.initializer
+    @dispatcher.distribute-all-outputs
+    @dispatcher.run
+    }
+ }
+
+%%  loader
+
+script definition/node.loader >> instance
+  let self-instance = self.create-loadtime {
+    map child-def = self.parts {
+      let child-instance = @child-def.loader {
+        self-instance.add-child(child-instance)
+      }}
+    >> self-instance
+  }
+
+script loadtime/node.initializer
+  map child = self.parts {  @child.initializer } 
+  self.initially
+end script
+
+script loadtime/dispatcher.distribute-all-outputs
+  map node = self.all-nodes {
+    map output-event = node.output-events {
+      let wire = output-event.find-wire { @wire.distribute-event(output-event) }
+      }}
+}
+
+script runtime/dispatcher.run
+  loop {
+    let node = self.get-node {
+      if @node.ready? {
+        node.invoke
+        @node.dispatch-outputs
+      }
+    }
+  }
+}
+
+script runtime/node.ready? >> true/false
+  if self.has-input? {
+    if @self.busy? {  >> false } else {  >> true }
+  }
+}
+
+script runtime/node.busy? >> true/false
+  if self.busy-self {
+    >> true
+  } else {
+    map child = self.children {
+      if @child.busy? { >> true }
+    }
+  }
+}
+
+script runtime/node.dispatch-outputs
+  map output-event = self.output-events {
+    let wire = output-event.find-wire { @wire.distribute-event(output-event) }
+  }
+}
+
+
+
