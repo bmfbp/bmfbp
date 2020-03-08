@@ -1,5 +1,6 @@
 types
   true/false
+  name
   definition/wire
   loadtime/node
   definition/node
@@ -10,13 +11,14 @@ types
 end types
 
 class definition/node {
-  method add-input-pin
-  method add-output-pin
-  method add-wire(definition/wire)
+  script add-input-pin(name)
+  script add-output-pin(name)
+  script add-part(name kind)
+  method install-wire(definition/wire)
 
   method create-loadtime >> loadtime/node
   method script loader  >> loadtime/node
-  }
+}
   
 class loadtime/node proto definition/node {
   method add-child(loadtime/node)
@@ -50,3 +52,18 @@ class runtime/node {
   script dispatch-outputs
   method output-events >> map runtime/output-event
   }
+
+
+
+
+% helpers 
+
+methods definition/node {
+  method ensure-input-pin-not-defined(name)
+  method ensure-output-pin-not-defined(name)
+  method ensure-part-not-defined(name)
+  method install-input-pin(name)
+  method install-output-pin(name)
+  method install-part(name definition/node)
+}
+
