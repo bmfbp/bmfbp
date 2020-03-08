@@ -9,7 +9,8 @@ type runtime/wire
 type runtime/destination
 
 kind runtime/destination
-  struct node pin
+  field node
+  field pin
 end kind
 
 kind definition/node
@@ -35,12 +36,15 @@ kind loadtime/dispatcher
 end kind
 
 kind runtime/output-event
-  struct node pin data
+  field node
+  field pin
+  field data
   method find-wire >> runtime/wire
 end kind
 
 kind runtime/wire
-  struct source  map runtime/destination
+  field source  
+  field map runtime/destination
   script distribute-event(output-event)
   method get-destinations
   method lock
@@ -66,14 +70,14 @@ end kind
 
 % helpers 
 
-auxmethods definition/node
+aux definition/node
   method ensure-input-pin-not-defined(name)
   method ensure-output-pin-not-defined(name)
   method ensure-part-not-defined(name)
   method install-input-pin(name)
   method install-output-pin(name)
   method ensure-source-exists(runtime/output-event)
-end auxmethods
+end aux
 
 
 
