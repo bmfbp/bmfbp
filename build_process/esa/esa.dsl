@@ -1,69 +1,209 @@
-types
-  true/false
-  name
-  definition/wire
-  loadtime/node
-  definition/node
-  loadtime/dispatcher
-  runtime/output-event % {node, pin, data}
-  runtime/wire % { source, map of runtime/destination }
-  runtime/destination % { node, pin }
-end types
+type true/false
+type name
+type definition/wire
+type loadtime/node
+type definition/node
+type loadtime/dispatcher
+type runtime/output-event
+type runtime/wire
+type runtime/destination
 
-class definition/node {
+kind runtime/destination
+  struct node pin
+end kind
+
+kind definition/node
   script add-input-pin(name)
   script add-output-pin(name)
   script add-part(name kind)
   method install-wire(definition/wire)
 
   method create-loadtime >> loadtime/node
-  method script loader  >> loadtime/node
-}
+  script loader  >> loadtime/node
+end kind
   
-class loadtime/node proto definition/node {
-  method add-child(loadtime/node)
+kind loadtime/node proto definition/node
+  method install-child(loadtime/node)
   script initializer
-  method parts
+  method get-parts
   method initially
   method output-events >> map runtime/output-event
-  }
+end kind
 
-class loadtime/dispatcher {
-  method all-nodes >> map loadtime/node
-  }
+kind loadtime/dispatcher
+  method get-nodes >> map loadtime/node
+end kind
 
-class runtime/output-event {
-  find-wire >> runtime/wire
-  }
+kind runtime/output-event
+  struct node pin data
+  method find-wire >> runtime/wire
+end kind
 
-class runtime/wire {
+kind runtime/wire
+  struct source  map runtime/destination
   script distribute-event(output-event)
-  }
+  method get-destinations
+  method lock
+  method unlock
+end kind
 
-class runtime/dispatcher {
+kind runtime/dispatcher
   method get-node >> runtime/node
-  }
+end kind
 
-class runtime/node {
+kind runtime/node
   script ready? >> true/false
   script busy? >> true/false
   method busy-self? >> true/false
   method children >> map of runtime/node
   script dispatch-outputs
   method output-events >> map runtime/output-event
-  }
+  method enqueue-input(runtime/event)
+end kind
 
 
 
 
 % helpers 
 
-methods definition/node {
+auxmethods definition/node
   method ensure-input-pin-not-defined(name)
   method ensure-output-pin-not-defined(name)
   method ensure-part-not-defined(name)
   method install-input-pin(name)
   method install-output-pin(name)
-  method install-part(name definition/node)
-}
+  method ensure-source-exists(runtime/output-event)
+end auxmethods
+
+
+
+
+
+;; scripts
+
+script main(tree-def dispatcher)
+  %% build graph (definition) for tree
+  let tree = @tree-def.loader in
+    @tree.initializer
+    @dispatcher.distribute-all-outputs
+    @dispatcher.run
+  end let
+end script
+
+
+
+%%  loader
+
+script definition/node.loader >> instance
+  let self-instance = self.create-loadtime in
+    map child-def = self.parts in
+      let child-instance = @child-def.loader in
+        self-instance.install-child(child-instance)
+      end let
+    end map
+    >> self-instance
+end script
+
+script loadtime/node.initializer
+  map child = self.get-parts in
+    @child.initializer
+  end map    
+  self.initially
+end script
+
+script loadtime/dispatcher.distribute-all-outputs
+  map node = self.get-nodes in
+    map output-event = node.output-events in
+      let wire = @output-event.find-wire in
+        @wire.distribute-event(output-event)
+      end let
+    end map
+  end map
+end script
+
+script runtime/dispatcher.run
+  loop
+    let node = self.get-node in
+      if @node.ready? then
+        node.invoke
+        @node.dispatch-outputs
+      end if
+    end let
+  end loop
+end script
+
+script runtime/node.ready? >> true/false
+  if self.has-input? then
+    if @self.busy? then
+      >> false
+    else
+      >> true
+  end if
+end script
+
+script runtime/node.busy? >> true/false
+  if self.busy-self then
+    >> true
+  else
+    map child = self.children in
+      if @child.busy? then
+        >> true
+      end if
+    end map
+  end if
+end script
+
+script runtime/node.dispatch-outputs
+  map output-event = self.output-events in
+    let wire = @output-event.find-wire in
+      @wire.distribute-event(output-event)
+    end let
+  end map
+end script
+
+
+script runtime/output-event.find-wire
+  let schematic = self.node.proto.parent in
+    schematic.ensure-source-exists(output-event)
+    let wire = schematic.find-wire(output-event) in
+      @wire.distribute-event(output-event)
+    end let
+  end let
+end script
+
+script runtime/wire.distribute-event(output-event)
+  self.lock
+  let data = output-event.data in
+    map dest in self.get-destinations in
+      let pin = dest.pin in
+        let node = dest.node in
+          let new-event = runtime/event/create(pin data)
+            node.enqueue-input(new-event)
+          end let
+        end let
+      end let
+    end map
+  end let
+  self.unlock
+end script
+
+
+
+
+%% helpers
+script definition/node.add-input-pin ((self definition/node) (name name))
+  self.ensure-input-pin-not-defined(name)
+  self.install-input-pin(name)
+end script
+
+script definition/node.add-output-pin ((self definition/node) (name name))
+  self.ensure-output-pin-not-defined(name)
+  self.install-output-pin(name)
+end script
+
+script definition/node.add-part ((self definition/node) (name name) (kind definition/node)
+  self.ensure-part-not-defined(name)
+  self.install-part (name kind)
+end script
+
 

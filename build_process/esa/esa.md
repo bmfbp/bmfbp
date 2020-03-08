@@ -2,7 +2,7 @@
 
 A "kind" is a prototype - a class that must be augmented at runtime with enough information to build an Arrowgrams ESA (Encapsulated Software Asset).
 
-An Arrograms application is a tree of ESA's.
+An Arrowgrams application is a tree of ESA's.
 
 An ESA comes into being by instantiating a Kind.  To instantiate a Kind, an ESA inherits from the Kind (in the usual OO manner), then calls the instantiate() routine to make a copy of the prototype.
 
