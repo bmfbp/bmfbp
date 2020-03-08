@@ -1,3 +1,51 @@
+overview:
+
+An ESA is a box on the Arrowgrams diagram.  Different word, same thing.
+
+Modern software languages tend to force one to tangle design with code.
+
+In untangling design from code, I found roughly 4 phases of Arrowgrams design:
+
+1. Definition (of the graph, of the tree)
+
+2. Querying the nodes of the graph.  (Nodes are Parts).
+
+3. Loader - create runnable data structures from the graph, instantiate Parts as tree nodes.
+
+4. Runner - the kernel which runs the Dispatcher and routes events (aka messages).
+
+=== strategy ===
+
+A design is broken into three parts:
+
+1. A description of the classes (actually prototypes).
+
+2. A description of how to use classes - scripts.
+
+3. An implementation of the above, in some language - mechanisms.
+
+=== scripts ===
+
+Scripts are a part of the Architecture.
+
+Scripts can be automatically compiled.
+
+The programmer needs only to write code for methods, not scripts.
+    
+=== scripts ===
+
+Scripts are, firstly, writable.  Each construct has an explicit "end <construct>".
+
+Writable scripts use up a lot of screen real-estate.
+
+A syntax checker finds all of the syntax errors and typos.  This is what happens in state-of-the-art compilers.
+
+After that, we can collapse the scripts by removing "end <construct>" from the scripts and collapsing lines where reasonable.
+
+This step produces a .script.readable file that should be more useful to maintainers.
+
+The step .script.writable --> .script.readable has not been implemented yet and will be left until later.  In fact, the IDE / Editor might provide these two views, switching from writable to readable format.
+
 =========== definition ============
 
 A "kind" is a prototype - a class that must be augmented at runtime with enough information to build an Arrowgrams ESA (Encapsulated Software Asset).
@@ -10,7 +58,7 @@ I used the terms "part" and "ESA" interchangably.  A Part is an ESA.
 
 Note that a Kind includes instance variables.  The mechanism for creating instance variables can be hidden behind the mechanisms of OO inheritance.  If an OO language is not used, then instance variables must be explicitly allocated (on the heap).
 
-A netlist is a routing table.  Each element of a netlist is a Wire.  A Wire has one Source and multiple Destinations.  The Source is a part/pin-name that places Events onto the wire.  The Destinations are part/pin-names of parts that receive events placed on this wire.  All part name are local to the ESA.  All pin-names are valid within the given parts (valid in their Kinds).  A Source can be an output pin of a child part or an input pin of the parent ESA (called SELF).  A Destination is a part-pin pair.  An Destination can be the input pin of a child part or and output pin of SELF.  An input pin of SELF can also be wired directly to an output pin of SELF.  Any pin not involved in a Wire is said to be N.C. (No Connection).  Events sent to N.C. pins are ignored.  Events never come into an N.C. pin (because it is N.C.).
+A netlist is a routing table.  Each element of a netlist is a Wire.  A Wire has one Source and multiple Destinations.  The Source is a part/pin-name that places Events onto the wire.  The Destinations are part/pin-names of parts that receive events placed on this wire.  All part names are local to the ESA.  All pin-names are valid within the given parts (valid in their Kinds).  A Source can be an output pin of a child part or an input pin of the parent ESA (called SELF).  A Destination is a part-pin pair.  An Destination can be the input pin of a child part or and output pin of SELF.  An input pin of SELF can also be wired directly to an output pin of SELF.  Any pin not involved in a Wire is said to be N.C. (No Connection).  Events sent to N.C. pins are ignored.  Events never come into an N.C. pin (because it is N.C.).
 
 
 Kinds are built during the definition phase, using OO inheritance plus the following methods:
@@ -18,7 +66,7 @@ Kinds are built during the definition phase, using OO inheritance plus the follo
 - definition/add-input-pin(name)
 - definition/add-output-pin(name)
 
-- add-named-part(name,OtherKind) - associates a part with some other Kind and a local name.  The name is unique within the Kind being defined and cannot leak out of the ESA (i.e. the Kind being defined is that "package" that contains and hides the name).
+- add-part(name,OtherKind) - associates a part with some other Kind and a local name.  The name is unique within the Kind being defined and cannot leak out of the ESA (i.e. the Kind being defined is the "package" that contains and hides the name).
 
 - definition/create-wire >> wire  - creates an empty wire
 
