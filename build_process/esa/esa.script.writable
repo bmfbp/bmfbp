@@ -12,7 +12,7 @@ end script
 %%  loader
 
 script definition/node.loader >> instance
-  let self-instance = self.create-loadtime ni
+  let self-instance = self.create-loadtime in
     map child-def = self.parts in
       let child-instance = @child-def.loader in
         self-instance.add-child(child-instance)
@@ -71,7 +71,7 @@ script runtime/node.busy? >> true/false
 end script
 
 script runtime/node.dispatch-outputs
-  map output-event = self.ouptut-events in
+  map output-event = self.output-events in
     let wire = output-event.find-wire in
       @wire.distribute-event(output-event)
     end let
