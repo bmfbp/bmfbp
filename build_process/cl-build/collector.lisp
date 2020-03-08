@@ -40,31 +40,34 @@
           (graph self) nil)))
 
 (defmethod collect-graph ((self collector))
-  (push (list :graph (cons (name self) (graph self))) (collection self)))
+  (push (graph-alist self (name self) (graph self)) (collection self)))
 
 (defmethod collect-leaf ((self collector) file-ref)
-  (push (list :leaf file-ref) (collection self)))
+  (push (leaf-alist self file-ref) (collection self)))
 
 (defmethod finalize-and-send-collection ((self collector))
-  (let ((list (collection self)))
-    (format *standard-output* "~&finalize ~S~%" list)
-    ;(@send self :json-collection jstring)
-    (e/part:first-time self)))
+  (let ((list-of-strings (reverse (collection self))))
+    (let ((jstring (apply-commas-make-json-array list-of-strings)))
+      (@send self :json-collection jstring)
+      (e/part:first-time self))))
 
-
-(defmethod finalize-leaf ((self collector) file-ref-pathname json-stream)
+(defmethod leaf-alist ((self collector) file-ref-pathname)
   ;; file-ref is a pathname like #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/split_diagram.lisp"
-  ;; result is a dotted pair (alist)
-  #+nil(let ((file-ref-str (namestring file-ref-pathname)))
-    (json:encode-json (cons :file file-ref-str) json-stream)))
+  ;; result is a string JSON map with 3 items
+  (let ((file-ref-str (namestring file-ref-pathname)))
+    (let ((name (pathname-name file-ref-pathname)))
+      (json:encode-json-to-string `( (:item-kind . "leaf") (:name . ,name) (:file-name . ,file-ref-str))))))
 
-(defmethod finalize-graph ((self collector) name-graph-dotted-pair json-stream)
-  ;; result is a dotted pair ("graph" . <object>)
-  #+nil(let ((graph-string (arrowgrams/compiler:strip-quotes (cdr name-graph-dotted-pair))))
-    (let ((name (car name-graph-dotted-pair)))
-      (with-input-from-string (s graph-string)
-        (let ((jalist (json:decode-json s))) ;; TODO: optimize this away
-          (let ((alist (cons :graph (cons name graph-string))))
-            (json:encode-json alist json-stream)))))))
+(defmethod graph-alist ((self collector) name json-graph)
+  (let ((alist-graph (with-input-from-string (s json-graph) (json:decode-json s))))
+    (json:encode-json-to-string `( (:item-kind . "graph") (:name . ,name) (:graph . ,alist-graph) ))))
 
+(defun apply-commas-make-json-array (lis)
+  (assert (> (length lis) 1))
+  (let ((result (pop lis)))
+    (@:loop
+      (@:exit-when (null lis))
+      (setf result (concatenate 'string result ",
+" (pop lis))))  ;; TODO: make this more efficient
+    (concatenate 'string "[" result "]")))
 

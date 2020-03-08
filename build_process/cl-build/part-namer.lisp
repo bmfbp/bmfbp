@@ -8,7 +8,6 @@
 
 (defmethod e/part:react ((self part-namer) e)
 (incf (counter self))
-(format *standard-output* "~&~a part namer gets ~a ~s~%" (counter self) (@pin self e) (@data self e))
   (ecase (@pin self e)
     (:in
      (let ((part-name (pathname-name (@data self e))))
