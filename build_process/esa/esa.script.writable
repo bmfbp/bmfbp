@@ -9,6 +9,8 @@ script main(tree-def dispatcher)
   end let
 end script
 
+
+
 %%  loader
 
 script definition/node.loader >> instance
@@ -80,3 +82,18 @@ end script
 
 
 
+%% helpers
+script definition/node.add-input-pin ((self definition/node) (name name))
+  self.ensure-input-pin-not-defined(name)
+  self.install-input-pin(name)
+end script
+
+script definition/node.add-output-pin ((self definition/node) (name name))
+  self.ensure-output-pin-not-defined(name)
+  self.install-output-pin(name)
+end script
+
+script definition/node.add-part ((self definition/node) (name name) (kind definition/node)
+  self.ensure-part-not-defined(name)
+  self.install-part (name kind)
+end script
