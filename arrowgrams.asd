@@ -234,9 +234,45 @@
                                                    ))))))
 
 
+(defsystem :arrowgrams/esa
+    :depends-on (:cl-event-passing :alexandria)
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+                          :pathname "./build_process/esa"
+                          :components ((:file "../../svg/cl-compiler/package")
+                                       (:file "token" :depends-on ("../../svg/cl-compiler/package"))
+                                       (:file "classes" :depends-on ("../../svg/cl-compiler/package"))
+                                       (:file "rp-macros" :depends-on ("../../svg/cl-compiler/package"))
+				       
+                                       (:file "dumper" :depends-on ("token"))
+
+				       (:file "tokenize" :depends-on ("token"))
+                                       (:file "comments" :depends-on ("token"))
+                                       (:file "raw-text" :depends-on ("token"))
+                                       (:file "strings" :depends-on ("token"))
+                                       (:file "spaces" :depends-on ("token"))
+                                       (:file "symbols" :depends-on ("token"))
+                                       (:file "integers" :depends-on ("token"))
+
+                                       (:file "parser-mechanisms"
+					      :depends-on ("../../svg/cl-compiler/package"
+							   "token" "dumper"
+                                                           "rp-macros"
+							   "tokenize" "comments" "raw-text" "strings" "spaces"
+							   "symbols" "integers"))
+                                       (:file "rp-rules" :depends-on ("parser-mechanisms"))
+                                       (:file "rp-parser" :depends-on ("rp-rules"))
+                                       (:file "esa-dsl" :depends-on ("parser-mechanisms"))
+                                       (:file "esa-parser" :depends-on ("esa-dsl"))
+                                       (:file "file-writer" :depends-on ("../../svg/cl-compiler/package"))
+                                       (:file "parser-schem" :depends-on ("file-writer" "esa-parser" "rp-parser"))))))
 
 (defsystem :arrowgrams/build
-  :depends-on (:arrowgrams :arrowgrams/compiler :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/part :sl :loops :cl-event-passing)
+  :depends-on (:arrowgrams :arrowgrams/compiler :arrowgrams/esa :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/part :sl :loops :cl-event-passing)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))

@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 ; (:code event-passing-parser (:start :token) (:pull :out :error))
 

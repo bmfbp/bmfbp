@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defmacro parser-success-p (body)
   `(eq :ok ,body))

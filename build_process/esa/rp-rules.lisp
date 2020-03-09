@@ -1,5 +1,4 @@
-
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 ;; tokens --> :character, :ws, :string, :symbol, :integer
 ;; all tokens have 4 accessible fields - kind, text, position (in line, 0=bol), line (starts at line 1)
@@ -40,7 +39,7 @@
 ;; N.B. "<" and ">" are valid identifier characters in Common Lisp
 
 (defmethod <rp> ((p parser))
-  (emit p "(in-package :rephrase)")
+  (emit p "(in-package :arrowgrams/compiler)")
   (emit p "
 
 ")

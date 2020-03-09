@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defmethod read-next-token ((p parser) &optional (debug t))
   (unless (eq :eof (token-kind (accepted-token p)))

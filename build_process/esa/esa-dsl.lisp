@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defmethod esa-dsl ((p parser))
 (call-rule p #'types)

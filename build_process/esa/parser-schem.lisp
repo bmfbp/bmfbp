@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defun run-rephrase-parser (output-filename input-filename)
   (let ((net (@defnetwork parse
@@ -110,12 +110,12 @@
 (defun cl-user::etest1 ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :esa)
-  (rephrase::run-rephrase-parser (asdf:system-relative-pathname :esa "esa-dsl.lisp")
-                                 (asdf:system-relative-pathname :esa "esa.rp")))
+  (arrowgrams/compiler::run-rephrase-parser (asdf:system-relative-pathname :esa "esa-dsl.lisp")
+                                 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")))
 (defun cl-user::etest2 ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :esa)
-  (rephrase::run-esa-parser (asdf:system-relative-pathname :esa "esa.dsl")))
+  (arrowgrams/compiler::run-esa-parser (asdf:system-relative-pathname :esa "build_process/esa/esa.dsl")))
 
 (defun cl-user::etest()
   (cl-user::etest1)

@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defclass spaces (e/part:code)
   ((buffer :accessor buffer)

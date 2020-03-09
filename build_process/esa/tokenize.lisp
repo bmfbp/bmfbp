@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defclass tokenize (e/part:code)
   ((nline :accessor nline)

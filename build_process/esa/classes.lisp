@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defclass parser (e/part:code)
   ((token-stream :accessor token-stream :initarg :token-stream :initform nil) ;; actually, just a list

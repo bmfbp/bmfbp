@@ -1,6 +1,4 @@
-(in-package :rephrase)
-
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 ;; tokens --> :character, :raw, :ws, :string, :symbol, :integer
 ;; all tokens have 4 accessible fields - kind, text, position (in line, 0=bol), line (starts at line 1)

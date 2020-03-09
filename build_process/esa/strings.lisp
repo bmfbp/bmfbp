@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defclass strings (e/part:code) 
   ((state :accessor state :initform :idle)

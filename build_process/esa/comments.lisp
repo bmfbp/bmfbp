@@ -1,4 +1,4 @@
-(in-package :rephrase)
+(in-package :arrowgrams/compiler)
 
 (defclass comments (e/part:code)
   ((buffer :accessor buffer)
