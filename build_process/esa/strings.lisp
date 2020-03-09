@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler)
+(in-package :arrowgrams/build)
 
 (defclass strings (e/part:code) 
   ((state :accessor state :initform :idle)

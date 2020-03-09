@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler)
+(in-package :arrowgrams/build)
 
 (defclass symbols (e/part:code)
   ((buffer :accessor buffer)

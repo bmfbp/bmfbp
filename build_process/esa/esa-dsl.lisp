@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler)
+(in-package :arrowgrams/build)
 
 (defmethod esa-dsl ((p parser))
 (call-rule p #'types)

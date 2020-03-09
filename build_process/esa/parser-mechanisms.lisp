@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler)
+(in-package :arrowgrams/build)
 
 (defmethod read-next-token ((p parser) &optional (debug t))
   (unless (eq :eof (token-kind (accepted-token p)))

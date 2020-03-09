@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler)
+(in-package :arrowgrams/build)
 
 (defun rephrase (filename)
   (let ((net (@defnetwork scanner
@@ -39,4 +39,4 @@
         (@inject net start-pin filename)))))
   
 (defun cl-user::rtest ()
-  (arrowgrams/compiler::rephrase (asdf:system-relative-pathname :arrowgrams "build_process/esa/testfile")))
+  (arrowgrams/build::rephrase (asdf:system-relative-pathname :arrowgrams "build_process/esa/testfile")))

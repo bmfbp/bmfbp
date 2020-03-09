@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler)
+(in-package :arrowgrams/build)
 
 ; (:code event-passing-parser (:start :token) (:pull :out :error))
 

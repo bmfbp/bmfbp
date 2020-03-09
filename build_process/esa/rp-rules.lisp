@@ -1,4 +1,4 @@
-(in-package :arrowgrams/compiler)
+(in-package :arrowgrams/build)
 
 ;; tokens --> :character, :ws, :string, :symbol, :integer
 ;; all tokens have 4 accessible fields - kind, text, position (in line, 0=bol), line (starts at line 1)
@@ -39,7 +39,7 @@
 ;; N.B. "<" and ">" are valid identifier characters in Common Lisp
 
 (defmethod <rp> ((p parser))
-  (emit p "(in-package :arrowgrams/compiler)")
+  (emit p "(in-package :arrowgrams/build)")
   (emit p "
 
 ")
