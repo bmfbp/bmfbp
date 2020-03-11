@@ -1,6 +1,6 @@
 = esa-dsl
 $   (emit p "(in-package :arrowgrams/build)~%~%")
-  @types
+  @type-decls
   @kinds
   @aux
   @scripts
@@ -37,12 +37,12 @@ $   (emit p "(in-package :arrowgrams/build)~%~%")
   | * ^fail
   ]
 
-= types
-  {[ ?SYMBOL/type @type
+= type-decls
+  {[ ?SYMBOL/type @type-decl
    | * >
   ]}
 
-= type
+= type-decl
   SYMBOL/type @esa-symbol
 
 = kinds
@@ -68,7 +68,7 @@ $      (emit p "~&(defclass ~a ()~%(" (atext p))
 $      (clear-method-stream p)
   {[ ?SYMBOL/script @script-decl
    | ?SYMBOL/method @method-decl
-   | ?SYMBOL/delegate @delegat-def
+   | ?SYMBOL/delegate @delegate-def
    | ?SYMBOL/field @field-decl
    | ?SYMBOL/proto @proto-decl
    | * >
@@ -106,7 +106,7 @@ $     (emit p "~&(proto :accessor proto :initform (make-instance '~a))~%" (atext
 = delegate-def
   SYMBOL/delegate @esa-symbol
   push-symbol
-$      (emit-to-method-stream p "~%(defmethod ~a (self" (atext p)
+$      (emit-to-method-stream p "~%(defmethod ~a (self" (atext p))
   @typed-formals
 $      (emit-to-method-stream p ")") ;; close parameter list
   @return-type
