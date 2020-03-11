@@ -71,7 +71,7 @@
 (defun get-sources (wire-alist)
   (cdr (assoc :sources wire-alist)))
 
-(defun get-destinations (wire-alist)
+(defun get-destinations-list (wire-alist)
   (cdr (assoc :recievers wire-alist)))
 
 
@@ -88,7 +88,7 @@
         (let ((w (create-definition/wire)))
           (dolist (source (get-sources wire-alist))
             (add-source w source)
-            (dolist (dest (get-destinations wire-alist))
+            (dolist (dest (get-destinations-list wire-alist))
               (add-destination w dest))
             (install-wire node w)))))))
                           
