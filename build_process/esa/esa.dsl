@@ -109,7 +109,7 @@ end script
 %%  loader
 
 script definition/node.loader >> instance
-  let self-instance = create-loadtime/node ni
+  let self-instance = create-loadtime/node in
     map child-def = self.get-parts in
       let child-instance = @child-def.loader in
         self-instance.install-child(child-instance)
