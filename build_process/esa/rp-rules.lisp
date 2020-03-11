@@ -199,7 +199,7 @@
 (defmethod error-if-not-success ((p parser) value)
   (if (eq :ok value)
       :ok
-      (parse-error p nil "")))
+      (parser-err p nil "")))
 
 (defmethod <parse-lookahead> ((p parser))
   (cond ((parser-success-p (look-char? p #\?))
