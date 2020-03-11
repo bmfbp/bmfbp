@@ -4,7 +4,7 @@
   ((nline :accessor nline)
    (nposition :accessor nposition)
    (state :accessor state)
-   (str-stream :accessor -strstream)))
+   (str-stream :accessor str-stream)))
 
 #+nil(defmethod initialize-instance :after ((self tokenize) &key)
        (format *error-output* "~&tokenize initialized~%"))
@@ -12,7 +12,7 @@
 (defmethod e/part:first-time ((self tokenize))
   (setf (state self) :idle)
   (setf (nline self) 1)
-  (setf (nposition self) 1))  
+  (setf (nposition self) 1))
 
 (defmethod e/part:react ((self tokenize) (e e/event:event))
   #+nil(format *standard-output* "~&tokenize in state ~s gets ~s ~s~%" (state self) (@pin self e) (@data self e))

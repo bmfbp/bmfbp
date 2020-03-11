@@ -82,3 +82,5 @@ svg/cl-compiler/COMPILE_COMPOSITE.json
 svg/cl-compiler/COMPILE_COMPOSITE.lisp
 
 build_process/cl-build/esa.lisp
+
+build_process/esa/esa-dsl.lisp
