@@ -11,6 +11,7 @@
    (saved-text :accessor saved-text :initform "")
    (method-stream :accessor method-stream :initarg :output-stream :initform (make-string-output-stream))
    (current-class :accessor current-class)
+   (current-method :accessor current-method)
    (expr-stack :accessor expr-stack :initform nil)
    (call-rule-flag :accessor call-rule-flag :initform nil)
    (need-close-paren-p :accessor need-close-paren-p :initform nil)

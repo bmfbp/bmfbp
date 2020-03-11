@@ -3,6 +3,8 @@
 (defclass file-writer (e/part:code)
   ((filename :accessor filename)))
 
+(defclass esa-file-writer (file-writer) () )
+
 (defmethod e/part:busy-p ((self file-writer)) (call-next-method))
 
 (defmethod e/part:clone ((self file-writer)) (call-next-method))

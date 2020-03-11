@@ -1,6 +1,7 @@
 (in-package :arrowgrams/build)
 
 (defmethod esa-dsl ((p parser))
+   (emit p "(in-package :arrowgrams/build)~%~%")
 (call-rule p #'types)
 (call-rule p #'kinds)
 (call-rule p #'aux)
@@ -31,6 +32,9 @@
 (return-from keyword :ok)
 );choice alt
 ((parser-success-p (look-symbol? p "let"))
+(return-from keyword :ok)
+);choice alt
+((parser-success-p (look-symbol? p "set"))
 (return-from keyword :ok)
 );choice alt
 ((parser-success-p (look-symbol? p "map"))
@@ -142,7 +146,6 @@
 (call-external p #'set-current-class)
       (emit p "~&(defclass ~a ()~%(" (atext p))
       (clear-method-stream p)
-(call-rule p #'optional-prototype)
 (loop
 (cond
 ((parser-success-p (look-symbol? p "script"))(call-rule p #'script-decl));choice clause
@@ -152,6 +155,9 @@
 ((parser-success-p (look-symbol? p "field"))
 (call-rule p #'field-decl)
 );choice alt
+((parser-success-p (look-symbol? p "proto"))
+(call-rule p #'proto-decl)
+);choice alt
 ( t 
 (return)
 );choice alt
@@ -160,18 +166,10 @@
 ) ;;loop
 
       (emit p "))~%")
+      (emit p "~%(defmethod create-~a () (make-instance '~a))" (current-class p) (current-class p))
 (call-external p #'emit-methods)
 (input-symbol p "end")
 (input-symbol p "kind")
-) ; rule
-
-(defmethod optional-prototype ((p parser))
-(cond
-((parser-success-p (look-symbol? p "proto"))(input-symbol p "proto")(call-rule p #'esa-symbol));choice clause
-( t 
-);choice alt
-);choice
-
 ) ; rule
 
 (defmethod auxiliary ((p parser))
@@ -210,6 +208,12 @@
 
 ) ; rule
 
+(defmethod proto-decl ((p parser))
+(input-symbol p "proto")
+(call-rule p #'esa-symbol)
+     (emit p "~&(proto :accessor proto :initform (make-instance '~a))~%" (atext p))
+) ; rule
+
 (defmethod method-decl ((p parser))
 (input-symbol p "method")
 (call-rule p #'esa-symbol)
@@ -232,8 +236,8 @@
 
 (defmethod map-decl ((p parser))
 (input-symbol p "map")
-     (emit p "~&(~a :accessor ~a :initform " (atext p) (atext p))
 (call-rule p #'esa-symbol)
+     (emit p "~&(~a :accessor ~a :initform " (atext p) (atext p))
      (emit p "(empty-map '~a))~%" (atext p))
 ) ; rule
 
@@ -264,10 +268,10 @@
 (defmethod return-type ((p parser))
 (cond
 ((parser-success-p (look-char? p #\>))(input-char p #\>)(input-char p #\>)(cond
-((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)            (emit-to-method-stream p " #|returns map ~s|# " (atext p)));choice clause
+((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)            (emit-to-method-stream p " #|returns map ~a|# " (atext p)));choice clause
 ( t 
 (call-rule p #'esa-symbol)
-            (emit-to-method-stream p " #|returns ~s|# " (atext p))
+            (emit-to-method-stream p " #|returns ~a|# " (atext p))
 );choice alt
 );choice
 );choice clause
@@ -280,6 +284,7 @@
 (defmethod script-definition ((p parser))
 (input-symbol p "script")
 (call-rule p #'qualified-symbol)
+(call-external p #'set-current-method)
       (emit p "~%(defmethod ~a #|script|# ((self ~a)" (atext p) (current-class p))
 (call-rule p #'formals)
       (emit p ")")  
@@ -324,6 +329,9 @@
 ((parser-success-p (look-symbol? p "map"))
 (call-rule p #'map-statement)
 );choice alt
+((parser-success-p (look-symbol? p "set"))
+(call-rule p #'set-statement)
+);choice alt
 ((parser-success-p (look-symbol? p "if"))
 (call-rule p #'if-statement)
 );choice alt
@@ -363,6 +371,15 @@
       (emit p ")#|end let|#")   
 (input-symbol p "end")
 (input-symbol p "let")
+) ; rule
+
+(defmethod set-statement ((p parser))
+(input-symbol p "set")
+      (emit p "(setf ")
+(call-rule p #'esa-expr)
+(input-char p #\=)
+(call-rule p #'esa-expr)
+      (emit p ")")
 ) ; rule
 
 (defmethod map-statement ((p parser))
@@ -428,7 +445,7 @@
 (input-char p #\>)
 (input-char p #\>)
 (call-rule p #'esa-symbol)
-    (emit p "(return-from ~a ~a)" (current-class p) (atext p))
+    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
 ) ; rule
 
 (defmethod qualified-symbol ((p parser))

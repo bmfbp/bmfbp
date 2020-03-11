@@ -1,0 +1,11 @@
+{
+  "entrypoint": "./json-array-splitter.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+    "array"
+  ],
+  "outPins": [
+    "items"
+  ]
+}

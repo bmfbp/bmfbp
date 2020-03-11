@@ -1,4 +1,5 @@
 = esa-dsl
+$   (emit p "(in-package :arrowgrams/build)~%~%")
   @types
   @kinds
   @aux
@@ -15,6 +16,7 @@
     | ?SYMBOL/script ^ok
     | ?SYMBOL/aux ^ok
     | ?SYMBOL/let ^ok
+    | ?SYMBOL/set ^ok
     | ?SYMBOL/map ^ok
     | ?SYMBOL/in ^ok
     | ?SYMBOL/loop ^ok
@@ -63,20 +65,16 @@
        set-current-class
 $      (emit p "~&(defclass ~a ()~%(" (atext p))
 $      (clear-method-stream p)
-  @optional-prototype
   {[ ?SYMBOL/script @script-decl
    | ?SYMBOL/method @method-decl
    | ?SYMBOL/field @field-decl
+   | ?SYMBOL/proto @proto-decl
    | * >
   ]}
 $      (emit p "))~%")
+$      (emit p "~%(defmethod create-~a () (make-instance '~a))" (current-class p) (current-class p))
        emit-methods
   SYMBOL/end SYMBOL/kind
-
-= optional-prototype
-  [ ?SYMBOL/proto SYMBOL/proto @esa-symbol
-  | *
-  ]
 
 = auxiliary
   SYMBOL/aux
@@ -97,6 +95,11 @@ $     (emit p "~&(~a :accessor ~a)~%" (atext p) (atext p))
   | *
   ]
 
+= proto-decl
+  SYMBOL/proto
+  @esa-symbol
+$     (emit p "~&(proto :accessor proto :initform (make-instance '~a))~%" (atext p))
+
 = method-decl
   SYMBOL/method @esa-symbol
 $      (emit-to-method-stream p "~%(defgeneric ~a (self" (atext p))
@@ -116,8 +119,8 @@ $      (emit-to-method-stream p ")") ;; close generic
 
 = map-decl
   SYMBOL/map 
-$     (emit p "~&(~a :accessor ~a :initform " (atext p) (atext p))
   @esa-symbol
+$     (emit p "~&(~a :accessor ~a :initform " (atext p) (atext p))
 $     (emit p "(empty-map '~a))~%" (atext p))
   
 = typed-formals
@@ -136,9 +139,9 @@ $     (emit-to-method-stream p " ~a" (atext p))
 = return-type
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map @esa-symbol
-$            (emit-to-method-stream p " #|returns map ~s|# " (atext p))
+$            (emit-to-method-stream p " #|returns map ~a|# " (atext p))
          | * @esa-symbol
-$            (emit-to-method-stream p " #|returns ~s|# " (atext p))
+$            (emit-to-method-stream p " #|returns ~a|# " (atext p))
 ]
   | *
   ]
@@ -146,6 +149,7 @@ $            (emit-to-method-stream p " #|returns ~s|# " (atext p))
 = script-definition
   SYMBOL/script
   @qualified-symbol
+  set-current-method
 $      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (atext p) (current-class p))
   @formals
 $      (emit p ")")  
@@ -169,6 +173,7 @@ $      (emit p ")#|end script|#~%")
 $     (emit p "~%")
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
+   | ?SYMBOL/set @set-statement
    | ?SYMBOL/if @if-statement
    | ?SYMBOL/loop @loop-statement
    | ?SYMBOL/exit-when @exit-when-statement
@@ -189,6 +194,14 @@ $      (emit p "))")
    @script-body
 $      (emit p ")#|end let|#")   
    SYMBOL/end SYMBOL/let
+
+= set-statement
+  SYMBOL/set
+$      (emit p "(setf ")
+   @esa-expr
+   '=' 
+   @esa-expr
+$      (emit p ")")
   
 = map-statement
   SYMBOL/map @esa-symbol
@@ -239,7 +252,7 @@ $    (emit p "(call-external p ~a)" (atext p))
 
 = return-statement
   '>' '>' @esa-symbol
-$    (emit p "(return-from ~a ~a)" (current-class p) (atext p))
+$    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
 
 = qualified-symbol
   @esa-symbol

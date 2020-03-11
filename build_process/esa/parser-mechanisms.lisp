@@ -174,6 +174,9 @@
 (defmethod set-current-class ((p parser))
   (setf (current-class p) (atext p)))
 
+(defmethod set-current-method ((p parser))
+  (setf (current-method p) (atext p)))
+
 (defun strip-quotes (s)
   (if (and (char= #\" (char s 0))
            (char= #\" (char s (1- (length s)))))

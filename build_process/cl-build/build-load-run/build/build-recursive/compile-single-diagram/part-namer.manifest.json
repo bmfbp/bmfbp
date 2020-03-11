@@ -1,0 +1,11 @@
+{
+  "entrypoint": "./part-namer.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+    "filename"
+  ],
+  "outPins": [
+    "name"
+  ]
+}

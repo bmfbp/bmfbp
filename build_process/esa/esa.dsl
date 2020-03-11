@@ -23,7 +23,8 @@ kind definition/node
   script loader  >> loadtime/node
 end kind
   
-kind loadtime/node proto definition/node
+kind loadtime/node 
+  proto definition/node
   method install-child(loadtime/node)
   script initializer
   method get-parts
@@ -42,9 +43,15 @@ kind runtime/output-event
   method find-wire >> runtime/wire
 end kind
 
-kind runtime/wire
+kind definition/wire
   field source  
-  field map runtime/destination
+  field map destinations
+  script add-source(definition/node name)      % node + output-pin-name
+  script add-destination(definition/node name) % node + input-pin-name
+end kind
+
+kind runtime/wire
+  proto definition/wire
   script distribute-event(output-event)
   method get-destinations
   method lock
@@ -56,13 +63,14 @@ kind runtime/dispatcher
 end kind
 
 kind runtime/node
+  script main(dispatcher)
   script ready? >> true/false
   script busy? >> true/false
   method busy-self? >> true/false
   method children >> map runtime/node
   script dispatch-outputs
   method output-events >> map runtime/output-event
-  method enqueue-input(runtime/event)
+  method enqueue-input(runtime/output-event)
 end kind
 
 
@@ -85,9 +93,9 @@ end aux
 
 %% scripts
 
-script main(tree-def dispatcher)
+script main(dispatcher)
   %% build graph (definition) for tree
-  let tree = @tree-def.loader in
+  let tree = @self.loader in
     @tree.initializer
     @dispatcher.distribute-all-outputs
     @dispatcher.run
@@ -183,7 +191,9 @@ script runtime/wire.distribute-event(output-event)
     map dest = self.get-destinations in
       let pin = dest.pin in
         let node = dest.node in
-          let new-event = runtime/event/create(pin data) in
+          let new-event = create-runtime/output-event in
+            set new-event.pin = pin
+	    set new-event.data = data
             node.enqueue-input(new-event)
           end let
         end let

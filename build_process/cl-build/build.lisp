@@ -24,7 +24,6 @@
             "
             )
 
-           (:code schematic-fetcher (:json-ref) (:filename :error))
            (:code schematic-or-leaf (:json-ref) (:schematic-json-ref :leaf-json-ref :error))
 
            (:schem build-recursive (:svg-filename) (:name :graph :leaf-json-ref :error)
@@ -73,5 +72,11 @@
 
 (defun cl-user::btest ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
-  (ql:quickload :arrowgrams/build)
+  (arrowgrams/build::run-rephrase-parser (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")
+                                 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp"))
+  (ql:quickload :arrowgrams/build) ;; reload generated file esa-dsl.lisp
+  (arrowgrams/build::run-esa-parser
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
+   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp"))
+  (ql:quickload :arrowgrams/build) ;; reload generated file esa.lisp
   (arrowgrams/build::btest))

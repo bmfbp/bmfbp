@@ -280,12 +280,13 @@
                         :pathname "./build_process/cl-build/"
                         :components ((:file "package")
                                      (:file "classes" :depends-on ("package"))
+                                     (:file "esa" :depends-on ("package" "classes"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes"))
                                      (:file "part-namer" :depends-on ("package" "classes"))
-                                     (:file "schematic-fetcher" :depends-on ("package" "classes"))
                                      (:file "schematic-or-leaf" :depends-on ("package" "classes"))
                                      (:file "collector" :depends-on ("package" "classes"))
+                                     (:file "build-graph" :depends-on ("package" "classes" "esa"))
 				     (:file "build" :depends-on ("package" "classes"
-                                                                 "part-namer" "json-array-splitter" "schematic-fetcher"
+                                                                 "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "collector"))
 				     ))))

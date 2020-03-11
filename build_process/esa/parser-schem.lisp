@@ -56,7 +56,7 @@
         (@inject net output-filename-pin output-filename)
         (@inject net start-pin input-filename)))))
 
-(defun run-esa-parser (filename)
+(defun run-esa-parser (filename output-filename)
   (let ((net (@defnetwork parse
                  (:code tokenize (:start :pull) (:out :error))
 		 (:code comments (:token) (:pull :out :error))
@@ -88,12 +88,14 @@
                          )
 
                  (:code esa-parser (:start :token) (:pull :out :error))
+                 (:code esa-file-writer (:filename :write) (:error))
 
-                 (:schem parse (:start) (:out :error)
-                    (esa-parser scanner)
+                 (:schem parse (:start :esa-output-filename) (:out :error)
+                    (esa-parser scanner esa-file-writer)
                     "
                     self.start -> esa-parser.start, scanner.start
-                    esa-parser.out -> self.out
+                    self.esa-output-filename -> esa-file-writer.filename
+                    esa-parser.out -> esa-file-writer.write
 
                     esa-parser.pull -> scanner.pull
                     scanner.out -> esa-parser.token
@@ -102,9 +104,11 @@
                     "
                     ))))
 
-    (let ((start-pin (@get-input-pin net :start)))
+    (let ((start-pin (@get-input-pin net :start))
+          (output-filename-pin (@get-input-pin net :esa-output-filename)))
       (@enable-logging)
       (@with-dispatch 
+        (@inject net output-filename-pin output-filename)
         (@inject net start-pin filename)))))
   
 (defun cl-user::etest1 ()
@@ -115,7 +119,9 @@
 (defun cl-user::etest2 ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/esa)
-  (arrowgrams/build::run-esa-parser (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")))
+  (arrowgrams/build::run-esa-parser
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
+   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp")))
 
 (defun cl-user::etest()
   (cl-user::etest1)
