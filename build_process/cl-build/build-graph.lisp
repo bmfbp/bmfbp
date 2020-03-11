@@ -56,7 +56,7 @@
 (defun get-outputs (graph-alist)
   (cdr (assoc :outputs graph-alist)))
 
-(defun get-parts (graph-alist)
+(defun get-parts-list (graph-alist)
   (cdr (assoc :parts graph-alist)))
 
 (defun get-part-name (part-alist)
@@ -82,7 +82,7 @@
         (add-input-pin node i))
       (dolist (o (get-outputs graph))
         (add-output-pin node o))
-      (dolist (p (get-parts graph))
+      (dolist (p (get-parts-list graph))
         (add-part node (list (get-part-name p) (get-part-kind p))))
       (dolist (wire-alist (get-wiring graph))
         (let ((w (create-definition/wire)))
