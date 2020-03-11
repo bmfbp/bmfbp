@@ -9,7 +9,7 @@
             (t #+nil(format *standard-output* "		next-token ~s ~s ~a ~a~%" (token-kind (next-token p)) (token-text (next-token p))
                        (token-line (next-token p)) (token-position (next-token p))))))))
 
-(defmethod parse-error ((p parser) kind text)
+(defmethod parser-err ((p parser) kind text)
   (let ((nt (next-token p)))
     (if kind
         (format *error-output* "~&parser error in ~s - wanted ~s ~s, but got ~s ~s at line ~a position ~a~%" (current-rule p)
@@ -33,25 +33,25 @@
 (defmethod input ((p parser) kind)
   (if (eq kind (token-kind (next-token p)))
       (accept p)
-    (parse-error p kind "")))
+    (parser-err p kind "")))
 
 (defmethod input-symbol ((p parser) text)
   (if (and (eq :symbol (token-kind (next-token p)))
            (string= text (token-text (next-token p))))
       (accept p)
-    (parse-error p :symbol text)))
+    (parser-err p :symbol text)))
 
 (defmethod input-upcase-symbol ((p parser))
   (if (and (eq :symbol (token-kind (next-token p)))
            (all-upcase-p (token-text (next-token p))))
         (accept p)
-    (parse-error p 'upcase-symbol (token-text (next-token p)))))
+    (parser-err p 'upcase-symbol (token-text (next-token p)))))
 
 (defmethod input-char ((p parser) char)
   (if (and (eq :character (token-kind (next-token p)))
            (char= (token-text (next-token p)) char))
       (accept p)
-    (parse-error p :character char)))
+    (parser-err p :character char)))
 
 (defmethod look-upcase-symbol? ((p parser))
   (if (and (eq :symbol (token-kind (next-token p)))
@@ -227,3 +227,9 @@
 (defmethod expr-stack-close ((p parser))
   (when (need-close-paren-p p)
     (emit p ") ")))
+
+(defmethod push-symbol ((p parser))
+  (push (atext p) (symbol-stack p)))
+
+(defmethod pop-symbol ((p parser))
+  (pop (symbol-stack p)))

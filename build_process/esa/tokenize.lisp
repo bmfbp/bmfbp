@@ -4,7 +4,7 @@
   ((nline :accessor nline)
    (nposition :accessor nposition)
    (state :accessor state)
-   (stream :accessor stream)))
+   (str-stream :accessor -strstream)))
 
 #+nil(defmethod initialize-instance :after ((self tokenize) &key)
        (format *error-output* "~&tokenize initialized~%"))
@@ -22,7 +22,7 @@
      (ecase (@pin self e)
        (:start
         (let ((str (alexandria:read-file-into-string (e/event:data e))))
-          (setf (stream self) (make-string-input-stream str))
+          (setf (str-stream self) (make-string-input-stream str))
           (setf (nposition self) 1)
           (setf (nline self) 1)
           (setf (state self) :running)))))
@@ -31,7 +31,7 @@
      (ecase (@pin self e)
        (:pull
         #+nil(format *standard-output* "~&tokenize in state running gets :pull ~S~%" (@data self e))
-        (let ((c (read-char (stream self) nil :EOF)))
+        (let ((c (read-char (str-stream self) nil :EOF)))
           (incf (nposition self))
           (let ((reached-eof (eq :EOF c)))
             (unless reached-eof

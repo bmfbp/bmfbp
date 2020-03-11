@@ -15,4 +15,5 @@
    (expr-stack :accessor expr-stack :initform nil)
    (call-rule-flag :accessor call-rule-flag :initform nil)
    (need-close-paren-p :accessor need-close-paren-p :initform nil)
+   (symbol-stack :accessor symbol-stack :initform nil)
    ))

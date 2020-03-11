@@ -6,12 +6,13 @@ $   (emit p "(in-package :arrowgrams/build)~%~%")
   @scripts
   EOF
 
-- keyword
+- keyword-symbol
   [ ?SYMBOL
     [ ?SYMBOL/type ^ok
     | ?SYMBOL/kind ^ok
     | ?SYMBOL/end ^ok
     | ?SYMBOL/proto ^ok
+    | ?SYMBOL/delegate ^ok
     | ?SYMBOL/method ^ok
     | ?SYMBOL/script ^ok
     | ?SYMBOL/aux ^ok
@@ -30,7 +31,7 @@ $   (emit p "(in-package :arrowgrams/build)~%~%")
 
 - non-keyword-symbol
   [ ?SYMBOL
-    [ &keyword ^fail
+    [ &keyword-symbol ^fail
     | * ^ok
     ]
   | * ^fail
@@ -67,6 +68,7 @@ $      (emit p "~&(defclass ~a ()~%(" (atext p))
 $      (clear-method-stream p)
   {[ ?SYMBOL/script @script-decl
    | ?SYMBOL/method @method-decl
+   | ?SYMBOL/delegate @delegat-def
    | ?SYMBOL/field @field-decl
    | ?SYMBOL/proto @proto-decl
    | * >
@@ -81,6 +83,7 @@ $      (emit p "~%(defmethod create-~a () (make-instance '~a))" (current-class p
   @esa-symbol
      set-current-class
   {[ ?SYMBOL/method @method-decl
+   | ?SYMBOL/script @delegate-def
    | ?SYMBOL/script @script-decl
    | * >
   ]}
@@ -100,6 +103,15 @@ $     (emit p "~&(~a :accessor ~a)~%" (atext p) (atext p))
   @esa-symbol
 $     (emit p "~&(proto :accessor proto :initform (make-instance '~a))~%" (atext p))
 
+= delegate-def
+  SYMBOL/delegate @esa-symbol
+  push-symbol
+$      (emit-to-method-stream p "~%(defmethod ~a (self" (atext p)
+  @typed-formals
+$      (emit-to-method-stream p ")") ;; close parameter list
+  @return-type
+$      (emit-to-method-stream p " (~a proto))" (pop-symbol p))
+  
 = method-decl
   SYMBOL/method @esa-symbol
 $      (emit-to-method-stream p "~%(defgeneric ~a (self" (atext p))
@@ -164,7 +176,8 @@ $      (emit p ")#|end script|#~%")
   ]}
 
 = untyped-formals
-  {[ &non-keyword-symbol @esa-symbol
+  {[ &non-keyword-symbol @esa-symbol 
+$    (emit p " ~a " (atext p))
    | * >
   ]}
 

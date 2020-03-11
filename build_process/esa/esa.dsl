@@ -63,6 +63,8 @@ kind runtime/dispatcher
 end kind
 
 kind runtime/node
+  proto loadtime/node
+  delegate parent
   script main(dispatcher)
   script ready? >> true/false
   script busy? >> true/false
@@ -93,7 +95,7 @@ end aux
 
 %% scripts
 
-script main(dispatcher)
+script definition/node.main(dispatcher)
   %% build graph (definition) for tree
   let tree = @self.loader in
     @tree.initializer
@@ -107,8 +109,8 @@ end script
 %%  loader
 
 script definition/node.loader >> instance
-  let self-instance = self.create-loadtime in
-    map child-def = self.parts in
+  let self-instance = create-loadtime/node ni
+    map child-def = self.get-parts in
       let child-instance = @child-def.loader in
         self-instance.install-child(child-instance)
       end let
@@ -177,7 +179,7 @@ end script
 
 
 script runtime/output-event.find-wire
-  let schematic = self.node.get-proto.parent in
+  let schematic = self.node.parent in
     schematic.ensure-source-exists(output-event)
     let wire = schematic.find-wire(output-event) in
       @wire.distribute-event(output-event)
