@@ -31,7 +31,7 @@
      (ecase (e/event::sym e)
        (:pull
         #+nil(format *standard-output* "~&tokenize in state running gets :pull ~S~%" (e/event:data e))
-        (let ((c (read-char (stream self) nil :EOF)))
+        (let ((c (read-char (str-stream self) nil :EOF)))
           (incf (tposition self))
           (let ((reached-eof (eq :EOF c)))
             (let ((tok (make-token :position (tposition self)
