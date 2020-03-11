@@ -158,7 +158,13 @@ So, for metadata, emit:
 (defun front-end-main (svg-filename)
   (setf *metadata-already-seen* nil)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
-    (let ((temp1-str (with-output-to-string (s)
+    (let ((temp1-str 
+#-lispworks(let ((temp-path (asdf:system-relative-pathname :arrowgrams "temp.fb")))
+	     (uiop:launch-program (format nil "~a <~a" command-svg-to-lisp svg-filename)
+				  :output temp-path
+				  :if-output-exists :supersede)
+	     (alexandria:read-file-into-string temp-path))
+#+lispworks(with-output-to-string (s)
                        (let ((status (system:call-system-showing-output
                                       (format nil "~a <~a" command-svg-to-lisp svg-filename)
                                       :output-stream s

@@ -2,13 +2,13 @@
 
 (defclass tokenize (compiler-part)
   ((tposition :accessor tposition)
-   (stream :accessor stream)))
+   (str-stream :accessor str-stream)))
 
 (defmethod e/part:busy-p ((self tokenize)) (call-next-method))
 
 (defmethod e/part:first-time ((self tokenize))
   (setf (tposition self) 0)
-  (setf (stream self) nil)
+  (setf (str-stream self) nil)
   (call-next-method))
 
 (defmethod e/part:react ((self tokenize) (e e/event:event))
@@ -18,12 +18,12 @@
      (ecase (e/event::sym e)
        (:start
         (let ((str (alexandria:read-file-into-string (e/event:data e))))
-	  (setf (stream self) (make-string-input-stream str))
+	  (setf (str-stream self) (make-string-input-stream str))
 	  (setf (tposition self) 0)
 	  (setf (state self) :running)))
        (:ir
         (let ((str (write-to-string (e/event:data e))))
-	  (setf (stream self) (make-string-input-stream str))
+	  (setf (str-stream self) (make-string-input-stream str))
 	  (setf (tposition self) 0)
 	  (setf (state self) :running)))))
 
