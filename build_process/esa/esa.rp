@@ -25,6 +25,9 @@ $   (emit p "(in-package :arrowgrams/build)")
     | ?SYMBOL/when ^ok
     | ?SYMBOL/situation ^ok
     | ?SYMBOL/or ^ok
+    | ?SYMBOL/true ^ok
+    | ?SYMBOL/false ^ok
+    | ?SYMBOL/exit-map ^ok
     | * ^fail
     ]
   | * ^fail
@@ -185,6 +188,7 @@ $    (emit p " ~a " (atext p))
 $     (emit p "~%")
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
+   | ?SYMBOL/exit-map @exit-map-statement
    | ?SYMBOL/set @set-statement
    | ?SYMBOL/create @create-statement
    | ?SYMBOL/defproto @set-proto-statement
@@ -217,10 +221,10 @@ $      (emit p "(let ((~a " (atext p))
    '=' 
    [ ?SYMBOL/map SYMBOL/map | * ]
    @class-ref
-$      (emit p "(make-instance '~a))" (atext p))
+$      (emit p "(make-instance '~a)))" (atext p))
    SYMBOL/in 
    @script-body
-$      (emit p "))#|end create|#")   
+$      (emit p ")#|end create|#")   
    SYMBOL/end SYMBOL/create
 
 = set-statement
@@ -242,13 +246,17 @@ $      (emit p ")")
   
 = map-statement
   SYMBOL/map @esa-symbol
-$      (emit p "(dolist (~a " (atext p))
+$      (emit p "(block map (dolist (~a " (atext p))
   '='
   @esa-expr
 $      (emit p ")")
   SYMBOL/in @script-body
-$      (emit p ")#|end map|#")   
+$      (emit p "))#|end map|#")   
   SYMBOL/end SYMBOL/map
+
+= exit-map-statement
+  SYMBOL/exit-map
+$     (emit p "(return-from map nil)")
 
 = loop-statement
   SYMBOL/loop
@@ -288,8 +296,14 @@ $    (emit p "(call-script p ~a)" (atext p))
 $    (emit p "(call-external p ~a)" (atext p))
 
 = return-statement
-  '>' '>' @esa-symbol
-$    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
+  '>' '>'
+  [ ?SYMBOL/true SYMBOL/true
+$                (emit p "(return-from ~a :true)" (current-method p))
+  | ?SYMBOL/false SYMBOL/false
+$                (emit p "(return-from ~a :false)" (current-method p))
+  | * @esa-symbol
+$                (emit p "(return-from ~a ~a)" (current-method p) (atext p))
+  ]
 
 = qualified-symbol
   @esa-symbol
