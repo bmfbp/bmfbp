@@ -40,7 +40,7 @@ end class
 class node
   input-queue
   output-queue
-  kind
+  kind-field
   container
   name-in-container  %% lookup this part instance by name as a child of my container
 end class
@@ -93,9 +93,9 @@ script kind add-output-pin(name)
    self.install-output-pin(name)
 end script
 
-script kind add-part(name kind)
-  self.ensure-part-not-declared(name)
-  self.install-part(name kind)
+script kind add-part(nm k)
+  self.ensure-part-not-declared(nm)
+  self.install-part(nm k)
 end script
 
 script kind add-wire(w)
@@ -112,7 +112,7 @@ script kind ensure-valid-source(s)
     self.ensure-valid-input-pin(s.pin)
   else
     let p = self.find-child(s.part) in
-      p.kind.ensure-valid-output-pin(s.pin)
+      p.kind-field.ensure-valid-output-pin(s.pin)
     end let
   end if
 end script
@@ -122,7 +122,7 @@ script kind ensure-valid-destination(dest)
     self.ensure-valid-output-pin(dest.pin)
   else
     let p = self.find-child(dest.part) in
-      p.kind.ensure-valid-input-pin(dest.pin)
+      p.kind-field.ensure-valid-input-pin(dest.pin)
     end let
   end if
 end script
@@ -159,12 +159,12 @@ script kind loader(my-name my-container) >> node
   create instance = node in
     node.clear-input-queue
     node.clear-output-queue
-    set node.kind = self
+    set node.kind-field = self
     set node.container = my-container
     set node.name-in-container = my-name
     create parts = map node in
       map part = self.parts in
-        let child-instance = @part.kind.loader (part.name self) in
+        let child-instance = @part.kind-field.loader (part.name self) in
 	  @self.add-part(part.name self)  % each child has a name that is local to the container (names are determined by kind)
         end let
       end map
@@ -264,7 +264,7 @@ end script
 
 script node distribute-output-events
   let parent-composite = self.container in
-    let parent-kind = parent-composite.kind in
+    let parent-kind = parent-composite.kind-field in
        let output = map self.output-events in
          let w = parent-composite.find-wire-for-source(output.part-name output.pin-name) in
            map dest = w.destinations in

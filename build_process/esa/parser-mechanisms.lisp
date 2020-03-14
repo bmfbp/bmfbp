@@ -148,7 +148,6 @@
 (defun spaces (n)
   (format *standard-output* "~&")
   (dotimes (i n)
-    (declare (ignore i))
     (format *standard-output* " ")))
 
 ;; esa mechanisms
@@ -184,40 +183,41 @@
     s))
 
 
-(defmethod expr-stack-open ((p parser))
-  (setf (expr-stack p) nil)
-  (setf (call-rule-flag p) nil))
+(defmethod string-stack-open ((p parser))
+  (setf (string-stack p) nil)
+  (setf (lpar-counter p) 0))
 
-(defmethod set-call-rule-flag ((p parser))
-  (setf (call-rule-flag p) T))
+(defmethod push-string-onto-expr-stack ((p parser))
+  (push (atext p) (string-stack p)))
 
-(defmethod push-symbol-onto-expr-stack ((p parser))
-  (push (atext p) (expr-stack p)))
+(defmethod expr-stack-has-only-one-item? ((p parser))
+  (let ((len (length (string-stack p))))
+    (assert (>= len 1))
+    (> len 1)))
 
-(defmethod emit-expr-stack ((p parser))
-  (let ((single-item-p (= 1 (length (expr-stack p))))
-        (first-time-p t))
-    (push nil (need-closing-rpar-flag-stack p))
-    ;; an error if single-item-p AND not a ref to formal parameter
-    (unless single-item-p
-      (emit p "(")
-      (setf (first (need-closing-rpar-flag-stack p)) t))
-    (dolist (e (expr-stack p))
-      (if first-time-p
-          (emit p "~a" e)
-        (emit p " ~a" e))
-      (setf first-time-p nil))
-    (setf (call-rule-flag p) nil)))
+(defmethod emit-string-pop ((p parser))
+  (let ((str (pop (string-stack p))))
+    (emit p "~a" str)))
 
-(defmethod emit-expr-actual ((p parser))
-  (emit p " ~a" (atext p)))
+(defmethod emit-lpart-inc-count ((p parser))
+  (emit p "(")
+  (incf (lpar-counter p)))
 
-(defmethod expr-stack-close ((p parser))
-  (when (pop (need-closing-rpar-flag-stack p))
-      (emit p ")")))
+(defmethod emit-rpars-count-less-1 ((p parser))
+  (@:loop
+    (@:exit-when (= 1 (lpar-counter p)))
+    (decf (lpar-counter p))
+    (emit p ")")))
 
-(defmethod push-symbol ((p parser))
-  (push (atext p) (symbol-stack p)))
+(defmethod emit-rpars ((p parser))
+  (assert (or (= 0 (lpar-counter p))
+              (= 1 (lpar-counter p))))
+  (when (= 1 (lpar-counter p))
+    (emit p ")")
+    (decf (lpar-counter p))))
 
-(defmethod pop-symbol ((p parser))
-  (pop (symbol-stack p)))
+(defmethod string-stack-close ((p parser))
+  (assert (null (string-stack p)))
+  (assert (= 0 (lpar-counter p))))
+
+

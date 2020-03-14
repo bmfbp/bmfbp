@@ -273,7 +273,7 @@ $    (emit p ")")
   [ ?SYMBOL/else SYMBOL/else
 $    (emit p "~%(progn")
      @script-body
-$    (emit p ")#|end else|#")
+$    (emit p ")#|end else|#~%")
   | *
   ]
 $    (emit p ")#|end if|#")
@@ -323,16 +323,30 @@ $    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
   ]}
 
 = esa-expr
-  expr-stack-open
+  string-stack-open
   [ ?'@' '@' set-call-rule-flag | * ]
   @esa-symbol
-  push-symbol-onto-expr-stack
-  {[ ?'.' @dotted-symbol push-symbol-onto-expr-stack
+  push-string-onto-expr-stack
+  {[ ?'.' @dotted-symbol push-string-onto-expr-stack
    | * >
   ]}
-  emit-expr-stack
+  [ string-stack-has-only-one-item?
+    emit-expr-pop
+  | *
+    emit-lpar-inc-count
+    emit-string-pop
+  ]
+  {[ string-stack-has-only-one-item?
+     emit-string-pop
+     >
+   | *
+     emit-lpar-inc-count
+     emit-string-pop
+  ]}
+  emitpars-count-less-1
   @actuals
-  expr-stack-close
+  emit-rpars
+  string-stack-close
 
 = actuals
  [ ?'(' '('

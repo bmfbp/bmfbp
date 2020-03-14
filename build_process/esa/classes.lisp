@@ -12,10 +12,6 @@
    (method-stream :accessor method-stream :initarg :output-stream :initform (make-string-output-stream))
    (current-class :accessor current-class)
    (current-method :accessor current-method)
-   (expr-stack :accessor expr-stack :initform nil)
-   (call-rule-flag :accessor call-rule-flag :initform nil)
-   (need-closing-rpar-flag-stack :accessor need-closing-rpar-flag-stack :initform nil) ;; flag ugh - maybe we should be constructing a lisp list, then convert it to a string?  package-ing might get in the way
-   (symbol-stack :accessor symbol-stack :initform nil)
+   (string-stack :accessor string-stack :initform nil)
+   (lpar-counter :accessor lpar-counter)
    ))
-
-(defclass filter (parser) ())
