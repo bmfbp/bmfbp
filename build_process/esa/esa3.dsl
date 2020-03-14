@@ -73,10 +73,13 @@ end when
 
 when building-aux kind
   method ensure-part-not-declared
+  method ensure-valid-input-pin(name)
+  method ensure-valid-output-pin(name)
   method ensure-input-pin-not-declared(name)
   method ensure-output-pin-not-declared(name)
   script ensure-valid-source(source)
   script ensure-valid-destination(destination)
+  method find-child(name)
 end when
 
 when building source
@@ -136,6 +139,7 @@ end script
 when building wire
   method install-source(name name)
   method install-destination(name name)
+  method ensure-source-empty
 end when
 
 script wire set-source(part pin)
@@ -220,6 +224,7 @@ when running node
   method dequeue-input
   method input-queue?
   method enqueue-input(event)
+  method enqueue-output(event)
 end when
 
 script node busy? >> boolean
@@ -277,7 +282,7 @@ script node distribute-output-events
              if dest.self? then
 	       create output-event = event in
                  set output-event.part-name = dest.part-name
-		 set output-event.part-pin = dest.pin-name
+		 set output-event.pin-name = dest.pin-name
 		 set output-event.data = output.data
 		 self.enqueue-output(output-event)
 	       end create
@@ -286,10 +291,10 @@ script node distribute-output-events
 	       % wiring is by-name and contained in the kind of the container
 	       % ==> every part-pin (by name) pair is valid
 	       let dest-part-name = dest.part-name in
-	         let part-instance = self.find-instance-by-name(dest-part-name) in
+	         let part-instance = self.find-child(dest.part-name) in
 		   create input-event = event in
-		     set input-event.part-name = dest-part-name
-                     set input-event.part-pin = dest.pin-name
+		     set input-event.part-name = dest.part-name
+                     set input-event.pin-name = dest.pin-name
                      set input-event.data = output.data
                      part-instance.enqueue-input(input-event)
                    end create
