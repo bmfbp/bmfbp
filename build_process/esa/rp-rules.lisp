@@ -49,6 +49,7 @@
       (if (parser-success-p (look-char? p #\-))
 	  (<parse-predicate> p)
          (@:exit-when t))))
+  (input p :EOF)
 )
 
 (defmethod <parse-token-expr> ((p parser))

@@ -1,21 +1,21 @@
+xxx
+
 = esa-dsl
-$   (emit p "(in-package :arrowgrams/build)~%~%")
+$   (emit p "(in-package :arrowgrams/build)")
   @type-decls
-  @kinds
-  @aux
-  @scripts
+  @situations
+  @classess
+  @whens-and-scripts
   EOF
 
 - keyword-symbol
   [ ?SYMBOL
     [ ?SYMBOL/type ^ok
-    | ?SYMBOL/kind ^ok
+    | ?SYMBOL/class ^ok
+    | ?SYMBOL/create ^ok
     | ?SYMBOL/end ^ok
-    | ?SYMBOL/proto ^ok
-    | ?SYMBOL/delegate ^ok
     | ?SYMBOL/method ^ok
     | ?SYMBOL/script ^ok
-    | ?SYMBOL/aux ^ok
     | ?SYMBOL/let ^ok
     | ?SYMBOL/set ^ok
     | ?SYMBOL/map ^ok
@@ -24,6 +24,9 @@ $   (emit p "(in-package :arrowgrams/build)~%~%")
     | ?SYMBOL/if ^ok
     | ?SYMBOL/then ^ok
     | ?SYMBOL/else ^ok
+    | ?SYMBOL/when ^ok
+    | ?SYMBOL/situation ^ok
+    | ?SYMBOL/or ^ok
     | * ^fail
     ]
   | * ^fail
@@ -45,73 +48,69 @@ $   (emit p "(in-package :arrowgrams/build)~%~%")
 = type-decl
   SYMBOL/type @esa-symbol
 
-= kinds
-  {[ ?SYMBOL/kind @kind
+= situations
+  {[ ?SYMBOL/situation @situation | * > ]}
+
+= situation
+  SYMBOL/situation SYMBOL
+
+= classess
+  {[ ?SYMBOL/class @class
    | * >
   ]}
 
-= aux
-  {[ ?SYMBOL/aux @auxiliary
-   | * >
-  ]}
-
-= scripts
+= whens-and-scripts
   {[ ?SYMBOL/script @script-definition
+   | ?SYMBOL/when @when-definition
    | * >
   ]}
 
-= kind
-  SYMBOL/kind
+= class
+  SYMBOL/class
   @esa-symbol
        set-current-class
 $      (emit p "~&(defclass ~a ()~%(" (atext p))
-$      (clear-method-stream p)
-  {[ ?SYMBOL/script @script-decl
-   | ?SYMBOL/method @method-decl
-   | ?SYMBOL/delegate @delegate-def
-   | ?SYMBOL/field @field-decl
-   | ?SYMBOL/proto @proto-decl
+  @field-decl-begin @field-decl
+  {[ &field-decl
    | * >
   ]}
 $      (emit p "))~%")
-$      (emit p "~%(defmethod create-~a () (make-instance '~a))" (current-class p) (current-class p))
-       emit-methods
-  SYMBOL/end SYMBOL/kind
+  SYMBOL/end SYMBOL/class
 
-= auxiliary
-  SYMBOL/aux
-  @esa-symbol
-     set-current-class
-  {[ ?SYMBOL/method @method-decl
-   | ?SYMBOL/script @delegate-def
-   | ?SYMBOL/script @script-decl
-   | * >
-  ]}
-    emit-methods
-  SYMBOL/end SYMBOL/aux
-
-= field-decl
-  SYMBOL/field
+= field-decl-begin
   [ ?SYMBOL/map @map-decl
   | &non-keyword-symbol @esa-symbol
-$     (emit p "~&(~a :accessor ~a)~%" (atext p) (atext p))
-  | *
   ]
 
-= proto-decl
-  SYMBOL/proto
-  @esa-symbol
-$     (emit p "~&(proto :accessor proto :initform (make-instance '~a))~%" (atext p))
+- field-decl
+  [ ?SYMBOL/map @map-decl ^ok
+  | &non-keyword-symbol @esa-symbol
+$     (emit p "~&(~a :accessor ~a)~%" (atext p) (atext p))
+    ^ok
+  | * ^fail
+  ]
 
-= delegate-def
-  SYMBOL/delegate @esa-symbol
-  push-symbol
-$      (emit-to-method-stream p "~%(defmethod ~a (self" (atext p))
-  @typed-formals
-$      (emit-to-method-stream p ")") ;; close parameter list
-  @return-type
-$      (emit-to-method-stream p " (~a proto))" (pop-symbol p))
+= when-definition
+  SYMBOL/when
+  @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
+$      (clear-method-stream p)
+  @class-ref
+  {[ ?SYMBOL/script @script-decl
+   | ?SYMBOL/method @method-decl
+   | * >
+  ]}
+       emit-methods
+  SYMBOL/end SYMBOL/when
+
+= situation-ref
+  @esa-symbol % should be checked to be a situation
+
+= or-situation
+  SYMBOL/or @situation-ref
   
+= class-ref
+  @esa-symbol  % should be checked to be a kind
+
 = method-decl
   SYMBOL/method @esa-symbol
 $      (emit-to-method-stream p "~%(defgeneric ~a (self" (atext p))
@@ -160,6 +159,8 @@ $            (emit-to-method-stream p " #|returns ~a|# " (atext p))
   
 = script-definition
   SYMBOL/script
+  @esa-symbol
+  set-current-class
   @qualified-symbol
   set-current-method
 $      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (atext p) (current-class p))
@@ -187,6 +188,8 @@ $     (emit p "~%")
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
    | ?SYMBOL/set @set-statement
+   | ?SYMBOL/create @create-statement
+   | ?SYMBOL/defproto @set-proto-statement
    | ?SYMBOL/if @if-statement
    | ?SYMBOL/loop @loop-statement
    | ?SYMBOL/exit-when @exit-when-statement
@@ -200,7 +203,8 @@ $     (emit p "~%")
   SYMBOL/let
    @esa-symbol
 $      (emit p "(let ((~a " (atext p))
-   '=' 
+   '='
+   [ ?SYMBOL/map SYMBOL/map | * ]
    @esa-expr
 $      (emit p "))")
    SYMBOL/in 
@@ -208,10 +212,32 @@ $      (emit p "))")
 $      (emit p ")#|end let|#")   
    SYMBOL/end SYMBOL/let
 
+= create-statement
+  SYMBOL/create
+   @esa-symbol
+$      (emit p "(let ((~a " (atext p))
+   '=' 
+   [ ?SYMBOL/map SYMBOL/map | * ]
+   @class-ref
+$      (emit p "(make-instance '~a))" (atext p))
+   SYMBOL/in 
+   @script-body
+$      (emit p "))#|end create|#")   
+   SYMBOL/end SYMBOL/create
+
 = set-statement
   SYMBOL/set
 $      (emit p "(setf ")
    @esa-expr
+   '=' 
+   @esa-expr
+$      (emit p ")")
+
+= set-proto-statement
+  SYMBOL/defproto
+$      (emit p "(setf (proto ")
+   @esa-expr
+$      (emit p ") ")
    '=' 
    @esa-expr
 $      (emit p ")")
@@ -295,6 +321,7 @@ $    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
   {[ ?'/' '/' combine-text SYMBOL combine-text
    | ?'-' '-' combine-text SYMBOL combine-text
    | ?'?' '?' combine-text >
+   | ?CHARACTER/' CHARACTER/' combine-text >
    | * >
   ]}
 
@@ -311,7 +338,12 @@ $    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
   expr-stack-close
 
 = actuals
- [ ?'(' '(' {[ &non-keyword-symbol @esa-symbol emit-expr-actual | * > ]} ')'
+ [ ?'(' '('
+$           (emit p " ")
+         {[ &non-keyword-symbol @esa-expr
+$          (emit p " ")
+          | * > ]}
+	 ')'
  | *
  ]
 

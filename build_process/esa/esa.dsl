@@ -23,13 +23,16 @@ kind definition/node
   script loader  >> loadtime/node
 end kind
   
-kind loadtime/node 
-  proto definition/node
-  method install-child(loadtime/node)
+kind loadtime/node
+  field output-queue
+  container loadtime/node
+  descriptor definition/node
+  method install-child(runtime/node)
   script initializer
   method get-parts
   method initially
   method output-events >> map runtime/output-event
+  script send(runtime/event)
 end kind
 
 kind loadtime/dispatcher
@@ -62,16 +65,21 @@ kind runtime/dispatcher
   method get-node >> runtime/node
 end kind
 
-kind runtime/node
-  proto loadtime/node
-  delegate parent
+kind runtime/node is loadtime/node
+  field input-queue
+  delegate container
+  delegate descriptor
+  delegate output-events >> map runtime/output-event
+  delegate send
+  delegate initially
+  delegate install-child
+  delegate initializer
   script main(dispatcher)
   script ready? >> true/false
   script busy? >> true/false
   method busy-self? >> true/false
   method children >> map runtime/node
   script dispatch-outputs
-  method output-events >> map runtime/output-event
   method enqueue-input(runtime/output-event)
 end kind
 
@@ -109,7 +117,12 @@ end script
 %%  loader
 
 script definition/node.loader >> instance
-  let self-instance = create-loadtime/node in
+let self-instance = create-loadtime/node in
+
+xxx what is the proto and what is the parent???
+
+    defproto self-instance = self
+    set self-instance.parent = self
     map child-def = self.get-parts in
       let child-instance = @child-def.loader in
         self-instance.install-child(child-instance)

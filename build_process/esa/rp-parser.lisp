@@ -12,7 +12,7 @@
   (setf (state self) :idle))
 
 (defmethod e/part:react ((self rp-parser) (e e/event:event))
-  #+nil(format *standard-output* "~&rp-parser in state ~s gets ~s ~s~%" (state self) (@pin self e) (@data self e))
+  (format *standard-output* "~&rp-parser in state ~s gets ~s ~s~%" (state self) (@pin self e) (@data self e))
   (ecase (state self)
     (:idle
      (ecase (@pin self e)

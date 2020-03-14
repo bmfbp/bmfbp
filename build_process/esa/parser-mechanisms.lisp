@@ -26,7 +26,7 @@
 
 (defmethod accept ((p parser))
   (setf (accepted-token p) (next-token p))
-  #+nil(format *standard-output* "~&~s" (token-text (accepted-token p)))
+  (format *standard-output* "~&~s" (token-text (accepted-token p)))
   (read-next-token p)
   :ok)
 
@@ -186,7 +186,6 @@
 
 (defmethod expr-stack-open ((p parser))
   (setf (expr-stack p) nil)
-  (setf (need-close-paren-p p) nil)
   (setf (call-rule-flag p) nil))
 
 (defmethod set-call-rule-flag ((p parser))
@@ -198,9 +197,11 @@
 (defmethod emit-expr-stack ((p parser))
   (let ((single-item-p (= 1 (length (expr-stack p))))
         (first-time-p t))
+    (push nil (need-closing-rpar-flag-stack p))
+    ;; an error if single-item-p AND not a ref to formal parameter
     (unless single-item-p
       (emit p "(")
-      (setf (need-close-paren-p p) T))
+      (setf (first (need-closing-rpar-flag-stack p)) t))
     (dolist (e (expr-stack p))
       (if first-time-p
           (emit p "~a" e)
@@ -208,25 +209,12 @@
       (setf first-time-p nil))
     (setf (call-rule-flag p) nil)))
 
-(defmethod emit-expr-stack-using-call-rule ((p parser))
-  (let ((single-item-p (= 1 (length (expr-stack p)))))
-    (unless single-item-p
-      (emit p "(")
-      (setf (need-close-paren-p p) T))
-    (when (call-rule-flag p)
-      (emit p "call-rule"))
-    (dolist (e (expr-stack p))
-      (if (call-rule-flag p)
-          (emit p " #'~a" e)
-        (emit p " ~a" e))
-      (setf (call-rule-flag p) nil))))
-
 (defmethod emit-expr-actual ((p parser))
   (emit p " ~a" (atext p)))
 
 (defmethod expr-stack-close ((p parser))
-  (when (need-close-paren-p p)
-    (emit p ") ")))
+  (when (pop (need-closing-rpar-flag-stack p))
+      (emit p ")")))
 
 (defmethod push-symbol ((p parser))
   (push (atext p) (symbol-stack p)))

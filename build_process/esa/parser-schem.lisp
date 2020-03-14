@@ -1,6 +1,6 @@
 (in-package :arrowgrams/build)
 
-(defun run-rephrase-parser (output-filename input-filename)
+(defun run-rephrase-parser (input-filename output-filename)
   (let ((net (@defnetwork parse
                  (:code tokenize (:start :pull) (:out :error))
 		 (:code comments (:token) (:pull :out :error))
@@ -27,15 +27,16 @@
 			 symbols.out -> integers.token
 			 integers.out -> self.out
 
-			 tokenize.error,comments.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+			 tokenize.error,comments.error,strings.error,symbols.error,spaces.error,integers.error,raw-text.error -> self.error
 			 "
                          )
 
                  (:code file-writer (:filename :write) (:error))
                  (:code rp-parser (:start :token) (:pull :out :error))
+                 (:code error-manager (:error) ())
 
                  (:schem parse (:start :output-filename) (:out :error)
-                    (rp-parser scanner file-writer)
+                    (rp-parser scanner file-writer error-manager)
                     "
                     self.start -> rp-parser.start, scanner.start
 
@@ -45,7 +46,7 @@
                     self.output-filename -> file-writer.filename
                     rp-parser.out -> file-writer.write
 
-                    scanner.error, rp-parser.error,file-writer.error -> self.error
+                    scanner.error, rp-parser.error,file-writer.error -> error-manager.error
                     "
                     ))))
 
@@ -65,6 +66,7 @@
 	         (:code strings (:token) (:pull :out :error))
 		 (:code symbols (:token) (:pull :out :error))
 		 (:code integers (:token) (:pull :out :error))
+
 		 
 		 (:schem scanner (:start :pull) (:out :error)
 			 (tokenize comments strings symbols spaces integers raw-text) ;; parts
@@ -83,15 +85,16 @@
 			 symbols.out -> integers.token
 			 integers.out -> self.out
 
-			 tokenize.error,comments.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
+			 tokenize.error,comments.error,raw-text.error,strings.error,symbols.error,spaces.error,integers.error -> self.error
 			 "
                          )
 
                  (:code esa-parser (:start :token) (:pull :out :error))
                  (:code esa-file-writer (:filename :write) (:error))
+                 (:code esa-error-manager (:error) ())
 
                  (:schem parse (:start :esa-output-filename) (:out :error)
-                    (esa-parser scanner esa-file-writer)
+                    (esa-parser scanner esa-file-writer esa-error-manager)
                     "
                     self.start -> esa-parser.start, scanner.start
                     self.esa-output-filename -> esa-file-writer.filename
@@ -100,7 +103,7 @@
                     esa-parser.pull -> scanner.pull
                     scanner.out -> esa-parser.token
 
-                    scanner.error, esa-parser.error -> self.error
+                    scanner.error, esa-parser.error -> esa-error-manager.error
                     "
                     ))))
 
@@ -114,13 +117,13 @@
 (defun cl-user::etest1 ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/esa)
-  (arrowgrams/build::run-rephrase-parser (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")
-                                 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")))
+  (arrowgrams/build::run-rephrase-parser (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")
+                                 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")))
 (defun cl-user::etest2 ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/esa)
   (arrowgrams/build::run-esa-parser
-   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa3.dsl")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp")))
 
 (defun cl-user::etest()

@@ -14,6 +14,8 @@
    (current-method :accessor current-method)
    (expr-stack :accessor expr-stack :initform nil)
    (call-rule-flag :accessor call-rule-flag :initform nil)
-   (need-close-paren-p :accessor need-close-paren-p :initform nil)
+   (need-closing-rpar-flag-stack :accessor need-closing-rpar-flag-stack :initform nil) ;; flag ugh - maybe we should be constructing a lisp list, then convert it to a string?  package-ing might get in the way
    (symbol-stack :accessor symbol-stack :initform nil)
    ))
+
+(defclass filter (parser) ())

@@ -258,10 +258,13 @@
                                        (:file "symbols" :depends-on ("token" "classes"))
                                        (:file "integers" :depends-on ("token" "classes"))
 
+                                       (:file "error-manager" :depends-on ("token" "classes"))
+
                                        (:file "parser-mechanisms"
 					      :depends-on ("../cl-build/package"
 							   "token" "classes" "dumper"
                                                            "rp-macros"
+                                                           "error-manager"
 							   "tokenize" "comments" "raw-text" "strings" "spaces"
 							   "symbols" "integers"))
                                        (:file "rp-rules" :depends-on ("parser-mechanisms"))
