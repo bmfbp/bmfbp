@@ -1,5 +1,3 @@
-xxx
-
 type name
 type function
 type true/false

@@ -1,5 +1,3 @@
-xxx
-
 = esa-dsl
 $   (emit p "(in-package :arrowgrams/build)")
   @type-decls
