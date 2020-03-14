@@ -166,7 +166,7 @@
       (setf (saved-text p) combined-text))))
 
 (defmethod atext ((p parser))
-  (token-text (accepted-token p)))
+  (concatenate 'string "" (token-text (accepted-token p))))
 
 (defmethod clear-method-stream ((p parser))
   (setf (method-stream p) (make-string-output-stream)))

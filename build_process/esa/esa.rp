@@ -161,7 +161,7 @@ $            (emit-to-method-stream p " #|returns ~a|# " (atext p))
   set-current-class
   @qualified-symbol
   set-current-method
-$      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (atext p) (current-class p))
+$      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (current-method p) (current-class p))
   @formals
 $      (emit p ")")  
   @return-type
@@ -293,7 +293,6 @@ $    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
 
 = qualified-symbol
   @esa-symbol
-    set-current-class
   [ ?'.' @dotted-symbol
   | *
   ]
