@@ -26,7 +26,7 @@
 
 (defmethod accept ((p parser))
   (setf (accepted-token p) (next-token p))
-  #+nil(format *standard-output* "~&~s" (token-text (accepted-token p)))
+  (format *standard-output* "~&~s" (token-text (accepted-token p)))
   (read-next-token p)
   :ok)
 
@@ -113,11 +113,12 @@
     #+nil (spaces (depth p))
     (incf (depth p))
     #+nil (format *standard-output* "call-external ~s~%" func)
-    (funcall func p)
-    (decf (depth p))
-    #+nil (spaces (depth p))
-    #+nil (format *standard-output* ">> external ~s~%" func)
-    (setf (current-rule p) prev)))
+    (let ((r (funcall func p)))
+      (decf (depth p))
+      #+nil (spaces (depth p))
+      #+nil (format *standard-output* ">> external ~s~%" func)
+      (setf (current-rule p) prev)
+      r)))
 
 (defmethod call-rule ((p parser) func)
   (let ((prev (current-rule p)))
@@ -184,40 +185,52 @@
 
 
 (defmethod string-stack-open ((p parser))
-  (setf (string-stack p) nil)
-  (setf (lpar-counter p) 0))
+  (let ((entry (make-instance 'string-stack-entry)))
+    (setf (count entry) 0)
+    (setf (str-stack entry) nil)
+    (push entry (string-stack p))
 
-(defmethod push-string-onto-expr-stack ((p parser))
+
+(defmethod top-of-string-stack ((p parser))
+  (first (string-stack p)))
+
+(defmethod push-string ((p parser))
   (push (atext p) (string-stack p)))
 
-(defmethod expr-stack-has-only-one-item? ((p parser))
-  (let ((len (length (string-stack p))))
-    (assert (>= len 1))
-    (> len 1)))
+(defmethod string-stack-empty ((p parser))
+  (null (str-stack (top-of-string-stack p))))
+
+(defmethod string-stack-has-only-one-item ((p parser))
+  (let ((len (length (str-stack (top-of-string-stack p)))))
+    (assert (>= len 0))
+    (= len 1)))
 
 (defmethod emit-string-pop ((p parser))
-  (let ((str (pop (string-stack p))))
-    (emit p "~a" str)))
+(format *standard-output* "string stack ~s~%" (string-stack p))
+  (let ((str (pop (str-stack (top-of-string-stack p)))))
+    (emit p " ~a" str)))
 
-(defmethod emit-lpart-inc-count ((p parser))
+(defmethod emit-lpar-inc-count ((p parser))
   (emit p "(")
-  (incf (lpar-counter p)))
+  (incf (counter (top-of-string-stack p))))
+
+(defmethod inc-lpar-count ((p parser))
+  (incf (counter (top-of-string-stack p))))
 
 (defmethod emit-rpars-count-less-1 ((p parser))
+  (assert (>= (counter (top-of-string-stack p)) 0))
   (@:loop
-    (@:exit-when (= 1 (lpar-counter p)))
-    (decf (lpar-counter p))
-    (emit p ")")))
+    (@:exit-when (<= (counter (top-of-string-stack p)) 1))
+    (decf (counter (top-of-string-stack p)))
+    (emit p ")#|less1|#")))
 
 (defmethod emit-rpars ((p parser))
-  (assert (or (= 0 (lpar-counter p))
-              (= 1 (lpar-counter p))))
-  (when (= 1 (lpar-counter p))
-    (emit p ")")
-    (decf (lpar-counter p))))
+  (assert (or (= 0 (counter (top-of-string-stack p)))
+              (= 1 (counter (top-of-string-stack p)))))
+  (when (= 1 (counter (top-of-string-stack p)))
+    (emit p ")#|rpars|#")))
 
 (defmethod string-stack-close ((p parser))
-  (assert (null (string-stack p)))
-  (assert (= 0 (lpar-counter p))))
+  (pop (string-stack p)))
 
 

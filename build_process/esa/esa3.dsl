@@ -1,89 +1,9 @@
-type name
-type function
-type true/false
-
-situation building
-situation building-aux
-situation loading
-situation initializing
-situation running
-
-class part
-  part-name
-  part-kind
-end class
-
-class source
-  part-name  % a name or "self"
-  pin-name
-end class
-
-class destination
-  part-name  % a name or "self"
-  pin-name
-end class
-
-class wire
-  source
-  map destinations
-end class
-
-class kind
-  input-pins
-  output-pins
-  initially
-  react
-  parts
-  wires
-end class
-
-class node
-  input-queue
-  output-queue
-  kind-field
-  container
-  name-in-container  %% lookup this part instance by name as a child of my container
-end class
-
-class dispatcher
-  map all-parts
-end class
-
-class event
-  part-name
-  pin-name
-  data
-end class
-
-%=== building kinds ===
-
-when building kind
-  method install-input-pin(name)
-  method install-output-pin(name)
-  script add-input-pin(name)
-  script add-output-pin(name)
-  method install-initially-function(function)
-  method install-react-function(function)
-  script add-part(name kind)
-  script add-wire(wire)
-end when
-
-when building-aux kind
-  method ensure-input-pin-not-declared(name)
-  method ensure-output-pin-not-declared(name)
-  script ensure-valid-source(source)
-  script ensure-valid-destination(destination)
-end when
-
-when building source
-  method self? >> true/false %% true if self.part-name == "self"
-end when
-
-when building destination 
-  method self? >> true/false %% true if self.part-name == "self"
-end when
-
 script kind add-input-pin(name)
+   abc
+   def.ghi
+   abc(jkl)
+   def.ghi(jkl)
+   def.ghi(jkl mno)
    self.ensure-input-pin-not-declared(name)
    self.install-input-pin(name)
 end script

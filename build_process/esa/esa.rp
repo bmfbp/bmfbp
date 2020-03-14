@@ -324,26 +324,28 @@ $    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
 
 = esa-expr
   string-stack-open
-  [ ?'@' '@' set-call-rule-flag | * ]
+  [ ?'@' '@' | * ]
   @esa-symbol
-  push-string-onto-expr-stack
-  {[ ?'.' @dotted-symbol push-string-onto-expr-stack
+  push-string
+  {[ ?'.' @dotted-symbol push-string
    | * >
   ]}
-  [ string-stack-has-only-one-item?
-    emit-expr-pop
+  [ string-stack-has-only-one-item
+    emit-string-pop
   | *
     emit-lpar-inc-count
     emit-string-pop
   ]
-  {[ string-stack-has-only-one-item?
+  {[ string-stack-empty
+     >
+   | string-stack-has-only-one-item
      emit-string-pop
      >
    | *
      emit-lpar-inc-count
      emit-string-pop
   ]}
-  emitpars-count-less-1
+  emit-rpars-count-less-1
   @actuals
   emit-rpars
   string-stack-close
@@ -351,10 +353,11 @@ $    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
 = actuals
  [ ?'(' '('
 $           (emit p " ")
+  inc-lpar-count
          {[ &non-keyword-symbol @esa-expr
 $          (emit p " ")
           | * > ]}
 	 ')'
- | *
+ | *  emit-rpars-count-less-1
  ]
 

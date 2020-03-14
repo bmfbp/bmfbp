@@ -150,7 +150,7 @@
    (setf result :ok))
   result))
 
-(defmethod <parse-cond-statements> ((p parser))
+(defmethod <parse-choice-statements> ((p parser))
   (let ((result :fail))
   (@:loop
    (@:exit-when (not (parser-success-p (<parse-statement> p))))
@@ -172,7 +172,7 @@
 	 (input-char p #\[)
              (emit p "~&(cond~%")
              (emit p "(")
-	 (<parse-cond-statements> p)
+	 (<parse-choice-statements> p)
              (emit p ");choice clause~%")
          (@:loop
            (@:exit-when (not (parser-success-p (look-char? p #\|))))
