@@ -353,7 +353,7 @@ $    (emit p "(return-from ~a ~a)" (current-method p) (atext p))
 = actuals
  [ ?'(' '('
 $           (emit p " ")
-  inc-lpar-count
+  set-lpar-count-to-1
          {[ &non-keyword-symbol @esa-expr
 $          (emit p " ")
           | * > ]}
