@@ -1327,17 +1327,18 @@ displayCanvasItemInstance model item =
                   ]
               ] ++ resizeOption
             )
-      Polyline points ->
+      Polyline rawPoints ->
         let
-          pointsString = pointsToString points
-          movementCircles = makeMovementCirlces itemToDisplay isItemHovered points
+          straightenedPoints = straightenPolyline rawPoints
+          pointsString = pointsToString straightenedPoints
+          movementCircles = makeMovementCirlces itemToDisplay isItemHovered rawPoints
           nameTexts = List.filterMap (Maybe.map makePinNameText) pinNamesWithPoints
           pinNamesWithPoints =
             [ Maybe.map (\x -> (x, item.sourcePinName)) starting
             , Maybe.map (\x -> (x, item.sinkPinName)) ending
             ]
           (starting, ending) =
-            case points of
+            case straightenedPoints of
               [] -> (Nothing, Nothing)
               (x :: xs) -> (Just x, (List.drop (List.length xs - 1) xs |> List.head))
           makePinNameText (coords, pinName) =
@@ -1477,6 +1478,24 @@ displayCanvasItemInstance model item =
                   ]
                   [ Svg.text label ]
             ]
+
+-- Polylines in Arrowgrams are always in straight lines. i.e. No diagonal line.
+straightenPolyline : List Coordinates -> List Coordinates
+straightenPolyline points =
+  case points of
+    (x :: xs) ->
+      let
+        (last, list) = List.foldr addConnectingPoint (x, []) xs
+      in
+        List.reverse (last :: list)
+    _ -> points
+
+addConnectingPoint : Coordinates -> (Coordinates, List Coordinates) -> (Coordinates, List Coordinates)
+addConnectingPoint next (pt, pts) =
+  let
+    connectingPoint = { x = next.x, y = pt.y }
+  in
+    (next, connectingPoint :: pt :: pts)
 
 calculatePinNamePosition : List CanvasItemInstance -> Coordinates -> (BoundingBoxCoordinates, String, String)
 calculatePinNamePosition instantiatedItems coords =
