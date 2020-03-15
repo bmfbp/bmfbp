@@ -216,6 +216,7 @@ coordinatesDecoder : JD.Decoder Coordinates
 coordinatesDecoder = JD.map2 Coordinates (JD.field "x" JD.int) (JD.field "y" JD.int)
 
 type alias Coordinates = { x : Int, y : Int }
+type alias BoundingBoxCoordinates = (Coordinates, Coordinates)
 
 -- This captures the state of some task that the user wants to
 -- do in multiple steps.
@@ -812,7 +813,7 @@ boundingBoxToEllipse upperLeft lowerRight =
   in
     ({ x = centerX, y = centerY }, radiusX, radiusY)
 
-ellipseToBoundingBox : Int -> Int -> Int -> Int -> (Coordinates, Coordinates)
+ellipseToBoundingBox : Int -> Int -> Int -> Int -> BoundingBoxCoordinates
 ellipseToBoundingBox cX cY rX rY =
   ( { x = cX - rX, y = cY - rY }
   , { x = cX + rX, y = cY + rY }
@@ -842,12 +843,12 @@ getCursorDropPointCoords canvasItems cursorCoords =
             Polyline points -> Nothing
             Text _ _ _ -> Nothing
             Rect topLeft bottomRight ->
-              if withinView cursorCoords (moveTopLeft topLeft tolerance) (moveBottomRight bottomRight tolerance)
+              if pointWithinView cursorCoords (moveTopLeft topLeft tolerance) (moveBottomRight bottomRight tolerance)
               then Just <| getClosestPoint topLeft bottomRight cursorCoords
               else Nothing
             Ellipse topLeft bottomRight ->
               -- TODO: Find the point on the curve instead of the bounding box.
-              if withinView cursorCoords (moveTopLeft topLeft tolerance) (moveBottomRight bottomRight tolerance)
+              if pointWithinView cursorCoords (moveTopLeft topLeft tolerance) (moveBottomRight bottomRight tolerance)
               then Just <| getClosestPoint topLeft bottomRight cursorCoords
               else Nothing
   in
@@ -1256,8 +1257,8 @@ displayResizeOption isItemHovered intent item cursorCoords upperLeft lowerRight 
     , makeCircle LowerRight
     ]
 
-withinView : Coordinates -> Coordinates -> Coordinates -> Bool
-withinView point upperLeft lowerRight =
+pointWithinView : Coordinates -> Coordinates -> Coordinates -> Bool
+pointWithinView point upperLeft lowerRight =
   point.x >= upperLeft.x && point.y >= upperLeft.y &&
   point.x <= lowerRight.x && point.y <= lowerRight.y
 
@@ -1333,16 +1334,21 @@ displayCanvasItemInstance model item =
               [] -> (Nothing, Nothing)
               (x :: xs) -> (Just x, (List.drop (List.length xs - 1) xs |> List.head))
           makePinNameText (coords, pinName) =
-            ( Svg.text_
-                [ SA.fill "black"
-                , SA.fontSize "8pt"
-                , SA.stroke (if isSelected then "blue" else "black")
-                -- Give the pin names some space from the points.
-                , SA.x <| String.fromInt <| coords.x + 10
-                , SA.y <| String.fromInt <| coords.y + 10
-                ]
-                [ Svg.text pinName ]
-            )
+            let
+              ((newCoords, _), anchor, baseline) = calculatePinNamePosition model.instantiatedItems coords
+            in
+              ( Svg.text_
+                  [ SA.fill "black"
+                  , SA.fontSize "8pt"
+                  , SA.stroke (if isSelected then "blue" else "black")
+                  -- Give the pin names some space from the points.
+                  , SA.x <| String.fromInt <| newCoords.x
+                  , SA.y <| String.fromInt <| newCoords.y
+                  , SA.textAnchor anchor
+                  , SA.alignmentBaseline baseline
+                  ]
+                  [ Svg.text pinName ]
+              )
         in
           Svg.g
             [ SE.onMouseDown (SelectItem item)
@@ -1463,6 +1469,85 @@ displayCanvasItemInstance model item =
                   ]
                   [ Svg.text label ]
             ]
+
+calculatePinNamePosition : List CanvasItemInstance -> Coordinates -> (BoundingBoxCoordinates, String, String)
+calculatePinNamePosition instantiatedItems coords =
+  let
+    rects = List.filterMap (.item >> getCoords) instantiatedItems
+    getCoords item =
+      case item of
+        (Rect upperLeft lowerRight) -> Just (upperLeft, lowerRight)
+        _ -> Nothing
+    -- Faking the lower right of the pin name since we don't have access to the
+    -- width and height of the text.
+    pinNameLR = { x = coords.x + 100, y = coords.y + 100 }
+    seed = ((coords, pinNameLR), "start", "baseline")
+  in
+    List.foldl calculatePositionOutsideOfBoundingBox seed rects
+
+padBoundingBox : BoundingBoxCoordinates -> Int -> BoundingBoxCoordinates
+padBoundingBox (ul, lr) padding =
+  ( { ul
+    | x = ul.x - padding
+    , y = ul.y - padding
+    }
+  , { lr
+    | x = lr.x + padding
+    , y = lr.y + padding
+    }
+  )
+
+calculatePositionOutsideOfBoundingBox : (Coordinates, Coordinates) -> (BoundingBoxCoordinates, String, String) -> (BoundingBoxCoordinates, String, String)
+calculatePositionOutsideOfBoundingBox bbox ((itemUL, itemLR), _, _) =
+  let
+    -- MAGIC: Padding of 10 for bounding boxes
+    (bbUL, bbLR) = padBoundingBox bbox 10
+    (dx, dy) = calculateClosestPointDelta itemUL itemLR bbUL bbLR
+    -- Which dimension is closer?
+    closerDimension = if abs dx < abs dy then "x" else "y"
+    -- See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor
+    (x, anchor) = if dx < 0 then (bbUL.x, "end") else (bbLR.x, "start")
+    -- See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/alignment-baseline
+    (y, baseline) = if dy < 0 then (bbUL.y, "baseline") else (bbLR.y, "hanging")
+    (ul, an, bl) =
+      case (dx, dy, abs dx < abs dy) of
+        (0, 0, _) -> (itemUL, "start", "baseline")
+        (_, _, True) -> ({ x = x, y = itemUL.y }, anchor, "baseline")
+        (_, _, False) -> ({ x = itemUL.x, y = y }, "start", baseline)
+  in
+    ((ul, ul), an, bl)
+
+-- Given: upper-left of box A, lower-right of box A, upper-left of box B,
+-- lower-right of box B, A intersects with B, do the following:
+-- 1. Calculate the closest point outside of B to A's upper-left.
+-- 2. Calculate the delta between that closest point and A's upper-left.
+-- 3. Return the delta in the form of (xDelta, yDelta).
+-- If A does not intersect with B, return (0, 0).
+calculateClosestPointDelta : Coordinates -> Coordinates -> Coordinates -> Coordinates -> (Int, Int)
+calculateClosestPointDelta aUL aLR bUL bLR =
+  if not (intersectingBoxes aUL aLR bUL bLR)
+  then (0, 0)
+  else 
+    let
+      -- Delta between A's upper left and B's upper left in the horizontal dimension
+      dxUL = bUL.x - aUL.x
+      -- Delta between A's upper left and B's lower right in the horizontal dimension
+      dxLR = bLR.x - aUL.x
+      -- Horizontal delta to return
+      dx = if abs dxUL < abs dxLR then dxUL else dxLR
+      -- Delta between A's upper left and B's upper left in the vertical dimension
+      dyUL = bUL.y - aUL.y
+      -- Delta between A's upper left and B's lower right in the vertical dimension
+      dyLR = bLR.y - aUL.y
+      -- Vertical delta to return
+      dy = if abs dyUL < abs dyLR then dyUL else dyLR
+    in
+      (dx, dy)
+
+intersectingBoxes : Coordinates -> Coordinates -> Coordinates -> Coordinates -> Bool
+intersectingBoxes aUL aLR bUL bLR =
+  (aUL.x > bUL.x && aUL.y > bUL.y && aUL.x < bLR.x && aUL.y < bLR.y) ||
+  (aLR.x > bUL.x && aLR.y > bUL.y && aLR.x < bLR.x && aLR.y < bLR.y)
 
 pointsToString : List Coordinates -> String
 pointsToString points =
