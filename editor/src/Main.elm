@@ -477,6 +477,7 @@ update message model =
         (_, Just i) ->
           case i.item of
             (Text _ _ _) -> updateModelOnly { model | intent = ToType i }
+            (Polyline _) -> updateModelOnly <| updateCanvasItemInstance model i (addPointToPolyline model.cursorCoords)
             _ -> (model, Cmd.none)
         _ -> (model, Cmd.none)
     MovePath path index point ->  updateModelOnly { model | intent = ToMovePath path index point }
@@ -541,6 +542,12 @@ addArrow model points =
     model2 = createNewCanvasItemInstance model <| Polyline points
   in
     { model2 | intent = ToExplore }
+
+addPointToPolyline : Coordinates -> CanvasItemInstance -> CanvasItemInstance
+addPointToPolyline cursor item =
+  case item.item of
+    Polyline points -> { item | item = Polyline (List.append points [cursor]) }
+    _ -> item
 
 -- We convert to float because of legacy reason with the compiler.
 fromInt x = String.fromInt x ++ ".0"
@@ -1377,6 +1384,7 @@ displayCanvasItemInstance model item =
                     , SA.fillOpacity "0.0"
                     , SA.strokeOpacity "0.0"
                     , SA.strokeWidth "20"
+                    , SE.on "dblclick" (JD.succeed <| DoubleClick (Just item))
                     ]
                     []
                 )
