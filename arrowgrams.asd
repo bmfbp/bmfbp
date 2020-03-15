@@ -289,8 +289,11 @@
                                      (:file "part-namer" :depends-on ("package" "classes"))
                                      (:file "schematic-or-leaf" :depends-on ("package" "classes"))
                                      (:file "collector" :depends-on ("package" "classes"))
-                                     (:file "build-graph" :depends-on ("package" "classes" "esa"))
+                                     (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa"))
 				     (:file "build" :depends-on ("package" "classes"
                                                                  "part-namer" "json-array-splitter"
-                                                                 "schematic-or-leaf" "collector"))
+                                                                 "schematic-or-leaf" "collector"
+                                                                 "build-graph-in-memory"
+                                                                 "esa" "esa-methods"
+                                                                 ))
 				     ))))
