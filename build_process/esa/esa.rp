@@ -2,7 +2,7 @@
 $   (emit p "(in-package :arrowgrams/build)")
   @type-decls
   @situations
-  @classess
+  @classes
   @whens-and-scripts
   EOF
 
@@ -55,7 +55,7 @@ $   (emit p "(in-package :arrowgrams/build)")
 = situation
   SYMBOL/situation SYMBOL
 
-= classess
+= classes
   {[ ?SYMBOL/class @class
    | * >
   ]}
@@ -80,7 +80,7 @@ $      (emit p "))~%")
 
 = field-decl-begin
   [ ?SYMBOL/map @map-decl
-  | &non-keyword-symbol @esa-symbol
+  | &non-keyword-symbol @field-decl
   ]
 
 - field-decl

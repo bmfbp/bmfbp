@@ -178,7 +178,7 @@ script kind loader(my-name my-container) >> node
     set instance.container = my-container
     set instance.name-in-container = my-name
       map part-def = self.children in
-        let child-instance = @part-def.kind-field.loader(part-def.part-name instance) in
+        let child-instance = @part-def.kind-field.loader(part-def.part-name self) in
 	  @instance.add-part(part-def.part-name self)  % each child has a name that is local to the container (names are determined by kind)
         end let
       end map
