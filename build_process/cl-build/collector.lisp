@@ -48,6 +48,8 @@
 (defmethod finalize-and-send-collection ((self collector))
   (let ((list-of-strings (reverse (collection self))))
     (let ((jstring (apply-commas-make-json-array list-of-strings)))
+      #+nil(with-open-file (f "/tmp/temp.txt" :direction :output :if-exists :supersede)
+        (write jstring :stream f))
       (@send self :json-collection jstring)
       (e/part:first-time self))))
 

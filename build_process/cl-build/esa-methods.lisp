@@ -15,10 +15,10 @@
 (defmethod install-wire ((self kind) (w wire))
   (push w (wires self)))
 
-(defmethod install-part ((self kind) name (k kind))
-  (let ((p (make-instance 'part)))
+(defmethod install-part ((self kind) name kind)
+  (let ((p (make-instance 'part-definition)))
     (setf (part-name p) name)
-    (setf (part-kind p) k)
+    (setf (part-kind p) kind)
     (push p (parts self))))
 
 (defmethod children ((self kind))
@@ -117,3 +117,8 @@
         (return-from find-wire-for-source w))))
   (assert nil)) ;; source not found - can't happen
 
+(defmethod find-child ((self kind) name)
+  (dolist (p (parts self))
+    (when (string= name (part-name p))
+      (return-from find-child p)))
+  (assert nil)) ;; no part with given name - can't happen

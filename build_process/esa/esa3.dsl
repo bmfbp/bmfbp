@@ -30,6 +30,7 @@ class wire
 end class
 
 class kind
+  kind-name
   input-pins
   output-pins
   initially

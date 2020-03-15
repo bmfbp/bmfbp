@@ -1,6 +1,9 @@
 (in-package :arrowgrams/build)
 
-(defclass build-graph-in-memory (builder) ())
+(defparameter *script* nil)
+
+(defclass build-graph-in-memory (builder) 
+  ((kinds-by-name :accessor kinds-by-name)))
 
 (defmethod e/part:busy-p ((self build-graph-in-memory))
   (call-next-method))
@@ -9,18 +12,19 @@
   (call-next-method))
 
 (defmethod e/part:first-time ((self build-graph-in-memory))
-)
+  (setf (kinds-by-name self) (make-hash-table :test 'equal)))
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
   (ecase (@pin self e)
     (:json-script
      (let ((script-as-alist (json-to-alist (@data self e))))
+       (setf *script* script-as-alist)
        (dolist (a script-as-alist)
-         (let ((graph (get-graph a))
-               (leaf  (get-leaf a)))
-           (if graph
-               (build-graph-in-mem graph)
-             (build-leaf-in-mem leaf))))))))
+         (let ((item-kind (get-item-kind a))
+               (name  (get-name a)))
+           (if (string= "graph" item-kind)
+               (build-graph-in-mem self name a)
+             (build-leaf-in-mem self name a))))))))
          ;(@send self :tree root))))))
 
 
@@ -65,12 +69,11 @@
 
 |#
 
-(defun json-to-alist (json-string)
-  (with-input-from-string (s json-string)
-    (json:decode-json s)))
+(defun get-name (alist)
+  (cdr (assoc :name alist)))
 
-(defun alist-to-json (alist)
-  (json:encode-json-alist-to-string alist))
+(defun get-item-kind (alist)
+  (cdr (assoc :item-kind alist)))
 
 (defun get-graph (alist)
   (cdr (assoc :graph alist)))
@@ -112,26 +115,35 @@
   (cdr (assoc :pin x)))
 
 
-(defun build-graph-in-mem (graph)
-  (let ((root-kind (make-instance 'kind)))
-    (dolist (input-name (get-inputs graph))
-      (add-input-pin root-kind input-name))
-    (dolist (output-name (get-outputs graph))
-      (add-output-pin root-kind output-name))
-    (dolist (part-kind (get-parts-list graph))
-      (add-part root-kind part-kind part-kind)) ;; for bootstrap part-kind == part-name
-    ;; the root wiring table is an array [] of wires
-    ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
-    (dolist (wire-as-alist (get-wiring graph))
-      (let ((w (make-instance 'wire)))
-        (set-index w (get-wire-index wire-as-alist))
-        (dolist (source (get-sources wire-as-alist))
-          (add-source w (get-part source) (get-pin source)))
-        (dolist (dest (get-destinations-list wire-as-alist))
-          (add-destination w (get-part dest) (get-pin dest)))
-        (add-wire root-kind w)))
-    root-kind))
+(defmethod build-graph-in-mem ((self build-graph-in-memory) name full-graph)
+  (let ((graph (get-graph full-graph))) ;; strip noise
+    (let ((kind (make-instance 'kind)))
+(format *standard-output* "~&define name ~s~%" name)
+      (setf (kind-name kind) name)
+      (setf (gethash name (kinds-by-name self)) kind)
+      (dolist (input-name (get-inputs graph))
+        (add-input-pin kind input-name))
+      (dolist (output-name (get-outputs graph))
+        (add-output-pin kind output-name))
+      (dolist (part-as-alist (get-parts-list graph))
+(format *standard-output* "~&need name ~s~%" (get-part-kind part-as-alist))
+        (add-part kind (get-part-name part-as-alist) (gethash (get-part-kind part-as-alist) (kinds-by-name self)))
+        ;; the root wiring table is an array [] of wires
+        ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
+        (dolist (wire-as-alist (get-wiring graph))
+          (let ((w (make-instance 'wire)))
+            (set-index w (get-wire-index wire-as-alist))
+            (dolist (source (get-sources wire-as-alist))
+              (add-source w (get-part source) (get-pin source)))
+            (dolist (dest (get-destinations-list wire-as-alist))
+              (add-destination w (get-part dest) (get-pin dest)))
+            (add-wire kind w)))
+        kind))))
 
-(defun build-leaf-in-mem (leaf-as-alist)
-  leaf-as-alist )
+(defmethod build-leaf-in-mem ((self build-graph-in-memory) name leaf-as-alist)
+  (let ((kind (make-instance 'kind)))
+(format *standard-output* "~&define name ~s~%" name)
+    (setf (kind-name kind) name)
+    (setf (gethash name (kinds-by-name self)) kind)
+    leaf-as-alist ))
 

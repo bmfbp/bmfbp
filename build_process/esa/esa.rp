@@ -86,7 +86,7 @@ $      (emit p "))~%")
 - field-decl
   [ ?SYMBOL/map @map-decl ^ok
   | &non-keyword-symbol @esa-symbol
-$     (emit p "~&(~a :accessor ~a)~%" (atext p) (atext p))
+$     (emit p "~&(~a :accessor ~a :initform nil)~%" (atext p) (atext p))
     ^ok
   | * ^fail
   ]
