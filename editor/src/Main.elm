@@ -402,7 +402,7 @@ update message model =
                 Polyline points ->
                   let
                     updatePoint i pt = if i == index then calculateActualCoords model coords else pt
-                    newPoints = List.indexedMap updatePoint points
+                    newPoints = matchClosestRect model.instantiatedItems <| List.indexedMap updatePoint points
                     updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id (Polyline newPoints)
                   in
                     { updatedModel | instantiatedItems = updatedItems }
@@ -535,6 +535,39 @@ update message model =
             x = Debug.log "Error loading file: " e
           in
             updateModelOnly model
+
+-- Given all instantiated items and a list of polyline points, match the first
+-- (the source) and the last point (the sink) to the closest instantiated
+-- item's boundary, if close enough.
+matchClosestRect : List CanvasItemInstance -> List Coordinates -> List Coordinates
+matchClosestRect items points =
+  case points of
+    (first :: tail) ->
+      case List.reverse tail of
+        (last :: middle) ->
+          let
+            newFirst = List.foldl matchPointWithRect first items
+            newLast = List.foldl matchPointWithRect last items
+          in
+            List.concat [[newFirst], middle, [newLast]]
+        _ -> points
+    _ -> points
+
+matchPointWithRect : CanvasItemInstance -> Coordinates -> Coordinates
+matchPointWithRect item point =
+  case item.item of
+    Rect ul lr ->
+      let
+        -- MAGIC: add padding for bounding box to detect arrow's proximity
+        (bbUL, bbLR) = padBoundingBox (ul, lr) 10
+        (dx, dy) = calculateClosestPointDelta point point bbUL bbLR
+        x = if dx < 0 then ul.x else lr.x
+        y = if dy < 0 then ul.y else lr.y
+      in
+        if intersectingBoxes point point bbUL bbLR
+        then if abs dx < abs dy then { x = x, y = point.y } else { x = point.x, y = y }
+        else point
+    _ -> point
 
 addArrow : Model -> List Coordinates -> Model
 addArrow model points =
@@ -1505,8 +1538,8 @@ calculatePinNamePosition instantiatedItems coords =
       case item of
         (Rect upperLeft lowerRight) -> Just (upperLeft, lowerRight)
         _ -> Nothing
-    -- Faking the lower right of the pin name since we don't have access to the
-    -- width and height of the text.
+    -- HACK: Faking the lower right of the pin name since we don't have access
+    -- to the width and height of the text.
     pinNameLR = { x = coords.x + 100, y = coords.y + 100 }
     seed = ((coords, pinNameLR), "start", "baseline")
   in
@@ -1527,20 +1560,19 @@ padBoundingBox (ul, lr) padding =
 calculatePositionOutsideOfBoundingBox : (Coordinates, Coordinates) -> (BoundingBoxCoordinates, String, String) -> (BoundingBoxCoordinates, String, String)
 calculatePositionOutsideOfBoundingBox bbox ((itemUL, itemLR), _, _) =
   let
+    (itemX, itemY) = (itemUL.x + 5, itemUL.y + 5)
     -- MAGIC: Padding of 10 for bounding boxes
     (bbUL, bbLR) = padBoundingBox bbox 10
     (dx, dy) = calculateClosestPointDelta itemUL itemLR bbUL bbLR
-    -- Which dimension is closer?
-    closerDimension = if abs dx < abs dy then "x" else "y"
     -- See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor
     (x, anchor) = if dx < 0 then (bbUL.x, "end") else (bbLR.x, "start")
     -- See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/alignment-baseline
     (y, baseline) = if dy < 0 then (bbUL.y, "baseline") else (bbLR.y, "hanging")
     (ul, an, bl) =
       case (dx, dy, abs dx < abs dy) of
-        (0, 0, _) -> (itemUL, "start", "baseline")
-        (_, _, True) -> ({ x = x, y = itemUL.y }, anchor, "baseline")
-        (_, _, False) -> ({ x = itemUL.x, y = y }, "start", baseline)
+        (0, 0, _) -> ({ x = itemX, y = itemY }, "start", "baseline")
+        (_, _, True) -> ({ x = x, y = itemY }, anchor, "baseline")
+        (_, _, False) -> ({ x = itemX, y = y }, "start", baseline)
   in
     ((ul, ul), an, bl)
 
