@@ -1384,7 +1384,7 @@ displayCanvasItemInstance model item =
                     , SA.points pointsString
                     , SA.fillOpacity "0.0"
                     , SA.strokeOpacity "0.0"
-                    , SA.strokeWidth "20"
+                    , SA.strokeWidth "5"
                     , SE.on "dblclick" (JD.succeed <| DoubleClick (Just item))
                     ]
                     []
