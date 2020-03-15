@@ -111,7 +111,7 @@
 
 (defmethod find-wire-for-source ((self node) part-name pin-name)
   (dolist (w (wires self))
-    (let ((s (source w)))
+    (dolist (s (sources w))
       (when (and (string= part-name (part-name s))
                  (string= pin-name  (pin-name s)))
         (return-from find-wire-for-source w))))

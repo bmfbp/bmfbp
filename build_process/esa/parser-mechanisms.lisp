@@ -223,13 +223,13 @@
   (@:loop
     (@:exit-when (<= (counter (top-of-string-stack p)) 1))
     (decf (counter (top-of-string-stack p)))
-    (emit p ")#|less1|#")))
+    (emit p ")")))
 
 (defmethod emit-rpars ((p parser))
   (assert (or (= 0 (counter (top-of-string-stack p)))
               (= 1 (counter (top-of-string-stack p)))))
   (when (= 1 (counter (top-of-string-stack p)))
-    (emit p ")#|rpars|#")))
+    (emit p ")")))
 
 (defmethod string-stack-close ((p parser))
   (pop (string-stack p)))

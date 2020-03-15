@@ -147,7 +147,6 @@ when building wire
 end when
 
 script wire add-source(part pin)
-  self.ensure-source-empty
   self.install-source(part pin)
 end script
 
