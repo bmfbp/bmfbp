@@ -59,15 +59,17 @@
             ")
 
            (:code build-graph-in-memory (:json-script) (:tree :error))
+           (:code runner (:tree) (:error))
            (:schem build-load-and-run (:done :svg-filename) (:error)
-            (build build-graph-in-memory)
+            (build build-graph-in-memory runner)
             "
             self.svg-filename -> build.svg-filename
             self.done -> build.done
 
             build.json-collection -> build-graph-in-memory.json-script
+            build-graph-in-memory.tree -> runner.tree
 
-            build.error,build-graph-in-memory.error -> self.error
+            build.error,build-graph-in-memory.error,runner.error -> self.error
             ")
 
 	   )))

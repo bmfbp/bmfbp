@@ -283,17 +283,19 @@
                         :pathname "./build_process/cl-build/"
                         :components ((:file "package")
                                      (:file "classes" :depends-on ("package"))
+                                     (:file "json" :depends-on ("package"))
                                      (:file "esa" :depends-on ("package" "classes"))
                                      (:file "esa-methods" :depends-on ("package" "classes" "esa"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes"))
                                      (:file "part-namer" :depends-on ("package" "classes"))
                                      (:file "schematic-or-leaf" :depends-on ("package" "classes"))
                                      (:file "collector" :depends-on ("package" "classes"))
-                                     (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa"))
-				     (:file "build" :depends-on ("package" "classes"
+                                     (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json"))
+                                     (:file "runner" :depends-on ("package" "classes"))
+				     (:file "build" :depends-on ("package" "classes" "json"
                                                                  "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "collector"
-                                                                 "build-graph-in-memory"
+                                                                 "build-graph-in-memory" "runner"
                                                                  "esa" "esa-methods"
                                                                  ))
 				     ))))

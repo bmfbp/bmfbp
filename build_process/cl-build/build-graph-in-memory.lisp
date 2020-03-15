@@ -14,9 +14,14 @@
 (defmethod e/part:react ((self build-graph-in-memory) e)
   (ecase (@pin self e)
     (:json-script
-     (let ((script-as-alist (@data self e)))
-       (let ((root (build-graph-in-mem script-as-alist)))
-         (@send self :tree root))))))
+     (let ((script-as-alist (json-to-alist (@data self e))))
+       (dolist (a script-as-alist)
+         (let ((graph (get-graph a))
+               (leaf  (get-leaf a)))
+           (if graph
+               (build-graph-in-mem graph)
+             (build-leaf-in-mem leaf))))))))
+         ;(@send self :tree root))))))
 
 
 
@@ -70,6 +75,9 @@
 (defun get-graph (alist)
   (cdr (assoc :graph alist)))
 
+(defun get-leaf (alist)
+  (cdr (assoc :leaf alist)))
+
 (defun get-inputs (graph-alist)
   (cdr (assoc :inputs graph-alist)))
 
@@ -97,26 +105,33 @@
 (defun get-destinations-list (wire-alist)
   (cdr (assoc :recievers wire-alist)))
 
+(defun get-part (x)
+  (cdr (assoc :part x)))
 
-(defun build-graph-in-mem (graph-as-alist)
-  (let ((graph (get-graph graph-as-alist))) ;; get rid of headers :item-kind, :name, :graph
-    (let ((root-kind (make-instance 'kind)))
-      (dolist (input-name (get-inputs graph))
-        (add-input-pin root-kind input-name))
-            (dolist (output-name (get-outputs graph))
-        (add-output-pin root-kind output-name))
-      (dolist (part-kind (get-parts-list graph))
-        (add-part root-kind part-kind part-kind)) ;; for bootstrap part-kind == part-name
-      ;; the root wiring table is an array [] of wires
-      ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
-      (dolist (wire-as-alist (get-wiring graph))
-        (let ((w (make-instance 'wire)))
-          (set-index w (get-wire-index wire-as-alist))
-          (dolist (source (get-sources wire-as-alist))
-            (add-source w source))
-          (dolist (dest (get-destinations-list wire-as-alist))
-            (add-destination w dest))
-          (add-wire root-kind w))))
+(defun get-pin (x)
+  (cdr (assoc :pin x)))
+
+
+(defun build-graph-in-mem (graph)
+  (let ((root-kind (make-instance 'kind)))
+    (dolist (input-name (get-inputs graph))
+      (add-input-pin root-kind input-name))
+    (dolist (output-name (get-outputs graph))
+      (add-output-pin root-kind output-name))
+    (dolist (part-kind (get-parts-list graph))
+      (add-part root-kind part-kind part-kind)) ;; for bootstrap part-kind == part-name
+    ;; the root wiring table is an array [] of wires
+    ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
+    (dolist (wire-as-alist (get-wiring graph))
+      (let ((w (make-instance 'wire)))
+        (set-index w (get-wire-index wire-as-alist))
+        (dolist (source (get-sources wire-as-alist))
+          (add-source w (get-part source) (get-pin source)))
+        (dolist (dest (get-destinations-list wire-as-alist))
+          (add-destination w (get-part dest) (get-pin dest)))
+        (add-wire root-kind w)))
     root-kind))
 
+(defun build-leaf-in-mem (leaf-as-alist)
+  leaf-as-alist )
 
