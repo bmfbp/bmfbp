@@ -8,7 +8,7 @@ situation loading
 situation initializing
 situation running
 
-class part
+class part-definition
   part-name
   part-kind
 end class
@@ -19,7 +19,7 @@ class source
 end class
 
 class destination
-  part-name  % a name or "self"
+  part-name
   pin-name
 end class
 
@@ -56,6 +56,11 @@ class event
   data
 end class
 
+class wire
+  source
+  map destinations
+end class
+
 %=== building kinds ===
 
 when building kind
@@ -69,6 +74,7 @@ when building kind
   script add-wire(wire)
   method install-wire(wire)
   method install-part(kind)
+  method children >> map part-definition
 end when
 
 when building-aux kind
@@ -161,6 +167,7 @@ end when
 when loading node
   method clear-input-queue
   method clear-output-queue
+  method children >> map node
 end when
 
 script kind loader(my-name my-container) >> node
@@ -170,13 +177,11 @@ script kind loader(my-name my-container) >> node
     set instance.kind-field = self
     set instance.container = my-container
     set instance.name-in-container = my-name
-    create parts = map node in
-      map part = self.parts in
-        let child-instance = @part.kind-field.loader(part.part-name self) in
-	  @self.add-part(part.part-name self)  % each child has a name that is local to the container (names are determined by kind)
+      map part-def = self.children in
+        let child-instance = @part-def.kind-field.loader(part-def.part-name instance) in
+	  @instance.add-part(part-def.part-name self)  % each child has a name that is local to the container (names are determined by kind)
         end let
       end map
-    end create
     >> instance
   end create
 end script
@@ -208,6 +213,7 @@ end script
 when intializing or running node
   method send(event)
   script distribute-output-events
+  method output-events >> map event
 end when
 
 %=== running ===
@@ -225,6 +231,7 @@ when running node
   method input-queue?
   method enqueue-input(event)
   method enqueue-output(event)
+  method find-wire-for-source(name name) >> wire
 end when
 
 script node busy? >> boolean
