@@ -102,7 +102,7 @@ end script
 
 script kind add-wire(w)
   % self is a container ==> sources and all dests must be contained as children, or, refer to "self"
-  map s in w.sources in
+  map s = w.sources in
     @self.ensure-valid-source(s)
   end map
   map dest = w.destinations in
