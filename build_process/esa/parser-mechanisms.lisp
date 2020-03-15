@@ -166,7 +166,7 @@
       (setf (saved-text p) combined-text))))
 
 (defmethod atext ((p parser))
-  (concatenate 'string "" (token-text (accepted-token p))))
+  (concatenate 'string "" (string (token-text (accepted-token p)))))
 
 (defmethod clear-method-stream ((p parser))
   (setf (method-stream p) (make-string-output-stream)))
@@ -186,16 +186,16 @@
 
 (defmethod string-stack-open ((p parser))
   (let ((entry (make-instance 'string-stack-entry)))
-    (setf (count entry) 0)
+    (setf (counter entry) 0)
     (setf (str-stack entry) nil)
-    (push entry (string-stack p))
+    (push entry (string-stack p))))
 
 
 (defmethod top-of-string-stack ((p parser))
   (first (string-stack p)))
 
 (defmethod push-string ((p parser))
-  (push (atext p) (string-stack p)))
+  (push (atext p) (str-stack (top-of-string-stack p))))
 
 (defmethod string-stack-empty ((p parser))
   (null (str-stack (top-of-string-stack p))))
@@ -206,7 +206,7 @@
     (= len 1)))
 
 (defmethod emit-string-pop ((p parser))
-(format *standard-output* "string stack ~s~%" (string-stack p))
+(format *standard-output* "~&string stack ~s~%" (string-stack p))
   (let ((str (pop (str-stack (top-of-string-stack p)))))
     (emit p " ~a" str)))
 
@@ -214,10 +214,11 @@
   (emit p "(")
   (incf (counter (top-of-string-stack p))))
 
-(defmethod inc-lpar-count ((p parser))
-  (incf (counter (top-of-string-stack p))))
+(defmethod set-lpar-count-to-1 ((p parser))
+  (setf (counter (top-of-string-stack p)) 1))
 
 (defmethod emit-rpars-count-less-1 ((p parser))
+(format *standard-output* "~&less-1 ~s" (string-stack p))
   (assert (>= (counter (top-of-string-stack p)) 0))
   (@:loop
     (@:exit-when (<= (counter (top-of-string-stack p)) 1))

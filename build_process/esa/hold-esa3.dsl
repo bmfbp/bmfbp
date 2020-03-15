@@ -1,6 +1,6 @@
 type name
 type function
-type boolean
+type true/false
 
 situation building
 situation building-aux
@@ -43,7 +43,6 @@ class node
   kind-field
   container
   name-in-container  %% lookup this part instance by name as a child of my container
-  children
 end class
 
 class dispatcher
@@ -67,27 +66,21 @@ when building kind
   method install-react-function(function)
   script add-part(name kind)
   script add-wire(wire)
-  method install-wire(wire)
-  method install-part(kind)
 end when
 
 when building-aux kind
-  method ensure-part-not-declared
-  method ensure-valid-input-pin(name)
-  method ensure-valid-output-pin(name)
   method ensure-input-pin-not-declared(name)
   method ensure-output-pin-not-declared(name)
   script ensure-valid-source(source)
   script ensure-valid-destination(destination)
-  method find-child(name)
 end when
 
 when building source
-  method self? >> boolean %% true if self.part-name == "self"
+  method self? >> true/false %% true if self.part-name == "self"
 end when
 
 when building destination 
-  method self? >> boolean %% true if self.part-name == "self"
+  method self? >> true/false %% true if self.part-name == "self"
 end when
 
 script kind add-input-pin(name)
@@ -111,25 +104,25 @@ script kind add-wire(w)
   map dest = w.destinations in
     @self.ensure-valid-destination(dest)
   end map
-  self.install-wire(w)
+  self.install-wire(wire)
 end script
 
 script kind ensure-valid-source(s)
   if s.self? then
-    self.ensure-valid-input-pin(s.pin-name)
+    self.ensure-valid-input-pin(s.pin)
   else
-    let p = self.find-child(s.part-name) in
-      p.kind-field.ensure-valid-output-pin(s.pin-name)
+    let p = self.find-child(s.part) in
+      p.kind-field.ensure-valid-output-pin(s.pin)
     end let
   end if
 end script
 
 script kind ensure-valid-destination(dest)
   if dest.self? then
-    self.ensure-valid-output-pin(dest.pin-name)
+    self.ensure-valid-output-pin(dest.pin)
   else
-    let p = self.find-child(dest.part-name) in
-      p.kind-field.ensure-valid-input-pin(dest.pin-name)
+    let p = self.find-child(dest.part) in
+      p.kind-field.ensure-valid-input-pin(dest.pin)
     end let
   end if
 end script
@@ -139,7 +132,6 @@ end script
 when building wire
   method install-source(name name)
   method install-destination(name name)
-  method ensure-source-empty
 end when
 
 script wire set-source(part pin)
@@ -155,7 +147,7 @@ end script
 %=== instantiating parts ===
 
 when loading kind
-  script loader(name node) >> node
+  script loader >> node
 end when
 
 when loading node
@@ -165,15 +157,15 @@ end when
 
 script kind loader(my-name my-container) >> node
   create instance = node in
-    instance.clear-input-queue
-    instance.clear-output-queue
-    set instance.kind-field = self
-    set instance.container = my-container
-    set instance.name-in-container = my-name
+    node.clear-input-queue
+    node.clear-output-queue
+    set node.kind-field = self
+    set node.container = my-container
+    set node.name-in-container = my-name
     create parts = map node in
       map part = self.parts in
-        let child-instance = @part.kind-field.loader(part.part-name self) in
-	  @self.add-part(part.part-name self)  % each child has a name that is local to the container (names are determined by kind)
+        let child-instance = @part.kind-field.loader (part.name self) in
+	  @self.add-part(part.name self)  % each child has a name that is local to the container (names are determined by kind)
         end let
       end map
     end create
@@ -221,13 +213,10 @@ end when
 when running node
   script busy?
   script ready?
-  method dequeue-input
-  method input-queue?
-  method enqueue-input(event)
-  method enqueue-output(event)
+  script 
 end when
 
-script node busy? >> boolean
+script node busy? >> true/false
   map child = self.children in
     if @child.busy? then
       >> true
@@ -241,26 +230,26 @@ script dispatcher start
   @self.run
 end script
 
+script dispatcher distribute-all-outputs
+end script
 
 script dispatcher run
   loop
     map part = self.all-parts in
       if @part.ready? then
         @part.invoke
-        exit-map
+        quit-map
       end if
     end map
   end loop
 end script
 
-script node invoke
-  let e = self.dequeue-input in
-    self.react(e)
-    @self.distribute-output-events
-  end let
+script node invoke(e)
+  part.react(e)
+  @part.distribute-output-events
 end script
 
-script node ready? >> boolean
+script node ready? >> true/false
   if self.input-queue? then
     >> true
   end if
@@ -282,8 +271,8 @@ script node distribute-output-events
              if dest.self? then
 	       create output-event = event in
                  set output-event.part-name = dest.part-name
-		 set output-event.pin-name = dest.pin-name
-		 set output-event.data = output.data
+		 set output-event.part-pin = dest.pin-name
+		 set output-event.data = ouput.data
 		 self.enqueue-output(output-event)
 	       end create
 	     else
@@ -291,10 +280,10 @@ script node distribute-output-events
 	       % wiring is by-name and contained in the kind of the container
 	       % ==> every part-pin (by name) pair is valid
 	       let dest-part-name = dest.part-name in
-	         let part-instance = self.find-child(dest.part-name) in
+	         let part-instance = self.find-instance-by-name(dest-part-name) in
 		   create input-event = event in
-		     set input-event.part-name = dest.part-name
-                     set input-event.pin-name = dest.pin-name
+		     set input-event.part-name = dest-part-name
+                     set input-event.part-pin = dest.pin-name
                      set input-event.data = output.data
                      part-instance.enqueue-input(input-event)
                    end create
