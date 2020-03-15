@@ -1,5 +1,25 @@
 (in-package :arrowgrams/build)
 
+(defclass build-graph-in-memory (builder) ())
+
+(defmethod e/part:busy-p ((self build-graph-in-memory))
+  (call-next-method))
+
+(defmethod e/part:clone ((self build-graph-in-memory))
+  (call-next-method))
+
+(defmethod e/part:first-time ((self build-graph-in-memory))
+)
+
+(defmethod e/part:react ((self build-graph-in-memory) e)
+  (ecase (@pin self e)
+    (:json-script
+     (let ((script-as-alist (@data self e)))
+       (let ((root (build-graph-in-mem script-as-alist)))
+         (@send self :tree root))))))
+
+
+
 #|
 {"Itemkind":"graph",
  "name":"ide",
@@ -78,7 +98,7 @@
   (cdr (assoc :recievers wire-alist)))
 
 
-(defun build-graph-in-memory (graph-as-alist)
+(defun build-graph-in-mem (graph-as-alist)
   (let ((graph (get-graph graph-as-alist))) ;; get rid of headers :item-kind, :name, :graph
     (let ((root-kind (make-instance 'kind)))
       (dolist (input-name (get-inputs graph))
@@ -91,7 +111,7 @@
       ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
       (dolist (wire-as-alist (get-wiring graph))
         (let ((w (make-instance 'wire)))
-          (set-index w (get-index wire-as-alist))
+          (set-index w (get-wire-index wire-as-alist))
           (dolist (source (get-sources wire-as-alist))
             (add-source w source))
           (dolist (dest (get-destinations-list wire-as-alist))
