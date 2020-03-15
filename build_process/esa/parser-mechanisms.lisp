@@ -26,7 +26,7 @@
 
 (defmethod accept ((p parser))
   (setf (accepted-token p) (next-token p))
-  (format *standard-output* "~&~s" (token-text (accepted-token p)))
+  ;(format *standard-output* "~&~s" (token-text (accepted-token p)))
   (read-next-token p)
   :ok)
 
@@ -206,7 +206,6 @@
     (= len 1)))
 
 (defmethod emit-string-pop ((p parser))
-(format *standard-output* "~&string stack ~s~%" (string-stack p))
   (let ((str (pop (str-stack (top-of-string-stack p)))))
     (emit p " ~a" str)))
 
@@ -218,7 +217,6 @@
   (setf (counter (top-of-string-stack p)) 1))
 
 (defmethod emit-rpars-count-less-1 ((p parser))
-(format *standard-output* "~&less-1 ~s" (string-stack p))
   (assert (>= (counter (top-of-string-stack p)) 0))
   (@:loop
     (@:exit-when (<= (counter (top-of-string-stack p)) 1))

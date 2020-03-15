@@ -113,17 +113,22 @@
   (cdr (assoc :recievers wire-alist)))
 
 (defun get-part (x)
-  (cdr (assoc :part x)))
+  (string-downcase (cdr (assoc :part x))))
 
 (defun get-pin (x)
-  (cdr (assoc :pin x)))
+  (string-downcase (cdr (assoc :pin x))))
 
+(defun strip-manifest-from-name (n)
+  (let ((index (search ".manifest" n)))
+    (if (numberp index)
+        (subseq n 0 index)
+      n)))
 
 
 (defmethod build-graph-in-mem ((self build-graph-in-memory) name full-graph)
   (let ((graph (get-graph full-graph))) ;; strip noise
     (let ((kind (make-instance 'kind)))
-(format *standard-output* "~&define graph name ~s~%" name)
+      (format *standard-output* "~&define graph name ~s~%" name)
       (setf (kind-name kind) name)
       (setf (gethash name (kinds-by-name self)) kind)
       (dolist (input-name (get-inputs graph))
@@ -131,27 +136,47 @@
       (dolist (output-name (get-outputs graph))
         (add-output-pin kind output-name))
       (dolist (part-as-alist (get-parts-list graph))
-        (let ((part-name (string-downcase (get-part-kind part-as-alist))))
- (format *standard-output* "~&need name ~s~%" part-name)
-          (add-part kind (get-part-name part-as-alist) (gethash (get-part-kind part-as-alist) (kinds-by-name self)))
-          ;; the root wiring table is an array [] of wires
-          ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
-          (dolist (wire-as-alist (get-wiring graph))
-            (let ((w (make-instance 'wire)))
-              (set-index w (get-wire-index wire-as-alist))
-              (dolist (source (get-sources wire-as-alist))
-                (add-source w (get-part source) (get-pin source)))
-              (dolist (dest (get-destinations-list wire-as-alist))
-                (add-destination w (get-part dest) (get-pin dest)))
-              (add-wire kind w)))
-          kind)))))
+        (let ((kind-name (string-downcase (get-part-kind part-as-alist)))
+              (part-name (string-downcase (get-part-name part-as-alist))))
+          (format *standard-output* "~&need name ~s~%" kind-name)
+          (add-part kind part-name (gethash kind-name (kinds-by-name self)))))
+      ;; the wiring table is an array [] of wires
+      ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
+      (dolist (wire-as-alist (get-wiring graph))
+        (let ((w (make-instance 'wire)))
+          (set-index w (get-wire-index wire-as-alist))
+          (dolist (source (get-sources wire-as-alist))
+            (add-source w (get-part source) (get-pin source)))
+          (dolist (dest (get-destinations-list wire-as-alist))
+            (add-destination w (get-part dest) (get-pin dest)))
+          (add-wire kind w)))
+      kind)))
 
-(defmethod build-leaf-in-mem ((self build-graph-in-memory) name leaf-as-alist)
-  (let ((kind (make-instance 'kind)))
-(format *standard-output* "~&define leaf name ~s ~s~%" name leaf-as-alist)
-    (setf (kind-name kind) name)
-    (setf (gethash name (kinds-by-name self)) kind)
-    leaf-as-alist ))
+(defun get-file-name (a)
+  (cdr (assoc :file-name a)))
+
+(defun get-in-pins (a)
+  (cdr (assoc :in-pins a)))
+
+(defun get-out-pins (a)
+  (cdr (assoc :out-pins a)))
+
+(defmethod build-leaf-in-mem ((self build-graph-in-memory) manifest-name leaf-as-alist)
+  (let ((name (string-downcase (strip-manifest-from-name manifest-name))))
+(format *standard-output* "~&define leaf name ~s~%" name)
+    (let ((filename (get-file-name leaf-as-alist)))
+      (let ((json-str (alexandria:read-file-into-string filename)))
+        (let ((manifest-as-alist (json-to-alist json-str)))
+          (let ((kind (make-instance 'kind))
+                (in-pins (get-in-pins manifest-as-alist))
+                (out-pins (get-out-pins manifest-as-alist)))
+            (setf (kind-name kind) name)
+            (dolist (ipin in-pins)
+              (add-input-pin kind ipin))
+            (dolist (opin out-pins)
+              (add-output-pin kind opin))
+            (setf (gethash name (kinds-by-name self)) kind)
+            leaf-as-alist ))))))
 
 
 (defparameter *test-graph*

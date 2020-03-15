@@ -132,8 +132,7 @@ $      (emit-to-method-stream p ")") ;; close generic
 = map-decl
   SYMBOL/map 
   @esa-symbol
-$     (emit p "~&(~a :accessor ~a :initform " (atext p) (atext p))
-$     (emit p "(make-hash-table))~%")
+$     (emit p "~&(~a :accessor ~a :initform nil)" (atext p) (atext p))
   
 = typed-formals
   [ ?'(' '(' type-list ')'
