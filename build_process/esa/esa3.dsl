@@ -117,7 +117,7 @@ script kind ensure-valid-source(s)
     self.ensure-valid-input-pin(s.pin-name)
   else
     let p = self.find-child(s.part-name) in
-      p.kind-field.ensure-valid-output-pin(s.pin-name)
+      p.part-kind.ensure-valid-output-pin(s.pin-name)
     end let
   end if
 end script
@@ -127,7 +127,7 @@ script kind ensure-valid-destination(dest)
     self.ensure-valid-output-pin(dest.pin-name)
   else
     let p = self.find-child(dest.part-name) in
-      p.kind-field.ensure-valid-input-pin(dest.pin-name)
+      p.part-kind.ensure-valid-input-pin(dest.pin-name)
     end let
   end if
 end script
