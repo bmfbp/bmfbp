@@ -145,6 +145,9 @@
                         :pathname "./svg/cl-compiler/"
                         :components ((:file "package")
                                      (:file "classes" :depends-on ("package"))
+
+                                     (:file "probe" :depends-on ("package"))
+
 				     (:file "compiler-part" :depends-on ("package" "classes"))
 
                                      (:file "fb" :depends-on ("compiler-part" "util"))
@@ -195,6 +198,7 @@
 
                                      (:file "compiler"
                                       :depends-on ("package" "classes" "compiler-part"
+                                                   "probe"
                                                    "reader" "unmapper" "fb" "writer" "convert-to-keywords" "sequencer"
                                                    "ellipse-bounding-boxes" "rectangle-bounding-boxes"
                                                    "speechbubble-bounding-boxes" "text-bounding-boxes"
@@ -285,6 +289,7 @@
                                      (:file "classes" :depends-on ("package"))
                                      (:file "json" :depends-on ("package"))
                                      (:file "probe" :depends-on ("package" "classes"))
+                                     (:file "probe2" :depends-on ("package" "classes"))
                                      (:file "esa" :depends-on ("package" "classes"))
                                      (:file "esa-methods" :depends-on ("package" "classes" "esa"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes"))
@@ -294,7 +299,7 @@
                                      (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json"))
                                      (:file "runner" :depends-on ("package" "classes"))
 				     (:file "build" :depends-on ("package" "classes" "json"
-                                                                 "probe"
+                                                                 "probe" "probe2"
                                                                  "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "collector"
                                                                  "build-graph-in-memory" "runner"

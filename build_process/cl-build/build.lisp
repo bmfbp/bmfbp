@@ -6,22 +6,23 @@
   (let ((build-net (@defnetwork build-load-and-run
 
            (:code probe (:in) (:out))
+           (:code probe2 (:in) (:out))
 
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:array :json) (:items :graph :error))
            (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :json-graph :lisp :error)
-            (compiler part-namer json-array-splitter probe)
+            (compiler part-namer json-array-splitter probe2)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
 
             compiler.metadata -> json-array-splitter.array
-            compiler.json -> json-array-splitter.json
+            compiler.json -> probe2.in
+   probe2.out -> json-array-splitter.json
 
             json-array-splitter.items -> self.json-file-ref
-            json-array-splitter.graph -> probe.in
-            probe.out -> self.json-graph
+            json-array-splitter.graph -> self.json-graph
 
             part-namer.out -> self.name
 

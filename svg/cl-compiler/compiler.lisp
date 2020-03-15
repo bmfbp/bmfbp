@@ -44,6 +44,9 @@
 (format *standard-output* "~&in compiler-event-passing~%")
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
+           (:code probe (:in) (:out))
+
+                                                          
            (:code reader (:file-name :in-stream) (:string-fact :eof :error))
            (:code fb (:string-fact :lisp-fact :retract :fb-request :iterate :get-next :show :reset) (:fb :next :no-more :error))
            (:code writer (:filename :start :next :no-more) (:request :error))
@@ -249,7 +252,7 @@ ellipse-bounding-boxes.done,
 
             (:schem back-end-parser (:start :ir :generic-filename :json-filename :lisp-filename) (:json-out :lisp-out :metadata :error)
               (scanner preparse generic-emitter collector json1-emitter json-emitter lisp-emitter emitter-pass2-generic
-                       generic-file-writer json-file-writer lisp-file-writer)
+                       generic-file-writer json-file-writer lisp-file-writer probe)
               "
                self.start -> scanner.start,preparse.start
                self.ir -> scanner.ir,preparse.start
@@ -285,7 +288,7 @@ ellipse-bounding-boxes.done,
 
             ;; see back-end.drawio / back end
             (:schem back-end (:ir :json-filename :generic-filename :lisp-filename) (:json :lisp :metadata :error)
-             (synchronizer back-end-parser)
+             (synchronizer back-end-parser probe)
              "
 self.ir -> synchronizer.ir
 self.json-filename -> synchronizer.json-filename
@@ -316,7 +319,7 @@ back-end-parser.error -> self.error
            
            (:schem compiler (:svg-filename :prolog-output-filename) (:metadata :json :lisp :error)
             ;; parts
-            (front-end compiler-testbed passes back-end file-namer)
+            (front-end compiler-testbed passes back-end file-namer probe)
             ;; wiring
             
 "

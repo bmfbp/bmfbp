@@ -1,7 +1,7 @@
-(in-package :arrowgrams/build)
+(in-package :arrowgrams/compiler)
 
-(defclass probe (builder)
-  ((index :accessor index :initform 1)))
+(defclass probe (e/part:code)
+  ((index :accessor index :initform 0)))
 
 (defmethod e/part:first-time ((self probe))
 )
