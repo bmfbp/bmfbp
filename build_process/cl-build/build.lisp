@@ -7,20 +7,22 @@
 
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
-           (:code json-array-splitter (:in) (:out))
+           (:code json-array-splitter (:array :json) (:items :graph :error))
            (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :json-graph :lisp :error)
             (compiler part-namer json-array-splitter)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
 
-            compiler.metadata -> json-array-splitter.in
-            compiler.json -> self.json-graph
+            compiler.metadata -> json-array-splitter.array
+            compiler.json -> json-array-splitter.json
 
-            json-array-splitter.out -> self.json-file-ref
+            json-array-splitter.items -> self.json-file-ref
+            json-array-splitter.graph -> self.json-graph
+
             part-namer.out -> self.name
 
-            compiler.error -> self.error
+            compiler.error,json-array-splitter.error -> self.error
             "
             )
 
