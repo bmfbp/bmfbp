@@ -3,12 +3,16 @@
 (defclass collector (builder)
   ((name :accessor name)
    (graph :accessor graph)
-   (collection :accessor collection)))
+   (graphs :accessor graphs)
+   (leaves :accessor leaves)))
+
+;; ensure that leaves are emitted before graphs (builder must build in reverse order, e.g. top-most graph last)
 
 (defmethod e/part:first-time ((self collector))
   (setf (name self) nil
         (graph self) nil)
-  (setf (collection self) nil)
+  (setf (leaves self) nil)
+  (setf (graphs self) nil)
   (call-next-method))
 
 (defmethod e/part:react ((self collector) e)
@@ -40,18 +44,22 @@
           (graph self) nil)))
 
 (defmethod collect-graph ((self collector))
-  (push (graph-alist self (name self) (graph self)) (collection self)))
+  (push (graph-alist self (name self) (graph self)) (graphs self)))
 
 (defmethod collect-leaf ((self collector) file-ref)
-  (push (leaf-alist self file-ref) (collection self)))
+  (push (leaf-alist self file-ref) (leaves self)))
 
-(defmethod finalize-and-send-collection ((self collector))
-  (let ((list-of-strings (reverse (collection self))))
+(defmethod send-collection ((self collector) collection)
+  (let ((list-of-strings collection))
     (let ((jstring (apply-commas-make-json-array list-of-strings)))
       #+nil(with-open-file (f "/tmp/temp.txt" :direction :output :if-exists :supersede)
         (write jstring :stream f))
       (@send self :json-collection jstring)
       (e/part:first-time self))))
+
+(defmethod finalize-and-send-collection ((self collector))
+  (send-collection self (leaves self))
+  (send-collection self (graphs self)))
 
 (defmethod leaf-alist ((self collector) file-ref-pathname)
   ;; file-ref is a pathname like #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/split_diagram.lisp"
@@ -65,11 +73,15 @@
     (json:encode-json-to-string `( (:item-kind . "graph") (:name . ,name) (:graph . ,alist-graph) ))))
 
 (defun apply-commas-make-json-array (lis)
-  (assert (> (length lis) 1))
-  (let ((result (pop lis)))
-    (@:loop
-      (@:exit-when (null lis))
-      (setf result (concatenate 'string result ",
+  (if (> (length lis) 1)
+      (let ((result (pop lis)))
+        (@:loop
+          (@:exit-when (null lis))
+          (setf result (concatenate 'string result ",
 " (pop lis))))  ;; TODO: make this more efficient
-    (concatenate 'string "[" result "]")))
+        (concatenate 'string "[" result "]"))
+    (if (= (length lis) 1)
+        (concatenate 'string "[" (car lis) "]")
+      "[]")))
+  
 
