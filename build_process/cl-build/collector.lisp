@@ -52,14 +52,12 @@
 (defmethod send-collection ((self collector) collection)
   (let ((list-of-strings collection))
     (let ((jstring (apply-commas-make-json-array list-of-strings)))
-      #+nil(with-open-file (f "/tmp/temp.txt" :direction :output :if-exists :supersede)
-        (write jstring :stream f))
-      (@send self :json-collection jstring)
-      (e/part:first-time self))))
+      (@send self :json-collection jstring))))
 
 (defmethod finalize-and-send-collection ((self collector))
   (send-collection self (leaves self))
-  (send-collection self (graphs self)))
+  (send-collection self (graphs self))
+  (e/part:first-time self))
 
 (defmethod leaf-alist ((self collector) file-ref-pathname)
   ;; file-ref is a pathname like #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/split_diagram.lisp"
