@@ -56,11 +56,6 @@ class event
   data
 end class
 
-class wire
-  source
-  map destinations
-end class
-
 %=== building kinds ===
 
 when building kind
@@ -73,12 +68,12 @@ when building kind
   script add-part(name kind)
   script add-wire(wire)
   method install-wire(wire)
-  method install-part(kind)
-  method children >> map part-definition
+  method install-part(name kind)
+  method parts-map >> map part-definition
 end when
 
 when building-aux kind
-  method ensure-part-not-declared
+  method ensure-part-not-declared(name)
   method ensure-valid-input-pin(name)
   method ensure-valid-output-pin(name)
   method ensure-input-pin-not-declared(name)
@@ -89,11 +84,11 @@ when building-aux kind
 end when
 
 when building source
-  method self? >> boolean %% true if self.part-name == "self"
+  method refers-to-self? >> boolean %% true if self.part-name == "self"
 end when
 
 when building destination 
-  method self? >> boolean %% true if self.part-name == "self"
+  method refers-to-self? >> boolean %% true if self.part-name == "self"
 end when
 
 script kind add-input-pin(name)
@@ -121,7 +116,7 @@ script kind add-wire(w)
 end script
 
 script kind ensure-valid-source(s)
-  if s.self? then
+  if s.refers-to-self? then
     self.ensure-valid-input-pin(s.pin-name)
   else
     let p = self.find-child(s.part-name) in
@@ -131,7 +126,7 @@ script kind ensure-valid-source(s)
 end script
 
 script kind ensure-valid-destination(dest)
-  if dest.self? then
+  if dest.refers-to-self? then
     self.ensure-valid-output-pin(dest.pin-name)
   else
     let p = self.find-child(dest.part-name) in
@@ -167,7 +162,7 @@ end when
 when loading node
   method clear-input-queue
   method clear-output-queue
-  method children >> map node
+  % method children >> map node
 end when
 
 script kind loader(my-name my-container) >> node
@@ -177,7 +172,7 @@ script kind loader(my-name my-container) >> node
     set instance.kind-field = self
     set instance.container = my-container
     set instance.name-in-container = my-name
-      map part-def = self.children in
+      map part-def = self.parts-map in
         let child-instance = @part-def.kind-field.loader(part-def.part-name self) in
 	  @instance.add-part(part-def.part-name self)  % each child has a name that is local to the container (names are determined by kind)
         end let
@@ -286,7 +281,7 @@ script node distribute-output-events
        let output = map self.output-events in
          let w = parent-composite.find-wire-for-source(output.part-name output.pin-name) in
            map dest = w.destinations in
-             if dest.self? then
+             if dest.refers-to-self? then
 	       create output-event = event in
                  set output-event.part-name = dest.part-name
 		 set output-event.pin-name = dest.pin-name

@@ -284,6 +284,7 @@
                         :components ((:file "package")
                                      (:file "classes" :depends-on ("package"))
                                      (:file "esa" :depends-on ("package" "classes"))
+                                     (:file "esa-methods" :depends-on ("package" "classes" "esa"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes"))
                                      (:file "part-namer" :depends-on ("package" "classes"))
                                      (:file "schematic-or-leaf" :depends-on ("package" "classes"))
