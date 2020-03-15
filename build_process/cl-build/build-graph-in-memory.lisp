@@ -123,7 +123,7 @@
 (defmethod build-graph-in-mem ((self build-graph-in-memory) name full-graph)
   (let ((graph (get-graph full-graph))) ;; strip noise
     (let ((kind (make-instance 'kind)))
-(format *standard-output* "~&define name ~s~%" name)
+(format *standard-output* "~&define graph name ~s~%" name)
       (setf (kind-name kind) name)
       (setf (gethash name (kinds-by-name self)) kind)
       (dolist (input-name (get-inputs graph))
@@ -148,7 +148,7 @@
 
 (defmethod build-leaf-in-mem ((self build-graph-in-memory) name leaf-as-alist)
   (let ((kind (make-instance 'kind)))
-(format *standard-output* "~&define name ~s~%" name)
+(format *standard-output* "~&define leaf name ~s~%" name)
     (setf (kind-name kind) name)
     (setf (gethash name (kinds-by-name self)) kind)
     leaf-as-alist ))
