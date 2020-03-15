@@ -253,6 +253,9 @@
 (defmethod symbol-must-be-nil ((p parser))
   (accepted-symbol-must-be-nil p))
 
+(defmethod error-no-metadata ((p parser))
+  (error (format nil "NO METADATA")))
+
 (defmethod break-here ((p parser))
   (format *standard-output* "p is ~A~%" p)
   (break)

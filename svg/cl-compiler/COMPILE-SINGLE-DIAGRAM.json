@@ -1,0 +1,40 @@
+{
+  "name" : COMPILE-SINGLE-DIAGRAM,
+  "kindName" : "COMPILE-SINGLE-DIAGRAM",
+  "metadata" : [{"dir":"build_process/","kindName":"compiler","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/compiler.lisp","ref":"master"},{"dir":"build_process/","kindName":"part-namer","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/part-namer.lisp","ref":"master"},{"dir":"build_process/","kindName":"build process","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/json-array-splitter.svg","ref":"master"}],
+  "inputs" : ["svg-filename"],
+  "outputs" : ["name","json-file-ref","graph","error"],
+  "wireCount" : 7, 
+  "parts" : {
+    {
+      "partName" : "ID91947", 
+      "kindName" : "json-array-splitter", 
+      "inCount" : 2,
+      "inMap" : {"array" : 0, "json" : 1},
+      "inPins" : [[0],[2]],
+      "outCount" : 2,
+      "outMap" : {"items" : 0, "graph" : 1},
+      "outPins" : [[5],[6]]
+    },
+    {
+      "partName" : "ID91914", 
+      "kindName" : "Compiler", 
+      "inCount" : 1,
+      "inMap" : {"svg-filename" : 0},
+      "inPins" : [[3]],
+      "outCount" : 4,
+      "outMap" : {"metadata" : 0, "lisp" : 1, "error" : 2, "json" : 3},
+      "outPins" : [[0],[],[1],[2]]
+    },
+    {
+      "partName" : "ID91933", 
+      "kindName" : "part-namer", 
+      "inCount" : 1,
+      "inMap" : {"filename" : 0},
+      "inPins" : [[3]],
+      "outCount" : 1,
+      "outMap" : {"name" : 0},
+      "outPins" : [[4]]
+    }
+  }
+}

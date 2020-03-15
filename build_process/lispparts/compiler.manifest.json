@@ -1,0 +1,14 @@
+{
+  "entrypoint": "./compiler",
+  "kindType": "leaf",
+  "platform": "lisppart",
+  "inPins": [
+    "svg-filename"
+  ],
+  "outPins": [
+    "metadata",
+    "json",
+    "lisp",
+    "error"
+  ]
+}

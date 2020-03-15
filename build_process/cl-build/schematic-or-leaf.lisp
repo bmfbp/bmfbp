@@ -20,10 +20,10 @@
                (let ((svg-filename (merge-pathnames (format nil "~a.svg" fname) *src-dir* )))
                  (if (probe-file svg-filename)
                      (@send self :schematic-json-ref svg-filename)
-                   (let ((lisp-filename (merge-pathnames (format nil "~a.lisp" fname) *src-dir*)))
+                   (let ((lisp-filename (merge-pathnames (format nil "~a.manifest.json" fname) *src-dir*)))
                      (if (probe-file lisp-filename)
                          (@send self :leaf-json-ref lisp-filename)
-                       (@send self :error (format nil "no file /~s/ (.svg or .lisp)" fname))))))))))))) 
+                       (@send self :error (format nil "no file /~s/ (.svg or .manifest.json)" fname))))))))))))) 
     
 
 (defun fixup-filename (s)

@@ -148,7 +148,7 @@
 
 (defmethod build-leaf-in-mem ((self build-graph-in-memory) name leaf-as-alist)
   (let ((kind (make-instance 'kind)))
-(format *standard-output* "~&define leaf name ~s~%" name)
+(format *standard-output* "~&define leaf name ~s ~s~%" name leaf-as-alist)
     (setf (kind-name kind) name)
     (setf (gethash name (kinds-by-name self)) kind)
     leaf-as-alist ))
