@@ -284,6 +284,7 @@
                         :components ((:file "package")
                                      (:file "classes" :depends-on ("package"))
                                      (:file "json" :depends-on ("package"))
+                                     (:file "probe" :depends-on ("package" "classes"))
                                      (:file "esa" :depends-on ("package" "classes"))
                                      (:file "esa-methods" :depends-on ("package" "classes" "esa"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes"))
@@ -293,6 +294,7 @@
                                      (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json"))
                                      (:file "runner" :depends-on ("package" "classes"))
 				     (:file "build" :depends-on ("package" "classes" "json"
+                                                                 "probe"
                                                                  "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "collector"
                                                                  "build-graph-in-memory" "runner"

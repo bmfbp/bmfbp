@@ -5,11 +5,13 @@
 (defun build (filename)
   (let ((build-net (@defnetwork build-load-and-run
 
+           (:code probe (:in) (:out))
+
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:array :json) (:items :graph :error))
            (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :json-graph :lisp :error)
-            (compiler part-namer json-array-splitter)
+            (compiler part-namer json-array-splitter probe)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
@@ -18,7 +20,8 @@
             compiler.json -> json-array-splitter.json
 
             json-array-splitter.items -> self.json-file-ref
-            json-array-splitter.graph -> self.json-graph
+            json-array-splitter.graph -> probe.in
+            probe.out -> self.json-graph
 
             part-namer.out -> self.name
 
@@ -29,12 +32,13 @@
            (:code schematic-or-leaf (:json-ref) (:schematic-json-ref :leaf-json-ref :error))
 
            (:schem build-recursive (:svg-filename) (:name :graph :leaf-json-ref :error)
-            (compile-single-diagram schematic-or-leaf)
+            (compile-single-diagram schematic-or-leaf probe)
             "
             self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
-            compile-single-diagram.json-graph -> self.graph
+            compile-single-diagram.json-graph -> probe.in
+            probe.out -> self.graph
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
             schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
