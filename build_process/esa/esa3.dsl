@@ -24,7 +24,8 @@ class destination
 end class
 
 class wire
-  source
+  index
+  map sources
   map destinations
 end class
 
@@ -83,13 +84,6 @@ when building-aux kind
   method find-child(name)
 end when
 
-when building source
-  method refers-to-self? >> boolean %% true if self.part-name == "self"
-end when
-
-when building destination 
-  method refers-to-self? >> boolean %% true if self.part-name == "self"
-end when
 
 script kind add-input-pin(name)
    self.ensure-input-pin-not-declared(name)
@@ -107,8 +101,10 @@ script kind add-part(nm k)
 end script
 
 script kind add-wire(w)
-  % self is a container ==> source and all dests must be contained as children, or, refer to "self"
-  @self.ensure-valid-source(w.source)
+  % self is a container ==> sources and all dests must be contained as children, or, refer to "self"
+  map s in w.sources in
+    @self.ensure-valid-source(s)
+  end map
   map dest = w.destinations in
     @self.ensure-valid-destination(dest)
   end map
@@ -137,13 +133,20 @@ end script
 
 %=== building wires ===
 
+when building source
+  method refers-to-self? >> boolean %% true if self.part-name == "self"
+end when
+
+when building destination 
+  method refers-to-self? >> boolean %% true if self.part-name == "self"
+end when
+
 when building wire
   method install-source(name name)
   method install-destination(name name)
-  method ensure-source-empty
 end when
 
-script wire set-source(part pin)
+script wire add-source(part pin)
   self.ensure-source-empty
   self.install-source(part pin)
 end script

@@ -63,17 +63,14 @@
 
 ;  wires
 
-(defmethod ensure-source-empty ((self wire))
-  (when (boundp (source self))
-    (when (source self)
-      (error (format nil "wire ~s already has a source" self))))
-  t)
+(defmethod set-index ((self wire) i)
+  (setf (index self) i))
 
 (defmethod install-source ((self wire) part-name pin-name)
   (let ((s (make-instance 'source)))
     (setf (part-name s) part-name)
     (setf (pin-name s) pin-name)
-    (setf (source self) s)))
+    (push s (sources self))))
           
 (defmethod install-destination ((self wire) part-name pin-name)
   (let ((d (make-instance 'destination)))

@@ -3,7 +3,7 @@
 (defparameter *compiler-net* (arrowgrams/compiler:get-compiler-net))
 
 (defun build (filename)
-  (let ((build-net (@defnetwork build
+  (let ((build-net (@defnetwork build-load-and-run
 
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
@@ -56,6 +56,18 @@
 
             build-recursive.error,collector.error -> self.error
 
+            ")
+
+           (:code build-graph-in-memory (:json-script) (:tree :error))
+           (:schem build-load-and-run (:done :svg-filename) (:error)
+            (build build-graph-in-memory)
+            "
+            self.svg-filename -> build.svg-filename
+            self.done -> build.done
+
+            build.json-collection -> build-graph-in-memory.json-script
+
+            build.error,build-graph-in-memory.error -> self.error
             ")
 
 	   )))
