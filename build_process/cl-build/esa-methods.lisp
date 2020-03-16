@@ -1,10 +1,12 @@
 (in-package :arrowgrams/build)
 
+;; for bootstrap - make names case insensitive - downcase everything
+
 (defmethod install-input-pin ((self kind) name)
-  (push name (input-pins self)))
+  (push (string-downcase name) (input-pins self)))
 
 (defmethod install-output-pin ((self kind) name)
-  (push name (output-pins self)))
+  (push (string-downcase name) (output-pins self)))
 
 (defmethod install-initially-function ((self kind) fn)
   (assert nil)) ;; should be explicitly defined in each class
@@ -17,7 +19,7 @@
 
 (defmethod install-part ((self kind) name kind)
   (let ((p (make-instance 'part-definition)))
-    (setf (part-name p) name)
+    (setf (part-name p) (string-downcase name))
     (setf (part-kind p) kind)
     (push p (parts self))))
 
@@ -68,14 +70,14 @@
 
 (defmethod install-source ((self wire) part-name pin-name)
   (let ((s (make-instance 'source)))
-    (setf (part-name s) part-name)
-    (setf (pin-name s) pin-name)
+    (setf (part-name s) (string-downcase part-name))
+    (setf (pin-name s) (string-downcase pin-name))
     (push s (sources self))))
           
 (defmethod install-destination ((self wire) part-name pin-name)
   (let ((d (make-instance 'destination)))
-    (setf (part-name d) part-name)
-    (setf (pin-name d) pin-name)
+    (setf (part-name d) (string-downcase part-name))
+    (setf (pin-name d) (string-downcase pin-name))
     (push d (destinations self))))
 
 
