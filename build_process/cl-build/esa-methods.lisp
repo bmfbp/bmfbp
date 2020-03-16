@@ -121,7 +121,7 @@
 
 (defmethod find-child ((self kind) name)
   (dolist (p (parts self))
-(format *standard-output* "~&find-child ~s ~s~%" (part-name p) name)
+;(format *standard-output* "~&find-child ~s ~s~%" (part-name p) name)
     (when (string= name (part-name p))
       (return-from find-child p)))
   (assert nil)) ;; no part with given name - can't happen

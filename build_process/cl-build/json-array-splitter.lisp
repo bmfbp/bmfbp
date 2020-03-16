@@ -11,7 +11,7 @@
   (setf (graph self) nil))
 
 (defmethod e/part:react ((self json-array-splitter) e)
-(format *standard-output* "~&json-array-splitter get ~s ~s~%" (@pin self e) (@data self e))
+;(format *standard-output* "~&json-array-splitter get ~s ~s~%" (@pin self e) (@data self e))
     (flet ((split-and-send-array ()
            (let ((string-json-array (arrowgrams/compiler::strip-quotes (json-array self))))
              (with-input-from-string (json-array string-json-array)

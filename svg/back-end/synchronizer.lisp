@@ -29,7 +29,7 @@
                (@send self :lisp-filename (lisp-filename self))
                (@send self :ir (ir self))
                (e/part:first-time self))))
-(format *standard-output* "~&back-end synchrnonizer gets ~s ~s~%" (@pin self e) (@data self e))      
+;(format *standard-output* "~&back-end synchrnonizer gets ~s ~s~%" (@pin self e) (@data self e))      
       (ecase (state self)
         (:idle
          (ecase pin

@@ -16,7 +16,7 @@
   (call-next-method))
 
 (defmethod e/part:react ((self collector) e)
-  (format *standard-output* "~&collector gets ~S /~s/~%" (@pin self e) (@data self e))
+  ;(format *standard-output* "~&collector gets ~S /~s/~%" (@pin self e) (@data self e))
   (ecase (@pin self e)
     (:name
      (assert (null (name self)))
@@ -67,7 +67,7 @@
       (json:encode-json-to-string `( (:item-kind . "leaf") (:name . ,name) (:file-name . ,file-ref-str))))))
 
 (defmethod graph-alist ((self collector) name json-graph)
-(format *standard-output* "~&graph-alist /~s/~%" json-graph)  
+;(format *standard-output* "~&graph-alist /~s/~%" json-graph)  
   (let ((alist-graph (with-input-from-string (s json-graph) (json:decode-json s))))
     (json:encode-json-to-string `( (:item-kind . "graph") (:name . ,name) (:graph . ,alist-graph) ))))
 
