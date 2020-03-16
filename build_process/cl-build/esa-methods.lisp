@@ -40,18 +40,18 @@
   (dolist (pin-name (output-pins self))
     (when (string= pin-name name)
       (return-from ensure-valid-output-pin T)))
-  (error (format nil "pin ~a is not an output pin of ~s" name self)))
+  (error (format nil "pin /~a/ is not an output pin of ~s" name self)))
 
 (defmethod ensure-input-pin-not-declared ((self kind) name)
   (dolist (pin-name (input-pins self))
     (when (string= pin-name name)
-      (error (format nil "pin ~a is already declared as an input pin of ~s" name self))))
+      (error (format nil "pin /~a/ is already declared as an input pin of ~s" name self))))
   T)
 
 (defmethod ensure-output-pin-not-declared ((self kind) name)
   (dolist (pin-name (output-pins self))
     (when (string= pin-name name)
-      (error (format nil "pin ~a is already declared as an output pin of ~s" name self))))
+      (error (format nil "pin /~a/ is already declared as an output pin of ~s" name self))))
   T)
 
 (defmethod refers-to-self? ((self source))
