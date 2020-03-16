@@ -9,6 +9,4 @@
 (defmethod e/part:react ((self probe) e)
   (format *standard-output* "~&probe ~a gets ~s ~s~%" (index self) (@pin self e) (@data self e))
   (ecase (@pin self e)
-    (:in
-     (let ((part-name (pathname-name (@data self e))))
-       (@send self :out part-name)))))
+    (:in (@send self :out (@data self e)))))
