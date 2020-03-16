@@ -273,8 +273,7 @@ ellipse-bounding-boxes.done,
 
                lisp-emitter.out -> lisp-file-writer.write,self.lisp-out
 
-               json-emitter.out -> json-file-writer.write
-               json1-emitter.out -> self.json-out
+               json1-emitter.out -> self.json-out,json-file-writer.write
 
                scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,lisp-emitter.error,
                   generic-file-writer.error,
