@@ -89,8 +89,8 @@
         (@inject build-net pin T)))))
     
 (defun btest ()
-  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
 (defun cl-user::btest ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
