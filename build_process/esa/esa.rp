@@ -56,7 +56,7 @@ $   (emit p "(in-package :arrowgrams/build)")
   SYMBOL/situation SYMBOL
 
 = classes
-  {[ ?SYMBOL/class @class
+  {[ ?SYMBOL/class @class-def
    | * >
   ]}
 
@@ -66,7 +66,7 @@ $   (emit p "(in-package :arrowgrams/build)")
    | * >
   ]}
 
-= class
+= class-def
   SYMBOL/class
   @esa-symbol
        set-current-class
@@ -115,7 +115,7 @@ $      (clear-method-stream p)
 = method-decl
   SYMBOL/method @esa-symbol
 $      (emit-to-method-stream p "~%(defgeneric ~a (self" (atext p))
-  @typed-formals
+  @generic-typed-formals
 $      (emit-to-method-stream p ")") ;; close parameter list
   @return-type
 $      (emit-to-method-stream p ")") ;; close generic
@@ -124,7 +124,7 @@ $      (emit-to-method-stream p ")") ;; close generic
 = script-decl
   SYMBOL/script @esa-symbol
 $      (emit-to-method-stream p "~%(defgeneric ~a #|script|# (self" (atext p))
-  @typed-formals
+  @generic-typed-formals
 $      (emit-to-method-stream p ")")
   @return-type
 $      (emit-to-method-stream p ")") ;; close generic
@@ -144,6 +144,19 @@ $     (emit p "~&(~a :accessor ~a :initform nil)" (atext p) (atext p))
 $     (emit-to-method-stream p " ~a" (atext p))
   {[ &non-keyword-symbol @esa-symbol
 $     (emit-to-method-stream p " ~a" (atext p))
+   | * >
+  ]}
+  
+= generic-typed-formals
+  [ ?'(' '(' generic-type-list ')'
+  | *
+  ]
+
+= generic-type-list
+  @esa-symbol
+$     (emit-to-method-stream p " ~a" (gensym))
+  {[ &non-keyword-symbol @esa-symbol
+$     (emit-to-method-stream p " ~a" (gensym))
    | * >
   ]}
   
