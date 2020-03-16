@@ -25,7 +25,10 @@
            (@send self :graph (graph self)))
          (save-array () (setf (json-array self) (@data self e)))
          (save-graph () (setf (graph self) (@data self e))))
-      (flet ((send-all () (send-graph) (split-and-send-array)))
+      (flet ((send-all ()
+               (split-and-send-array)
+               (send-graph)))
+             
         
         ;; ensure that graph is sent out before array is split and sent out
         

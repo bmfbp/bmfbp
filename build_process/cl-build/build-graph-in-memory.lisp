@@ -3,7 +3,8 @@
 (defparameter *script* nil)
 
 (defclass build-graph-in-memory (builder) 
-  ((kinds-by-name :accessor kinds-by-name)))
+  ((kinds-by-name :accessor kinds-by-name)
+   (script-stack :accessor script-stack)))
 
 (defmethod e/part:busy-p ((self build-graph-in-memory))
   (call-next-method))
@@ -12,15 +13,20 @@
   (call-next-method))
 
 (defmethod e/part:first-time ((self build-graph-in-memory))
-  (setf (kinds-by-name self) (make-hash-table :test 'equal)))
+  (setf (kinds-by-name self) (make-hash-table :test 'equal))
+  (setf (script-stack self) nil))
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
+  (format *standard-output* "~&~%build-graph-in-memory gets ~s ~s~%" (@pin self e) (@data self e))
   (ecase (@pin self e)
     (:json-script
      (let ((script-as-alist (json-to-alist (@data self e))))
+       (push script-as-alist (script-stack self))))
+
+    (:done
+     (dolist (script-as-alist (script-stack self))
        (setf *script* script-as-alist)
        (alist-to-graph self script-as-alist)))))
-         ;(@send self :tree root))))))
 
 (defmethod alist-to-graph ((self build-graph-in-memory) script-as-alist)
   (dolist (a script-as-alist)

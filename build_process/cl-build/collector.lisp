@@ -57,6 +57,7 @@
 (defmethod finalize-and-send-collection ((self collector))
   (send-collection self (leaves self))
   (send-collection self (graphs self))
+  (@send self :done t)
   (e/part:first-time self))
 
 (defmethod leaf-alist ((self collector) file-ref-pathname)

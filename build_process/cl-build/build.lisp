@@ -11,8 +11,8 @@
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:array :json) (:items :graph :error))
-           (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :json-graph :lisp :error)
-            (compiler part-namer json-array-splitter probe2 probe)
+           (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :graph :error)
+            (compiler part-namer json-array-splitter)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
@@ -21,7 +21,7 @@
             compiler.json -> json-array-splitter.json
 
             json-array-splitter.items -> self.json-file-ref
-            json-array-splitter.graph -> self.json-graph
+            json-array-splitter.graph -> self.graph
 
             part-namer.out -> self.name
 
@@ -37,7 +37,7 @@
             self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
-            compile-single-diagram.json-graph -> self.graph
+            compile-single-diagram.graph -> self.graph
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
             schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
@@ -45,13 +45,15 @@
             compile-single-diagram.error, schematic-or-leaf.error -> self.error 
             ")
 
-           (:code collector (:graph :name :leaf-json-ref :done) (:json-collection :error))
+           (:code collector (:graph :name :leaf-json-ref :done) (:json-collection :done :error))
            
-           (:schem build (:done :svg-filename) (:json-collection :error)
+           (:schem build (:done :svg-filename) (:json-collection :done :error)
             (build-recursive collector)
             "
             self.svg-filename -> build-recursive.svg-filename
             self.done -> collector.done
+
+            collector.done -> self.done
 
             build-recursive.graph -> collector.graph
             build-recursive.name -> collector.name
@@ -63,13 +65,15 @@
 
             ")
 
-           (:code build-graph-in-memory (:json-script) (:tree :error))
+           (:code build-graph-in-memory (:json-script :done) (:tree :error))
            (:code runner (:tree) (:error))
            (:schem build-load-and-run (:done :svg-filename) (:error)
             (build build-graph-in-memory runner)
             "
             self.svg-filename -> build.svg-filename
             self.done -> build.done
+
+            build.done -> build-graph-in-memory.done
 
             build.json-collection -> build-graph-in-memory.json-script
             build-graph-in-memory.tree -> runner.tree
@@ -87,8 +91,8 @@
         (@inject build-net pin T)))))
     
 (defun btest ()
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
-  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
 (defun cl-user::btest ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
