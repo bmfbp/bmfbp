@@ -12,7 +12,7 @@
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:array :json) (:items :graph :error))
            (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :json-graph :lisp :error)
-            (compiler part-namer json-array-splitter probe2)
+            (compiler part-namer json-array-splitter probe2 probe)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
@@ -22,7 +22,8 @@
    probe2.out -> json-array-splitter.json
 
             json-array-splitter.items -> self.json-file-ref
-            json-array-splitter.graph -> self.json-graph
+            json-array-splitter.graph -> probe.in
+  probe.out -> self.json-graph
 
             part-namer.out -> self.name
 
@@ -38,8 +39,7 @@
             self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
-            compile-single-diagram.json-graph -> probe.in
-            probe.out -> self.graph
+            compile-single-diagram.json-graph -> self.graph
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
             schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
@@ -89,6 +89,7 @@
         (@inject build-net pin T)))))
     
 (defun btest ()
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
 (defun cl-user::btest ()

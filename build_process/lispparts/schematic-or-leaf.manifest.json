@@ -1,0 +1,14 @@
+{
+  "entrypoint": "./schematic-or-leaf.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+    "svg-filename"
+  ],
+  "outPins": [
+    "name",
+    "leaf-json-ref",
+    "graph",
+    "error"
+  ]
+}
