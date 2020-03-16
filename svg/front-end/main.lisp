@@ -158,34 +158,22 @@ So, for metadata, emit:
 (defun front-end-main (svg-filename)
   (setf *metadata-already-seen* nil)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
-    (let ((temp1-str 
-#-lispworks(let ((temp-path (asdf:system-relative-pathname :arrowgrams "temp.fb")))
-	     (uiop:launch-program (format nil "~a <~a" command-svg-to-lisp svg-filename)
-				  :output temp-path
-				  :if-output-exists :supersede)
-	     (alexandria:read-file-into-string temp-path))
-#+lispworks(with-output-to-string (s)
-                       (let ((status (system:call-system-showing-output
-                                      (format nil "~a <~a" command-svg-to-lisp svg-filename)
-                                      :output-stream s
-                                      :show-cmd nil
-                                      :prefix "")))
-                         (unless (zerop status)
-                           (error "~&call failed status=~a (~a <~a)~%" status command-svg-to-lisp svg-filename))))))
-      ;; this is silly, but mimics the on-disk behaviour of the V2 compiler (which used temp files)
-      ;; rewrite in the future
-      (let ((*package* (find-package *pname*)))
-        (let ((lis (read-from-string temp1-str nil nil)))
-          (assert lis)
-          (let ((top-name (pathname-name svg-filename)))
-            (let ((new-lis (cons `(component ,top-name) lis)))
-              (let ((temp2-str (with-output-to-string (s)
-                                 (write new-lis :stream s))))
-                (let ((instream (make-string-input-stream temp2-str)))
-                  (let ((output-stream (make-string-output-stream)))
-                    (run instream output-stream)
-                    (let ((result-string (get-output-stream-string output-stream)))
-                      result-string)))))))))))
+    (let ((cmd (format nil "~a <~a" command-svg-to-lisp svg-filename)))
+      (let ((temp1-str (uiop:run-program cmd :output :string)))
+	;; this is silly, but mimics the on-disk behaviour of the V2 compiler (which used temp files)
+	;; rewrite in the future
+	(let ((*package* (find-package *pname*)))
+          (let ((lis (read-from-string temp1-str nil nil)))
+            (assert lis)
+            (let ((top-name (pathname-name svg-filename)))
+              (let ((new-lis (cons `(component ,top-name) lis)))
+		(let ((temp2-str (with-output-to-string (s)
+                                   (write new-lis :stream s))))
+                  (let ((instream (make-string-input-stream temp2-str)))
+                    (let ((output-stream (make-string-output-stream)))
+                      (run instream output-stream)
+                      (let ((result-string (get-output-stream-string output-stream)))
+			result-string))))))))))))
 
 ;;;; util.lisp
 
