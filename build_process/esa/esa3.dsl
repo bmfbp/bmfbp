@@ -152,7 +152,7 @@ script wire add-source(part pin)
 end script
 
 script wire add-destination(part pin)
-  self.install-source(part pin)
+  self.install-destination(part pin)
 end script
 
 
