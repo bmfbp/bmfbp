@@ -67,6 +67,7 @@
       (json:encode-json-to-string `( (:item-kind . "leaf") (:name . ,name) (:file-name . ,file-ref-str))))))
 
 (defmethod graph-alist ((self collector) name json-graph)
+(format *standard-output* "~&graph-alist /~s/~%" json-graph)  
   (let ((alist-graph (with-input-from-string (s json-graph) (json:decode-json s))))
     (json:encode-json-to-string `( (:item-kind . "graph") (:name . ,name) (:graph . ,alist-graph) ))))
 
