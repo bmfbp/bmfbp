@@ -104,13 +104,13 @@
   (cdr (assoc :wiring graph-alist)))
 
 (defun get-wire-index (wire-alist)
-  (cdr (assoc :wireindex wire-alist)))
+  (cdr (assoc :wire-index wire-alist)))
 
 (defun get-sources (wire-alist)
   (cdr (assoc :sources wire-alist)))
 
 (defun get-destinations-list (wire-alist)
-  (cdr (assoc :recievers wire-alist)))
+  (cdr (assoc :receivers wire-alist)))
 
 (defun get-part (x)
   (string-downcase (cdr (assoc :part x))))
