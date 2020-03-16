@@ -334,8 +334,7 @@ file-namer.generic-filename -> back-end.generic-filename
 file-namer.lisp-filename -> back-end.lisp-filename
 
 back-end.metadata -> self.metadata
-back-end.json -> probe.in
-probe.out -> self.json
+back-end.json -> self.json
 back-end.lisp -> self.lisp
 
 self.prolog-output-filename -> compiler-testbed.prolog-output-filename

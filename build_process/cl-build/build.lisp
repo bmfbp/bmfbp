@@ -18,12 +18,10 @@
             self.svg-filename -> compiler.svg-filename,part-namer.in
 
             compiler.metadata -> json-array-splitter.array
-            compiler.json -> probe2.in
-   probe2.out -> json-array-splitter.json
+            compiler.json -> json-array-splitter.json
 
             json-array-splitter.items -> self.json-file-ref
-            json-array-splitter.graph -> probe.in
-  probe.out -> self.json-graph
+            json-array-splitter.graph -> self.json-graph
 
             part-namer.out -> self.name
 
