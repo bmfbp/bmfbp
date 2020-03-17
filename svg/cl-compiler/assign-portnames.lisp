@@ -29,7 +29,7 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "~&assign-portnames~%")
+             (format *standard-output* "assign-portnames ")
              (assign-portnames self)
              (@send self :done t)
              (e/part::first-time self))

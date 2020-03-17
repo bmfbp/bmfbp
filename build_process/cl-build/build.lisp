@@ -68,12 +68,14 @@
            (:code build-graph-in-memory (:json-script :done) (:tree :error))
            (:code runner (:tree) (:error))
            (:schem build-load-and-run (:done :svg-filename) (:error)
-            (build build-graph-in-memory runner)
+            (build build-graph-in-memory runner probe probe2)
             "
             self.svg-filename -> build.svg-filename
-            self.done -> build.done
+            self.done -> probe.in
+  probe.out -> build.done
 
-            build.done -> build-graph-in-memory.done
+            build.done -> probe2.in
+  probe2.out -> build-graph-in-memory.done
 
             build.json-collection -> build-graph-in-memory.json-script
             build-graph-in-memory.tree -> runner.tree
@@ -91,8 +93,8 @@
         (@inject build-net pin T)))))
     
 (defun btest ()
-  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
 (defun cl-user::btest ()
   (asdf::run-program "rm -rf ~/.cache/common-lisp")

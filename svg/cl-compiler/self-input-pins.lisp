@@ -28,7 +28,7 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "~&self-input-pins~%")
+             (format *standard-output* "self-input-pins ")
              (self-input-pins self)
              (@send self :done t)
              (e/part:first-time self))

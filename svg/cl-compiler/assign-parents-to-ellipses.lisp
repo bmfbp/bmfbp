@@ -28,7 +28,7 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "~&assign-parents-to-ellipses~%")
+             (format *standard-output* "~&assign-parents-to-ellipses ")
              (assign-parents self)
              (@send self :done t)
              (e/part:first-time self))

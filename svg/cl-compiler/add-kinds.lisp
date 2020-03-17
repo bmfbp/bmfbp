@@ -29,7 +29,7 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "~&add-kinds~%")
+             (format *standard-output* "add-kinds ")
              (add-kinds self)
              (@send self :done t)
              (e/part:first-time self))

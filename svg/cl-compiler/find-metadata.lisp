@@ -29,7 +29,7 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "~&find-metadata~%")
+             (format *standard-output* "find-metadata ")
              (find-metadata self)
              (@send self :done t)
              (e/part:first-time self))

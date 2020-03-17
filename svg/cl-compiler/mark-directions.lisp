@@ -29,7 +29,7 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "~&mark-directions (noop)~%")
+             (format *standard-output* "/mark-directions (noop)/ ")
              ;
              (@send self :done t)
              (e/part::first-time self))

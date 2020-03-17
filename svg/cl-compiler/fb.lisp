@@ -38,7 +38,7 @@
                              (setf (state self) :iterating))
                          (if (eq action :reset)
                              (progn
-                               (format *standard-output* "~&FB RESET~%")
+                               (format *standard-output* "FB RESET ")
                                (e/part::first-time self))
                            (@send self :error
                                   (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e)))))))))))))
