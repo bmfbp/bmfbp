@@ -117,6 +117,7 @@
           (dolist (dest (get-destinations-list wire-as-alist))
             (add-destination w (get-part dest) (get-pin dest)))
           (add-wire kind w)))
+      (setf (gethash name (kinds-by-name self)) kind)  ;; this should be per diagram/graph, not global
       kind)))
 
 (defun get-file-name (a)
