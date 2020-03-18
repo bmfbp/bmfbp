@@ -3,12 +3,11 @@
   "kindType": "leaf",
   "platform": "lisp",
   "inPins": [
-    "svg-filename"
+    "json-ref"
   ],
   "outPins": [
-    "name",
     "leaf-json-ref",
-    "graph",
+    "schematic-json-ref",
     "error"
   ]
 }
