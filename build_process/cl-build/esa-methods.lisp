@@ -125,3 +125,7 @@
     (when (string= name (part-name p))
       (return-from find-child p)))
   (assert nil)) ;; no part with given name - can't happen
+
+(defmethod ensure-kind-defined ((self part-definition))
+  (unless (eq 'kind (type-of (part-kind self)))
+    (error "kind for ~s part is not defined" self)))

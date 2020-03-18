@@ -85,6 +85,9 @@ when building-aux kind
   method find-child(name)
 end when
 
+when building part-definition
+  method ensure-kind-defined	
+end when
 
 script kind add-input-pin(name)
    self.ensure-input-pin-not-declared(name)
@@ -117,6 +120,7 @@ script kind ensure-valid-source(s)
     self.ensure-valid-input-pin(s.pin-name)
   else
     let p = self.find-child(s.part-name) in
+      p.ensure-kind-defined
       p.part-kind.ensure-valid-output-pin(s.pin-name)
     end let
   end if
@@ -127,6 +131,7 @@ script kind ensure-valid-destination(dest)
     self.ensure-valid-output-pin(dest.pin-name)
   else
     let p = self.find-child(dest.part-name) in
+      p.ensure-kind-defined
       p.part-kind.ensure-valid-input-pin(dest.pin-name)
     end let
   end if

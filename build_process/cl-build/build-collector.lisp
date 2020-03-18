@@ -6,7 +6,7 @@
    (graphs :accessor graphs)
    (leaves :accessor leaves)))
 
-;; ensure that leaves are emitted before graphs (builder must build in reverse order, e.g. top-most graph last)
+;; ensure that graphs are emitted before leaves (builder must build in reverse order, e.g. top-most graph last)
 
 (defmethod clear ((self build-collector))
   (setf (name self) nil
@@ -52,14 +52,14 @@
 (defmethod collect-leaf ((self build-collector) file-ref)
   (push (leaf-alist self file-ref) (leaves self)))
 
-(defmethod send-collection ((self build-collector) collection)
+(defmethod send-collection ((self build-collector) collection kind)
   (let ((list-of-strings collection))
     (let ((jstring (apply-commas-make-json-array list-of-strings)))
-      (@send self :json-collection jstring :tag "build-collector json"))))
+      (@send self :json-collection jstring :tag (format nil "build-collector ~s" kind)))))
 
 (defmethod finalize-and-send-collection ((self build-collector))
-  (send-collection self (leaves self))
-  (send-collection self (graphs self))
+  (send-collection self (graphs self) "leaf")
+  (send-collection self (leaves self) "graph")
   (@send self :done t :tag "build-collector done")
   (clear self))
 
