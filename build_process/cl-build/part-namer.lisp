@@ -7,8 +7,7 @@
 )
 
 (defmethod e/part:react ((self part-namer) e)
-  (format *standard-output* "~&part-namer gets ~s ~s~%" (@pin self e) (@data self e))
   (ecase (@pin self e)
     (:in
      (let ((part-name (pathname-name (@data self e))))
-       (@send self :out part-name)))))
+       (@send self :out part-name :tag "part-namer")))))

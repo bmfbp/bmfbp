@@ -7,15 +7,17 @@
 
            (:code probe (:in) (:out))
            (:code probe2 (:in) (:out))
+           (:code probe3 (:in) (:out))
 
            (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:array :json) (:items :graph :error))
            (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :graph :error)
-            (compiler part-namer json-array-splitter)
+            (compiler part-namer json-array-splitter probe3)
             ;; test net - needs to be rewired as components are created
             "
-            self.svg-filename -> compiler.svg-filename,part-namer.in
+            self.svg-filename -> probe3.in
+  probe3.out -> compiler.svg-filename,part-namer.in
 
             compiler.metadata -> json-array-splitter.array
             compiler.json -> json-array-splitter.json
@@ -34,7 +36,8 @@
            (:schem build-recursive (:svg-filename) (:name :graph :leaf-json-ref :error)
             (compile-single-diagram schematic-or-leaf probe)
             "
-            self.svg-filename,schematic-or-leaf.schematic-json-ref -> compile-single-diagram.svg-filename
+            schematic-or-leaf.schematic-json-ref,self.svg-filename -> probe.in
+ probe.out -> compile-single-diagram.svg-filename
             
             compile-single-diagram.name -> self.name
             compile-single-diagram.graph -> self.graph
@@ -45,34 +48,33 @@
             compile-single-diagram.error, schematic-or-leaf.error -> self.error 
             ")
 
-           (:code collector (:graph :name :leaf-json-ref :done) (:json-collection :done :error))
+           (:code build-collector (:graph :name :leaf-json-ref :done) (:json-collection :done :error))
            
            (:schem build (:done :svg-filename) (:json-collection :done :error)
-            (build-recursive collector)
+            (build-recursive build-collector)
             "
             self.svg-filename -> build-recursive.svg-filename
-            self.done -> collector.done
+            self.done -> build-collector.done
 
-            collector.done -> self.done
+            build-collector.done -> self.done
 
-            build-recursive.graph -> collector.graph
-            build-recursive.name -> collector.name
-            build-recursive.leaf-json-ref -> collector.leaf-json-ref
+            build-recursive.graph -> build-collector.graph
+            build-recursive.name -> build-collector.name
+            build-recursive.leaf-json-ref -> build-collector.leaf-json-ref
 
-            collector.json-collection -> self.json-collection
+            build-collector.json-collection -> self.json-collection
 
-            build-recursive.error,collector.error -> self.error
+            build-recursive.error,build-collector.error -> self.error
 
             ")
 
            (:code build-graph-in-memory (:json-script :done) (:tree :error))
            (:code runner (:tree) (:error))
            (:schem build-load-and-run (:done :svg-filename) (:error)
-            (build build-graph-in-memory runner probe probe2)
+            (build build-graph-in-memory runner probe2)
             "
             self.svg-filename -> build.svg-filename
-            self.done -> probe.in
-  probe.out -> build.done
+            self.done -> build.done
 
             build.done -> probe2.in
   probe2.out -> build-graph-in-memory.done
@@ -88,16 +90,17 @@
     (@with-dispatch
       (@enable-logging)
       (let ((pin (e/part::get-input-pin build-net :svg-filename)))
-        (@inject build-net pin filename))
+        (@inject build-net pin filename)) ; :tag "build-net filename"))
       (let ((pin (e/part::get-input-pin build-net :done)))
-        (@inject build-net pin T)))))
+        (@inject build-net pin T :tag "build-net done")))))
     
 (defun btest ()
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
-  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
 (defun cl-user::btest ()
-  (asdf::run-program "rm -rf ~/.cache/common-lisp")
+  ;(asdf::run-program "rm -rf ~/.cache/common-lisp")
+  (asdf::run-program "rm -rf /Users/tarvydas/.cache/common-lisp/sbcl-1.5.9-macosx-x64/Users/tarvydas/quicklisp/local-projects/bmfbp")
   (arrowgrams/build::run-rephrase-parser (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")
                                  (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp"))
   (ql:quickload :arrowgrams/build) ;; reload generated file esa-dsl.lisp

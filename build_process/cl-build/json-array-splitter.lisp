@@ -19,10 +19,10 @@
                  (@:loop
                    (@:exit-when (null array))
                    (let ((jstr (json:encode-json-alist-to-string (first array))))
-                     (@send self :items jstr)
+                     (@send self :items jstr :tag "jas items")
                      (pop array)))))))
          (send-graph ()
-           (@send self :graph (graph self)))
+           (@send self :graph (graph self) :tag "jas graph"))
          (save-array () (setf (json-array self) (@data self e)))
          (save-graph () (setf (graph self) (@data self e))))
       (flet ((send-all ()

@@ -287,22 +287,25 @@
                         :pathname "./build_process/cl-build/"
                         :components ((:file "package")
                                      (:file "classes" :depends-on ("package"))
+                                     (:file "util" :depends-on ("package"))
                                      (:file "json" :depends-on ("package"))
-                                     (:file "probe" :depends-on ("package" "classes"))
-                                     (:file "probe2" :depends-on ("package" "classes"))
-                                     (:file "esa" :depends-on ("package" "classes"))
-                                     (:file "esa-methods" :depends-on ("package" "classes" "esa"))
-                                     (:file "json-array-splitter" :depends-on ("package" "classes"))
-                                     (:file "part-namer" :depends-on ("package" "classes"))
-                                     (:file "schematic-or-leaf" :depends-on ("package" "classes"))
-                                     (:file "collector" :depends-on ("package" "classes"))
-                                     (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json"))
-                                     (:file "runner" :depends-on ("package" "classes"))
+                                     (:file "probe" :depends-on ("package" "classes" "util"))
+                                     (:file "probe2" :depends-on ("package" "classes" "util"))
+                                     (:file "probe3" :depends-on ("package" "classes" "util"))
+                                     (:file "esa" :depends-on ("package" "classes" "util"))
+                                     (:file "esa-methods" :depends-on ("package" "classes" "esa" "util"))
+                                     (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
+                                     (:file "part-namer" :depends-on ("package" "classes" "util"))
+                                     (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
+                                     (:file "build-collector" :depends-on ("package" "classes" "util"))
+                                     (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json" "util"))
+                                     (:file "runner" :depends-on ("package" "classes" "util"))
 				     (:file "build" :depends-on ("package" "classes" "json"
-                                                                 "probe" "probe2"
+                                                                 "probe" "probe2" "probe3"
                                                                  "part-namer" "json-array-splitter"
-                                                                 "schematic-or-leaf" "collector"
+                                                                 "schematic-or-leaf" "build-collector"
                                                                  "build-graph-in-memory" "runner"
                                                                  "esa" "esa-methods"
+                                                                 "util"
                                                                  ))
 				     ))))
