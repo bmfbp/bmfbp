@@ -16,8 +16,7 @@
             (compiler part-namer json-array-splitter probe3)
             ;; test net - needs to be rewired as components are created
             "
-            self.svg-filename -> probe3.in
-  probe3.out -> compiler.svg-filename,part-namer.in
+            self.svg-filename -> compiler.svg-filename,part-namer.in
 
             compiler.metadata -> json-array-splitter.array
             compiler.json -> json-array-splitter.json
@@ -36,13 +35,11 @@
            (:schem build-recursive (:svg-filename) (:name :graph :leaf-json-ref :error)
             (compile-single-diagram schematic-or-leaf probe)
             "
-            schematic-or-leaf.schematic-json-ref,self.svg-filename -> probe.in
- probe.out -> compile-single-diagram.svg-filename
-            
             compile-single-diagram.name -> self.name
             compile-single-diagram.graph -> self.graph
             compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
 
+            schematic-or-leaf.schematic-json-ref,self.svg-filename -> compile-single-diagram.svg-filename
             schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
 
             compile-single-diagram.error, schematic-or-leaf.error -> self.error 
@@ -76,8 +73,7 @@
             self.svg-filename -> build.svg-filename
             self.done -> build.done
 
-            build.done -> probe2.in
-  probe2.out -> build-graph-in-memory.done
+            build.done -> build-graph-in-memory.done
 
             build.json-collection -> build-graph-in-memory.json-script
             build-graph-in-memory.tree -> runner.tree
