@@ -29,7 +29,7 @@
      (assert (null (graph self)))
      (setf (graph self) (@data self e))
      (maybe-collect-graph self))     
-    (:leaf-json-ref
+    (:code-filename
      (collect-leaf self (@data self e)))
     (:done
      (finalize-and-send-collection self))))
@@ -55,7 +55,7 @@
 (defmethod send-collection ((self build-collector) collection kind)
   (let ((list-of-strings collection))
     (let ((jstring (apply-commas-make-json-array list-of-strings)))
-      (@send self :json-collection jstring :tag (format nil "build-collector ~s" kind)))))
+      (@send self :final-code jstring :tag (format nil "build-collector ~s" kind)))))
 
 (defmethod finalize-and-send-collection ((self build-collector))
   (send-collection self (graphs self) "leaf")

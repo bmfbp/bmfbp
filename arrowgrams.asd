@@ -296,6 +296,8 @@
                                      (:file "esa-methods" :depends-on ("package" "classes" "esa" "util"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
                                      (:file "part-namer" :depends-on ("package" "classes" "util"))
+                                     (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
+                                     (:file "get-code" :depends-on ("package" "classes" "util"))
                                      (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
                                      (:file "build-collector" :depends-on ("package" "classes" "util"))
                                      (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json" "util"))
@@ -304,6 +306,7 @@
                                                                  "probe" "probe2" "probe3"
                                                                  "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "build-collector"
+                                                                 "get-manifest-file" "get-code"
                                                                  "build-graph-in-memory" "runner"
                                                                  "esa" "esa-methods"
                                                                  "util"

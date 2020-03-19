@@ -1,6 +1,33 @@
 (in-package :arrowgrams/build)
 
-(defparameter *src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/"))
+#|
+
+leaf part: iterator:
+1. manifest inside build_process.svg
+  {    "dir": "build_process/", "file": "parts/parts/iterator.json","kindName": "iterator", "ref": "master", "repo": "https://github.com/bmfbp/bmfbp.git" },
+2. file iterator.manifest.json
+{ "entrypoint": "./iterator.js", "kindType": "leaf", "platform": "nodejs", "inPins": [ "start", "continue", "done" ], "outPins": [ "get one" ]}
+3. file iterator.js
+  << js code >>
+
+
+composite (graph) part: compile_composite:
+1. manifest inside build_process.svg
+  { "dir": "build_process/", "file": "parts/compile_composite.json", "kindName": "compile composite", "ref": "master", "repo": "https://github.com/bmfbp/bmfbp.git" },
+2. file compile_composite.json
+{ "entrypoint": "./compile_composite.arrowgram.json", "inPins": [ "arrowgram" ], "kindType": "composite", "outPins": [ "metadata json", "composite json" ], "platform": "nodejs" }
+3. compile_composite.output.json
+  << json graph >>
+
+
+basic algorithm:
+
+1. receive manifest file reference (json 5 parts)
+2. read manifest file using file reference
+3. if manifest.kindType == "leaf" then create a file ref and send it to the code output pin
+   if manifest.kindType == "composite" then create a file ref and send it to the schematic output pin
+2/3 check for errors (manifest doesn't exist, code/svg doesn't exist)
+|#
 
 (defclass schematic-or-leaf (builder)
   ())
@@ -9,25 +36,58 @@
   (call-next-method))
 
 (defmethod e/part:react ((self schematic-or-leaf) e)
-  ;(format *standard-output* "~&schematic-or-leaf gets ~s ~s~%" (@pin self e) (subseq (@data self e) 0 60))
+  (format *standard-output* "~&schematic-or-leaf gets ~s ~s~%" (@pin self e) (subseq (@data self e) 0 60))
   (ecase (@pin self e)
-    (:json-ref
-     ;; stubbed out for now - all files reside in a working directory
-     (with-input-from-string (json-ref (@data self e))
-         (let ((file-ref-alist (json:decode-json json-ref)))
-           ;(format *standard-output* "~&file ref list ~S~%" file-ref-alist)
-           (let ((file-ref (cdr (assoc :file file-ref-alist))))
-             (let ((fname (fixup-filename (pathname-name file-ref))))
-               (let ((svg-filename (merge-pathnames (format nil "~a.svg" fname) *src-dir* )))
-                 (if (probe-file svg-filename)
-                     (@send self :schematic-json-ref svg-filename :tag "schem")
-                   (let ((lisp-filename (merge-pathnames (format nil "~a.manifest.json" fname) *src-dir*)))
-                     (if (probe-file lisp-filename)
-                         (@send self :leaf-json-ref lisp-filename :tag "leaf")
-                       (@send self :error (format nil "no file /~s/ (.svg or .manifest.json)" fname) :tag "schematic-or-leaf error")
-                       )))))))))))
-    
+    (:manifest-as-json-string
+     ;; during bootstrap: all files reside in a working directory
+     (let ((manifest-alist (json-to-alist (@data self e))))
+       (let ((kind-type-str (cdr (assoc :kind-type manifest-alist)))  ;; "leaf" or "composite"
+             (platform-str (cdr (assoc :platform manifest-alist)))  ;; "lisp" or "loadedlisp"
+             (entry-point (cdr (assoc :entrypoint manifest-alist))) ;; a string (file reference, e.g. "./file"
+             (in-pins (cdr (assoc :in-pins manifest-alist))) ;; a lisp list of string names
+             (out-pins (cdr (assoc :out-pins manifest-alist))))  ;; a lisp list of string names
+	 (unless (and (stringp kind-type-str) (stringp platform-str) (stringp entry-point) 
+		      (list-of-strings-p in-pins) (list-of-strings-p out-pins))
+	   (let ((msg (format nil "badly formed manifest ~s" manifest-alist)))
+	     (@send self :error msg)
+	     (error msg)))
+             (cond ((string= "leaf" kind-type-str)
+                    (cond ((string= "lisp" platform-str)
+                           (let ((file-name (merge-pathnames entry-point *src-dir*)))
+                             (if (probe-file file-name)
+                                 (progn
+                                   (@send self :code-filename (make-json-filename file-name)))
+                               (progn
+                                 (let ((msg (format nil "file ~s does not exist" file-name)))
+                                   (break)
+                                   (@send self :error msg) 
+                                   (error msg)))))) ;; lisp error only during bootstrapping
+                          ((string= "loadedlisp" platform-str)
+                           (let ((file-name (merge-pathnames entry-point "~/quicklisp/local-projects/bmfbp/build_process/lispparts")))
+                             (format *standard-output* "~&loaded lisp file ~s~%" file-name)))))
+                   ;; no op
+               
+              ((string= "composite" kind-type-str)
+               (let ((file-name (merge-pathnames entry-point "~/quicklisp/local-projects/bmfbp/build_process/lispparts")))
+                 (if (probe-file file-name)
+                     (progn
+                       (@send self :schematic-filename file-name))
+                   (progn
+                     (let ((msg (format nil "file ~s does not exist" file-name)))
+                       (break)
+                       (@send self :error msg) 
+                       (error msg))))))))))));; lisp error only during bootstrapping
 
-(defun fixup-filename (s)
+#+nil(defun fixup-filename (s)
   (let ((r1 (cl-ppcre:regex-replace-all " " s "-")))
     r1))
+
+(defun list-of-strings-p (x)
+  (when (listp x)
+    (dolist (s x)
+      (unless (stringp s)
+        (return-from list-of-strings-p nil))))
+  t)
+
+(defun make-json-filename (s)
+  (namestring s))

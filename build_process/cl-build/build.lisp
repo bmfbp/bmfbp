@@ -30,22 +30,26 @@
             "
             )
 
-           (:code schematic-or-leaf (:json-ref) (:schematic-json-ref :leaf-json-ref :error))
+           (:code get-manifest-file (:in) (:out :error))
+           (:code schematic-or-leaf (:manifest-as-json-string) (:schematic-filename :code-filename :error))
 
-           (:schem build-recursive (:svg-filename) (:name :graph :leaf-json-ref :error)
-            (compile-single-diagram schematic-or-leaf probe)
+           (:schem build-recursive (:svg-filename) (:name :graph :code-filename :error)
+            (compile-single-diagram schematic-or-leaf get-manifest-file)
             "
+            schematic-or-leaf.schematic-filename,self.svg-filename -> compile-single-diagram.svg-filename
+
             compile-single-diagram.name -> self.name
             compile-single-diagram.graph -> self.graph
-            compile-single-diagram.json-file-ref -> schematic-or-leaf.json-ref
+            compile-single-diagram.json-file-ref -> get-manifest-file.in
 
-            schematic-or-leaf.schematic-json-ref,self.svg-filename -> compile-single-diagram.svg-filename
-            schematic-or-leaf.leaf-json-ref -> self.leaf-json-ref
+            get-manifest-file.out -> schematic-or-leaf.manifest-as-json-string
 
-            compile-single-diagram.error, schematic-or-leaf.error -> self.error 
+            schematic-or-leaf.code-filename -> self.code-filename
+
+            compile-single-diagram.error, schematic-or-leaf.error,get-manifest-file.error -> self.error 
             ")
 
-           (:code build-collector (:graph :name :leaf-json-ref :done) (:json-collection :done :error))
+           (:code build-collector (:graph :name :code-filename :done) (:final-code :done :error))
            
            (:schem build (:done :svg-filename) (:json-collection :done :error)
             (build-recursive build-collector)
@@ -57,9 +61,9 @@
 
             build-recursive.graph -> build-collector.graph
             build-recursive.name -> build-collector.name
-            build-recursive.leaf-json-ref -> build-collector.leaf-json-ref
+            build-recursive.code-filename -> build-collector.code-filename
 
-            build-collector.json-collection -> self.json-collection
+            build-collector.final-code -> self.json-collection
 
             build-recursive.error,build-collector.error -> self.error
 

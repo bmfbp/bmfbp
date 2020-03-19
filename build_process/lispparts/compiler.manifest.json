@@ -1,7 +1,7 @@
 {
   "entrypoint": "./compiler",
   "kindType": "leaf",
-  "platform": "lisppart",
+  "platform": "loadedlisp",
   "inPins": [
     "svg-filename"
   ],

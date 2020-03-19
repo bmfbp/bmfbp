@@ -4,7 +4,7 @@
 
 (defclass build-graph-in-memory (builder) 
   ((kinds-by-name :accessor kinds-by-name)
-   (script-stack :accessor script-stack)))
+   (code-stack :accessor code-stack)))
 
 (defmethod e/part:busy-p ((self build-graph-in-memory))
   (call-next-method))
@@ -14,22 +14,22 @@
 
 (defmethod e/part:first-time ((self build-graph-in-memory))
   (setf (kinds-by-name self) (make-hash-table :test 'equal))
-  (setf (script-stack self) nil))
+  (setf (code-stack self) nil))
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
   ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
   (ecase (@pin self e)
     (:json-script
      (let ((script-as-alist (json-to-alist (@data self e))))
-       (push script-as-alist (script-stack self))))
+       (push script-as-alist (code-stack self))))
 
     (:done
-     (dolist (script-as-alist (script-stack self))
+     (dolist (script-as-alist (code-stack self))
        (setf *script* script-as-alist)
        (alist-to-graph self script-as-alist)))))
 
-(defmethod alist-to-graph ((self build-graph-in-memory) script-as-alist)
-  (dolist (a script-as-alist)
+(defmethod alist-to-graph ((self build-graph-in-memory) code-chunks-as-alist)
+  (dolist (a code-chunks-as-alist)
     (let ((item-kind (get-item-kind a))
           (name  (get-name a)))
       (if (string= "graph" item-kind)
@@ -85,12 +85,6 @@
 (defun get-pin (x)
   (string-downcase (cdr (assoc :pin x))))
 
-(defun strip-manifest-from-name (n)
-  (let ((index (search ".manifest" n)))
-    (if (numberp index)
-        (subseq n 0 index)
-      n)))
-
 
 (defmethod build-graph-in-mem ((self build-graph-in-memory) name full-graph)
   (let ((graph (get-graph full-graph))) ;; strip noise
@@ -130,7 +124,7 @@
   (cdr (assoc :out-pins a)))
 
 (defmethod build-leaf-in-mem ((self build-graph-in-memory) manifest-name leaf-as-alist)
-  (let ((name (string-downcase (strip-manifest-from-name manifest-name))))
+  (let ((name (string-downcase manifest-name)))
 (format *standard-output* "~&define leaf name ~s~%" name)
     (let ((filename (get-file-name leaf-as-alist)))
       (let ((json-str (alexandria:read-file-into-string filename)))
