@@ -128,4 +128,4 @@
 
 (defmethod ensure-kind-defined ((self part-definition))
   (unless (eq 'kind (type-of (part-kind self)))
-    (error "kind for part /~s/ is not defined ~s" (part-name self) self)))
+    (error "kind for part /~s/ is not defined (chek if manifest is correct) ~s" (part-name self) self)))
