@@ -136,11 +136,11 @@ build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (
         (in-pins (get-in-pins a))
         (out-pins (get-out-pins a)))
     ;; kind is a CLOS class name
-    (when filename
-      (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)
     (let ((kind (make-instance 'kind)))
       (setf (kind-name kind) kind-str)
       (format *standard-output* "~&define leaf name ~s~%" kind-str)
+      (when filename
+        (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)
       (dolist (ipin-str in-pins)
         (add-input-pin kind ipin-str))
       (dolist (opin-str out-pins)
