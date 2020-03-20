@@ -3,11 +3,11 @@
   "kindType": "leaf",
   "platform": "lisp",
   "inPins": [
-    "json-ref"
+    "manifest-as-json-string"
   ],
   "outPins": [
-    "leaf-json-ref",
-    "schematic-json-ref",
+    "code-part-descriptor",
+    "schematic-filename",
     "error"
   ]
 }
