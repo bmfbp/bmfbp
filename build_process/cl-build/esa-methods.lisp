@@ -70,6 +70,7 @@
 
 (defmethod install-source ((self wire) part-name pin-name)
   (let ((s (make-instance 'source)))
+(format *standard-output* "~&install-source ~s ~S~%" part-name pin-name)
     (setf (part-name s) (string-downcase part-name))
     (setf (pin-name s) (string-downcase pin-name))
     (push s (sources self))))
@@ -128,4 +129,4 @@
 
 (defmethod ensure-kind-defined ((self part-definition))
   (unless (eq 'kind (type-of (part-kind self)))
-    (error "kind for part /~s/ is not defined (chek if manifest is correct) ~s" (part-name self) self)))
+    (error "kind for part /~s/ is not defined (check if manifest is correct) ~s" (part-name self) self)))
