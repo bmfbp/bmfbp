@@ -28,7 +28,7 @@
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e) :name "generic emitter")))
-              (debug-accept nil)
+              (debug-accept t)
               (ir-generic p)
               (@send self :out (get-output p))
               (e/part::first-time self)))))))))
