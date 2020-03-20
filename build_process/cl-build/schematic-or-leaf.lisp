@@ -56,7 +56,14 @@ basic algorithm:
                            (let ((file-name (merge-pathnames entry-point *src-dir*)))
                              (if (probe-file file-name)
                                  (progn
-                                   (@send self :code-filename (make-json-filename file-name)))
+                                   (let ((descriptor-as-json-string
+                                          (alist-to-json-string
+                                           (list (cons :item-kind "leaf")
+                                                 (cons :in-pins in-pins)
+                                                 (cons :out-pins out-pins)
+                                                 (cons :kind (pathname-name file-name))
+                                                 (cons :filename (make-string-filename file-name))))))
+                                     (@send self :code-part-descriptor descriptor-as-json-string)))
                                (progn
                                  (let ((msg (format nil "file ~s does not exist" file-name)))
                                    (break)
@@ -89,5 +96,5 @@ basic algorithm:
         (return-from list-of-strings-p nil))))
   t)
 
-(defun make-json-filename (s)
+(defun make-string-filename (s)
   (namestring s))
