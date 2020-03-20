@@ -92,3 +92,5 @@ svg/cl-compiler/COMPILE-SINGLE-DIAGRAM.lisp
 svg/cl-compiler/BUILD-RECURSIVE.json
 
 svg/cl-compiler/BUILD-RECURSIVE.lisp
+
+svg/cl-compiler/BUILD.lisp
