@@ -1,5 +1,5 @@
 {
-  "entrypoint": "./build-recursive.svg",
+  "entrypoint": "./build.svg",
   "kindType": "composite",
   "platform": "lisp",
   "inPins": [
