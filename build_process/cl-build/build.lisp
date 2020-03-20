@@ -31,7 +31,7 @@
             )
 
            (:code get-manifest-file (:in) (:out :error))
-           (:code schematic-or-leaf (:manifest-as-json-string) (:schematic-filename :code-filename :error))
+           (:code schematic-or-leaf (:manifest-as-json-string) (:schematic-filename :code-part-descriptor :error))
 
            (:schem build-recursive (:svg-filename) (:name :graph :code-filename :error)
             (compile-single-diagram schematic-or-leaf get-manifest-file)
@@ -44,12 +44,12 @@
 
             get-manifest-file.out -> schematic-or-leaf.manifest-as-json-string
 
-            schematic-or-leaf.code-filename -> self.code-filename
+            schematic-or-leaf.code-part-descriptor -> self.code-filename
 
             compile-single-diagram.error, schematic-or-leaf.error,get-manifest-file.error -> self.error 
             ")
 
-           (:code build-collector (:graph :name :code-filename :done) (:final-code :done :error))
+           (:code build-collector (:graph :name :descriptor :done) (:final-code :done :error))
            
            (:schem build (:done :svg-filename) (:json-collection :done :error)
             (build-recursive build-collector)
@@ -61,7 +61,7 @@
 
             build-recursive.graph -> build-collector.graph
             build-recursive.name -> build-collector.name
-            build-recursive.code-filename -> build-collector.code-filename
+            build-recursive.code-filename -> build-collector.descriptor
 
             build-collector.final-code -> self.json-collection
 
