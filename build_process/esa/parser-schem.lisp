@@ -115,12 +115,12 @@
         (@inject net start-pin filename)))))
   
 (defun cl-user::etest1 ()
-  (asdf::run-program "rm -rf ~/.cache/common-lisp")
+  ;(asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/esa)
   (arrowgrams/build::run-rephrase-parser (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")
                                  (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")))
 (defun cl-user::etest2 ()
-  (asdf::run-program "rm -rf ~/.cache/common-lisp")
+  ;(asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/esa)
   (arrowgrams/build::run-esa-parser
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")

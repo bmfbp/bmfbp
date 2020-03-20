@@ -13,7 +13,7 @@
            (:code part-namer (:in) (:out))
            (:code json-array-splitter (:array :json) (:items :graph :error))
            (:schem compile-single-diagram (:svg-filename) (:name :json-file-ref :graph :error)
-            (compiler part-namer json-array-splitter probe3)
+            (compiler part-namer json-array-splitter)
             ;; test net - needs to be rewired as components are created
             "
             self.svg-filename -> compiler.svg-filename,part-namer.in
@@ -31,22 +31,28 @@
             )
 
            (:code get-manifest-file (:in) (:out :error))
-           (:code schematic-or-leaf (:manifest-as-json-string) (:schematic-filename :code-part-descriptor :error))
+           (:code children-before-graph (:child :graph :graph-name) (:name :graph :descriptor :error))
+           (:code schematic-or-leaf (:manifest-as-json-string) (:schematic-filename :child-descriptor :error))
 
-           (:schem build-recursive (:svg-filename) (:name :graph :code-filename :error)
-            (compile-single-diagram schematic-or-leaf get-manifest-file)
+           (:schem build-recursive (:svg-filename) (:name :graph :descriptor :error)
+            (compile-single-diagram schematic-or-leaf get-manifest-file children-before-graph)
+
             "
             schematic-or-leaf.schematic-filename,self.svg-filename -> compile-single-diagram.svg-filename
 
-            compile-single-diagram.name -> self.name
-            compile-single-diagram.graph -> self.graph
+            compile-single-diagram.name -> children-before-graph.graph-name
             compile-single-diagram.json-file-ref -> get-manifest-file.in
+            compile-single-diagram.graph -> children-before-graph.graph
 
             get-manifest-file.out -> schematic-or-leaf.manifest-as-json-string
+            
+            schematic-or-leaf.child-descriptor -> children-before-graph.child
 
-            schematic-or-leaf.code-part-descriptor -> self.code-filename
+            children-before-graph.name -> self.name
+            children-before-graph.graph -> self.graph
+            children-before-graph.descriptor -> self.descriptor
 
-            compile-single-diagram.error, schematic-or-leaf.error,get-manifest-file.error -> self.error 
+            compile-single-diagram.error, schematic-or-leaf.error,get-manifest-file.error,children-before-graph.error -> self.error 
             ")
 
            (:code build-collector (:graph :name :descriptor :done) (:final-code :done :error))
@@ -61,7 +67,7 @@
 
             build-recursive.graph -> build-collector.graph
             build-recursive.name -> build-collector.name
-            build-recursive.code-filename -> build-collector.descriptor
+            build-recursive.descriptor -> build-collector.descriptor
 
             build-collector.final-code -> self.json-collection
 
@@ -92,11 +98,12 @@
       (let ((pin (e/part::get-input-pin build-net :svg-filename)))
         (@inject build-net pin filename)) ; :tag "build-net filename"))
       (let ((pin (e/part::get-input-pin build-net :done)))
-        (@inject build-net pin T :tag "build-net done")))))
+        (@inject build-net pin T ))))) ;:tag "build-net done")))))
     
 (defun btest ()
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
-  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
 (defun cl-user::btest ()
   ;(asdf::run-program "rm -rf ~/.cache/common-lisp")

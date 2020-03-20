@@ -1,0 +1,16 @@
+{
+  "entrypoint": "./build-collector.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "graph",
+      "name", 
+      "descriptor",
+      "done"
+  ],
+  "outPins": [
+      "final-code",
+      "done",
+      "error"
+  ]
+}

@@ -30,15 +30,23 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
   ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
   (ecase (@pin self e)
     (:json-script
-     (let ((script-as-alist (json-to-alist (@data self e))))
-       (push script-as-alist (code-stack self))))
+     (let ((alist (json-to-alist (@data self e))))
+       (format *standard-output* "~&build-graph-in-memory pushes ~s ~s~%"
+	       (cdr (assoc :item-kind alist))
+	       (cdr (assoc :name alist)))
+       (push alist (code-stack self))))
 
     (:done
      (dolist (alist (code-stack self))
-       ;(format *standard-output* "~&build-graph processes ~s~%" alist)
        (if (string= "leaf" (cdr (assoc :item-kind alist)))
-           (build-leaf-in-mem self alist)
-         (build-graph-in-mem self alist))))))
+	   (progn
+	     (format *standard-output* "~&build-graph processes ~s~%"
+		     (get-kind alist))
+             (build-leaf-in-mem self alist))
+	   (progn
+	     (format *standard-output* "~&build-graph processes ~s ~s~%"
+		     (get-kind alist) (cdr (assoc :name alist)))
+             (build-graph-in-mem self alist)))))))
 
 
 

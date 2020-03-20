@@ -18,7 +18,7 @@
                (let ((array (json:decode-json json-array)))
                  (@:loop
                    (@:exit-when (null array))
-                   (let ((jstr (json:encode-json-alist-to-string (first array))))
+                   (let ((jstr (alist-to-json-string (first array))))
                      (@send self :items jstr)
                      (pop array)))))))
          (send-graph ()

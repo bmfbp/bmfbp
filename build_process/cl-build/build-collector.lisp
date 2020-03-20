@@ -54,13 +54,13 @@
 
 (defmethod send-collection ((self build-collector) list-of-alist kind)
   (dolist (alist list-of-alist)
-    (@send self :final-code (alist-to-json-string alist) :tag (format nil "build-collector ~s" kind))))
+    (@send self :final-code (alist-to-json-string alist) ))) ;:tag (format nil "build-collector ~s" kind))))
 
 (defmethod finalize-and-send-collection ((self build-collector))
   ;; leaves and graphs are alists
   (send-collection self (graphs self) "leaf")
   (send-collection self (leaves self) "graph")
-  (@send self :done t :tag "build-collector done")
+  (@send self :done t ) ;:tag "build-collector done")
   (clear self))
 
 #+nil(defmethod leaf-alist ((self build-collector) file-ref-pathname)

@@ -51,46 +51,41 @@ basic algorithm:
 	   (let ((msg (format nil "badly formed manifest ~s" manifest-alist)))
 	     (@send self :error msg)
 	     (error msg)))
-             (cond ((string= "leaf" kind-type-str)
-                    (cond ((string= "lisp" platform-str)
-                           (let ((file-name (merge-pathnames entry-point *src-dir*)))
-                             (if (probe-file file-name)
-                                 (progn
-                                   (let ((descriptor-as-json-string
-                                          (alist-to-json-string
-                                           (list (cons :item-kind "leaf")
-                                                 (cons :in-pins in-pins)
-                                                 (cons :out-pins out-pins)
-                                                 (cons :kind (pathname-name file-name))
-                                                 (cons :filename (make-string-filename file-name))))))
-                                     (@send self :code-part-descriptor descriptor-as-json-string)))
-                               (progn
-                                 (let ((msg (format nil "file ~s does not exist" file-name)))
-                                   (break)
-                                   (@send self :error msg) 
-                                   (error msg)))))) ;; lisp error only during bootstrapping
-                          ((string= "loadedlisp" platform-str)
-                           (let ((file-name (merge-pathnames entry-point "~/quicklisp/local-projects/bmfbp/build_process/lispparts")))
-                             (let ((descriptor-as-json-string
-                                    (alist-to-json-string
-                                     (list (cons :item-kind "leaf")
-                                           (cons :in-pins in-pins)
-                                           (cons :out-pins out-pins)
-                                           (cons :kind (pathname-name file-name)))))) ;; no filename!  don't load it
-                               (@send self :code-part-descriptor descriptor-as-json-string)
-                               (format *standard-output* "~&loaded lisp file ~s~%" file-name))))))
-                   ;; no op
+         (cond ((string= "leaf" kind-type-str)
+                (cond ((string= "lisp" platform-str)
+                       (let ((file-name (merge-pathnames entry-point *src-dir*)))
+                         (if (probe-file file-name)
+                             (progn
+                               (let ((descriptor-as-json-string
+                                      (alist-to-json-string
+                                       (list (cons :item-kind "leaf")
+					     (cons :name (pathname-name file-name))
+                                             (cons :in-pins in-pins)
+                                             (cons :out-pins out-pins)
+                                             (cons :kind (pathname-name file-name))
+                                             (cons :filename (make-string-filename file-name))))))
+                                 (@send self :child-descriptor descriptor-as-json-string :tag "sol child1")))
+                           (progn
+                             (let ((msg (format nil "file ~s does not exist" file-name)))
+                               (break)
+                               (@send self :error msg) 
+                               (error msg)))))) ;; lisp error only during bootstrapping
+                      ((string= "loadedlisp" platform-str)
+                       (let ((descriptor-as-json-string
+                              (let ((file-name (merge-pathnames entry-point *src-dir*)))
+                                (alist-to-json-string
+                                 (list (cons :item-kind "leaf")
+                                       (cons :name (pathname-name file-name))
+                                       (cons :in-pins in-pins)
+                                       (cons :out-pins out-pins)
+                                       (cons :kind (pathname-name file-name))))))) ;; no filename!  don't load it, just send :kind
+                         (@send self :child-descriptor descriptor-as-json-string :tag "sol child2")
+                         (format *standard-output* "~&loaded lisp file \"\"~%")))))
+               ;; no op
                
-              ((string= "composite" kind-type-str)
-               (let ((file-name (merge-pathnames entry-point "~/quicklisp/local-projects/bmfbp/build_process/lispparts")))
-                 (if (probe-file file-name)
-                     (progn
-                       (@send self :schematic-filename file-name))
-                   (progn
-                     (let ((msg (format nil "file ~s does not exist" file-name)))
-                       (break)
-                       (@send self :error msg) 
-                       (error msg))))))))))));; lisp error only during bootstrapping
+               ((string= "composite" kind-type-str)
+                (let ((file-name (merge-pathnames *diagram-dir* entry-point)))
+                  (@send self :schematic-filename file-name :tag "sol composite")))))))))
 
 #+nil(defun fixup-filename (s)
   (let ((r1 (cl-ppcre:regex-replace-all " " s "-")))

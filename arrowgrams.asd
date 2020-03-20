@@ -300,12 +300,14 @@
                                      (:file "get-code" :depends-on ("package" "classes" "util"))
                                      (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
                                      (:file "build-collector" :depends-on ("package" "classes" "util"))
+                                     (:file "children-before-graph" :depends-on ("package" "classes" "util"))
                                      (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json" "util"))
                                      (:file "runner" :depends-on ("package" "classes" "util"))
 				     (:file "build" :depends-on ("package" "classes" "json"
                                                                  "probe" "probe2" "probe3"
                                                                  "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "build-collector"
+								 "children-before-graph"
                                                                  "get-manifest-file" "get-code"
                                                                  "build-graph-in-memory" "runner"
                                                                  "esa" "esa-methods"

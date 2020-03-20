@@ -6,7 +6,7 @@
     "manifest-as-json-string"
   ],
   "outPins": [
-    "code-part-descriptor",
+    "child-descriptor",
     "schematic-filename",
     "error"
   ]
