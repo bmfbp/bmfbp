@@ -101,18 +101,19 @@
         (@inject build-net pin T ))))) ;:tag "build-net done")))))
     
 (defun btest ()
-  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build.svg")))
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
   ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
 (defun cl-user::btest ()
-  ;(asdf::run-program "rm -rf ~/.cache/common-lisp")
-  (asdf::run-program "rm -rf /Users/tarvydas/.cache/common-lisp/sbcl-1.5.9-macosx-x64/Users/tarvydas/quicklisp/local-projects/bmfbp")
+  (asdf::run-program "rm -rf ~/.cache/common-lisp")
+  ;(asdf::run-program "rm -rf /Users/tarvydas/.cache/common-lisp/sbcl-1.5.9-macosx-x64/Users/tarvydas/quicklisp/local-projects/bmfbp")
   (arrowgrams/build::run-rephrase-parser (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")
                                  (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp"))
   (ql:quickload :arrowgrams/build) ;; reload generated file esa-dsl.lisp
   (arrowgrams/build::run-esa-parser
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp"))
+  (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/build) ;; reload generated file esa.lisp
   (arrowgrams/build::btest))
