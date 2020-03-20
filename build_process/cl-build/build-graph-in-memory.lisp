@@ -17,16 +17,15 @@
   (setf (code-stack self) nil))
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
-  ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
+  (format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
   (ecase (@pin self e)
     (:json-script
      (let ((script-as-alist (json-to-alist (@data self e))))
        (push script-as-alist (code-stack self))))
 
     (:done
-     (dolist (script-as-alist (code-stack self))
-       (setf *script* script-as-alist)
-       (alist-to-graph self script-as-alist)))))
+     (dolist (alist (code-stack self))
+       (format *standard-output* "~&build-graph processes ~s~%" alist)))))
 
 (defmethod alist-to-graph ((self build-graph-in-memory) code-chunks-as-alist)
   (dolist (a code-chunks-as-alist)
@@ -127,6 +126,9 @@
   (let ((name (string-downcase manifest-name)))
 (format *standard-output* "~&define leaf name ~s~%" name)
     (let ((filename (get-file-name leaf-as-alist)))
+;--- need kind-name here
+;--- in-pins and out-pins
+
       (let ((json-str (alexandria:read-file-into-string filename)))
         (let ((manifest-as-alist (json-to-alist json-str)))
           (let ((kind (make-instance 'kind))
