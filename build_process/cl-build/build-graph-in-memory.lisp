@@ -16,8 +16,18 @@
   (setf (kinds-by-name self) (make-hash-table :test 'equal))
   (setf (code-stack self) nil))
 
+#|
+build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "filename") (:OUT-PINS "name" "error") (:KIND . "part-namer") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/part-namer.lisp"))
+
+build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "array" "json") (:OUT-PINS "items" "graph" "error") (:KIND . "json-array-splitter") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/json-array-splitter.lisp"))
+
+build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (:KIND . "probe3") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/probe3.lisp"))
+
+build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram") (:GRAPH (:NAME . "COMPILE-SINGLE-DIAGRAM") (:INPUTS "SVG-FILENAME") (:OUTPUTS "ERROR" "GRAPH" "JSON-FILE-REF" "NAME") (:PARTS ((:PART-NAME . "JSON-ARRAY-SPLITTER") (:KIND-NAME . "JSON-ARRAY-SPLITTER")) ((:PART-NAME . "PART-NAMER") (:KIND-NAME . "PART-NAMER")) ((:PART-NAME . "PROBE3") (:KIND-NAME . "PROBE3")) ((:PART-NAME . "COMPILER") (:KIND-NAME . "COMPILER"))) (:WIRING ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "COMPILER") (:PIN . "METADATA"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ARRAY")))) ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "COMPILER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "COMPILER") (:PIN . "JSON"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "JSON")))) ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "SVG-FILENAME"))) (:RECEIVERS ((:PART . "PROBE3") (:PIN . "IN")))) ((:WIRE-INDEX . 4) (:SOURCES ((:PART . "PART-NAMER") (:PIN . "NAME"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "NAME")))) ((:WIRE-INDEX . 5) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ITEMS"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "JSON-FILE-REF")))) ((:WIRE-INDEX . 6) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "GRAPH"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "GRAPH")))) ((:WIRE-INDEX . 7) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 8) (:SOURCES ((:PART . "PROBE3") (:PIN . "OUT"))) (:RECEIVERS ((:PART . "COMPILER") (:PIN . "SVG-FILENAME")) ((:PART . "PART-NAMER") (:PIN . "FILENAME")))))))
+|#
+
 (defmethod e/part:react ((self build-graph-in-memory) e)
-  (format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
+  ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
   (ecase (@pin self e)
     (:json-script
      (let ((script-as-alist (json-to-alist (@data self e))))
@@ -25,16 +35,10 @@
 
     (:done
      (dolist (alist (code-stack self))
-       (format *standard-output* "~&build-graph processes ~s~%" alist)))))
-
-(defmethod alist-to-graph ((self build-graph-in-memory) code-chunks-as-alist)
-  (dolist (a code-chunks-as-alist)
-    (let ((item-kind (get-item-kind a))
-          (name  (get-name a)))
-      (if (string= "graph" item-kind)
-          (build-graph-in-mem self name a)
-        (build-leaf-in-mem self name a)))))
-
+       ;(format *standard-output* "~&build-graph processes ~s~%" alist)
+       (if (string= "leaf" (cdr (assoc :item-kind alist)))
+           (build-leaf-in-mem self alist)
+         (build-graph-in-mem self alist))))))
 
 
 
@@ -84,17 +88,21 @@
 (defun get-pin (x)
   (string-downcase (cdr (assoc :pin x))))
 
+#|
+build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram") (:GRAPH (:NAME . "COMPILE-SINGLE-DIAGRAM") (:INPUTS "SVG-FILENAME") (:OUTPUTS "ERROR" "GRAPH" "JSON-FILE-REF" "NAME") (:PARTS ((:PART-NAME . "JSON-ARRAY-SPLITTER") (:KIND-NAME . "JSON-ARRAY-SPLITTER")) ((:PART-NAME . "PART-NAMER") (:KIND-NAME . "PART-NAMER")) ((:PART-NAME . "PROBE3") (:KIND-NAME . "PROBE3")) ((:PART-NAME . "COMPILER") (:KIND-NAME . "COMPILER"))) (:WIRING ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "COMPILER") (:PIN . "METADATA"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ARRAY")))) ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "COMPILER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "COMPILER") (:PIN . "JSON"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "JSON")))) ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "SVG-FILENAME"))) (:RECEIVERS ((:PART . "PROBE3") (:PIN . "IN")))) ((:WIRE-INDEX . 4) (:SOURCES ((:PART . "PART-NAMER") (:PIN . "NAME"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "NAME")))) ((:WIRE-INDEX . 5) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ITEMS"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "JSON-FILE-REF")))) ((:WIRE-INDEX . 6) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "GRAPH"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "GRAPH")))) ((:WIRE-INDEX . 7) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 8) (:SOURCES ((:PART . "PROBE3") (:PIN . "OUT"))) (:RECEIVERS ((:PART . "COMPILER") (:PIN . "SVG-FILENAME")) ((:PART . "PART-NAMER") (:PIN . "FILENAME")))))))
+|#
 
-(defmethod build-graph-in-mem ((self build-graph-in-memory) name full-graph)
-  (let ((graph (get-graph full-graph))) ;; strip noise
+(defmethod build-graph-in-mem ((self build-graph-in-memory) full-graph)
+  (let ((graph (get-graph full-graph)) ;; strip noise
+        (name (get-name full-graph)))
     (let ((kind (make-instance 'kind)))
       (format *standard-output* "~&define graph name ~s~%" name)
       (setf (kind-name kind) name)
       (setf (gethash name (kinds-by-name self)) kind)
       (dolist (input-name (get-inputs graph))
-        (add-input-pin kind input-name))
+        (add-input-pin kind (string-downcase input-name)))
       (dolist (output-name (get-outputs graph))
-        (add-output-pin kind output-name))
+        (add-output-pin kind (string-downcase output-name)))
       (dolist (part-as-alist (get-parts-list graph))
         (let ((kind-name (string-downcase (get-part-kind part-as-alist)))
               (part-name (string-downcase (get-part-name part-as-alist))))
@@ -110,34 +118,32 @@
           (dolist (dest (get-destinations-list wire-as-alist))
             (add-destination w (get-part dest) (get-pin dest)))
           (add-wire kind w)))
-      (setf (gethash name (kinds-by-name self)) kind)  ;; this should be per diagram/graph, not global
       kind)))
 
-(defun get-file-name (a)
-  (cdr (assoc :file-name a)))
 
-(defun get-in-pins (a)
-  (cdr (assoc :in-pins a)))
 
-(defun get-out-pins (a)
-  (cdr (assoc :out-pins a)))
+(defun get-filename (a)  (cdr (assoc :filename a)))
+(defun get-in-pins (a)  (cdr (assoc :in-pins a)))
+(defun get-out-pins (a)  (cdr (assoc :out-pins a)))
+(defun get-kind (a) (cdr (assoc :kind a)))
 
-(defmethod build-leaf-in-mem ((self build-graph-in-memory) manifest-name leaf-as-alist)
-  (let ((name (string-downcase manifest-name)))
-(format *standard-output* "~&define leaf name ~s~%" name)
-    (let ((filename (get-file-name leaf-as-alist)))
-;--- need kind-name here
-;--- in-pins and out-pins
-
-      (let ((json-str (alexandria:read-file-into-string filename)))
-        (let ((manifest-as-alist (json-to-alist json-str)))
-          (let ((kind (make-instance 'kind))
-                (in-pins (get-in-pins manifest-as-alist))
-                (out-pins (get-out-pins manifest-as-alist)))
-            (setf (kind-name kind) name)
-            (dolist (ipin in-pins)
-              (add-input-pin kind ipin))
-            (dolist (opin out-pins)
-              (add-output-pin kind opin))
-            (setf (gethash name (kinds-by-name self)) kind)  ;; this should be per diagram/graph, not global
-            leaf-as-alist ))))))
+#|
+build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (:KIND . "probe3") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/probe3.lisp"))
+|#
+(defmethod build-leaf-in-mem ((self build-graph-in-memory) a)
+  (let ((kind-str (get-kind a))
+        (filename (get-filename a))
+        (in-pins (get-in-pins a))
+        (out-pins (get-out-pins a)))
+    ;; kind is a CLOS class name
+    (when filename
+      (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)
+    (let ((kind (make-instance 'kind)))
+      (setf (kind-name kind) kind-str)
+      (format *standard-output* "~&define leaf name ~s~%" kind-str)
+      (dolist (ipin-str in-pins)
+        (add-input-pin kind ipin-str))
+      (dolist (opin-str out-pins)
+        (add-output-pin kind opin-str))
+      (setf (gethash kind-str (kinds-by-name self)) kind)  ;; this should be per diagram/graph, not global
+      kind)))

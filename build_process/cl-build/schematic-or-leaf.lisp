@@ -71,6 +71,13 @@ basic algorithm:
                                    (error msg)))))) ;; lisp error only during bootstrapping
                           ((string= "loadedlisp" platform-str)
                            (let ((file-name (merge-pathnames entry-point "~/quicklisp/local-projects/bmfbp/build_process/lispparts")))
+                                   (let ((descriptor-as-json-string
+                                          (alist-to-json-string
+                                           (list (cons :item-kind "leaf")
+                                                 (cons :in-pins in-pins)
+                                                 (cons :out-pins out-pins)
+                                                 (cons :kind (pathname-name file-name)))))) ;; no filename!  don't load it
+                                     (@send self :code-part-descriptor descriptor-as-json-string)))
                              (format *standard-output* "~&loaded lisp file ~s~%" file-name)))))
                    ;; no op
                
