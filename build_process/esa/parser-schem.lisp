@@ -123,7 +123,7 @@
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/esa)
   (arrowgrams/build::run-esa-parser
-   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa3.dsl")
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp")))
 
 (defun cl-user::etest()

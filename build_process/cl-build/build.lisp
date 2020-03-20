@@ -105,7 +105,7 @@
                                  (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp"))
   (ql:quickload :arrowgrams/build) ;; reload generated file esa-dsl.lisp
   (arrowgrams/build::run-esa-parser
-   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa3.dsl")
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp"))
   (ql:quickload :arrowgrams/build) ;; reload generated file esa.lisp
   (arrowgrams/build::btest))
