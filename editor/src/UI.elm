@@ -183,7 +183,7 @@ propertyPanel model =
         _ :: _ -> [ El.text "Multiple items selected" ]
     )
 
-itemPropertyPanel : MD.CanvasItemInstance -> List (El.Element MD.Msg)
+itemPropertyPanel : MD.CanvasItem -> List (El.Element MD.Msg)
 itemPropertyPanel item =
   let
     fieldLabel label =
@@ -213,7 +213,7 @@ itemPropertyPanel item =
         , El.spacing 25
         , El.width El.fill
         ]
-        ( case item.item of
+        ( case item.shape of
             MD.Rect _ _ ->
               [ textField MD.UpdateItemName item.name "e.g. Compile composite" "Part name"
               , textField MD.UpdateItemGitUrl item.gitUrl "e.g. https://github.com/arrowgrams/arrowgrams.git" "Git URL"
@@ -235,7 +235,7 @@ itemPropertyPanel item =
 canvas : MD.GlobalState -> Html.Html MD.Msg
 canvas model =
   let
-    canvasItems = List.map (displayCanvasItemInstance model) model.instantiatedItems
+    canvasItems = List.map (displayCanvasItem model) model.instantiatedItems
     (polylineUnderConstruction, pointUnderCursorCoords) =
       case model.intent of
         MD.ToCreatePolyline cursorCoords points -> (GP.pointsToString points, Just cursorCoords)
@@ -338,7 +338,7 @@ canvas model =
       -- order.
       (backgroundItems ++ canvasItems ++ specialItems)
 
-makeMovementCirlces : MD.CanvasItemInstance -> Bool -> List MD.Coordinates -> List (Svg.Svg MD.Msg)
+makeMovementCirlces : MD.CanvasItem -> Bool -> List MD.Coordinates -> List (Svg.Svg MD.Msg)
 makeMovementCirlces item toDisplay points =
   let
     makeCircle i { x, y } =
@@ -353,7 +353,7 @@ makeMovementCirlces item toDisplay points =
     List.indexedMap makeCircle points
 
 -- Selection circle around visual elements for resizing.
-makeResizeCircles : MD.Coordinates -> MD.CanvasItemInstance -> Int -> Int -> Bool -> MD.AnchorPosition -> Svg.Svg MD.Msg
+makeResizeCircles : MD.Coordinates -> MD.CanvasItem -> Int -> Int -> Bool -> MD.AnchorPosition -> Svg.Svg MD.Msg
 makeResizeCircles cursorCoords item width height toDisplay anchor =
   let
     (offsetX, offsetY) =
@@ -374,12 +374,12 @@ makeResizeCircles cursorCoords item width height toDisplay anchor =
       )
       []
 
-displayResizeOption : Bool -> MD.Intent -> MD.CanvasItemInstance -> MD.Coordinates -> MD.Coordinates -> MD.Coordinates -> List (Svg.Svg MD.Msg)
+displayResizeOption : Bool -> MD.Intent -> MD.CanvasItem -> MD.Coordinates -> MD.Coordinates -> MD.Coordinates -> List (Svg.Svg MD.Msg)
 displayResizeOption isItemHovered intent item cursorCoords upperLeft lowerRight =
   let
     isResizing =
       case intent of
-        MD.ToResizeCanvasItemInstance _ _ _ -> True
+        MD.ToResizeCanvasItem _ _ _ -> True
         _ -> False
     width = lowerRight.x - upperLeft.x
     height = lowerRight.y - upperLeft.y
@@ -392,17 +392,17 @@ displayResizeOption isItemHovered intent item cursorCoords upperLeft lowerRight 
     , makeCircle MD.LowerRight
     ]
 
-moveSelectedItems : MD.GlobalState -> MD.CanvasItemInstance -> MD.CanvasItemInstance
+moveSelectedItems : MD.GlobalState -> MD.CanvasItem -> MD.CanvasItem
 moveSelectedItems model item =
   case (model.cursorMode, model.cursorCoords) of
     (MD.DragCursor starting, current) ->
       MD.updateItemCoordinates model.zoomFactor starting current item
     _ -> item
 
-displayCanvasItemInstance : MD.GlobalState -> MD.CanvasItemInstance -> Svg.Svg MD.Msg
-displayCanvasItemInstance model item =
+displayCanvasItem : MD.GlobalState -> MD.CanvasItem -> Svg.Svg MD.Msg
+displayCanvasItem model item =
   let
-    isSelected = MD.isSelectedCanvasItemInstance model item
+    isSelected = MD.isSelectedCanvasItem model item
     itemToDisplay =
       case (isSelected, model.cursorMode) of
         (True, MD.DragCursor _) -> moveSelectedItems model item
@@ -413,7 +413,7 @@ displayCanvasItemInstance model item =
         Nothing -> False
     toDisplayResizeOption = displayResizeOption isItemHovered model.intent itemToDisplay model.cursorCoords
   in
-    case itemToDisplay.item of
+    case itemToDisplay.shape of
       MD.Rect upperLeft lowerRight ->
         let
           x = String.fromInt upperLeft.x
@@ -602,10 +602,10 @@ displayCanvasItemInstance model item =
                   [ Svg.text label ]
             ]
 
-calculatePinNamePosition : List MD.CanvasItemInstance -> MD.Coordinates -> (MD.BoundingBoxCoordinates, String, String)
+calculatePinNamePosition : List MD.CanvasItem -> MD.Coordinates -> (MD.BoundingBoxCoordinates, String, String)
 calculatePinNamePosition instantiatedItems coords =
   let
-    rects = List.filterMap (.item >> getCoords) instantiatedItems
+    rects = List.filterMap (.shape >> getCoords) instantiatedItems
     getCoords item =
       case item of
         (MD.Rect upperLeft lowerRight) -> Just (upperLeft, lowerRight)

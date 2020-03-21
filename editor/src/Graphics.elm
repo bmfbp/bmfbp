@@ -25,7 +25,7 @@ padBoundingBox (ul, lr) padding =
 calculatePositionOutsideOfBoundingBox : (MD.Coordinates, MD.Coordinates) -> (MD.BoundingBoxCoordinates, String, String) -> (MD.BoundingBoxCoordinates, String, String)
 calculatePositionOutsideOfBoundingBox bbox ((itemUL, itemLR), _, _) =
   let
-    (itemX, itemY) = (itemUL.x + gapFromBoundingBox, itemUL.y + gapFromBoundingBox)
+    (itemX, itemY) = (itemUL.x + CS.gapFromBoundingBox, itemUL.y + CS.gapFromBoundingBox)
     (bbUL, bbLR) = padBoundingBox bbox CS.detectionPaddingSize
     (dx, dy) = calculateClosestPointDelta itemUL itemLR bbUL bbLR
     -- See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor

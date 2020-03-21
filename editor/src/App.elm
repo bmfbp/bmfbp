@@ -49,51 +49,51 @@ update message model =
         (model, IR.saveFile encodedFile)
     MD.LoadSchematic -> (model, IR.loadFile (JE.null))
     MD.AddRect ->
-      (createNewCanvasItemInstance model (MD.Rect { x = 100, y = 100 } { x = 200, y = 200 }), Cmd.none)
+      (createNewCanvasItem model (MD.Rect { x = 100, y = 100 } { x = 200, y = 200 }), Cmd.none)
     MD.AddArrow ->
       case model.intent of
         MD.ToCreatePolyline _ points -> updateModelOnly <| addArrow model points
         _ ->
           ({ model | intent = MD.ToCreatePolyline model.cursorCoords [] }, Cmd.none)
     MD.AddEllipse ->
-      (createNewCanvasItemInstance model (MD.Ellipse { x = 100, y = 100 } { x = 250, y = 200 }), Cmd.none)
+      (createNewCanvasItem model (MD.Ellipse { x = 100, y = 100 } { x = 250, y = 200 }), Cmd.none)
     MD.AddText ->
-      (createNewCanvasItemInstance model (MD.Text { x = 100, y = 100 } { x = 200, y = 200 } "text"), Cmd.none)
+      (createNewCanvasItem model (MD.Text { x = 100, y = 100 } { x = 200, y = 200 } "text"), Cmd.none)
     MD.UpdateItemName item newName ->
       let
         updateName i = { i | name = newName }
       in
-        (updateCanvasItemInstance model item updateName, Cmd.none)
+        (updateCanvasItem model item updateName, Cmd.none)
     MD.UpdateItemGitUrl item newGitUrl ->
       let
         updateGitUrl i = { i | gitUrl = newGitUrl }
       in
-        (updateCanvasItemInstance model item updateGitUrl, Cmd.none)
+        (updateCanvasItem model item updateGitUrl, Cmd.none)
     MD.UpdateItemGitRef item newGitRef ->
       let
         updateGitRef i = { i | gitRef = newGitRef }
       in
-        (updateCanvasItemInstance model item updateGitRef, Cmd.none)
+        (updateCanvasItem model item updateGitRef, Cmd.none)
     MD.UpdateItemContextDir item newContextDir ->
       let
         updateContextDir i = { i | contextDir = newContextDir }
       in
-        (updateCanvasItemInstance model item updateContextDir, Cmd.none)
+        (updateCanvasItem model item updateContextDir, Cmd.none)
     MD.UpdateItemManifestPath item newManifestPath ->
       let
         updateManifestPath i = { i | manifestPath = newManifestPath }
       in
-        (updateCanvasItemInstance model item updateManifestPath, Cmd.none)
+        (updateCanvasItem model item updateManifestPath, Cmd.none)
     MD.UpdateSourcePinName item newName ->
       let
         updateSourcePinName i = { i | sourcePinName = newName }
       in
-        (updateCanvasItemInstance model item updateSourcePinName, Cmd.none)
+        (updateCanvasItem model item updateSourcePinName, Cmd.none)
     MD.UpdateSinkPinName item newName ->
       let
         updateSinkPinName i = { i | sinkPinName = newName }
       in
-        (updateCanvasItemInstance model item updateSinkPinName, Cmd.none)
+        (updateCanvasItem model item updateSinkPinName, Cmd.none)
     MD.UserIsTyping item -> updateModelOnly { model | intent = MD.ToType item }
     MD.UserIsNotTyping item -> updateModelOnly { model | intent = MD.ToExplore }
     MD.MouseMove coords ->
@@ -103,20 +103,20 @@ update message model =
           case (updatedModel.cursorMode, updatedModel.intent) of
             -- Moving paths is handled differently than the rest because it
             -- doesn't have an anchor point.
-            (_, MD.ToMovePath { id, item } index point) ->
-              case item of
+            (_, MD.ToMovePath { id, shape } index point) ->
+              case shape of
                 MD.Polyline points ->
                   let
                     updatePoint i pt = if i == index then calculateActualCoords model coords else pt
                     newPoints = matchClosestRect model.instantiatedItems <| List.indexedMap updatePoint points
-                    updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id (MD.Polyline newPoints)
+                    updatedItems = replaceCanvasItemById updatedModel.instantiatedItems id (MD.Polyline newPoints)
                   in
                     { updatedModel | instantiatedItems = updatedItems }
                 _ -> updatedModel
-            (_, MD.ToResizeCanvasItemInstance { id, item } startingCoords anchor) ->
+            (_, MD.ToResizeCanvasItem { id, shape } startingCoords anchor) ->
               let
-                newItem = resizeCanvasItem model.zoomFactor item startingCoords updatedModel.cursorCoords anchor
-                updatedItems = replaceCanvasItemInstanceById updatedModel.instantiatedItems id newItem
+                newShape = resizeShape model.zoomFactor shape startingCoords updatedModel.cursorCoords anchor
+                updatedItems = replaceCanvasItemById updatedModel.instantiatedItems id newShape
               in
                 { updatedModel
                 | instantiatedItems = updatedItems
@@ -156,7 +156,7 @@ update message model =
         MD.MultipleSelect ->
           let
             selected =
-              if MD.isSelectedCanvasItemInstance model item
+              if MD.isSelectedCanvasItem model item
               then model.selectedItems
               else item :: model.selectedItems
             newSelectionMode =
@@ -173,17 +173,17 @@ update message model =
     MD.ResizeItem item startingCursorCoords anchor ->
       updateModelOnly
         { model
-        | intent = MD.ToResizeCanvasItemInstance item startingCursorCoords anchor
+        | intent = MD.ToResizeCanvasItem item startingCursorCoords anchor
         }
     MD.HoveredItem item -> updateModelOnly { model | hoveredItem = Just item }
     MD.UnhoveredItem -> updateModelOnly { model | hoveredItem = Nothing }
-    MD.DoubleClick item ->
-      case (model.intent, item) of
+    MD.DoubleClick itemMb ->
+      case (model.intent, itemMb) of
         (MD.ToCreatePolyline _ points, _) -> updateModelOnly <| addArrow model (List.take (List.length points - 1) points)
-        (_, Just i) ->
-          case i.item of
-            (MD.Text _ _ _) -> updateModelOnly { model | intent = MD.ToType i }
-            (MD.Polyline _) -> updateModelOnly <| updateCanvasItemInstance model i (addPointToPolyline model.cursorCoords)
+        (_, Just item) ->
+          case item.shape of
+            (MD.Text _ _ _) -> updateModelOnly { model | intent = MD.ToType item }
+            (MD.Polyline _) -> updateModelOnly <| updateCanvasItem model item (addPointToPolyline model.cursorCoords)
             _ -> (model, Cmd.none)
         _ -> (model, Cmd.none)
     MD.MovePath path index point ->  updateModelOnly { model | intent = MD.ToMovePath path index point }
@@ -214,11 +214,11 @@ update message model =
       case (model.cursorMode, model.intent) of
         (_, MD.ToMovePath _ _ _) ->
           updateModelOnly { model | intent = MD.ToExplore }
-        (_, MD.ToResizeCanvasItemInstance _ _ _) ->
+        (_, MD.ToResizeCanvasItem _ _ _) ->
           updateModelOnly { model | intent = MD.ToExplore }
         (_, MD.ToPanViewBox _ _) ->
           updateModelOnly { model | intent = MD.ToExplore }
-        (MD.DragCursor starting, MD.ToCreateCanvasItemInstance item) ->
+        (MD.DragCursor starting, MD.ToCreateCanvasItem item) ->
           updateModelOnly
             { model
             | instantiatedItems = item :: model.instantiatedItems
@@ -245,7 +245,7 @@ update message model =
 -- Given all instantiated items and a list of polyline points, match the first
 -- (the source) and the last point (the sink) to the closest instantiated
 -- item's boundary, if close enough.
-matchClosestRect : List MD.CanvasItemInstance -> List MD.Coordinates -> List MD.Coordinates
+matchClosestRect : List MD.CanvasItem -> List MD.Coordinates -> List MD.Coordinates
 matchClosestRect items points =
   case points of
     (first :: tail) ->
@@ -259,9 +259,9 @@ matchClosestRect items points =
         _ -> points
     _ -> points
 
-matchPointWithRect : MD.CanvasItemInstance -> MD.Coordinates -> MD.Coordinates
+matchPointWithRect : MD.CanvasItem -> MD.Coordinates -> MD.Coordinates
 matchPointWithRect item point =
-  case item.item of
+  case item.shape of
     MD.Rect ul lr ->
       let
         (bbUL, bbLR) = GP.padBoundingBox (ul, lr) CS.detectionPaddingSize
@@ -277,14 +277,14 @@ matchPointWithRect item point =
 addArrow : MD.GlobalState -> List MD.Coordinates -> MD.GlobalState
 addArrow model points =
   let
-    model2 = createNewCanvasItemInstance model <| MD.Polyline points
+    model2 = createNewCanvasItem model <| MD.Polyline points
   in
     { model2 | intent = MD.ToExplore }
 
-addPointToPolyline : MD.Coordinates -> MD.CanvasItemInstance -> MD.CanvasItemInstance
+addPointToPolyline : MD.Coordinates -> MD.CanvasItem -> MD.CanvasItem
 addPointToPolyline cursor item =
-  case item.item of
-    MD.Polyline points -> { item | item = MD.Polyline (List.append points [cursor]) }
+  case item.shape of
+    MD.Polyline points -> { item | shape = MD.Polyline (List.append points [cursor]) }
     _ -> item
 
 -- We convert to float because of legacy reason with the compiler.
@@ -303,9 +303,9 @@ handleKeyDown model key =
       -- Multiple select
       "Shift" -> ({ model | selectionMode = MD.MultipleSelect }, defaultCmd)
       -- Delete
-      "Backspace" -> (deleteSelectedCanvasItemInstances model, defaultCmd)
+      "Backspace" -> (deleteSelectedCanvasItems model, defaultCmd)
       -- Copy
-      "c" -> (copySelectedCanvasItemInstances model, defaultCmd)
+      "c" -> (copySelectedCanvasItems model, defaultCmd)
       -- Zoom in
       "=" -> zoom model (1.0 - CS.zoomStepSize)
       "+" -> zoom model (1.0 - CS.zoomStepSize)
@@ -317,13 +317,13 @@ handleKeyDown model key =
 handleKeyUp : MD.GlobalState -> String -> MD.GlobalState
 handleKeyUp model key = model
 
-createNewCanvasItemInstance : MD.GlobalState -> MD.CanvasItem -> MD.GlobalState
-createNewCanvasItemInstance model canvasItem =
+createNewCanvasItem : MD.GlobalState -> MD.Shape -> MD.GlobalState
+createNewCanvasItem model shape =
   let
     newItem =
-      copyCanvasItemInstance model
+      copyCanvasItem model
         { id = -1
-        , item = canvasItem
+        , shape = shape
         , name = ""
         , gitUrl = ""
         , gitRef = ""
@@ -335,21 +335,21 @@ createNewCanvasItemInstance model canvasItem =
   in
     { model | instantiatedItems = newItem :: model.instantiatedItems }
 
-createNewCanvasItemInstance2 : MD.CanvasItem -> MD.GlobalState -> MD.GlobalState
-createNewCanvasItemInstance2 item model = createNewCanvasItemInstance model item
+createNewCanvasItem2 : MD.Shape -> MD.GlobalState -> MD.GlobalState
+createNewCanvasItem2 item model = createNewCanvasItem model item
 
-deleteSelectedCanvasItemInstances : MD.GlobalState -> MD.GlobalState
-deleteSelectedCanvasItemInstances model =
+deleteSelectedCanvasItems : MD.GlobalState -> MD.GlobalState
+deleteSelectedCanvasItems model =
   { model
       | instantiatedItems = List.filter (\x -> not (List.member x model.selectedItems)) model.instantiatedItems
       , selectedItems = []
   }
 
-copySelectedCanvasItemInstances : MD.GlobalState -> MD.GlobalState
-copySelectedCanvasItemInstances model =
+copySelectedCanvasItems : MD.GlobalState -> MD.GlobalState
+copySelectedCanvasItems model =
   let
     copiedItems = List.foldl (foldCopy model) [] model.selectedItems
-    move instance = { instance | item = moveItem copyItemOffset copyItemOffset instance.item }
+    move instance = { instance | shape = moveItem CS.itemCopyingOffset CS.itemCopyingOffset instance.shape}
     newItems = List.map move copiedItems
   in
     { model
@@ -357,7 +357,7 @@ copySelectedCanvasItemInstances model =
         , selectedItems = newItems
     }
 
-moveItem : Int -> Int -> MD.CanvasItem -> MD.CanvasItem
+moveItem : Int -> Int -> MD.Shape -> MD.Shape
 moveItem deltaX deltaY item =
   let
     move = MD.moveCoordinates deltaX deltaY
@@ -372,18 +372,18 @@ moveItem deltaX deltaY item =
       MD.Text upperLeft lowerRight label ->
         MD.Text (move upperLeft) (move lowerRight) label
 
-foldCopy : MD.GlobalState -> MD.CanvasItemInstance -> List MD.CanvasItemInstance -> List MD.CanvasItemInstance
+foldCopy : MD.GlobalState -> MD.CanvasItem -> List MD.CanvasItem -> List MD.CanvasItem
 foldCopy model item newItems =
   let
-    newItem = copyCanvasItemInstance model item
+    newItem = copyCanvasItem model item
   in
     (newItem :: newItems)
 
-findLargestId : List MD.CanvasItemInstance -> Int
+findLargestId : List MD.CanvasItem -> Int
 findLargestId = List.map .id >> List.maximum >> Maybe.withDefault 0
 
-copyCanvasItemInstance : MD.GlobalState -> MD.CanvasItemInstance -> MD.CanvasItemInstance
-copyCanvasItemInstance model canvasItem =
+copyCanvasItem : MD.GlobalState -> MD.CanvasItem -> MD.CanvasItem
+copyCanvasItem model canvasItem =
   let
     newId = findLargestId model.instantiatedItems + 1
   in
@@ -392,8 +392,8 @@ copyCanvasItemInstance model canvasItem =
 updateModelOnly : MD.GlobalState -> (MD.GlobalState, Cmd MD.Msg)
 updateModelOnly model = (model, Cmd.none)
 
-updateCanvasItemInstance : MD.GlobalState -> MD.CanvasItemInstance -> (MD.CanvasItemInstance -> MD.CanvasItemInstance) -> MD.GlobalState
-updateCanvasItemInstance model target f =
+updateCanvasItem : MD.GlobalState -> MD.CanvasItem -> (MD.CanvasItem -> MD.CanvasItem) -> MD.GlobalState
+updateCanvasItem model target f =
   let
     process item =
       if item.id == target.id
@@ -437,7 +437,7 @@ updateSelectedItemCoordinates model starting ending =
   let
     updateCoordinates = MD.updateItemCoordinates model.zoomFactor starting ending
     process item =
-      if MD.isSelectedCanvasItemInstance model item
+      if MD.isSelectedCanvasItem model item
       then
         let updatedItem = updateCoordinates item
         in  (updatedItem, Just updatedItem)
@@ -448,8 +448,8 @@ updateSelectedItemCoordinates model starting ending =
   in
     { model | instantiatedItems = updatedItems, selectedItems = selectedItems }
 
-resizeCanvasItem : Float -> MD.CanvasItem -> MD.Coordinates -> MD.Coordinates -> MD.AnchorPosition -> MD.CanvasItem
-resizeCanvasItem zoomFactor originalItem startingCoords currentCoords anchor =
+resizeShape : Float -> MD.Shape -> MD.Coordinates -> MD.Coordinates -> MD.AnchorPosition -> MD.Shape
+resizeShape zoomFactor originalItem startingCoords currentCoords anchor =
   let
     deltaX = toFloat (currentCoords.x - startingCoords.x) * zoomFactor |> round
     deltaY = toFloat (currentCoords.y - startingCoords.y) * zoomFactor |> round
@@ -522,17 +522,17 @@ resizeCanvasItem zoomFactor originalItem startingCoords currentCoords anchor =
           MD.Ellipse newUpperLeft newLowerRight
       _ -> originalItem
 
-replaceCanvasItemInstanceById : List MD.CanvasItemInstance -> Int -> MD.CanvasItem -> List MD.CanvasItemInstance
-replaceCanvasItemInstanceById allItems id newItem =
+replaceCanvasItemById : List MD.CanvasItem -> Int -> MD.Shape -> List MD.CanvasItem
+replaceCanvasItemById allItems id newShape =
   let
     replaceItem item =
       if item.id == id
-      then { item | item = newItem }
+      then { item | shape = newShape }
       else item
   in
     List.map replaceItem allItems
 
-getCursorDropPointCoords : List MD.CanvasItemInstance -> MD.Coordinates -> MD.Coordinates
+getCursorDropPointCoords : List MD.CanvasItem -> MD.Coordinates -> MD.Coordinates
 getCursorDropPointCoords canvasItems cursorCoords =
   let
     tolerance = CS.cursorSnapTolerance
@@ -542,7 +542,7 @@ getCursorDropPointCoords canvasItems cursorCoords =
       case found of
         Just _ -> found
         Nothing ->
-          case item.item of
+          case item.shape of
             MD.Polyline points -> Nothing
             MD.Text _ _ _ -> Nothing
             MD.Rect topLeft bottomRight ->

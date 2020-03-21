@@ -15,23 +15,23 @@ type Msg
   | AddEllipse
   | AddArrow
   | AddText
-  | UpdateItemName CanvasItemInstance String
-  | UpdateSourcePinName CanvasItemInstance String
-  | UpdateSinkPinName CanvasItemInstance String
-  | UpdateItemGitUrl CanvasItemInstance String
-  | UpdateItemGitRef CanvasItemInstance String
-  | UpdateItemContextDir CanvasItemInstance String
-  | UpdateItemManifestPath CanvasItemInstance String
-  | UserIsTyping CanvasItemInstance
-  | UserIsNotTyping CanvasItemInstance
+  | UpdateItemName CanvasItem String
+  | UpdateSourcePinName CanvasItem String
+  | UpdateSinkPinName CanvasItem String
+  | UpdateItemGitUrl CanvasItem String
+  | UpdateItemGitRef CanvasItem String
+  | UpdateItemContextDir CanvasItem String
+  | UpdateItemManifestPath CanvasItem String
+  | UserIsTyping CanvasItem
+  | UserIsNotTyping CanvasItem
   | MouseMove Coordinates
   | KeyPress String
   | KeyUp String
-  | SelectItem CanvasItemInstance
-  | ResizeItem CanvasItemInstance Coordinates AnchorPosition
-  | HoveredItem CanvasItemInstance
-  | DoubleClick (Maybe CanvasItemInstance)
-  | MovePath CanvasItemInstance Int Coordinates
+  | SelectItem CanvasItem
+  | ResizeItem CanvasItem Coordinates AnchorPosition
+  | HoveredItem CanvasItem
+  | DoubleClick (Maybe CanvasItem)
+  | MovePath CanvasItem Int Coordinates
   | UnhoveredItem
   | ClearSelection
   | MouseDown Coordinates
@@ -43,15 +43,15 @@ type SelectionMode = SingleSelect | MultipleSelect
 
 type alias GlobalState =
   { cursorCoords : Coordinates
-  , instantiatedItems : List CanvasItemInstance
-  , selectedItems : List CanvasItemInstance
-  , itemsUnderCursor : List CanvasItemInstance
+  , instantiatedItems : List CanvasItem
+  , selectedItems : List CanvasItem
+  , itemsUnderCursor : List CanvasItem
   -- Out of the items under cursor, only one item (or none) can be selected.
-  , currentItemUnderCursor : Maybe CanvasItemInstance
+  , currentItemUnderCursor : Maybe CanvasItem
   , cursorMode : CursorMode
   , intent : Intent
   , selectionMode : SelectionMode
-  , hoveredItem : Maybe CanvasItemInstance
+  , hoveredItem : Maybe CanvasItem
   , zoomFactor : Float
   , panCoords : Coordinates
   , viewPortSize : (Int, Int)
@@ -59,7 +59,7 @@ type alias GlobalState =
 
 type alias File =
   { moduleName : String
-  , canvasItems : List CanvasItemInstance
+  , canvasItems : List CanvasItem
   }
 
 type alias Coordinates = { x : Int, y : Int }
@@ -70,10 +70,10 @@ type alias BoundingBoxCoordinates = (Coordinates, Coordinates)
 type Intent
   -- Default state: Moving the mouse around
   = ToExplore
-  | ToMoveSelectedCanvasItemInstances
-  | ToResizeCanvasItemInstance CanvasItemInstance Coordinates AnchorPosition
-  | ToCreateCanvasItemInstance CanvasItemInstance
-  | ToMovePath CanvasItemInstance Int Coordinates
+  | ToMoveSelectedCanvasItems
+  | ToResizeCanvasItem CanvasItem Coordinates AnchorPosition
+  | ToCreateCanvasItem CanvasItem
+  | ToMovePath CanvasItem Int Coordinates
   -- The first parameter is the next point to be drawn and the second parameter
   -- is the rest of the points from which to draw the polyline.
   | ToCreatePolyline Coordinates (List Coordinates)
@@ -81,7 +81,7 @@ type Intent
   -- coordinates.
   | ToPanViewBox Coordinates Coordinates
   -- When the user is typing text to a particular item
-  | ToType CanvasItemInstance
+  | ToType CanvasItem
 
 type CursorMode
   = FreeFormCursor
@@ -91,13 +91,12 @@ type CursorMode
   -- when the user triggers a mousedown event.
   | SelectionInProgress
 
-type alias CanvasItemId = Int
+type alias ShapeId = Int
 
 -- These are the items actually displayed on the canvas.
-type alias CanvasItemInstance =
-  { id : CanvasItemId
-  -- TODO: Rename CanvasItem to Shape
-  , item : CanvasItem
+type alias CanvasItem =
+  { id : ShapeId
+  , shape : Shape
   -- TODO: Refactor the following into Element since it's disjoint.
   , name : String -- Part and Pin
   , gitUrl : String -- Part only
@@ -109,7 +108,7 @@ type alias CanvasItemInstance =
   }
 
 -- These are the elements that can be displayed on the canvas.
-type CanvasItem
+type Shape
   -- A rectangle is defined by the upper-left and the lower-right coordinates.
   = Rect Coordinates Coordinates
   | Polyline (List Coordinates)
@@ -136,14 +135,14 @@ encodeFile file =
   JE.object
     [ ( "version", JE.string CS.versionCanonicalFormat )
     , ( "moduleName", JE.string file.moduleName )
-    , ( "canvasItems", JE.list encodeCanvasItemInstance file.canvasItems )
+    , ( "canvasItems", JE.list encodeCanvasItem file.canvasItems )
     ]
 
-encodeCanvasItemInstance : CanvasItemInstance -> JE.Value
-encodeCanvasItemInstance canvasItem =
+encodeCanvasItem : CanvasItem -> JE.Value
+encodeCanvasItem canvasItem =
   JE.object
     [ ( "id", JE.int canvasItem.id )
-    , ( "item", encodeCanvasItem canvasItem.item )
+    , ( "shape", encodeShape canvasItem.shape )
     , ( "kindName", JE.string canvasItem.name )
     , ( "gitUrl", JE.string canvasItem.gitUrl )
     , ( "gitRef", JE.string canvasItem.gitRef )
@@ -153,9 +152,9 @@ encodeCanvasItemInstance canvasItem =
     , ( "sinkPinName", JE.string canvasItem.sinkPinName )
     ]
 
-encodeCanvasItem : CanvasItem -> JE.Value
-encodeCanvasItem canvasItem =
-  case canvasItem of
+encodeShape : Shape -> JE.Value
+encodeShape shape =
+  case shape of
     Rect topLeft bottomRight ->
       JE.object
         [ ( "tag", JE.string "Rect" )
@@ -199,15 +198,19 @@ fileDecoderSwitch version =
     "2019-12-19" ->
       JD.map2 File
         (JD.field "moduleName" JD.string)
-        (JD.field "canvasItems" (JD.list canvasItemInstanceDecoder))
+        (JD.field "canvasItems" (JD.list canvasItemDecoder20191219))
+    "2020-03-21" ->
+      JD.map2 File
+        (JD.field "moduleName" JD.string)
+        (JD.field "canvasItems" (JD.list canvasItemDecoder))
     _ ->
       JD.fail <| "Unknown version: " ++ version
 
-canvasItemInstanceDecoder : JD.Decoder CanvasItemInstance
-canvasItemInstanceDecoder =
-  JD.succeed CanvasItemInstance
+canvasItemDecoder20191219 : JD.Decoder CanvasItem
+canvasItemDecoder20191219 =
+  JD.succeed CanvasItem
     |> JDE.andMap (JD.field "id" JD.int)
-    |> JDE.andMap (JD.field "item" canvasItemDecoder)
+    |> JDE.andMap (JD.field "item" shapeDecoder)
     |> JDE.andMap (JD.field "kindName" JD.string)
     |> JDE.andMap (JD.field "gitUrl" JD.string)
     |> JDE.andMap (JD.field "gitRef" JD.string)
@@ -218,11 +221,24 @@ canvasItemInstanceDecoder =
 
 canvasItemDecoder : JD.Decoder CanvasItem
 canvasItemDecoder =
-  JD.field "tag" JD.string
-    |> JD.andThen canvasItemContent
+  JD.succeed CanvasItem
+    |> JDE.andMap (JD.field "id" JD.int)
+    |> JDE.andMap (JD.field "shape" shapeDecoder)
+    |> JDE.andMap (JD.field "kindName" JD.string)
+    |> JDE.andMap (JD.field "gitUrl" JD.string)
+    |> JDE.andMap (JD.field "gitRef" JD.string)
+    |> JDE.andMap (JD.field "contextDir" JD.string)
+    |> JDE.andMap (JD.field "manifestPath" JD.string)
+    |> JDE.andMap (JD.field "sourcePinName" JD.string)
+    |> JDE.andMap (JD.field "sinkPinName" JD.string)
 
-canvasItemContent : String -> JD.Decoder CanvasItem
-canvasItemContent contentType =
+shapeDecoder : JD.Decoder Shape
+shapeDecoder =
+  JD.field "tag" JD.string
+    |> JD.andThen shapeContent
+
+shapeContent : String -> JD.Decoder Shape
+shapeContent contentType =
   case contentType of
     "Rect" ->
       JD.map2 Rect
@@ -246,17 +262,17 @@ canvasItemContent contentType =
 coordinatesDecoder : JD.Decoder Coordinates
 coordinatesDecoder = JD.map2 Coordinates (JD.field "x" JD.int) (JD.field "y" JD.int)
 
-isSelectedCanvasItemInstance : GlobalState -> CanvasItemInstance -> Bool
-isSelectedCanvasItemInstance model match = List.any (\i -> i.id == match.id) model.selectedItems
+isSelectedCanvasItem : GlobalState -> CanvasItem -> Bool
+isSelectedCanvasItem model match = List.any (\i -> i.id == match.id) model.selectedItems
 
-updateItemCoordinates : Float -> Coordinates -> Coordinates -> CanvasItemInstance -> CanvasItemInstance
+updateItemCoordinates : Float -> Coordinates -> Coordinates -> CanvasItem -> CanvasItem
 updateItemCoordinates zoomFactor starting ending canvasItem =
   let
     dx = toFloat (ending.x - starting.x) * zoomFactor |> round
     dy = toFloat (ending.y - starting.y) * zoomFactor |> round
     move = moveCoordinates dx dy
-    item =
-      case canvasItem.item of
+    shape =
+      case canvasItem.shape of
         Rect upperLeft lowerRight ->
           Rect (move upperLeft) (move lowerRight)
         Polyline points ->
@@ -266,7 +282,7 @@ updateItemCoordinates zoomFactor starting ending canvasItem =
         Text upperLeft lowerRight label ->
           Text (move upperLeft) (move lowerRight) label
   in
-    { canvasItem | item = item }
+    { canvasItem | shape = shape }
 
 moveCoordinates : Int -> Int -> Coordinates -> Coordinates
 moveCoordinates deltaX deltaY coords =
