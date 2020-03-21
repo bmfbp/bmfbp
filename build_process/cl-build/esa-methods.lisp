@@ -130,3 +130,10 @@
 (defmethod ensure-kind-defined ((self part-definition))
   (unless (eq 'kind (type-of (part-kind self)))
     (error "kind for part /~s/ is not defined (check if manifest is correct) ~s" (part-name self) self)))
+
+
+(defmethod install-node ((self dispatcher) (n node))
+  (push n (all-parts dispatcher)))
+
+(defmethod set-top-node ((self dispatcher) (n node))
+  (setf (top-node self) n))

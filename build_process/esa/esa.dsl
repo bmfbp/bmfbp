@@ -50,6 +50,7 @@ end class
 
 class dispatcher
   map all-parts
+  top-node
 end class
 
 class event
@@ -164,7 +165,7 @@ end script
 %=== instantiating parts ===
 
 when loading kind
-  script loader(name node) >> node
+  script loader(name node dispatcher) >> node
 end when
 
 when loading node
@@ -173,21 +174,27 @@ when loading node
   % method children >> map node
 end when
 
-script kind loader(my-name my-container) >> node
-  create instance = node in
-    instance.clear-input-queue
-    instance.clear-output-queue
-    set instance.kind-field = self
-    set instance.container = my-container
-    set instance.name-in-container = my-name
-      map part-def = self.parts-map in
-        let child-instance = @part-def.kind-field.loader(part-def.part-name self) in
-	  @instance.add-part(part-def.part-name self)  % each child has a name that is local to the container (names are determined by kind)
-        end let
-      end map
-    >> instance
+script kind loader(my-name my-container dispatchr) >> node
+  create node-instance = node in
+    node-instance.clear-input-queue
+    node-instance.clear-output-queue
+    set node-instance.kind-field = self
+    set node-instance.container = my-container
+    set node-instance.name-in-container = my-name
+    map part-def = self.parts-map in
+      let child-instance = @part-def.kind-field.loader(part-def.part-name self dispatchr) in
+        @node-instance.add-node(part-def.part-name self)  % each child has a name that is local to the container (names are determined by kind)
+      end let
+    end map
+    dispatchr.install-node(node-instance)
+    >> node-instance
   end create
 end script
+
+when loading dispatcher
+  method install-node(node)
+  method set-top-node(node)
+end when
 
 
 %=== initializing ===
