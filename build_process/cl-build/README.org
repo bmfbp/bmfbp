@@ -1,10 +1,20 @@
 * usage
-  cl-user> (ql:quickload :arrowgrams/build)
-  cl-user> (in-package :arrowgrams/build)
-  arrowgrams/build> (btest)
+  cl-user> (ql:quickload :arrowgrams/br)  ;; ignore 3 undefined functions : BUILD, CREATE-ESA-COMPILER, CREATE-ESA
+  cl-user> (run-all)
 
+** sub-commands
+*** 
+
+    cl-user> (make-all) ;; to make the compilers, from scratch (initially performs: "rm -rf ~/cache/common-lisp")
+    cl-user> (runb)  ;; to run only the builder (when compilers don't need to be re-made)
+    cl-user> (run-all) ;; makes everything from scratch
+
+** see also
+*** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
 
 * output from builder
+** see cl-build/graph.lisp/*test-descriptors*
+*** old stuff ...
 #+NAME: output-from-builder
 #+BEGIN_SRC js
 [
