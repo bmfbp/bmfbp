@@ -101,7 +101,8 @@
         (@inject build-net pin T ))))) ;:tag "build-net done")))))
     
 (defun btest ()
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build.svg")))
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
+  ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build.svg")))
   ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/build-recursive.svg")))
   ;(build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/compile-single-diagram.svg")))
 
