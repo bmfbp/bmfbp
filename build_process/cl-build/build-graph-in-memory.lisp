@@ -37,6 +37,7 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
        (push alist (code-stack self))))
 
     (:done
+(setf cl-user::*code* (code-stack self))
      (dolist (alist (code-stack self))
        (if (string= "leaf" (cdr (assoc :item-kind alist)))
 	   (progn
