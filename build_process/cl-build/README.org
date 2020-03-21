@@ -1,5 +1,5 @@
 * usage
-  cl-user> (ql:quickload :arrowgrams/br)  ;; ignore 3 undefined functions : BUILD, CREATE-ESA-COMPILER, CREATE-ESA
+  cl-user> (ql:quickload :arrowgrams/br)  ;; ignore 4 undefined functions : TEST-RUN, BUILD, CREATE-ESA-COMPILER, CREATE-ESA
   cl-user> (run-all)
 
 ** sub-commands
