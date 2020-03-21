@@ -72,7 +72,7 @@ when building kind
   script add-wire(wire)
   method install-wire(wire)
   method install-part(name kind)
-  method parts-map >> map part-definition
+  method parts >> map part-definition
 end when
 
 when building-aux kind
@@ -171,6 +171,7 @@ end when
 when loading node
   method clear-input-queue
   method clear-output-queue
+  method add-node(node)
   % method children >> map node
 end when
 
@@ -181,7 +182,7 @@ script kind loader(my-name my-container dispatchr) >> node
     set node-instance.kind-field = self
     set node-instance.container = my-container
     set node-instance.name-in-container = my-name
-    map part-def = self.parts-map in
+    map part-def = self.parts in
       let child-instance = @part-def.kind-field.loader(part-def.part-name self dispatchr) in
         @node-instance.add-node(part-def.part-name self)  % each child has a name that is local to the container (names are determined by kind)
       end let

@@ -90,7 +90,7 @@
 (defmethod clear-output-queue ((self node))
   (setf (output-queue self) nil))
 
-;(defmethod children ((self node)) ;; already defined in declaration of accessor
+;(defmethod instances ((self node)) ;; already defined in declaration of accessor
   
 ; (defmethod intially ((self node))  needs to be explicitly declared in each class instance
 
@@ -105,6 +105,9 @@
 
 (defmethod input-queue? ((self node))
   (not (null (input-queue self))))
+
+(defmethod install-child ((self node) (child node))
+  (push node (children self)))
 
 (defmethod enqueue-input ((self node) (e event))
   (setf (input-queue self) (append (input-queue self) (list e))))

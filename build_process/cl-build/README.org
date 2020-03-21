@@ -8,6 +8,7 @@
     cl-user> (make-all) ;; to make the compilers, from scratch (initially performs: "rm -rf ~/cache/common-lisp")
     cl-user> (runb)  ;; to run only the builder (when compilers don't need to be re-made)
     cl-user> (run-all) ;; makes everything from scratch
+    cl-user> (btest)  ;; runs the tail end of the builder (build-graph-in-memory and graph.lisp)
 
 ** see also
 *** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
