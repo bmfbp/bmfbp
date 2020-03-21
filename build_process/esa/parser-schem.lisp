@@ -1,6 +1,6 @@
 (in-package :arrowgrams/build)
 
-(defun make-esa-compiler (input-filename output-filename)
+(defun create-esa-compiler (input-filename output-filename)
   (let ((net (@defnetwork parse
                  (:code tokenize (:start :pull) (:out :error))
 		 (:code comments (:token) (:pull :out :error))
@@ -57,7 +57,7 @@
         (@inject net output-filename-pin output-filename)
         (@inject net start-pin input-filename)))))
 
-(defun run-esa-parser (filename output-filename)
+(defun run-esa-compiler (filename output-filename)
   (let ((net (@defnetwork parse
                  (:code tokenize (:start :pull) (:out :error))
 		 (:code comments (:token) (:pull :out :error))
@@ -113,7 +113,17 @@
       (@with-dispatch 
         (@inject net output-filename-pin output-filename)
         (@inject net start-pin filename)))))
-  
+
+(defun make-esa-dsl ()
+  (arrowgrams/build::create-esa-compiler (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")
+					 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")))
+
+(defun make-esa ()
+  (arrowgrams/build::run-esa-compiler
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
+   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp")))
+
+#|
 (defun cl-user::etest1 ()
   ;(asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/esa)
@@ -136,5 +146,4 @@
 (defun compile-esa (&key (from nil) (to nil))
   (arrowgrams/build::run-esa-parser (asdf:system-relative-pathname :arrowgrams (format nil "build_process/esa/~a" from))
 				    (asdf:system-relative-pathname :arrowgrams (format nil "build_process/cl-build/~a" to))))
-
-
+|#
