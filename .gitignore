@@ -94,3 +94,7 @@ svg/cl-compiler/BUILD-RECURSIVE.json
 svg/cl-compiler/BUILD-RECURSIVE.lisp
 
 svg/cl-compiler/BUILD.lisp
+
+svg/cl-compiler/BOOT-BOOT.json
+
+svg/cl-compiler/BOOT-BOOT.lisp
