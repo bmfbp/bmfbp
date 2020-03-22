@@ -7,7 +7,7 @@
   ;; instantiate all parts in the graph and assign them to named slots in each appropriate level
   (let ((d (make-instance 'dispatcher)))  ;; make one "global" dispatcher
     (setf *dispatcher* d)
-    (let ((n (loader kind nil d))) ;; call to esa --> node
+    (let ((n (loader top-kind "TOP" nil d))) ;; call to esa --> node
       (set-top-node d n)
       (values d n)))) ;; return dispatcher and top node
 
@@ -19,7 +19,7 @@
 
 
 
-(defun test ()
+(defun test-run ()
   (let ((fake (make-instance 'build-graph-in-memory)))
     (reset fake)
     (let ((top-most-kind (process-code fake *test-descriptors*)))
@@ -27,6 +27,7 @@
           (instantiate-graph top-most-kind)
         (initialize-graph dispatchr)
         (run-graph dispatchr)))))
+
 
 (defparameter *test-descriptors* 
   '(

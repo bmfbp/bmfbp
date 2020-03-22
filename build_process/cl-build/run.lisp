@@ -17,7 +17,12 @@
   (make-all)
   (run-builder))
 
+(defun btest ()
+  (create-arrowgrams-builder)
+  (run-builder)
+  (test-run))
 
 (defun cl-user::make-all () (arrowgrams/build::make-all))
 (defun cl-user::run-all () (arrowgrams/build::run-all))
 (defun cl-user::runb () (arrowgrams/build::run-builder))
+(defun cl-user::btest () (arrowgrams/build::btest))

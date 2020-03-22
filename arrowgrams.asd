@@ -238,7 +238,7 @@
                                                    ))))))
 
 
-(defsystem :arrowgrams/esa-compiler
+(defsystem :arrowgrams/rephrase-compiler
     :depends-on (:cl-event-passing :alexandria)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
@@ -278,8 +278,20 @@
                                        (:file "file-writer" :depends-on ("../cl-build/package" "classes"))
                                        (:file "parser-schem" :depends-on ("file-writer" "esa-parser" "rp-parser"))))))
 
+(defsystem :arrowgrams/esa
+    :depends-on (:arrowgrams/rephrase-compiler)
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+                          :pathname "./build_process/esa"
+                          :components ((:file "esa-dsl")))))
+
 (defsystem :arrowgrams/build
-  :depends-on (:arrowgrams :arrowgrams/compiler :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/part :sl :loops :cl-event-passing)
+  :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :sl :loops :cl-event-passing :cl-holm-prolog
+			       :arrowgrams/compiler)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -292,8 +304,9 @@
                                      (:file "probe" :depends-on ("package" "classes" "util"))
                                      (:file "probe2" :depends-on ("package" "classes" "util"))
                                      (:file "probe3" :depends-on ("package" "classes" "util"))
-                                     (:file "esa" :depends-on ("package" "classes" "util"))
-                                     (:file "esa-methods" :depends-on ("package" "classes" "esa" "util"))
+                                     (:file "esa-macros" :depends-on ("package" "classes" "util"))
+                                     (:file "esa" :depends-on ("package" "classes" "util" "esa-macros"))
+                                     (:file "esa-methods" :depends-on ("package" "classes" "util" "esa-macros" "esa"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
                                      (:file "part-namer" :depends-on ("package" "classes" "util"))
                                      (:file "get-manifest-file" :depends-on ("package" "classes" "util"))

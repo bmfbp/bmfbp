@@ -280,11 +280,11 @@ $     (emit p ")#|end loop|#")
 = exit-when-statement
   SYMBOL/exit-when
     @esa-expr
-$     (emit p "(when ~a (return))" (atext p))
+$     (emit p "(esa-when ~a (return))" (atext p))
 
 = if-statement
   SYMBOL/if
-$    (emit p "(if ")
+$    (emit p "(esa-if ")
     @esa-expr
   SYMBOL/then
 $    (emit p "~%(progn")
@@ -336,6 +336,8 @@ $                (emit p "(return-from ~a ~a)" (current-method p) (atext p))
     clear-saved-text
     SYMBOL
     @esa-symbol-follow
+  | ?SYMBOL/true SYMBOL/true set-saved-text-true
+  | ?SYMBOL/false SYMBOL/false set-saved-text-false
   | *
   ]
 
