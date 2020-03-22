@@ -352,7 +352,7 @@ script node distribute-output-events
 	       % ==> every part-pin (by name) pair is valid
 	       let dest-part-name = dest.part-name in
 		 let child-instance = self.find-child(dest.part-name) in
-                   let child = child-instance.part-instance
+                   let child = child-instance.part-instance in
 		     create input-event = event in
 		       set input-event.part-name = dest.part-name
 		       set input-event.pin-name = dest.pin-name
