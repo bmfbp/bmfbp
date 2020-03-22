@@ -13,6 +13,11 @@ class part-definition
   part-kind
 end class
 
+class part-instance
+  part-name
+  part-instance
+end class
+
 class source
   part-name  % a name or "self"
   pin-name
@@ -174,7 +179,7 @@ when loading node
   method clear-output-queue
   method install-node(node)
   script add-child(name node)
-  % method children >> map node
+  % method children >> map part-instance
 end when
 
 script kind loader(my-name my-container dispatchr) >> node
@@ -265,14 +270,16 @@ script node busy? >> boolean
   if self.flagged-as-busy? then
     >> true
   else
-    map child = self.children in
-      if child.has-inputs-or-outputs? then
-        >> true
-      else
-        if @child.busy? then
-          >> true
+    map child-part-instance = self.children in
+      let child = child-part-instance.part-instance in
+	if child.has-inputs-or-outputs? then
+	  >> true
+	else
+	  if @child.busy? then
+	    >> true
+	  end if
 	end if
-      end if
+      end let
     end map
   end if
   >> false
@@ -344,13 +351,15 @@ script node distribute-output-events
 	       % wiring is by-name and contained in the kind of the container
 	       % ==> every part-pin (by name) pair is valid
 	       let dest-part-name = dest.part-name in
-		 let part-instance = self.find-child(dest.part-name) in
-		   create input-event = event in
-		     set input-event.part-name = dest.part-name
-		     set input-event.pin-name = dest.pin-name
-		     set input-event.data = output.data
-		     part-instance.enqueue-input(input-event)
-		   end create
+		 let child-instance = self.find-child(dest.part-name) in
+                   let child = child-instance.part-instance
+		     create input-event = event in
+		       set input-event.part-name = dest.part-name
+		       set input-event.pin-name = dest.pin-name
+		       set input-event.data = output.data
+		       child.enqueue-input(input-event)
+		     end create
+		   end let
 		 end let
 	       end let
 	      end if

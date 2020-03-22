@@ -145,9 +145,9 @@
      :false))
 
 (defmethod install-child ((self node) name (child node))
-  (let ((pdef (make-instance 'part-definition)))
+  (let ((pdef (make-instance 'part-instace)))
     (setf (part-name pdef) name)
-    (setf (part-kind pdef) child)
+    (setf (part-instance pdef) child)
     (push pdef (children self))))
 
 (defmethod enqueue-input ((self node) (e event))
