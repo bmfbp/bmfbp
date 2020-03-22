@@ -15,8 +15,3 @@
   `(when (esa-expr-true ,expr)
      ,@body))
 
-(defun esa-expr-true (x)
-  (cond ((eq :true x) t)
-        ((eq :false x) nil)
-        (t (error (format nil "~&esa expression returned /~s/, but expected :true or :false" x)))))
-  
