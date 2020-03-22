@@ -305,7 +305,7 @@
                                      (:file "probe2" :depends-on ("package" "classes" "util"))
                                      (:file "probe3" :depends-on ("package" "classes" "util"))
                                      (:file "esa-macros" :depends-on ("package" "classes" "util"))
-                                     (:file "esa-methods" :depends-on ("package" "classes" "esa" "util" "esa-macros"))
+                                     (:file "esa-methods" :depends-on ("package" "classes" "util" "esa-macros"))
                                      (:file "esa" :depends-on ("package" "classes" "util" "esa-macros" "esa-methods"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
                                      (:file "part-namer" :depends-on ("package" "classes" "util"))
