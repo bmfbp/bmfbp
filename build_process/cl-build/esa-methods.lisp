@@ -2,6 +2,20 @@
 
 ;; for bootstrap - make names case insensitive - downcase everything
 
+(defmacro esa-if (expr &body body)
+  (cond ((= 1 (length body))
+	 `(cond ((eq :true ,expr) ,@body)
+		((eq :false ,expr))
+		(t (esa-if-failed-to-return-true-false (format nil "~s" '(esa-if ,expr ,@body))))))
+	(( = 2 (length body))
+	 `(cond ((eq :true ,expr) ,@(first body))
+		((eq :false ,expr) ,@(second body))
+		(t (esa-if-failed-to-return-true-false (format nil "~s" '(esa-if ,expr ,@body))))))
+	(t (error "~&esa-if syntax error ~s" (list 'esa-if expr body)))))
+
+(defun esa-if-failed-to-return-true-false (msg)
+  (error (format nil "esa-if - expr did not return :true or :false ~s" msg)))
+
 (defmethod install-input-pin ((self kind) name)
   (push (string-downcase name) (input-pins self)))
 
@@ -84,15 +98,32 @@
 
 ;; nodes
 
+
 (defmethod clear-input-queue ((self node))
   (setf (input-queue self) nil))
 
 (defmethod clear-output-queue ((self node))
   (setf (output-queue self) nil))
 
-;(defmethod instances ((self node)) ;; already defined in declaration of accessor
+; (defmethod instances ((self node)) ;; already defined in declaration of accessor
   
 ; (defmethod intially ((self node))  needs to be explicitly declared in each class instance
+
+(defmethod initially ((self node))
+  ;; graphs have no initially
+  ;; leaves might have an initially
+  ;; (call-next-method) ends up here - nothing to do
+  (format *error-output* "~&initially on ~s~%" self))
+
+(defmethod display-output-events-to-console ((self node))
+  (dolist (e (output-queue self))
+    (format *standard-output* "~&~s outputs ~s on ~s~%" (self name-in-container) (pin-name e) (data e))))
+
+(defmethod is-busy ((self node))
+  (busy-flag self))
+
+(defmethod has-no-container? ((self node))
+  (null (container self)))
 
 (defmethod send ((self node) (e event))
   (setf (output-queue self) (append (output-queue self) (list e))))
@@ -106,8 +137,11 @@
 (defmethod input-queue? ((self node))
   (not (null (input-queue self))))
 
-(defmethod install-child ((self node) (child node))
-  (push node (children self)))
+(defmethod install-child ((self node) name (child node))
+  (let ((pdef (make-instance 'part-definition)))
+    (setf (part-name pdef) name)
+    (setf (part-kind pdef) child)
+    (push pdef (children self))))
 
 (defmethod enqueue-input ((self node) (e event))
   (setf (input-queue self) (append (input-queue self) (list e))))
@@ -136,7 +170,7 @@
 
 
 (defmethod install-node ((self dispatcher) (n node))
-  (push n (all-parts dispatcher)))
+  (push n (all-parts self)))
 
 (defmethod set-top-node ((self dispatcher) (n node))
   (setf (top-node self) n))
