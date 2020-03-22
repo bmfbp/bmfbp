@@ -293,7 +293,7 @@ script dispatcher run
         exit-map
       end if
     end map
-    exit true
+    exit-when true
   end loop
   self.declare-finished
 end script

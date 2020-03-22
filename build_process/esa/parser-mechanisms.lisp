@@ -93,6 +93,12 @@
   (dotimes (i (length str))
     (write-char (char str i) (output-stream p))))
 
+(defmethod emit-true ((p parser))
+  (write-string ":true" (output-stream p)))
+
+(defmethod emit-false ((p parser))
+  (write-string ":false" (output-stream p)))
+
 
 (defmethod emit-to-method-stream ((p parser) fmtstr &rest args)
   (let ((str (apply #'format nil fmtstr args)))
@@ -155,12 +161,6 @@
 
 (defmethod clear-saved-text ((p parser))
   (setf (saved-text p) ""))
-
-(defmethod set-saved-text-true ((p parser))
-  (setf (saved-text p) ":true"))
-
-(defmethod set-saved-text-false ((p parser))
-  (setf (saved-text p) ":false"))
 
 (defmethod save-text ((p parser))
   (setf (saved-text p) (token-text (accepted-token p))))

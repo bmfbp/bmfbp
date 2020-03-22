@@ -279,8 +279,9 @@ $     (emit p ")#|end loop|#")
   
 = exit-when-statement
   SYMBOL/exit-when
+$     (emit p "(esa-when ")
     @esa-expr
-$     (emit p "(esa-when ~a (return))" (atext p))
+$     (emit p " (return))")
 
 = if-statement
   SYMBOL/if
@@ -336,8 +337,6 @@ $                (emit p "(return-from ~a ~a)" (current-method p) (atext p))
     clear-saved-text
     SYMBOL
     @esa-symbol-follow
-  | ?SYMBOL/true SYMBOL/true set-saved-text-true
-  | ?SYMBOL/false SYMBOL/false set-saved-text-false
   | *
   ]
 
@@ -353,30 +352,34 @@ $                (emit p "(return-from ~a ~a)" (current-method p) (atext p))
 = esa-expr
   string-stack-open
   [ ?'@' '@' | * ]
-  @esa-symbol
-  push-string
-  {[ ?'.' @dotted-symbol push-string
-   | * >
-  ]}
-  [ string-stack-has-only-one-item
-    emit-string-pop
+  [ ?SYMBOL/true SYMBOL/true emit-true
+  | ?SYMBOL/false SYMBOL/false emit-false
   | *
-    emit-lpar-inc-count
-    emit-string-pop
-  ]
-  {[ string-stack-empty
-     >
-   | string-stack-has-only-one-item
-     emit-string-pop
-     >
-   | *
-     emit-lpar-inc-count
-     emit-string-pop
-  ]}
-  emit-rpars-count-less-1
-  @actuals
-  emit-rpars
-  string-stack-close
+    @esa-symbol
+    push-string
+    {[ ?'.' @dotted-symbol push-string
+     | * >
+    ]}
+    [ string-stack-has-only-one-item
+      emit-string-pop
+    | *
+      emit-lpar-inc-count
+      emit-string-pop
+    ]
+    {[ string-stack-empty
+       >
+     | string-stack-has-only-one-item
+       emit-string-pop
+       >
+     | *
+       emit-lpar-inc-count
+       emit-string-pop
+    ]}
+    emit-rpars-count-less-1
+    @actuals
+    emit-rpars
+    string-stack-close
+   ]
 
 = actuals
  [ ?'(' '('
