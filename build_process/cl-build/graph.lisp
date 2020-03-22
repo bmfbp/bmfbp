@@ -26,7 +26,12 @@
       (multiple-value-bind (dispatchr top-node)
           (instantiate-graph top-most-kind)
         (initialize-graph dispatchr)
-	--- inject graph-name here ---
+	(let ((diagram-name (asdf:system-relative-pathname :arrowgrams "build_process/lisppparts/boot-boot.svg")))
+	  (let ((ev (make-instance 'event)))
+	    (setf (part-name ev) "boot-boot")
+	    (setf (part-name ev) "svg-filename")
+	    (setf (data ev) diagram-name)
+	    (enqueue-input top-node ev)))
         (run-graph dispatchr)))))
 
 
