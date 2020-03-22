@@ -26,6 +26,7 @@
       (multiple-value-bind (dispatchr top-node)
           (instantiate-graph top-most-kind)
         (initialize-graph dispatchr)
+	--- inject graph-name here ---
         (run-graph dispatchr)))))
 
 
@@ -54,7 +55,8 @@
        ((:part-name . "CHILDREN-BEFORE-GRAPH") (:KIND-NAME . "CHILDREN-BEFORE-GRAPH")) 
        ((:part-name . "GET-MANIFEST-FILE") (:KIND-NAME . "GET-MANIFEST-FILE")) 
        ((:part-name . "PART-NAMER") (:KIND-NAME . "PART-NAMER")) 
-       ((:part-name . "BUILD-COLLECTOR") (:KIND-NAME . "BUILD-COLLECTOR"))) (:WIRING 
+       ((:part-name . "BUILD-COLLECTOR") (:KIND-NAME . "BUILD-COLLECTOR")))
+      (:WIRING 
        ((:wire-index . 0) (:SOURCES ((:PART . "COMPILER") (:PIN . "METADATA"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ARRAY")))) 
        ((:wire-index . 1) (:SOURCES ((:PART . "COMPILER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:pin . "ERROR")))) 
        ((:wire-index . 2) (:SOURCES ((:PART . "COMPILER") (:PIN . "JSON"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "JSON")))) 
