@@ -5,6 +5,11 @@
 (defun esa-if-failed-to-return-true-false (msg)
   (error (format nil "esa-if - expr did not return :true or :false ~s" msg)))
 
+(defun esa-expr-true (x)
+  (cond ((eq :true x) t)
+        ((eq :false x) nil)
+        (t (error (format nil "~&esa expression returned /~s/, but expected :true or :false" x)))))
+  
 
 
 (defmethod install-input-pin ((self kind) name)
