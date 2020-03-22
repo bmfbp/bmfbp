@@ -11,3 +11,12 @@
 		(t (esa-if-failed-to-return-true-false (format nil "~s" '(esa-if ,expr ,@body))))))
 	(t (error "~&esa-if syntax error ~s" (list 'esa-if expr body)))))
 
+(defmacro esa-when (expr &body body)
+  `(when (esa-expr-true ,expr)
+     ,@body))
+
+(defun esa-expr-true (x)
+  (cond ((eq :true x) t)
+        ((eq :false x) nil)
+        (t (error (format nil "~&esa expression returned /~s/, but expected :true or :false" x)))))
+  

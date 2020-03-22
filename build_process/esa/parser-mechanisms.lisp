@@ -156,6 +156,12 @@
 (defmethod clear-saved-text ((p parser))
   (setf (saved-text p) ""))
 
+(defmethod set-saved-text-true ((p parser))
+  (setf (saved-text p) ":true"))
+
+(defmethod set-saved-text-false ((p parser))
+  (setf (saved-text p) ":false"))
+
 (defmethod save-text ((p parser))
   (setf (saved-text p) (token-text (accepted-token p))))
 

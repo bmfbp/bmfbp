@@ -245,12 +245,14 @@ when running dispatcher
   script start
   script distribute-all-outputs
   script run
+  method declare-finished
 end when
 
 when running node
   script busy?
   script ready?
-  method is-busy >> boolean
+  method has-inputs-or-outputs? >> boolean
+  method flagged-as-busy? >> boolean
   method dequeue-input
   method input-queue?
   method enqueue-input(event)
@@ -260,11 +262,11 @@ end when
 
 script node busy? >> boolean
   % atomically
-  if self.busy-flag then
+  if self.flagged-as-busy? then
     >> true
   else
     map child = self.children in
-      if child.has-inputs-or-outputs then
+      if child.has-inputs-or-outputs? then
         >> true
       else
         if @child.busy? then
@@ -291,7 +293,9 @@ script dispatcher run
         exit-map
       end if
     end map
+    exit true
   end loop
+  self.declare-finished
 end script
 
 script node invoke
