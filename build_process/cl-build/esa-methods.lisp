@@ -2,19 +2,10 @@
 
 ;; for bootstrap - make names case insensitive - downcase everything
 
-(defmacro esa-if (expr &body body)
-  (cond ((= 1 (length body))
-	 `(cond ((eq :true ,expr) ,@body)
-		((eq :false ,expr))
-		(t (esa-if-failed-to-return-true-false (format nil "~s" '(esa-if ,expr ,@body))))))
-	(( = 2 (length body))
-	 `(cond ((eq :true ,expr) ,@(first body))
-		((eq :false ,expr) ,@(second body))
-		(t (esa-if-failed-to-return-true-false (format nil "~s" '(esa-if ,expr ,@body))))))
-	(t (error "~&esa-if syntax error ~s" (list 'esa-if expr body)))))
-
 (defun esa-if-failed-to-return-true-false (msg)
   (error (format nil "esa-if - expr did not return :true or :false ~s" msg)))
+
+
 
 (defmethod install-input-pin ((self kind) name)
   (push (string-downcase name) (input-pins self)))
@@ -117,7 +108,7 @@
 
 (defmethod display-output-events-to-console ((self node))
   (dolist (e (output-queue self))
-    (format *standard-output* "~&~s outputs ~s on ~s~%" (self name-in-container) (pin-name e) (data e))))
+    (format *standard-output* "~&~s outputs ~s on ~s~%" (name-in-container self) (pin-name e) (data e))))
 
 (defmethod is-busy ((self node))
   (busy-flag self))
@@ -136,6 +127,10 @@
 
 (defmethod input-queue? ((self node))
   (not (null (input-queue self))))
+
+(defmethod has-inputs-or-outputs ((self node))
+  (or (not (null (input-queue self)))
+      (not (null (output-queue self)))))
 
 (defmethod install-child ((self node) name (child node))
   (let ((pdef (make-instance 'part-definition)))
