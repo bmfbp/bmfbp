@@ -284,7 +284,7 @@ $     (emit p "(when ~a (return))" (atext p))
 
 = if-statement
   SYMBOL/if
-$    (emit p "(if ")
+$    (emit p "(esa-if ")
     @esa-expr
   SYMBOL/then
 $    (emit p "~%(progn")
