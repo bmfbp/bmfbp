@@ -32,7 +32,7 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
 |#
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
-  ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
+  (format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
   (ecase (@pin self e)
     (:json-script
      (let ((alist (json-to-alist (@data self e))))

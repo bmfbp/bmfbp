@@ -20,6 +20,7 @@
 
 
 (defun test-run ()
+  (format *standard-output* "~&test-run~%")
   (let ((fake (make-instance 'build-graph-in-memory)))
     (reset fake)
     (let ((top-most-kind (process-code fake *test-descriptors*)))
