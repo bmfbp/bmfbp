@@ -150,7 +150,7 @@
      :false))
 
 (defmethod install-child ((self node) name (child node))
-  (let ((pdef (make-instance 'part-instace)))
+  (let ((pdef (make-instance 'part-instance)))
     (setf (part-name pdef) name)
     (setf (part-instance pdef) child)
     (push pdef (children self))))
