@@ -62,10 +62,14 @@
   T)
 
 (defmethod refers-to-self? ((self source))
-  (string= "self" (part-name self)))
+  (if (string= "self" (part-name self))
+      :true
+     :false))
 
 (defmethod refers-to-self? ((self destination))
-  (string= "self" (part-name self)))
+  (if (string= "self" (part-name self))
+      :true
+     :false))
 
 
 ;  wires
@@ -110,11 +114,15 @@
   (dolist (e (output-queue self))
     (format *standard-output* "~&~s outputs ~s on ~s~%" (name-in-container self) (pin-name e) (data e))))
 
-(defmethod is-busy ((self node))
-  (busy-flag self))
+(defmethod flagged-as-busy? ((self node))
+  (if (busy-flag self)
+      :true
+     :false))
 
 (defmethod has-no-container? ((self node))
-  (null (container self)))
+  (if (null (container self))
+      :true
+     :false))
 
 (defmethod send ((self node) (e event))
   (setf (output-queue self) (append (output-queue self) (list e))))
@@ -126,11 +134,15 @@
   (pop (input-queue self)))
 
 (defmethod input-queue? ((self node))
-  (not (null (input-queue self))))
+  (if (not (null (input-queue self)))
+      :true
+     :false))
 
-(defmethod has-inputs-or-outputs ((self node))
-  (or (not (null (input-queue self)))
-      (not (null (output-queue self)))))
+(defmethod has-inputs-or-outputs? ((self node))
+  (if (or (not (null (input-queue self)))
+	  (not (null (output-queue self))))
+      :true
+     :false))
 
 (defmethod install-child ((self node) name (child node))
   (let ((pdef (make-instance 'part-definition)))
@@ -169,3 +181,6 @@
 
 (defmethod set-top-node ((self dispatcher) (n node))
   (setf (top-node self) n))
+
+(defmethod declare-finished ((self dispatcher))
+  (format *standard-output* "~&~%Dispatcher Finished~%~%"))
