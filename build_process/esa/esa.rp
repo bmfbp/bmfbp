@@ -279,20 +279,20 @@ $     (emit p ")#|end loop|#")
   
 = exit-when-statement
   SYMBOL/exit-when
-$     (emit p "(esa-when ")
+$     (emit p "(when (esa-expr-true ")
     @esa-expr
-$     (emit p " (return))")
+$     (emit p ") (return))")
 
 = if-statement
   SYMBOL/if
-$    (emit p "(esa-if ")
+$    (emit p "(cond ((esa-expr-true ")
     @esa-expr
+$    (emit p ")")
   SYMBOL/then
-$    (emit p "~%(progn")
     @script-body
 $    (emit p ")")
   [ ?SYMBOL/else SYMBOL/else
-$    (emit p "~%(progn")
+$    (emit p "~%(t  #|else|# ")
      @script-body
 $    (emit p ")#|end else|#~%")
   | *
