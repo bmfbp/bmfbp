@@ -46,6 +46,7 @@ class node
   container
   name-in-container  %% lookup this part instance by name as a child of my container
   children
+  busy-flag
 end class
 
 class dispatcher
@@ -171,25 +172,28 @@ end when
 when loading node
   method clear-input-queue
   method clear-output-queue
-  method add-node(node)
+  method install-node(node)
+  script add-child(name node)
   % method children >> map node
 end when
 
 script kind loader(my-name my-container dispatchr) >> node
-  create node-instance = node in
-    node-instance.clear-input-queue
-    node-instance.clear-output-queue
-    set node-instance.kind-field = self
-    set node-instance.container = my-container
-    set node-instance.name-in-container = my-name
-    map part-def = self.parts in
-      let child-instance = @part-def.kind-field.loader(part-def.part-name self dispatchr) in
-        @node-instance.add-node(part-def.part-name self)  % each child has a name that is local to the container (names are determined by kind)
-      end let
-    end map
-    dispatchr.install-node(node-instance)
-    >> node-instance
-  end create
+  let my-kind = self in
+    create node-instance = node in
+      node-instance.clear-input-queue
+      node-instance.clear-output-queue
+      set node-instance.kind-field = my-kind
+      set node-instance.container = my-container
+      set node-instance.name-in-container = my-name
+      map part-def = my-kind.parts in
+	let child-instance = @part-def.part-kind.loader(part-def.part-name node-instance dispatchr) in % name, container (a node), dispatcher
+	  @node-instance.add-child(part-def.part-name node-instance)  % each child has a name that is local to the container (names are determined by kind)
+	end let
+      end map
+      dispatchr.install-node(node-instance)
+      >> node-instance
+    end create
+  end let
 end script
 
 when loading dispatcher
@@ -197,7 +201,13 @@ when loading dispatcher
   method set-top-node(node)
 end when
 
+when loading node
+  script add-child(name node)
+end when
 
+script node add-child(nm nd)
+  self.install-child(nm nd)
+end script
 %=== initializing ===
 
 when initializing dispatcher
@@ -224,7 +234,9 @@ end script
 when intializing or running node
   method send(event)
   script distribute-output-events
+  method display-output-events-to-console
   method output-events >> map event
+  method has-no-container? >> boolean
 end when
 
 %=== running ===
@@ -238,6 +250,7 @@ end when
 when running node
   script busy?
   script ready?
+  method is-busy >> boolean
   method dequeue-input
   method input-queue?
   method enqueue-input(event)
@@ -246,12 +259,22 @@ when running node
 end when
 
 script node busy? >> boolean
-  map child = self.children in
-    if @child.busy? then
-      >> true
-    end if
-  end map
+  % atomically
+  if self.busy-flag then
+    >> true
+  else
+    map child = self.children in
+      if child.has-inputs-or-outputs then
+        >> true
+      else
+        if @child.busy? then
+          >> true
+	end if
+      end if
+    end map
+  end if
   >> false
+  % end atomically
 end script
 
 script dispatcher start
@@ -279,10 +302,16 @@ script node invoke
 end script
 
 script node ready? >> boolean
-  if self.input-queue? then
-    >> true
-  end if
-  >> false
+  % atomically
+    if self.input-queue? then
+      if @self.busy? then
+        >> false
+      else
+        >> true
+      end if
+    end if
+    >> false
+  % end atomically
 end script
 
 script dispatcher distribute-all-outputs
@@ -292,14 +321,16 @@ script dispatcher distribute-all-outputs
 end script
 
 script node distribute-output-events
-  let parent-composite = self.container in
-    let parent-kind = parent-composite.kind-field in
-       let output = map self.output-events in
-         let w = parent-composite.find-wire-for-source(output.part-name output.pin-name) in
-           map dest = w.destinations in
-             if dest.refers-to-self? then
+  if self.has-no-container? then
+    self.display-output-events-to-console
+  else
+    let parent-composite-node = self.container in
+       map output = self.output-events in
+	 let w = parent-composite-node.find-wire-for-source(output.part-name output.pin-name) in
+	   map dest = w.destinations in
+	     if dest.refers-to-self? then
 	       create output-event = event in
-                 set output-event.part-name = dest.part-name
+		 set output-event.part-name = dest.part-name
 		 set output-event.pin-name = dest.pin-name
 		 set output-event.data = output.data
 		 self.enqueue-output(output-event)
@@ -309,20 +340,20 @@ script node distribute-output-events
 	       % wiring is by-name and contained in the kind of the container
 	       % ==> every part-pin (by name) pair is valid
 	       let dest-part-name = dest.part-name in
-	         let part-instance = self.find-child(dest.part-name) in
+		 let part-instance = self.find-child(dest.part-name) in
 		   create input-event = event in
 		     set input-event.part-name = dest.part-name
-                     set input-event.pin-name = dest.pin-name
-                     set input-event.data = output.data
-                     part-instance.enqueue-input(input-event)
-                   end create
+		     set input-event.pin-name = dest.pin-name
+		     set input-event.data = output.data
+		     part-instance.enqueue-input(input-event)
+		   end create
 		 end let
-               end let
-              end if
-            end map
-         end let
-       end let
+	       end let
+	      end if
+	    end map
+	 end let
+       end map
     end let
-  end let
+  end if
 end script
 
