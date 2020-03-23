@@ -38,8 +38,6 @@ class kind
   kind-name
   input-pins
   output-pins
-  initially
-  react
   parts
   wires
 end class
@@ -72,8 +70,8 @@ when building kind
   method install-output-pin(name)
   script add-input-pin(name)
   script add-output-pin(name)
-  method install-initially-function(function)
-  method install-react-function(function)
+  % method install-initially-function(function)
+  % method install-react-function(function)
   script add-part(name kind)
   script add-wire(wire)
   method install-wire(wire)
@@ -263,6 +261,7 @@ when running node
   method enqueue-input(event)
   method enqueue-output(event)
   method find-wire-for-source(name name) >> wire
+  method react(event)
 end when
 
 script node busy? >> boolean

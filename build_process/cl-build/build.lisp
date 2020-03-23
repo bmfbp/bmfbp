@@ -103,6 +103,9 @@
 (defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
+(defun hwtest ()
+  (build (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")))
+
 (defun cl-user::from-esa ()
   ;; compilation steps after changing esa.dsl
   (ql:quickload :arrowgrams/build)
