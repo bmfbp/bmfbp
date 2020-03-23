@@ -4,7 +4,12 @@
   cl-user> (ql:quickload :arrowgrams/esa)
   cl-user> (ab::make-esa)
   cl-user> (ql:quickload :arrowgrams/build)
-  cl-user> (ab::btest)
+  cl-user> (ab::hwtest)
+  cl-user> (ab::test-run)
+
+;; if adding (break) or changes only to files in cl-build...
+;; skip (ab::hwtest) which generates the graph - it's been captured and is part of test-run
+  cl-user> (ql:quickload :arrowgrams/build)
   cl-user> (ab::test-run)
 
 ** see also
@@ -35,3 +40,46 @@
 {\"itemKind\":\"graph\",\"name\":\"compile_composite\",\"graph\":{\"name\":\"COMPILE_COMPOSITE\",\"inputs\":null,\"outputs\":null,\"parts\":[{\"partName\":\"SPLIT-DIAGRAM\",\"kindName\":\"SPLIT-DIAGRAM\"},{\"partName\":\"COMPILE-ONE-DIAGRAM\",\"kindName\":\"COMPILE-ONE-DIAGRAM\"},{\"partName\":\"JSON-ARRAY-SPLITTER\",\"kindName\":\"JSON-ARRAY-SPLITTER\"}],\"wiring\":[{\"wireIndex\":0,\"sources\":[{\"part\":\"SPLIT-DIAGRAM\",\"pin\":\"DIAGRAM\"}],\"receivers\":[{\"part\":\"COMPILE-ONE-DIAGRAM\",\"pin\":\"DIAGRAM\"}]},{\"wireIndex\":1,\"sources\":[{\"part\":\"SPLIT-DIAGRAM\",\"pin\":\"METADATA-AS-JSON-ARRAY\"}],\"receivers\":[{\"part\":\"JSON-ARRAY-SPLITTER\",\"pin\":\"JSON\"}]},{\"wireIndex\":2,\"sources\":[{\"part\":\"SELF\",\"pin\":\"SVG\"}],\"receivers\":[{\"part\":\"SPLIT-DIAGRAM\",\"pin\":\"SVG-CONTENT\"}]},{\"wireIndex\":3,\"sources\":[{\"part\":\"COMPILE-ONE-DIAGRAM\",\"pin\":\"GRAPH-AS-JSON\"}],\"receivers\":[{\"part\":\"SELF\",\"pin\":\"GRAPH-AS-JSON\"}]},{\"wireIndex\":4,\"sources\":[{\"part\":\"JSON-ARRAY-SPLITTER\",\"pin\":\"OBJECTS\"}],\"receivers\":[{\"part\":\"SELF\",\"pin\":\"PARTS-AS-JSON-OBJECTS\"}]}]}}
 ]
 #+END_SRC
+
+* build code snippets
+
+#+RESULTS: arrowgrams
+: "4. test run finished" 3793988917
+
+#+name: arrowgrams
+#+header: :var message="1, rephrase ready"
+#+begin_src lisp
+  (ql:quickload :arrowgrams/rephrase-compiler)
+  (princ message)
+#+end_src
+#+name: arrowgrams
+#+header: :var message="2. esa ready"
+#+begin_src lisp
+  (ab::make-esa-dsl)
+  (ql:quickload :arrowgrams/esa)
+  (format nil "~s ~s" message (get-universal-time))
+#+end_src
+#+name: arrowgrams
+#+header: :var message="3. esa.lisp generated, build ready"
+#+begin_src lisp
+  (ab::make-esa)
+  (ql:quickload :arrowgrams/build)
+  (format nil "~s ~s" message (get-universal-time))
+#+end_src
+#+name: arrowgrams
+#+header: :var message="4. test run finished"
+#+begin_src lisp
+  (ab::test-run)
+  (format nil "~s ~s" message (get-universal-time))
+#+end_src
+
+not needed, after graph has been captured
+#+name: arrowgrams
+#+header: :var message="4a. hello world graph built"
+#+begin_src lisp :eval yes
+  (ab::hwtest)
+  (princ message)
+  cl-user::*code*
+#+end_src
+
+

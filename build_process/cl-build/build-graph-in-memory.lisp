@@ -42,9 +42,10 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
        (push alist (code-stack self))))
 
     (:done
-(setf cl-user::*code* (code-stack self))
-     (process-code self (code-stack self)))))
-
+     (let ((code (code-stack self)))
+       (format t "~%~s~%" code)
+       (process-code self (code-stack self))))))
+     
 (defun process-code (self list-of-alists)
   (let ((top-most-kind nil))
     (dolist (alist list-of-alists)
