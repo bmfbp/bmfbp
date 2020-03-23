@@ -273,10 +273,8 @@
 							   "symbols" "integers"))
                                        (:file "rp-rules" :depends-on ("parser-mechanisms"))
                                        (:file "rp-parser" :depends-on ("rp-rules"))
-                                       (:file "esa-dsl" :depends-on ("parser-mechanisms" "classes"))
-                                       (:file "esa-parser" :depends-on ("parser-mechanisms" "classes"))
                                        (:file "file-writer" :depends-on ("../cl-build/package" "classes"))
-                                       (:file "parser-schem" :depends-on ("file-writer" "esa-parser" "rp-parser"))))))
+                                       (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
 
 (defsystem :arrowgrams/esa
     :depends-on (:arrowgrams/rephrase-compiler)
@@ -287,7 +285,8 @@
                       (funcall next))
     :components ((:module "source"
                           :pathname "./build_process/esa"
-                          :components ((:file "esa-dsl")))))
+                          :components ((:file "esa-dsl")
+                                       (:file "esa-parser")))))
 
 (defsystem :arrowgrams/build
   :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :sl :loops :cl-event-passing :cl-holm-prolog

@@ -1,14 +1,11 @@
 * usage
-  cl-user> (ql:quickload :arrowgrams/br)  ;; ignore 4 undefined functions : TEST-RUN, BUILD, CREATE-ESA-COMPILER, CREATE-ESA
-  cl-user> (run-all)
-
-** sub-commands
-*** 
-
-    cl-user> (make-all) ;; to make the compilers, from scratch (initially performs: "rm -rf ~/cache/common-lisp")
-    cl-user> (runb)  ;; to run only the builder (when compilers don't need to be re-made)
-    cl-user> (run-all) ;; makes everything from scratch
-    cl-user> (btest)  ;; runs the tail end of the builder (build-graph-in-memory and graph.lisp)
+  cl-user> (ql:quickload :arrowgrams/rephrase-compiler)
+  cl-user> (ab::make-esa-dsl)
+  cl-user> (ql:quickload :arrowgrams/esa)
+  cl-user> (ab::make-esa)
+  cl-user> (ql:quickload :arrowgrams/build)
+  cl-user> (ab::btest)
+  cl-user> (ab::test-run)
 
 ** see also
 *** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
