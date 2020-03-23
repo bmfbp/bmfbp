@@ -276,6 +276,18 @@
                                        (:file "file-writer" :depends-on ("../cl-build/package" "classes"))
                                        (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
 
+(defsystem :arrowgrams/esa-compiler
+    :depends-on (:arrowgrams/rephrase-compiler)
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+			  :pathname "./build_process/esa"
+			  :components ((:file "esa-dsl")
+                                       (:file "esa-parser")))))
+
 (defsystem :arrowgrams/old-rephrase-compiler
     :depends-on (:cl-event-passing :alexandria)
     :around-compile (lambda (next)
@@ -317,7 +329,7 @@
                                        (:file "parser-schem" :depends-on ("file-writer" "esa-parser" "rp-parser"))))))
 
 (defsystem :arrowgrams/esa
-    :depends-on (:arrowgrams/rephrase-compiler)
+    :depends-on (:arrowgrams/esa-compiler)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
                                   (safety 3)
