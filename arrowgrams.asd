@@ -276,7 +276,7 @@
                                        (:file "file-writer" :depends-on ("../cl-build/package" "classes"))
                                        (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
 
-(defsystem :arrowgrams/esa-compiler
+(defsystem :arrowgrams/esa
     :depends-on (:arrowgrams/rephrase-compiler)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
@@ -284,60 +284,9 @@
                                   (speed 0)))
                       (funcall next))
     :components ((:module "source"
-			  :pathname "./build_process/esa"
-			  :components ((:file "esa-dsl")
+                          :pathname "./build_process/esa"
+                          :components ((:file "esa-dsl")
                                        (:file "esa-parser")))))
-
-(defsystem :arrowgrams/old-rephrase-compiler
-    :depends-on (:cl-event-passing :alexandria)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "../cl-build/package")
-                                       (:file "token" :depends-on ("../cl-build/package"))
-                                       (:file "classes" :depends-on ("../cl-build/package"))
-                                       (:file "rp-macros" :depends-on ("../cl-build/package"))
-				       
-                                       (:file "dumper" :depends-on ("token" "classes"))
-
-				       (:file "tokenize" :depends-on ("token" "classes"))
-                                       (:file "comments" :depends-on ("token" "classes"))
-                                       (:file "raw-text" :depends-on ("token" "classes"))
-                                       (:file "strings" :depends-on ("token" "classes"))
-                                       (:file "spaces" :depends-on ("token" "classes"))
-                                       (:file "symbols" :depends-on ("token" "classes"))
-                                       (:file "integers" :depends-on ("token" "classes"))
-
-                                       (:file "error-manager" :depends-on ("token" "classes"))
-
-                                       (:file "parser-mechanisms"
-					      :depends-on ("../cl-build/package"
-							   "token" "classes" "dumper"
-                                                           "rp-macros"
-                                                           "error-manager"
-							   "tokenize" "comments" "raw-text" "strings" "spaces"
-							   "symbols" "integers"))
-                                       (:file "rp-rules" :depends-on ("parser-mechanisms"))
-                                       (:file "rp-parser" :depends-on ("rp-rules"))
-                                       (:file "esa-dsl" :depends-on ("parser-mechanisms" "classes"))
-                                       (:file "esa-parser" :depends-on ("parser-mechanisms" "classes"))
-                                       (:file "file-writer" :depends-on ("../cl-build/package" "classes"))
-                                       (:file "parser-schem" :depends-on ("file-writer" "esa-parser" "rp-parser"))))))
-
-(defsystem :arrowgrams/esa
-    :depends-on (:arrowgrams/esa-compiler)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "esa-dsl")))))
 
 (defsystem :arrowgrams/build
   :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :sl :loops :cl-event-passing :cl-holm-prolog
