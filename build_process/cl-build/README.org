@@ -44,13 +44,13 @@
 * build code snippets
 
 #+RESULTS: arrowgrams
-: "4. test run finished" 3793988917
+: "4. test run finished" 3794046993
 
 #+name: arrowgrams
 #+header: :var message="1, rephrase ready"
 #+begin_src lisp
   (ql:quickload :arrowgrams/rephrase-compiler)
-  (princ message)
+  (format nil "~s ~s" message (get-universal-time))
 #+end_src
 #+name: arrowgrams
 #+header: :var message="2. esa ready"
@@ -77,9 +77,7 @@ not needed, after graph has been captured
 #+name: arrowgrams
 #+header: :var message="4a. hello world graph built"
 #+begin_src lisp :eval yes
-  (ab::hwtest)
-  (princ message)
-  cl-user::*code*
+  (format nil "~s ~s ~s" message (ab::hwtest) (get-universal-time))
 #+end_src
 
 
