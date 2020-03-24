@@ -123,27 +123,8 @@
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp")))
 
-#|
-(defun cl-user::etest1 ()
-  ;(asdf::run-program "rm -rf ~/.cache/common-lisp")
-  (ql:quickload :arrowgrams/esa)
-  (arrowgrams/build::create-esa-compiler (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")
-                                 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")))
-(defun cl-user::etest2 ()
-  ;(asdf::run-program "rm -rf ~/.cache/common-lisp")
-  (ql:quickload :arrowgrams/esa)
-  (arrowgrams/build::run-esa-parser
-   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
-   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp")))
+(defun make-sample ()
+  (arrowgrams/build::run-esa-compiler
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/sample.dsl")
+   (asdf:system-relative-pathname :arrowgrams "build_process/esa/sample.lisp")))
 
-(defun cl-user::etest()
-  (cl-user::etest1)
-  (cl-user::etest2))
-
-(defun create-esa-compiler ()
-  (ql:quickload :arrowgrams/esa-compiler))
-
-(defun compile-esa (&key (from nil) (to nil))
-  (arrowgrams/build::run-esa-parser (asdf:system-relative-pathname :arrowgrams (format nil "build_process/esa/~a" from))
-				    (asdf:system-relative-pathname :arrowgrams (format nil "build_process/cl-build/~a" to))))
-|#
