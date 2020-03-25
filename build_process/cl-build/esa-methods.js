@@ -40,7 +40,6 @@ class Kind {
   }
 
   installPart(name, kind) {
-    // TODO: Paul, I'm not sure how we'd link `PartDefinition` here.
     let p = new PartDefinition();
     p.partName = name.toLowerCase();
     p.partKind = kind;
@@ -150,7 +149,6 @@ class Wire {
   }
 
   installSource(partName, pinName) {
-    // TODO: Paul, I'm not sure how we'd link `Source` here.
     let s = new Source();
     console.log(`install-source ${partName} ${pinName}`);
     s.partName = partName.toLowerCase();
@@ -159,7 +157,6 @@ class Wire {
   }
 
   installDestination(partName, pinName) {
-    // TODO: Paul, I'm not sure how we'd link `Destination` here.
     let d = new Destination();
     d.partName = partName.toLowerCase();
     d.pinName = pinName.toLowerCase();
@@ -225,7 +222,7 @@ class Node {
 
   installChild(name, child) {
     // TODO: Paul, I'm not sure how we'd link `PartInstance` here.
-    let pdef = new PartInstance;
+    let pdef = new PartInstance();
     pdef.partName = name;
     pdef.partInstance = child;
     this.children.push(pdef);

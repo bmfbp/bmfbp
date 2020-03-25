@@ -11,14 +11,15 @@
 
 (defmethod parser-err ((p parser) kind text)
   (let ((nt (next-token p)))
-    (if kind
-        (format *error-output* "~&parser error in ~s - wanted ~s ~s, but got ~s ~s at line ~a position ~a~%" (current-rule p)
-                kind text (token-kind nt) (token-text nt) (token-line nt) (token-position nt))
-      (format *error-output* "~&parser error in ~s - got ~s ~s at line ~a position ~a~%" (current-rule p)
-              (token-kind nt) (token-text nt) (token-line nt) (token-position nt)))
-    (error "parser error")
+    (let ((error-message
+	   (if kind
+               (format nil "~&parser error in ~s - wanted ~s ~s, but got ~s ~s at line ~a position ~a~%" (current-rule p)
+                       kind text (token-kind nt) (token-text nt) (token-line nt) (token-position nt))
+	       (format nil "~&parser error in ~s - got ~s ~s at line ~a position ~a~%" (current-rule p)
+		       (token-kind nt) (token-text nt) (token-line nt) (token-position nt)))))
+    (error "parser error ~s" error-message)
     (read-next-token p)
-    :fail))
+    :fail)))
 
 (defmethod initialize ((p parser))
   (setf (next-token p) (pop (token-stream p))))
@@ -26,7 +27,7 @@
 
 (defmethod accept ((p parser))
   (setf (accepted-token p) (next-token p))
-  ;(format *standard-output* "~&~s" (token-text (accepted-token p)))
+  (format *standard-output* "~&~s" (token-text (accepted-token p)))
   (read-next-token p)
   :ok)
 

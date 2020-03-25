@@ -50,7 +50,7 @@
 * build code snippets
 
 #+RESULTS: arrowgrams
-: "2. esa ready" 3794164101
+: ".2a sample esa" 3794058225
 
 #+name: arrowgrams
 #+header: :var message="1, rephrase ready"
@@ -66,28 +66,12 @@
   (format nil "~s ~s" message (get-universal-time))
 #+end_src
 #+name: arrowgrams
-#+header: :var message="3a. esa.lisp generated"
+#+header: :var message="3. esa.lisp generated, build ready"
 #+begin_src lisp
   (ab::make-esa)
-  (format nil "~s ~s" message (get-universal-time))
-#+end_src
-#+name: arrowgrams
-#+header: :var message="3b. build ready"
-#+begin_src lisp
   (ql:quickload :arrowgrams/build)
   (format nil "~s ~s" message (get-universal-time))
 #+end_src
-#+name: arrowgrams
-#+header: :var message="4. test run finished"
-#+begin_src lisp
-  (ab::test-hw)
-  (format nil "~s ~s" message (get-universal-time))
-#+end_src
-
-
-
-
-
 #+name: arrowgrams
 #+header: :var message="4. test run finished"
 #+begin_src lisp
@@ -101,5 +85,11 @@ not needed, after graph has been captured
 #+begin_src lisp :eval yes
   (format nil "~s ~s ~s" message (ab::hwtest) (get-universal-time))
 #+end_src
-
+make sample.lisp
+#+name: arrowgrams
+#+header: :var message=".2a sample esa"
+#+begin_src lisp
+  (ab::make-sample)
+  (format nil "~s ~s" message (get-universal-time))
+#+end_src
 
