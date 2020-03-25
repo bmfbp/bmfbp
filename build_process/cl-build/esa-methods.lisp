@@ -113,7 +113,7 @@
   ;; graphs have no initially
   ;; leaves might have an initially
   ;; (call-next-method) ends up here - nothing to do
-  (format *error-output* "~&initially on ~s~%" self))
+  (format *error-output* "~&initially on ~s ~s~%" (name-in-container self) self))
 
 (defmethod display-output-events-to-console ((self node))
   (dolist (e (output-queue self))
@@ -144,16 +144,19 @@
      :false))
 
 (defmethod has-inputs-or-outputs? ((self node))
+(format *standard-output* "~&g ~s input-queue ~s output-queue ~s self ~s~%"
+        (name-in-container self)
+	(not (null (input-queue self))) (not (null (output-queue self))) self)
   (if (or (not (null (input-queue self)))
 	  (not (null (output-queue self))))
       :true
      :false))
 
 (defmethod install-child ((self node) name (child node))
-  (let ((pdef (make-instance 'part-instance)))
-    (setf (part-name pdef) name)
-    (setf (part-instance pdef) child)
-    (push pdef (children self))))
+  (let ((pinstance (make-instance 'named-part-instance)))
+    (setf (instance-name pinstance) name)
+    (setf (instance-node pinstance) child)
+    (push pinstance (children self))))
 
 (defmethod enqueue-input ((self node) (e event))
   (setf (input-queue self) (append (input-queue self) (list e))))

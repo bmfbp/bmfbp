@@ -1,3 +1,9 @@
+* todo
+** in -> out of top
+** initially set state for each code part
+** write filter for rp that gives * and + operators
+*** rp is an assembler for parsing
+
 * usage
   cl-user> (ql:quickload :arrowgrams/rephrase-compiler)
   cl-user> (ab::make-esa-dsl)
@@ -44,7 +50,7 @@
 * build code snippets
 
 #+RESULTS: arrowgrams
-: "3. esa.lisp generated, build ready" 3794128557
+: "3b. build ready" 3794139577
 
 #+name: arrowgrams
 #+header: :var message="1, rephrase ready"
@@ -60,9 +66,14 @@
   (format nil "~s ~s" message (get-universal-time))
 #+end_src
 #+name: arrowgrams
-#+header: :var message="3. esa.lisp generated, build ready"
+#+header: :var message="3a. esa.lisp generated"
 #+begin_src lisp
   (ab::make-esa)
+  (format nil "~s ~s" message (get-universal-time))
+#+end_src
+#+name: arrowgrams
+#+header: :var message="3b. build ready"
+#+begin_src lisp
   (ql:quickload :arrowgrams/build)
   (format nil "~s ~s" message (get-universal-time))
 #+end_src

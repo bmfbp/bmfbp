@@ -30,7 +30,6 @@
 	  (setf (pin-name ev) "start")
 	  (setf (data ev) t)
 	  (enqueue-input top-node ev))
-(break)
 	(run-graph dispatchr)))))
 
 (defun test-run ()

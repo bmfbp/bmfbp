@@ -13,9 +13,9 @@ class part-definition
   part-kind
 end class
 
-class part-instance
-  part-name
-  part-instance
+class named-part-instance
+  instance-name
+  instance-node
 end class
 
 class source
@@ -177,7 +177,7 @@ when loading node
   method clear-output-queue
   method install-node(node)
   script add-child(name node)
-  % method children >> map part-instance
+  % method children >> map named-part-instance
 end when
 
 script kind loader(my-name my-container dispatchr) >> node
@@ -190,7 +190,7 @@ script kind loader(my-name my-container dispatchr) >> node
       set node-instance.name-in-container = my-name
       map part-def = my-kind.parts in
 	let child-instance = @part-def.part-kind.loader(part-def.part-name node-instance dispatchr) in % name, container (a node), dispatcher
-	  @node-instance.add-child(part-def.part-name node-instance)  % each child has a name that is local to the container (names are determined by kind)
+	  @node-instance.add-child(part-def.part-name child-instance)  % each child has a name that is local to the container (names are determined by kind)
 	end let
       end map
       dispatchr.memo-node(node-instance)
@@ -270,11 +270,11 @@ script node busy? >> boolean
     >> true
   else
     map child-part-instance = self.children in
-      let child = child-part-instance.part-instance in
-	if child.has-inputs-or-outputs? then
+      let child-node = child-part-instance.instance-node in
+	if child-node.has-inputs-or-outputs? then
 	  >> true
 	else
-	  if @child.busy? then
+	  if @child-node.busy? then
 	    >> true
 	  end if
 	end if
@@ -350,13 +350,13 @@ script node distribute-output-events
 	       % wiring is by-name and contained in the kind of the container
 	       % ==> every part-pin (by name) pair is valid
 	       let dest-part-name = dest.part-name in
-		 let child-instance = self.find-child(dest.part-name) in
-                   let child = child-instance.part-instance in
+		 let child-named-instance = self.find-child(dest.part-name) in
+                   let child-node = child-named-instance.instance-node in
 		     create input-event = event in
 		       set input-event.part-name = dest.part-name
 		       set input-event.pin-name = dest.pin-name
 		       set input-event.data = output.data
-		       child.enqueue-input(input-event)
+		       child-node.enqueue-input(input-event)
 		     end create
 		   end let
 		 end let
