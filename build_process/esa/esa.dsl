@@ -193,14 +193,14 @@ script kind loader(my-name my-container dispatchr) >> node
 	  @node-instance.add-child(part-def.part-name node-instance)  % each child has a name that is local to the container (names are determined by kind)
 	end let
       end map
-      dispatchr.install-node(node-instance)
+      dispatchr.memo-node(node-instance)
       >> node-instance
     end create
   end let
 end script
 
 when loading dispatcher
-  method install-node(node)
+  method memo-node(node)
   method set-top-node(node)
 end when
 

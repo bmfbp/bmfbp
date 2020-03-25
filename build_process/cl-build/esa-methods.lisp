@@ -181,7 +181,7 @@
     (error "kind for part /~s/ is not defined (check if manifest is correct) ~s" (part-name self) self)))
 
 
-(defmethod install-node ((self dispatcher) (n node))
+(defmethod memo-node ((self dispatcher) (n node))
   (push n (all-parts self)))
 
 (defmethod set-top-node ((self dispatcher) (n node))

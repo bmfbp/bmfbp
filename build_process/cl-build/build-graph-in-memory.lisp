@@ -32,7 +32,7 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
 |#
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
-  (format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
+  ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
   (ecase (@pin self e)
     (:json-script
      (let ((alist (json-to-alist (@data self e))))
@@ -51,12 +51,11 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
     (dolist (alist list-of-alists)
       (if (string= "leaf" (cdr (assoc :item-kind alist)))
           (progn
-            (format *standard-output* "~&build-graph processes ~s~%"
-                    (get-kind alist))
+            #+nil(format *standard-output* "~&build-graph processes ~s ~s~%"
+		    (get-kind alist) (cdr (assoc :name alist)))
             (build-leaf-in-mem self alist))
         (progn
-          (format *standard-output* "~&build-graph processes ~s ~s~%"
-                  (get-kind alist) (cdr (assoc :name alist)))
+          #+nil(format *standard-output* "~&build-graph processes ~s ~s~%" (get-kind alist) (cdr (assoc :name alist)))
           (setf top-most-kind (build-graph-in-mem self alist))))) ;; set top-most-kind to the last graph processed (which is the top-most, since this is being done in reverse order)
     top-most-kind))
 
