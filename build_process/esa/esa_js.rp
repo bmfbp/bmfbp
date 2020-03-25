@@ -111,32 +111,26 @@ $      (clear-method-stream p)
 = class-ref
   @esa-symbol  % should be checked to be a kind
 
-;; TODO: I need access to the name of the class here. How do I reference that?
 = method-decl
   SYMBOL/method @esa-symbol
-$      (emit-to-method-stream p "~%(defgeneric ~a (self" (atext p))
+$      (emit-to-method-stream p "~%~a.~a = function (" (current-class p) (atext p))
   @generic-typed-formals
-$      (emit-to-method-stream p ")") ;; close parameter list
+$      (emit-to-method-stream p ") {};~&") ;; close parameter list
   @return-type
-$      (emit-to-method-stream p ")") ;; close generic
 
   
-;; TODO: I need access to the name of the class here. How do I reference that?
 = script-decl
   SYMBOL/script @esa-symbol
-$      (emit-to-method-stream p "~%(defgeneric ~a #|script|# (" (atext p))
+$      (emit-to-method-stream p "~%~a.~a = function /*script*/ (" (current-class p) (atext p))
   @generic-typed-formals
-$      (emit-to-method-stream p ")")
+$      (emit-to-method-stream p ") {};~&")
   @return-type
-$      (emit-to-method-stream p ")") ;; close generic
 
-;; TODO: It seems like this only appears within a field, which is within a
-;; class. Under what circumstance would `map` appear within a `class` 
-;; definition?
 = map-decl
   SYMBOL/map 
   @esa-symbol
-$     (emit p "~&(~a :accessor ~a :initform nil)" (atext p) (atext p))
+;; We are not implementing map field in class in JS.
+;; $     (emit p "~&(~a :accessor ~a :initform nil)" (atext p) (atext p))
   
 = typed-formals
   [ ?'(' '(' type-list ')'
@@ -174,19 +168,18 @@ $            (emit-to-method-stream p " /*returns ~a*/ " (atext p))
   | *
   ]
   
-;; TODO: I need access to the name of the class here. How do I reference that?
 = script-definition
   SYMBOL/script
   @esa-symbol
   set-current-class
   @qualified-symbol
   set-current-method
-$      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (current-method p) (current-class p))
+$      (emit p "~%~a.~a = function /*script*/ (" (current-class p) (current-method p))
   @formals
-$      (emit p ")")  
+$      (emit p ") {~&")  
   @return-type
   @script-body
-$      (emit p ")#|end script|#~%")
+$      (emit p "~%};~&/*end script*/~&")
   SYMBOL/end SYMBOL/script
 
 = formals
@@ -208,7 +201,6 @@ $     (emit p "~%")
    | ?SYMBOL/exit-map @exit-map-statement
    | ?SYMBOL/set @set-statement
    | ?SYMBOL/create @create-statement
-   | ?SYMBOL/defproto @set-proto-statement
    | ?SYMBOL/if @if-statement
    | ?SYMBOL/loop @loop-statement
    | ?SYMBOL/exit-when @exit-when-statement
@@ -251,16 +243,6 @@ $      (emit p "~%")
    '=' 
 $      (emit p " = ")
    @esa-expr
-
-;; TODO: I pulled from Github and proto is still in esa.rp. Is this needed?
-= set-proto-statement
-  SYMBOL/defproto
-$      (emit p "(setf (proto ")
-   @esa-expr
-$      (emit p ") ")
-   '=' 
-   @esa-expr
-$      (emit p ")")
   
 = map-statement
   SYMBOL/map @esa-symbol
@@ -304,12 +286,10 @@ $    (emit p "~&}~%")
   ]
   SYMBOL/end SYMBOL/if
 
-;; TODO: Are there no parameters passed to scripts?
 = script-call
   '@' @qualified-symbol
 $    (emit p "~&this.~a();~%" (atext p))
 
-;; TODO: Are there no parameters passed to methods?
 = method-call
   @qualified-symbol
 $    (emit p "~&this.~a();~%" (atext p))
