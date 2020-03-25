@@ -48,9 +48,7 @@ class node
   kind-field
   container
   name-in-container  %% lookup this part instance by name as a child of my container
-  has-container? >> boolean
   children
-  node-find-child(name) >> named-part-instance
   busy-flag
 end class
 
@@ -88,7 +86,6 @@ when building-aux kind
   method ensure-output-pin-not-declared(name)
   script ensure-valid-source(source)
   script ensure-valid-destination(destination)
-  method find-child(name)
 end when
 
 when building part-definition
@@ -125,7 +122,7 @@ script kind ensure-valid-source(s)
   if s.refers-to-self? then
     self.ensure-valid-input-pin(s.pin-name)
   else
-    let p = self.find-child(s.part-name) in
+    let p = self.kind-find-part(s.part-name) in
       p.ensure-kind-defined
       p.part-kind.ensure-valid-output-pin(s.pin-name)
     end let
@@ -136,7 +133,7 @@ script kind ensure-valid-destination(dest)
   if dest.refers-to-self? then
     self.ensure-valid-output-pin(dest.pin-name)
   else
-    let p = self.find-child(dest.part-name) in
+    let p = self.kind-find-part(dest.part-name) in
       p.ensure-kind-defined
       p.part-kind.ensure-valid-input-pin(dest.pin-name)
     end let
@@ -264,6 +261,7 @@ when running node
   method enqueue-output(event)
   method find-wire-for-source(name name) >> wire
   script react(event)
+  method node-find-child(name) >> named-part-instance
 end when
 
 script node busy? >> boolean
@@ -329,16 +327,16 @@ end script
 script dispatcher distribute-all-outputs
   map p = self.all-parts in
     @p.distribute-output-events
+    @p.distribute-outputs-upwards
   end map
-  @p.distribute-outputs-upwards
 end script
 
 script node distribute-outputs-upwards
   % if node create an output event on the parent, then distribute parent's output
-  if node.has-no-container? then  
+  if self.has-no-container? then  
     %% stops upward recursion at top node (no container)
   else
-    let parent = node.container in
+    let parent = self.container in
       parent.distribute-output-events
     end let
   end if 
@@ -403,10 +401,9 @@ script node react(e)
     map dest = w.destinations in
       create new-event = event in
 	if dest.refers-to-self? then
-	<< deliver output event >>
 	  % self.in going to out must go to an output pin
 	  % this has already been checked during build
-	  set new-event.part-name = dest.part-name  %% "self" in this case
+          set new-event.part-name = self.name-in-container
 	  set new-event.pin-name = dest.pin-name
 	  set new-event.data = e.data
 	  self.send(new-event)
@@ -415,16 +412,11 @@ script node react(e)
 	  set new-event.part-name = dest.part-name
 	  set new-event.pin-name = dest.pin-name
 	  set new-event.data = e.data
-	  let child-part-instance = self.node-find-child(dest.part-name)
-	    let child-node = child-part-instance.instance-node in
-	      child-node.enqueue-input(new-event)
-	    end let
+	  let child-part-instance = self.node-find-child(dest.part-name) in
+            child-part-instance.instance-node.enqueue-input(new-event)
 	  end let
-	  <>.enqueue-input(new-event)
 	end if
       end create
     end map
   end let
 end script
-
-<<< todo: node.find-child with name "self" -> pi.part-name=self >>>

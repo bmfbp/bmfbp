@@ -33,8 +33,11 @@
     (setf (part-kind p) kind)
     (push p (parts self))))
 
-(defmethod children ((self kind))
-  (parts self))
+(defmethod kind-find-part ((self kind) name)
+  (dolist (p (parts self))
+    (when (string= name (part-name p))
+      (return-from kind-find-part p)))
+  (assert nil)) ;; no part with given name - can't happen
 
 (defmethod ensure-part-not-declared ((self kind) name)
   (dolist (part (parts self))
@@ -165,18 +168,17 @@
   (setf (output-queue self) (append (output-queue self) (list e))))
 
 (defmethod find-wire-for-source ((self node) part-name pin-name)
-  (dolist (w (wires self))
+  (dolist (w (wires (kind-field self)))
     (dolist (s (sources w))
       (when (and (string= part-name (part-name s))
                  (string= pin-name  (pin-name s)))
         (return-from find-wire-for-source w))))
   (assert nil)) ;; source not found - can't happen
 
-(defmethod find-child ((self kind) name)
-  (dolist (p (parts self))
-;(format *standard-output* "~&find-child ~s ~s~%" (part-name p) name)
+(defmethod node-find-child ((self node) name)
+  (dolist (p (children self))
     (when (string= name (part-name p))
-      (return-from find-child p)))
+      (return-from node-find-child p)))
   (assert nil)) ;; no part with given name - can't happen
 
 (defmethod ensure-kind-defined ((self part-definition))
