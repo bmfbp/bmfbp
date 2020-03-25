@@ -13,9 +13,9 @@ class part-definition
   part-kind
 end class
 
-class part-instance
-  part-name
-  part-instance
+class named-part-instance
+  instance-name
+  instance-node
 end class
 
 class source
@@ -38,8 +38,6 @@ class kind
   kind-name
   input-pins
   output-pins
-  initially
-  react
   parts
   wires
 end class
@@ -72,8 +70,7 @@ when building kind
   method install-output-pin(name)
   script add-input-pin(name)
   script add-output-pin(name)
-  method install-initially-function(function)
-  method install-react-function(function)
+  % method install-initially-function(function)
   script add-part(name kind)
   script add-wire(wire)
   method install-wire(wire)
@@ -89,7 +86,6 @@ when building-aux kind
   method ensure-output-pin-not-declared(name)
   script ensure-valid-source(source)
   script ensure-valid-destination(destination)
-  method find-child(name)
 end when
 
 when building part-definition
@@ -126,7 +122,7 @@ script kind ensure-valid-source(s)
   if s.refers-to-self? then
     self.ensure-valid-input-pin(s.pin-name)
   else
-    let p = self.find-child(s.part-name) in
+    let p = self.kind-find-part(s.part-name) in
       p.ensure-kind-defined
       p.part-kind.ensure-valid-output-pin(s.pin-name)
     end let
@@ -137,7 +133,7 @@ script kind ensure-valid-destination(dest)
   if dest.refers-to-self? then
     self.ensure-valid-output-pin(dest.pin-name)
   else
-    let p = self.find-child(dest.part-name) in
+    let p = self.kind-find-part(dest.part-name) in
       p.ensure-kind-defined
       p.part-kind.ensure-valid-input-pin(dest.pin-name)
     end let
@@ -179,7 +175,7 @@ when loading node
   method clear-output-queue
   method install-node(node)
   script add-child(name node)
-  % method children >> map part-instance
+  % method children >> map named-part-instance
 end when
 
 script kind loader(my-name my-container dispatchr) >> node
@@ -192,17 +188,17 @@ script kind loader(my-name my-container dispatchr) >> node
       set node-instance.name-in-container = my-name
       map part-def = my-kind.parts in
 	let child-instance = @part-def.part-kind.loader(part-def.part-name node-instance dispatchr) in % name, container (a node), dispatcher
-	  @node-instance.add-child(part-def.part-name node-instance)  % each child has a name that is local to the container (names are determined by kind)
+	  @node-instance.add-child(part-def.part-name child-instance)  % each child has a name that is local to the container (names are determined by kind)
 	end let
       end map
-      dispatchr.install-node(node-instance)
+      dispatchr.memo-node(node-instance)
       >> node-instance
     end create
   end let
 end script
 
 when loading dispatcher
-  method install-node(node)
+  method memo-node(node)
   method set-top-node(node)
 end when
 
@@ -242,6 +238,7 @@ when intializing or running node
   method display-output-events-to-console
   method output-events >> map event
   method has-no-container? >> boolean
+  script distribute-outputs-upwards
 end when
 
 %=== running ===
@@ -263,6 +260,8 @@ when running node
   method enqueue-input(event)
   method enqueue-output(event)
   method find-wire-for-source(name name) >> wire
+  script react(event)
+  method node-find-child(name) >> named-part-instance
 end when
 
 script node busy? >> boolean
@@ -271,11 +270,11 @@ script node busy? >> boolean
     >> true
   else
     map child-part-instance = self.children in
-      let child = child-part-instance.part-instance in
-	if child.has-inputs-or-outputs? then
+      let child-node = child-part-instance.instance-node in
+	if child-node.has-inputs-or-outputs? then
 	  >> true
 	else
-	  if @child.busy? then
+	  if @child-node.busy? then
 	    >> true
 	  end if
 	end if
@@ -307,7 +306,7 @@ end script
 
 script node invoke
   let e = self.dequeue-input in
-    self.react(e)
+    @self.react(e)
     @self.distribute-output-events
   end let
 end script
@@ -328,11 +327,28 @@ end script
 script dispatcher distribute-all-outputs
   map p = self.all-parts in
     @p.distribute-output-events
+    @p.distribute-outputs-upwards
   end map
 end script
 
+script node distribute-outputs-upwards
+  % if node create an output event on the parent, then distribute parent's output
+  if self.has-no-container? then  
+    %% stops upward recursion at top node (no container)
+  else
+    let parent = self.container in
+      parent.distribute-output-events
+    end let
+  end if 
+end script
+
 script node distribute-output-events
+  % an output event can be delivered to three possible places
+  % 1. a child (part/pin) [most common]
+  % 2. the parent's output pin ("self"/pin)
+  % 3. the console if this is the top part (no container)
   if self.has-no-container? then
+    % condition 3.
     self.display-output-events-to-console
   else
     let parent-composite-node = self.container in
@@ -340,24 +356,26 @@ script node distribute-output-events
 	 let w = parent-composite-node.find-wire-for-source(output.part-name output.pin-name) in
 	   map dest = w.destinations in
 	     if dest.refers-to-self? then
+               % condition 2.
 	       create output-event = event in
-		 set output-event.part-name = dest.part-name
+		 set output-event.part-name = dest.part-name % "self"
 		 set output-event.pin-name = dest.pin-name
 		 set output-event.data = output.data
 		 self.enqueue-output(output-event)
 	       end create
 	     else
+               % condition 1.
 	       % the wire has already been validated
 	       % wiring is by-name and contained in the kind of the container
 	       % ==> every part-pin (by name) pair is valid
 	       let dest-part-name = dest.part-name in
-		 let child-instance = self.find-child(dest.part-name) in
-                   let child = child-instance.part-instance in
+		 let child-named-instance = self.node-find-child(dest.part-name) in
+                   let child-node = child-named-instance.instance-node in
 		     create input-event = event in
 		       set input-event.part-name = dest.part-name
 		       set input-event.pin-name = dest.pin-name
 		       set input-event.data = output.data
-		       child.enqueue-input(input-event)
+		       child-node.enqueue-input(input-event)
 		     end create
 		   end let
 		 end let
@@ -370,3 +388,35 @@ script node distribute-output-events
   end if
 end script
 
+script node react(e)
+  % composite reaction
+  % composites distribute their inputs to 
+  % 1. children [most common], or,
+  % 2. to self.output(s) as appropriate
+
+  % bottom of the react call-chain
+  % code parts should override / augment this method
+
+  let w = self.find-wire-for-source(e.part-name e.pin-name) in
+    map dest = w.destinations in
+      create new-event = event in
+	if dest.refers-to-self? then
+	  % self.in going to out must go to an output pin
+	  % this has already been checked during build
+          set new-event.part-name = self.name-in-container
+	  set new-event.pin-name = dest.pin-name
+	  set new-event.data = e.data
+	  self.send(new-event)
+	else
+	  % else, must go to an input of a child
+	  set new-event.part-name = dest.part-name
+	  set new-event.pin-name = dest.pin-name
+	  set new-event.data = e.data
+	  let child-part-instance = self.node-find-child(dest.part-name) in
+            child-part-instance.instance-node.enqueue-input(new-event)
+	  end let
+	end if
+      end create
+    end map
+  end let
+end script

@@ -203,7 +203,6 @@ $     (emit p "~%")
    | ?SYMBOL/exit-map @exit-map-statement
    | ?SYMBOL/set @set-statement
    | ?SYMBOL/create @create-statement
-   | ?SYMBOL/defproto @set-proto-statement
    | ?SYMBOL/if @if-statement
    | ?SYMBOL/loop @loop-statement
    | ?SYMBOL/exit-when @exit-when-statement
@@ -247,14 +246,6 @@ $      (emit p "(setf ")
    @esa-expr
 $      (emit p ")")
 
-= set-proto-statement
-  SYMBOL/defproto
-$      (emit p "(setf (proto ")
-   @esa-expr
-$      (emit p ") ")
-   '=' 
-   @esa-expr
-$      (emit p ")")
   
 = map-statement
   SYMBOL/map @esa-symbol

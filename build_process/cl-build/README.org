@@ -1,3 +1,9 @@
+* todo
+** in -> out of top
+** initially set state for each code part
+** write filter for rp that gives * and + operators
+*** rp is an assembler for parsing
+
 * usage
   cl-user> (ql:quickload :arrowgrams/rephrase-compiler)
   cl-user> (ab::make-esa-dsl)

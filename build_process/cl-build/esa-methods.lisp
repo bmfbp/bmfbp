@@ -33,8 +33,11 @@
     (setf (part-kind p) kind)
     (push p (parts self))))
 
-(defmethod children ((self kind))
-  (parts self))
+(defmethod kind-find-part ((self kind) name)
+  (dolist (p (parts self))
+    (when (string= name (part-name p))
+      (return-from kind-find-part p)))
+  (assert nil)) ;; no part with given name - can't happen
 
 (defmethod ensure-part-not-declared ((self kind) name)
   (dolist (part (parts self))
@@ -113,7 +116,7 @@
   ;; graphs have no initially
   ;; leaves might have an initially
   ;; (call-next-method) ends up here - nothing to do
-  (format *error-output* "~&initially on ~s~%" self))
+  (format *error-output* "~&initially on ~s ~s~%" (name-in-container self) self))
 
 (defmethod display-output-events-to-console ((self node))
   (dolist (e (output-queue self))
@@ -144,16 +147,19 @@
      :false))
 
 (defmethod has-inputs-or-outputs? ((self node))
+(format *standard-output* "~&g ~s input-queue ~s output-queue ~s self ~s~%"
+        (name-in-container self)
+	(not (null (input-queue self))) (not (null (output-queue self))) self)
   (if (or (not (null (input-queue self)))
 	  (not (null (output-queue self))))
       :true
      :false))
 
 (defmethod install-child ((self node) name (child node))
-  (let ((pdef (make-instance 'part-instance)))
-    (setf (part-name pdef) name)
-    (setf (part-instance pdef) child)
-    (push pdef (children self))))
+  (let ((pinstance (make-instance 'named-part-instance)))
+    (setf (instance-name pinstance) name)
+    (setf (instance-node pinstance) child)
+    (push pinstance (children self))))
 
 (defmethod enqueue-input ((self node) (e event))
   (setf (input-queue self) (append (input-queue self) (list e))))
@@ -162,18 +168,17 @@
   (setf (output-queue self) (append (output-queue self) (list e))))
 
 (defmethod find-wire-for-source ((self node) part-name pin-name)
-  (dolist (w (wires self))
+  (dolist (w (wires (kind-field self)))
     (dolist (s (sources w))
       (when (and (string= part-name (part-name s))
                  (string= pin-name  (pin-name s)))
         (return-from find-wire-for-source w))))
   (assert nil)) ;; source not found - can't happen
 
-(defmethod find-child ((self kind) name)
-  (dolist (p (parts self))
-;(format *standard-output* "~&find-child ~s ~s~%" (part-name p) name)
+(defmethod node-find-child ((self node) name)
+  (dolist (p (children self))
     (when (string= name (part-name p))
-      (return-from find-child p)))
+      (return-from node-find-child p)))
   (assert nil)) ;; no part with given name - can't happen
 
 (defmethod ensure-kind-defined ((self part-definition))
@@ -181,7 +186,7 @@
     (error "kind for part /~s/ is not defined (check if manifest is correct) ~s" (part-name self) self)))
 
 
-(defmethod install-node ((self dispatcher) (n node))
+(defmethod memo-node ((self dispatcher) (n node))
   (push n (all-parts self)))
 
 (defmethod set-top-node ((self dispatcher) (n node))
@@ -189,3 +194,4 @@
 
 (defmethod declare-finished ((self dispatcher))
   (format *standard-output* "~&~%Dispatcher Finished~%~%"))
+
