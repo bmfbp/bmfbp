@@ -26,7 +26,7 @@
           (instantiate-graph top-most-kind)
         (initialize-graph dispatchr)
 	(let ((ev (make-instance 'event)))
-	  (setf (part-name ev) "hello-world")
+	  (setf (part-name ev) "helloworld")
 	  (setf (pin-name ev) "start")
 	  (setf (data ev) t)
 	  (enqueue-input top-node ev))
