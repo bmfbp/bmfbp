@@ -1,6 +1,6 @@
 (in-package :arrowgrams/build)
 
-(defclass string-join (kind)
+(defclass string-join (node)
   ((state :accessor state)
    (string-a :accessor string-a)
    (string-b :accessor string-b)))
@@ -9,7 +9,7 @@
   (setf (state self) :idle))
 
 (defmethod react ((self string-join) (e event))
-(break)
+(format *standard-output* "~&react ~s~%" (name-in-container self))
   (flet ((send-both ()
 	   (let ((out-e (make-instance 'event)))
 	     (setf (part-name out-e) (name self))

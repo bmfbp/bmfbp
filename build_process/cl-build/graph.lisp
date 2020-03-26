@@ -2,14 +2,54 @@
 
 (defparameter *dispatcher* nil)
 
+;;; test code
+(defclass dispatcher ()
+  ((all-parts :accessor all-parts :initform nil)(top-node :accessor top-node :initform nil)
+   ))
+(defclass kind ()
+  ((kind-name :accessor kind-name :initform nil)
+   (input-pins :accessor input-pins :initform nil)
+   (output-pins :accessor output-pins :initform nil)
+   (parts :accessor parts :initform nil)
+   (wires :accessor wires :initform nil)
+   ))
+(defclass node ()
+  ((input-queue :accessor input-queue :initform nil)
+   (output-queue :accessor output-queue :initform nil)
+   (kind-field :accessor kind-field :initform nil)
+   (container :accessor container :initform nil)
+   (name-in-container :accessor name-in-container :initform nil)
+   (children :accessor children :initform nil)
+   (busy-flag :accessor busy-flag :initform nil)
+   ))
+
+(defmethod loader #|script|# ((self kind) my-name  my-class  my-container  dispatchr )
+    (let ((inst (make-instance my-class)))
+      ( clear-input-queue inst)
+      ( clear-output-queue inst)
+      (setf ( kind-field inst) my-class)
+      (setf ( container inst) my-container)
+      (setf ( name-in-container inst) my-name)
+      (block map (dolist (part ( parts self))
+		   (let ((part-instance ( loader( part-kind part) ( part-name part) ( part-kind part)  inst  dispatchr )))
+		     ( add-child inst  part-instance )
+		     )#|end let|#
+		   ))#|end map|#
+      ( memo-node dispatchr  inst )
+      (return-from loader inst)
+      )#|end create|#
+    )
+;;;
+
 (defun instantiate-graph (top-kind)
   ;; KIND is built up in build-graph-in-memory
   ;; instantiate all parts in the graph and assign them to named slots in each appropriate level
   (let ((d (make-instance 'dispatcher)))  ;; make one "global" dispatcher
     (setf *dispatcher* d)
-    (let ((n (loader top-kind "TOP" nil d))) ;; call to esa --> node
-      (set-top-node d n)
-      (values d n)))) ;; return dispatcher and top node
+    (let ((nproto (make-instance 'node)))
+      (let ((n (loader top-kind "TOP" (type-of nproto) nil d))) ;; call to esa --> node
+        (set-top-node d n)
+        (values d n))))) ;; return dispatcher and top node
 
 (defun initialize-graph (esa-dispatcher)
   (initialize-all esa-dispatcher))
@@ -22,14 +62,17 @@
   (let ((fake (make-instance 'build-graph-in-memory)))
     (reset fake)
     (let ((top-most-kind (process-code fake *hw-descriptors*)))
+      (format *standard-output* "~&instantiation phase *************~%")
       (multiple-value-bind (dispatchr top-node)
           (instantiate-graph top-most-kind)
+      (format *standard-output* "~&initialize phase *************~%")
         (initialize-graph dispatchr)
 	(let ((ev (make-instance 'event)))
-	  (setf (part-name ev) "helloworld")
+	  (setf (part-name ev) "self")
 	  (setf (pin-name ev) "start")
 	  (setf (data ev) t)
 	  (enqueue-input top-node ev))
+      (format *standard-output* "~&run phase *************~%")
 	(run-graph dispatchr)))))
 
 (defun test-run ()
@@ -118,8 +161,11 @@
    (:FILENAME
     . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./string-join.lisp"))
   
-  ((:ITEM-KIND . "graph") (:NAME . "helloworld")
-   (:GRAPH (:NAME . "HELLOWORLD") (:INPUTS "START") (:OUTPUTS "RESULT")
+  ((:ITEM-KIND . "graph") 
+   (:NAME . "helloworld")
+   (:GRAPH (:NAME . "HELLOWORLD")
+           (:INPUTS "START")
+           (:OUTPUTS "RESULT")
 	   (:PARTS ((:PART-NAME . "STRING-JOIN") (:KIND-NAME . "STRING-JOIN"))
 		   ((:PART-NAME . "WORLD") (:KIND-NAME . "WORLD"))
 		   ((:PART-NAME . "HELLO") (:KIND-NAME . "HELLO")))

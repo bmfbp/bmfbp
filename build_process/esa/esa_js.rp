@@ -129,8 +129,8 @@ $      (emit-to-method-stream p ") {};~&")
 = map-decl
   SYMBOL/map 
   @esa-symbol
-;; We are not implementing map field in class in JS.
-;; $     (emit p "~&(~a :accessor ~a :initform nil)" (atext p) (atext p))
+% We are not implementing map field in class in JS.
+% $     (emit p "~&(~a :accessor ~a :initform nil)" (atext p) (atext p))
   
 = typed-formals
   [ ?'(' '(' type-list ')'

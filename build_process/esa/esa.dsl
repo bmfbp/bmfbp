@@ -1,6 +1,7 @@
 type name
 type function
 type boolean
+type my-class
 
 situation building
 situation building-aux
@@ -167,7 +168,7 @@ end script
 %=== instantiating parts ===
 
 when loading kind
-  script loader(name node dispatcher) >> node
+  script loader(name my-class node dispatcher) >> node
 end when
 
 when loading node
@@ -178,23 +179,21 @@ when loading node
   % method children >> map named-part-instance
 end when
 
-script kind loader(my-name my-container dispatchr) >> node
-  let my-kind = self in
-    create node-instance = node in
-      node-instance.clear-input-queue
-      node-instance.clear-output-queue
-      set node-instance.kind-field = my-kind
-      set node-instance.container = my-container
-      set node-instance.name-in-container = my-name
-      map part-def = my-kind.parts in
-	let child-instance = @part-def.part-kind.loader(part-def.part-name node-instance dispatchr) in % name, container (a node), dispatcher
-	  @node-instance.add-child(part-def.part-name child-instance)  % each child has a name that is local to the container (names are determined by kind)
-	end let
-      end map
-      dispatchr.memo-node(node-instance)
-      >> node-instance
-    end create
-  end let
+script kind loader(my-name my-class my-container dispatchr) >> node  % return an object that inherits from node
+  create inst = my-class in
+    inst.clear-input-queue
+    inst.clear-output-queue
+    set inst.kind-field = my-class
+    set inst.container = my-container
+    set inst.name-in-container = my-name
+    map part = self.parts in  % map over kind.parts
+      let part-instance = @part.part-kind.loader(part.part-name part.part-kind inst dispatchr) in
+        @inst.add-child(part-instance)
+      end let
+    end map
+    dispatchr.memo-node(inst)
+    >> inst
+  end create
 end script
 
 when loading dispatcher
@@ -243,11 +242,20 @@ end when
 
 %=== running ===
 
+when running event
+  method get-destination >> destination
+end when
+
 when running dispatcher
   script start
   script distribute-all-outputs
   script run
   method declare-finished
+end when
+
+when running kind
+  method find-wire-for-source(name name) >> wire
+  method find-wire-for-self-source(name) >> wire
 end when
 
 when running node
@@ -259,9 +267,9 @@ when running node
   method input-queue?
   method enqueue-input(event)
   method enqueue-output(event)
-  method find-wire-for-source(name name) >> wire
-  method find-wire-for-self-source(name) >> wire
-  script react(event)
+  method react(event)
+  script run-reaction(event)
+  script run-composite-reaction(event)
   method node-find-child(name) >> named-part-instance
 end when
 
@@ -293,21 +301,25 @@ end script
 
 
 script dispatcher run
+  let done = true in
   loop
     map part = self.all-parts in
       if @part.ready? then
         @part.invoke
+	set done = false
         exit-map
       end if
     end map
-    exit-when true
+    exit-when done
   end loop
+  end let
   self.declare-finished
 end script
 
 script node invoke
   let e = self.dequeue-input in
-    @self.react(e)
+    @self.run-reaction(e)
+    @self.run-composite-reaction(e)
     @self.distribute-output-events
   end let
 end script
@@ -356,22 +368,23 @@ script node distribute-output-events
     let parent-composite-node = self.container in
        map output = self.output-events in
          create new-event = event in
-	   let dest = output.destination in
-	   if dest.refers-to-self? then
-	     % case 2 - output to output pin of self
-	     set new-event.part-name = self.name-in-container
-	     set new-event.pin-name = dest.pin-name
-             set new-event.data = output.data
-	     self.send(new-event)
-	   else
-	     % case 1 - the common case - child outputs to input of another child
-             set new-event.part-name = dest.part-name
-             set new-event.pin-name = dest.pin-name
-             set new-event.data = output.data
-             let child-node = self.find-child(part-name) in
-               child-node.enqueue-input(new-event)
-             end let
-	   end if
+	   let dest = output.get-destination in
+	     if dest.refers-to-self? then
+	       % case 2 - output to output pin of self
+	       set new-event.part-name = self.name-in-container
+	       set new-event.pin-name = dest.pin-name
+	       set new-event.data = output.data
+	       self.send(new-event)
+	     else
+	       % case 1 - the common case - child outputs to input of another child
+	       set new-event.part-name = dest.part-name
+	       set new-event.pin-name = dest.pin-name
+	       set new-event.data = output.data
+	       let child-node = self.node-find-child(dest.part-name) in
+		 child-node.enqueue-input(new-event)
+	       end let
+	     end if
+           end let
          end create
        end map
     end let
@@ -379,16 +392,21 @@ script node distribute-output-events
 end script
 
 
-script node react(e)
-  % composite reaction
+script node run-reaction(e)  % composite reaction
+  self.react(e)
+end script
+
+script node run-composite-reaction(e)
   % composites distribute their inputs to 
   % 1. children [most common], or,
   % 2. to self.output(s) as appropriate
 
-  % bottom of the react call-chain
-  % code parts should override / augment this method
-
-  let w = self.find-wire-for-source(e.part-name e.pin-name) in
+  let w = true in
+    if self.has-no-container? then
+      set w = self.kind-field.find-wire-for-self-source(e.pin-name)
+    else	
+      set w = self.container.kind-field.find-wire-for-source(e.part-name e.pin-name)
+    end if
     map dest = w.destinations in
       create new-event = event in
 	if dest.refers-to-self? then
@@ -411,3 +429,4 @@ script node react(e)
     end map
   end let
 end script
+

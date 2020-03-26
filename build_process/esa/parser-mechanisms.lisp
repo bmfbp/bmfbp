@@ -95,10 +95,10 @@
     (write-char (char str i) (output-stream p))))
 
 (defmethod emit-true ((p parser))
-  (write-string ":true" (output-stream p)))
+  (write-string " :true" (output-stream p)))
 
 (defmethod emit-false ((p parser))
-  (write-string ":false" (output-stream p)))
+  (write-string " :false" (output-stream p)))
 
 
 (defmethod emit-to-method-stream ((p parser) fmtstr &rest args)

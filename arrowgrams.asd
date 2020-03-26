@@ -288,6 +288,18 @@
                           :components ((:file "esa-dsl")
                                        (:file "esa-parser")))))
 
+(defsystem :arrowgrams/esa-js
+    :depends-on (:arrowgrams/rephrase-compiler)
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+                          :pathname "./build_process/esa"
+                          :components ((:file "esa-dsl-js")
+                                       (:file "esa-parser")))))
+
 (defsystem :arrowgrams/build
   :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :sl :loops :cl-event-passing :cl-holm-prolog
 			       :arrowgrams/compiler)

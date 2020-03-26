@@ -43,7 +43,7 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
 
     (:done
      (let ((code (code-stack self)))
-       (format t "~%~s~%" code)
+       (format t "~%build phase ***********~%~s~%" code)
        (process-code self (code-stack self))))))
      
 (defun process-code (self list-of-alists)

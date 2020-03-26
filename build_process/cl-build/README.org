@@ -49,41 +49,37 @@
 
 * build code snippets
 
-#+RESULTS: arrowgrams
-: "3. esa.lisp generated, build ready" 3794202757
-
 #+name: arrowgrams
-#+header: :var message="1, rephrase ready"
 #+begin_src lisp
   (ql:quickload :arrowgrams/rephrase-compiler)
-  (format nil "~s ~s" message (get-universal-time))
 #+end_src
 #+name: arrowgrams
-#+header: :var message="2. esa ready"
 #+begin_src lisp
   (ab::make-esa-dsl)
-  (ql:quickload :arrowgrams/esa)
-  (format nil "~s ~s" message (get-universal-time))
 #+end_src
 #+name: arrowgrams
-#+header: :var message="3. esa.lisp generated, build ready"
+#+begin_src lisp
+  (ql:quickload :arrowgrams/esa)
+#+end_src
+#+name: arrowgrams
 #+begin_src lisp
   (ab::make-esa)
-  (ql:quickload :arrowgrams/build)
-  (format nil "~s ~s" message (get-universal-time))
 #+end_src
 #+name: arrowgrams
-#+header: :var message="4. test run finished"
+#+begin_src lisp
+  (ql:quickload :arrowgrams/build)
+#+end_src
+#+name: arrowgrams
 #+begin_src lisp
   (ab::test-hw)
-  (format nil "~s ~s" message (get-universal-time))
 #+end_src
+#+RESULTS: arrowgrams
+| :ARROWGRAMS/BUILD |
+
 
 #+name: arrowgrams
-#+header: :var message="4. test run finished"
 #+begin_src lisp
   (ab::test-run)
-  (format nil "~s ~s" message (get-universal-time))
 #+end_src
 
 not needed, after graph has been captured
@@ -99,4 +95,32 @@ make sample.lisp
   (ab::make-sample)
   (format nil "~s ~s" message (get-universal-time))
 #+end_src
+
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+
+
+* for building JS, click ^C^C on the grayed-out lisp lines, sequentially waiting for status line to change (many seconds), to generate js transpiler
+
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ab::make-esa-dsl-js)
+#+end_src
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ql:quickload :arrowgrams/esa-js)
+#+end_src
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ab::make-esa-js)
+#+end_src
+
+#+RESULTS: arrowgrams_js
+| :ARROWGRAMS/REPHRASE-COMPILER |
 
