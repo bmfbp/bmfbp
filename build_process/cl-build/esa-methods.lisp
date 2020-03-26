@@ -35,47 +35,47 @@
 
 (defmethod kind-find-part ((self kind) name)
   (dolist (p (parts self))
-    (when (string= name (part-name p))
+    (when (string=-downcase name (part-name p))
       (return-from kind-find-part p)))
   (assert nil)) ;; no part with given name - can't happen
 
 (defmethod ensure-part-not-declared ((self kind) name)
   (dolist (part (parts self))
-    (when (string= name (part-name part))
+    (when (string=-downcase name (part-name part))
       (error (format nil "part ~a already declared in ~s ~s" name (kind-name self) self))))
    T)
 
 (defmethod ensure-valid-input-pin ((self kind) name)
   (dolist (pin-name (input-pins self))
-    (when (string= pin-name name)
+    (when (string=-downcase pin-name name)
       (return-from ensure-valid-input-pin T)))
   (error (format nil "pin ~a is not an input pin of ~s ~s" name (kind-name self) self)))
 
 (defmethod ensure-valid-output-pin ((self kind) name)
   (dolist (pin-name (output-pins self))
-    (when (string= pin-name name)
+    (when (string=-downcase pin-name name)
       (return-from ensure-valid-output-pin T)))
   (error (format nil "pin /~a/ is not an output pin of ~s ~s" name (kind-name self) self)))
 
 (defmethod ensure-input-pin-not-declared ((self kind) name)
   (dolist (pin-name (input-pins self))
-    (when (string= pin-name name)
+    (when (string=-downcase pin-name name)
       (error (format nil "pin /~a/ is already declared as an input pin of ~s ~s" name (kind-name self) self))))
   T)
 
 (defmethod ensure-output-pin-not-declared ((self kind) name)
   (dolist (pin-name (output-pins self))
-    (when (string= pin-name name)
+    (when (string=-downcase pin-name name)
       (error (format nil "pin /~a/ is already declared as an output pin of ~s ~s" name (kind-name self) self))))
   T)
 
 (defmethod refers-to-self? ((self source))
-  (if (string= "self" (part-name self))
+  (if (string=-downcase "self" (part-name self))
       :true
      :false))
 
 (defmethod refers-to-self? ((self destination))
-  (if (string= "self" (part-name self))
+  (if (string=-downcase "self" (part-name self))
       :true
      :false))
 
@@ -170,14 +170,14 @@
 (defmethod find-wire-for-source ((self node) part-name pin-name)
   (dolist (w (wires (kind-field self)))
     (dolist (s (sources w))
-      (when (and (string= part-name (part-name s))
-                 (string= pin-name  (pin-name s)))
+      (when (and (string=-downcase part-name (part-name s))
+                 (string=-downcase pin-name  (pin-name s)))
         (return-from find-wire-for-source w))))
   (assert nil)) ;; source not found - can't happen
 
 (defmethod node-find-child ((self node) name)
   (dolist (p (children self))
-    (when (string= name (part-name p))
+    (when (string=-downcase name (part-name p))
       (return-from node-find-child p)))
   (assert nil)) ;; no part with given name - can't happen
 
@@ -195,3 +195,6 @@
 (defmethod declare-finished ((self dispatcher))
   (format *standard-output* "~&~%Dispatcher Finished~%~%"))
 
+
+(defun string=-downcase (a b)
+  (string= (string-downcase a) (string-downcase b)))

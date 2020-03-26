@@ -50,7 +50,7 @@
 * build code snippets
 
 #+RESULTS: arrowgrams
-: ".2a sample esa" 3794058225
+: "3. esa.lisp generated, build ready" 3794202757
 
 #+name: arrowgrams
 #+header: :var message="1, rephrase ready"
@@ -72,6 +72,13 @@
   (ql:quickload :arrowgrams/build)
   (format nil "~s ~s" message (get-universal-time))
 #+end_src
+#+name: arrowgrams
+#+header: :var message="4. test run finished"
+#+begin_src lisp
+  (ab::test-hw)
+  (format nil "~s ~s" message (get-universal-time))
+#+end_src
+
 #+name: arrowgrams
 #+header: :var message="4. test run finished"
 #+begin_src lisp
