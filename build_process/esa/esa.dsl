@@ -260,6 +260,7 @@ when running node
   method enqueue-input(event)
   method enqueue-output(event)
   method find-wire-for-source(name name) >> wire
+  method find-wire-for-self-source(name) >> wire
   script react(event)
   method node-find-child(name) >> named-part-instance
 end when
@@ -347,46 +348,36 @@ script node distribute-output-events
   % 1. a child (part/pin) [most common]
   % 2. the parent's output pin ("self"/pin)
   % 3. the console if this is the top part (no container)
+
   if self.has-no-container? then
-    % condition 3.
+    % case 3.
     self.display-output-events-to-console
   else
     let parent-composite-node = self.container in
        map output = self.output-events in
-	 let w = parent-composite-node.find-wire-for-source(output.part-name output.pin-name) in
-	   map dest = w.destinations in
-	     if dest.refers-to-self? then
-               % condition 2.
-	       create output-event = event in
-		 set output-event.part-name = dest.part-name % "self"
-		 set output-event.pin-name = dest.pin-name
-		 set output-event.data = output.data
-		 self.enqueue-output(output-event)
-	       end create
-	     else
-               % condition 1.
-	       % the wire has already been validated
-	       % wiring is by-name and contained in the kind of the container
-	       % ==> every part-pin (by name) pair is valid
-	       let dest-part-name = dest.part-name in
-		 let child-named-instance = self.node-find-child(dest.part-name) in
-                   let child-node = child-named-instance.instance-node in
-		     create input-event = event in
-		       set input-event.part-name = dest.part-name
-		       set input-event.pin-name = dest.pin-name
-		       set input-event.data = output.data
-		       child-node.enqueue-input(input-event)
-		     end create
-		   end let
-		 end let
-	       end let
-	      end if
-	    end map
-	 end let
+         create new-event = event in
+	   let dest = output.destination in
+	   if dest.refers-to-self? then
+	     % case 2 - output to output pin of self
+	     set new-event.part-name = self.name-in-container
+	     set new-event.pin-name = dest.pin-name
+             set new-event.data = output.data
+	     self.send(new-event)
+	   else
+	     % case 1 - the common case - child outputs to input of another child
+             set new-event.part-name = dest.part-name
+             set new-event.pin-name = dest.pin-name
+             set new-event.data = output.data
+             let child-node = self.find-child(part-name) in
+               child-node.enqueue-input(new-event)
+             end let
+	   end if
+         end create
        end map
     end let
   end if
 end script
+
 
 script node react(e)
   % composite reaction
@@ -401,20 +392,20 @@ script node react(e)
     map dest = w.destinations in
       create new-event = event in
 	if dest.refers-to-self? then
-	  % self.in going to out must go to an output pin
-	  % this has already been checked during build
-          set new-event.part-name = self.name-in-container
-	  set new-event.pin-name = dest.pin-name
-	  set new-event.data = e.data
-	  self.send(new-event)
+	    % self.in going to out must go to an output pin
+	    % this has already been checked during build
+	    set new-event.part-name = dest.part-name %"self"
+	    set new-event.pin-name = dest.pin-name
+	    set new-event.data = e.data
+	    self.send(new-event)
 	else
 	  % else, must go to an input of a child
-	  set new-event.part-name = dest.part-name
-	  set new-event.pin-name = dest.pin-name
-	  set new-event.data = e.data
-	  let child-part-instance = self.node-find-child(dest.part-name) in
-            child-part-instance.instance-node.enqueue-input(new-event)
-	  end let
+	    set new-event.part-name = dest.part-name
+	    set new-event.pin-name = dest.pin-name
+	    set new-event.data = e.data
+	    let child-part-instance = self.node-find-child(dest.part-name) in
+	      child-part-instance.instance-node.enqueue-input(new-event)
+	    end let
 	end if
       end create
     end map
