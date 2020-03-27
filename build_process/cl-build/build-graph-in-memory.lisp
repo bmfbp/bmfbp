@@ -129,7 +129,7 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
         (let ((kind-name (string-downcase (get-part-kind part-as-alist)))
               (part-name (string-downcase (get-part-name part-as-alist))))
           (format *standard-output* "~&need name ~s~%" kind-name)
-          (add-part kind part-name (gethash kind-name (kinds-by-name self)))))  ;; calls esa
+          (add-part kind part-name (gethash kind-name (kinds-by-name self)) kind-name)))  ;; calls esa
       ;; the wiring table is an array [] of wires
       ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
       (dolist (wire-as-alist (get-wiring graph))
