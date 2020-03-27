@@ -9,7 +9,7 @@
   (declare (ignore input-e))
 (format *standard-output* "~&react ~s~%" (name-in-container self))
   (let ((e (make-instance 'event)))
-    (setf (part-name e) (name self))
+    (setf (part-name e) (name-in-container self))
     (setf (pin-name  e) "s")
     (setf (data      e) "hello")
     (send self e)))

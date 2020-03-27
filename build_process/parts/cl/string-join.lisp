@@ -12,7 +12,7 @@
 (format *standard-output* "~&react ~s~%" (name-in-container self))
   (flet ((send-both ()
 	   (let ((out-e (make-instance 'event)))
-	     (setf (part-name out-e) (name self))
+	     (setf (part-name out-e) (name-in-container self))
 	     (setf (pin-name out-e) "c")
 	     (setf (data out-e) (concatenate 'string (string-a self) (string-b self)))
 	     (send self out-e))))
