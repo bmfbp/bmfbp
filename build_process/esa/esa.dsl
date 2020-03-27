@@ -38,9 +38,8 @@ end class
 class kind
   kind-name
   input-pins
-  self-class  % subsumes initially code, react code and instance vars (using OO), otherwise OO is overkill
+  self-class  % of type node-class % subsumes initially code, react code and instance vars (using OO), otherwise OO is overkill
   output-pins
-  node-class
   parts
   wires
 end class
@@ -171,10 +170,10 @@ end script
 %=== instantiating parts ===
 
 when loading kind
-%                         node=runtime-container
-%                         |
-%                         V
-  script loader(name kind node dispatcher) >> node
+%                    node=runtime-container
+%                    |
+%                    V
+  script loader(name node dispatcher) >> node
 end when
 
 when loading node
@@ -185,17 +184,17 @@ when loading node
   % method children >> map named-part-instance
 end when
 
-script kind loader(my-name my-kind my-container dispatchr) >> node  % return an object that inherits from node
-  let clss = self.node-class in
-    create inst = clss in
+script kind loader(my-name my-container dispatchr) >> node  % return an object that inherits from node
+  let clss = self.self-class in
+    create inst = *clss in
       inst.clear-input-queue
       inst.clear-output-queue
-      set inst.kind-field = my-kind
+      set inst.kind-field = self
       set inst.container = my-container
       set inst.name-in-container = my-name
       map part = self.parts in  % map over kind.parts
-	let part-instance = @part.part-kind.loader(part.part-name part.part-kind inst dispatchr) in
-	  @inst.add-child(part-instance)
+	let part-instance = @part.part-kind.loader(part.part-name inst dispatchr) in
+	  @inst.add-child(part.part-name part-instance)
 	end let
       end map
       dispatchr.memo-node(inst)
@@ -207,10 +206,6 @@ end script
 when loading dispatcher
   method memo-node(node)
   method set-top-node(node)
-end when
-
-when loading node
-  script add-child(name node)
 end when
 
 script node add-child(nm nd)
@@ -270,6 +265,7 @@ when running node
   script busy?
   script ready?
   method has-inputs-or-outputs? >> boolean
+  method children? >> boolean
   method flagged-as-busy? >> boolean
   method dequeue-input
   method input-queue?
@@ -426,12 +422,14 @@ script node run-composite-reaction(e)
 	    self.send(new-event)
 	else
 	  % else, must go to an input of a child
-	    set new-event.part-name = dest.part-name
-	    set new-event.pin-name = dest.pin-name
-	    set new-event.data = e.data
-	    let child-part-instance = self.node-find-child(dest.part-name) in
-	      child-part-instance.instance-node.enqueue-input(new-event)
-	    end let
+	  if self.children? then
+            set new-event.part-name = dest.part-name
+            set new-event.pin-name = dest.pin-name
+            set new-event.data = e.data
+            let child-part-instance = self.node-find-child(dest.part-name) in
+              child-part-instance.instance-node.enqueue-input(new-event)
+            end let
+	   end if
 	end if
       end create
     end map
