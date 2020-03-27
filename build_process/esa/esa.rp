@@ -227,12 +227,12 @@ $      (emit p ")#|end let|#")
 
 = create-statement
   SYMBOL/create
-   @esa-expr
+   @esa-symbol
 $      (emit p "(let ((~a " (atext p))
    '=' 
    [ ?SYMBOL/map SYMBOL/map | * ]
    @class-ref
-$      (emit p "(make-instance '~a)))" (atext p))
+$      (emit p "(make-instance ~a)))" (atext p))
    SYMBOL/in 
    @script-body
 $      (emit p ")#|end create|#")   
