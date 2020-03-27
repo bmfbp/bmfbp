@@ -27,10 +27,11 @@
 (defmethod install-wire ((self kind) (w wire))
   (push w (wires self)))
 
-(defmethod install-part ((self kind) name kind)
+(defmethod install-part ((self kind) name kind node-class)
   (let ((p (make-instance 'part-definition)))
     (setf (part-name p) (string-downcase name))
     (setf (part-kind p) kind)
+    (setf (part-class p) node-class)
     (push p (parts self))))
 
 (defmethod kind-find-part ((self kind) name)

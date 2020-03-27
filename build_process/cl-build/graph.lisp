@@ -2,44 +2,6 @@
 
 (defparameter *dispatcher* nil)
 
-;;; test code
-(defclass dispatcher ()
-  ((all-parts :accessor all-parts :initform nil)(top-node :accessor top-node :initform nil)
-   ))
-(defclass kind ()
-  ((kind-name :accessor kind-name :initform nil)
-   (input-pins :accessor input-pins :initform nil)
-   (output-pins :accessor output-pins :initform nil)
-   (parts :accessor parts :initform nil)
-   (wires :accessor wires :initform nil)
-   ))
-(defclass node ()
-  ((input-queue :accessor input-queue :initform nil)
-   (output-queue :accessor output-queue :initform nil)
-   (kind-field :accessor kind-field :initform nil)
-   (container :accessor container :initform nil)
-   (name-in-container :accessor name-in-container :initform nil)
-   (children :accessor children :initform nil)
-   (busy-flag :accessor busy-flag :initform nil)
-   ))
-
-(defmethod loader #|script|# ((self kind) my-name  my-class  my-container  dispatchr )
-    (let ((inst (make-instance my-class)))
-      ( clear-input-queue inst)
-      ( clear-output-queue inst)
-      (setf ( kind-field inst) my-class)
-      (setf ( container inst) my-container)
-      (setf ( name-in-container inst) my-name)
-      (block map (dolist (part ( parts self))
-		   (let ((part-instance ( loader( part-kind part) ( part-name part) ( part-kind part)  inst  dispatchr )))
-		     ( add-child inst  part-instance )
-		     )#|end let|#
-		   ))#|end map|#
-      ( memo-node dispatchr  inst )
-      (return-from loader inst)
-      )#|end create|#
-    )
-;;;
 
 (defun instantiate-graph (top-kind)
   ;; KIND is built up in build-graph-in-memory

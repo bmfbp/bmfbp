@@ -51,39 +51,39 @@ event.prototype = {
   data: null
 };
 
-event.install-input-pin = function (, G525) {};
+event.install-input-pin = function (, G458) {};
 
-event.install-output-pin = function (, G526) {};
+event.install-output-pin = function (, G459) {};
 
-event.add-input-pin = function /*script*/ (, G527) {};
+event.add-input-pin = function /*script*/ (, G460) {};
 
-event.add-output-pin = function /*script*/ (, G528) {};
+event.add-output-pin = function /*script*/ (, G461) {};
 
-event.add-part = function /*script*/ (, G529, G530) {};
+event.add-part = function /*script*/ (, G462, G463) {};
 
-event.add-wire = function /*script*/ (, G531) {};
+event.add-wire = function /*script*/ (, G464) {};
 
-event.install-wire = function (, G532) {};
+event.install-wire = function (, G465) {};
 
-event.install-part = function (, G533, G534) {};
+event.install-part = function (, G466, G467) {};
 
 event.parts = function () {};
  /*returns map part-definition*/ 
 
 
-event.ensure-part-not-declared = function (, G535) {};
+event.ensure-part-not-declared = function (, G468) {};
 
-event.ensure-valid-input-pin = function (, G536) {};
+event.ensure-valid-input-pin = function (, G469) {};
 
-event.ensure-valid-output-pin = function (, G537) {};
+event.ensure-valid-output-pin = function (, G470) {};
 
-event.ensure-input-pin-not-declared = function (, G538) {};
+event.ensure-input-pin-not-declared = function (, G471) {};
 
-event.ensure-output-pin-not-declared = function (, G539) {};
+event.ensure-output-pin-not-declared = function (, G472) {};
 
-event.ensure-valid-source = function /*script*/ (, G540) {};
+event.ensure-valid-source = function /*script*/ (, G473) {};
 
-event.ensure-valid-destination = function /*script*/ (, G541) {};
+event.ensure-valid-destination = function /*script*/ (, G474) {};
 
 
 
@@ -184,9 +184,9 @@ kind.refers-to-self? = function () {};
  /*returns boolean*/ 
 
 
-kind.install-source = function (, G542, G543) {};
+kind.install-source = function (, G475, G476) {};
 
-kind.install-destination = function (, G544, G545) {};
+kind.install-destination = function (, G477, G478) {};
 
 
 
@@ -204,7 +204,7 @@ wire.add-destination = function /*script*/ (, part , pin ) {
 };
 /*end script*/
 
-wire.loader = function /*script*/ (, G546, G547, G548, G549) {};
+wire.loader = function /*script*/ (, G479, G480, G481, G482) {};
  /*returns node*/ 
 
 
@@ -212,9 +212,9 @@ wire.clear-input-queue = function () {};
 
 wire.clear-output-queue = function () {};
 
-wire.install-node = function (, G550) {};
+wire.install-node = function (, G483) {};
 
-wire.add-child = function /*script*/ (, G551, G552) {};
+wire.add-child = function /*script*/ (, G484, G485) {};
 
 
 
@@ -250,13 +250,13 @@ return inst;
 };
 /*end script*/
 
-kind.memo-node = function (, G553) {};
+kind.memo-node = function (, G486) {};
 
-kind.set-top-node = function (, G554) {};
+kind.set-top-node = function (, G487) {};
 
 
 
-kind.add-child = function /*script*/ (, G555, G556) {};
+kind.add-child = function /*script*/ (, G488, G489) {};
 
 
 
@@ -296,7 +296,7 @@ node.initialize = function /*script*/ () {
 };
 /*end script*/
 
-node.send = function (, G557) {};
+node.send = function (, G490) {};
 
 node.distribute-output-events = function /*script*/ () {};
 
@@ -324,9 +324,9 @@ node.declare-finished = function () {};
 
 
 
-node.find-wire-for-source = function (, G558, G559) {};
+node.find-wire-for-source = function (, G491, G492) {};
  /*returns wire*/ 
-node.find-wire-for-self-source = function (, G560) {};
+node.find-wire-for-self-source = function (, G493) {};
  /*returns wire*/ 
 
 
@@ -342,17 +342,17 @@ node.dequeue-input = function () {};
 
 node.input-queue? = function () {};
 
-node.enqueue-input = function (, G561) {};
+node.enqueue-input = function (, G494) {};
 
-node.enqueue-output = function (, G562) {};
+node.enqueue-output = function (, G495) {};
 
-node.react = function (, G563) {};
+node.react = function (, G496) {};
 
-node.run-reaction = function /*script*/ (, G564) {};
+node.run-reaction = function /*script*/ (, G497) {};
 
-node.run-composite-reaction = function /*script*/ (, G565) {};
+node.run-composite-reaction = function /*script*/ (, G498) {};
 
-node.node-find-child = function (, G566) {};
+node.node-find-child = function (, G499) {};
  /*returns named-part-instance*/ 
 
 

@@ -154,7 +154,7 @@ build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (
 |#
 
 ;; 
-;; map incoming json -> alist -> esa KIND class, defining a leaf
+;; map incoming json -> alist -> esa KIND class, deining a leaf
 ;;
 
 (defmethod build-leaf-in-mem ((self build-graph-in-memory) a)
@@ -163,14 +163,15 @@ build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (
         (in-pins (get-in-pins a))
         (out-pins (get-out-pins a)))
     ;; kind is a CLOS class name
-    (let ((kind (make-instance 'kind)))  ;; defined by esa
-      (setf (kind-name kind) kind-str)
+    (let ((k (make-instance 'kind)))  ;; defined by esa
+      (setf (kind-name k) kind-str)
+      (setf (node-class k) kind-str)
       (format *standard-output* "~&define leaf name ~s~%" kind-str)
       (when filename
         (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)
       (dolist (ipin-str in-pins)
-        (add-input-pin kind ipin-str))  ;; call to esa
+        (add-input-pin k ipin-str))  ;; call to esa
       (dolist (opin-str out-pins)
-        (add-output-pin kind opin-str)) ;; call to esa
-      (setf (gethash kind-str (kinds-by-name self)) kind)  ;; this should be per diagram/graph, not global
-      kind)))
+        (add-output-pin k opin-str)) ;; call to esa
+      (setf (gethash kind-str (kinds-by-name self)) k)  ;; this should be per diagram/graph, not global
+      k)))

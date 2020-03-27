@@ -323,7 +323,7 @@
                                      (:file "get-code" :depends-on ("package" "classes" "util"))
                                      (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
                                      (:file "build-collector" :depends-on ("package" "classes" "util"))
-                                     (:file "children-before-graph" :depends-on ("package" "classes" "util"))
+                                     (:file "children-before-graph" :depends-on ("package" "classes" "util" "esa" "esa-methods"))
                                      (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json" "util"))
                                      (:file "graph" :depends-on ("package" "classes" "util" "esa"))
                                      (:file "runner" :depends-on ("package" "classes" "util" "graph"))

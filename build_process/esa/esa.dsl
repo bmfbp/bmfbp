@@ -1,7 +1,7 @@
 type name
 type function
 type boolean
-type my-class
+type node-class
 
 situation building
 situation building-aux
@@ -12,6 +12,7 @@ situation running
 class part-definition
   part-name
   part-kind
+  part-class  % subsumes initially code, react code and instance vars (using OO), otherwise OO is overkill
 end class
 
 class named-part-instance
@@ -39,6 +40,7 @@ class kind
   kind-name
   input-pins
   output-pins
+  node-class
   parts
   wires
 end class
@@ -72,14 +74,15 @@ when building kind
   script add-input-pin(name)
   script add-output-pin(name)
   % method install-initially-function(function)
-  script add-part(name kind)
+  script add-part(name kind node-class)
   script add-wire(wire)
   method install-wire(wire)
-  method install-part(name kind)
+  method install-part(name kind node-class)
   method parts >> map part-definition
 end when
 
 when building-aux kind
+  method install-class(node-class)
   method ensure-part-not-declared(name)
   method ensure-valid-input-pin(name)
   method ensure-valid-output-pin(name)
@@ -103,9 +106,9 @@ script kind add-output-pin(name)
    self.install-output-pin(name)
 end script
 
-script kind add-part(nm k)
+script kind add-part(nm k nclass)
   self.ensure-part-not-declared(nm)
-  self.install-part(nm k)
+  self.install-part(nm k nclass)
 end script
 
 script kind add-wire(w)
@@ -168,7 +171,10 @@ end script
 %=== instantiating parts ===
 
 when loading kind
-  script loader(name my-class node dispatcher) >> node
+%                         node=runtime-container
+%                         |
+%                         V
+  script loader(name kind node dispatcher) >> node
 end when
 
 when loading node
@@ -179,21 +185,23 @@ when loading node
   % method children >> map named-part-instance
 end when
 
-script kind loader(my-name my-class my-container dispatchr) >> node  % return an object that inherits from node
-  create inst = my-class in
-    inst.clear-input-queue
-    inst.clear-output-queue
-    set inst.kind-field = my-class
-    set inst.container = my-container
-    set inst.name-in-container = my-name
-    map part = self.parts in  % map over kind.parts
-      let part-instance = @part.part-kind.loader(part.part-name part.part-kind inst dispatchr) in
-        @inst.add-child(part-instance)
-      end let
-    end map
-    dispatchr.memo-node(inst)
-    >> inst
-  end create
+script kind loader(my-name my-kind my-container dispatchr) >> node  % return an object that inherits from node
+  let clss = self.node-class in
+    create inst = clss in
+      inst.clear-input-queue
+      inst.clear-output-queue
+      set inst.kind-field = my-kind
+      set inst.container = my-container
+      set inst.name-in-container = my-name
+      map part = self.parts in  % map over kind.parts
+	let part-instance = @part.part-kind.loader(part.part-name part.part-kind inst dispatchr) in
+	  @inst.add-child(part-instance)
+	end let
+      end map
+      dispatchr.memo-node(inst)
+      >> inst
+    end create
+  end let
 end script
 
 when loading dispatcher
