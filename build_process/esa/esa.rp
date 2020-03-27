@@ -231,8 +231,13 @@ $      (emit p ")#|end let|#")
 $      (emit p "(let ((~a " (atext p))
    '=' 
    [ ?SYMBOL/map SYMBOL/map | * ]
-   @class-ref
+   [ ?'*' '*'
+     @class-ref
 $      (emit p "(make-instance ~a)))" (atext p))
+   | *
+     @class-ref
+$      (emit p "(make-instance '~a)))" (atext p))
+   ]
    SYMBOL/in 
    @script-body
 $      (emit p ")#|end create|#")   
