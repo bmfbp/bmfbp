@@ -120,6 +120,7 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
     (let ((kind (make-instance 'kind)))
       (format *standard-output* "~&define graph name ~s~%" name)
       (setf (kind-name kind) name)
+      (setf (self-class kind) name)
       (setf (gethash name (kinds-by-name self)) kind)  ;; kind defined in esa
       (dolist (input-name (get-inputs graph))
         (add-input-pin kind (string-downcase input-name)))  ;; calls esa
@@ -165,7 +166,7 @@ build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (
     ;; kind is a CLOS class name
     (let ((k (make-instance 'kind)))  ;; defined by esa
       (setf (kind-name k) kind-str)
-      (setf (node-class k) kind-str)
+      (setf (self-class k) kind-str)
       (format *standard-output* "~&define leaf name ~s~%" kind-str)
       (when filename
         (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)

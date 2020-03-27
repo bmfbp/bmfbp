@@ -12,7 +12,6 @@ situation running
 class part-definition
   part-name
   part-kind
-  part-class  % subsumes initially code, react code and instance vars (using OO), otherwise OO is overkill
 end class
 
 class named-part-instance
@@ -39,6 +38,7 @@ end class
 class kind
   kind-name
   input-pins
+  self-class  % subsumes initially code, react code and instance vars (using OO), otherwise OO is overkill
   output-pins
   node-class
   parts
