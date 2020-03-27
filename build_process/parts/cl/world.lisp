@@ -12,7 +12,7 @@
   (declare (ignore input-e))
 (format *standard-output* "~&react ~s~%" (name-in-container self))
   (let ((e (make-instance 'event))
-        (pp (make-instance 'pp)))
+        (pp (make-instance 'part-pin)))
     (setf (part-name pp) (name-in-container self))
     (setf (pin-name  pp) "s")
     (setf (partpin e) pp)

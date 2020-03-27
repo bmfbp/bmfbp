@@ -12,7 +12,7 @@
 (format *standard-output* "~&react ~s~%" (name-in-container self))
   (flet ((send-both ()
 	   (let ((out-e (make-instance 'event))
-                 (pp (make-instance 'pp)))
+                 (pp (make-instance 'part-pin)))
 	     (setf (part-name pp) (name-in-container self))
 	     (setf (pin-name pp) "c")
              (setf (partpin out-e) pp)
