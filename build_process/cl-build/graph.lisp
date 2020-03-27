@@ -8,10 +8,9 @@
   ;; instantiate all parts in the graph and assign them to named slots in each appropriate level
   (let ((d (make-instance 'dispatcher)))  ;; make one "global" dispatcher
     (setf *dispatcher* d)
-    (let ((nproto (make-instance 'node)))
-      (let ((n (loader top-kind "TOP" (type-of nproto) nil d))) ;; call to esa --> node
-        (set-top-node d n)
-        (values d n))))) ;; return dispatcher and top node
+    (let ((n (loader top-kind "TOP" nil d))) ;; call to esa --> node
+      (set-top-node d n)
+      (values d n)))) ;; return dispatcher and top node
 
 (defun initialize-graph (esa-dispatcher)
   (initialize-all esa-dispatcher))

@@ -118,31 +118,32 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
   (let ((graph (get-graph full-graph)) ;; strip noise
         (name (get-name full-graph)))
     (let ((kind (make-instance 'kind)))
-      (format *standard-output* "~&define graph name ~s~%" name)
-      (setf (kind-name kind) name)
-      (setf (self-class kind) name)
-      (setf (gethash name (kinds-by-name self)) kind)  ;; kind defined in esa
-      (dolist (input-name (get-inputs graph))
-        (add-input-pin kind (string-downcase input-name)))  ;; calls esa
-      (dolist (output-name (get-outputs graph))
-        (add-output-pin kind (string-downcase output-name)))  ;; calls esa
-      (dolist (part-as-alist (get-parts-list graph))
-        (let ((kind-name (string-downcase (get-part-kind part-as-alist)))
-              (part-name (string-downcase (get-part-name part-as-alist))))
-          (format *standard-output* "~&need name ~s~%" kind-name)
-          (add-part kind part-name (gethash kind-name (kinds-by-name self)) kind-name)))  ;; calls esa
-      ;; the wiring table is an array [] of wires
-      ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
-      (dolist (wire-as-alist (get-wiring graph))
-        (let ((w (make-instance 'wire)))
-          (set-index w (get-wire-index wire-as-alist))
-          (dolist (source (get-sources wire-as-alist))
-            (add-source w (get-part source) (get-pin source)))   ;; calls esa
-          (dolist (dest (get-destinations-list wire-as-alist))
-            (add-destination w (get-part dest) (get-pin dest)))  ;; calls esa
-          (add-wire kind w)))                                    ;; calls esa
-      kind)))
-
+      (let ((kind-sym 'graph))
+        (format *standard-output* "~&define graph name ~s~%" name)
+        (setf (kind-name kind) name)
+        (setf (self-class kind) kind-sym)
+        (setf (gethash kind-sym (kinds-by-name self)) kind)  ;; kind defined in esa
+        (dolist (input-name (get-inputs graph))
+          (add-input-pin kind (make-pin-name input-name)))  ;; calls esa
+        (dolist (output-name (get-outputs graph))
+          (add-output-pin kind (string-downcase output-name)))  ;; calls esa
+        (dolist (part-as-alist (get-parts-list graph))
+          (let ((kind-sym (make-class-name (get-part-kind part-as-alist)))
+                (part-name (make-pin-name (get-part-name part-as-alist))))
+            (format *standard-output* "~&need name ~s~%" kind-sym)
+            (add-part kind part-name (gethash kind-sym (kinds-by-name self)) kind-sym)))  ;; calls esa
+        ;; the wiring table is an array [] of wires
+        ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
+        (dolist (wire-as-alist (get-wiring graph))
+          (let ((w (make-instance 'wire)))
+            (set-index w (get-wire-index wire-as-alist))
+            (dolist (source (get-sources wire-as-alist))
+              (add-source w (get-part source) (get-pin source)))   ;; calls esa
+            (dolist (dest (get-destinations-list wire-as-alist))
+              (add-destination w (get-part dest) (get-pin dest)))  ;; calls esa
+            (add-wire kind w)))                                    ;; calls esa
+        kind))))
+  
 
 
 (defun get-filename (a)  (cdr (assoc :filename a)))
@@ -164,15 +165,27 @@ build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (
         (in-pins (get-in-pins a))
         (out-pins (get-out-pins a)))
     ;; kind is a CLOS class name
-    (let ((k (make-instance 'kind)))  ;; defined by esa
-      (setf (kind-name k) kind-str)
-      (setf (self-class k) kind-str)
-      (format *standard-output* "~&define leaf name ~s~%" kind-str)
-      (when filename
-        (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)
-      (dolist (ipin-str in-pins)
-        (add-input-pin k ipin-str))  ;; call to esa
-      (dolist (opin-str out-pins)
-        (add-output-pin k opin-str)) ;; call to esa
-      (setf (gethash kind-str (kinds-by-name self)) k)  ;; this should be per diagram/graph, not global
-      k)))
+    (let ((kind-sym (make-class-name kind-str)))
+      (let ((k (make-instance 'kind)))  ;; defined by esa
+        (setf (kind-name k) kind-sym)
+        (setf (self-class k) kind-sym)
+        (format *standard-output* "~&define leaf name ~s~%" kind-sym)
+        (when filename
+          (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)
+        (dolist (ipin-str in-pins)
+          (add-input-pin k ipin-str))  ;; call to esa
+        (dolist (opin-str out-pins)
+          (add-output-pin k opin-str)) ;; call to esa
+        (setf (gethash kind-sym (kinds-by-name self)) k)  ;; this should be per diagram/graph, not global
+        k))))
+
+(defparameter *arrowgrams-package* "ARROWGRAMS/BUILD")
+
+(defun make-class-name (str)
+  (intern (string-upcase str) *arrowgrams-package*))
+
+(defun make-pin-name (str)
+  (string-downcase str))
+
+(defun make-part-id (str)
+  (string-downcase str))
