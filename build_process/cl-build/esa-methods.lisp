@@ -80,6 +80,11 @@
       :true
      :false))
 
+(defmethod refers-to-self? ((self part-pin))
+  (if (string=-downcase "self" (part-name self))
+      :true
+     :false))
+
 
 ;  wires
 
@@ -184,7 +189,7 @@
   (assert nil)) ;; source not found - can't happen
 
 (defmethod find-wire-for-source ((self kind) part-name pin-name)
-  (format *standard-output* "~&find-wire-for-source A ~s ~s in ~s ~s ~%" part-name pin-name (kind-name self) self)
+  (format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-name self) self)
   (dolist (w (wires self))
     (dolist (s (sources w))
       (when (and (or (string= "self" (part-name s))
