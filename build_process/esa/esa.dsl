@@ -19,6 +19,11 @@ class named-part-instance
   instance-node
 end class
 
+class part-pin
+  part-name
+  pin-name
+end class
+
 class source
   part-name  % a name or "self"
   pin-name
@@ -60,8 +65,7 @@ class dispatcher
 end class
 
 class event
-  part-name
-  pin-name
+  partpin
   data
 end class
 
@@ -245,10 +249,6 @@ end when
 
 %=== running ===
 
-when running event
-  method get-destination >> destination
-end when
-
 when running dispatcher
   script start
   script distribute-all-outputs
@@ -372,22 +372,26 @@ script node distribute-output-events
     let parent-composite-node = self.container in
        map output = self.output-events in
          create new-event = event in
-	   let dest = output.get-destination in
-	     if dest.refers-to-self? then
-	       % case 2 - output to output pin of self
-	       set new-event.part-name = self.name-in-container
-	       set new-event.pin-name = dest.pin-name
-	       set new-event.data = output.data
-	       self.send(new-event)
-	     else
-	       % case 1 - the common case - child outputs to input of another child
-	       set new-event.part-name = dest.part-name
-	       set new-event.pin-name = dest.pin-name
-	       set new-event.data = output.data
-	       let child-node = self.node-find-child(dest.part-name) in
-		 child-node.enqueue-input(new-event)
-	       end let
-	     end if
+	   let dest = output.partpin in
+	     create pp = partpin in
+               if dest.refers-to-self? then
+                 % case 2 - output to output pin of self
+                 set pp.part-name = self.name-in-container
+                 set pp.pin-name = dest.pin-name
+                 set new-event.partpin = pp
+                 set new-event.data = output.data
+                 self.send(new-event)
+               else
+                 % case 1 - the common case - child outputs to input of another child
+                 set pp.part-name = dest.part-name
+                 set pp.pin-name = dest.pin-name
+                 set new-event.partpin = pp
+                 set new-event.data = output.data
+                 let child-node = self.node-find-child(dest.part-name) in
+                   child-node.enqueue-input(new-event)
+                 end let
+               end if
+	     end create
            end let
          end create
        end map
@@ -413,24 +417,28 @@ script node run-composite-reaction(e)
     end if
     map dest = w.destinations in
       create new-event = event in
-	if dest.refers-to-self? then
-	    % self.in going to out must go to an output pin
-	    % this has already been checked during build
-	    set new-event.part-name = dest.part-name %"self"
-	    set new-event.pin-name = dest.pin-name
-	    set new-event.data = e.data
-	    self.send(new-event)
-	else
-	  % else, must go to an input of a child
-	  if self.children? then
-            set new-event.part-name = dest.part-name
-            set new-event.pin-name = dest.pin-name
-            set new-event.data = e.data
-            let child-part-instance = self.node-find-child(dest.part-name) in
-              child-part-instance.instance-node.enqueue-input(new-event)
-            end let
-	   end if
-	end if
+	create pp = part-pin in
+          if dest.refers-to-self? then
+              % self.in going to out must go to an output pin
+              % this has already been checked during build
+              set pp.part-name = dest.part-name %"self"
+              set pp.pin-name = dest.pin-name
+              set new-event.partpin = pp
+              set new-event.data = e.data
+              self.send(new-event)
+          else
+            % else, must go to an input of a child
+            if self.children? then
+              set pp.part-name = dest.part-name
+              set pp.pin-name = dest.pin-name
+              set new-event.partpin = pp
+              set new-event.data = e.data
+              let child-part-instance = self.node-find-child(dest.part-name) in
+                child-part-instance.instance-node.enqueue-input(new-event)
+              end let
+             end if
+          end if
+	end create
       end create
     end map
   end let
