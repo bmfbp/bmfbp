@@ -373,7 +373,7 @@ script node distribute-output-events
        map output = self.output-events in
          create new-event = event in
 	   let dest = output.partpin in
-	     create pp = partpin in
+	     create pp = part-pin in
                if dest.refers-to-self? then
                  % case 2 - output to output pin of self
                  set pp.part-name = self.name-in-container
