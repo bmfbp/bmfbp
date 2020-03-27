@@ -323,7 +323,6 @@ end script
 script node invoke
   let e = self.dequeue-input in
     @self.run-reaction(e)
-    @self.run-composite-reaction(e)
     @self.distribute-output-events
   end let
 end script
@@ -383,13 +382,15 @@ script node distribute-output-events
                  self.send(new-event)
                else
                  % case 1 - the common case - child outputs to input of another child
-                 set pp.part-name = dest.part-name
-                 set pp.pin-name = dest.pin-name
-                 set new-event.partpin = pp
-                 set new-event.data = output.data
-                 let child-node = self.node-find-child(dest.part-name) in
-                   child-node.enqueue-input(new-event)
-                 end let
+                 if self.children? then
+                   set pp.part-name = dest.part-name
+                   set pp.pin-name = dest.pin-name
+                   set new-event.partpin = pp
+                   set new-event.data = output.data
+                   let child-node = self.node-find-child(dest.part-name) in
+                     child-node.enqueue-input(new-event)
+                   end let
+                 end if
                end if
 	     end create
            end let
