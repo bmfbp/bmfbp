@@ -411,9 +411,9 @@ script node run-composite-reaction(e)
 
   let w = true in
     if self.has-no-container? then
-      set w = self.kind-field.find-wire-for-self-source(e.pin-name)
+      set w = self.kind-field.find-wire-for-self-source(e.partpin.pin-name)
     else	
-      set w = self.container.kind-field.find-wire-for-source(e.part-name e.pin-name)
+      set w = self.container.kind-field.find-wire-for-source(e.partpin.part-name e.partpin.pin-name)
     end if
     map dest = w.destinations in
       create new-event = event in
