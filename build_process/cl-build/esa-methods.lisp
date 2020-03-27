@@ -1,5 +1,6 @@
 (in-package :arrowgrams/build)
 
+
 ;; for bootstrap - make names case insensitive - downcase everything
 
 (defun esa-if-failed-to-return-true-false (msg)
@@ -124,6 +125,11 @@
 
 (defmethod flagged-as-busy? ((self node))
   (if (busy-flag self)
+      :true
+     :false))
+
+(defmethod children? ((self node))
+  (if (not (null (children self)))
       :true
      :false))
 
