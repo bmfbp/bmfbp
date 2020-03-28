@@ -307,6 +307,7 @@ end script
 script dispatcher run
   let done = true in
   loop
+    @self.distribute-all-outputs
     map part = self.all-parts in
       if @part.ready? then
         @part.invoke
@@ -379,18 +380,16 @@ script node distribute-output-events
                  set pp.pin-name = dest.pin-name
                  set new-event.partpin = pp
                  set new-event.data = output.data
-                 self.send(new-event)
+                 parent-composite-node.send(new-event)
                else
                  % case 1 - the common case - child outputs to input of another child
-                 if self.children? then
-                   set pp.part-name = dest.part-name
-                   set pp.pin-name = dest.pin-name
-                   set new-event.partpin = pp
-                   set new-event.data = output.data
-                   let child-node = self.node-find-child(dest.part-name) in
-                     child-node.enqueue-input(new-event)
-                   end let
-                 end if
+                 set pp.part-name = dest.part-name
+                 set pp.pin-name = dest.pin-name
+                 set new-event.partpin = pp
+                 set new-event.data = output.data
+                 let child-part-instance = parent-composite-node.node-find-child(pp.part-name) in
+                   child-part-instance.instance-node.enqueue-input(new-event)
+                 end let
                end if
 	     end create
            end let
