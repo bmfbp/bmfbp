@@ -242,7 +242,7 @@ when intializing or running node
   method send(event)
   script distribute-output-events
   method display-output-events-to-console
-  method output-events >> map event
+  method get-output-events-and-delete >> map event
   method has-no-container? >> boolean
   script distribute-outputs-upwards
 end when
@@ -370,43 +370,42 @@ script node distribute-output-events
     self.display-output-events-to-console
   else
     let parent-composite-node = self.container in
-       map output = self.output-events in
-	   let dest = output.partpin in
+       map output = self.get-output-events-and-delete in
+         let dest = output.partpin in
+           let w = parent-composite-node.kind-field.find-wire-for-source(output.partpin.part-name output.partpin.pin-name) in
+             map dest = w.destinations in
                if dest.refers-to-self? then
-                 % case 2 - output to output pin of self
+                 % case 2
                  create new-event = event in
                    create pp = part-pin in
-                     set pp.part-name = self.name-in-container
+                     set pp.part-name = dest.name-in-container
                      set pp.pin-name = dest.pin-name
                      set new-event.partpin = pp
                      set new-event.data = output.data
                      parent-composite-node.send(new-event)
-                 end create
+                   end create
                  end create
                else
                  % case 1 - the common case - child outputs to input of another child
-                 let w = parent-composite-node.kind-field.find-wire-for-source(output.partpin.part-name output.partpin.pin-name) in
-                   map dest = w.destinations in
-                     create new-event = event in
-                       create pp = part-pin in
-                         set pp.part-name = dest.part-name
-                         set pp.pin-name = dest.pin-name
-                         set new-event.partpin = pp
-                         set new-event.data = output.data
-                         let child-part-instance = parent-composite-node.node-find-child(pp.part-name) in
-                           child-part-instance.instance-node.enqueue-input(new-event)
-                         end let
-                       end create
-                     end create
-                   end map
-                 end let
+                 create new-event = event in
+                   create pp = part-pin in
+                     set pp.part-name = dest.part-name
+                     set pp.pin-name = dest.pin-name
+                     set new-event.partpin = pp
+                     set new-event.data = output.data
+                     let child-part-instance = parent-composite-node.node-find-child(pp.part-name) in
+                       child-part-instance.instance-node.enqueue-input(new-event)
+                     end let
+                   end create
+                 end create
                end if
+             end map
            end let
+         end let
        end map
     end let
   end if
 end script
-
 
 script node run-reaction(e)  % composite reaction
   self.react(e)
