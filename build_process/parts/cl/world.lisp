@@ -3,7 +3,7 @@
 (defclass world (node) () )
 
 (defmethod initialize-instance :after ((self world) &key &allow-other-keys)
-  (format *standard-output* "~&initialize-instance world~%"))
+  #+nil(format *standard-output* "~&initialize-instance world~%"))
 
 (defmethod initially ((self world))
   )
