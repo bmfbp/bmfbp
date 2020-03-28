@@ -198,7 +198,7 @@
                      (string=-downcase part-name (part-name s)))
                  (string=-downcase pin-name  (pin-name s)))
         (return-from find-wire-for-source w))))
-  (assert nil)) ;; source not found - can't happen
+  (make-instance 'wire)) ;;(assert nil)) ;; source not found - can't happen - NC!
 
 (defmethod node-find-child ((self node) name)
   ;(format *standard-output* "~&node-find-child of ~s wants ~s~%" (name-in-container self) name)
