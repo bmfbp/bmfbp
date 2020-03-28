@@ -2,11 +2,8 @@
 
 (defclass world (node) () )
 
-(defmethod initialize-instance :after ((self world) &key &allow-other-keys)
-  #+nil(format *standard-output* "~&initialize-instance world~%"))
-
 (defmethod initially ((self world))
-  )
+)
 
 (defmethod react ((self world) (input-e event))
   (declare (ignore input-e))
