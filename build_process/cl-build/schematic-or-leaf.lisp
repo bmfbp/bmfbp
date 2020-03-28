@@ -53,7 +53,7 @@ basic algorithm:
 	     (error msg)))
          (cond ((string= "leaf" kind-type-str)
                 (cond ((string= "lisp" platform-str)
-                       (let ((file-name (merge-pathnames entry-point *bootstrap-src-dir*)))
+                       (let ((file-name (merge-pathnames entry-point *src-dir*)))
                          (if (probe-file file-name)
                              (progn
                                (let ((descriptor-as-json-string
@@ -72,7 +72,7 @@ basic algorithm:
                                (error msg)))))) ;; lisp error only during bootstrapping
                       ((string= "loadedlisp" platform-str)
                        (let ((descriptor-as-json-string
-                              (let ((file-name (merge-pathnames entry-point *bootstrap-src-dir*)))
+                              (let ((file-name (merge-pathnames entry-point *src-dir*)))
                                 (alist-to-json-string
                                  (list (cons :item-kind "leaf")
                                        (cons :name (pathname-name file-name))
@@ -84,7 +84,7 @@ basic algorithm:
                ;; no op
                
                ((string= "composite" kind-type-str)
-                (let ((file-name (merge-pathnames *bootstrap-diagram-dir* entry-point)))
+                (let ((file-name (merge-pathnames *diagram-dir* entry-point)))
                   (@send self :schematic-filename file-name :tag "sol composite")))))))))
 
 #+nil(defun fixup-filename (s)
