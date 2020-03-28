@@ -109,8 +109,8 @@
 (defun cl-user::from-esa ()
   ;; compilation steps after changing esa.dsl
   (ql:quickload :arrowgrams/build)
-  (ab::btest)
-  (ab::test-run))
+  (ab::hwtest)
+  (ab::test-hw))
 
 (defun cl-user::from-top ()
   (uiop:run-program "rm -rf ~/.cache/common-lisp")
