@@ -307,6 +307,7 @@ end script
 script dispatcher run
   let done = true in
   loop
+    set done = true
     @self.distribute-all-outputs
     map part = self.all-parts in
       if @part.ready? then
