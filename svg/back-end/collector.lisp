@@ -31,7 +31,7 @@
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e) :name "collector" )))
               (debug-sl nil)
-              (debug-accept t)
+              (debug-accept nil)
               (ir-collector p 0)
               (let ((schem (top-schematic p)))
                 (@send self :metadata (metadata schem))

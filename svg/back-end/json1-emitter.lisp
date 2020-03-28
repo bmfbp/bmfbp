@@ -30,7 +30,7 @@
          (ecase (e/event::sym e)
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e) :name "json1 emitter")))
-              (debug-accept t)
+              (debug-accept nil)
               (ir-json1 p)
               (@send self :out (get-output p))
               (e/part::first-time self)))))))))

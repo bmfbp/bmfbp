@@ -31,7 +31,7 @@
            (:parse
             (let ((p (make-instance 'parser :owner self :token-stream (e/event::data e) :name "lisp emitter")))
               (debug-accept nil)
-              (debug-accept t)
+              (debug-accept nil)
               (ir-lisp p)
               (@send self :out (get-output p))
               (e/part::first-time self)))))))))
