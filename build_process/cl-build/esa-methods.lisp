@@ -146,8 +146,10 @@
 (defmethod send ((self node) (e event))
   (setf (output-queue self) (append (output-queue self) (list e))))
 
-(defmethod output-events ((self node))
-  (output-queue self))
+(defmethod get-output-events-and-delete ((self node))
+  (let ((out-event-list (output-queue self)))
+    (setf (output-queue self) nil)
+    out-event-list))
 
 (defmethod dequeue-input ((self node))
   (pop (input-queue self)))
