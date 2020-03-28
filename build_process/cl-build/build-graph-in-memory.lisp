@@ -35,8 +35,8 @@
     (:done
      (let ((code (code-stack self)))
        (format t "~%build phase ***********~%~s~%" code)
-       (let ((tree (process-code self (code-stack self))))
-         (@send self :tree tree))))))
+       (let ((top-most-kind (process-code self (code-stack self))))
+         (@send self :kind-graph top-most-kind))))))
      
 (defun process-code (self list-of-alists)
   (let ((top-most-kind nil))
