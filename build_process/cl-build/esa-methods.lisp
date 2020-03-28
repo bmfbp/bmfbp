@@ -178,9 +178,9 @@
 (defmethod enqueue-output ((self node) (e event))
   (setf (output-queue self) (append (output-queue self) (list e))))
 
-(defmethod find-wire-for-self-source ((self kind) pinname)
+(defmethod find-wire-for-self-source ((self node) pinname)
   (format *standard-output* "~&find-wire-for-self-source A ~s wires.len=~s~%" (kind-name self) (length (wires self)))
-  (dolist (w (wires self))
+  (dolist (w (wires (kind-field self)))
     (format *standard-output* "~&find-wire-for-self-source B ~s sources=~s~%" w (sources w))
     (dolist (s (sources w))
       (format *standard-output* "~&find-wire-for-self-source C ~s ~s~%" pinname (pin-name s))
@@ -188,9 +188,9 @@
       (return-from find-wire-for-self-source w)))
   (assert nil)) ;; source not found - can't happen
 
-(defmethod find-wire-for-source ((self kind) part-name pin-name)
-  (format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-name self) self)
-  (dolist (w (wires self))
+(defmethod find-wire-for-source ((self node) part-name pin-name)
+  (format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-field self) self)
+  (dolist (w (wires (kind-field self)))
     (dolist (s (sources w))
       (when (and (or (string= "self" (part-name s))
                      (string=-downcase part-name (part-name s)))
