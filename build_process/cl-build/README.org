@@ -1,5 +1,7 @@
 * todo
+** join builder to runner, build-graph-in-memory to run
 ** in -> out of top
+** no metadata, null metadata
 ** initially set state for each code part
 ** write filter for rp that gives * and + operators
 *** rp is an assembler for parsing
@@ -21,7 +23,34 @@
 ** see also
 *** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
 
-* build code snippets
+* build from top
+#+name: arrowgrams
+#+begin_src lisp
+  (uiop:run-program "rm -rf ~/.cache/common-lisp")
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::make-esa-dsl)
+  (ql:quickload :arrowgrams/esa)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::make-esa)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (ql:quickload :arrowgrams/build)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::btest)
+#+end_src
+
+#+RESULTS: arrowgrams
+| <schematic | [PARSE] | > | <code | [ESA-ERROR-MANAGER] | > | <code | [ESA-FILE-WRITER] | > | <schematic | [SCANNER] | > | <code | [ESA-PARSER] | > | <code | [RAW-TEXT] | > | <code | [INTEGERS] | > | <code | [SPACES] | > | <code | [SYMBOLS] | > | <code | [STRINGS] | > | <code | [COMMENTS] | > | <code | [TOKENIZE] | > |
+
+* build code snippets for esa builder and runner
 
 #+name: arrowgrams
 #+begin_src lisp
@@ -55,7 +84,6 @@
 
 #+RESULTS: arrowgrams
 : NIL
-
 * test-run
 #+name: arrowgrams
 #+begin_src lisp
@@ -68,7 +96,7 @@
 #+begin_src lisp :eval yes
   (format nil "~s ~s ~s" message (ab::hwtest) (get-universal-time))
 #+end_src
-make sample.lisp
+* make sample.lisp
 #+name: arrowgrams
 #+header: :var message=".2a sample esa"
 #+begin_src lisp
