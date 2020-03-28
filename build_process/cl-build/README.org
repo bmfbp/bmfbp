@@ -30,8 +30,8 @@ drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_pro
 front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
 ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
 assign-parents-to-ellipses find-comments find-metadata 
-"WARNING FB: fact already exists (USED ID1990)"
-retract (:RECT :ID1987)
+"WARNING FB: fact already exists (USED ID1513)"
+retract (:RECT :ID1510)
 add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
 back-end collector gets :PARSE ... 
 build-graph-in-memory pushes "graph" "helloworld"
@@ -79,11 +79,44 @@ install-source "world" "s"
 install-source "string-join" "c"
 install-source "self" "start"
 ,**** runner gets pin :KIND-GRAPH
-,**** loader
-initialize-instance world
-terminating - ready list is nil
-3794399980
+,**** loading
+,**** injecting input into top node
+,**** initially
+,**** run phase
+g "string-join" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::STRING-JOIN {100B149253}>
+g "world" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::WORLD {100B00BCC3}>
+g "hello" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::HELLO {100ADDF293}>
+react node "TOP"
+react "world"
+react "string-join" with "string-join" "b" "world"
+react "hello"
+react "string-join" with "string-join" "a" "hello"
+"TOP" outputs on pin "result" : "helloworld"
+
+Dispatcher Finished
+
+cl-event-passing terminating - ready list is nil
 #+end_example
+* build worldhello
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::build
+  (asdf:system-relative-pathname
+   :arrowgrams
+     "build_process/parts/diagram/worldhello.svg")))
+  (princ (get-universal-time))
+#+end_src
 
 * build helloworld
 #+name: arrowgrams
@@ -94,10 +127,9 @@ terminating - ready list is nil
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::hwtest)
+  (arrowgrams/build::build (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")))
   (princ (get-universal-time))
 #+end_src
-
 * build esa from top
 #+name: arrowgrams
 #+begin_src lisp :results output
