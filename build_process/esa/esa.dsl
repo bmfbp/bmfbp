@@ -385,7 +385,7 @@ script node distribute-output-events
                  end create
                else
                  % case 1 - the common case - child outputs to input of another child
-                 let w = parent-composite.find-wire-for-source(output.partpin.part-name output-partpin.pin-name) in
+                 let w = parent-composite-node.find-wire-for-source(output.partpin.part-name output.partpin.pin-name) in
                    map dest = w.destinations in
                      create new-event = event in
                        create pp = part-pin in
