@@ -38,7 +38,7 @@
 
       (:waiting-for-a
        (cond ((and (string= (pin-name (partpin e)) "a") (stringp (data e)))
-	      (setf (string-b self) (data e))
+	      (setf (string-a self) (data e))
 	      (send-both)
 	      (setf (state self) :idle))
 	     (t (error (format nil "string-join in state :waiting-for-a expected a string on pin a, but got pin ~s with data ~s" (pin-name (partpin e)) (data e)))))))))
