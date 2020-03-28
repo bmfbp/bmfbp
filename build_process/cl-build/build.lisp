@@ -100,7 +100,7 @@
       (let ((pin (e/part::get-input-pin build-net :done)))
         (@inject build-net pin T ))))) ;:tag "build-net done")))))
     
-(defun btest ()
+#+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
 (defun hwtest ()
@@ -117,5 +117,5 @@
   (ql:quickload :arrowgrams/rephrase-compiler)
   (ab::make-esa-dsl)
   (ql:quickload :arrowgrams/build)
-  (ab::btest)
-  (ab::test-run))
+  (ab::hwtest)
+  (ab::test-hw))

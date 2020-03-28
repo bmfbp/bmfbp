@@ -1546,6 +1546,2599 @@ in compiler-event-passing
   (arrowgrams/build::btest)
 #+end_src
 
+#+RESULTS:
+#+begin_example
+drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/boot-boot.svg"
+front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/boot-boot.svg"
+ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
+assign-parents-to-ellipses find-comments find-metadata 
+"WARNING FB: fact already exists (USED ID712)"
+retract (:RECT :ID709)
+add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
+back-end collector gets :PARSE ... 
+(
+:string /"BOOT-BOOT"/
+:string /"BOOT-BOOT"/
+:string /"[{"dir":"build_process/","kindName":"compiler","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/compiler.lisp","ref":"master"},{"dir":"build_process/","kindName":"part-namer","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/part-namer.lisp","ref":"master"},{"dir":"build_process/","kindName":"build process","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/json-array-splitter.svg","ref":"master"},{"dir":"build_process/","kindName":"children-before-graph","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/children-before-graph.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-collector","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-collector.lisp","ref":"master"},{"dir":"build_process/","kindName":"get-manifest-file","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/get-manifest-file.lisp","ref":"master"},{"dir":"build_process/","kindName":"schematic-or-leaf","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/schematic-or-leaf.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-graph-in-memory","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-graph-in-memory.lisp","ref":"master"},{"dir":"build_process/","kindName":"runner","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/runner.lisp","ref":"master"}]"/
+(
+:string /"svg-filename"/
+:string /"done"/
+)
+(
+:string /"error"/
+:string /"descriptor"/
+)
+:string /"react"/
+:string /"first-time"/
+(
+(
+:string /"ID849"/
+:string /"runner"/
+(
+:string /"json-collection"/
+)
+(
+:string /"error"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID842"/
+:string /"build-graph-in-memory"/
+(
+:string /"done"/
+:string /"json-script"/
+)
+(
+:string /"json-collection"/
+:string /"error"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID809"/
+:string /"build-collector"/
+(
+:string /"done"/
+:string /"name"/
+:string /"graph"/
+:string /"descriptor"/
+)
+(
+:string /"done"/
+:string /"final-code"/
+:string /"error"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID778"/
+:string /"children-before-graph"/
+(
+:string /"child"/
+:string /"graph"/
+:string /"graph-name"/
+)
+(
+:string /"error"/
+:string /"name"/
+:string /"graph"/
+:string /"descriptor"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID750"/
+:string /"get-manifest-file"/
+(
+:string /"in"/
+)
+(
+:string /"out"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID732"/
+:string /"schematic-or-leaf"/
+(
+:string /"manifest-as json-string"/
+)
+(
+:string /"schematic-filename"/
+:string /"child-descriptor"/
+:string /"error"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID685"/
+:string /"json-array-splitter"/
+(
+:string /"json"/
+:string /"array"/
+)
+(
+:string /"error"/
+:string /"graph"/
+:string /"items"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID668"/
+:string /"part-namer"/
+(
+:string /"filename"/
+)
+(
+:string /"name"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+(
+:string /"ID649"/
+:string /"Compiler"/
+(
+:string /"svg-filename"/
+)
+(
+:string /"json"/
+:string /"error"/
+:string /"lisp"/
+:string /"metadata"/
+)
+:string /"react"/
+:string /"first-time"/
+)
+)
+(
+(
+:integer 0
+(
+(
+:string /"ID649"/
+:string /"metadata"/
+)
+)
+(
+(
+:string /"ID685"/
+:string /"array"/
+)
+)
+)
+(
+:integer 1
+(
+(
+:string /"ID649"/
+:string /"error"/
+)
+)
+(
+(
+:string /"self"/
+:string /"descriptor"/
+)
+)
+)
+(
+:integer 2
+(
+(
+:string /"ID649"/
+:string /"json"/
+)
+)
+(
+(
+:string /"ID685"/
+:string /"json"/
+)
+)
+)
+(
+:integer 3
+(
+(
+:string /"self"/
+:string /"svg-filename"/
+)
+)
+(
+(
+:string /"ID649"/
+:string /"svg-filename"/
+)
+(
+:string /"ID668"/
+:string /"filename"/
+)
+)
+)
+(
+:integer 4
+(
+(
+:string /"ID668"/
+:string /"name"/
+)
+)
+(
+(
+:string /"ID778"/
+:string /"graph-name"/
+)
+)
+)
+(
+:integer 5
+(
+(
+:string /"ID685"/
+:string /"items"/
+)
+)
+(
+(
+:string /"ID750"/
+:string /"in"/
+)
+)
+)
+(
+:integer 6
+(
+(
+:string /"ID685"/
+:string /"graph"/
+)
+)
+(
+(
+:string /"ID778"/
+:string /"graph"/
+)
+)
+)
+(
+:integer 7
+(
+(
+:string /"ID685"/
+:string /"error"/
+)
+)
+(
+(
+:string /"self"/
+:string /"descriptor"/
+)
+)
+)
+(
+:integer 8
+(
+(
+:string /"ID732"/
+:string /"error"/
+)
+)
+(
+(
+:string /"self"/
+:string /"descriptor"/
+)
+)
+)
+(
+:integer 9
+(
+(
+:string /"ID732"/
+:string /"child-descriptor"/
+)
+)
+(
+(
+:string /"ID778"/
+:string /"child"/
+)
+)
+)
+(
+:integer 10
+(
+(
+:string /"ID732"/
+:string /"schematic-filename"/
+)
+)
+(
+(
+:string /"ID668"/
+:string /"filename"/
+)
+(
+:string /"ID668"/
+:string /"filename"/
+)
+)
+)
+(
+:integer 11
+(
+(
+:string /"ID750"/
+:string /"out"/
+)
+)
+(
+(
+:string /"ID732"/
+:string /"manifest-as json-string"/
+)
+)
+)
+(
+:integer 12
+(
+(
+:string /"ID778"/
+:string /"descriptor"/
+)
+)
+(
+(
+:string /"ID809"/
+:string /"descriptor"/
+)
+)
+)
+(
+:integer 13
+(
+(
+:string /"ID778"/
+:string /"graph"/
+)
+)
+(
+(
+:string /"ID809"/
+:string /"graph"/
+)
+)
+)
+(
+:integer 14
+(
+(
+:string /"ID778"/
+:string /"name"/
+)
+)
+(
+(
+:string /"ID809"/
+:string /"name"/
+)
+)
+)
+(
+:integer 15
+(
+(
+:string /"ID778"/
+:string /"error"/
+)
+)
+(
+(
+:string /"self"/
+:string /"descriptor"/
+)
+)
+)
+(
+:integer 16
+(
+(
+:string /"ID809"/
+:string /"error"/
+)
+)
+(
+(
+:string /"self"/
+:string /"descriptor"/
+)
+)
+)
+(
+:integer 17
+(
+(
+:string /"ID809"/
+:string /"final-code"/
+)
+)
+(
+(
+:string /"ID842"/
+:string /"json-script"/
+)
+)
+)
+(
+:integer 18
+(
+(
+:string /"ID809"/
+:string /"done"/
+)
+)
+(
+(
+:string /"ID842"/
+:string /"done"/
+)
+)
+)
+(
+:integer 19
+(
+(
+:string /"self"/
+:string /"done"/
+)
+)
+(
+(
+:string /"ID809"/
+:string /"done"/
+)
+)
+)
+(
+:integer 20
+(
+(
+:string /"ID842"/
+:string /"error"/
+)
+)
+(
+(
+:string /"self"/
+:string /"error"/
+)
+)
+)
+(
+:integer 21
+(
+(
+:string /"ID842"/
+:string /"json-collection"/
+)
+)
+(
+(
+:string /"ID849"/
+:string /"json-collection"/
+)
+)
+)
+(
+:integer 22
+(
+(
+:string /"ID849"/
+:string /"error"/
+)
+)
+(
+(
+:string /"self"/
+:string /"descriptor"/
+)
+)
+)
+)
+)
+:string /BOOT-BOOT/
+:string /"BOOT-BOOT"/
+:string /[{"dir":"build_process/","kindName":"compiler","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/compiler.lisp","ref":"master"},{"dir":"build_process/","kindName":"part-namer","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/part-namer.lisp","ref":"master"},{"dir":"build_process/","kindName":"build process","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/json-array-splitter.svg","ref":"master"},{"dir":"build_process/","kindName":"children-before-graph","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/children-before-graph.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-collector","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-collector.lisp","ref":"master"},{"dir":"build_process/","kindName":"get-manifest-file","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/get-manifest-file.lisp","ref":"master"},{"dir":"build_process/","kindName":"schematic-or-leaf","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/schematic-or-leaf.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-graph-in-memory","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-graph-in-memory.lisp","ref":"master"},{"dir":"build_process/","kindName":"runner","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/runner.lisp","ref":"master"}]/
+:inputs
+:string /done/
+:string /svg-filename/
+:end
+:outputs
+:string /descriptor/
+:string /error/
+:end
+:string /"react"/
+:string /"first-time"/
+:integer 23
+:string /ID849/
+:string /runner/
+:integer 1
+:inmap
+:string /json-collection/
+:integer 0
+:end
+:inputs
+:string /json-collection/
+:integer 21
+:end
+:end
+:integer 1
+:outmap
+:string /error/
+:integer 0
+:end
+:outputs
+:string /error/
+:integer 22
+:end
+:end
+:string /ID842/
+:string /build-graph-in-memory/
+:integer 2
+:inmap
+:string /json-script/
+:integer 0
+:string /done/
+:integer 1
+:end
+:inputs
+:string /json-script/
+:integer 17
+:end
+:string /done/
+:integer 18
+:end
+:end
+:integer 2
+:outmap
+:string /error/
+:integer 0
+:string /json-collection/
+:integer 1
+:end
+:outputs
+:string /error/
+:integer 20
+:end
+:string /json-collection/
+:integer 21
+:end
+:end
+:string /ID809/
+:string /build-collector/
+:integer 4
+:inmap
+:string /descriptor/
+:integer 0
+:string /graph/
+:integer 1
+:string /name/
+:integer 2
+:string /done/
+:integer 3
+:end
+:inputs
+:string /descriptor/
+:integer 12
+:end
+:string /graph/
+:integer 13
+:end
+:string /name/
+:integer 14
+:end
+:string /done/
+:integer 19
+:end
+:end
+:integer 3
+:outmap
+:string /error/
+:integer 0
+:string /final-code/
+:integer 1
+:string /done/
+:integer 2
+:end
+:outputs
+:string /error/
+:integer 16
+:end
+:string /final-code/
+:integer 17
+:end
+:string /done/
+:integer 18
+:end
+:end
+:string /ID778/
+:string /children-before-graph/
+:integer 3
+:inmap
+:string /graph-name/
+:integer 0
+:string /graph/
+:integer 1
+:string /child/
+:integer 2
+:end
+:inputs
+:string /graph-name/
+:integer 4
+:end
+:string /graph/
+:integer 6
+:end
+:string /child/
+:integer 9
+:end
+:end
+:integer 4
+:outmap
+:string /descriptor/
+:integer 0
+:string /graph/
+:integer 1
+:string /name/
+:integer 2
+:string /error/
+:integer 3
+:end
+:outputs
+:string /descriptor/
+:integer 12
+:end
+:string /graph/
+:integer 13
+:end
+:string /name/
+:integer 14
+:end
+:string /error/
+:integer 15
+:end
+:end
+:string /ID750/
+:string /get-manifest-file/
+:integer 1
+:inmap
+:string /in/
+:integer 0
+:end
+:inputs
+:string /in/
+:integer 5
+:end
+:end
+:integer 1
+:outmap
+:string /out/
+:integer 0
+:end
+:outputs
+:string /out/
+:integer 11
+:end
+:end
+:string /ID732/
+:string /schematic-or-leaf/
+:integer 1
+:inmap
+:string /manifest-as json-string/
+:integer 0
+:end
+:inputs
+:string /manifest-as json-string/
+:integer 11
+:end
+:end
+:integer 3
+:outmap
+:string /error/
+:integer 0
+:string /child-descriptor/
+:integer 1
+:string /schematic-filename/
+:integer 2
+:end
+:outputs
+:string /error/
+:integer 8
+:end
+:string /child-descriptor/
+:integer 9
+:end
+:string /schematic-filename/
+:integer 10
+:end
+:end
+:string /ID685/
+:string /json-array-splitter/
+:integer 2
+:inmap
+:string /array/
+:integer 0
+:string /json/
+:integer 1
+:end
+:inputs
+:string /array/
+:integer 0
+:end
+:string /json/
+:integer 2
+:end
+:end
+:integer 3
+:outmap
+:string /items/
+:integer 0
+:string /graph/
+:integer 1
+:string /error/
+:integer 2
+:end
+:outputs
+:string /items/
+:integer 5
+:end
+:string /graph/
+:integer 6
+:end
+:string /error/
+:integer 7
+:end
+:end
+:string /ID668/
+:string /part-namer/
+:integer 1
+:inmap
+:string /filename/
+:integer 0
+:end
+:inputs
+:string /filename/
+:integer 10
+:integer 3
+:end
+:end
+:integer 1
+:outmap
+:string /name/
+:integer 0
+:end
+:outputs
+:string /name/
+:integer 4
+:end
+:end
+:string /ID649/
+:string /Compiler/
+:integer 1
+:inmap
+:string /svg-filename/
+:integer 0
+:end
+:inputs
+:string /svg-filename/
+:integer 3
+:end
+:end
+:integer 4
+:outmap
+:string /metadata/
+:integer 0
+:string /lisp/
+:integer 1
+:string /error/
+:integer 2
+:string /json/
+:integer 3
+:end
+:outputs
+:string /metadata/
+:integer 0
+:end
+:string /lisp/
+:end
+:string /error/
+:integer 1
+:end
+:string /json/
+:integer 2
+:end
+:end
+(
+:string /"BOOT-BOOT"/
+:string /"BOOT-BOOT"/
+:string /"[{"dir":"build_process/","kindName":"compiler","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/compiler.lisp","ref":"master"},{"dir":"build_process/","kindName":"part-namer","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/part-namer.lisp","ref":"master"},{"dir":"build_process/","kindName":"build process","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/json-array-splitter.svg","ref":"master"},{"dir":"build_process/","kindName":"children-before-graph","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/children-before-graph.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-collector","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-collector.lisp","ref":"master"},{"dir":"build_process/","kindName":"get-manifest-file","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/get-manifest-file.lisp","ref":"master"},{"dir":"build_process/","kindName":"schematic-or-leaf","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/schematic-or-leaf.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-graph-in-memory","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-graph-in-memory.lisp","ref":"master"},{"dir":"build_process/","kindName":"runner","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/runner.lisp","ref":"master"}]"/
+(
+:string /svg-filename/
+:string /done/
+)
+(
+:string /error/
+:string /descriptor/
+)
+:string /"react"/
+:string /"first-time"/
+(
+(
+:string /ID849/
+:string /runner/
+(
+:string /json-collection/
+)
+(
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID842/
+:string /build-graph-in-memory/
+(
+:string /done/
+:string /json-script/
+)
+(
+:string /json-collection/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID809/
+:string /build-collector/
+(
+:string /done/
+:string /name/
+:string /graph/
+:string /descriptor/
+)
+(
+:string /done/
+:string /final-code/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID778/
+:string /children-before-graph/
+(
+:string /child/
+:string /graph/
+:string /graph-name/
+)
+(
+:string /error/
+:string /name/
+:string /graph/
+:string /descriptor/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID750/
+:string /get-manifest-file/
+(
+:string /in/
+)
+(
+:string /out/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID732/
+:string /schematic-or-leaf/
+(
+:string /manifest-as json-string/
+)
+(
+:string /schematic-filename/
+:string /child-descriptor/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID685/
+:string /json-array-splitter/
+(
+:string /json/
+:string /array/
+)
+(
+:string /error/
+:string /graph/
+:string /items/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID668/
+:string /part-namer/
+(
+:string /filename/
+)
+(
+:string /name/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID649/
+:string /Compiler/
+(
+:string /svg-filename/
+)
+(
+:string /json/
+:string /error/
+:string /lisp/
+:string /metadata/
+)
+:string /react/
+:string /first-time/
+)
+)
+(
+(
+:integer 0
+(
+(
+:string /ID649/
+:string /metadata/
+)
+)
+(
+(
+:string /ID685/
+:string /array/
+)
+)
+)
+(
+:integer 1
+(
+(
+:string /ID649/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 2
+(
+(
+:string /ID649/
+:string /json/
+)
+)
+(
+(
+:string /ID685/
+:string /json/
+)
+)
+)
+(
+:integer 3
+(
+(
+:string /self/
+:string /svg-filename/
+)
+)
+(
+(
+:string /ID649/
+:string /svg-filename/
+)
+(
+:string /ID668/
+:string /filename/
+)
+)
+)
+(
+:integer 4
+(
+(
+:string /ID668/
+:string /name/
+)
+)
+(
+(
+:string /ID778/
+:string /graph-name/
+)
+)
+)
+(
+:integer 5
+(
+(
+:string /ID685/
+:string /items/
+)
+)
+(
+(
+:string /ID750/
+:string /in/
+)
+)
+)
+(
+:integer 6
+(
+(
+:string /ID685/
+:string /graph/
+)
+)
+(
+(
+:string /ID778/
+:string /graph/
+)
+)
+)
+(
+:integer 7
+(
+(
+:string /ID685/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 8
+(
+(
+:string /ID732/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 9
+(
+(
+:string /ID732/
+:string /child-descriptor/
+)
+)
+(
+(
+:string /ID778/
+:string /child/
+)
+)
+)
+(
+:integer 10
+(
+(
+:string /ID732/
+:string /schematic-filename/
+)
+)
+(
+(
+:string /ID668/
+:string /filename/
+)
+(
+:string /ID668/
+:string /filename/
+)
+)
+)
+(
+:integer 11
+(
+(
+:string /ID750/
+:string /out/
+)
+)
+(
+(
+:string /ID732/
+:string /manifest-as json-string/
+)
+)
+)
+(
+:integer 12
+(
+(
+:string /ID778/
+:string /descriptor/
+)
+)
+(
+(
+:string /ID809/
+:string /descriptor/
+)
+)
+)
+(
+:integer 13
+(
+(
+:string /ID778/
+:string /graph/
+)
+)
+(
+(
+:string /ID809/
+:string /graph/
+)
+)
+)
+(
+:integer 14
+(
+(
+:string /ID778/
+:string /name/
+)
+)
+(
+(
+:string /ID809/
+:string /name/
+)
+)
+)
+(
+:integer 15
+(
+(
+:string /ID778/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 16
+(
+(
+:string /ID809/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 17
+(
+(
+:string /ID809/
+:string /final-code/
+)
+)
+(
+(
+:string /ID842/
+:string /json-script/
+)
+)
+)
+(
+:integer 18
+(
+(
+:string /ID809/
+:string /done/
+)
+)
+(
+(
+:string /ID842/
+:string /done/
+)
+)
+)
+(
+:integer 19
+(
+(
+:string /self/
+:string /done/
+)
+)
+(
+(
+:string /ID809/
+:string /done/
+)
+)
+)
+(
+:integer 20
+(
+(
+:string /ID842/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /error/
+)
+)
+)
+(
+:integer 21
+(
+(
+:string /ID842/
+:string /json-collection/
+)
+)
+(
+(
+:string /ID849/
+:string /json-collection/
+)
+)
+)
+(
+:integer 22
+(
+(
+:string /ID849/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+)
+)
+(
+:string /"BOOT-BOOT"/
+:string /"BOOT-BOOT"/
+:string /"[{"dir":"build_process/","kindName":"compiler","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/compiler.lisp","ref":"master"},{"dir":"build_process/","kindName":"part-namer","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/part-namer.lisp","ref":"master"},{"dir":"build_process/","kindName":"build process","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/json-array-splitter.svg","ref":"master"},{"dir":"build_process/","kindName":"children-before-graph","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/children-before-graph.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-collector","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-collector.lisp","ref":"master"},{"dir":"build_process/","kindName":"get-manifest-file","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/get-manifest-file.lisp","ref":"master"},{"dir":"build_process/","kindName":"schematic-or-leaf","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/schematic-or-leaf.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-graph-in-memory","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-graph-in-memory.lisp","ref":"master"},{"dir":"build_process/","kindName":"runner","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/runner.lisp","ref":"master"}]"/
+(
+:string /svg-filename/
+:string /done/
+)
+(
+:string /error/
+:string /descriptor/
+)
+:string /"react"/
+:string /"first-time"/
+(
+(
+:string /ID849/
+:string /runner/
+(
+:string /json-collection/
+)
+(
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID842/
+:string /build-graph-in-memory/
+(
+:string /done/
+:string /json-script/
+)
+(
+:string /json-collection/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID809/
+:string /build-collector/
+(
+:string /done/
+:string /name/
+:string /graph/
+:string /descriptor/
+)
+(
+:string /done/
+:string /final-code/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID778/
+:string /children-before-graph/
+(
+:string /child/
+:string /graph/
+:string /graph-name/
+)
+(
+:string /error/
+:string /name/
+:string /graph/
+:string /descriptor/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID750/
+:string /get-manifest-file/
+(
+:string /in/
+)
+(
+:string /out/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID732/
+:string /schematic-or-leaf/
+(
+:string /manifest-as json-string/
+)
+(
+:string /schematic-filename/
+:string /child-descriptor/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID685/
+:string /json-array-splitter/
+(
+:string /json/
+:string /array/
+)
+(
+:string /error/
+:string /graph/
+:string /items/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID668/
+:string /part-namer/
+(
+:string /filename/
+)
+(
+:string /name/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID649/
+:string /Compiler/
+(
+:string /svg-filename/
+)
+(
+:string /json/
+:string /error/
+:string /lisp/
+:string /metadata/
+)
+:string /react/
+:string /first-time/
+)
+)
+(
+(
+:integer 0
+(
+(
+:string /ID649/
+:string /metadata/
+)
+)
+(
+(
+:string /ID685/
+:string /array/
+)
+)
+)
+(
+:integer 1
+(
+(
+:string /ID649/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 2
+(
+(
+:string /ID649/
+:string /json/
+)
+)
+(
+(
+:string /ID685/
+:string /json/
+)
+)
+)
+(
+:integer 3
+(
+(
+:string /self/
+:string /svg-filename/
+)
+)
+(
+(
+:string /ID649/
+:string /svg-filename/
+)
+(
+:string /ID668/
+:string /filename/
+)
+)
+)
+(
+:integer 4
+(
+(
+:string /ID668/
+:string /name/
+)
+)
+(
+(
+:string /ID778/
+:string /graph-name/
+)
+)
+)
+(
+:integer 5
+(
+(
+:string /ID685/
+:string /items/
+)
+)
+(
+(
+:string /ID750/
+:string /in/
+)
+)
+)
+(
+:integer 6
+(
+(
+:string /ID685/
+:string /graph/
+)
+)
+(
+(
+:string /ID778/
+:string /graph/
+)
+)
+)
+(
+:integer 7
+(
+(
+:string /ID685/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 8
+(
+(
+:string /ID732/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 9
+(
+(
+:string /ID732/
+:string /child-descriptor/
+)
+)
+(
+(
+:string /ID778/
+:string /child/
+)
+)
+)
+(
+:integer 10
+(
+(
+:string /ID732/
+:string /schematic-filename/
+)
+)
+(
+(
+:string /ID668/
+:string /filename/
+)
+(
+:string /ID668/
+:string /filename/
+)
+)
+)
+(
+:integer 11
+(
+(
+:string /ID750/
+:string /out/
+)
+)
+(
+(
+:string /ID732/
+:string /manifest-as json-string/
+)
+)
+)
+(
+:integer 12
+(
+(
+:string /ID778/
+:string /descriptor/
+)
+)
+(
+(
+:string /ID809/
+:string /descriptor/
+)
+)
+)
+(
+:integer 13
+(
+(
+:string /ID778/
+:string /graph/
+)
+)
+(
+(
+:string /ID809/
+:string /graph/
+)
+)
+)
+(
+:integer 14
+(
+(
+:string /ID778/
+:string /name/
+)
+)
+(
+(
+:string /ID809/
+:string /name/
+)
+)
+)
+(
+:integer 15
+(
+(
+:string /ID778/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 16
+(
+(
+:string /ID809/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 17
+(
+(
+:string /ID809/
+:string /final-code/
+)
+)
+(
+(
+:string /ID842/
+:string /json-script/
+)
+)
+)
+(
+:integer 18
+(
+(
+:string /ID809/
+:string /done/
+)
+)
+(
+(
+:string /ID842/
+:string /done/
+)
+)
+)
+(
+:integer 19
+(
+(
+:string /self/
+:string /done/
+)
+)
+(
+(
+:string /ID809/
+:string /done/
+)
+)
+)
+(
+:integer 20
+(
+(
+:string /ID842/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /error/
+)
+)
+)
+(
+:integer 21
+(
+(
+:string /ID842/
+:string /json-collection/
+)
+)
+(
+(
+:string /ID849/
+:string /json-collection/
+)
+)
+)
+(
+:integer 22
+(
+(
+:string /ID849/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+)
+)
+(
+:string /"BOOT-BOOT"/
+:string /"BOOT-BOOT"/
+:string /"[{"dir":"build_process/","kindName":"compiler","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/compiler.lisp","ref":"master"},{"dir":"build_process/","kindName":"part-namer","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/part-namer.lisp","ref":"master"},{"dir":"build_process/","kindName":"build process","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/json-array-splitter.svg","ref":"master"},{"dir":"build_process/","kindName":"children-before-graph","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/children-before-graph.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-collector","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-collector.lisp","ref":"master"},{"dir":"build_process/","kindName":"get-manifest-file","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/get-manifest-file.lisp","ref":"master"},{"dir":"build_process/","kindName":"schematic-or-leaf","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/schematic-or-leaf.lisp","ref":"master"},{"dir":"build_process/","kindName":"build-graph-in-memory","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/build-graph-in-memory.lisp","ref":"master"},{"dir":"build_process/","kindName":"runner","repo":"https://github.com/bmfbp/bmfbp.git","file":"lispparts/runner.lisp","ref":"master"}]"/
+(
+:string /svg-filename/
+:string /done/
+)
+(
+:string /error/
+:string /descriptor/
+)
+:string /"react"/
+:string /"first-time"/
+(
+(
+:string /ID849/
+:string /runner/
+(
+:string /json-collection/
+)
+(
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID842/
+:string /build-graph-in-memory/
+(
+:string /done/
+:string /json-script/
+)
+(
+:string /json-collection/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID809/
+:string /build-collector/
+(
+:string /done/
+:string /name/
+:string /graph/
+:string /descriptor/
+)
+(
+:string /done/
+:string /final-code/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID778/
+:string /children-before-graph/
+(
+:string /child/
+:string /graph/
+:string /graph-name/
+)
+(
+:string /error/
+:string /name/
+:string /graph/
+:string /descriptor/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID750/
+:string /get-manifest-file/
+(
+:string /in/
+)
+(
+:string /out/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID732/
+:string /schematic-or-leaf/
+(
+:string /manifest-as json-string/
+)
+(
+:string /schematic-filename/
+:string /child-descriptor/
+:string /error/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID685/
+:string /json-array-splitter/
+(
+:string /json/
+:string /array/
+)
+(
+:string /error/
+:string /graph/
+:string /items/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID668/
+:string /part-namer/
+(
+:string /filename/
+)
+(
+:string /name/
+)
+:string /react/
+:string /first-time/
+)
+(
+:string /ID649/
+:string /Compiler/
+(
+:string /svg-filename/
+)
+(
+:string /json/
+:string /error/
+:string /lisp/
+:string /metadata/
+)
+:string /react/
+:string /first-time/
+)
+)
+(
+(
+:integer 0
+(
+(
+:string /ID649/
+:string /metadata/
+)
+)
+(
+(
+:string /ID685/
+:string /array/
+)
+)
+)
+(
+:integer 1
+(
+(
+:string /ID649/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 2
+(
+(
+:string /ID649/
+:string /json/
+)
+)
+(
+(
+:string /ID685/
+:string /json/
+)
+)
+)
+(
+:integer 3
+(
+(
+:string /self/
+:string /svg-filename/
+)
+)
+(
+(
+:string /ID649/
+:string /svg-filename/
+)
+(
+:string /ID668/
+:string /filename/
+)
+)
+)
+(
+:integer 4
+(
+(
+:string /ID668/
+:string /name/
+)
+)
+(
+(
+:string /ID778/
+:string /graph-name/
+)
+)
+)
+(
+:integer 5
+(
+(
+:string /ID685/
+:string /items/
+)
+)
+(
+(
+:string /ID750/
+:string /in/
+)
+)
+)
+(
+:integer 6
+(
+(
+:string /ID685/
+:string /graph/
+)
+)
+(
+(
+:string /ID778/
+:string /graph/
+)
+)
+)
+(
+:integer 7
+(
+(
+:string /ID685/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 8
+(
+(
+:string /ID732/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 9
+(
+(
+:string /ID732/
+:string /child-descriptor/
+)
+)
+(
+(
+:string /ID778/
+:string /child/
+)
+)
+)
+(
+:integer 10
+(
+(
+:string /ID732/
+:string /schematic-filename/
+)
+)
+(
+(
+:string /ID668/
+:string /filename/
+)
+(
+:string /ID668/
+:string /filename/
+)
+)
+)
+(
+:integer 11
+(
+(
+:string /ID750/
+:string /out/
+)
+)
+(
+(
+:string /ID732/
+:string /manifest-as json-string/
+)
+)
+)
+(
+:integer 12
+(
+(
+:string /ID778/
+:string /descriptor/
+)
+)
+(
+(
+:string /ID809/
+:string /descriptor/
+)
+)
+)
+(
+:integer 13
+(
+(
+:string /ID778/
+:string /graph/
+)
+)
+(
+(
+:string /ID809/
+:string /graph/
+)
+)
+)
+(
+:integer 14
+(
+(
+:string /ID778/
+:string /name/
+)
+)
+(
+(
+:string /ID809/
+:string /name/
+)
+)
+)
+(
+:integer 15
+(
+(
+:string /ID778/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 16
+(
+(
+:string /ID809/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+(
+:integer 17
+(
+(
+:string /ID809/
+:string /final-code/
+)
+)
+(
+(
+:string /ID842/
+:string /json-script/
+)
+)
+)
+(
+:integer 18
+(
+(
+:string /ID809/
+:string /done/
+)
+)
+(
+(
+:string /ID842/
+:string /done/
+)
+)
+)
+(
+:integer 19
+(
+(
+:string /self/
+:string /done/
+)
+)
+(
+(
+:string /ID809/
+:string /done/
+)
+)
+)
+(
+:integer 20
+(
+(
+:string /ID842/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /error/
+)
+)
+)
+(
+:integer 21
+(
+(
+:string /ID842/
+:string /json-collection/
+)
+)
+(
+(
+:string /ID849/
+:string /json-collection/
+)
+)
+)
+(
+:integer 22
+(
+(
+:string /ID849/
+:string /error/
+)
+)
+(
+(
+:string /self/
+:string /descriptor/
+)
+)
+)
+)
+)
+build-collector gets :NAME /"boot-boot"/
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./compiler\",
+  \"kindType\": \"leaf\",
+  \"pla"
+loaded lisp file ""
+build-collector gets :GRAPH /"{
+  \"name\" : \"BOOT-BOOT\",
+  \"inputs\" : [\"SVG-FILENAME\", \"DONE\"],
+  \"outputs\" : [\"ERROR\", \"DESCRIPTOR\"],
+  \"parts\" :
+  [
+    { \"partName\" : \"RUNNER\", \"kindName\" : \"RUNNER\"},
+    { \"partName\" : \"BUILD-GRAPH-IN-MEMORY\", \"kindName\" : \"BUILD-GRAPH-IN-MEMORY\"},
+    { \"partName\" : \"BUILD-COLLECTOR\", \"kindName\" : \"BUILD-COLLECTOR\"},
+    { \"partName\" : \"CHILDREN-BEFORE-GRAPH\", \"kindName\" : \"CHILDREN-BEFORE-GRAPH\"},
+    { \"partName\" : \"GET-MANIFEST-FILE\", \"kindName\" : \"GET-MANIFEST-FILE\"},
+    { \"partName\" : \"SCHEMATIC-OR-LEAF\", \"kindName\" : \"SCHEMATIC-OR-LEAF\"},
+    { \"partName\" : \"JSON-ARRAY-SPLITTER\", \"kindName\" : \"JSON-ARRAY-SPLITTER\"},
+    { \"partName\" : \"PART-NAMER\", \"kindName\" : \"PART-NAMER\"},
+    { \"partName\" : \"COMPILER\", \"kindName\" : \"COMPILER\"}
+  ],
+  \"wiring\" :
+    [
+      {\"wire-index\" : 0, \"sources\" : [{\"part\" : \"COMPILER\", \"pin\" : \"METADATA\"}], \"receivers\" : [{\"part\" : \"JSON-ARRAY-SPLITTER\", \"pin\" : \"ARRAY\"}]},
+      {\"wire-index\" : 1, \"sources\" : [{\"part\" : \"COMPILER\", \"pin\" : \"ERROR\"}], \"receivers\" : [{\"part\" : \"SELF\", \"pin\" : \"DESCRIPTOR\"}]},
+      {\"wire-index\" : 2, \"sources\" : [{\"part\" : \"COMPILER\", \"pin\" : \"JSON\"}], \"receivers\" : [{\"part\" : \"JSON-ARRAY-SPLITTER\", \"pin\" : \"JSON\"}]},
+      {\"wire-index\" : 3, \"sources\" : [{\"part\" : \"SELF\", \"pin\" : \"SVG-FILENAME\"}], \"receivers\" : [{\"part\" : \"COMPILER\", \"pin\" : \"SVG-FILENAME\"},{\"part\" : \"PART-NAMER\", \"pin\" : \"FILENAME\"}]},
+      {\"wire-index\" : 4, \"sources\" : [{\"part\" : \"PART-NAMER\", \"pin\" : \"NAME\"}], \"receivers\" : [{\"part\" : \"CHILDREN-BEFORE-GRAPH\", \"pin\" : \"GRAPH-NAME\"}]},
+      {\"wire-index\" : 5, \"sources\" : [{\"part\" : \"JSON-ARRAY-SPLITTER\", \"pin\" : \"ITEMS\"}], \"receivers\" : [{\"part\" : \"GET-MANIFEST-FILE\", \"pin\" : \"IN\"}]},
+      {\"wire-index\" : 6, \"sources\" : [{\"part\" : \"JSON-ARRAY-SPLITTER\", \"pin\" : \"GRAPH\"}], \"receivers\" : [{\"part\" : \"CHILDREN-BEFORE-GRAPH\", \"pin\" : \"GRAPH\"}]},
+      {\"wire-index\" : 7, \"sources\" : [{\"part\" : \"JSON-ARRAY-SPLITTER\", \"pin\" : \"ERROR\"}], \"receivers\" : [{\"part\" : \"SELF\", \"pin\" : \"DESCRIPTOR\"}]},
+      {\"wire-index\" : 8, \"sources\" : [{\"part\" : \"SCHEMATIC-OR-LEAF\", \"pin\" : \"ERROR\"}], \"receivers\" : [{\"part\" : \"SELF\", \"pin\" : \"DESCRIPTOR\"}]},
+      {\"wire-index\" : 9, \"sources\" : [{\"part\" : \"SCHEMATIC-OR-LEAF\", \"pin\" : \"CHILD-DESCRIPTOR\"}], \"receivers\" : [{\"part\" : \"CHILDREN-BEFORE-GRAPH\", \"pin\" : \"CHILD\"}]},
+      {\"wire-index\" : 10, \"sources\" : [{\"part\" : \"SCHEMATIC-OR-LEAF\", \"pin\" : \"SCHEMATIC-FILENAME\"}], \"receivers\" : [{\"part\" : \"PART-NAMER\", \"pin\" : \"FILENAME\"},{\"part\" : \"PART-NAMER\", \"pin\" : \"FILENAME\"}]},
+      {\"wire-index\" : 11, \"sources\" : [{\"part\" : \"GET-MANIFEST-FILE\", \"pin\" : \"OUT\"}], \"receivers\" : [{\"part\" : \"SCHEMATIC-OR-LEAF\", \"pin\" : \"MANIFEST-AS-JSON-STRING\"}]},
+      {\"wire-index\" : 12, \"sources\" : [{\"part\" : \"CHILDREN-BEFORE-GRAPH\", \"pin\" : \"DESCRIPTOR\"}], \"receivers\" : [{\"part\" : \"BUILD-COLLECTOR\", \"pin\" : \"DESCRIPTOR\"}]},
+      {\"wire-index\" : 13, \"sources\" : [{\"part\" : \"CHILDREN-BEFORE-GRAPH\", \"pin\" : \"GRAPH\"}], \"receivers\" : [{\"part\" : \"BUILD-COLLECTOR\", \"pin\" : \"GRAPH\"}]},
+      {\"wire-index\" : 14, \"sources\" : [{\"part\" : \"CHILDREN-BEFORE-GRAPH\", \"pin\" : \"NAME\"}], \"receivers\" : [{\"part\" : \"BUILD-COLLECTOR\", \"pin\" : \"NAME\"}]},
+      {\"wire-index\" : 15, \"sources\" : [{\"part\" : \"CHILDREN-BEFORE-GRAPH\", \"pin\" : \"ERROR\"}], \"receivers\" : [{\"part\" : \"SELF\", \"pin\" : \"DESCRIPTOR\"}]},
+      {\"wire-index\" : 16, \"sources\" : [{\"part\" : \"BUILD-COLLECTOR\", \"pin\" : \"ERROR\"}], \"receivers\" : [{\"part\" : \"SELF\", \"pin\" : \"DESCRIPTOR\"}]},
+      {\"wire-index\" : 17, \"sources\" : [{\"part\" : \"BUILD-COLLECTOR\", \"pin\" : \"FINAL-CODE\"}], \"receivers\" : [{\"part\" : \"BUILD-GRAPH-IN-MEMORY\", \"pin\" : \"JSON-SCRIPT\"}]},
+      {\"wire-index\" : 18, \"sources\" : [{\"part\" : \"BUILD-COLLECTOR\", \"pin\" : \"DONE\"}], \"receivers\" : [{\"part\" : \"BUILD-GRAPH-IN-MEMORY\", \"pin\" : \"DONE\"}]},
+      {\"wire-index\" : 19, \"sources\" : [{\"part\" : \"SELF\", \"pin\" : \"DONE\"}], \"receivers\" : [{\"part\" : \"BUILD-COLLECTOR\", \"pin\" : \"DONE\"}]},
+      {\"wire-index\" : 20, \"sources\" : [{\"part\" : \"BUILD-GRAPH-IN-MEMORY\", \"pin\" : \"ERROR\"}], \"receivers\" : [{\"part\" : \"SELF\", \"pin\" : \"ERROR\"}]},
+      {\"wire-index\" : 21, \"sources\" : [{\"part\" : \"BUILD-GRAPH-IN-MEMORY\", \"pin\" : \"JSON-COLLECTION\"}], \"receivers\" : [{\"part\" : \"RUNNER\", \"pin\" : \"JSON-COLLECTION\"}]},
+      {\"wire-index\" : 22, \"sources\" : [{\"part\" : \"RUNNER\", \"pin\" : \"ERROR\"}], \"receivers\" : [{\"part\" : \"SELF\", \"pin\" : \"DESCRIPTOR\"}]}
+    ]
+  }"/
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"compiler\",\"inPins\":[\"svg-filename\"],\"outPins\":[\"metadata\",\"json\",\"lisp\",\"error\"],\"kind\":\"compiler\"}"
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"compiler\",\"inPins\":[\"svg-filename\"],\"outPins\":[\"metadata\",\"json\",\"lisp\",\"error\"],\"kind\":\"compiler\"}"/
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./part-namer.lisp\",
+  \"kindType\": \"leaf\","
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"part-namer\",\"inPins\":[\"filename\"],\"outPins\":[\"name\",\"error\"],\"kind\":\"part-namer\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/part-namer.lisp\"}"
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"part-namer\",\"inPins\":[\"filename\"],\"outPins\":[\"name\",\"error\"],\"kind\":\"part-namer\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/part-namer.lisp\"}"/
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./json-array-splitter.lisp\",
+  \"kindType\""
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./children-before-graph.lisp\",
+  \"kindTyp"
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"json-array-splitter\",\"inPins\":[\"array\",\"json\"],\"outPins\":[\"items\",\"graph\",\"error\"],\"kind\":\"json-array-splitter\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/json-array-splitter.lisp\"}"
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"children-before-graph\",\"inPins\":[\"graph-name\",\"graph\",\"child\"],\"outPins\":[\"name\",\"graph\",\"descriptor\",\"error\"],\"kind\":\"children-before-graph\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/children-before-graph.lisp\"}"
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"json-array-splitter\",\"inPins\":[\"array\",\"json\"],\"outPins\":[\"items\",\"graph\",\"error\"],\"kind\":\"json-array-splitter\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/json-array-splitter.lisp\"}"/
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"children-before-graph\",\"inPins\":[\"graph-name\",\"graph\",\"child\"],\"outPins\":[\"name\",\"graph\",\"descriptor\",\"error\"],\"kind\":\"children-before-graph\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/children-before-graph.lisp\"}"/
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./build-collector.lisp\",
+  \"kindType\": \"l"
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"build-collector\",\"inPins\":[\"graph\",\"name\",\"descriptor\",\"done\"],\"outPins\":[\"final-code\",\"done\",\"error\"],\"kind\":\"build-collector\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/build-collector.lisp\"}"
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./get-manifest-file.lisp\",
+  \"kindType\": "
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"build-collector\",\"inPins\":[\"graph\",\"name\",\"descriptor\",\"done\"],\"outPins\":[\"final-code\",\"done\",\"error\"],\"kind\":\"build-collector\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/build-collector.lisp\"}"/
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"get-manifest-file\",\"inPins\":[\"in\"],\"outPins\":[\"out\",\"error\"],\"kind\":\"get-manifest-file\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/get-manifest-file.lisp\"}"
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./schematic-or-leaf.lisp\",
+  \"kindType\": "
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"schematic-or-leaf\",\"inPins\":[\"manifest-as-json-string\"],\"outPins\":[\"child-descriptor\",\"schematic-filename\",\"error\"],\"kind\":\"schematic-or-leaf\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/schematic-or-leaf.lisp\"}"
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./build-graph-in-memory.lisp\",
+  \"kindTyp"
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"get-manifest-file\",\"inPins\":[\"in\"],\"outPins\":[\"out\",\"error\"],\"kind\":\"get-manifest-file\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/get-manifest-file.lisp\"}"/
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"schematic-or-leaf\",\"inPins\":[\"manifest-as-json-string\"],\"outPins\":[\"child-descriptor\",\"schematic-filename\",\"error\"],\"kind\":\"schematic-or-leaf\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/schematic-or-leaf.lisp\"}"/
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"build-graph-in-memory\",\"inPins\":[\"done\",\"json-script\"],\"outPins\":[\"json-collection\",\"error\"],\"kind\":\"build-graph-in-memory\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/build-graph-in-memory.lisp\"}"
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"build-graph-in-memory\",\"inPins\":[\"done\",\"json-script\"],\"outPins\":[\"json-collection\",\"error\"],\"kind\":\"build-graph-in-memory\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/build-graph-in-memory.lisp\"}"/
+schematic-or-leaf gets :MANIFEST-AS-JSON-STRING "{
+  \"entrypoint\": \"./runner.lisp\",
+  \"kindType\": \"leaf\",
+  \""
+child-before-graph sends "{\"itemKind\":\"leaf\",\"name\":\"runner\",\"inPins\":[\"json-collection\"],\"outPins\":[\"error\"],\"kind\":\"runner\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/runner.lisp\"}"
+build-collector gets :DESCRIPTOR /"{\"itemKind\":\"leaf\",\"name\":\"runner\",\"inPins\":[\"json-collection\"],\"outPins\":[\"error\"],\"kind\":\"runner\",\"filename\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/cl-build\\/.\\/runner.lisp\"}"/
+build-collector gets :DONE /T/
+build-graph-in-memory pushes "graph" "boot-boot"
+build-graph-in-memory pushes "leaf" "runner"
+build-graph-in-memory pushes "leaf" "build-graph-in-memory"
+build-graph-in-memory pushes "leaf" "schematic-or-leaf"
+build-graph-in-memory pushes "leaf" "get-manifest-file"
+build-graph-in-memory pushes "leaf" "build-collector"
+build-graph-in-memory pushes "leaf" "children-before-graph"
+build-graph-in-memory pushes "leaf" "json-array-splitter"
+build-graph-in-memory pushes "leaf" "part-namer"
+build-graph-in-memory pushes "leaf" "compiler"
+
+build phase ***********
+(((:ITEM-KIND . "leaf") (:NAME . "compiler") (:IN-PINS "svg-filename")
+  (:OUT-PINS "metadata" "json" "lisp" "error") (:KIND . "compiler"))
+ ((:ITEM-KIND . "leaf") (:NAME . "part-namer") (:IN-PINS "filename")
+  (:OUT-PINS "name" "error") (:KIND . "part-namer")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./part-namer.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "json-array-splitter")
+  (:IN-PINS "array" "json") (:OUT-PINS "items" "graph" "error")
+  (:KIND . "json-array-splitter")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./json-array-splitter.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "children-before-graph")
+  (:IN-PINS "graph-name" "graph" "child")
+  (:OUT-PINS "name" "graph" "descriptor" "error")
+  (:KIND . "children-before-graph")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./children-before-graph.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "build-collector")
+  (:IN-PINS "graph" "name" "descriptor" "done")
+  (:OUT-PINS "final-code" "done" "error") (:KIND . "build-collector")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./build-collector.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "get-manifest-file") (:IN-PINS "in")
+  (:OUT-PINS "out" "error") (:KIND . "get-manifest-file")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./get-manifest-file.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "schematic-or-leaf")
+  (:IN-PINS "manifest-as-json-string")
+  (:OUT-PINS "child-descriptor" "schematic-filename" "error")
+  (:KIND . "schematic-or-leaf")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./schematic-or-leaf.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "build-graph-in-memory")
+  (:IN-PINS "done" "json-script") (:OUT-PINS "json-collection" "error")
+  (:KIND . "build-graph-in-memory")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./build-graph-in-memory.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "runner") (:IN-PINS "json-collection")
+  (:OUT-PINS "error") (:KIND . "runner")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/./runner.lisp"))
+ ((:ITEM-KIND . "graph") (:NAME . "boot-boot")
+  (:GRAPH (:NAME . "BOOT-BOOT") (:INPUTS "SVG-FILENAME" "DONE")
+   (:OUTPUTS "ERROR" "DESCRIPTOR")
+   (:PARTS ((:PART-NAME . "RUNNER") (:KIND-NAME . "RUNNER"))
+    ((:PART-NAME . "BUILD-GRAPH-IN-MEMORY")
+     (:KIND-NAME . "BUILD-GRAPH-IN-MEMORY"))
+    ((:PART-NAME . "BUILD-COLLECTOR") (:KIND-NAME . "BUILD-COLLECTOR"))
+    ((:PART-NAME . "CHILDREN-BEFORE-GRAPH")
+     (:KIND-NAME . "CHILDREN-BEFORE-GRAPH"))
+    ((:PART-NAME . "GET-MANIFEST-FILE") (:KIND-NAME . "GET-MANIFEST-FILE"))
+    ((:PART-NAME . "SCHEMATIC-OR-LEAF") (:KIND-NAME . "SCHEMATIC-OR-LEAF"))
+    ((:PART-NAME . "JSON-ARRAY-SPLITTER") (:KIND-NAME . "JSON-ARRAY-SPLITTER"))
+    ((:PART-NAME . "PART-NAMER") (:KIND-NAME . "PART-NAMER"))
+    ((:PART-NAME . "COMPILER") (:KIND-NAME . "COMPILER")))
+   (:WIRING
+    ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "COMPILER") (:PIN . "METADATA")))
+     (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ARRAY"))))
+    ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "COMPILER") (:PIN . "ERROR")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "DESCRIPTOR"))))
+    ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "COMPILER") (:PIN . "JSON")))
+     (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "JSON"))))
+    ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "SVG-FILENAME")))
+     (:RECEIVERS ((:PART . "COMPILER") (:PIN . "SVG-FILENAME"))
+      ((:PART . "PART-NAMER") (:PIN . "FILENAME"))))
+    ((:WIRE-INDEX . 4) (:SOURCES ((:PART . "PART-NAMER") (:PIN . "NAME")))
+     (:RECEIVERS ((:PART . "CHILDREN-BEFORE-GRAPH") (:PIN . "GRAPH-NAME"))))
+    ((:WIRE-INDEX . 5)
+     (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ITEMS")))
+     (:RECEIVERS ((:PART . "GET-MANIFEST-FILE") (:PIN . "IN"))))
+    ((:WIRE-INDEX . 6)
+     (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "GRAPH")))
+     (:RECEIVERS ((:PART . "CHILDREN-BEFORE-GRAPH") (:PIN . "GRAPH"))))
+    ((:WIRE-INDEX . 7)
+     (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ERROR")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "DESCRIPTOR"))))
+    ((:WIRE-INDEX . 8)
+     (:SOURCES ((:PART . "SCHEMATIC-OR-LEAF") (:PIN . "ERROR")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "DESCRIPTOR"))))
+    ((:WIRE-INDEX . 9)
+     (:SOURCES ((:PART . "SCHEMATIC-OR-LEAF") (:PIN . "CHILD-DESCRIPTOR")))
+     (:RECEIVERS ((:PART . "CHILDREN-BEFORE-GRAPH") (:PIN . "CHILD"))))
+    ((:WIRE-INDEX . 10)
+     (:SOURCES ((:PART . "SCHEMATIC-OR-LEAF") (:PIN . "SCHEMATIC-FILENAME")))
+     (:RECEIVERS ((:PART . "PART-NAMER") (:PIN . "FILENAME"))
+      ((:PART . "PART-NAMER") (:PIN . "FILENAME"))))
+    ((:WIRE-INDEX . 11)
+     (:SOURCES ((:PART . "GET-MANIFEST-FILE") (:PIN . "OUT")))
+     (:RECEIVERS
+      ((:PART . "SCHEMATIC-OR-LEAF") (:PIN . "MANIFEST-AS-JSON-STRING"))))
+    ((:WIRE-INDEX . 12)
+     (:SOURCES ((:PART . "CHILDREN-BEFORE-GRAPH") (:PIN . "DESCRIPTOR")))
+     (:RECEIVERS ((:PART . "BUILD-COLLECTOR") (:PIN . "DESCRIPTOR"))))
+    ((:WIRE-INDEX . 13)
+     (:SOURCES ((:PART . "CHILDREN-BEFORE-GRAPH") (:PIN . "GRAPH")))
+     (:RECEIVERS ((:PART . "BUILD-COLLECTOR") (:PIN . "GRAPH"))))
+    ((:WIRE-INDEX . 14)
+     (:SOURCES ((:PART . "CHILDREN-BEFORE-GRAPH") (:PIN . "NAME")))
+     (:RECEIVERS ((:PART . "BUILD-COLLECTOR") (:PIN . "NAME"))))
+    ((:WIRE-INDEX . 15)
+     (:SOURCES ((:PART . "CHILDREN-BEFORE-GRAPH") (:PIN . "ERROR")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "DESCRIPTOR"))))
+    ((:WIRE-INDEX . 16)
+     (:SOURCES ((:PART . "BUILD-COLLECTOR") (:PIN . "ERROR")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "DESCRIPTOR"))))
+    ((:WIRE-INDEX . 17)
+     (:SOURCES ((:PART . "BUILD-COLLECTOR") (:PIN . "FINAL-CODE")))
+     (:RECEIVERS ((:PART . "BUILD-GRAPH-IN-MEMORY") (:PIN . "JSON-SCRIPT"))))
+    ((:WIRE-INDEX . 18)
+     (:SOURCES ((:PART . "BUILD-COLLECTOR") (:PIN . "DONE")))
+     (:RECEIVERS ((:PART . "BUILD-GRAPH-IN-MEMORY") (:PIN . "DONE"))))
+    ((:WIRE-INDEX . 19) (:SOURCES ((:PART . "SELF") (:PIN . "DONE")))
+     (:RECEIVERS ((:PART . "BUILD-COLLECTOR") (:PIN . "DONE"))))
+    ((:WIRE-INDEX . 20)
+     (:SOURCES ((:PART . "BUILD-GRAPH-IN-MEMORY") (:PIN . "ERROR")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR"))))
+    ((:WIRE-INDEX . 21)
+     (:SOURCES ((:PART . "BUILD-GRAPH-IN-MEMORY") (:PIN . "JSON-COLLECTION")))
+     (:RECEIVERS ((:PART . "RUNNER") (:PIN . "JSON-COLLECTION"))))
+    ((:WIRE-INDEX . 22) (:SOURCES ((:PART . "RUNNER") (:PIN . "ERROR")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "DESCRIPTOR"))))))))
+define leaf name ARROWGRAMS/BUILD::COMPILER
+define leaf name ARROWGRAMS/BUILD::PART-NAMER
+define leaf name ARROWGRAMS/BUILD::JSON-ARRAY-SPLITTER
+define leaf name ARROWGRAMS/BUILD::CHILDREN-BEFORE-GRAPH
+define leaf name ARROWGRAMS/BUILD::BUILD-COLLECTOR
+define leaf name ARROWGRAMS/BUILD::GET-MANIFEST-FILE
+define leaf name ARROWGRAMS/BUILD::SCHEMATIC-OR-LEAF
+define leaf name ARROWGRAMS/BUILD::BUILD-GRAPH-IN-MEMORY
+define leaf name ARROWGRAMS/BUILD::RUNNER
+define graph name "boot-boot"
+need name ARROWGRAMS/BUILD::RUNNER
+need name ARROWGRAMS/BUILD::BUILD-GRAPH-IN-MEMORY
+need name ARROWGRAMS/BUILD::BUILD-COLLECTOR
+need name ARROWGRAMS/BUILD::CHILDREN-BEFORE-GRAPH
+need name ARROWGRAMS/BUILD::GET-MANIFEST-FILE
+need name ARROWGRAMS/BUILD::SCHEMATIC-OR-LEAF
+need name ARROWGRAMS/BUILD::JSON-ARRAY-SPLITTER
+need name ARROWGRAMS/BUILD::PART-NAMER
+need name ARROWGRAMS/BUILD::COMPILER
+install-source "compiler" "metadata"
+install-source "compiler" "error"
+install-source "compiler" "json"
+install-source "self" "svg-filename"
+install-source "part-namer" "name"
+install-source "json-array-splitter" "items"
+install-source "json-array-splitter" "graph"
+install-source "json-array-splitter" "error"
+install-source "schematic-or-leaf" "error"
+install-source "schematic-or-leaf" "child-descriptor"
+install-source "schematic-or-leaf" "schematic-filename"
+install-source "get-manifest-file" "out"
+install-source "children-before-graph" "descriptor"
+install-source "children-before-graph" "graph"
+install-source "children-before-graph" "name"
+install-source "children-before-graph" "error"
+install-source "build-collector" "error"
+install-source "build-collector" "final-code"
+install-source "build-collector" "done"
+install-source "self" "done"
+install-source "build-graph-in-memory" "error"
+install-source "build-graph-in-memory" "json-collection"
+install-source "runner" "error"
+terminating - ready list is nil
+#+end_example
+
 * build code snippets for esa builder and runner
 
 #+name: arrowgrams
