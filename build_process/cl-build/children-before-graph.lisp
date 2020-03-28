@@ -18,7 +18,7 @@
     (:idle
      (ecase (@pin self e)
        (:child
-        (format *standard-output* "~&child-before-graph sends ~s~%" (@data self e))
+        ;(format *standard-output* "~&child-before-graph sends ~s~%" (@data self e))
 	(@send self :descriptor (@data self e)))
        (:graph-name
 	(save-graph-name self e)

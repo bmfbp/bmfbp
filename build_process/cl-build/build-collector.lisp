@@ -19,7 +19,7 @@
   (call-next-method))
 
 (defmethod e/part:react ((self build-collector) e)
-  (format *standard-output* "~&build-collector gets ~S /~s/~%" (@pin self e) (@data self e))
+  ;(format *standard-output* "~&build-collector gets ~S /~s/~%" (@pin self e) (@data self e))
   (ecase (@pin self e)
     (:name
      (assert (null (name self)))
