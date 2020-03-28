@@ -126,7 +126,7 @@
 
 (defmethod display-output-events-to-console ((self node))
   (dolist (e (output-queue self))
-    (format *standard-output* "~&~s outputs ~s on ~s~%" (name-in-container self) (pin-name e) (data e))))
+    (format *standard-output* "~&~s outputs ~s on ~s~%" (name-in-container self) (pin-name (partpin e)) (data e))))
 
 (defmethod flagged-as-busy? ((self node))
   (if (busy-flag self)
