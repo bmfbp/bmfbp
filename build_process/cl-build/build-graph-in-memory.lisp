@@ -21,15 +21,6 @@
 
 
 
-#|
-build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "filename") (:OUT-PINS "name" "error") (:KIND . "part-namer") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/part-namer.lisp"))
-
-build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "array" "json") (:OUT-PINS "items" "graph" "error") (:KIND . "json-array-splitter") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/json-array-splitter.lisp"))
-
-build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (:KIND . "probe3") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/probe3.lisp"))
-
-build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram") (:GRAPH (:NAME . "COMPILE-SINGLE-DIAGRAM") (:INPUTS "SVG-FILENAME") (:OUTPUTS "ERROR" "GRAPH" "JSON-FILE-REF" "NAME") (:PARTS ((:PART-NAME . "JSON-ARRAY-SPLITTER") (:KIND-NAME . "JSON-ARRAY-SPLITTER")) ((:PART-NAME . "PART-NAMER") (:KIND-NAME . "PART-NAMER")) ((:PART-NAME . "PROBE3") (:KIND-NAME . "PROBE3")) ((:PART-NAME . "COMPILER") (:KIND-NAME . "COMPILER"))) (:WIRING ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "COMPILER") (:PIN . "METADATA"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ARRAY")))) ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "COMPILER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "COMPILER") (:PIN . "JSON"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "JSON")))) ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "SVG-FILENAME"))) (:RECEIVERS ((:PART . "PROBE3") (:PIN . "IN")))) ((:WIRE-INDEX . 4) (:SOURCES ((:PART . "PART-NAMER") (:PIN . "NAME"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "NAME")))) ((:WIRE-INDEX . 5) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ITEMS"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "JSON-FILE-REF")))) ((:WIRE-INDEX . 6) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "GRAPH"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "GRAPH")))) ((:WIRE-INDEX . 7) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 8) (:SOURCES ((:PART . "PROBE3") (:PIN . "OUT"))) (:RECEIVERS ((:PART . "COMPILER") (:PIN . "SVG-FILENAME")) ((:PART . "PART-NAMER") (:PIN . "FILENAME")))))))
-|#
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
   ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
@@ -44,7 +35,8 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
     (:done
      (let ((code (code-stack self)))
        (format t "~%build phase ***********~%~s~%" code)
-       (process-code self (code-stack self))))))
+       (let ((tree (process-code self (code-stack self))))
+         (@send self :tree tree))))))
      
 (defun process-code (self list-of-alists)
   (let ((top-most-kind nil))
@@ -189,3 +181,13 @@ build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (
 
 (defun make-part-id (str)
   (string-downcase str))
+
+#|
+build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "filename") (:OUT-PINS "name" "error") (:KIND . "part-namer") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/part-namer.lisp"))
+
+build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "array" "json") (:OUT-PINS "items" "graph" "error") (:KIND . "json-array-splitter") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/json-array-splitter.lisp"))
+
+build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (:KIND . "probe3") (:FILENAME . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/cl-build/probe3.lisp"))
+
+build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram") (:GRAPH (:NAME . "COMPILE-SINGLE-DIAGRAM") (:INPUTS "SVG-FILENAME") (:OUTPUTS "ERROR" "GRAPH" "JSON-FILE-REF" "NAME") (:PARTS ((:PART-NAME . "JSON-ARRAY-SPLITTER") (:KIND-NAME . "JSON-ARRAY-SPLITTER")) ((:PART-NAME . "PART-NAMER") (:KIND-NAME . "PART-NAMER")) ((:PART-NAME . "PROBE3") (:KIND-NAME . "PROBE3")) ((:PART-NAME . "COMPILER") (:KIND-NAME . "COMPILER"))) (:WIRING ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "COMPILER") (:PIN . "METADATA"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ARRAY")))) ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "COMPILER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "COMPILER") (:PIN . "JSON"))) (:RECEIVERS ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "JSON")))) ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "SVG-FILENAME"))) (:RECEIVERS ((:PART . "PROBE3") (:PIN . "IN")))) ((:WIRE-INDEX . 4) (:SOURCES ((:PART . "PART-NAMER") (:PIN . "NAME"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "NAME")))) ((:WIRE-INDEX . 5) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ITEMS"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "JSON-FILE-REF")))) ((:WIRE-INDEX . 6) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "GRAPH"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "GRAPH")))) ((:WIRE-INDEX . 7) (:SOURCES ((:PART . "JSON-ARRAY-SPLITTER") (:PIN . "ERROR"))) (:RECEIVERS ((:PART . "SELF") (:PIN . "ERROR")))) ((:WIRE-INDEX . 8) (:SOURCES ((:PART . "PROBE3") (:PIN . "OUT"))) (:RECEIVERS ((:PART . "COMPILER") (:PIN . "SVG-FILENAME")) ((:PART . "PART-NAMER") (:PIN . "FILENAME")))))))
+|#
