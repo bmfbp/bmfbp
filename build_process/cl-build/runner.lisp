@@ -13,6 +13,6 @@
     (let ((d (make-instance 'dispatcher)))  ;; make one "global" dispatcher
       (format *standard-output* "~&**** loader~%")
       (let ((n (loader kgraph "TOP" nil d)))
-        (format *standard-output* "~&**** finished loader~%")
+        (set-top-node d n)
         kgraph))))
 
