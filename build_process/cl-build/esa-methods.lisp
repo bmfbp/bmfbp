@@ -160,9 +160,6 @@
      :false))
 
 (defmethod has-inputs-or-outputs? ((self node))
-(format *standard-output* "~&g ~s input-queue ~s output-queue ~s self ~s~%"
-        (name-in-container self)
-	(not (null (input-queue self))) (not (null (output-queue self))) self)
   (if (or (not (null (input-queue self)))
 	  (not (null (output-queue self))))
       :true

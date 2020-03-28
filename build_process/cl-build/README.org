@@ -30,8 +30,8 @@ drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_pro
 front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/worldhello.svg"
 ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
 assign-parents-to-ellipses find-comments find-metadata 
-"WARNING FB: fact already exists (USED ID2525)"
-retract (:RECT :ID2522)
+"WARNING FB: fact already exists (USED ID2606)"
+retract (:RECT :ID2603)
 add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
 back-end collector gets :PARSE ... 
 build-graph-in-memory pushes "graph" "worldhello"
@@ -84,9 +84,9 @@ install-source "self" "start"
 ,**** injecting input into top node
 ,**** initially
 ,**** run phase
-g "string-join" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::STRING-JOIN {10027609D3}>
-g "world" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::WORLD {100269B553}>
-g "hello" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::HELLO {10025C6903}>
+g "string-join" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::STRING-JOIN {100564C553}>
+g "world" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::WORLD {100558E323}>
+g "hello" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::HELLO {10054F14F3}>
 react node "TOP"
 "TOP" outputs on pin "result" : T
 react "world"
@@ -99,6 +99,27 @@ Dispatcher Finished
 
 cl-event-passing terminating - ready list is nil
 #+end_example
+* build helloworld3
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::build
+  (asdf:system-relative-pathname
+   :arrowgrams
+     "build_process/parts/diagram/helloworld3.svg")))
+  (princ (get-universal-time))
+#+end_src
+
 * build worldhello
 #+name: arrowgrams
 #+begin_src lisp :results output
