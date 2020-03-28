@@ -50,10 +50,11 @@
 #+end_src
 #+name: arrowgrams
 #+begin_src lisp
-  (ab::test-hw)
+  (ab::test-hw) ;; run this in the repl to see output
 #+end_src
+
 #+RESULTS: arrowgrams
-| :ARROWGRAMS/BUILD |
+: NIL
 
 * test-run
 #+name: arrowgrams
