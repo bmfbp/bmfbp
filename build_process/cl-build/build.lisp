@@ -107,6 +107,9 @@
 (defun hwtest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")))
 
+(defun atest (fname)
+  (build fname))
+
 (defun cl-user::from-esa ()
   ;; compilation steps after changing esa.dsl
   (ql:quickload :arrowgrams/build)
