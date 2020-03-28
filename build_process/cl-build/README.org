@@ -26,15 +26,15 @@
 * build results
 #+RESULTS: arrowgrams
 #+begin_example
-drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
-front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
+drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/worldhello.svg"
+front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/worldhello.svg"
 ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
 assign-parents-to-ellipses find-comments find-metadata 
-"WARNING FB: fact already exists (USED ID1513)"
-retract (:RECT :ID1510)
+"WARNING FB: fact already exists (USED ID2525)"
+retract (:RECT :ID2522)
 add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
 back-end collector gets :PARSE ... 
-build-graph-in-memory pushes "graph" "helloworld"
+build-graph-in-memory pushes "graph" "worldhello"
 build-graph-in-memory pushes "leaf" "string-join"
 build-graph-in-memory pushes "leaf" "world"
 build-graph-in-memory pushes "leaf" "hello"
@@ -52,25 +52,26 @@ build phase ***********
   (:OUT-PINS "c" "error") (:KIND . "string-join")
   (:FILENAME
    . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./string-join.lisp"))
- ((:ITEM-KIND . "graph") (:NAME . "helloworld")
-  (:GRAPH (:NAME . "HELLOWORLD") (:INPUTS "START") (:OUTPUTS "RESULT")
+ ((:ITEM-KIND . "graph") (:NAME . "worldhello")
+  (:GRAPH (:NAME . "WORLDHELLO") (:INPUTS "START") (:OUTPUTS "RESULT")
    (:PARTS ((:PART-NAME . "STRING-JOIN") (:KIND-NAME . "STRING-JOIN"))
     ((:PART-NAME . "WORLD") (:KIND-NAME . "WORLD"))
     ((:PART-NAME . "HELLO") (:KIND-NAME . "HELLO")))
    (:WIRING
     ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "HELLO") (:PIN . "S")))
-     (:RECEIVERS ((:PART . "STRING-JOIN") (:PIN . "A"))))
-    ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "WORLD") (:PIN . "S")))
      (:RECEIVERS ((:PART . "STRING-JOIN") (:PIN . "B"))))
+    ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "WORLD") (:PIN . "S")))
+     (:RECEIVERS ((:PART . "STRING-JOIN") (:PIN . "A"))))
     ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "STRING-JOIN") (:PIN . "C")))
      (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))))
     ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "START")))
-     (:RECEIVERS ((:PART . "WORLD") (:PIN . "START"))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))
+      ((:PART . "WORLD") (:PIN . "START"))
       ((:PART . "HELLO") (:PIN . "START"))))))))
 define leaf name ARROWGRAMS/BUILD::HELLO
 define leaf name ARROWGRAMS/BUILD::WORLD
 define leaf name ARROWGRAMS/BUILD::STRING-JOIN
-define graph name "helloworld"
+define graph name "worldhello"
 need name ARROWGRAMS/BUILD::STRING-JOIN
 need name ARROWGRAMS/BUILD::WORLD
 need name ARROWGRAMS/BUILD::HELLO
@@ -83,15 +84,16 @@ install-source "self" "start"
 ,**** injecting input into top node
 ,**** initially
 ,**** run phase
-g "string-join" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::STRING-JOIN {100B149253}>
-g "world" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::WORLD {100B00BCC3}>
-g "hello" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::HELLO {100ADDF293}>
+g "string-join" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::STRING-JOIN {10027609D3}>
+g "world" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::WORLD {100269B553}>
+g "hello" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::HELLO {10025C6903}>
 react node "TOP"
+"TOP" outputs on pin "result" : T
 react "world"
-react "string-join" with "string-join" "b" "world"
+react "string-join" with "string-join" "a" "world"
 react "hello"
-react "string-join" with "string-join" "a" "hello"
-"TOP" outputs on pin "result" : "helloworld"
+react "string-join" with "string-join" "b" "hello"
+"TOP" outputs on pin "result" : "worldhello"
 
 Dispatcher Finished
 
