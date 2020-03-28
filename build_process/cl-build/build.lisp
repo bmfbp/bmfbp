@@ -75,8 +75,8 @@
 
             ")
 
-           (:code build-graph-in-memory (:json-script :done) (:tree :error))
-           (:code runner (:tree) (:error))
+           (:code build-graph-in-memory (:json-script :done) (:kind-graph :error))
+           (:code runner (:kind-graph) (:error))
            (:schem build-load-and-run (:done :svg-filename) (:error)
             (build build-graph-in-memory runner probe2)
             "
@@ -86,7 +86,7 @@
             build.done -> build-graph-in-memory.done
 
             build.json-collection -> build-graph-in-memory.json-script
-            build-graph-in-memory.tree -> runner.tree
+            build-graph-in-memory.kind-graph -> runner.kind-graph
 
             build.error,build-graph-in-memory.error,runner.error -> self.error
             ")
@@ -115,4 +115,5 @@
   (uiop:run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/rephrase-compiler)
   (ab::make-esa-dsl)
-  (ql:quickload :arrowgrams/build))
+  (ql:quickload :arrowgrams/build)
+  (ab::hwtest))
