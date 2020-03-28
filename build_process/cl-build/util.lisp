@@ -18,3 +18,6 @@
 (defparameter *manifest-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/"))
 (defparameter  *diagram-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/"))
 (defparameter      *src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/cl/)"))
+(defparameter *bootstrap-manifest-dir* (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/"))
+(defparameter  *bootstrap-diagram-dir* (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/"))
+(defparameter      *bootstrap-src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/)"

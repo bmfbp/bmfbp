@@ -26,5 +26,5 @@
 #|  {    "dir": "build_process/", "file": "lispparts/iterator.json","kindName": "iterator", "ref": "master", "repo": "https://github.com/bmfbp/bmfbp.git" } |#
   (let ((afname (cdr (assoc :file alist))))
     (let ((name1 (format nil "~a.manifest.json" (pathname-name afname))))
-      (let ((name2 (merge-pathnames name1 arrowgrams/build::*manifest-dir*)))
+      (let ((name2 (merge-pathnames name1 arrowgrams/build::*bootstrap-manifest-dir*)))
        (namestring name2)))))
