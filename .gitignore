@@ -97,3 +97,5 @@ svg/cl-compiler/BUILD.lisp
 svg/cl-compiler/BOOT-BOOT.json
 
 svg/cl-compiler/BOOT-BOOT.lisp
+
+svg/cl-compiler/HELLOWORLD.json

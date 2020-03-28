@@ -4,9 +4,9 @@
    (START)
    (RESULT)
   
-  (:code STRING-JOIN (B A) (C))
   (:code WORLD (START) (S))
   (:code HELLO (START) (S))
+  (:code STRING-JOIN (B A) (C))
   "
     HELLO.S -> STRING-JOIN.A
     WORLD.S -> STRING-JOIN.B
