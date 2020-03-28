@@ -98,7 +98,8 @@
       (let ((pin (e/part::get-input-pin build-net :svg-filename)))
         (@inject build-net pin filename)) ; :tag "build-net filename"))
       (let ((pin (e/part::get-input-pin build-net :done)))
-        (@inject build-net pin T ))))) ;:tag "build-net done")))))
+        (@inject build-net pin T )))) ;:tag "build-net done")))))
+  "build.lisp done")
     
 #+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
