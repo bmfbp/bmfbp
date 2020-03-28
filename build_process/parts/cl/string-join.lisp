@@ -9,7 +9,7 @@
   (setf (state self) :idle))
 
 (defmethod react ((self string-join) (e event))
-(format *standard-output* "~&react ~s~%" (name-in-container self))
+(format *standard-output* "~&react ~s with ~s ~s ~s~%" (name-in-container self) (part-name (partpin e)) (pin-name (partpin e)) (data e))
   (flet ((send-both ()
 	   (let ((out-e (make-instance 'event))
                  (pp (make-instance 'part-pin)))
