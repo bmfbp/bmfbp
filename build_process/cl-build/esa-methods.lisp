@@ -124,8 +124,8 @@
   ;; (call-next-method) ends up here - nothing to do
   (format *error-output* "~&initially on ~s ~s~%" (name-in-container self) self))
 
-(defmethod display-output-events-to-console ((self node))
-  (dolist (e (output-queue self))
+(defmethod display-output-events-to-console-and-delete ((self node))
+  (dolist (e (get-output-events-and-delete self))
     (format *standard-output* "~&~s outputs ~s on ~s~%" (name-in-container self) (pin-name (partpin e)) (data e))))
 
 (defmethod flagged-as-busy? ((self node))

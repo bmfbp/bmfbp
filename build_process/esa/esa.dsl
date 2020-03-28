@@ -241,7 +241,7 @@ end script
 when intializing or running node
   method send(event)
   script distribute-output-events
-  method display-output-events-to-console
+  method display-output-events-to-console-and-delete
   method get-output-events-and-delete >> map event
   method has-no-container? >> boolean
   script distribute-outputs-upwards
@@ -367,7 +367,7 @@ script node distribute-output-events
 
   if self.has-no-container? then
     % case 3.
-    self.display-output-events-to-console
+    self.display-output-events-to-console-and-delete
   else
     let parent-composite-node = self.container in
        map output = self.get-output-events-and-delete in
