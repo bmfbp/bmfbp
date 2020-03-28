@@ -178,19 +178,19 @@
 (defmethod enqueue-output ((self node) (e event))
   (setf (output-queue self) (append (output-queue self) (list e))))
 
-(defmethod find-wire-for-self-source ((self node) pinname)
-  (format *standard-output* "~&find-wire-for-self-source A ~s wires.len=~s~%" (kind-name self) (length (wires self)))
-  (dolist (w (wires (kind-field self)))
-    (format *standard-output* "~&find-wire-for-self-source B ~s sources=~s~%" w (sources w))
+(defmethod find-wire-for-self-source ((self kind) pinname)
+  ;(format *standard-output* "~&find-wire-for-self-source A ~s wires.len=~s~%" (kind-name self) (length (wires self)))
+  (dolist (w (wires self))
+    ;(format *standard-output* "~&find-wire-for-self-source B ~s sources=~s~%" w (sources w))
     (dolist (s (sources w))
-      (format *standard-output* "~&find-wire-for-self-source C ~s ~s~%" pinname (pin-name s))
+      ;(format *standard-output* "~&find-wire-for-self-source C ~s ~s~%" pinname (pin-name s))
       (when (string=-downcase pinname  (pin-name s)))
       (return-from find-wire-for-self-source w)))
   (assert nil)) ;; source not found - can't happen
 
-(defmethod find-wire-for-source ((self node) part-name pin-name)
-  (format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-field self) self)
-  (dolist (w (wires (kind-field self)))
+(defmethod find-wire-for-source ((self kind) part-name pin-name)
+  ;(format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-field self) self)
+  (dolist (w (wires self))
     (dolist (s (sources w))
       (when (and (or (string= "self" (part-name s))
                      (string=-downcase part-name (part-name s)))
@@ -199,7 +199,7 @@
   (assert nil)) ;; source not found - can't happen
 
 (defmethod node-find-child ((self node) name)
-  (format *standard-output* "~&node-find-child of ~s wants ~s~%" (name-in-container self) name)
+  ;(format *standard-output* "~&node-find-child of ~s wants ~s~%" (name-in-container self) name)
   (dolist (p (children self))
     (when (string=-downcase name (instance-name p))
       (return-from node-find-child p)))
