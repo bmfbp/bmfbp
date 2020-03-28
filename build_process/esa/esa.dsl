@@ -371,29 +371,37 @@ script node distribute-output-events
   else
     let parent-composite-node = self.container in
        map output = self.output-events in
-         create new-event = event in
 	   let dest = output.partpin in
-	     create pp = part-pin in
                if dest.refers-to-self? then
                  % case 2 - output to output pin of self
-                 set pp.part-name = self.name-in-container
-                 set pp.pin-name = dest.pin-name
-                 set new-event.partpin = pp
-                 set new-event.data = output.data
-                 parent-composite-node.send(new-event)
+                 create new-event = event in
+                   create pp = part-pin in
+                     set pp.part-name = self.name-in-container
+                     set pp.pin-name = dest.pin-name
+                     set new-event.partpin = pp
+                     set new-event.data = output.data
+                     parent-composite-node.send(new-event)
+                 end create
+                 end create
                else
                  % case 1 - the common case - child outputs to input of another child
-                 set pp.part-name = dest.part-name
-                 set pp.pin-name = dest.pin-name
-                 set new-event.partpin = pp
-                 set new-event.data = output.data
-                 let child-part-instance = parent-composite-node.node-find-child(pp.part-name) in
-                   child-part-instance.instance-node.enqueue-input(new-event)
+                 let w = parent-composite.find-wire-for-source(output.partpin.part-name output-partpin.pin-name) in
+                   map dest = w.destinations in
+                     create new-event = event in
+                       create pp = part-pin in
+                         set pp.part-name = dest.part-name
+                         set pp.pin-name = dest.pin-name
+                         set new-event.partpin = pp
+                         set new-event.data = output.data
+                         let child-part-instance = parent-composite-node.node-find-child(pp.part-name) in
+                           child-part-instance.instance-node.enqueue-input(new-event)
+                         end let
+                       end create
+                     end create
+                   end map
                  end let
                end if
-	     end create
            end let
-         end create
        end map
     end let
   end if
