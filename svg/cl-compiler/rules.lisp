@@ -1,10 +1,5 @@
 (in-package :arrowgrams/compiler)
 
-(defclass rules (compiler-part) ())
-(defmethod e/part:busy-p ((self rules)) (call-next-method))
-(defmethod e/part:clone ((self rules)) (call-next-method))
-(defmethod e/part:first-time ((self rules)) (call-next-method))
-
 (defparameter *rules*
 '
 (((:NONAME (:? PORT)) (:PORTNAMEBYID (:? PORT) (:? NAMEID)) :! :FAIL)
@@ -15,15 +10,15 @@
  ((:NOT_USED (:? X)))
  ((:NOT_NAMEDSINK (:? X)) (:NAMEDSINK (:? X)) :! :FAIL)
  ((:NOT_NAMEDSINK (:? X)))
- ((:WSPC) (:LISP (OUT " ")) :!)
- ((:NLE) (:LISP (OUT-NL)) :!)
- ((:WE (:? WE_ARG)) (:LISP (OUT (:? WE_ARG))) :!)
+ ((:WSPC) (:LISP (ARROWGRAMS/COMPILER::OUT " ")) :!)
+ ((:NLE) (:LISP (ARROWGRAMS/COMPILER::OUT-NL)) :!)
+ ((:WE (:? WE_ARG)) (:LISP (ARROWGRAMS/COMPILER::OUT (:? WE_ARG))) :!)
  ((:WEN (:? WEN_ARG)) (:WE (:? WEN_ARG)) (:NLE) :!)
  ((:CALC_BOUNDS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:CREATEBOUNDINGBOXES)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CREATEBOUNDINGBOXES)
   (:CONDITIONALCREATEELLIPSEBB)
   (:CONDRECT)
@@ -35,10 +30,10 @@
   (:FORALL (:SPEECHBUBBLE (:? ID)) (:CREATERECTBOUNDINGBOX (:? ID))))
  ((:CONDTEXT)
   (:FORALL
-   (:TEXT (:? ID) (:? DONTCARE_29530))
+   (:TEXT (:? ID) (:? DONTCARE_37051))
    (:CREATETEXTBOUNDINGBOX (:? ID))))
  ((:CONDITIONALCREATEELLIPSEBB)
-  (:ELLIPSE (:? DONTCARE_29531))
+  (:ELLIPSE (:? DONTCARE_37052))
   (:FORALL (:ELLIPSE (:? ID)) (:CREATEELLIPSEBOUNDINGBOX (:? ID))))
  ((:CREATERECTBOUNDINGBOX (:? ID))
   (:GEOMETRY_LEFT_X (:? ID) (:? X))
@@ -46,23 +41,19 @@
   (:GEOMETRY_W (:? ID) (:? WIDTH))
   (:GEOMETRY_H (:? ID) (:? HEIGHT))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_LEFT
-                                       (:? ID)
-                                       (:? X))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_LEFT (:? ID) (:? X))))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_TOP
-                                       (:? ID)
-                                       (:? Y))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_TOP (:? ID) (:? Y))))
   (:LISPV (:? RIGHT) (+ (:? X) (:? WIDTH)))
   (:LISPV (:? BOTTOM) (+ (:? Y) (:? HEIGHT)))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_RIGHT
-                                       (:? ID)
-                                       (:? RIGHT))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_RIGHT
+                                  (:? ID)
+                                  (:? RIGHT))))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_BOTTOM
-                                       (:? ID)
-                                       (:? BOTTOM)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_BOTTOM
+                                  (:? ID)
+                                  (:? BOTTOM)))))
  ((:CREATETEXTBOUNDINGBOX (:? ID))
   (:GEOMETRY_CENTER_X (:? ID) (:? CX))
   (:GEOMETRY_TOP_Y (:? ID) (:? Y))
@@ -70,23 +61,19 @@
   (:GEOMETRY_H (:? ID) (:? HEIGHT))
   (:LISPV (:? X) (- (:? CX) (:? HALFWIDTH)))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_LEFT
-                                       (:? ID)
-                                       (:? X))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_LEFT (:? ID) (:? X))))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_TOP
-                                       (:? ID)
-                                       (:? Y))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_TOP (:? ID) (:? Y))))
   (:LISPV (:? RIGHT) (+ (:? CX) (:? HALFWIDTH)))
   (:LISPV (:? BOTTOM) (+ (:? Y) (:? HEIGHT)))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_RIGHT
-                                       (:? ID)
-                                       (:? RIGHT))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_RIGHT
+                                  (:? ID)
+                                  (:? RIGHT))))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_BOTTOM
-                                       (:? ID)
-                                       (:? BOTTOM)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_BOTTOM
+                                  (:? ID)
+                                  (:? BOTTOM)))))
  ((:CREATEELLIPSEBOUNDINGBOX (:? ID))
   (:GEOMETRY_CENTER_X (:? ID) (:? CX))
   (:GEOMETRY_CENTER_Y (:? ID) (:? CY))
@@ -95,99 +82,84 @@
   (:LISPV (:? LEFT) (- (:? CX) (:? HALFWIDTH)))
   (:LISPV (:? TOP) (- (:? CY) (:? HALFHEIGHT)))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_LEFT
-                                       (:? ID)
-                                       (:? LEFT))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_LEFT
+                                  (:? ID)
+                                  (:? LEFT))))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_TOP
-                                       (:? ID)
-                                       (:? TOP))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_TOP (:? ID) (:? TOP))))
   (:LISPV (:? RIGHT) (+ (:? CX) (:? HALFWIDTH)))
   (:LISPV (:? BOTTOM) (+ (:? CY) (:? HALFHEIGHT)))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_RIGHT
-                                       (:? ID)
-                                       (:? RIGHT))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_RIGHT
+                                  (:? ID)
+                                  (:? RIGHT))))
   (:LISP-METHOD
-   (ASSERTA (:BOUNDING_BOX_BOTTOM
-                                       (:? ID)
-                                       (:? BOTTOM)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:BOUNDING_BOX_BOTTOM
+                                  (:? ID)
+                                  (:? BOTTOM)))))
  ((:ASSIGN_PARENTS_TO_ELLISPSES_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:FORALL
    (:ELLIPSE (:? ELLIPSEID))
    (:MAKEPARENTFORELLIPSE (:? ELLIPSEID)))
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:MAKEPARENTFORELLIPSE (:? ELLIPSEID))
   (:COMPONENT (:? COMP))
   (:LISP-METHOD
-   (ASSERTA (:PARENT
-                                       (:? COMP)
-                                       (:? ELLIPSEID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? COMP) (:? ELLIPSEID)))))
  ((:FIND_COMMENTS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:CONDCOMMENT)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CONDCOMMENT)
   (:FORALL (:SPEECHBUBBLE (:? ID)) (:CREATECOMMENTS (:? ID))))
  ((:CREATECOMMENTS (:? BUBBLEID))
-  (:TEXT (:? TEXTID) (:? DONTCARE_29532))
+  (:TEXT (:? TEXTID) (:? DONTCARE_37053))
   (:TEXTCOMPLETELYINSIDEBOX (:? TEXTID) (:? BUBBLEID))
   :!
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:USED (:? TEXTID))))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:COMMENT (:? TEXTID)))))
+ ((:CREATECOMMENTS (:? DONTCARE_37054))
   (:LISP-METHOD
-   (ASSERTA (:USED (:? TEXTID))))
-  (:LISP-METHOD
-   (ASSERTA (:COMMENT (:? TEXTID)))))
- ((:CREATECOMMENTS (:? DONTCARE_29533))
-  (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       "fATAL"
-                                       :COMMENTFINDERFAILED)))
-  (:LISP (TRUE)))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG "fATAL" :COMMENTFINDERFAILED)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:TEXTCOMPLETELYINSIDEBOX (:? TEXTID) (:? BUBBLEID))
   (:POINTCOMPLETELYINSIDEBOUNDINGBOX (:? TEXTID) (:? BUBBLEID)))
  ((:FIND_METADATA_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:CONDMETA)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CONDMETA)
   (:METADATA (:? MID) (:? TEXTID))
   (:RECT (:? BOXID))
   (:METADATACOMPLETELYINSIDEBOUNDINGBOX (:? TEXTID) (:? BOXID))
   :!
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:USED (:? TEXTID))))
   (:LISP-METHOD
-   (ASSERTA (:USED (:? TEXTID))))
-  (:LISP-METHOD
-   (ASSERTA (:ROUNDEDRECT (:? BOXID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:ROUNDEDRECT (:? BOXID))))
   (:COMPONENT (:? MAIN))
   (:LISP-METHOD
-   (ASSERTA (:PARENT (:? MAIN) (:? BOXID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? MAIN) (:? BOXID))))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       (:? BOXID)
-                                       :BOX_IS_META_DATA)))
-  (:LISP-METHOD (RETRACT (:RECT (:? BOXID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG (:? BOXID) :BOX_IS_META_DATA)))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::RETRACT (:RECT (:? BOXID))))
   :FAIL)
  ((:CREATEMETADATARECT (:? MID))
   (:METADATA (:? MID) (:? TEXTID))
   (:RECT (:? BOXID))
   (:METADATACOMPLETELYINSIDEBOUNDINGBOX (:? TEXTID) (:? BOXID))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:USED (:? TEXTID))))
   (:LISP-METHOD
-   (ASSERTA (:USED (:? TEXTID))))
-  (:LISP-METHOD
-   (ASSERTA (:ROUNDEDRECT (:? BOXID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:ROUNDEDRECT (:? BOXID))))
   (:COMPONENT (:? MAIN))
   (:LISP-METHOD
-   (ASSERTA (:PARENT (:? MAIN) (:? BOXID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? MAIN) (:? BOXID))))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       (:? BOXID)
-                                       :BOX_IS_META_DATA)))
-  (:LISP-METHOD
-   (RETRACT (:RECT (:? BOXID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG (:? BOXID) :BOX_IS_META_DATA)))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::RETRACT (:RECT (:? BOXID)))))
  ((:CREATEMETADATARECT (:? TEXTID))
   (:WEN " ")
   (:WE "createMetaDataRect failed ")
@@ -195,41 +167,39 @@
  ((:METADATACOMPLETELYINSIDEBOUNDINGBOX (:? TEXTID) (:? BOXID))
   (:CENTERCOMPLETELYINSIDEBOUNDINGBOX (:? TEXTID) (:? BOXID)))
  ((:ADD_KINDS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:CONDDOKINDS)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CONDDOKINDS)
   (:ELTYPE (:? BOXID) :BOX)
   (:TEXT (:? TEXTID) (:? STR))
   (:NOT_USED (:? TEXTID))
   (:TEXTCOMPLETELYINSIDEBOX (:? TEXTID) (:? BOXID))
   :!
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:USED (:? TEXTID))))
   (:LISP-METHOD
-   (ASSERTA (:USED (:? TEXTID))))
-  (:LISP-METHOD
-   (ASSERTA (:KIND (:? BOXID) (:? STR)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:KIND (:? BOXID) (:? STR)))))
  ((:CREATEALLKINDS (:? BOXID))
-  (:TEXT (:? TEXTID) (:? DONTCARE_29534))
+  (:TEXT (:? TEXTID) (:? DONTCARE_37055))
   (:CREATEONEKIND (:? BOXID) (:? TEXTID))
   :FAIL)
- ((:CREATEALLKINDS (:? DONTCARE_29535))
-  (:LISP (TRUE)))
+ ((:CREATEALLKINDS (:? DONTCARE_37056))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CREATEONEKIND (:? BOXID) (:? TEXTID))
   (:TEXT (:? TEXTID) (:? STR))
   (:NOT_USED (:? TEXTID))
   (:TEXTCOMPLETELYINSIDEBOX (:? TEXTID) (:? BOXID))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:USED (:? TEXTID))))
   (:LISP-METHOD
-   (ASSERTA (:USED (:? TEXTID))))
-  (:LISP-METHOD
-   (ASSERTA (:KIND (:? BOXID) (:? STR)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:KIND (:? BOXID) (:? STR)))))
  ((:TEXTCOMPLETELYINSIDEBOX (:? TEXTID) (:? BOXID))
   (:POINTCOMPLETELYINSIDEBOUNDINGBOX (:? TEXTID) (:? BOXID)))
  ((:ADD_SELFPORTS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:CONDELLIPSES)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CONDELLIPSES)
   (:ELLIPSE (:? ELLIPSEID))
   (:PORT (:? PORTID))
@@ -254,19 +224,14 @@
   (:TEXT (:? NAMEID) (:? NAME))
   (:TEXTCOMPLETELYINSIDE (:? NAMEID) (:? ELLIPSEID))
   (:LISP-METHOD
-   (ASSERTA (:PARENT
-                                       (:? ELLIPSEID)
-                                       (:? PORTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? ELLIPSEID) (:? PORTID))))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:USED (:? NAMEID))))
   (:LISP-METHOD
-   (ASSERTA (:USED (:? NAMEID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PORTNAMEBYID
+                                  (:? PORTID)
+                                  (:? NAMEID))))
   (:LISP-METHOD
-   (ASSERTA (:PORTNAMEBYID
-                                       (:? PORTID)
-                                       (:? NAMEID))))
-  (:LISP-METHOD
-   (ASSERTA (:PORTNAME
-                                       (:? PORTID)
-                                       (:? NAME))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PORTNAME (:? PORTID) (:? NAME))))
   :FAIL)
  ((:PORTTOUCHESELLIPSE
    (:? PORTLEFTX)
@@ -275,7 +240,7 @@
    (:? PORTBOTTOMY)
    (:? ELEFTX)
    (:? ETOPY)
-   (:? DONTCARE_29536)
+   (:? DONTCARE_37057)
    (:? EBOTTOMY))
   (:LISP-TRUE-FAIL (<= (:? PORTLEFTX) (:? ELEFTX)))
   (:LISP-TRUE-FAIL (>= (:? PORTRIGHTX) (:? ELEFTX)))
@@ -289,7 +254,7 @@
    (:? ELEFTX)
    (:? ETOPY)
    (:? ERIGHTX)
-   (:? DONTCARE_29537))
+   (:? DONTCARE_37058))
   (:LISP-TRUE-FAIL (<= (:? PORTTOPY) (:? ETOPY)))
   (:LISP-TRUE-FAIL (>= (:? PORTBOTTOMY) (:? ETOPY)))
   (:LISP-TRUE-FAIL (>= (:? PORTLEFTX) (:? ELEFTX)))
@@ -299,7 +264,7 @@
    (:? PORTTOPY)
    (:? PORTRIGHTX)
    (:? PORTBOTTOMY)
-   (:? DONTCARE_29538)
+   (:? DONTCARE_37059)
    (:? ETOPY)
    (:? ERIGHTX)
    (:? EBOTTOMY))
@@ -313,7 +278,7 @@
    (:? PORTRIGHTX)
    (:? PORTBOTTOMY)
    (:? ELEFTX)
-   (:? DONTCARE_29539)
+   (:? DONTCARE_37060)
    (:? ERIGHTX)
    (:? EBOTTOMY))
   (:LISP-TRUE-FAIL (<= (:? PORTTOPY) (:? EBOTTOMY)))
@@ -323,17 +288,17 @@
  ((:TEXTCOMPLETELYINSIDE (:? TEXTID) (:? OBJID))
   (:BOUNDINGBOXCOMPLETELYINSIDE (:? TEXTID) (:? OBJID)))
  ((:MAKE_UNKNOWN_PORT_NAMES_MAIN)
-  (:TEXT (:? TEXTID) (:? DONTCARE_29540))
+  (:TEXT (:? TEXTID) (:? DONTCARE_37061))
   (:NOT_USED (:? TEXTID))
   (:LISP-METHOD
-   (ASSERTA (:UNASSIGNED (:? TEXTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:UNASSIGNED (:? TEXTID))))
   :FAIL)
  ((:UNUSED_TEXT (:? TEXTID))
-  (:TEXT (:? TEXTID) (:? DONTCARE_29541))
+  (:TEXT (:? TEXTID) (:? DONTCARE_37062))
   (:NOT_USED (:? TEXTID)))
  ((:CREATEPORTNAMEIFNOTAKINDNAME (:? TEXTID))
   (:LISP-METHOD
-   (ASSERTA (:UNASSIGNED (:? TEXTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:UNASSIGNED (:? TEXTID)))))
  ((:CREATE_CENTERS_MAIN)
   (:CREATETEXTCENTERS)
   (:CREATEELLIPSECENTERS)
@@ -347,7 +312,7 @@
   (:ELTYPE (:? PORTID) :PORT)
   (:CREATECENTER (:? PORTID)))
  ((:CONDITIONALELLIPSECENTERS)
-  (:ELLIPSE (:? DONTCARE_29542))
+  (:ELLIPSE (:? DONTCARE_37063))
   (:FORALL (:ELLIPSE (:? ID)) (:CREATECENTER (:? ID))))
  ((:CREATECENTER (:? ID))
   (:BOUNDING_BOX_LEFT (:? ID) (:? LEFT))
@@ -358,23 +323,23 @@
   (:LISPV (:? TEMP) (/ (:? W) 2))
   (:LISPV (:? X) (+ (:? LEFT) (:? TEMP)))
   (:LISP-METHOD
-   (ASSERTA (:CENTER_X (:? ID) (:? X))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:CENTER_X (:? ID) (:? X))))
   (:LISPV (:? H) (- (:? BOTTOM) (:? TOP)))
   (:LISPV (:? TEMPH) (/ (:? H) 2))
   (:LISPV (:? Y) (+ (:? TOP) (:? TEMPH)))
   (:LISP-METHOD
-   (ASSERTA (:CENTER_Y (:? ID) (:? Y)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:CENTER_Y (:? ID) (:? Y)))))
  ((:CALCULATE_DISTANCES_MAIN)
-  (:LISP (SET-COUNTER 0))
+  (:LISP (ARROWGRAMS/COMPILER::SET-COUNTER 0))
   :!
   (:ELTYPE (:? PORTID) :PORT)
   (:UNASSIGNED (:? TEXTID))
-  (:LISPV (:? NEWID) (READ-COUNTER))
+  (:LISPV (:? NEWID) (ARROWGRAMS/COMPILER::READ-COUNTER))
   (:LISP-METHOD
-   (ASSERTA (:JOIN_CENTERPAIR
-                                       (:? PORTID)
-                                       (:? NEWID))))
-  (:LISP (INC-COUNTER))
+   (ARROWGRAMS/COMPILER::ASSERTA (:JOIN_CENTERPAIR
+                                  (:? PORTID)
+                                  (:? NEWID))))
+  (:LISP (ARROWGRAMS/COMPILER::INC-COUNTER))
   (:CENTER_X (:? PORTID) (:? PX))
   (:CENTER_Y (:? PORTID) (:? PY))
   (:CENTER_X (:? TEXTID) (:? TX))
@@ -386,13 +351,13 @@
   (:LISPV (:? SUM) (+ (:? DXSQ) (:? DYSQ)))
   (:LISPV (:? DISTANCE) (SQRT (:? SUM)))
   (:LISP-METHOD
-   (ASSERTA (:JOIN_DISTANCE
-                                       (:? NEWID)
-                                       (:? TEXTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:JOIN_DISTANCE
+                                  (:? NEWID)
+                                  (:? TEXTID))))
   (:LISP-METHOD
-   (ASSERTA (:DISTANCE_XY
-                                       (:? NEWID)
-                                       (:? DISTANCE))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:DISTANCE_XY
+                                  (:? NEWID)
+                                  (:? DISTANCE))))
   :FAIL)
  ((:MAKEALLCENTERPAIRS (:? PORTID))
   (:FORALL
@@ -411,20 +376,20 @@
   (:LISPV (:? SUM) (+ (:? DXSQ) (:? DYSQ)))
   (:LISPV (:? DISTANCE) (SQRT (:? SUM)))
   (:LISP-METHOD
-   (ASSERTA (:JOIN_DISTANCE
-                                       (:? JOINPAIRID)
-                                       (:? TEXTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:JOIN_DISTANCE
+                                  (:? JOINPAIRID)
+                                  (:? TEXTID))))
   (:LISP-METHOD
-   (ASSERTA (:DISTANCE_XY
-                                       (:? JOINPAIRID)
-                                       (:? DISTANCE)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:DISTANCE_XY
+                                  (:? JOINPAIRID)
+                                  (:? DISTANCE)))))
  ((:MAKEPAIRID (:? PORTID) (:? NEWID))
-  (:LISPV (:? NEWID) (READ-COUNTER))
+  (:LISPV (:? NEWID) (ARROWGRAMS/COMPILER::READ-COUNTER))
   (:LISP-METHOD
-   (ASSERTA (:JOIN_CENTERPAIR
-                                       (:? PORTID)
-                                       (:? NEWID))))
-  (:LISP (INC-COUNTER)))
+   (ARROWGRAMS/COMPILER::ASSERTA (:JOIN_CENTERPAIR
+                                  (:? PORTID)
+                                  (:? NEWID))))
+  (:LISP (ARROWGRAMS/COMPILER::INC-COUNTER)))
  ((:COLLECT_NAMELESS_PORTS
    (:? PORTID)
    (:? LEFT)
@@ -465,25 +430,23 @@
   (:DISTANCE_XY (:? JOINID) (:? DISTANCE))
   (:TEXT (:? TEXTID) (:? STRID)))
  ((:MARKINDEXEDPORTS_MAIN)
-  (:PORTNAME (:? P) (:? DONTCARE_29545))
+  (:PORTNAME (:? P) (:? DONTCARE_37066))
   (:MARKNAMED (:? P))
   :FAIL)
  ((:MARKNAMED (:? P))
-  (:SINK (:? DONTCARE_29546) (:? P))
+  (:SINK (:? DONTCARE_37067) (:? P))
   :!
-  (:LISP-METHOD
-   (ASSERTA (:NAMEDSINK (:? P)))))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:NAMEDSINK (:? P)))))
  ((:MARKNAMED (:? P))
-  (:SOURCE (:? DONTCARE_29547) (:? P))
+  (:SOURCE (:? DONTCARE_37068) (:? P))
   :!
-  (:LISP-METHOD
-   (ASSERTA (:NAMEDSOURCE (:? P)))))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:NAMEDSOURCE (:? P)))))
  ((:COINCIDENTPORTS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:COINCIDENTSINKS)
   (:COINCIDENTSOURCES)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:FINDCOINCIDENTSINK (:? A) (:? B))
   (:NOTNAMEDSINK (:? B))
   :!
@@ -501,27 +464,27 @@
   (:CLOSETOGETHER (:? AY) (:? BY))
   (:PORTNAME (:? A) (:? N))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       :COINCIDENTSINK
-                                       (:? A)
-                                       (:? B)
-                                       (:? N))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  :COINCIDENTSINK
+                                  (:? A)
+                                  (:? B)
+                                  (:? N))))
   (:LISP-METHOD
-   (ASSERTA (:PORTNAME (:? B) (:? N)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PORTNAME (:? B) (:? N)))))
  ((:!))
  ((:NOTNAMEDSINK (:? X)) (:NOT_NAMEDSINK (:? X)))
  ((:COINCIDENTSINKS (:? A) (:? B))
   (:NAMEDSINK (:? A))
   (:FINDALLCOINCIDENTSINKS (:? A) (:? B)))
  ((:FINDALLCOINCIDENTSINKS (:? A) (:? B))
-  (:SINK (:? DONTCARE_29548) (:? B))
+  (:SINK (:? DONTCARE_37069) (:? B))
   (:FINDCOINCIDENTSINK (:? A) (:? B))
   :FAIL)
  ((:COINCIDENTSOURCES (:? A) (:? B))
   (:NAMEDSOURCE (:? A))
   (:FINDALLCOINCIDENTSOURCES (:? A) (:? B)))
  ((:FINDALLCOINCIDENTSOURCES (:? A) (:? B))
-  (:SOURCE (:? DONTCARE_29549) (:? B))
+  (:SOURCE (:? DONTCARE_37070) (:? B))
   (:FINDCOINCIDENTSOURCE (:? A) (:? B))
   :FAIL)
  ((:FINDCOINCIDENTSOURCE (:? A) (:? B))
@@ -540,86 +503,77 @@
   (:PORTNAME (:? A) (:? N))
   :!
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       :COINCIDENTSOURCE
-                                       (:? A)
-                                       (:? B)
-                                       (:? N))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  :COINCIDENTSOURCE
+                                  (:? A)
+                                  (:? B)
+                                  (:? N))))
   (:LISP-METHOD
-   (ASSERTA (:PORTNAME (:? B) (:? N))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PORTNAME (:? B) (:? N))))
   :!)
  ((:NOTNAMEDSOURCE (:? X)) (:NAMEDSOURCE (:? X)) :! :FAIL)
- ((:NOTNAMEDSOURCE (:? X)) (:LISP (TRUE)))
+ ((:NOTNAMEDSOURCE (:? X)) (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CLOSETOGETHER (:? X) (:? Y))
   (:LISPV (:? DELTA) (- (:? X) (:? Y)))
   (:LISPV (:? ABS) (ABS (:? DELTA)))
   (:LISP-TRUE-FAIL (>= 20 (:? ABS))))
- ((:CLOSETOGETHER (:? DONTCARE_29550) (:? DONTCARE_29551)) :FAIL)
+ ((:CLOSETOGETHER (:? DONTCARE_37071) (:? DONTCARE_37072)) :FAIL)
  ((:MARK_DIRECTIONS_MAIN)
-  (:LISP (TRUE))
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:MATCH_PORTS_TO_COMPONENTS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:MATCH_PORTS)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:MATCH_PORTS_TO_COMPONENTS (:? PORTID))
   (:ELTYPE (:? PORTID) :PORT)
   (:NO_PARENT (:? PORTID))
   (:NEW_ASSIGN_PARENT_FOR_PORT (:? PORTID)))
- ((:NO_PARENT (:? X)) (:PARENT (:? DONTCARE_29552) (:? X)) :! :FAIL)
+ ((:NO_PARENT (:? X)) (:PARENT (:? DONTCARE_37073) (:? X)) :! :FAIL)
  ((:NO_PARENT (:? X)))
  ((:NEW_ASSIGN_PARENT_FOR_PORT (:? PORTID))
   (:ELLIPSE (:? PARENTID))
   (:PORTINTERSECTION (:? PORTID) (:? PARENTID))
   (:LISP-METHOD
-   (ASSERTA (:PARENT
-                                       (:? PARENTID)
-                                       (:? PORTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? PARENTID) (:? PORTID)))))
  ((:NEW_ASSIGN_PARENT_FOR_PORT (:? PORTID))
   (:RECT (:? PARENTID))
   (:PORTINTERSECTION (:? PORTID) (:? PARENTID))
   (:LISP-METHOD
-   (ASSERTA (:PARENT
-                                       (:? PARENTID)
-                                       (:? PORTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? PARENTID) (:? PORTID)))))
  ((:MARK_NC (:? PORTID))
   (:NO_PARENT (:? PORTID))
   (:ELTYPE (:? PORTID) :PORT)
   (:LISP-METHOD
-   (ASSERTA (:LOG (:? PORTID) "is_nc")))
-  (:LISP-METHOD
-   (ASSERTA (:N_C (:? PORTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG (:? PORTID) "is_nc")))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:N_C (:? PORTID)))))
  ((:ASSIGN_PARENT_FOR_PORT (:? PORTID))
-  (:PARENT (:? DONTCARE_29553) (:? PORTID))
+  (:PARENT (:? DONTCARE_37074) (:? PORTID))
   :!)
  ((:ASSIGN_PARENT_FOR_PORT (:? PORTID))
   (:ELLIPSE (:? PARENTID))
   (:PORTINTERSECTION (:? PORTID) (:? PARENTID))
   (:LISP-METHOD
-   (ASSERTA (:PARENT
-                                       (:? PARENTID)
-                                       (:? PORTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? PARENTID) (:? PORTID))))
   :!)
  ((:ASSIGN_PARENT_FOR_PORT (:? PORTID))
   (:ELTYPE (:? PARENTID) :BOX)
   (:PORTINTERSECTION (:? PORTID) (:? PARENTID))
   (:LISP-METHOD
-   (ASSERTA (:PARENT
-                                       (:? PARENTID)
-                                       (:? PORTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PARENT (:? PARENTID) (:? PORTID))))
   :!)
  ((:ASSIGN_PARENT_FOR_PORT (:? PORTID))
-  (:PORTNAME (:? PORTID) (:? DONTCARE_29554))
+  (:PORTNAME (:? PORTID) (:? DONTCARE_37075))
   (:LISP-METHOD
-   (ASSERTA (:LOG (:? PORTID) "is_nc")))
-  (:LISP-METHOD (ASSERTA (:N_C (:? PORTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG (:? PORTID) "is_nc")))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:N_C (:? PORTID))))
   :!)
  ((:ASSIGN_PARENT_FOR_PORT (:? PORTID))
   (:LISP-METHOD
-   (ASSERTA (:LOG (:? PORTID) "is_nc")))
-  (:LISP-METHOD (ASSERTA (:N_C (:? PORTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG (:? PORTID) "is_nc")))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:N_C (:? PORTID))))
   :!)
  ((:PORTINTERSECTION (:? PORTID) (:? PARENTID))
   (:BOUNDING_BOX_LEFT (:? PORTID) (:? LEFT))
@@ -663,16 +617,16 @@
  ((:MARK_PINLESS (:? RRECTID))
   (:ROUNDEDRECT (:? RRECTID))
   (:LISP-METHOD
-   (ASSERTA (:PINLESS (:? RRECTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:PINLESS (:? RRECTID)))))
  ((:NEW_SEM_PARTSHAVESOMEPORTS_MAIN (:? RECTID))
   (:ELTYPE (:? RECTID) :BOX)
   (:NOT_PINLESS (:? RECTID))
   (:NO_PORT (:? RECTID))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       (:? PARTID)
-                                       "error_part_has_no_port"
-                                       "partsHaveSomePorts"))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  (:? PARTID)
+                                  "error_part_has_no_port"
+                                  "partsHaveSomePorts"))))
  ((:NOT_PINLESS (:? R)) (:PINLESS (:? R)) :! :FAIL)
  ((:NOT_PINLESS (:? R)))
  ((:NO_PORT (:? R))
@@ -682,10 +636,10 @@
   :FAIL)
  ((:NO_PORT (:? R)))
  ((:SEM_PARTSHAVESOMEPORTS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:FORALL (:ELTYPE (:? PARTID) :BOX) (:CHECK_HAS_PORT (:? PARTID)))
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CHECK_HAS_PORT (:? PARTID))
   (:PARENT (:? PARTID) (:? PORTID))
   (:PORT (:? PORTID))
@@ -693,48 +647,48 @@
  ((:CHECK_HAS_PORT (:? PARTID)) (:PINLESS (:? PARTID)) :!)
  ((:CHECK_HAS_PORT (:? PARTID))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       (:? PARTID)
-                                       "error_part_has_no_port"
-                                       "partsHaveSomePorts"))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  (:? PARTID)
+                                  "error_part_has_no_port"
+                                  "partsHaveSomePorts"))))
  ((:SEM_PORTSHAVESINKORSOURCE_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:FORALL (:PORT (:? PORTID)) (:HASSINKORSOURCE (:? PORTID)))
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:HASSINKORSOURCE (:? PORTID))
-  (:SINK (:? DONTCARE_29555) (:? PORTID))
+  (:SINK (:? DONTCARE_37076) (:? PORTID))
   :!)
  ((:HASSINKORSOURCE (:? PORTID))
-  (:SOURCE (:? DONTCARE_29556) (:? PORTID))
+  (:SOURCE (:? DONTCARE_37077) (:? PORTID))
   :!)
  ((:HASSINKORSOURCE (:? PORTID))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       "fATAL"
-                                       :PORT_ISNT_MARKED_SINK_OR_SOURCE
-                                       (:? PORTID))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  "fATAL"
+                                  :PORT_ISNT_MARKED_SINK_OR_SOURCE
+                                  (:? PORTID))))
   :!)
  ((:SEM_NODUPLICATEKINDS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:FORALL
    (:ELTYPE (:? RECTID) :BOX)
    (:CHECK_HAS_EXACTLY_ONE_KIND (:? RECTID)))
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CHECK_HAS_EXACTLY_ONE_KIND (:? RECTID))
   (:KIND (:? RECTID) (:? KIND1))
   (:KIND (:? RECTID) (:? KIND2))
   (:NOT_SAME (:? KIND1) (:? KIND2))
   :!
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       "fATAL_ERRORS_DURING_COMPILATION"
-                                       "noDuplicateKinds")))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  "fATAL_ERRORS_DURING_COMPILATION"
+                                  "noDuplicateKinds")))
   (:LISP-METHOD
-   (ASSERTA (:LOG "rect " (:? RECTID))))
-  (:LISP-METHOD (ASSERTA (:LOG (:? KIND1))))
-  (:LISP-METHOD (ASSERTA (:LOG (:? KIND2))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG "rect " (:? RECTID))))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:LOG (:? KIND1))))
+  (:LISP-METHOD (ARROWGRAMS/COMPILER::ASSERTA (:LOG (:? KIND2))))
   (:NLE)
   (:WE "ERROR!!! ")
   (:WE (:? RECTID))
@@ -743,87 +697,85 @@
   (:WSPC)
   (:WEN (:? KIND2)))
  ((:CHECK_HAS_EXACTLY_ONE_KIND (:? RECTID))
-  (:KIND (:? RECTID) (:? DONTCARE_29557))
+  (:KIND (:? RECTID) (:? DONTCARE_37078))
   :!)
  ((:CHECK_HAS_EXACTLY_ONE_KIND (:? RECTID))
   (:ROUNDEDRECT (:? RECTID))
   :!)
  ((:CHECK_HAS_EXACTLY_ONE_KIND (:? RECTID))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       (:? RECTID)
-                                       "has_no_kind"
-                                       "noDuplicateKinds")))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  (:? RECTID)
+                                  "has_no_kind"
+                                  "noDuplicateKinds")))
   :!)
  ((:SEM_SPEECHVSCOMMENTS_MAIN)
-  (:LISP (TRUE))
-  (:LISP (SET-COUNTER 0))
-  (:FORALL (:SPEECHBUBBLE (:? ID)) (:INC :COUNTER (:? DONTCARE_29558)))
-  (:FORALL (:COMMENT (:? ID)) (:DEC :COUNTER (:? DONTCARE_29559)))
-  (:LISPV (:? COUNTER) (READ-COUNTER))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::SET-COUNTER 0))
+  (:FORALL (:SPEECHBUBBLE (:? ID)) (:INC :COUNTER (:? DONTCARE_37079)))
+  (:FORALL (:COMMENT (:? ID)) (:DEC :COUNTER (:? DONTCARE_37080)))
+  (:LISPV (:? COUNTER) (ARROWGRAMS/COMPILER::READ-COUNTER))
   (:CHECKZERO (:? COUNTER))
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:CHECKZERO 0) :!)
  ((:CHECKZERO (:? N))
   (:LISP-METHOD
-   (ASSERTA (:LOG
-                                       "fATAL"
-                                       "speechCountCommentCount"
-                                       (:? N)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:LOG
+                                  "fATAL"
+                                  "speechCountCommentCount"
+                                  (:? N)))))
  ((:ASSIGN_WIRE_NUMBERS_TO_EDGES_MAIN (:? EDGEID))
-  (:LISP (SET-COUNTER 0))
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::SET-COUNTER 0))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:EDGE (:? EDGEID))
   (:ASSIGN_WIRE_NUMBER (:? EDGEID))
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:ASSIGN_WIRE_NUMBER (:? EDGEID))
-  (:LISPV (:? OLD) (READ-COUNTER))
+  (:LISPV (:? OLD) (ARROWGRAMS/COMPILER::READ-COUNTER))
   (:LISP-METHOD
-   (ASSERTA (:WIRENUM (:? EDGEID) (:? OLD))))
-  (:LISP (INC-COUNTER)))
+   (ARROWGRAMS/COMPILER::ASSERTA (:WIRENUM (:? EDGEID) (:? OLD))))
+  (:LISP (ARROWGRAMS/COMPILER::INC-COUNTER)))
  ((:SELFINPUTPINS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:CONDSOURCEELLIPSE)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:SOURCE_ELLIPSE (:? ELLIPSEID))
   (:ELLIPSE (:? ELLIPSEID))
   (:COMPONENT (:? MAIN))
   (:PARENT (:? MAIN) (:? ELLIPSEID))
   (:PORTFOR (:? ELLIPSEID) (:? PORTID))
-  (:SOURCE (:? DONTCARE_29561) (:? PORTID))
+  (:SOURCE (:? DONTCARE_37082) (:? PORTID))
   (:LISP-METHOD
-   (ASSERTA (:SELFINPUTPIN (:? PORTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:SELFINPUTPIN (:? PORTID)))))
  ((:SELFOUTPUTPINS_MAIN)
-  (:LISP (TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
   (:CONDSINKELLIPSE)
-  (:LISP (TRUE))
-  (:LISP (TRUE)))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:SINK_ELLIPSE (:? ELLIPSEID))
   (:PARENT (:? MAIN) (:? ELLIPSEID))
   (:COMPONENT (:? MAIN))
   (:PORTFOR (:? ELLIPSEID) (:? PORTID))
-  (:SINK (:? DONTCARE_29562) (:? PORTID))
+  (:SINK (:? DONTCARE_37083) (:? PORTID))
   (:LISP-METHOD
-   (ASSERTA (:SELFOUTPUTPIN (:? PORTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:SELFOUTPUTPIN (:? PORTID)))))
  ((:SINK_RECT (:? RECTID))
   (:RECT (:? RECTID))
   (:PORTFOR (:? RECTID) (:? PORTID))
-  (:SINK (:? DONTCARE_29563) (:? PORTID))
+  (:SINK (:? DONTCARE_37084) (:? PORTID))
   (:LISP-METHOD
-   (ASSERTA (:INPUTPIN
-                                       (:? RECTID)
-                                       (:? PORTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:INPUTPIN (:? RECTID) (:? PORTID)))))
  ((:SOURCE_RECT (:? RECTID))
   (:RECT (:? RECTID))
   (:PORTFOR (:? RECTID) (:? PORTID))
-  (:SOURCE (:? DONTCARE_29564) (:? PORTID))
+  (:SOURCE (:? DONTCARE_37085) (:? PORTID))
   (:LISP-METHOD
-   (ASSERTA (:OUTPUTPIN
-                                       (:? RECTID)
-                                       (:? PORTID)))))
+   (ARROWGRAMS/COMPILER::ASSERTA (:OUTPUTPIN
+                                  (:? RECTID)
+                                  (:? PORTID)))))
  ((:BOUNDINGBOXCOMPLETELYINSIDE (:? ID1) (:? ID2))
   (:BOUNDING_BOX_LEFT (:? ID1) (:? L1))
   (:BOUNDING_BOX_TOP (:? ID1) (:? T1))
@@ -948,12 +900,12 @@
   (:WSPC)
   (:WEN (:? Z)))
  ((:DUMPLOG
-   (:? DONTCARE_29565)
-   (:? DONTCARE_29566)
-   (:? DONTCARE_29567)
-   (:? DONTCARE_29568)
-   (:? DONTCARE_29569))
-  (:LISP (TRUE)))
+   (:? DONTCARE_37086)
+   (:? DONTCARE_37087)
+   (:? DONTCARE_37088)
+   (:? DONTCARE_37089)
+   (:? DONTCARE_37090))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:DUMPLOG (:? U) (:? V) (:? W) (:? X) (:? Y) (:? Z))
   (:WE (:? U))
   (:WSPC)
@@ -967,13 +919,13 @@
   (:WSPC)
   (:WEN (:? Z)))
  ((:DUMPLOG
-   (:? DONTCARE_29570)
-   (:? DONTCARE_29571)
-   (:? DONTCARE_29572)
-   (:? DONTCARE_29573)
-   (:? DONTCARE_29574)
-   (:? DONTCARE_29575))
-  (:LISP (TRUE)))
+   (:? DONTCARE_37091)
+   (:? DONTCARE_37092)
+   (:? DONTCARE_37093)
+   (:? DONTCARE_37094)
+   (:? DONTCARE_37095)
+   (:? DONTCARE_37096))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:DUMPLOG (:? T) (:? U) (:? V) (:? W) (:? X) (:? Y) (:? Z))
   (:WE (:? T))
   (:WSPC)
@@ -989,14 +941,14 @@
   (:WSPC)
   (:WEN (:? Z)))
  ((:DUMPLOG
-   (:? DONTCARE_29576)
-   (:? DONTCARE_29577)
-   (:? DONTCARE_29578)
-   (:? DONTCARE_29579)
-   (:? DONTCARE_29580)
-   (:? DONTCARE_29581)
-   (:? DONTCARE_29582))
-  (:LISP (TRUE)))
+   (:? DONTCARE_37097)
+   (:? DONTCARE_37098)
+   (:? DONTCARE_37099)
+   (:? DONTCARE_37100)
+   (:? DONTCARE_37101)
+   (:? DONTCARE_37102)
+   (:? DONTCARE_37103))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:DUMPLOG (:? S) (:? T) (:? U) (:? V) (:? W) (:? X) (:? Y) (:? Z))
   (:WE (:? S))
   (:WSPC)
@@ -1014,15 +966,15 @@
   (:WSPC)
   (:WEN (:? Z)))
  ((:DUMPLOG
-   (:? DONTCARE_29583)
-   (:? DONTCARE_29584)
-   (:? DONTCARE_29585)
-   (:? DONTCARE_29586)
-   (:? DONTCARE_29587)
-   (:? DONTCARE_29588)
-   (:? DONTCARE_29589)
-   (:? DONTCARE_29590))
-  (:LISP (TRUE)))
+   (:? DONTCARE_37104)
+   (:? DONTCARE_37105)
+   (:? DONTCARE_37106)
+   (:? DONTCARE_37107)
+   (:? DONTCARE_37108)
+   (:? DONTCARE_37109)
+   (:? DONTCARE_37110)
+   (:? DONTCARE_37111))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
  ((:DUMPLOG
    (:? R)
    (:? S)
@@ -1051,19 +1003,19 @@
   (:WSPC)
   (:WEN (:? Z)))
  ((:DUMPLOG
-   (:? DONTCARE_29591)
-   (:? DONTCARE_29592)
-   (:? DONTCARE_29593)
-   (:? DONTCARE_29594)
-   (:? DONTCARE_29595)
-   (:? DONTCARE_29596)
-   (:? DONTCARE_29597)
-   (:? DONTCARE_29598)
-   (:? DONTCARE_29599))
-  (:LISP (TRUE)))
- ((:WSPC) (:LISP (OUT " ")))
- ((:NLE) (:LISP (OUT-NL)))
- ((:WE (:? WE_ARG)) (:LISP (OUT (:? WE_ARG))))
+   (:? DONTCARE_37112)
+   (:? DONTCARE_37113)
+   (:? DONTCARE_37114)
+   (:? DONTCARE_37115)
+   (:? DONTCARE_37116)
+   (:? DONTCARE_37117)
+   (:? DONTCARE_37118)
+   (:? DONTCARE_37119)
+   (:? DONTCARE_37120))
+  (:LISP (ARROWGRAMS/COMPILER::TRUE)))
+ ((:WSPC) (:LISP (ARROWGRAMS/COMPILER::OUT " ")))
+ ((:NLE) (:LISP (ARROWGRAMS/COMPILER::OUT-NL)))
+ ((:WE (:? WE_ARG)) (:LISP (ARROWGRAMS/COMPILER::OUT (:? WE_ARG))))
  ((:WEN (:? WEN_ARG)) (:WE (:? WEN_ARG)) (:NLE))
  ((:PORTFOR (:? RECTORELLIPSEID) (:? PORTID))
   (:PARENT (:? RECTORELLIPSEID) (:? PORTID))
