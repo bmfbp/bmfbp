@@ -378,7 +378,7 @@ script node distribute-output-events
                  % case 2
                  create new-event = event in
                    create pp = part-pin in
-                     set pp.part-name = dest.name-in-container
+                     set pp.part-name = parent-composite-node.name-in-container
                      set pp.pin-name = dest.pin-name
                      set new-event.partpin = pp
                      set new-event.data = output.data
