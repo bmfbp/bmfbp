@@ -235,6 +235,7 @@
    os> sbcl
    sbcl> (quicklisp:register-local-projects)
 ** 3. run
+   os> rm -r ~/.cache/common-lisp
    os> sbcl
    sbcl> (quicklisp:quickload :arrowgrams/build)
    sbcl> (arrowgrams/build::helloworld)
