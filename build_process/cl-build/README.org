@@ -25,80 +25,7 @@
 
 * build results
 #+RESULTS: arrowgrams
-#+begin_example
-drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/worldhello.svg"
-front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/worldhello.svg"
-ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
-assign-parents-to-ellipses find-comments find-metadata 
-"WARNING FB: fact already exists (USED ID2606)"
-retract (:RECT :ID2603)
-add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
-back-end collector gets :PARSE ... 
-build-graph-in-memory pushes "graph" "worldhello"
-build-graph-in-memory pushes "leaf" "string-join"
-build-graph-in-memory pushes "leaf" "world"
-build-graph-in-memory pushes "leaf" "hello"
-
-build phase ***********
-(((:ITEM-KIND . "leaf") (:NAME . "hello") (:IN-PINS "start")
-  (:OUT-PINS "s" "error") (:KIND . "hello")
-  (:FILENAME
-   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./hello.lisp"))
- ((:ITEM-KIND . "leaf") (:NAME . "world") (:IN-PINS "start")
-  (:OUT-PINS "s" "error") (:KIND . "world")
-  (:FILENAME
-   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./world.lisp"))
- ((:ITEM-KIND . "leaf") (:NAME . "string-join") (:IN-PINS "a" "b")
-  (:OUT-PINS "c" "error") (:KIND . "string-join")
-  (:FILENAME
-   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./string-join.lisp"))
- ((:ITEM-KIND . "graph") (:NAME . "worldhello")
-  (:GRAPH (:NAME . "WORLDHELLO") (:INPUTS "START") (:OUTPUTS "RESULT")
-   (:PARTS ((:PART-NAME . "STRING-JOIN") (:KIND-NAME . "STRING-JOIN"))
-    ((:PART-NAME . "WORLD") (:KIND-NAME . "WORLD"))
-    ((:PART-NAME . "HELLO") (:KIND-NAME . "HELLO")))
-   (:WIRING
-    ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "HELLO") (:PIN . "S")))
-     (:RECEIVERS ((:PART . "STRING-JOIN") (:PIN . "B"))))
-    ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "WORLD") (:PIN . "S")))
-     (:RECEIVERS ((:PART . "STRING-JOIN") (:PIN . "A"))))
-    ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "STRING-JOIN") (:PIN . "C")))
-     (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))))
-    ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "START")))
-     (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))
-      ((:PART . "WORLD") (:PIN . "START"))
-      ((:PART . "HELLO") (:PIN . "START"))))))))
-define leaf name ARROWGRAMS/BUILD::HELLO
-define leaf name ARROWGRAMS/BUILD::WORLD
-define leaf name ARROWGRAMS/BUILD::STRING-JOIN
-define graph name "worldhello"
-need name ARROWGRAMS/BUILD::STRING-JOIN
-need name ARROWGRAMS/BUILD::WORLD
-need name ARROWGRAMS/BUILD::HELLO
-install-source "hello" "s"
-install-source "world" "s"
-install-source "string-join" "c"
-install-source "self" "start"
-,**** runner gets pin :KIND-GRAPH
-,**** loading
-,**** injecting input into top node
-,**** initially
-,**** run phase
-g "string-join" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::STRING-JOIN {100564C553}>
-g "world" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::WORLD {100558E323}>
-g "hello" input-queue NIL output-queue NIL self #<ARROWGRAMS/BUILD::HELLO {10054F14F3}>
-react node "TOP"
-"TOP" outputs on pin "result" : T
-react "world"
-react "string-join" with "string-join" "a" "world"
-react "hello"
-react "string-join" with "string-join" "b" "hello"
-"TOP" outputs on pin "result" : "worldhello"
-
-Dispatcher Finished
-
-cl-event-passing terminating - ready list is nil
-#+end_example
+: 3794477685
 * build helloworld3
 #+name: arrowgrams
 #+begin_src lisp :results output
@@ -285,3 +212,38 @@ cl-event-passing terminating - ready list is nil
 
 * notes
 ** bootstrap manifests are in ~/quicklisp/local-projects/bmfbp/build_process/lispparts
+
+
+* instructions for duplication March 29/2020
+  ** 0a. get SBCL  (mac brew? macports? installed with linux?)
+  ** 0b. get quicklisp (mac brew?) https://www.quicklisp.org/beta/ and install
+**  1a. clone pt repos
+   cd quicklisp/local-projects/<clean-directory>
+   git clone git@github.com:guitarvydas/cl-event-passing.git
+   git clone git@github.com:guitarvydas/cl-holm-prolog.git
+   git clone git@github.com:guitarvydas/loops.git
+   git clone git@github.com:guitarvydas/cl-peg.git
+   git clone git@github.com:guitarvydas/sl.git
+**  1b. clone arrowgrams repo
+   git clone git@github.com:bmfbp/bmfbp.git
+   git checkout pt-20200106
+** 2. refresh quicklisp
+   os> sbcl
+   sbcl> (quicklisp:register-local-projects)
+** 3. run
+   os> sbcl
+   sbcl> (quicklisp:quickload :arrowgrams/build)
+   sbcl> (arrowgrams/build::helloworld)
+   << screen-fulls of debug - the last line matters the most 
+      "TOP" outputs on pin "result" : "helloworld" >>
+   use ^D or (exit) to quit sbcl
+   if you get a restart traceback choose the ABORT option and report to me - usually a single digit followed by RETURN
+** 4. edit and repeat
+   use drawio to make a simple change to ~/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.drawio
+     (for example, draw a line from the "start" ellipse and join it to the "result" ellipse, 
+      this should produce two outputs: T and "helloworld")
+   os> sbcl
+   sbcl> (arrowgrams/build::helloworld)
+** (5.) Edit results, if you want to see the graph
+   edit ~/quicklisp/local-projects/bmfbp/build_process/cl-build/helloworld.graph.json
+   

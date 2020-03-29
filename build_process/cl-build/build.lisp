@@ -110,7 +110,7 @@
 #+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
-(defun hwtest ()
+(defun helloworld ()
   (build
    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
