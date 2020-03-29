@@ -34,6 +34,7 @@
 
     (:done
      (let ((code (code-stack self)))
+       (@send self :json-graph (alist-to-json-string code))
        (format t "~%build phase ***********~%~s~%" code)
        (let ((top-most-kind (process-code self (code-stack self))))
          (@send self :kind-graph top-most-kind))))))
