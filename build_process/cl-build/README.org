@@ -217,8 +217,11 @@
 * instructions for duplication March 29/2020
   ** 0a. get SBCL  (mac brew? macports? installed with linux?)
   ** 0b. get quicklisp (mac brew?) https://www.quicklisp.org/beta/ and install
+  ** 0c. install Haskell
+     linux mint: $ sudo apt-get install haskell-platform,
+     https://docs.haskellstack.org/en/stable/README/)
 **  1a. clone pt repos
-   cd quicklisp/local-projects/<clean-directory>
+   cd quicklisp/local-projects/
    git clone git@github.com:guitarvydas/cl-event-passing.git
    git clone git@github.com:guitarvydas/cl-holm-prolog.git
    git clone git@github.com:guitarvydas/loops.git
@@ -226,6 +229,7 @@
    git clone git@github.com:guitarvydas/sl.git
 **  1b. clone arrowgrams repo
    git clone git@github.com:bmfbp/bmfbp.git
+   os> cd bmfbp
    git checkout pt-20200106
 ** 2. refresh quicklisp
    os> sbcl
