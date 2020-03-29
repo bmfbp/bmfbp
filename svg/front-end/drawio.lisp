@@ -12,6 +12,6 @@
      (let ((filename (cl-event-passing-user:@data self e)))
        (let ((s (cl-user::front-end-main filename)))
          (let ((strm (cl:make-string-input-stream s)))
-           (with-open-file (f "/Users/tarvydas/test.pro" :direction :output :if-exists :supersede)
+           #+nil(with-open-file (f "/Users/tarvydas/test.pro" :direction :output :if-exists :supersede)
              (write s :stream f))
            (cl-event-passing-user:@send self :output-string-stream strm)))))))
