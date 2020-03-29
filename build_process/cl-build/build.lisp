@@ -2,7 +2,7 @@
 
 (defparameter *compiler-net* (arrowgrams/compiler:get-compiler-net))
 
-(defun build (filename)
+(defun build (filename output-filename)
   (let ((build-net (@defnetwork build-load-and-run
 
            (:code probe (:in) (:out))
@@ -75,20 +75,24 @@
 
             ")
 
-           (:code build-graph-in-memory (:json-script :done) (:kind-graph :error))
+           (:code build-graph-in-memory (:json-script :done) (:kind-graph :json-graph :error))
+           (:code file-writer (:filename :write) (:error))
            (:code runner (:kind-graph) (:error))
-           (:schem build-load-and-run (:done :svg-filename) (:error)
-            (build build-graph-in-memory runner probe2)
+           (:schem build-load-and-run (:done :svg-filename :output-filename) (:error)
+            (build build-graph-in-memory runner probe2 file-writer)
             "
             self.svg-filename -> build.svg-filename
             self.done -> build.done
+            self.output-filename -> file-writer.filename
 
             build.done -> build-graph-in-memory.done
 
             build.json-collection -> build-graph-in-memory.json-script
             build-graph-in-memory.kind-graph -> runner.kind-graph
 
-            build.error,build-graph-in-memory.error,runner.error -> self.error
+            build-graph-in-memory.json-graph -> file-writer.write
+
+            build.error,build-graph-in-memory.error,runner.error,file-writer.error -> self.error
             ")
 
 	   )))
@@ -97,6 +101,8 @@
       (@enable-logging)
       (let ((pin (e/part::get-input-pin build-net :svg-filename)))
         (@inject build-net pin filename)) ; :tag "build-net filename"))
+      (let ((pin (e/part::get-input-pin build-net :output-filename)))
+        (@inject build-net pin output-filename)) 
       (let ((pin (e/part::get-input-pin build-net :done)))
         (@inject build-net pin T )))) ;:tag "build-net done")))))
   "build.lisp done")
@@ -105,7 +111,10 @@
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
 (defun hwtest ()
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")))
+  (build
+   (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
+   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
+   ))
 
 (defun cl-user::from-esa ()
   ;; compilation steps after changing esa.dsl

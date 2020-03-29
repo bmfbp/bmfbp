@@ -316,6 +316,7 @@
                                      (:file "probe" :depends-on ("package" "classes" "util"))
                                      (:file "probe2" :depends-on ("package" "classes" "util"))
                                      (:file "probe3" :depends-on ("package" "classes" "util"))
+                                     (:file "file-writer" :depends-on ("package"))
                                      (:file "graph-class" :depends-on ("package" "classes" "util" "esa"))
                                      (:file "esa-methods" :depends-on ("package" "classes" "util" "esa"))
                                      (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
@@ -330,6 +331,7 @@
                                      (:file "runner" :depends-on ("package" "classes" "util" "graph"))
 				     (:file "build" :depends-on ("package" "classes" "json"
                                                                  "probe" "probe2" "probe3"
+                                                                 "file-writer"
                                                                  "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "build-collector"
 								 "children-before-graph"
