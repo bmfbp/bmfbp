@@ -360,3 +360,12 @@
 							 "make-kind-from-graph"
 							 "instantiate-kind-recursively"
 							 ))))))
+
+(defsystem :arrowgrams/bundle
+  :depends-on (:arrowgrams/build :cl-json)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "arrowgrams-bundle"
+                        :pathname "./build_process/cl-bundle"
+                        :components ((:file "example")))))
