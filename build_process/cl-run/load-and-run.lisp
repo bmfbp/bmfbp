@@ -2,22 +2,22 @@
 
 (defun load-and-run (graph-filename)
   (let ((graph-alist (json-to-alist (alexandria:read-file-into-string graph-filename))))
-    (format *standard-output* "*** making kind from graph~%")
+    #+nil(format *standard-output* "*** making kind from graph~%")
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in esa.lisp
       
-      (format *standard-output* "*** creating dispatcher~%")
+      #+nil(format *standard-output* "*** creating dispatcher~%")
       (let ((esa-disp (make-instance 'dispatcher)))  ;; dispatcher defined in esa.lisp
 
-	(format *standard-output* "*** instantiating graph~%")
+	#+nil(format *standard-output* "*** instantiating graph~%")
 	(let ((top-node (instantiate-kind-recursively top-kind esa-disp)))
 
-	  (format *standard-output* "*** initializing instances~%")
+	  #+nil(format *standard-output* "*** initializing instances~%")
 	  (initialize-all esa-disp)  ;; initialize-all is in esa.lisp
 
-	  (format *standard-output* "*** distributing initial outputs~%")
+	  #+nil(format *standard-output* "*** distributing initial outputs~%")
 	  (distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in esa.lisp
 
-	  (format *standard-output* "*** injecting START~%")
+	  #+nil(format *standard-output* "*** injecting START~%")
 	  (let ((ev (make-instance 'event))
 		(pp (make-instance 'part-pin)))
 	    (setf (part-name pp) "self")
@@ -26,7 +26,7 @@
 	    (setf (data ev) t)
 	    (enqueue-input top-node ev))
 
-	  (format *standard-output* "*** running~%")
+	  #+nil(format *standard-output* "*** running~%")
 	  (run esa-disp)  ;; run is in esa.lisp
           )))))
 
