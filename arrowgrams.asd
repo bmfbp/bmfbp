@@ -343,13 +343,20 @@
                                                                  ))
 				     ))))
 
-(defsystem :arrowgrams/br
-  :depends-on (:arrowgrams)
+(defsystem :arrowgrams/runner
+  :depends-on (:arrowgrams/build :cl-json)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
-  :components ((:module "arrowgrams-builder-utility"
-                        :pathname "./build_process/cl-build/"
-                        :components ((:file "package")
-                                     (:file "run" :depends-on ("package"))
-				     ))))
+  :components ((:module "arrowgrams-runner-utility"
+                        :pathname "./build_process/cl-run"
+                        :components ((:file "../cl-build/package")
+                                     (:file "esa-methods" :depends-on ("../cl-build/package"))
+                                     (:file "esa" :depends-on ("../cl-build/package" "esa-methods"))
+                                     (:file "make-kind-from-graph" :depends-on ("esa"))
+                                     (:file "instantiate-kind-recursively" :depends-on ("esa"))
+                                     (:file "load-and-run" 
+					    :depends-on (
+							 "make-kind-from-graph"
+							 "instantiate-kind-recursively"
+							 ))))))
