@@ -5,6 +5,8 @@
 
 (in-package :arrowgrams/build)
 
+(defparameter *verbose* t)
+
 ;;;; esa.lisp
 (defclass part-definition ()
   ((part-name :accessor part-name :initform nil)
@@ -498,7 +500,6 @@
 
 (defmethod install-source ((self wire) part-name pin-name)
   (let ((s (make-instance 'source)))
-(format *standard-output* "~&install-source ~s ~S~%" part-name pin-name)
     (setf (part-name s) (string-downcase part-name))
     (setf (pin-name s) (string-downcase pin-name))
     (push s (sources self))))
@@ -531,7 +532,10 @@
 
 (defmethod display-output-events-to-console-and-delete ((self node))
   (dolist (e (get-output-events-and-delete self))
-    (format *standard-output* "~&~s outputs on pin ~s : ~s~%" (name-in-container self) (pin-name (partpin e)) (data e))))
+    (if arrowgrams/build::*verbose*
+      (format *standard-output* "~&~s outputs on pin ~s : ~s~%" (name-in-container self) (pin-name (partpin e)) (data e))
+      (format *standard-output* "~s" (data e)))))
+
 
 (defmethod flagged-as-busy? ((self node))
   (if (busy-flag self)
@@ -633,7 +637,6 @@
     (setf (pin-name d) (pin-name self))))
 
 (defmethod react ((self node) (e event))
-  (format *standard-output* "~&react node ~s~%" (name-in-container self))
   (run-composite-reaction self e))
 
 ;;;; json.lisp

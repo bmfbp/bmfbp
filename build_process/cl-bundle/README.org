@@ -1,8 +1,12 @@
+* cache disabling
+** put this in .zshrc (and .bashrc?), but doesn't work as documented
+  export ASDF_OUTPUT_TRANSLATIONS=/:
+
+
 * testing script(s)
 #+name: bundle
 #+begin_src lisp :results output
   (ql:quickload :arrowgrams/bundle)
-  ;(asdf:load-system :arrowgrams/bundle)
 #+end_src
 
 #+name: bundle
@@ -12,28 +16,7 @@
 #+end_src
 
 #+RESULTS: bundle
-#+begin_example
-To load "arrowgrams/bundle":
-  Load 1 ASDF system:
-    arrowgrams/bundle
-; Loading "arrowgrams/bundle"
-..................................
-sl parsing
-..
-sl parsing
-..
-sl parsing
-.
-sl parsing
-..
-sl parsing
-.
-sl parsing
-........
-[package arrowgrams/compiler].....................
-..................................................
-[package arrowgrams/build].............
-in compiler-event-passing
-...........
-[package arrowgrams/build].......
-#+end_example
+: "TOP""TOP"
+: 
+: Dispatcher Finished
+: 
