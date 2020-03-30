@@ -52,14 +52,15 @@
 (defmethod collect-leaf ((self build-collector) descriptor-as-json-string)
   (push (json-to-alist descriptor-as-json-string) (leaves self)))
 
-(defmethod send-collection ((self build-collector) list-of-alist kind)
+#+nil(defmethod send-collection ((self build-collector) list-of-alist kind)
   (dolist (alist list-of-alist)
     (@send self :final-code (alist-to-json-string alist) ))) ;:tag (format nil "build-collector ~s" kind))))
 
 (defmethod finalize-and-send-collection ((self build-collector))
   ;; leaves and graphs are alists
-  (send-collection self (graphs self) "leaf")
-  (send-collection self (leaves self) "graph")
+  (@send self :final-code (alist-to-json-string (append (leaves self) (graphs self))))
+  #+nil(send-collection self (graphs self) "leaf")
+  #+nil(send-collection self (leaves self) "graph")
   (@send self :done t ) ;:tag "build-collector done")
   (clear self))
 
