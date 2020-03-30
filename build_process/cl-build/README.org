@@ -30,12 +30,12 @@ drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_pro
 front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
 ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
 assign-parents-to-ellipses find-comments find-metadata 
-"WARNING FB: fact already exists (USED ID1196)"
-retract (:RECT :ID1193)
+"WARNING FB: fact already exists (USED ID640)"
+retract (:RECT :ID637)
 add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
 back-end collector gets :PARSE ... 
 terminating - ready list is nil
-3794588585
+3794588671
 #+end_example
 * build helloworld.graph.json and helloworld.graph.lisp (alist)
 #+name: arrowgrams

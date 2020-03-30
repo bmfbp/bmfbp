@@ -5,7 +5,7 @@
 
 
 ;;;; esa.lisp
-(in-package :arrowgrams/build)(defclass part-definition ()
+(defclass part-definition ()
   ((part-name :accessor part-name :initform nil)
    (part-kind :accessor part-kind :initform nil)
    ))
@@ -209,7 +209,7 @@
 
 (defgeneric start #|script|# (self))
 (defgeneric distribute-all-outputs #|script|# (self))
-(defgeneric run #|script|# (self))
+(defgeneric run-dispatcher#|script|# (self))
 (defgeneric declare-finished (self))
 
 
@@ -257,10 +257,10 @@
 
 (defmethod start #|script|# ((self dispatcher))
   ( distribute-all-outputs self)
-  ( run self)
+  ( run-dispatcher self)
   )#|end script|#
 
-(defmethod run #|script|# ((self dispatcher))
+(defmethod run-dispatcher#|script|# ((self dispatcher))
   (let ((done  :true))
     (loop
      (setf  done :true)
@@ -403,7 +403,6 @@
 
   
 ;;;; esa-methods.lisp
-(in-package :arrowgrams/build)
 
 
 ;; for bootstrap - make names case insensitive - downcase everything
@@ -801,9 +800,53 @@
 (defun get-kind (a) (cdr (assoc :kind a)))
 
 
+;;;; instantiate-kind-recursively.lisp
+
+(defun instantiate-kind-recursively (top-kind disp)
+  ;; top-kind -> tree of nodes
+  ;;
+  ;; (kind gives one definition for every node
+  ;;  tree of nodes might create more than one node of the same kind)
+  ;;
+  ;; and memo each node within dispatcher (disp)
+  ;;
+  ;; kind and dispatcher are defined in ../cl-build/esa.lisp
+
+  (let ((top-most-node (loader top-kind "TOP" nil disp)))
+    top-most-node))
+
 ;;;; load-and-run.lisp
 
-(defun load-and-run (graph-filename)
+(defun init-and-run (graph-alist)
+    #+nil(format *standard-output* "*** making kind from graph~%")
+    (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in esa.lisp
+      
+      #+nil(format *standard-output* "*** creating dispatcher~%")
+      (let ((esa-disp (make-instance 'dispatcher)))  ;; dispatcher defined in esa.lisp
+
+	#+nil(format *standard-output* "*** instantiating graph~%")
+	(let ((top-node (instantiate-kind-recursively top-kind esa-disp)))
+
+	  #+nil(format *standard-output* "*** initializing instances~%")
+	  (initialize-all esa-disp)  ;; initialize-all is in esa.lisp
+
+	  #+nil(format *standard-output* "*** distributing initial outputs~%")
+	  (distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in esa.lisp
+
+	  #+nil(format *standard-output* "*** injecting START~%")
+	  (let ((ev (make-instance 'event))
+		(pp (make-instance 'part-pin)))
+	    (setf (part-name pp) "self")
+	    (setf (pin-name pp) "start")
+            (setf (partpin ev) pp)
+	    (setf (data ev) t)
+	    (enqueue-input top-node ev))
+
+	  #+nil(format *standard-output* "*** running~%")
+	  (run-dispatche resa-disp)  ;; run is in esa.lisp
+          ))))
+
+#+nil(defun load-and-run (graph-filename)
   (let ((graph-alist (json-to-alist (alexandria:read-file-into-string graph-filename))))
     #+nil(format *standard-output* "*** making kind from graph~%")
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in esa.lisp
@@ -830,9 +873,43 @@
 	    (enqueue-input top-node ev))
 
 	  #+nil(format *standard-output* "*** running~%")
-	  (run esa-disp)  ;; run is in esa.lisp
+	  (run-dispatcheresa-disp)  ;; run is in esa.lisp
           )))))
 
-(defun test-lar ()
-  (load-and-run (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")))
 
+;;;; graph
+(defparameter *graph*
+'(((:ITEM-KIND . "leaf") (:NAME . "string-join") (:IN-PINS "a" "b")
+  (:OUT-PINS "c" "error") (:KIND . "string-join")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./string-join.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "world") (:IN-PINS "start")
+  (:OUT-PINS "s" "error") (:KIND . "world")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./world.lisp"))
+ ((:ITEM-KIND . "leaf") (:NAME . "hello") (:IN-PINS "start")
+  (:OUT-PINS "s" "error") (:KIND . "hello")
+  (:FILENAME
+   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./hello.lisp"))
+ ((:ITEM-KIND . "graph") (:NAME . "helloworld")
+  (:GRAPH (:NAME . "HELLOWORLD") (:INPUTS "START") (:OUTPUTS "RESULT")
+   (:PARTS ((:PART-NAME . "STRING-JOIN") (:KIND-NAME . "STRING-JOIN"))
+    ((:PART-NAME . "WORLD") (:KIND-NAME . "WORLD"))
+    ((:PART-NAME . "HELLO") (:KIND-NAME . "HELLO")))
+   (:WIRING
+    ((:WIRE-INDEX . 0) (:SOURCES ((:PART . "HELLO") (:PIN . "S")))
+     (:RECEIVERS ((:PART . "STRING-JOIN") (:PIN . "A"))))
+    ((:WIRE-INDEX . 1) (:SOURCES ((:PART . "WORLD") (:PIN . "S")))
+     (:RECEIVERS ((:PART . "STRING-JOIN") (:PIN . "B"))))
+    ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "STRING-JOIN") (:PIN . "C")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))))
+    ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "START")))
+     (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))
+      ((:PART . "WORLD") (:PIN . "START"))
+      ((:PART . "HELLO") (:PIN . "START"))))))))
+  )
+
+;;;;
+
+(defun main ()
+  (init-and-run *graph*))
