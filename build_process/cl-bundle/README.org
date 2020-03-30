@@ -1,0 +1,39 @@
+* testing script(s)
+#+name: bundle
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/bundle)
+  ;(asdf:load-system :arrowgrams/bundle)
+#+end_src
+
+#+name: bundle
+#+begin_src lisp :results output
+  (let ((arrowgrams/build::*verbose* nil))
+    (arrowgrams/build::main))
+#+end_src
+
+#+RESULTS: bundle
+#+begin_example
+To load "arrowgrams/bundle":
+  Load 1 ASDF system:
+    arrowgrams/bundle
+; Loading "arrowgrams/bundle"
+..................................
+sl parsing
+..
+sl parsing
+..
+sl parsing
+.
+sl parsing
+..
+sl parsing
+.
+sl parsing
+........
+[package arrowgrams/compiler].....................
+..................................................
+[package arrowgrams/build].............
+in compiler-event-passing
+...........
+[package arrowgrams/build].......
+#+end_example

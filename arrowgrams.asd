@@ -42,7 +42,7 @@
                                      (:file "test.lisp" :depends-on ("rules.lisp"))))))
 
 (defsystem arrowgrams/parser
-  :depends-on (:arrowgrams :esrap :cl-event-passing :loops)
+  :depends-on (:arrowgrams #| :esrap |# :cl-event-passing :loops)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -61,7 +61,7 @@
                                      (:file "test" :depends-on ("gprolog-to-hprolog" "prolog-peg" "facts"))))))
 
 (defsystem arrowgrams/compiler/xform
-  :depends-on (:arrowgrams :esrap :cl-event-passing :loops :cl-peg)
+  :depends-on (:arrowgrams #| :esrap |# :cl-event-passing :loops :cl-peg)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))

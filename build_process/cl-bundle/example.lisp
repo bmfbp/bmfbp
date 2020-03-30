@@ -3,6 +3,7 @@
   (:use :cl :cl-event-passing-user)
   (:nicknames "AB"))
 
+(in-package :arrowgrams/build)
 
 ;;;; esa.lisp
 (defclass part-definition ()
@@ -260,7 +261,7 @@
   ( run-dispatcher self)
   )#|end script|#
 
-(defmethod run-dispatcher#|script|# ((self dispatcher))
+(defmethod run-dispatcher #|script|# ((self dispatcher))
   (let ((done  :true))
     (loop
      (setf  done :true)
@@ -843,7 +844,7 @@
 	    (enqueue-input top-node ev))
 
 	  #+nil(format *standard-output* "*** running~%")
-	  (run-dispatche resa-disp)  ;; run is in esa.lisp
+	  (run-dispatcher esa-disp)  ;; run is in esa.lisp
           ))))
 
 #+nil(defun load-and-run (graph-filename)
@@ -873,7 +874,7 @@
 	    (enqueue-input top-node ev))
 
 	  #+nil(format *standard-output* "*** running~%")
-	  (run-dispatcheresa-disp)  ;; run is in esa.lisp
+	  (run-dispatcher esa-disp)  ;; run is in esa.lisp
           )))))
 
 
