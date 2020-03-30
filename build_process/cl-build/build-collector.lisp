@@ -63,13 +63,6 @@
   (@send self :done t ) ;:tag "build-collector done")
   (clear self))
 
-#+nil(defmethod leaf-alist ((self build-collector) file-ref-pathname)
-  ;; file-ref is a pathname like #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/split_diagram.lisp"
-  ;; result is a string JSON map with 3 items
-  (let ((file-ref-str (namestring file-ref-pathname)))
-    (let ((name (pathname-name file-ref-pathname)))
-      (json:encode-json-to-string `( (:item-kind . "leaf") (:name . ,name) (:file-name . ,file-ref-str))))))
-
 (defmethod graph-alist ((self build-collector) name json-graph)
 ;(format *standard-output* "~&graph-alist /~s/~%" json-graph)  
   (let ((alist-graph (json-to-alist json-graph)))
