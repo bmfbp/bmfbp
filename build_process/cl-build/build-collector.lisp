@@ -58,9 +58,9 @@
 
 (defmethod finalize-and-send-collection ((self build-collector))
   ;; leaves and graphs are alists
-  (@send self :final-code (alist-to-json-string (append (leaves self) (graphs self))))
-  #+nil(send-collection self (graphs self) "leaf")
-  #+nil(send-collection self (leaves self) "graph")
+  (let ((final-alist (append (leaves self) (graphs self))))
+    (@send self :alist final-alist)
+    (@send self :final-code (alist-to-json-string final-alist)))
   (@send self :done t ) ;:tag "build-collector done")
   (clear self))
 

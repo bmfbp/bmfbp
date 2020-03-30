@@ -2,7 +2,7 @@
 
 (defparameter *compiler-net* (arrowgrams/compiler:get-compiler-net))
 
-(defun build (filename output-filename)
+(defun build (filename output-filename alist-filename)
   (let ((build-net (@defnetwork build-load-and-run
 
            (:code probe (:in) (:out))
@@ -55,9 +55,9 @@
             compile-single-diagram.error, schematic-or-leaf.error,get-manifest-file.error,children-before-graph.error -> self.error 
             ")
 
-           (:code build-collector (:graph :name :descriptor :done) (:final-code :done :error))
+           (:code build-collector (:graph :name :descriptor :done) (:final-code :alist :done :error))
            
-           (:schem build (:done :svg-filename) (:json-collection :done :error)
+           (:schem build (:done :svg-filename) (:json-collection :alist :done :error)
             (build-recursive build-collector)
             "
             self.svg-filename -> build-recursive.svg-filename
@@ -70,22 +70,26 @@
             build-recursive.descriptor -> build-collector.descriptor
 
             build-collector.final-code -> self.json-collection
+            build-collector.alist -> self.alist
 
             build-recursive.error,build-collector.error -> self.error
 
             ")
 
            (:code file-writer (:filename :write) (:error))
-           (:schem build-load-and-run (:done :svg-filename :output-filename) (:error)
-            (build probe2 file-writer)
+           (:code alist-writer (:filename :write) (:error))
+           (:schem build-load-and-run (:done :svg-filename :output-filename :alist-filename) (:error)
+            (build file-writer alist-writer)
             "
             self.svg-filename -> build.svg-filename
             self.done -> build.done
             self.output-filename -> file-writer.filename
+            self.alist-filename -> alist-writer.filename
 
             build.json-collection -> file-writer.write
+            build.alist -> alist-writer.write
 
-            build.error,file-writer.error -> self.error
+            build.error,file-writer.error,alist-writer.error -> self.error
             ")
 
 	   )))
@@ -96,6 +100,8 @@
         (@inject build-net pin filename)) ; :tag "build-net filename"))
       (let ((pin (e/part::get-input-pin build-net :output-filename)))
         (@inject build-net pin output-filename)) 
+      (let ((pin (e/part::get-input-pin build-net :alist-filename)))
+        (@inject build-net pin alist-filename)) 
       (let ((pin (e/part::get-input-pin build-net :done)))
         (@inject build-net pin T )))) ;:tag "build-net done")))))
   "build.lisp done")
@@ -107,6 +113,7 @@
   (build
    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
+   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.lisp")
    ))
 
 (defun cl-user::from-esa ()
