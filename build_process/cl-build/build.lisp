@@ -83,6 +83,8 @@
             self.done -> build.done
             self.output-filename -> file-writer.filename
 
+            build.json-collection -> file-writer.write
+
             build.error,file-writer.error -> self.error
             ")
 
