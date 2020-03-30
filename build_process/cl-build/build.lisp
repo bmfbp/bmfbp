@@ -112,11 +112,11 @@
 (defun cl-user::from-esa ()
   ;; compilation steps after changing esa.dsl
   (ql:quickload :arrowgrams/build)
-  (ab::hwtest))
+  (ab::helloworld))
 
 (defun cl-user::from-top ()
   (uiop:run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/rephrase-compiler)
   (ab::make-esa-dsl)
   (ql:quickload :arrowgrams/build)
-  (ab::hwtest))
+  (ab::helloworld))

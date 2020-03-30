@@ -10,12 +10,12 @@
     (arrowgrams/build::test-lar))
 #+end_src
 
+#+RESULTS: runner
+: T"helloworld"
+
 ** verbose
 #+name: runner
 #+begin_src lisp :results output
     (arrowgrams/build::test-lar)
 #+end_src
-
-#+RESULTS: runner
-: T"helloworld"
 
