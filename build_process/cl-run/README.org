@@ -6,22 +6,16 @@
 
 #+name: runner
 #+begin_src lisp :results output
-  (arrowgrams/build::test-lar)
+  (let ((arrowgrams/build::*verbose* nil))
+    (arrowgrams/build::test-lar))
+#+end_src
+
+** verbose
+#+name: runner
+#+begin_src lisp :results output
+    (arrowgrams/build::test-lar)
 #+end_src
 
 #+RESULTS: runner
-#+begin_example
-,*** making kind from graph
-,*** creating dispatcher
-,*** instantiating graph
-,*** initializing instances
-,*** distributing initial outputs
-,*** injecting START
-,*** running
-"TOP" outputs on pin "result" : T
-"TOP" outputs on pin "result" : "helloworld"
-
-Dispatcher Finished
-
-#+end_example
+: T"helloworld"
 

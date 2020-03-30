@@ -1,5 +1,6 @@
 (in-package :arrowgrams/build)
 
+(defparameter *verbose* t)
 
 ;; for bootstrap - make names case insensitive - downcase everything
 
@@ -125,7 +126,9 @@
 
 (defmethod display-output-events-to-console-and-delete ((self node))
   (dolist (e (get-output-events-and-delete self))
-    (format *standard-output* "~&~s outputs on pin ~s : ~s~%" (name-in-container self) (pin-name (partpin e)) (data e))))
+    (if *verbose*
+	(format *standard-output* "~&~s outputs on pin ~s : ~s~%" (name-in-container self) (pin-name (partpin e)) (data e))
+	(format *standard-output* "~S" (data e)))))
 
 (defmethod flagged-as-busy? ((self node))
   (if (busy-flag self)
@@ -215,8 +218,8 @@
   (setf (top-node self) n))
 
 (defmethod declare-finished ((self dispatcher))
-  (format *standard-output* "~&~%Dispatcher Finished~%~%"))
-
+  (if *verbose*
+      (format *standard-output* "~&~%Dispatcher Finished~%~%")))
 
 (defun string=-downcase (a b)
   (string= (string-downcase a) (string-downcase b)))
