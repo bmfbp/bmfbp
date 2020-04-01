@@ -386,6 +386,7 @@
                         :pathname "./cl-event-passing-no-esrap"
                         :components ((:file "package")
                                      (:file "util" :depends-on ("package"))
+                                     (:file "net-parser" :depends-on ("package"))
                                      (:file "pin" :depends-on ("package" "event"))
                                      (:file "part" :depends-on ("package" "pin"))
                                      (:file "schematic" :depends-on ("package" "pin" "part" "source" "event"))
