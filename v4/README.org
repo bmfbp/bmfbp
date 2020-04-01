@@ -10,6 +10,10 @@
 #+end_src
 #+name: v4
 #+begin_src lisp :results output
+  (princ "<nothing>")
+#+end_src
+#+name: v4
+#+begin_src lisp :results output
 (let ((output (namestring (asdf:system-relative-pathname :arrowgrams "v4/cl-compiler/output.prolog")))
       (golden (namestring (asdf:system-relative-pathname :arrowgrams "v4/golden.prolog")))
       (cmd (namestring (asdf:system-relative-pathname :arrowgrams "v4/fbdiff.bash"))))
