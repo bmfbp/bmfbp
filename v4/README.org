@@ -10,7 +10,7 @@
 #+end_src
 #+name: v4
 #+begin_src lisp :results output
-(let ((output (namestring (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/output.prolog")))
+(let ((output (namestring (asdf:system-relative-pathname :arrowgrams "v4/cl-compiler/output.prolog")))
       (golden (namestring (asdf:system-relative-pathname :arrowgrams "v4/golden.prolog")))
       (cmd (namestring (asdf:system-relative-pathname :arrowgrams "v4/fbdiff.bash"))))
   (let ((full-cmd (format nil "~a ~a ~a" cmd output golden)))
@@ -21,7 +21,11 @@
 #+end_src
 
 #+RESULTS: v4
-: x=NIL y=NIL z=0
+: To load "arrowgrams/v4compiler":
+:   Load 1 ASDF system:
+:     arrowgrams/v4compiler
+: ; Loading "arrowgrams/v4compiler"
+: 
 
 * spacer
 

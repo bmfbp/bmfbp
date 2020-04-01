@@ -374,69 +374,125 @@
 ;;;;;;;;;;
 ;;;;;;;;;; compiler v4
 ;;;;;;;;;;
+
+(defsystem :arrowgrams/v4compiler/top
+  :depends-on (:arrowgrams :cl-event-passing :cl-holm-prolog :cl-ppcre :cl-json :sl :alexandria)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "v4compiler-top"
+                        :pathname "./v4/"
+                        :components ((:file "package")
+                                     (:file "part" :depends-on ("package"))
+                                     (:file "classes" :depends-on ("package" "part"))
+                                     (:file "util" :depends-on ("package" "part" "classes"))
+))))
+
+(defsystem :arrowgrams/v4compiler/front-end
+  :depends-on (:arrowgrams :arrowgrams/v4compiler/top)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "front-end"
+                        :pathname "./v4/front-end/"
+                        :components ((:file "main")
+                                     (:file "drawio" :depends-on ("main"))))))
+
+(defsystem arrowgrams/v4compiler/back-end
+  :depends-on (:arrowgrams :arrowgrams/v4compiler/top)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./v4/back-end"
+			:components ((:file "token")
+				     (:file "synchronizer" :depends-on ("token"))
+				     (:file "tokenize" :depends-on ("token"))
+				     (:file "parens" :depends-on ("token"))
+				     (:file "ws" :depends-on ("token"))
+				     (:file "spaces" :depends-on ("token"))
+				     (:file "strings" :depends-on ("token"))
+				     (:file "symbols" :depends-on ("token"))
+				     (:file "integers" :depends-on ("token"))
+				     (:file "dumper" :depends-on ("token"))
+				     (:file "parse-util" :depends-on ("token"))
+				     (:file "preparse" :depends-on ("token"))
+				     (:file "file-writer" :depends-on ("token"))
+                                     (:file "schem-unparse" :depends-on ("token" "parse-util"))
+                                     (:file "collector-sl" :depends-on ("token" "parse-util"))
+                                     (:file "file-namer")
+                                     (:file "collector" :depends-on ("token" "parse-util" "collector-sl" "schem-unparse"))
+                                     (:file "emitter-pass2-generic-sl" :depends-on ("token" "parse-util"))
+                                     (:file "emitter-pass2-generic" :depends-on ("token" "parse-util" "emitter-pass2-generic-sl"))
+                                     (:file "json-emitter-sl" :depends-on ("token" "parse-util"))
+                                     (:file "json-emitter" :depends-on ("token" "parse-util" "json-emitter-sl"))
+                                     (:file "generic-sl" :depends-on ("token"))
+				     (:file "generic-emitter" :depends-on ("token" "parse-util" "generic-sl"))
+                                     (:file "lisp-sl" :depends-on ("token"))
+				     (:file "lisp-emitter" :depends-on ("token" "parse-util" "lisp-sl"))
+                                     (:file "json1-sl" :depends-on ("token"))
+				     (:file "json1-emitter" :depends-on ("token" "parse-util" "json1-sl"))
+				     (:file "parser" :depends-on ("token" "tokenize" "strings" "ws"
+                                                                  "symbols" "integers" "spaces" "preparse" "file-writer"
+                                                                  "generic-emitter" "collector" "lisp-emitter" "json1-emitter"
+                                                                  "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))))))
+
 (defsystem :arrowgrams/v4compiler
-  :depends-on (:arrowgrams :cl-holm-prolog :cl-ppcre :cl-json :arrowgrams/compiler/back-end :arrowgrams/compiler/v4part :arrowgrams/compiler/front-end)
+  :depends-on (:arrowgrams :arrowgrams/v4compiler/top :arrowgrams/v4compiler/front-end :arrowgrams/v4compiler/back-end)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
   :components ((:module "cl-compiler"
-                        :pathname "./svg/cl-compiler/"
-                        :components ((:file "package")
-                                     (:file "classes" :depends-on ("package"))
+                        :pathname "./v4/cl-compiler/"
+                        :components (
+                                     (:file "probe")
 
-                                     (:file "probe" :depends-on ("package"))
+                                     (:file "fb")
+                                     (:file "sequencer")
+                                     (:file "unmapper")
+                                     (:file "reader")
+                                     (:file "writer")
+                                     (:file "convert-to-keywords")
+                                     (:file "ellipse-bounding-boxes")
+                                     (:file "rectangle-bounding-boxes")
+                                     (:file "speechbubble-bounding-boxes")
+                                     (:file "text-bounding-boxes")
+                                     (:file "assign-parents-to-ellipses")
 
-				     (:file "compiler-part" :depends-on ("package" "classes"))
+                                     (:file "rules")
 
-                                     (:file "fb" :depends-on ("compiler-part" "util"))
-                                     (:file "sequencer" :depends-on ("compiler-part"))
-                                     (:file "unmapper" :depends-on ("compiler-part"))
-                                     (:file "reader" :depends-on ("compiler-part"))
-                                     (:file "writer" :depends-on ("compiler-part"))
-                                     (:file "convert-to-keywords" :depends-on ("compiler-part"))
-                                     (:file "ellipse-bounding-boxes" :depends-on ("compiler-part"))
-                                     (:file "rectangle-bounding-boxes" :depends-on ("compiler-part"))
-                                     (:file "speechbubble-bounding-boxes" :depends-on ("compiler-part"))
-                                     (:file "text-bounding-boxes" :depends-on ("compiler-part"))
-                                     (:file "assign-parents-to-ellipses" :depends-on ("compiler-part"))
-                                     (:file "util" :depends-on ("compiler-part"))
+                                     (:file "demux")
+                                     (:file "find-comments")
+                                     (:file "find-metadata")
+                                     (:file "add-kinds" :depends-on ("rules"))
+                                     (:file "add-self-ports" :depends-on ("rules"))
+                                     (:file "create-centers" :depends-on ("rules"))
+                                     (:file "calculate-distances" :depends-on ("rules"))
+                                     (:file "make-unknown-port-names")
+                                     (:file "closest")
+                                     (:file "assign-portnames" :depends-on ("closest"))
+                                     (:file "mark-indexed-ports")
+                                     (:file "coincident-ports")
+                                     (:file "mark-directions")
+                                     (:file "mark-nc")
+                                     (:file "match-ports-to-components")
+                                     (:file "pinless")
+                                     (:file "sem-parts-have-some-ports")
+                                     (:file "sem-ports-have-sink-or-source")
+                                     (:file "sem-no-duplicate-kinds")
+                                     (:file "sem-speech-vs-comments")
+                                     (:file "assign-wire-numbers-to-edges" :depends-on ("rules-util" ))
+                                     (:file "self-input-pins")
+                                     (:file "self-output-pins")
+                                     (:file "input-pins")
+                                     (:file "output-pins")
 
-                                     (:file "rules" :depends-on ("compiler-part"))
+                                     (:file "ir-emitter")
 
-                                     (:file "demux" :depends-on ("compiler-part"))
-                                     (:file "find-comments" :depends-on ("compiler-part"))
-                                     (:file "find-metadata" :depends-on ("compiler-part" "util"))
-                                     (:file "add-kinds" :depends-on ("compiler-part" "rules"))
-                                     (:file "add-self-ports" :depends-on ("compiler-part" "rules"))
-                                     (:file "create-centers" :depends-on ("compiler-part" "rules"))
-                                     (:file "calculate-distances" :depends-on ("compiler-part" "rules"))
-                                     (:file "make-unknown-port-names" :depends-on ("compiler-part"))
-                                     (:file "closest" :depends-on ("compiler-part"))
-                                     (:file "assign-portnames" :depends-on ("compiler-part" "closest"))
-                                     (:file "mark-indexed-ports" :depends-on ("compiler-part"))
-                                     (:file "coincident-ports" :depends-on ("compiler-part"))
-                                     (:file "mark-directions" :depends-on ("compiler-part"))
-                                     (:file "mark-nc" :depends-on ("compiler-part"))
-                                     (:file "match-ports-to-components" :depends-on ("compiler-part"))
-                                     (:file "pinless" :depends-on ("compiler-part"))
-                                     (:file "sem-parts-have-some-ports" :depends-on ("compiler-part"))
-                                     (:file "sem-ports-have-sink-or-source" :depends-on ("compiler-part"))
-                                     (:file "sem-no-duplicate-kinds" :depends-on ("compiler-part"))
-                                     (:file "sem-speech-vs-comments" :depends-on ("compiler-part"))
-                                     (:file "assign-wire-numbers-to-edges" :depends-on ("compiler-part" "rules-util" "util"))
-                                     (:file "self-input-pins" :depends-on ("compiler-part"))
-                                     (:file "self-output-pins" :depends-on ("compiler-part"))
-                                     (:file "input-pins" :depends-on ("compiler-part"))
-                                     (:file "output-pins" :depends-on ("compiler-part"))
-
-                                     (:file "ir-emitter" :depends-on ("compiler-part"))
-
-                                     (:file "rules-util" :depends-on ("compiler-part"))
-
+                                     (:file "rules-util")
 
                                      (:file "compiler"
-                                      :depends-on ("package" "classes" "compiler-part"
-                                                   "probe"
+                                      :depends-on ("probe"
                                                    "reader" "unmapper" "fb" "writer" "convert-to-keywords" "sequencer"
                                                    "ellipse-bounding-boxes" "rectangle-bounding-boxes"
                                                    "speechbubble-bounding-boxes" "text-bounding-boxes"
@@ -474,11 +530,5 @@
                                                    "rules-util"
 
                                                    ))))))
-(defsystem :arrowgrams/compiler/v4part
-  :around-compile (lambda (next)
-                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-                    (funcall next))
-  :components ((:module "compiler-part-class-definition"
-                        :pathname "./v4/"
-                        :components ((:file "package")
-                                     (:file "v4part" :depends-on ("package"))))))
+
+
