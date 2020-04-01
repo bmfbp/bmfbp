@@ -239,7 +239,7 @@
 
 
 (defsystem :arrowgrams/rephrase-compiler
-    :depends-on (:cl-event-passing :alexandria)
+    :depends-on (:arrowgrams/cl-event-passing-no-esrap :alexandria)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
                                   (safety 3)
@@ -301,8 +301,7 @@
                                        (:file "esa-parser")))))
 
 (defsystem :arrowgrams/build
-  :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :sl :loops :cl-event-passing :cl-holm-prolog
-			       :arrowgrams/compiler)
+  :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
