@@ -1,7 +1,7 @@
 * scripts
 #+name: v4
 #+begin_src lisp :results output
-  (ql:quickload :arrowgrams/compiler)
+  (ql:quickload :arrowgrams/v4compiler)
 #+end_src
 
 #+name: v4
