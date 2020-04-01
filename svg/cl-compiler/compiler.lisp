@@ -371,6 +371,9 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
                     (e/part::get-input-pin compiler-net :finished-pipeline)
                     T))))
 
+(defun main ()
+  (new-main))
+  
 (defun ctest ()
   #+nil#(system:run-shell-command "rm -rf ~/.cache/common-lisp")
   (asdf::run-program "rm -rf ~/.cache/common-lisp")

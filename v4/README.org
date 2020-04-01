@@ -1,0 +1,27 @@
+* scripts
+#+name: v4
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/compiler)
+#+end_src
+
+#+name: v4
+#+begin_src lisp :results output
+(arrowgrams/compiler::main)
+#+end_src
+#+name: v4
+#+begin_src lisp :results output
+(let ((output (namestring (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/output.prolog")))
+      (golden (namestring (asdf:system-relative-pathname :arrowgrams "v4/golden.prolog")))
+      (cmd (namestring (asdf:system-relative-pathname :arrowgrams "v4/fbdiff.bash"))))
+  (let ((full-cmd (format nil "~a ~a ~a" cmd output golden)))
+    ;(format t "~&~a~%" full-cmd)
+    (multiple-value-bind (x y z)
+      (uiop:run-program full-cmd)
+      (format t "~&x=~s y=~s z=~s~%" x y z)))) ;; should be NIL NIL 0
+#+end_src
+
+#+RESULTS: v4
+: x=NIL y=NIL z=0
+
+* spacer
+

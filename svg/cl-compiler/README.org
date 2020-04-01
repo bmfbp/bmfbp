@@ -1,0 +1,20 @@
+* scripts
+#+name: v3
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/compiler)
+#+end_src
+
+#+name: v3
+#+begin_src lisp :results output
+(arrowgrams/compiler::main))
+#+end_src
+#+name: v3
+#+begin_src lisp :results output
+(let ((output (namestring (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/output.prolog")))
+      (golden (namestring (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/golden.prolog")))
+      (cmd (namestring (asdf:system-relative-pathname :arrowgrams "svg/cl-compiler/fbdiff.bash"))))
+  (uiop:run-program (format nil "~a ~a ~a" cmd output golden)))
+#+end_src
+
+#+RESULTS: v3
+
