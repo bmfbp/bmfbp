@@ -1,5 +1,5 @@
 (defsystem :arrowgrams
-  :depends-on (:cl-event-passing :cl-peg :loops)
+  :depends-on (:cl-peg :loops)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -375,8 +375,38 @@
 ;;;;;;;;;; compiler v4
 ;;;;;;;;;;
 
+(defsystem "arrowgrams/cl-event-passing-no-esrap"
+  :depends-on (:loops)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:module "source"
+                        :pathname "./cl-event-passing-no-esrap"
+                        :components ((:file "package")
+                                     (:file "util" :depends-on ("package"))
+                                     (:file "pin" :depends-on ("package" "event"))
+                                     (:file "part" :depends-on ("package" "pin"))
+                                     (:file "schematic" :depends-on ("package" "pin" "part" "source" "event"))
+                                     (:file "event" :depends-on ("package"))
+                                     (:file "source" :depends-on ("package" "pin" "event" "wire"))
+                                     (:file "receiver" :depends-on ("package" "pin" "event" "part"))
+                                     (:file "wire" :depends-on ("package" "util" "receiver" "pin"))
+                                     (:file "dispatch" :depends-on ("package" "util" "part" "event"))
+				     (:file "macro-support"  :depends-on ("package" "util" "pin" "part" "schematic" "event"
+                                                                          "source" "receiver" "wire" "dispatch"))
+				     (:file "macro"  :depends-on ("package" "util" "pin" "part" "schematic" "event"
+                                                                          "source" "receiver" "wire" "dispatch"))
+				     (:file "api"  :depends-on ("package" "util" "pin" "part"
+                                                                "schematic" "event" "source" "receiver" "wire" "dispatch"))
+				     (:file "logging"  :depends-on ("api" "macro" "macro-support" "package" "util" "pin" "part"
+                                                                "schematic" "event" "source" "receiver" "wire" "dispatch"))
+				     (:file "checking"  :depends-on ("api" "macro" "macro-support" "package" "util" "pin" "part"
+                                                                "schematic" "event" "source" "receiver" "wire" "dispatch"))))))
+
 (defsystem :arrowgrams/v4compiler/top
-  :depends-on (:arrowgrams :cl-event-passing :cl-holm-prolog :cl-ppcre :cl-json :sl :alexandria)
+  :depends-on (:arrowgrams/cl-event-passing-no-esrap :cl-holm-prolog :cl-ppcre :cl-json :alexandria)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -389,7 +419,7 @@
 ))))
 
 (defsystem :arrowgrams/v4compiler/front-end
-  :depends-on (:arrowgrams :arrowgrams/v4compiler/top)
+  :depends-on (:arrowgrams/v4compiler/top)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -399,7 +429,7 @@
                                      (:file "drawio" :depends-on ("main"))))))
 
 (defsystem arrowgrams/v4compiler/back-end
-  :depends-on (:arrowgrams :arrowgrams/v4compiler/top)
+  :depends-on (:arrowgrams/v4compiler/top)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -438,7 +468,7 @@
                                                                   "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))))))
 
 (defsystem :arrowgrams/v4compiler
-  :depends-on (:arrowgrams :arrowgrams/v4compiler/top :arrowgrams/v4compiler/front-end :arrowgrams/v4compiler/back-end)
+  :depends-on (:arrowgrams/v4compiler/top :arrowgrams/v4compiler/front-end :arrowgrams/v4compiler/back-end)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))

@@ -1,0 +1,59 @@
+* deprecated
+** abandoning the tests for this project in lieue of Arrowgrams and its tests, both of which should be simpler
+** still bootstrapping Arrowgrams
+** making band-aid fixes to get Arrowgrams bootstrap working
+
+* Usage
+** (ql:quickload :cl-event-passing/examples) (cl-user::test-all)
+   
+   expected result:
+   test0
+   consumed message "hello" on incoming pin :IN of "consumer"
+   test6
+
+   "test 6" 
+   test6a
+   
+   "test 6" 
+   test7
+   
+   "test 7" 
+   test8
+   test9
+   test 16
+   
+   "test 16" 
+   feedback test
+   
+   "(IN-PACKAGE :CL-EVENT-PASSING-USER)" 
+   "(DEFUN TEST-FEEDBACK NIL (LET ((NET (CL-EVENT-PASSING-USER:@DEFNETWORK CL-EVENT-PASSING-USER::MAIN (:CODE FILE-STREAM (:FILE-NAME :READ :CLOSE) (:STREAM :OBJECT :DONE :FATAL) (FUNCTION FILE-STREAM) (FUNCTION FILE-STREAM-RESET)) (:CODE ITER (:BEGIN :NEXT :FINISH) (:NEXT :FATAL) (FUNCTION ITER) (FUNCTION ITER-RESET)) (:CODE CAT (:IN) (:OUT :FATAL) (FUNCTION CAT)) (:CODE FATAL (:IN) NIL (FUNCTION FATAL)) (:SCHEM CL-EVENT-PASSING-USER::MAIN (:IN) (:OUT) (FILE-STREAM ITER CAT FATAL) ((((:SELF :IN)) ((FILE-STREAM :FILE-NAME))) (((ITER :NEXT)) ((FILE-STREAM :READ))) (((FILE-STREAM :STREAM)) ((ITER :BEGIN))) (((FILE-STREAM :OBJECT)) ((ITER :NEXT) (CAT :IN))) (((FILE-STREAM :DONE)) ((ITER :FINISH) (FILE-STREAM :CLOSE))) (((CAT :OUT)) ((:SELF :OUT))) (((FILE-STREAM :FATAL) (ITER :FATAL) (CAT :FATAL)) ((FATAL :IN)))))))) (LET ((AP CL-EVENT-PASSING-DISPATCH::*ALL-PARTS*)) (ASSERT (= 5 (LENGTH AP))) (@INJECT NET (CL-EVENT-PASSING-PART::GET-INPUT-PIN NET :IN) (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :CL-EVENT-PASSING \"test-feedback.lisp\")) (@HISTORY))))" 
+   NIL
+
+* Status
+** test-reuse3 working
+
+* Design Intention
+** FYI - when an event arrives at a Code part (aka Leaf), it runs some code (usually a CASE on the pin name) to completion then returns.  When an event arrives at a Schematic, the "same" thing happens - the event is passed into the bowels of the schematic and is processed to completion by the graph of parts.
+** schematic input handler
+   set self.busy true
+   lookup the input pin in self.sources, then dispatch the event
+   set self.busy false (the dispatcher will see self as busy recursively, if any of self's children are busy, this recurs until we hit code parts.  [nb. need to revamp busy to tak output and input queues into account in parts of lower-level schematics)
+
+
+* Incoming vs Outgoing
+** An Outgoing Receiver is one who's target is an output pin
+** Everything else is Incoming (there is only one other direction :in)
+** obsoleted (information subsumed into input-pin and output-pin)
+
+* Todo examples
+** character pipeline
+** whole-file pipeline
+** full-blown network (with feedback)
+** do we need a line-based pipeline (i.e. unix-like)?
+
+
+* branches
+** master 
+
+* todo
+** think about if this is needed: mark all parents (recursively) that have first-time-handlers somewhere inside

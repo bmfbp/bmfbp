@@ -860,6 +860,5 @@
     (parser filename gfile jfile lfile)))
 
 (defun cl-user::clear ()
-  (esrap::clear-rules)
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/compiler/back-end))
