@@ -21,11 +21,7 @@
 #+end_src
 
 #+RESULTS: v4
-: To load "arrowgrams/v4compiler":
-:   Load 1 ASDF system:
-:     arrowgrams/v4compiler
-: ; Loading "arrowgrams/v4compiler"
-: 
+: x=NIL y=NIL z=0
 
 * spacer
 

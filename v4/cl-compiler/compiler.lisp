@@ -37,7 +37,7 @@
   ;(let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/build_process.svg")))
   (let ((filename (asdf:system-relative-pathname :arrowgrams/compiler "build_process/kk/ide.svg")))
     (let ((map-filename nil))
-      (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "svg/cl-compiler/output.prolog")))
+      (let ((output-filename (asdf:system-relative-pathname :arrowgrams/compiler "v4/cl-compiler/output.prolog")))
 	(compiler-event-passing filename map-filename output-filename)))))
 
 (defun get-compiler-net ()
