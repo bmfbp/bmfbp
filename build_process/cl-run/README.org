@@ -11,7 +11,15 @@
 #+end_src
 
 #+RESULTS: runner
-: T"helloworld"
+: To load "arrowgrams/runner":
+:   Load 1 ASDF system:
+:     arrowgrams/runner
+: ; Loading "arrowgrams/runner"
+: ..................................................
+: [package arrowgrams/build].............
+: in compiler-event-passing
+: ...........
+: [package arrowgrams/build]......
 
 ** verbose
 #+name: runner
