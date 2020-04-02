@@ -1,4 +1,4 @@
-(in-package :arrowgrams/build)
+(in-package :arrowgrams/esa)
 
 (defun rephrase (filename)
   (let ((net (@defnetwork scanner

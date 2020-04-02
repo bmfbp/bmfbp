@@ -247,10 +247,10 @@
                       (funcall next))
     :components ((:module "source"
                           :pathname "./build_process/esa"
-                          :components ((:file "../cl-build/package")
-                                       (:file "token" :depends-on ("../cl-build/package"))
-                                       (:file "classes" :depends-on ("../cl-build/package"))
-                                       (:file "rp-macros" :depends-on ("../cl-build/package"))
+                          :components ((:file "package")
+                                       (:file "token" :depends-on ("package"))
+                                       (:file "classes" :depends-on ("package"))
+                                       (:file "rp-macros" :depends-on ("package"))
 				       
                                        (:file "dumper" :depends-on ("token" "classes"))
 
@@ -265,7 +265,7 @@
                                        (:file "error-manager" :depends-on ("token" "classes"))
 
                                        (:file "parser-mechanisms"
-					      :depends-on ("../cl-build/package"
+					      :depends-on ("package"
 							   "token" "classes" "dumper"
                                                            "rp-macros"
                                                            "error-manager"
@@ -273,7 +273,7 @@
 							   "symbols" "integers"))
                                        (:file "rp-rules" :depends-on ("parser-mechanisms"))
                                        (:file "rp-parser" :depends-on ("rp-rules"))
-                                       (:file "file-writer" :depends-on ("../cl-build/package" "classes"))
+                                       (:file "file-writer" :depends-on ("package" "classes"))
                                        (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
 
 (defsystem :arrowgrams/esa
@@ -288,7 +288,7 @@
                           :components ((:file "esa-dsl")
                                        (:file "esa-parser")))))
 
-(defsystem :arrowgrams/esa-js
+#+nil (defsystem :arrowgrams/esa-js
     :depends-on (:arrowgrams/rephrase-compiler)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)

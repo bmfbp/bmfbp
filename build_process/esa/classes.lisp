@@ -1,4 +1,4 @@
-(in-package :arrowgrams/build)
+(in-package :arrowgrams/esa)
 
 (defclass string-stack-entry () 
   ((counter :accessor counter :initform 0)
@@ -9,7 +9,8 @@
 
 
 (defclass class-descriptor ()
-  ((methods :accessor methods :initform (make-hash-table :test 'equal))))
+  ((methods :accessor methods :initform (make-hash-table :test 'equal))
+   (name :accessor name :initarg nil)))
 
 (defun make-empty-class ()
   (make-instance 'class-descriptor))
@@ -43,5 +44,7 @@
    (string-stack :accessor string-stack :initform nil)
 
    ;; class stuff for v2 emission
-   
+   (esa-classes :accessor esa-classes :initform (make-hash-table :test 'equal))
+   (class-desciptor-stack :accessor class-descriptor-stack)
+   (method-desciptor-stack :accessor method-descriptor-stack)
    ))

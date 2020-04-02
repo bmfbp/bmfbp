@@ -1,4 +1,4 @@
-(in-package :arrowgrams/build)
+(in-package :arrowgrams/esa)
 
 (defun create-esa-compiler (input-filename output-filename)
   (let ((net (@defnetwork parse
@@ -148,18 +148,18 @@
         (@inject net start-pin filename)))))
 
 (defun make-esa-dsl ()
-  (arrowgrams/build::create-esa-compiler (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")
+  (arrowgrams/esa::create-esa-compiler (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.rp")
 					 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl.lisp")))
 
 (defun make-esa ()
-  (arrowgrams/build::run-esa-compiler
+  (arrowgrams/esa::run-esa-compiler
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
    (asdf:system-relative-pathname :arrowgrams "build_process/cl-bundle/esa.lisp")))
 
 
 ;;; sample
 (defun make-sample ()
-  (arrowgrams/build::run-esa-compiler
+  (arrowgrams/esa::run-esa-compiler
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/sample.dsl")
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/sample.lisp")))
 

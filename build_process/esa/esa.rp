@@ -1,5 +1,6 @@
 = esa-dsl
-$   (emit p "(in-package :arrowgrams/build)")
+$   (emit p "(in-package :arrowgrams/esa)")
+  reset-classes
   @type-decls
   @situations
   @classes
@@ -87,10 +88,10 @@ $   (emit p "(in-package :arrowgrams/build)")
   [ ?SYMBOL/map
     SYMBOL/map 
     @esa-symbol
-    create-method-descriptor
+    create-method-descriptor-for-class
     set-current-method-as-map
   | &non-keyword-symbol @esa-symbol
-    create-method-descriptor
+    create-method-descriptor-for-class
   ]
 
 = when-definition

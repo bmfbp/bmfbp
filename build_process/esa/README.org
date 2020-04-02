@@ -15,7 +15,7 @@
 
 #+name: esa
 #+begin_src lisp :results output
-  (ab::make-esa-dsl)
+  (esa::make-esa-dsl)
 #+end_src
 
 #+name: esa
@@ -25,7 +25,7 @@
 
 #+name: esa
 #+begin_src lisp :results output
-  (ab::make-esa)
+  (esa::make-esa)
 #+end_src
 
 

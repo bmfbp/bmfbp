@@ -1,4 +1,4 @@
-(in-package :arrowgrams/build)
+(in-package :arrowgrams/esa)
 
 (defmethod read-next-token ((p parser) &optional (debug t))
   (unless (eq :eof (token-kind (accepted-token p)))
@@ -21,13 +21,17 @@
     (read-next-token p)
     :fail)))
 
+(defmethod semantic-error ((p parser) fmtstr &rest fmtargs)
+  (let ((msg (apply 'format *error-output* fmtstr fmtargs)))
+    (error msg))) ;; parser should try to continue - error only during bootstrap
+
 (defmethod initialize ((p parser))
   (setf (next-token p) (pop (token-stream p))))
 
 
 (defmethod accept ((p parser))
   (setf (accepted-token p) (next-token p))
-  (format *standard-output* "~&~s" (token-text (accepted-token p)))
+  ;(format *standard-output* "~&~s" (token-text (accepted-token p)))
   (read-next-token p)
   :ok)
 
@@ -247,35 +251,34 @@
 (defmethod reset-classes ((p parser))
   (format *standard-output* "~&*** reset classes 1 p=~s" p)
   (setf (class-descriptor-stack p) nil)
-  (format *standard-output* "~&*** reset classes 3 p=~s c=%s~%" p (classes p))
+  (format *standard-output* "~&*** reset classes 3 p=~s c=~s~%" p (esa-classes p))
   (setf (method-descriptor-stack p) nil)
-  (format *standard-output* "~&*** reset classes 4 p=~s c=%s~%" p (classes p))
-  ;(setf (classes p) (make-hash-table :test 'equal))
-  (setf (classes p) nil)
-  (format *standard-output* "~&*** reset classes 2 p=~s c=%s~%" p (classes p))
-  (format *standard-output* "~&*** reset classes 2a p=~s classes=~s~%" p (classes p))
-  (format *standard-output* "~&*** in reset-classes (classes p=~s) type-of=~s val=~s~%" 
-	  p 
-	  (type-of (classes p)) 
-	  (classes p))
+  (format *standard-output* "~&*** reset classes 4 p=~s c=~s~%" p (esa-classes p))
+  (setf (esa-classes p) (make-hash-table :test 'equal))
+  (format *standard-output* "~&*** reset classes 2 p=~s c=~s~%" p (esa-classes p))
+  (format *standard-output* "~&*** reset classes 2a p=~s classes=~s~%" p (esa-classes p))
+  (format *standard-output* "~&*** in reset-classes (esa-classes p=~s) type-of=~s val=~s~%" 
+	  (esa-classes p)
+	  (type-of (esa-classes p)) 
+	  (esa-classes p))
   (format *standard-output* "~&*** reset classes 2b p=~s~%" p)
 )
 
 (defmethod open-class-descriptor ((p parser))
-  (let ((class-name (atext p)))
-(format *standard-output* "~&(classes p=~s) type-of=~s val=~s~%" p (type-of (classes p)) (classes p))
-    (unless (or (null (classes p))
-		(<= 0 (hash-table-count (classes p))))
+  (let ((esa-class-name (atext p)))
+(format *standard-output* "~&(esa-classes p=~s) type-of=~s val=~s~%" p (type-of (esa-classes p)) (esa-classes p))
+    (unless (or (null (esa-classes p))
+		(<= 0 (hash-table-count (esa-classes p))))
       (multiple-value-bind (val success)
-	  (gethash class-name (classes p))
+	  (gethash esa-class-name (esa-classes p))
 	(declare (ignore val))
 	(when success
-	  (semantic-error "class ~a is being declared more than once" class-name))))
-(format *standard-output* "~&ocd: (classes p=~s) type-of=~s val=~s~%" p (type-of (classes p)) (classes p))
+	  (semantic-error "class ~a is being declared more than once" esa-class-name))))
+(format *standard-output* "~&ocd: (esa-classes p=~s) type-of=~s val=~s~%" p (type-of (esa-classes p)) (esa-classes p))
     (let ((c (make-empty-class)))
-      (setf (gethash class-name (classes p))
+      (setf (gethash esa-class-name (esa-classes p))
 	    c)
-      (setf (name c) (atext p))
+      (setf (name c) esa-class-name)
       (push c (class-descriptor-stack p)))))
 
 (defmethod close-class-descriptor ((p parser))
@@ -300,7 +303,7 @@
 (defmethod current-class-push ((p parser))
   (let ((class-name (atext p)))
     (multiple-value-bind (class-descriptor success)
-	(gethash class-name (classes p))
+	(gethash class-name (esa-classes p))
       (assert success) ;; internal bug if class not found
       (push class-descriptor (class-descriptor-stack p)))))
 
@@ -375,7 +378,7 @@
   (emit-code p "false"))
 
 (defmethod emit-code-symbol ((p parser))
-  (emit-code p "~a" (atext p)))
+  (emit-code p (format nil "~a" (atext p))))
 
 (defmethod emit-code-dot ((p parser))
   (emit-code p "."))
@@ -400,3 +403,8 @@
 
 (defmethod emit-code-rpar ((p parser))
   (emit-code p ")"))
+
+(defmethod create-method-descriptor-for-class ((p parser))
+  (let ((mdesc (make-instance 'method-descriptor)))
+    (push mdesc (methods (top-class p)))
+    (push mdesc (method-descriptor-stack p))))
