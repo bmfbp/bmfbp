@@ -187,9 +187,9 @@
 
 (defmethod field-decl-begin ((p parser)) ;; predicate
 (cond
-((parser-success-p (look-symbol? p "map"))(call-rule p #'map-decl));choice clause
+((parser-success-p (look-symbol? p "map"))(return-from field-decl-begin :ok));choice clause
 ((parser-success-p (call-predicate p #'non-keyword-symbol))
-(call-rule p #'field-decl)
+(return-from field-decl-begin :ok)
 );choice alt
 ( t 
 (return-from field-decl-begin :fail)
@@ -222,7 +222,7 @@
 
 ) ;;loop
 
-(call-external p #'open-method-descriptor)
+(call-external p #'open-new-method-descriptor)
 (call-rule p #'class-ref)
 (loop
 (cond
@@ -239,6 +239,7 @@
 
 (input-symbol p "end")
 (input-symbol p "when")
+(call-external p #'close-new-method-descriptor)
 ) ; rule
 
 (defmethod situation-ref ((p parser))
@@ -257,9 +258,9 @@
 (defmethod method-decl ((p parser))
 (input-symbol p "method")
 (call-rule p #'esa-symbol)
-(call-external p #'open-method-descriptor-for-current-class)
+(call-external p #'open-method-descriptor)
 (call-rule p #'generic-typed-formals)
-(call-rule p #'return-type)
+(call-rule p #'optional-return-type)
 (call-external p #'close-method-descriptor)
 ) ; rule
 

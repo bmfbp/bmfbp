@@ -320,15 +320,18 @@
 (defmethod close-method-descriptor ((p parser))
   (pop (method-descriptor-stack p)))
 
+(defmethod open-new-method-descriptor ((p parser))
+  ;; called when declaring a method (but not defining it)
+  (open-method-descriptor p))
+
+(defmethod close-new-method-descriptor ((p parser))
+  (close-method-descriptor p))
+
 (defmethod top-method ((p parser))
   (first (method-descriptor-stack p)))
 
 (defmethod set-current-method-as-map ((p parser))
   (setf (map? (top-method p)) t))
-
-(defmethod open-method-descriptor-for-current-class ((p parser))
-  (open-method-descriptor p)
-  (setf (gethash 'methods (top-class p)) (top-method p)))
 
 (defmethod add-formal-parameter-to-method ((p parser))
   (let ((pdesc (make-parameter-descriptor)))

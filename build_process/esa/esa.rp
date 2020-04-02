@@ -79,8 +79,8 @@ $   (emit p "(in-package :arrowgrams/esa)")
   SYMBOL/end SYMBOL/class
 
 - field-decl-begin
-  [ ?SYMBOL/map @map-decl
-  | &non-keyword-symbol @field-decl
+  [ ?SYMBOL/map ^ok
+  | &non-keyword-symbol ^ok
   | * ^fail
  ]
 
@@ -97,13 +97,14 @@ $   (emit p "(in-package :arrowgrams/esa)")
 = when-definition
   SYMBOL/when
   @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
-  open-method-descriptor
+  open-new-method-descriptor
   @class-ref
   {[ ?SYMBOL/script @script-decl
    | ?SYMBOL/method @method-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/when
+  close-new-method-descriptor
 
 = situation-ref
   @esa-symbol % should be checked to be a situation
@@ -116,9 +117,9 @@ $   (emit p "(in-package :arrowgrams/esa)")
 
 = method-decl
   SYMBOL/method @esa-symbol
-  open-method-descriptor-for-current-class
+  open-method-descriptor
   @generic-typed-formals
-  @return-type
+  @optional-return-type
   close-method-descriptor
   
 = script-decl
