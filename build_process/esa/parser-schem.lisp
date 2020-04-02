@@ -154,17 +154,8 @@
 (defun make-esa ()
   (arrowgrams/build::run-esa-compiler
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
-   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa.lisp")))
+   (asdf:system-relative-pathname :arrowgrams "build_process/cl-bundle/esa.lisp")))
 
-;;; js
-(defun make-esa-dsl-js ()
-  (arrowgrams/build::create-esa-compiler (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa_js.rp")
-					 (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa-dsl-js.lisp")))
-
-(defun make-esa-js ()
-  (arrowgrams/build::run-esa-compiler
-   (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
-   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/esa_js.js")))
 
 ;;; sample
 (defun make-sample ()
