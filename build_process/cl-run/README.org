@@ -1,3 +1,7 @@
+* status
+** doesn't use ESRAP
+** if you dyn bind arrowgrams/build::*verbose* to nil, it will print values, but not messages
+
 * testing script(s)
 #+name: runner
 #+begin_src lisp :results output
@@ -11,15 +15,7 @@
 #+end_src
 
 #+RESULTS: runner
-: To load "arrowgrams/runner":
-:   Load 1 ASDF system:
-:     arrowgrams/runner
-: ; Loading "arrowgrams/runner"
-: ..................................................
-: [package arrowgrams/build].............
-: in compiler-event-passing
-: ...........
-: [package arrowgrams/build]......
+: T"helloworld"
 
 ** verbose
 #+name: runner

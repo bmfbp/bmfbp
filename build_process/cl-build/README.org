@@ -1,6 +1,6 @@
 * todo
-** join builder to runner, build-graph-in-memory to run
-** in -> out of top
+** x join builder to runner, build-graph-in-memory to run
+** x in -> out of top
 ** no metadata, null metadata
 ** initially set state for each code part
 ** write filter for rp that gives * and + operators
@@ -36,7 +36,7 @@ retract (:RECT :ID627)
 add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
 back-end collector gets :PARSE ... 
 terminating - ready list is nil
-3794767048
+3794813358
 #+end_example
 * build helloworld.graph.json and helloworld.graph.lisp (alist)
 #+name: arrowgrams
