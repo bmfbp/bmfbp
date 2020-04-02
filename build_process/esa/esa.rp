@@ -63,7 +63,7 @@ $   (emit p "(in-package :arrowgrams/esa)")
 
 = whens-and-scripts
   {[ ?SYMBOL/script @script-definition
-   | ?SYMBOL/when @when-definition
+   | ?SYMBOL/when @when-declaration
    | * >
   ]}
 
@@ -71,12 +71,13 @@ $   (emit p "(in-package :arrowgrams/esa)")
   SYMBOL/class
   @esa-symbol
        set-current-class
-  open-class-descriptor
+  open-new-class-descriptor
   @field-decl-begin @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
+  close-new-class-descriptor
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
@@ -95,13 +96,13 @@ $   (emit p "(in-package :arrowgrams/esa)")
   ]
   close-new-method-descriptor
 
-= when-definition
+= when-declaration
   SYMBOL/when
   @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
-  open-existing-class-descriptor
   @class-ref
-  {[ ?SYMBOL/script @script-decl
-   | ?SYMBOL/method @method-decl
+  open-existing-class-descriptor
+  {[ ?SYMBOL/script @script-declaration
+   | ?SYMBOL/method @method-declaration
    | * >
   ]}
   SYMBOL/end SYMBOL/when
@@ -116,34 +117,39 @@ $   (emit p "(in-package :arrowgrams/esa)")
 = class-ref
   @esa-symbol  % should be checked to be a kind
 
-= method-decl
+= method-declaration % "when" is always a declaration
   SYMBOL/method @esa-symbol
-  open-existing-method-descriptor
+  open-new-method-descriptor
   @generic-typed-formals
   @optional-return-type
-  close-existing-method-descriptor
+  method-attach-to-class
+  close-new-method-descriptor
   
-= script-decl
+= script-declaration  % this is a declaration of scripts to be defined
   SYMBOL/script @esa-symbol
-  open-defined-method-descriptor
+  open-new-method-descriptor
   @generic-typed-formals
-  @optional-return-type
-  close-existing-method-descriptor
+  @optional-return-type-declaration
+  method-attach-to-class
+  close-new-method-descriptor
 
 = generic-typed-formals
+   reset-formals-index
   [ ?'(' '(' generic-type-list ')'
   | *
   ]
 
 = generic-type-list
   @esa-symbol
-  add-formal-parameter-to-method
+  add-formal-type-at-index
+  inc-formals-index
   {[ &non-keyword-symbol @esa-symbol
-     add-formal-parameter-to-method
+     add-formal-type-at-index
+     inc-formals-index
    | * >
   ]}
 
-= optional-return-type
+= optional-return-type-declaration
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map @esa-symbol
            push-new-return-type
@@ -152,35 +158,49 @@ $   (emit p "(in-package :arrowgrams/esa)")
            push-new-return-type
 
   ]
+  add-return-type-to-method
   pop-new-return-type
   | *
-  ]  
-  
+  ]
+
+
+
 = script-definition
   SYMBOL/script
   @esa-symbol
-  current-class-push
+  open-existing-class-descriptor
   @qualified-symbol
-  open-defined-method-descriptor-for-current-class
-  @formals
-  @return-type
+  open-existing-method-descriptor
+  @optional-formals-definition
+  @optional-return-type-definition
   @script-body
-  method-attach-to-class
-  method-close
-  current-class-pop
+  close-existing-method-descriptor
+  close-existing-class-descriptor
   SYMBOL/end SYMBOL/script
 
-= formals
-  {[ ?'(' '(' untyped-formals ')'
+= optional-formals-definitions
+  reset-formals-index
+  {[ ?'(' '(' untyped-formals-definition ')'
    | * >
   ]}
 
-= untyped-formals
-  {[ &non-keyword-symbol @esa-symbol 
-$    (emit p " ~a " (atext p))
+= untyped-formals-definition
+  {[ &non-keyword-symbol @esa-symbol
+     % index and type
+     add-formal-name-at-index
+     inc-formals-index
    | * >
   ]}
+  
+= optional-return-type-definition  % should check that return type matches the definition
+  [ ?'>' '>' '>'
+         [ ?SYMBOL/map SYMBOL/map @esa-symbol
+         | * @esa-symbol
 
+  ]
+  | *
+  ]  
+  
 = script-body
   {
 $     (emit p "~%")

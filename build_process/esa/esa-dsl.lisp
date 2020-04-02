@@ -153,7 +153,7 @@
 (cond
 ((parser-success-p (look-symbol? p "script"))(call-rule p #'script-definition));choice clause
 ((parser-success-p (look-symbol? p "when"))
-(call-rule p #'when-definition)
+(call-rule p #'when-declaration)
 );choice alt
 ( t 
 (return)
@@ -168,7 +168,7 @@
 (input-symbol p "class")
 (call-rule p #'esa-symbol)
 (call-external p #'set-current-class)
-(call-external p #'open-class-descriptor)
+(call-external p #'open-new-class-descriptor)
 (call-rule p #'field-decl-begin)
 (call-rule p #'field-decl)
 (loop
@@ -183,6 +183,7 @@
 
 (input-symbol p "end")
 (input-symbol p "class")
+(call-external p #'close-new-class-descriptor)
 ) ; rule
 
 (defmethod field-decl-begin ((p parser)) ;; predicate
@@ -200,16 +201,17 @@
 
 (defmethod field-decl ((p parser))
 (cond
-((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)(call-external p #'create-method-descriptor-for-class)(call-external p #'set-current-method-as-map));choice clause
+((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)(call-external p #'open-new-method-descriptor)(call-external p #'set-current-method-as-map));choice clause
 ((parser-success-p (call-predicate p #'non-keyword-symbol))
 (call-rule p #'esa-symbol)
-(call-external p #'create-method-descriptor-for-class)
+(call-external p #'open-new-method-descriptor)
 );choice alt
 );choice
 
+(call-external p #'close-new-method-descriptor)
 ) ; rule
 
-(defmethod when-definition ((p parser))
+(defmethod when-declaration ((p parser))
 (input-symbol p "when")
 (call-rule p #'situation-ref)
 (loop
@@ -222,13 +224,13 @@
 
 ) ;;loop
 
-(call-external p #'open-new-method-descriptor)
 (call-rule p #'class-ref)
+(call-external p #'open-existing-class-descriptor)
 (loop
 (cond
-((parser-success-p (look-symbol? p "script"))(call-rule p #'script-decl));choice clause
+((parser-success-p (look-symbol? p "script"))(call-rule p #'script-declaration));choice clause
 ((parser-success-p (look-symbol? p "method"))
-(call-rule p #'method-decl)
+(call-rule p #'method-declaration)
 );choice alt
 ( t 
 (return)
@@ -239,7 +241,7 @@
 
 (input-symbol p "end")
 (input-symbol p "when")
-(call-external p #'close-new-method-descriptor)
+(call-external p #'close-existing-class-descriptor)
 ) ; rule
 
 (defmethod situation-ref ((p parser))
@@ -255,25 +257,28 @@
 (call-rule p #'esa-symbol)
 ) ; rule
 
-(defmethod method-decl ((p parser))
+(defmethod method-declaration ((p parser))
 (input-symbol p "method")
 (call-rule p #'esa-symbol)
-(call-external p #'open-method-descriptor)
+(call-external p #'open-new-method-descriptor)
 (call-rule p #'generic-typed-formals)
 (call-rule p #'optional-return-type)
-(call-external p #'close-method-descriptor)
+(call-external p #'method-attach-to-class)
+(call-external p #'close-new-method-descriptor)
 ) ; rule
 
-(defmethod script-decl ((p parser))
+(defmethod script-declaration ((p parser))
 (input-symbol p "script")
 (call-rule p #'esa-symbol)
-(call-external p #'open-defined-method-descriptor-for-current-class)
+(call-external p #'open-new-method-descriptor)
 (call-rule p #'generic-typed-formals)
-(call-rule p #'optional-return-type)
-(call-external p #'close-method-descriptor)
+(call-rule p #'optional-return-type-declaration)
+(call-external p #'method-attach-to-class)
+(call-external p #'close-new-method-descriptor)
 ) ; rule
 
 (defmethod generic-typed-formals ((p parser))
+(call-external p #'reset-formals-index)
 (cond
 ((parser-success-p (look-char? p #\())(input-char p #\()(call-external p #'generic-type-list)(input-char p #\)));choice clause
 ( t 
@@ -284,10 +289,11 @@
 
 (defmethod generic-type-list ((p parser))
 (call-rule p #'esa-symbol)
-(call-external p #'add-formal-parameter-to-method)
+(call-external p #'add-formal-type-at-index)
+(call-external p #'inc-formals-index)
 (loop
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol)(call-external p #'add-formal-parameter-to-method));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol)(call-external p #'add-formal-type-at-index)(call-external p #'inc-formals-index));choice clause
 ( t 
 (return)
 );choice alt
@@ -297,16 +303,16 @@
 
 ) ; rule
 
-(defmethod optional-return-type ((p parser))
+(defmethod optional-return-type-declaration ((p parser))
 (cond
 ((parser-success-p (look-char? p #\>))(input-char p #\>)(input-char p #\>)(cond
-((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)(call-external p #'add-return-type-to-current-method)(call-external p #'set-return-type-as-map));choice clause
+((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)(call-external p #'push-new-return-type)(call-external p #'set-return-type-as-map));choice clause
 ( t 
 (call-rule p #'esa-symbol)
-(call-external p #'add-return-type-to-current-method)
+(call-external p #'push-new-return-type)
 );choice alt
 );choice
-);choice clause
+(call-external p #'add-return-type-to-method)(call-external p #'pop-new-return-type));choice clause
 ( t 
 );choice alt
 );choice
@@ -316,23 +322,23 @@
 (defmethod script-definition ((p parser))
 (input-symbol p "script")
 (call-rule p #'esa-symbol)
-(call-external p #'current-class-push)
+(call-external p #'open-existing-class-descriptor)
 (call-rule p #'qualified-symbol)
-(call-external p #'open-defined-method-descriptor-for-current-class)
-(call-rule p #'formals)
-(call-rule p #'return-type)
+(call-external p #'open-existing-method-descriptor)
+(call-rule p #'optional-formals-definition)
+(call-rule p #'optional-return-type-definition)
 (call-rule p #'script-body)
-(call-external p #'method-attach-to-class)
-(call-external p #'method-close)
-(call-external p #'current-class-pop)
+(call-external p #'close-existing-method-descriptor)
+(call-external p #'close-existing-class-descriptor)
 (input-symbol p "end")
 (input-symbol p "script")
 ) ; rule
 
-(defmethod formals ((p parser))
+(defmethod optional-formals-definitions ((p parser))
+(call-external p #'reset-formals-index)
 (loop
 (cond
-((parser-success-p (look-char? p #\())(input-char p #\()(call-external p #'untyped-formals)(input-char p #\)));choice clause
+((parser-success-p (look-char? p #\())(input-char p #\()(call-external p #'untyped-formals-definition)(input-char p #\)));choice clause
 ( t 
 (return)
 );choice alt
@@ -342,16 +348,31 @@
 
 ) ; rule
 
-(defmethod untyped-formals ((p parser))
+(defmethod untyped-formals-definition ((p parser))
 (loop
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol)    (emit p " ~a " (atext p)));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol)(call-external p #'add-formal-name-at-index)(call-external p #'inc-formals-index));choice clause
 ( t 
 (return)
 );choice alt
 );choice
 
 ) ;;loop
+
+) ; rule
+
+(defmethod optional-return-type-definition ((p parser))
+(cond
+((parser-success-p (look-char? p #\>))(input-char p #\>)(input-char p #\>)(cond
+((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol));choice clause
+( t 
+(call-rule p #'esa-symbol)
+);choice alt
+);choice
+);choice clause
+( t 
+);choice alt
+);choice
 
 ) ; rule
 
