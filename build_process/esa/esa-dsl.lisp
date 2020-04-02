@@ -262,7 +262,7 @@
 (call-rule p #'esa-symbol)
 (call-external p #'open-new-method-descriptor)
 (call-rule p #'generic-typed-formals)
-(call-rule p #'optional-return-type)
+(call-rule p #'optional-return-type-declaration)
 (call-external p #'method-attach-to-class)
 (call-external p #'close-new-method-descriptor)
 ) ; rule
@@ -334,7 +334,7 @@
 (input-symbol p "script")
 ) ; rule
 
-(defmethod optional-formals-definitions ((p parser))
+(defmethod optional-formals-definition ((p parser))
 (call-external p #'reset-formals-index)
 (loop
 (cond
