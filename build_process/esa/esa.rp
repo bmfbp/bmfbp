@@ -118,10 +118,10 @@ $   (emit p "(in-package :arrowgrams/esa)")
   @esa-symbol  % should be checked to be a kind
 
 = method-declaration % "when" is always a declaration
-  SYMBOL/method @esa-symbol
   open-new-method-descriptor
+  SYMBOL/method @esa-symbol
   @generic-typed-formals
-  @optional-return-type
+  @optional-return-type-declaration
   method-attach-to-class
   close-new-method-descriptor
   
@@ -178,7 +178,7 @@ $   (emit p "(in-package :arrowgrams/esa)")
   close-existing-class-descriptor
   SYMBOL/end SYMBOL/script
 
-= optional-formals-definitions
+= optional-formals-definition
   reset-formals-index
   {[ ?'(' '(' untyped-formals-definition ')'
    | * >

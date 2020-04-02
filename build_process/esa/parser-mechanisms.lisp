@@ -379,21 +379,23 @@
   (declare (ignore p))
   (incf (formals-index (top-method p))))
 
-(defmethod put-parameter ((p parser) name (desc parameter-descriptor))
-  (declare (ignore p))
-  (setf (parameters desc) (append (parameters desc) (list desc)))) ;; must be kept in ordered sequence
+(defmethod put-parameter ((p parser) type-name (desc parameter-descriptor))
+  (declare (ignore type-name))
+  (let ((m (top-method p)))
+    (setf (parameters m)
+	  (append (parameters m) (list desc))))) ;; must be kept in ordered sequence
 
 (defmethod add-formal-type-at-index ((p parser))
   (let ((param-type-name (atext p)))
     (let ((param-descriptor (make-parameter-descriptor)))
       (setf (parameter-type param-descriptor) param-type-name)
-      (put-parameter p param-name param-descriptor))))
+      (put-parameter p param-type-name param-descriptor))))
 
 (defmethod add-formal-name-at-index ((p parser))
   (let ((param-name (atext p)))
     (let ((top-m (top-method p)))
       (let ((param-descriptor (nth (formals-index top-m) (parameters top-m))))
-	(assert (null (name param-descriptor)))
+	(assert (eq :unknown (name param-descriptor)))
 	(setf (name param-descriptor) param-name)))))
 
 (defmethod top-parameter ((p parser))
@@ -430,8 +432,8 @@
 
 
 ;; emitter to method body stream
-(defmethod emit-code ((p parser) str)
-  (format (code-stream (top-method p)) str))
+(defmethod emit-code ((p parser) fmtstr &rest fmtargs)
+  (apply 'format (code-stream (top-method p)) fmtstr fmtargs))
 
 (defmethod emit-code-true ((p parser))
   (emit-code p ":true"))
