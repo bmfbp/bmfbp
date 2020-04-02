@@ -241,28 +241,7 @@
 
 
 
-;;;;;;;  js emitter additions ;;;;;;;;;
-
-(defclass class-descriptor ()
-  ((methods :accessor methods :initform (make-hash-table :test 'equal))))
-
-(defun make-empty-class ()
-  (make-instance 'class-descriptor))
-
-
-(defclass method-descriptor ()
-  ((name :accessor name)
-   (map? :accessor map? :initform nil)  ;; t or nil (true or false)
-   (code-stream :accessor code-stream :initform (make-string-output-stream)) ;; later ... (get-output-stream-string ...) on this field
-   (parameters :accessor parameters :initform nil)
-   (return-parameters :accessor return-parameters :initform nil)
-   ))
-
-(defclass parameter-descriptor ()
-  ((name :accessor name)
-   (map? :accessor map? :initform nil)))
-
-  
+;;;;;;;  v2 emitter additions ;;;;;;;;;
 ;;; mechanisms (callable from esa_js.rp)
 
 (defmethod reset-classes ((p parser))
