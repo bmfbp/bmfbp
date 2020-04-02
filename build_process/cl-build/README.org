@@ -1,3 +1,4 @@
+
 * todo
 ** join builder to runner, build-graph-in-memory to run
 ** in -> out of top
@@ -77,7 +78,9 @@
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::build (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")))
+  #+nil(arrowgrams/build::build
+    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
+  (helloworld)
   (princ (get-universal-time))
 #+end_src
 * build esa from top
