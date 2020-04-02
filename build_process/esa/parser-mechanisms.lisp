@@ -264,24 +264,32 @@
   (format *standard-output* "~&*** reset classes 2b p=~s~%" p)
 )
 
-(defmethod open-class-descriptor ((p parser))
+(defmethod open-new-class-descriptor ((p parser))
   (let ((esa-class-name (atext p)))
-(format *standard-output* "~&(esa-classes p=~s) type-of=~s val=~s~%" p (type-of (esa-classes p)) (esa-classes p))
-    (unless (or (null (esa-classes p))
-		(<= 0 (hash-table-count (esa-classes p))))
-      (multiple-value-bind (val success)
-	  (gethash esa-class-name (esa-classes p))
-	(declare (ignore val))
-	(when success
-	  (semantic-error "class ~a is being declared more than once" esa-class-name))))
-(format *standard-output* "~&ocd: (esa-classes p=~s) type-of=~s val=~s~%" p (type-of (esa-classes p)) (esa-classes p))
+    (multiple-value-bind (val success)
+	(gethash esa-class-name (esa-classes p))
+      (declare (ignore val))
+      (when success
+	(semantic-error "class ~a is being declared more than once" esa-class-name)))
+    (format *standard-output* "~&ocd: (esa-classes p=~s) type-of=~s val=~s~%" p (type-of (esa-classes p)) (esa-classes p))
     (let ((c (make-empty-class)))
-      (setf (gethash esa-class-name (esa-classes p))
-	    c)
+      (setf (gethash esa-class-name (esa-classes p)) c)
       (setf (name c) esa-class-name)
       (push c (class-descriptor-stack p)))))
 
-(defmethod close-class-descriptor ((p parser))
+(defmethod close-new-class-descriptor ((p parser))
+  (pop (class-descriptor-stack p)))
+
+(defmethod open-existing-class-descriptor ((p parser))
+  (let ((esa-class-name (atext p)))
+    (multiple-value-bind (class-descriptor success)
+	(gethash esa-class-name (esa-classes p))
+      (declare (ignore val))
+      (unless success
+	(semantic-error "class ~a has not been declared (but is being defined)" esa-class-name))
+      (push class-descriptor (class-descriptor-stack p)))))
+
+(defmethod close-existing-class-descriptor ((p parser))
   (pop (class-descriptor-stack p)))
 
 (defmethod close-all-classes ((p parser))
@@ -298,34 +306,41 @@
 (defun make-parameter-descriptor ()
   (make-instance 'parameter-descriptor))
 
-;;; current-class mechanism
-
-(defmethod current-class-push ((p parser))
-  (let ((class-name (atext p)))
-    (multiple-value-bind (class-descriptor success)
-	(gethash class-name (esa-classes p))
-      (assert success) ;; internal bug if class not found
-      (push class-descriptor (class-descriptor-stack p)))))
-
-(defmethod current-class-pop ((p parser))
-  (assert (class-descriptor-stack p)) ;; internal bug if stack empty
-  (pop (class-descriptor-stack p)))
 
 
-(defmethod open-method-descriptor ((p parser))
-  (let ((m (make-empty-method-descriptor)))
-    (setf (name m) (atext p))
-    (push m (method-descriptor-stack p))))
-
-(defmethod close-method-descriptor ((p parser))
-  (pop (method-descriptor-stack p)))
+;; method mechanisms
 
 (defmethod open-new-method-descriptor ((p parser))
-  ;; called when declaring a method (but not defining it)
-  (open-method-descriptor p))
+  (let ((desc (make-empty-method-descriptor)))
+    (let ((method-name (atext p)))
+      (setf (name desc) method-name)
+      (multiple-value-bind (val success)
+	  (gethash method-name (methods (top-class p)))
+	(declare (ignore val))
+	(when success
+	  (semantic-error p (format nil "method ~s already declared for class ~s" 
+				    method-name (top-class p))))
+	(setf (gethash method-name (methods (top-class p)))
+	      desc)
+	(push desc (method-descriptor-stack p))))))
 
 (defmethod close-new-method-descriptor ((p parser))
-  (close-method-descriptor p))
+  (pop (method-stack p)))
+
+
+(defmethod open-existing-method-descriptor ((p parser))
+    (let ((method-name (atext p)))
+      (multiple-value-bind (method-desc success)
+	  (gethash method-name (methods (top-class p)))
+	(declare (ignore val))
+	(unless success
+	  (semantic-error p (format nil "method ~s has not been declared for class ~s (but is being defined in a WHEN)" 
+				    method-name (top-class p))))
+	(push desc (method-descriptor-stack p)))))
+
+(defmethod close-existing-method-descriptor ((p parser))
+  (pop (method-stack p)))
+  
 
 (defmethod top-method ((p parser))
   (first (method-descriptor-stack p)))
@@ -333,41 +348,49 @@
 (defmethod set-current-method-as-map ((p parser))
   (setf (map? (top-method p)) t))
 
-(defmethod add-formal-parameter-to-method ((p parser))
-  (let ((pdesc (make-parameter-descriptor)))
-    (setf (name pdesc) (atext p))
-    (push pdesc (parameters (top-method p)))))
+(defmethod ensure-parameter-not-declared ((p parser) name)
+  (let ((method-desc (top-method p)))
+    (multiple-value-bind (val success)
+	(gethash name (parameters method-desc))
+      (declare (ignore val))
+      (when success
+	(error "attempt to declare parameter ~s more than once in method ~s"
+	       name method-desc)))))
 
-(defmethod add-return-type-to-current-method ((p parser))
-  (let ((pdesc (make-parameter-descriptor)))
-    (setf (name pdesc) (atext p))
-    (push pdesc (return-parameters (top-method p)))))
+(defmethod put-parameter ((p parser) name (desc parameter-descriptor))
+  (setf (gethash name (parameters (top-method p)))
+	desc))
+
+(defmethod add-formal-parameter-to-method ((p parser))
+  (let ((param-name (atext p)))
+    (ensure-parameter-not-declared p param-name)
+    (let ((param-descriptor (make-parameter-descriptor)))
+      (setf (name pdesc) param-name)
+      (put-parameter p param-name param-descriptor))))
+
+(defmethod add-return-type ((self method-descriptor) (r parameter-descriptor))
+  (setf (gethash (name r) (return-parameters self)) r))
+
+(defmethod push-new-return-type ((p parser))
+  (let ((return-type-name (atext p)))
+    (let ((method-desc (top-method p)))
+      (let ((param-descriptor (make-parameter-descriptor)))
+	(setf (name param-descriptor return-type-name))
+	(push param-descriptor (parameter-descriptor-stack p))
+	(add-return-type method-desc param-descriptor)))))
   
 (defmethod has-return-type? ((p parser) m)
   (declare (ignore p))
-  (not (null (return-parameters m))))
+  (> (hash-table-count (return-parameters m)) 0))
 
 (defmethod set-return-type-as-map ((p parser))
   (let ((m (top-method p)))
     (assert (has-return-type? p m)) ;; internal bug if no return type at this point
-    (setf (map? (first (return-parameters m))) t)))
+    (setf (map? (top-parameter p)) t)))
 
+(defmethod top-parameter ((p parser))
+  (first (parameter-descriptor-stack p)))
 
-(defmethod method-open ((p parser))
-  ;; find method with accepted-token name and push it onto the top of the method stack
-  (assert (not (null (class-descriptor-stack p)))) ;; internal bug if empty
-  (let ((method-name (atext p)))
-    (multiple-value-bind (method-descriptor success)
-	(gethash method-name (methods (top-class p)))
-      (assert success)  ;; internal bug if method not found
-      (push method-descriptor (method-descriptor-stack p)))))
-
-(defmethod method-close ((p parser))
-  (pop (method-descriptor-stack p)))
-
-(defmethod method-attach-to-class ((p parser))
-  ;; no op - should be already attached
-  )
 
 
 ;; emitter to method body stream
@@ -375,10 +398,10 @@
   (format (code-stream (top-method p)) str))
 
 (defmethod emit-code-true ((p parser))
-  (emit-code p "true"))
+  (emit-code p ":true"))
 
 (defmethod emit-code-false ((p parser))
-  (emit-code p "false"))
+  (emit-code p ":false"))
 
 (defmethod emit-code-symbol ((p parser))
   (emit-code p (format nil "~a" (atext p))))
@@ -407,7 +430,3 @@
 (defmethod emit-code-rpar ((p parser))
   (emit-code p ")"))
 
-(defmethod create-method-descriptor-for-class ((p parser))
-  (let ((mdesc (make-instance 'method-descriptor)))
-    (push mdesc (methods (top-class p)))
-    (push mdesc (method-descriptor-stack p))))

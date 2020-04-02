@@ -88,23 +88,24 @@ $   (emit p "(in-package :arrowgrams/esa)")
   [ ?SYMBOL/map
     SYMBOL/map 
     @esa-symbol
-    create-method-descriptor-for-class
+    open-new-method-descriptor
     set-current-method-as-map
   | &non-keyword-symbol @esa-symbol
-    create-method-descriptor-for-class
+    open-new-method-descriptor
   ]
+  close-new-method-descriptor
 
 = when-definition
   SYMBOL/when
   @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
-  open-new-method-descriptor
+  open-existing-class-descriptor
   @class-ref
   {[ ?SYMBOL/script @script-decl
    | ?SYMBOL/method @method-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/when
-  close-new-method-descriptor
+  close-existing-class-descriptor
 
 = situation-ref
   @esa-symbol % should be checked to be a situation
@@ -117,17 +118,17 @@ $   (emit p "(in-package :arrowgrams/esa)")
 
 = method-decl
   SYMBOL/method @esa-symbol
-  open-method-descriptor
+  open-existing-method-descriptor
   @generic-typed-formals
   @optional-return-type
-  close-method-descriptor
+  close-existing-method-descriptor
   
 = script-decl
   SYMBOL/script @esa-symbol
-  open-method-descriptor-for-current-class
+  open-defined-method-descriptor
   @generic-typed-formals
   @optional-return-type
-  close-method-descriptor
+  close-existing-method-descriptor
 
 = generic-typed-formals
   [ ?'(' '(' generic-type-list ')'
@@ -145,21 +146,22 @@ $   (emit p "(in-package :arrowgrams/esa)")
 = optional-return-type
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map @esa-symbol
-           add-return-type-to-current-method
+           push-new-return-type
            set-return-type-as-map
          | * @esa-symbol
-           add-return-type-to-current-method
+           push-new-return-type
 
   ]
+  pop-new-return-type
   | *
-  ]
+  ]  
   
 = script-definition
   SYMBOL/script
   @esa-symbol
   current-class-push
   @qualified-symbol
-  method-open
+  open-defined-method-descriptor-for-current-class
   @formals
   @return-type
   @script-body

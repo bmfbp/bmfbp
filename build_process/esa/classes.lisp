@@ -20,8 +20,8 @@
   ((name :accessor name)
    (map? :accessor map? :initform nil)  ;; t or nil (true or false)
    (code-stream :accessor code-stream :initform (make-string-output-stream)) ;; later ... (get-output-stream-string ...) on this field
-   (parameters :accessor parameters :initform nil)
-   (return-parameters :accessor return-parameters :initform nil)
+   (parameters :accessor parameters :initform (make-hash-table :test 'equal))
+   (return-parameters :accessor return-parameters :initform (make-hash-table :test 'equal))
    ))
 
 (defclass parameter-descriptor ()
@@ -47,4 +47,5 @@
    (esa-classes :accessor esa-classes :initform (make-hash-table :test 'equal))
    (class-desciptor-stack :accessor class-descriptor-stack)
    (method-desciptor-stack :accessor method-descriptor-stack)
+   (parameter-descriptor-stack :accessor parameter-descriptor-stack)
    ))
