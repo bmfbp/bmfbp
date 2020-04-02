@@ -1,8 +1,11 @@
 = esa-dsl
   @type-decls
   @situations
+  reset-classes
   @classes
   @whens-and-scripts
+  close-all-classes
+  emit-classes
   EOF
 
 - keyword-symbol
@@ -68,38 +71,38 @@
 = class-def
   SYMBOL/class
   @esa-symbol
-       set-current-class
-$      (emit p "~&function ~a () {}~%~a.prototype = {~%" (atext p) (atext p))
-  @field-decl-begin @field-decl
-  {[ &field-decl
+  open-class-descriptor
+  @field-decl
+  {[ &field-decl-begin @field-decl
    | * >
   ]}
-$      (emit p "};~%")
   SYMBOL/end SYMBOL/class
 
-= field-decl-begin
-  [ ?SYMBOL/map @map-decl
-  | &non-keyword-symbol @field-decl
+- field-decl-begin
+  [?SYMBOL/map ^ok
+  | &non-keyword-symbol ^ok
+  | * ^fail
   ]
 
-- field-decl
-  [ ?SYMBOL/map @map-decl ^ok
+= field-decl
+  [ ?SYMBOL/map
+    SYMBOL/map 
+    @esa-symbol
+    create-method-descriptor
+    set-current-method-as-map
   | &non-keyword-symbol @esa-symbol
-$     (emit p "~&  ~a: null~%" (atext p))
-    ^ok
-  | * ^fail
+    create-method-descriptor
   ]
 
 = when-definition
   SYMBOL/when
   @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
-$      (clear-method-stream p)
+  open-method-descriptor
   @class-ref
   {[ ?SYMBOL/script @script-decl
    | ?SYMBOL/method @method-decl
    | * >
   ]}
-       emit-methods
   SYMBOL/end SYMBOL/when
 
 = situation-ref
@@ -113,38 +116,19 @@ $      (clear-method-stream p)
 
 = method-decl
   SYMBOL/method @esa-symbol
-$      (emit-to-method-stream p "~%~a.~a = function (" (current-class p) (atext p))
+  open-method-descriptor-for-current-class
   @generic-typed-formals
-$      (emit-to-method-stream p ") {};~&") ;; close parameter list
   @return-type
-
+  close-method-descriptor
   
 = script-decl
   SYMBOL/script @esa-symbol
-$      (emit-to-method-stream p "~%~a.~a = function /*script*/ (" (current-class p) (atext p))
+  open-method-descriptor-for-current-class
   @generic-typed-formals
-$      (emit-to-method-stream p ") {};~&")
-  @return-type
+  @optional-return-type
+  close-method-descriptor
 
-= map-decl
-  SYMBOL/map 
-  @esa-symbol
-% We are not implementing map field in class in JS.
-% $     (emit p "~&(~a :accessor ~a :initform nil)" (atext p) (atext p))
-  
-= typed-formals
-  [ ?'(' '(' type-list ')'
-  | *
-  ]
 
-= type-list
-  @esa-symbol
-$     (emit-to-method-stream p ", ~a" (atext p))
-  {[ &non-keyword-symbol @esa-symbol
-$     (emit-to-method-stream p ", ~a" (atext p))
-   | * >
-  ]}
-  
 = generic-typed-formals
   [ ?'(' '(' generic-type-list ')'
   | *
@@ -152,34 +136,36 @@ $     (emit-to-method-stream p ", ~a" (atext p))
 
 = generic-type-list
   @esa-symbol
-$     (emit-to-method-stream p ", ~a" (gensym))
+  add-formal-parameter-to-method
   {[ &non-keyword-symbol @esa-symbol
-$     (emit-to-method-stream p ", ~a" (gensym))
+     add-formal-parameter-to-method
    | * >
   ]}
   
-= return-type
+= optional-return-type
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map @esa-symbol
-$            (emit-to-method-stream p " /*returns map ~a*/ " (atext p))
+           add-return-type-to-current-method
+           set-return-type-as-map
          | * @esa-symbol
-$            (emit-to-method-stream p " /*returns ~a*/ " (atext p))
-]
+           add-return-type-to-current-method
+
+  ]
   | *
   ]
   
 = script-definition
   SYMBOL/script
   @esa-symbol
-  set-current-class
+  current-class-push
   @qualified-symbol
-  set-current-method
-$      (emit p "~%~a.~a = function /*script*/ (" (current-class p) (current-method p))
+  method-open
   @formals
-$      (emit p ") {~&")  
   @return-type
   @script-body
-$      (emit p "~%};~&/*end script*/~&")
+  method-attach-to-class
+  method-close
+  current-class-pop
   SYMBOL/end SYMBOL/script
 
 = formals
@@ -189,9 +175,12 @@ $      (emit p "~%};~&/*end script*/~&")
 
 = untyped-formals
   {[ &non-keyword-symbol @esa-symbol 
-$    (emit p ", ~a " (atext p))
    | * >
   ]}
+
+
+
+
 
 = script-body
   {
@@ -213,95 +202,99 @@ $     (emit p "~%")
 = let-statement
   SYMBOL/let
    @esa-symbol
-$      (emit p "~&{~%  let ~a =" (atext p))
+$      (emit-code p "~&let ~a =" (atext p))
    '='
    [ ?SYMBOL/map SYMBOL/map | * ]
    @esa-expr
-$      (emit p ";~%")
+$      (emit-code p "; /* let */ ~%")
    SYMBOL/in 
    @script-body
-$      (emit p "~&}~%")
    SYMBOL/end SYMBOL/let
 
 = create-statement
   SYMBOL/create
    @esa-symbol
-$      (emit p "~&{ let ~a = " (atext p))
+$      (emit-code p "~&let ~a = " (atext p))
    '=' 
    [ ?SYMBOL/map SYMBOL/map | * ]
+   [ ?'*' '*'
+     @class-ref
+$      (emit-code p "new *~a(); /* create* */ ~%" (atext p))
+   | *
    @class-ref
-$      (emit p "new ~a();~%" (atext p))
+$      (emit-code p "new ~a(); /* create */ ~%" (atext p))
+   ]
    SYMBOL/in 
    @script-body
-$      (emit p "~&}/*end create*/~%")   
    SYMBOL/end SYMBOL/create
 
 = set-statement
   SYMBOL/set
-$      (emit p "~%")
    @esa-expr
    '=' 
-$      (emit p " = ")
+$      (emit-code p " = ")
    @esa-expr
+$      (emit-code p " ; /* set */~% ")
   
 = map-statement
   SYMBOL/map @esa-symbol
-$      (emit p "~&(function () {~%  let ~a;~%" (atext p))
+$      (emit-code p "~&for ~a in " (atext p))
   '='
   @esa-expr
+$      (emit-code p ") {~%")
   SYMBOL/in @script-body
-$      (emit p "~&})();/*end map*/~%")
+$      (emit-code p "} /* end map */ ~%")
   SYMBOL/end SYMBOL/map
 
 = exit-map-statement
   SYMBOL/exit-map
-$     (emit p "~&return;~%")
+$     (emit-code p "~&return; /* exit map */ ~%")
 
 = loop-statement
   SYMBOL/loop
-$     (emit p "~&while (true) {~%")
+$     (emit-code p "~&while (true) {~%")
     @script-body
-$     (emit p "~&}/*end loop*/~%")
+$     (emit-code p "~&} /*end loop*/ ~%")
   SYMBOL/end SYMBOL/loop
   
 = exit-when-statement
   SYMBOL/exit-when
-$     (emit p "~&if (")
+$     (emit-code p "~&if (")
     @esa-expr
-$     (emit p ") return;~%")
+$     (emit-code p ") return; /* exit-when */ ~%")
 
 = if-statement
   SYMBOL/if
-$    (emit p "~&if (")
+$    (emit-code p "~&if (")
     @esa-expr
-$    (emit p ") {~%")
+$    (emit-code p ") {~%")
   SYMBOL/then
     @script-body
-$    (emit p "~&}~%")
+$    (emit-code p "~&}  /* end if */ ~%")
   [ ?SYMBOL/else SYMBOL/else
-$    (emit p "~&else {~%")
+$    (emit-code p "~&else {~%")
      @script-body
-$    (emit p "~&}~%")
+$    (emit-code p "~&} /* end else */ ~%")
   | *
   ]
   SYMBOL/end SYMBOL/if
 
 = script-call
   '@' @qualified-symbol
-$    (emit p "~&this.~a();~%" (atext p))
+$    (emit-code p "~&this.~a(); /* call script */ ~%" (atext p))
 
 = method-call
   @qualified-symbol
-$    (emit p "~&this.~a();~%" (atext p))
+$    (emit-code p "~&this.~a(); /* call method */ ~%" (atext p))
 
 = return-statement
   '>' '>'
   [ ?SYMBOL/true SYMBOL/true
-$                (emit p "~&return true;~%")
+$                (emit-code p "~&return true; /* return true */ ~%")
   | ?SYMBOL/false SYMBOL/false
-$                (emit p "~&return false;~%")
+$                (emit-code p "~&return false; /* return false */ ~%")
   | * @esa-symbol
-$                (emit p "~&return ~a;~%" (atext p))
+$                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
   ]
 
 = qualified-symbol
@@ -316,7 +309,10 @@ $                (emit p "~&return ~a;~%" (atext p))
   ]}
   
 = dotted-symbol
-  '.' @esa-symbol
+  '.' 
+  emit-code-dot
+  @esa-symbol
+  emit-code-symbol
 
 = esa-symbol
   [ &non-keyword-symbol
@@ -328,53 +324,46 @@ $                (emit p "~&return ~a;~%" (atext p))
 
 = esa-symbol-follow
   save-text
-  {[ ?'/' '/' combine-text SYMBOL combine-text
-   | ?'-' '-' combine-text SYMBOL combine-text
-   | ?'?' '?' combine-text >
-   | ?CHARACTER/' CHARACTER/' combine-text >
+  {[ ?'/' '/' 
+     emit-code-slash 
+     SYMBOL
+     emit-code-symbol
+   | ?'-' '-' 
+     emit-code-dash
+     SYMBOL
+     emit-code-symbol
+   | ?'?' '?'
+     emit-code-question
+      >
+   | ?CHARACTER/' CHARACTER/' 
+     emit-code-primed
+     >
    | * >
   ]}
 
 = esa-expr
-  string-stack-open
-  [ ?'@' '@' | * ]
-  [ ?SYMBOL/true SYMBOL/true emit-true
-  | ?SYMBOL/false SYMBOL/false emit-false
+  [ ?'@' '@' | * ]  % ignore @ (script call symbol)
+  [ ?SYMBOL/true SYMBOL/true emit-code-true
+  | ?SYMBOL/false SYMBOL/false emit-code-false
   | *
     @esa-symbol
-    push-string
-    {[ ?'.' @dotted-symbol push-string
+    emit-code-symbol
+    {[ ?'.' @dotted-symbol
      | * >
     ]}
-    [ string-stack-has-only-one-item
-      emit-string-pop
-    | *
-      emit-lpar-inc-count
-      emit-string-pop
-    ]
-    {[ string-stack-empty
-       >
-     | string-stack-has-only-one-item
-       emit-string-pop
-       >
-     | *
-       emit-lpar-inc-count
-       emit-string-pop
-    ]}
-    emit-rpars-count-less-1
     @actuals
-    emit-rpars
-    string-stack-close
    ]
 
 = actuals
  [ ?'(' '('
-$           (emit p " ")
-  set-lpar-count-to-1
-         {[ &non-keyword-symbol @esa-expr
-$          (emit p " ")
-          | * > ]}
-	 ')'
- | *  emit-rpars-count-less-1
+   emit-code-lpar
+   {[ &non-keyword-symbol 
+      emit-code-comma        
+      @esa-expr
+    | * > 
+    ]}
+    ')'
+    emit-code-rpar
+ | * 
  ]
 

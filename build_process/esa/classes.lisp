@@ -8,6 +8,8 @@
   (format out "[~a ~S]" (counter obj) (str-stack obj)))
 
 
+
+
 (defclass parser (e/part:code)
   ((token-stream :accessor token-stream :initarg :token-stream :initform nil) ;; actually, just a list
    (output-stream :accessor output-stream :initarg :output-stream :initform (make-string-output-stream))
