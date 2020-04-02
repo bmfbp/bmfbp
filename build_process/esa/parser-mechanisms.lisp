@@ -31,7 +31,7 @@
 
 (defmethod accept ((p parser))
   (setf (accepted-token p) (next-token p))
-  ;(format *standard-output* "~&~s" (token-text (accepted-token p)))
+  (format *standard-output* "~&~s" (token-text (accepted-token p)))
   (read-next-token p)
   :ok)
 

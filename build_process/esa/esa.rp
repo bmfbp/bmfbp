@@ -73,7 +73,7 @@ $   (emit p "(in-package :arrowgrams/esa)")
        set-current-class
   open-class-descriptor
   @field-decl-begin @field-decl
-  {[ &field-decl
+  {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class

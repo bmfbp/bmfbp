@@ -173,7 +173,7 @@
 (call-rule p #'field-decl)
 (loop
 (cond
-((parser-success-p (call-predicate p #'field-decl)));choice clause
+((parser-success-p (call-predicate p #'field-decl-begin))(call-rule p #'field-decl));choice clause
 ( t 
 (return)
 );choice alt
