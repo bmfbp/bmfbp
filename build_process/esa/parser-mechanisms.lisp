@@ -379,18 +379,39 @@
 
 ;; emitter to method body stream
 
+(defmethod collapse-top-symbol-to-string ((p parser))
+  ;; language-dependent - make a string out of the top symbol
+  (with-output-to-string (s)
+    (dolist (item (top-symbol p))
+      (if (stringp item)
+	  (format s "~s" item)
+	(ecase item
+	  (:slash
+	   (format s "_slash_"))
+	  (:dash
+	   (format s "_slash_"))
+	  (:question
+	   (format s "_question"))
+	  (:primed
+	   (format s "_primed")))))))
+
 (defmethod top-symbol ((p parser))
   (first (symbol-stack p)))
 
 (defmethod symbol-open ((p parser))
-  (push nil (symbol-stack p)))
+  (push nil  (symbol-stack p)))
 
 (defmethod symbol-close ((p parser))
   (pop (symbol-stack p)))
 
+(defmethod convert-symbol-to-accepted-token ((p parser))
+  ;; @esa-symbol must leave the symbol in (accepted-token p)
+  (let ((str (collapse-top-symbol-to-string p )))
+    (setf (text (accepted-token p) str)))))
+
 (defmethod symbol-append ((p parser) thing)
   (setf (first (symbol-stack  p))
-	(append (top-symbol p) thing)))
+	(append (top-symbol p) (list thing))))
 
 (defmethod symbol-append-symbol ((p parser))
   (symbol-append p (atext p)))

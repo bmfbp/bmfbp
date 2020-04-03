@@ -339,6 +339,7 @@ $                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
     SYMBOL
     symbol-append-symbol
     @esa-symbol-follow
+    convert-symbol-to-accepted-token
     symbol-close
   | *
   ]

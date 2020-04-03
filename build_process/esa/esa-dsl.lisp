@@ -586,7 +586,7 @@
 
 (defmethod esa-symbol ((p parser))
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'symbol-open)(input p :SYMBOL)(call-external p #'symbol-append-symbol)(call-rule p #'esa-symbol-follow)(call-external p #'symbol-close));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'symbol-open)(input p :SYMBOL)(call-external p #'symbol-append-symbol)(call-rule p #'esa-symbol-follow)(call-external p #'convert-symbol-to-accepted-token)(call-external p #'symbol-close));choice clause
 ( t 
 );choice alt
 );choice
