@@ -169,7 +169,7 @@ $   (emit p "(in-package :arrowgrams/esa)")
   SYMBOL/script
   @esa-symbol
   open-existing-class-descriptor
-  @qualified-symbol
+  @esa-symbol
   open-existing-method-descriptor
   @optional-formals-definition
   @optional-return-type-definition
@@ -345,7 +345,6 @@ $                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
   ]
 
 = esa-symbol-follow
-  save-text
   {[ ?'/' '/' 
      symbol-append-slash 
      SYMBOL

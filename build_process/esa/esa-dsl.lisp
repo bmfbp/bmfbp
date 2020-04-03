@@ -320,19 +320,19 @@
 ) ; rule
 
 (defmethod script-definition ((p parser))
-(input-symbol p "script")
-(call-rule p #'esa-symbol)
-(call-external p #'open-existing-class-descriptor)
-(call-rule p #'qualified-symbol)
-(call-external p #'open-existing-method-descriptor)
-(call-rule p #'optional-formals-definition)
-(call-rule p #'optional-return-type-definition)
-(call-rule p #'script-body)
-(call-external p #'close-existing-method-descriptor)
-(call-external p #'close-existing-class-descriptor)
-(input-symbol p "end")
-(input-symbol p "script")
-) ; rule
+  (input-symbol p "script")
+  (call-rule p #'esa-symbol)
+  (call-external p #'open-existing-class-descriptor)
+  (call-rule p #'esa-symbol)
+  (call-external p #'open-existing-method-descriptor)
+  (call-rule p #'optional-formals-definition)
+  (call-rule p #'optional-return-type-definition)
+  (call-rule p #'script-body)
+  (call-external p #'close-existing-method-descriptor)
+  (call-external p #'close-existing-class-descriptor)
+  (input-symbol p "end")
+  (input-symbol p "script")
+  ) ; rule
 
 (defmethod optional-formals-definition ((p parser))
 (call-external p #'reset-formals-index)
@@ -594,7 +594,6 @@
 ) ; rule
 
 (defmethod esa-symbol-follow ((p parser))
-(call-external p #'save-text)
 (loop
 (cond
 ((parser-success-p (look-char? p #\/))(input-char p #\/)(call-external p #'symbol-append-slash)(input p :SYMBOL)(call-external p #'symbol-append-symbol));choice clause

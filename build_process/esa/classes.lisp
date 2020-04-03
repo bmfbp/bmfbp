@@ -39,7 +39,6 @@
    (state :accessor state :initform :idle)
    (current-rule :accessor current-rule :initform nil)
    (depth :accessor depth :initform 0)
-   (saved-text :accessor saved-text :initform "")
    (method-stream :accessor method-stream :initarg :output-stream :initform (make-string-output-stream))
    (current-class :accessor current-class)
    (current-method :accessor current-method)

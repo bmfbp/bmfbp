@@ -164,13 +164,7 @@
 
 ;; esa mechanisms
 
-(defmethod clear-saved-text ((p parser))
-  (setf (saved-text p) ""))
-
-(defmethod save-text ((p parser))
-  (setf (saved-text p) (token-text (accepted-token p))))
-
-(defmethod combine-text ((p parser))
+#+nil (defmethod combine-text ((p parser))
   (let ((text (token-text (accepted-token p))))
     (let ((combined-text (strip-quotes (concatenate 'string (saved-text p) (string text)))))
       (setf (token-text (accepted-token p)) combined-text)
@@ -412,7 +406,7 @@
 
 (defmethod symbol-append ((p parser) thing)
   (setf (first (symbol-stack  p))
-	(append (top-symbol p) (list thing))))
+	(append (first (symbol-stack p)) (list thing))))
 
 (defmethod symbol-append-symbol ((p parser))
   (symbol-append p (atext p)))
