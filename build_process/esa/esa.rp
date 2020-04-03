@@ -329,60 +329,64 @@ $                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
   
 = dotted-symbol
   '.' 
-  emit-code-dot
+  symbol-enstack-apply
   @esa-symbol
-  emit-code-symbol
+  symbol-pop-apply
 
 = esa-symbol
   [ &non-keyword-symbol
-    clear-saved-text
+    symbol-open
     SYMBOL
+    symbol-append-symbol
     @esa-symbol-follow
+    symbol-close
   | *
   ]
 
 = esa-symbol-follow
   save-text
   {[ ?'/' '/' 
-     emit-code-slash 
+     symbol-append-slash 
      SYMBOL
-     emit-code-symbol
+     symbol-append-symbol
    | ?'-' '-' 
-     emit-code-dash
+     symbol-append-dash
      SYMBOL
-     emit-code-symbol
+     symbol-append-symbol
    | ?'?' '?'
-     emit-code-question
+     symbol-append-question
       >
    | ?CHARACTER/' CHARACTER/' 
-     emit-code-primed
+     symbol-append-primed
      >
    | * >
   ]}
 
 = esa-expr
+  expr-open
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
-  [ ?SYMBOL/true SYMBOL/true emit-code-true
-  | ?SYMBOL/false SYMBOL/false emit-code-false
+  [ ?SYMBOL/true SYMBOL/true symbol-open symbol-append-true symbol-close
+  | ?SYMBOL/false SYMBOL/false symbol-open symbol-append-false symbol-close
   | *
     @esa-symbol
-    emit-code-symbol
     {[ ?'.' @dotted-symbol
      | * >
     ]}
+    expr-set-functor
     @actuals
+    expr-close
    ]
 
 = actuals
  [ ?'(' '('
-   emit-code-lpar
    {[ &non-keyword-symbol 
-      emit-code-comma        
+     expr-open
       @esa-expr
+      expr-add-as-argument
+      expr-close
     | * > 
     ]}
     ')'
-    emit-code-rpar
  | * 
  ]
 

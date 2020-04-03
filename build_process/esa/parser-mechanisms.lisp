@@ -18,7 +18,7 @@
 	       (format nil "~&parser error in ~s - got ~s ~s at line ~a position ~a~%" (current-rule p)
 		       (token-kind nt) (token-text nt) (token-line nt) (token-position nt)))))
     (error "parser error ~s" error-message)
-    (read-next-token p)
+    ;(read-next-token p)
     :fail)))
 
 (defmethod semantic-error ((p parser) fmtstr &rest fmtargs)
@@ -195,53 +195,6 @@
     s))
 
 
-(defmethod string-stack-open ((p parser))
-  (let ((entry (make-instance 'string-stack-entry)))
-    (setf (counter entry) 0)
-    (setf (str-stack entry) nil)
-    (push entry (string-stack p))))
-
-
-(defmethod top-of-string-stack ((p parser))
-  (first (string-stack p)))
-
-(defmethod push-string ((p parser))
-  (push (atext p) (str-stack (top-of-string-stack p))))
-
-(defmethod string-stack-empty ((p parser))
-  (null (str-stack (top-of-string-stack p))))
-
-(defmethod string-stack-has-only-one-item ((p parser))
-  (let ((len (length (str-stack (top-of-string-stack p)))))
-    (assert (>= len 0))
-    (= len 1)))
-
-(defmethod emit-string-pop ((p parser))
-  (let ((str (pop (str-stack (top-of-string-stack p)))))
-    (emit p " ~a" str)))
-
-(defmethod emit-lpar-inc-count ((p parser))
-  (emit p "(")
-  (incf (counter (top-of-string-stack p))))
-
-(defmethod set-lpar-count-to-1 ((p parser))
-  (setf (counter (top-of-string-stack p)) 1))
-
-(defmethod emit-rpars-count-less-1 ((p parser))
-  (assert (>= (counter (top-of-string-stack p)) 0))
-  (@:loop
-    (@:exit-when (<= (counter (top-of-string-stack p)) 1))
-    (decf (counter (top-of-string-stack p)))
-    (emit p ")")))
-
-(defmethod emit-rpars ((p parser))
-  (assert (or (= 0 (counter (top-of-string-stack p)))
-              (= 1 (counter (top-of-string-stack p)))))
-  (when (= 1 (counter (top-of-string-stack p)))
-    (emit p ")")))
-
-(defmethod string-stack-close ((p parser))
-  (pop (string-stack p)))
 
 
 
@@ -284,7 +237,6 @@
   (let ((esa-class-name (atext p)))
     (multiple-value-bind (class-descriptor success)
 	(gethash esa-class-name (esa-classes p))
-      (declare (ignore val))
       (unless success
 	(semantic-error p "class ~a has not been declared (but is being defined)" esa-class-name))
       (push class-descriptor (class-descriptor-stack p)))))
@@ -333,7 +285,6 @@
       (semantic-error "method ~s of class ~s is being defined more than once" (name m) (name c)))))
 
 (defmethod add-new-method-to-class ((p parser) (c class-descriptor) (m method-descriptor))
-  (declare (ignore p))
   (ensure-method-is-new p c m)
   (setf (gethash (name m) (methods c)) m))
 
@@ -346,7 +297,6 @@
     (let ((method-name (atext p)))
       (multiple-value-bind (method-desc success)
 	  (gethash method-name (methods (top-class p)))
-	(declare (ignore val))
 	(unless success
 	  (semantic-error p (format nil "method ~s has not been declared for class ~s (but is being defined in a WHEN)" 
 				    method-name (top-class p))))
@@ -372,11 +322,9 @@
 	       name (name method-desc))))))
 
 (defmethod reset-formals-index ((p parser))
-  (declare (ignore p))
   (setf (formals-index (top-method p)) 0))
 
 (defmethod inc-formals-index ((p parser))
-  (declare (ignore p))
   (incf (formals-index (top-method p))))
 
 (defmethod put-parameter ((p parser) type-name (desc parameter-descriptor))
@@ -408,10 +356,9 @@
 (defmethod push-new-return-type ((p parser))
   ;; at present, we make return types into parameter descriptors and push them onto the param stack
   (let ((return-type-name (atext p)))
-    (let ((method-desc (top-method p)))
-      (let ((param-descriptor (make-parameter-descriptor)))
-	(setf (name param-descriptor) return-type-name)
-	(push param-descriptor (parameter-descriptor-stack p))))))
+    (let ((param-descriptor (make-parameter-descriptor)))
+      (setf (name param-descriptor) return-type-name)
+      (push param-descriptor (parameter-descriptor-stack p)))))
 
 (defmethod pop-new-return-type ((p parser))
   (pop (parameter-descriptor-stack p)))
@@ -424,47 +371,77 @@
   (> (hash-table-count (return-parameters m)) 0))
 
 (defmethod set-return-type-as-map ((p parser))
-  (let ((m (top-method p)))
-    (assert (not (null (parameter-descriptor-stack p)))) ;; internal error if stack empty
-    (setf (map? (top-parameter p)) t)))
+  (assert (not (null (parameter-descriptor-stack p)))) ;; internal error if stack empty
+  (setf (map? (top-parameter p)) t))
 
 
 
 
 ;; emitter to method body stream
-(defmethod emit-code ((p parser) fmtstr &rest fmtargs)
-  (apply 'format (code-stream (top-method p)) fmtstr fmtargs))
 
-(defmethod emit-code-true ((p parser))
-  (emit-code p ":true"))
+(defmethod top-symbol ((p parser))
+  (first (symbol-stack p)))
 
-(defmethod emit-code-false ((p parser))
-  (emit-code p ":false"))
+(defmethod symbol-open ((p parser))
+  (push nil (symbol-stack p)))
 
-(defmethod emit-code-symbol ((p parser))
-  (emit-code p (format nil "~a" (atext p))))
+(defmethod symbol-close ((p parser))
+  (pop (symbol-stack p)))
 
-(defmethod emit-code-dot ((p parser))
-  (emit-code p "."))
+(defmethod symbol-append ((p parser) thing)
+  (setf (first (symbol-stack  p))
+	(append (top-symbol p) thing)))
 
-(defmethod emit-code-slash ((p parser))
-  (emit-code p "-slash-"))
+(defmethod symbol-append-symbol ((p parser))
+  (symbol-append p (atext p)))
 
-(defmethod emit-code-question ((p parser))
-  (emit-code p "-question"))
+(defmethod symbol-append-slash ((p parser))
+  (symbol-append p :slash))
 
-(defmethod emit-code-dash ((p parser))
-  (emit-code p "-dash-"))
+(defmethod symbol-append-dash ((p parser))
+  (symbol-append p :dash))
 
-(defmethod emit-code-primed ((p parser))
-  (emit-code p "-primed"))
+(defmethod symbol-append-question ((p parser))
+  (symbol-append p :question))
 
-(defmethod emit-code-comma ((p parser))
-  (emit-code p ","))
+(defmethod symbol-append-primed ((p parser))
+  (symbol-append p :primed))
 
-(defmethod emit-code-lpar ((p parser))
-  (emit-code p "("))
+(defmethod symbol-append-true ((p parser))
+  (symbol-append p :true))
 
-(defmethod emit-code-rpar ((p parser))
-  (emit-code p ")"))
+(defmethod symbol-append-false ((p parser))
+  (symbol-append p :false))
+
+(defmethod symbol-enstack-apply ((p parser))
+  (push nil (symbol-stack p)))
+
+(defmethod symbol-pop-apply ((p parser))
+  (let ((s2 (pop (symbol-stack p))))
+    (let ((s1 (pop (symbol-stack p))))
+      (push (cons s1 s2) (symbol-stack p)))))
+
+
+(defmethod expr-open ((p parser))
+  (push (cons nil (list nil)) (expr-stack p)))
+
+(defmethod expr-close ((p parser))
+  (pop (expr-stack p)))
+
+(defmethod expr-add-as-argument ((p parser)) ;; affects symbol-stack
+  (let ((arg (pop (symbol-stack p))))
+    (setf (second (first (symbol-stack p)))
+	  arg)))
+
+(defmethod expr-set-functor ((p parser))
+  ;; functor is the object to be called with args
+  ;; I couldn't find a better word
+  ;; (functor arg1 arg2 ... argN)
+  ;; function with 0 args is (functor)
+  ;; function with 1 arg is (functor arg)
+  ;; function with 2 args is (functor arg1 arg2)
+  ;; and so on
+  (let ((functor (pop (symbol-stack p))))
+    (setf (first (first (symbol-stack p)))
+	  functor)))
 
