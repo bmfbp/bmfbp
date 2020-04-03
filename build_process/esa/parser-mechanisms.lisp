@@ -405,9 +405,10 @@
   (pop (symbol-stack p)))
 
 (defmethod convert-symbol-to-accepted-token ((p parser))
-  ;; @esa-symbol must leave the symbol in (accepted-token p)
-  (let ((str (collapse-top-symbol-to-string p )))
-    (setf (text (accepted-token p) str)))))
+  ;; @esa-symbol must leave the symbol in (token-text (accepted-token p))
+  ;; kludge alert - old code used (token-text (accepted-token p)) BUT the token was NOT guaranteed to be a SYMBOL (e.g. after /, -, ?, ') ; old code worked even though the result was not always a SYMBOL token
+  (let ((str (collapse-top-symbol-to-string p)))
+    (setf (token-text (accepted-token p)) str))) ;; kludge: ignore token-kind
 
 (defmethod symbol-append ((p parser) thing)
   (setf (first (symbol-stack  p))
