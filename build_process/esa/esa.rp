@@ -322,11 +322,6 @@ $                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
   | *
   ]
 
-= qualifiers
-  {[ ?'.' @dotted-symbol
-   | * >
-  ]}
-  
 = dotted-symbol
   '.' 
   symbol-enstack-apply
@@ -363,11 +358,11 @@ $                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
   ]}
 
 = esa-expr
-  expr-open
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
   [ ?SYMBOL/true SYMBOL/true symbol-open symbol-append-true symbol-close
   | ?SYMBOL/false SYMBOL/false symbol-open symbol-append-false symbol-close
   | *
+    expr-open
     @esa-symbol
     {[ ?'.' @dotted-symbol
      | * >
