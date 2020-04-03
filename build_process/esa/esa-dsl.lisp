@@ -258,9 +258,9 @@
 ) ; rule
 
 (defmethod method-declaration ((p parser))
+(call-external p #'open-new-method-descriptor)
 (input-symbol p "method")
 (call-rule p #'esa-symbol)
-(call-external p #'open-new-method-descriptor)
 (call-rule p #'generic-typed-formals)
 (call-rule p #'optional-return-type-declaration)
 (call-external p #'method-attach-to-class)
@@ -579,14 +579,14 @@
 
 (defmethod dotted-symbol ((p parser))
 (input-char p #\.)
-(call-external p #'emit-code-dot)
+(call-external p #'symbol-enstack-apply)
 (call-rule p #'esa-symbol)
-(call-external p #'emit-code-symbol)
+(call-external p #'symbol-pop-apply)
 ) ; rule
 
 (defmethod esa-symbol ((p parser))
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'clear-saved-text)(input p :SYMBOL)(call-rule p #'esa-symbol-follow));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'symbol-open)(input p :SYMBOL)(call-external p #'symbol-append-symbol)(call-rule p #'esa-symbol-follow)(call-external p #'symbol-close));choice clause
 ( t 
 );choice alt
 );choice
@@ -597,21 +597,21 @@
 (call-external p #'save-text)
 (loop
 (cond
-((parser-success-p (look-char? p #\/))(input-char p #\/)(call-external p #'emit-code-slash)(input p :SYMBOL)(call-external p #'emit-code-symbol));choice clause
+((parser-success-p (look-char? p #\/))(input-char p #\/)(call-external p #'symbol-append-slash)(input p :SYMBOL)(call-external p #'symbol-append-symbol));choice clause
 ((parser-success-p (look-char? p #\-))
 (input-char p #\-)
-(call-external p #'emit-code-dash)
+(call-external p #'symbol-append-dash)
 (input p :SYMBOL)
-(call-external p #'emit-code-symbol)
+(call-external p #'symbol-append-symbol)
 );choice alt
 ((parser-success-p (look-char? p #\?))
 (input-char p #\?)
-(call-external p #'emit-code-question)
+(call-external p #'symbol-append-question)
 (return)
 );choice alt
 ((parser-success-p (look-char? p #\'))
 (input-char p #\')
-(call-external p #'emit-code-primed)
+(call-external p #'symbol-append-primed)
 (return)
 );choice alt
 ( t 
@@ -624,6 +624,7 @@
 ) ; rule
 
 (defmethod esa-expr ((p parser))
+(call-external p #'expr-open)
 (cond
 ((parser-success-p (look-char? p #\@))(input-char p #\@));choice clause
 ( t 
@@ -631,14 +632,15 @@
 );choice
 
 (cond
-((parser-success-p (look-symbol? p "true"))(input-symbol p "true")(call-external p #'emit-code-true));choice clause
+((parser-success-p (look-symbol? p "true"))(input-symbol p "true")(call-external p #'symbol-open)(call-external p #'symbol-append-true)(call-external p #'symbol-close));choice clause
 ((parser-success-p (look-symbol? p "false"))
 (input-symbol p "false")
-(call-external p #'emit-code-false)
+(call-external p #'symbol-open)
+(call-external p #'symbol-append-false)
+(call-external p #'symbol-close)
 );choice alt
 ( t 
 (call-rule p #'esa-symbol)
-(call-external p #'emit-code-symbol)
 (loop
 (cond
 ((parser-success-p (look-char? p #\.))(call-rule p #'dotted-symbol));choice clause
@@ -649,7 +651,9 @@
 
 ) ;;loop
 
+(call-external p #'expr-set-functor)
 (call-rule p #'actuals)
+(call-external p #'expr-close)
 );choice alt
 );choice
 
@@ -657,16 +661,16 @@
 
 (defmethod actuals ((p parser))
 (cond
-((parser-success-p (look-char? p #\())(input-char p #\()(call-external p #'emit-code-lpar)(loop
+((parser-success-p (look-char? p #\())(input-char p #\()(loop
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'emit-code-comma)(call-rule p #'esa-expr));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'expr-open)(call-rule p #'esa-expr)(call-external p #'expr-add-as-argument)(call-external p #'expr-close));choice clause
 ( t 
 (return)
 );choice alt
 );choice
 
 ) ;;loop
-(input-char p #\))(call-external p #'emit-code-rpar));choice clause
+(input-char p #\)));choice clause
 ( t 
 );choice alt
 );choice
