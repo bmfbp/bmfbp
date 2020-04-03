@@ -1,3 +1,4 @@
+
 * todo
 ** x join builder to runner, build-graph-in-memory to run
 ** x in -> out of top
@@ -54,4 +55,165 @@ terminating - ready list is nil
     )
   (princ (get-universal-time))
 #+end_src
+
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::build
+  (asdf:system-relative-pathname
+   :arrowgrams
+     "build_process/parts/diagram/worldhello.svg")))
+  (princ (get-universal-time))
+#+end_src
+
+* build helloworld
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::build (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")))
+  (princ (get-universal-time))
+#+end_src
+* build esa from top
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (uiop:run-program "rm -rf ~/.cache/common-lisp")
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::make-esa-dsl)
+  (ql:quickload :arrowgrams/esa)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::make-esa)
+  (ql:quickload :arrowgrams/build)
+#+end_src
+#+name: arrowgrams
+#+results output
+#+begin_src lisp :results output
+  (arrowgrams/build::btest)
+#+end_src
+
+* build code snippets for esa builder and runner
+
+#+name: arrowgrams
+#+begin_src lisp
+  (uiop:run-program "rm -rf ~/.cache/common-lisp")
+#+end_src
+#+name: arrowgrams
+#+name: arrowgrams
+#+begin_src lisp
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (ab::make-esa-dsl)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (ql:quickload :arrowgrams/esa)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (ab::make-esa)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (ql:quickload :arrowgrams/build)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp
+  (ab::test-hw) ;; run this in the repl to see output
+#+end_src
+
+#+RESULTS: arrowgrams
+: NIL
+* test-run
+#+name: arrowgrams
+#+begin_src lisp
+  (ab::test-run)
+#+end_src
+
+* graph capture - not needed, after graph has been captured
+#+name: arrowgrams
+#+header: :var message="4a. hello world graph built"
+#+begin_src lisp :eval yes
+  (format nil "~s ~s ~s" message (ab::hwtest) (get-universal-time))
+#+end_src
+* make sample.lisp
+#+name: arrowgrams
+#+header: :var message=".2a sample esa"
+#+begin_src lisp
+  (ab::make-sample)
+  (format nil "~s ~s" message (get-universal-time))
+#+end_src
+
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+
+* for building JS, click ^C^C on the grayed-out lisp lines, sequentially waiting for status line to change (many seconds), to generate js transpiler
+
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ab::make-esa-dsl-js)
+#+end_src
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ql:quickload :arrowgrams/esa-js)
+#+end_src
+#+name: arrowgrams_js
+#+begin_src lisp
+  (ab::make-esa-js)
+#+end_src
+
+#+RESULTS: arrowgrams_js
+| :ARROWGRAMS/ESA-JS |
+
+* output from builder
+** see cl-build/graph.lisp/*test-descriptors*
+*** old stuff ...
+#+NAME: output-from-builder
+#+BEGIN_SRC js
+[
+{\"itemKind\":\"leaf\",\"name\":\"svg_input\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/svg_input.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"run\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/run.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"top_level_name\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/top_level_name.lisp\"},
+{\"itemKind\":\"graph\",\"name\":\"ide\",\"graph\":{\"name\":\"IDE\",\"inputs\":null,\"outputs\":null,\"parts\":[{\"partName\":\"RUN\",\"kindName\":\"RUN\"},{\"partName\":\"SVG-INPUT\",\"kindName\":\"SVG-INPUT\"},{\"partName\":\"TOP-LEVEL-NAME\",\"kindName\":\"TOP-LEVEL-NAME\"},{\"partName\":\"BUILD-PROCESS\",\"kindName\":\"BUILD-PROCESS\"}],\"wiring\":[{\"wireIndex\":0,\"sources\":[{\"part\":\"SVG-INPUT\",\"pin\":\"SVG-CONTENT\"}],\"receivers\":[{\"part\":\"BUILD-PROCESS\",\"pin\":\"TOP-LEVEL-SVG\"}]},{\"wireIndex\":1,\"sources\":[{\"part\":\"BUILD-PROCESS\",\"pin\":\"JAVASCRIPT-SOURCE-CODE\"}],\"receivers\":[{\"part\":\"RUN\",\"pin\":\"IN\"}]},{\"wireIndex\":2,\"sources\":[{\"part\":\"TOP-LEVEL-NAME\",\"pin\":\"NAME\"}],\"receivers\":[{\"part\":\"BUILD-PROCESS\",\"pin\":\"TOP-LEVEL-NAME\"}]}]}},
+{\"itemKind\":\"leaf\",\"name\":\"get_file_content_in_repo\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/get_file_content_in_repo.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"iterator\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/iterator.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"json_object_stacker\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/json_object_stacker.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"determine_kind_type\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/determine_kind_type.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"collector\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/collector.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"javascript_builder\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/javascript_builder.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"fetch_git_repo\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/fetch_git_repo.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"prepare_temp_directory\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/prepare_temp_directory.lisp\"},
+{\"itemKind\":\"graph\",\"name\":\"build_process\",\"graph\":{\"name\":\"BUILD_PROCESS\",\"inputs\":null,\"outputs\":null,\"parts\":[{\"partName\":\"COLLECTOR\",\"kindName\":\"COLLECTOR\"},{\"partName\":\"GET-FILE-CONTENT-IN-REPO\",\"kindName\":\"GET-FILE-CONTENT-IN-REPO\"},{\"partName\":\"FETCH-GIT-REPO\",\"kindName\":\"FETCH-GIT-REPO\"},{\"partName\":\"GET-FILE-CONTENT-IN-REPO\",\"kindName\":\"GET-FILE-CONTENT-IN-REPO\"},{\"partName\":\"COMPILE-COMPOSITE\",\"kindName\":\"COMPILE-COMPOSITE\"},{\"partName\":\"PREPARE-TEMP-DIRECTORY\",\"kindName\":\"PREPARE-TEMP-DIRECTORY\"},{\"partName\":\"JAVASCRIPT-BUILDER\",\"kindName\":\"JAVASCRIPT-BUILDER\"},{\"partName\":\"ITERATOR\",\"kindName\":\"ITERATOR\"},{\"partName\":\"JSON-OBJECT-STACKER\",\"kindName\":\"JSON-OBJECT-STACKER\"},{\"partName\":\"DETERMINE-KINDTYPE\",\"kindName\":\"DETERMINE-KINDTYPE\"}],\"wiring\":[{\"wireIndex\":0,\"sources\":[{\"part\":\"JSON-OBJECT-STACKER\",\"pin\":\"PART-METADATA\"}],\"receivers\":[{\"part\":\"FETCH-GIT-REPO\",\"pin\":\"GIT-REPO-METADATA\"},{\"part\":\"ITERATOR\",\"pin\":\"CONTINUE\"}]},{\"wireIndex\":1,\"sources\":[{\"part\":\"COMPILE-COMPOSITE\",\"pin\":\"PARTS-AS-JSON-OBJECTS\"}],\"receivers\":[{\"part\":\"JSON-OBJECT-STACKER\",\"pin\":\"PUSH-OBJECT\"}]},{\"wireIndex\":2,\"sources\":[{\"part\":\"COMPILE-COMPOSITE\",\"pin\":\"GRAPH-AS-JSON\"}],\"receivers\":[{\"part\":\"COLLECTOR\",\"pin\":\"COMPOSITE\"}]},{\"wireIndex\":3,\"sources\":[{\"part\":\"COLLECTOR\",\"pin\":\"INTERMEDIATE-CODE\"}],\"receivers\":[{\"part\":\"JAVASCRIPT-BUILDER\",\"pin\":\"INTERMEDIATE-CODE\"}]},{\"wireIndex\":4,\"sources\":[{\"part\":\"ITERATOR\",\"pin\":\"GET-A-PART\"}],\"receivers\":[{\"part\":\"JSON-OBJECT-STACKER\",\"pin\":\"GET-A-PART\"}]},{\"wireIndex\":5,\"sources\":[{\"part\":\"JSON-OBJECT-STACKER\",\"pin\":\"NO-MORE\"}],\"receivers\":[{\"part\":\"ITERATOR\",\"pin\":\"DONE\"},{\"part\":\"COLLECTOR\",\"pin\":\"DONE\"}]},{\"wireIndex\":6,\"sources\":[{\"part\":\"DETERMINE-KINDTYPE\",\"pin\":\"PART-METADATA\"}],\"receivers\":[{\"part\":\"GET-FILE-CONTENT-IN-REPO\",\"pin\":\"GIT-REPO-METADATA\"}]},{\"wireIndex\":7,\"sources\":[{\"part\":\"DETERMINE-KINDTYPE\",\"pin\":\"LEAF-METADATA\"}],\"receivers\":[{\"part\":\"COLLECTOR\",\"pin\":\"LEAF\"}]},{\"wireIndex\":8,\"sources\":[{\"part\":\"GET-FILE-CONTENT-IN-REPO\",\"pin\":\"FILE-CONTENT\"}],\"receivers\":[{\"part\":\"COMPILE-COMPOSITE\",\"pin\":\"SVG\"}]},{\"wireIndex\":9,\"sources\":[{\"part\":\"SELF\",\"pin\":\"TOP-LEVEL-SVG\"}],\"receivers\":[{\"part\":\"ITERATOR\",\"pin\":\"START\"},{\"part\":\"COMPILE-COMPOSITE\",\"pin\":\"SVG\"}]},{\"wireIndex\":10,\"sources\":[{\"part\":\"JAVASCRIPT-BUILDER\",\"pin\":\"TOP-LEVEL-NAME\"}],\"receivers\":[{\"part\":\"SELF\",\"pin\":\"JAVASCRIPT-SOURCE-CODE\"}]},{\"wireIndex\":11,\"sources\":[{\"part\":\"FETCH-GIT-REPO\",\"pin\":\"METADATA\"}],\"receivers\":[{\"part\":\"GET-FILE-CONTENT-IN-REPO\",\"pin\":\"GIT-REPO-METADATA\"}]},{\"wireIndex\":12,\"sources\":[{\"part\":\"PREPARE-TEMP-DIRECTORY\",\"pin\":\"DIRECTORY\"}],\"receivers\":[{\"part\":\"GET-FILE-CONTENT-IN-REPO\",\"pin\":\"TEMP-DIRECTORY\"},{\"part\":\"GET-FILE-CONTENT-IN-REPO\",\"pin\":\"TEMP-DIRECTORY\"},{\"part\":\"FETCH-GIT-REPO\",\"pin\":\"TEMP-DIRECTORY\"},{\"part\":\"JAVASCRIPT-BUILDER\",\"pin\":\"TEMP-DIRECTORY\"}]},{\"wireIndex\":13,\"sources\":[{\"part\":\"GET-FILE-CONTENT-IN-REPO\",\"pin\":\"FILE-CONTENT\"}],\"receivers\":[{\"part\":\"DETERMINE-KINDTYPE\",\"pin\":\"FILE-CONTENT\"}]},{\"wireIndex\":14,\"sources\":[{\"part\":\"GET-FILE-CONTENT-IN-REPO\",\"pin\":\"METADATA\"}],\"receivers\":[{\"part\":\"DETERMINE-KINDTYPE\",\"pin\":\"PART-METADATA\"}]},{\"wireIndex\":15,\"sources\":[{\"part\":\"SELF\",\"pin\":\"TOP-LEVEL-NAME\"}],\"receivers\":[{\"part\":\"JAVASCRIPT-BUILDER\",\"pin\":\"TOP-LEVEL-NAME\"}]}]}},
+{\"itemKind\":\"leaf\",\"name\":\"split_diagram\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/split_diagram.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"compile_one_diagram\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/compile_one_diagram.lisp\"},
+{\"itemKind\":\"leaf\",\"name\":\"json_array_splitter\",\"fileName\":\"\\/Users\\/tarvydas\\/quicklisp\\/local-projects\\/bmfbp\\/build_process\\/lispparts\\/json_array_splitter.lisp\"},
+{\"itemKind\":\"graph\",\"name\":\"compile_composite\",\"graph\":{\"name\":\"COMPILE_COMPOSITE\",\"inputs\":null,\"outputs\":null,\"parts\":[{\"partName\":\"SPLIT-DIAGRAM\",\"kindName\":\"SPLIT-DIAGRAM\"},{\"partName\":\"COMPILE-ONE-DIAGRAM\",\"kindName\":\"COMPILE-ONE-DIAGRAM\"},{\"partName\":\"JSON-ARRAY-SPLITTER\",\"kindName\":\"JSON-ARRAY-SPLITTER\"}],\"wiring\":[{\"wireIndex\":0,\"sources\":[{\"part\":\"SPLIT-DIAGRAM\",\"pin\":\"DIAGRAM\"}],\"receivers\":[{\"part\":\"COMPILE-ONE-DIAGRAM\",\"pin\":\"DIAGRAM\"}]},{\"wireIndex\":1,\"sources\":[{\"part\":\"SPLIT-DIAGRAM\",\"pin\":\"METADATA-AS-JSON-ARRAY\"}],\"receivers\":[{\"part\":\"JSON-ARRAY-SPLITTER\",\"pin\":\"JSON\"}]},{\"wireIndex\":2,\"sources\":[{\"part\":\"SELF\",\"pin\":\"SVG\"}],\"receivers\":[{\"part\":\"SPLIT-DIAGRAM\",\"pin\":\"SVG-CONTENT\"}]},{\"wireIndex\":3,\"sources\":[{\"part\":\"COMPILE-ONE-DIAGRAM\",\"pin\":\"GRAPH-AS-JSON\"}],\"receivers\":[{\"part\":\"SELF\",\"pin\":\"GRAPH-AS-JSON\"}]},{\"wireIndex\":4,\"sources\":[{\"part\":\"JSON-ARRAY-SPLITTER\",\"pin\":\"OBJECTS\"}],\"receivers\":[{\"part\":\"SELF\",\"pin\":\"PARTS-AS-JSON-OBJECTS\"}]}]}}
+]
+#+END_SRC
+
+* notes
+** bootstrap manifests are in ~/quicklisp/local-projects/bmfbp/build_process/lispparts
+
 
