@@ -258,9 +258,9 @@
 ) ; rule
 
 (defmethod method-declaration ((p parser))
-(call-external p #'open-new-method-descriptor)
 (input-symbol p "method")
 (call-rule p #'esa-symbol)
+(call-external p #'open-new-method-descriptor)
 (call-rule p #'generic-typed-formals)
 (call-rule p #'optional-return-type-declaration)
 (call-external p #'method-attach-to-class)

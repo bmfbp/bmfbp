@@ -118,8 +118,8 @@ $   (emit p "(in-package :arrowgrams/esa)")
   @esa-symbol  % should be checked to be a kind
 
 = method-declaration % "when" is always a declaration
-  open-new-method-descriptor
   SYMBOL/method @esa-symbol
+  open-new-method-descriptor
   @generic-typed-formals
   @optional-return-type-declaration
   method-attach-to-class
