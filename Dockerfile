@@ -11,7 +11,7 @@
 #
 #    That is the image ID. We'll use it below.
 #
-# 4. Run the image (using the image ID): `docker run 17408eb201c5`. You will see something like this at the end:
+# 4. You should also see this somewhere in the bottom of the output. This is the output from the hello-world program.
 #
 #      react node "TOP"
 #      react "world"
@@ -78,5 +78,5 @@ RUN cd /root/quicklisp/local-projects/bmfbp && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit
 
 # Run hello-world
-CMD cd /root/quicklisp/local-projects/bmfbp && \
+RUN cd /root/quicklisp/local-projects/bmfbp && \
   sbcl --eval "(quicklisp:quickload :arrowgrams/build)" --eval "(arrowgrams/build::helloworld)" --quit
