@@ -1,0 +1,14 @@
+* scripts
+#+name: rp
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/rephrase-compiler)
+#+end_src
+
+#+RESULTS: rp
+: To load "arrowgrams/rephrase-compiler":
+:   Load 1 ASDF system:
+:     arrowgrams/rephrase-compiler
+: ; Loading "arrowgrams/rephrase-compiler"
+: 
+
+

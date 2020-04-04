@@ -1,0 +1,145 @@
+RP is an "assembler" for parsers.  See "Parser Operations" section below.
+
+RP has a syntax for each of the 16 operations.  The syntax for RP operations doesn't look very assembler-like, more like a cross between regular expressions and PEG.
+
+See S/SL [Holt, Cordy, Wortman <>] for where the inspiration came from.
+
+The 16 operations of RP map directly onto Common Lisp (and, probably, JS).
+
+RP is parsed using rp-rules.lisp - manually build parser for the RP assembler.
+
+To make things simple to parse, every one of the 16 operations has a single-character, left-handle, i.e just by looking at the next character, we know exactly what should come next (or error).
+
+RP is used to build more-interesting DSLs, like ESA.
+
+
+
+left handle, single character - all of these characters introduce a concept, all other characters produce an error: 
+
+=
+-
+[A-Z]
+?
+*
+@
+&
+[
+|
+]
+^
+{
+>
+[a-z]
+
+Parser model:
+a parser (class) has:
+1) next token
+2) accepted token
+3) operations (see below)
+4) success/failure of parse
+
+a Token (class) is:
+1) A Kind (kind-of token - character, space, symbol, etc., etc.)
+2) Text (the text associated with the token)
+3) Line number
+4) Position (within line, or from beginning)
+5) extra technical details (e.g. a pulled-p flag)
+
+A token stream is a sequential flow of tokens.
+
+A Scanner is a simple pipeline of filters that remove / replace tokens.
+
+The Front of the pipeline is a tokenizer, which produces one token for each incoming character.  The Kind is always "CHARACTER" (or :character in Common Lisp).
+
+The Tokenizer can be optimized to emit one token every time its PULL line is pulled, or non-optimized to read entire file into memory and emit a string of CHARACTER tokens.
+
+The Tokenizer feeds a Line Counter filter which assigns a line number to each token and watches for Newline tokens passing by.
+
+The rest of the pipeline consists of very simple filters, for example:
+
+- End of Line Comment filter - when it sees a Comment character, it consumes CHARACTER tokens until it sees a Newline CHARACTER.  It Emits one token (or zero) to represent the comment (Line number set to the appropriate line, Position set to the beginning of the comment), plus the Newline token.  The comment filter needs to worry about strings (which can contain non-comment newlines).  Placing the Comment Filter further downstream in the chain allows the String filter to create STRING tokens before they reach the Comment filter (hence, removing some of the work from the Comment filter ; and the dependency of knowing what STRINGs look like in a given language).
+
+- String filter - emits one STRING token for each incoming string (e.g. "...").  Starts buffering strings when it sees a start-of-string token (e.g. "), and emits the string token.  It simply passes incoming tokens downstream if it is not buffering a string.
+
+- Symbol filter - aka Ident filter - emits one SYMBOL token for each group of tokens (that make up a SYMBOL) and passes all other tokens, untouched, downstream.  Usually, the symbol filter needs to "look ahead" by one token, so that it knows when to stop buffering.  For example, "xyz(abc)" is converted into 8 CHARACTER tokens ("x", "y", etc., "(", ")").  The Symbol filter emits 4 tokens - one SYMBOL "xyx", one CHARACTER "(", SYMBOL "abc" and CHARACTER ")". To do this, the Symbol filter must look ahead by one token, e.g. the "(" token after the "z".  If the tokenizer produces tokens on demand, the Symbol filter ends up demanding one more token than it uses.  It must produce some sort of mark (in one of its tokens) that allows downstream filters to request the appropriate number of token requests.  [check if this is true, or faulty thinking on my part].
+
+- Whitespace filter - collapse runs of Whitespace (space, newline, tab, etc.) into single tokens.
+
+- Integers filter - collapse runs of digits [0-9] into single tokens.  N.B. a Float filter is not needed, since downstream parsers can combine Integer tokens, CHARACTER "." tokens, etc. into what is needed.
+
+- Raw-Text filter - almost like comment but guarantees that all encountered text (up to Newline) is stored in the text field of the token, for example "$ { code }" will save " { code }" into the text field of the token.  This is an escape mehanism used during bootstrapping and should be deprecated.
+
+====== meaning of left-handle characters ====
+[ see below 'Parser Operations" ]
+
+The Parser consumes tokens from the Scanner and tries to make sense of the stream (and declares errors where the phrases don't make sense).
+
+= <Symbol>
+  Begins a defintion of a procedure with given name.  Parser consumes two tokens - CHARACTER and SYMBOL ("=" followed by some symbol).  After accepting these two tokens, the Parser tries to make sense of the following definition.  See esa.rp.
+
+- <Symbol>
+  Begins a definition of a predicate.  Almost the same as above, except that predicates can be used at Parse time to test and help the parser along.
+
+[A-Z]
+  Any upper-case letter starts a symbol pattern match.  The symbol is represented by [A-Z][A-Z0-9]* which is used to match the Kind of an incoming token.  Remember, this is an *assembler* for parsing.  The operation which [A-Z]... represents is the token-accept operation.  See below.
+
+&
+  call predicate
+
+@
+  call rule
+
+*
+  succeed
+
+[
+  begin choice
+
+|
+  alternate choice
+
+]
+  end choice
+
+>> ^ok
+  return TRUE from a predicate
+
+>> ^fail
+  return FALSE from a predicate
+
+{
+  begin cycle
+
+}
+  end cycle
+
+>
+  break out of cycle
+  
+[a-z]
+  call external rule
+
+
+N.B. cheating: the > character is overloaded to represent 3 operations (each of which can be easily parsed after seeing >).
+
+
+====== Parser operations =====
+1) accept token by Kind  : succeed if Next-Token has matching Kind, on success, move Next-Token into Accepted-Token and pulls a new Next-Token from the input stream
+2) accept token by Kind+Text : same as (1) but also requires that the Text of the Next-Token matches
+3) lookahead token by Kind - succeed if Next-Token has given Kind, does not affect Next-Token and Accepted-Token
+4) lookahead token by Kind+Text - same as (3), except that Text is also used in the match
+5) call-predicate - calls some other Rule which must return TRUE or FALSE (in CL, :true or :false)
+6) call-rule - calls some other rule, expects no result
+7) succeed - always succeeds, but does not affect Next-Token or Accepted-Token
+8) begin choice - next item must result in TRUE or FALSE, if TRUE, then fall through and execute next set of operations, if FALSE, jump to next alternate or end-choice ; after TRUE fall-through, JUMP to instructdion AFTER end-choice (e.g. break)
+9) alternate choice - same as (8), different syntax (maybe), N.B "otherwise" is two operations: ALTERNATE followed by SUCCEED (jump to instruction after end-choice)
+10 )end-choice - marks end of choice block(s), FAIL if executed
+11) return (immediately) success from a predicate --> TRUE (:true)
+12) return (immediately) failure from a predicate --> FALSE (:false)
+13) break out of cycle
+14) begin cycle - LOOP
+15) end cycle
+16) call external rule - call a routine in the base language, don't expect a result
+
+
+
