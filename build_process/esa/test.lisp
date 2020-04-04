@@ -3,6 +3,12 @@
 (defparameter *expr*
   '(:call (:field (:call (:field "self" "y") "a" "b") "z") "c" "d"))
 
+(defparameter *expr1*
+  '(:field "self" "x"))
+
+(defparameter *expr2*
+  '(:field (:field "self" "x") "y"))
+
 (defun emit-expr-as-js (expr s)
   (flet ((print-args ()
 	   (let ((args (rest (cdr expr))))
@@ -39,7 +45,7 @@
 	  (let ((inner (u (expr-as-cl (second expr)))))
 	    (ecase (first expr)
 	      (:field `(slot-value ,inner ',(u (third expr))))
-	      (:call  `(:call2 ,inner ,@(mapcar #'u (rest (rest expr)))))))))))
+	      (:call  `(funcall ,inner ,@(mapcar #'u (rest (rest expr)))))))))))
 
 (defun test-both (e)
   (with-output-to-string (s)
@@ -51,6 +57,8 @@
       cl-expr)))
 
 (defun test ()
-  (test-both *expr*))
+  (test-both *expr*)
+  (test-both *expr1*)
+  (test-both *expr2*))
 
     
