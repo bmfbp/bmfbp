@@ -1,8 +1,6 @@
 (in-package :arrowgrams/esa)
 
 (defmethod esa-dsl ((p parser))
-   (emit p "(in-package :arrowgrams/esa)")
-(call-external p #'reset-classes)
 (call-rule p #'type-decls)
 (call-rule p #'situations)
 (call-rule p #'classes)
@@ -167,8 +165,6 @@
 (defmethod class-def ((p parser))
 (input-symbol p "class")
 (call-rule p #'esa-symbol)
-(call-external p #'set-current-class)
-(call-external p #'open-new-class-descriptor)
 (call-rule p #'field-decl-begin)
 (call-rule p #'field-decl)
 (loop
@@ -183,7 +179,6 @@
 
 (input-symbol p "end")
 (input-symbol p "class")
-(call-external p #'close-new-class-descriptor)
 ) ; rule
 
 (defmethod field-decl-begin ((p parser)) ;; predicate
@@ -201,14 +196,12 @@
 
 (defmethod field-decl ((p parser))
 (cond
-((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)(call-external p #'open-new-method-descriptor)(call-external p #'set-current-method-as-map));choice clause
+((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol));choice clause
 ((parser-success-p (call-predicate p #'non-keyword-symbol))
 (call-rule p #'esa-symbol)
-(call-external p #'open-new-method-descriptor)
 );choice alt
 );choice
 
-(call-external p #'close-new-method-descriptor)
 ) ; rule
 
 (defmethod when-declaration ((p parser))
@@ -225,7 +218,6 @@
 ) ;;loop
 
 (call-rule p #'class-ref)
-(call-external p #'open-existing-class-descriptor)
 (loop
 (cond
 ((parser-success-p (look-symbol? p "script"))(call-rule p #'script-declaration));choice clause
@@ -241,7 +233,6 @@
 
 (input-symbol p "end")
 (input-symbol p "when")
-(call-external p #'close-existing-class-descriptor)
 ) ; rule
 
 (defmethod situation-ref ((p parser))
@@ -260,25 +251,18 @@
 (defmethod method-declaration ((p parser))
 (input-symbol p "method")
 (call-rule p #'esa-symbol)
-(call-external p #'open-new-method-descriptor)
 (call-rule p #'generic-typed-formals)
 (call-rule p #'optional-return-type-declaration)
-(call-external p #'method-attach-to-class)
-(call-external p #'close-new-method-descriptor)
 ) ; rule
 
 (defmethod script-declaration ((p parser))
 (input-symbol p "script")
 (call-rule p #'esa-symbol)
-(call-external p #'open-new-method-descriptor)
 (call-rule p #'generic-typed-formals)
 (call-rule p #'optional-return-type-declaration)
-(call-external p #'method-attach-to-class)
-(call-external p #'close-new-method-descriptor)
 ) ; rule
 
 (defmethod generic-typed-formals ((p parser))
-(call-external p #'reset-formals-index)
 (cond
 ((parser-success-p (look-char? p #\())(input-char p #\()(call-external p #'generic-type-list)(input-char p #\)));choice clause
 ( t 
@@ -289,11 +273,9 @@
 
 (defmethod generic-type-list ((p parser))
 (call-rule p #'esa-symbol)
-(call-external p #'add-formal-type-at-index)
-(call-external p #'inc-formals-index)
 (loop
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol)(call-external p #'add-formal-type-at-index)(call-external p #'inc-formals-index));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol));choice clause
 ( t 
 (return)
 );choice alt
@@ -306,13 +288,12 @@
 (defmethod optional-return-type-declaration ((p parser))
 (cond
 ((parser-success-p (look-char? p #\>))(input-char p #\>)(input-char p #\>)(cond
-((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol)(call-external p #'push-new-return-type)(call-external p #'set-return-type-as-map));choice clause
+((parser-success-p (look-symbol? p "map"))(input-symbol p "map")(call-rule p #'esa-symbol));choice clause
 ( t 
 (call-rule p #'esa-symbol)
-(call-external p #'push-new-return-type)
 );choice alt
 );choice
-(call-external p #'add-return-type-to-method)(call-external p #'pop-new-return-type));choice clause
+);choice clause
 ( t 
 );choice alt
 );choice
@@ -320,22 +301,17 @@
 ) ; rule
 
 (defmethod script-definition ((p parser))
-  (input-symbol p "script")
-  (call-rule p #'esa-symbol)
-  (call-external p #'open-existing-class-descriptor)
-  (call-rule p #'esa-symbol)
-  (call-external p #'open-existing-method-descriptor)
-  (call-rule p #'optional-formals-definition)
-  (call-rule p #'optional-return-type-definition)
-  (call-rule p #'script-body)
-  (call-external p #'close-existing-method-descriptor)
-  (call-external p #'close-existing-class-descriptor)
-  (input-symbol p "end")
-  (input-symbol p "script")
-  ) ; rule
+(input-symbol p "script")
+(call-rule p #'esa-symbol)
+(call-rule p #'esa-symbol)
+(call-rule p #'optional-formals-definition)
+(call-rule p #'optional-return-type-definition)
+(call-rule p #'script-body)
+(input-symbol p "end")
+(input-symbol p "script")
+) ; rule
 
 (defmethod optional-formals-definition ((p parser))
-(call-external p #'reset-formals-index)
 (loop
 (cond
 ((parser-success-p (look-char? p #\())(input-char p #\()(call-external p #'untyped-formals-definition)(input-char p #\)));choice clause
@@ -351,7 +327,7 @@
 (defmethod untyped-formals-definition ((p parser))
 (loop
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol)(call-external p #'add-formal-name-at-index)(call-external p #'inc-formals-index));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-symbol));choice clause
 ( t 
 (return)
 );choice alt
@@ -378,7 +354,6 @@
 
 (defmethod script-body ((p parser))
 (loop
-     (emit p "~%")
 (cond
 ((parser-success-p (look-symbol? p "let"))(call-rule p #'let-statement));choice clause
 ((parser-success-p (look-symbol? p "map"))
@@ -423,7 +398,6 @@
 (defmethod let-statement ((p parser))
 (input-symbol p "let")
 (call-rule p #'esa-symbol)
-      (emit-code p "~&let ~a =" (atext p))
 (input-char p #\=)
 (cond
 ((parser-success-p (look-symbol? p "map"))(input-symbol p "map"));choice clause
@@ -432,7 +406,6 @@
 );choice
 
 (call-rule p #'esa-expr)
-      (emit-code p "; /* let */ ~%")
 (input-symbol p "in")
 (call-rule p #'script-body)
 (input-symbol p "end")
@@ -442,7 +415,6 @@
 (defmethod create-statement ((p parser))
 (input-symbol p "create")
 (call-rule p #'esa-symbol)
-      (emit-code p "~&let ~a = " (atext p))
 (input-char p #\=)
 (cond
 ((parser-success-p (look-symbol? p "map"))(input-symbol p "map"));choice clause
@@ -451,10 +423,9 @@
 );choice
 
 (cond
-((parser-success-p (look-char? p #\*))(input-char p #\*)(call-rule p #'class-ref)      (emit-code p "new *~a(); /* create* */ ~%" (atext p)));choice clause
+((parser-success-p (look-char? p #\*))(input-char p #\*)(call-rule p #'class-ref));choice clause
 ( t 
 (call-rule p #'class-ref)
-      (emit-code p "new ~a(); /* create */ ~%" (atext p))
 );choice alt
 );choice
 
@@ -468,56 +439,43 @@
 (input-symbol p "set")
 (call-rule p #'esa-expr)
 (input-char p #\=)
-      (emit-code p " = ")
 (call-rule p #'esa-expr)
-      (emit-code p " ; /* set */~% ")
 ) ; rule
 
 (defmethod map-statement ((p parser))
 (input-symbol p "map")
 (call-rule p #'esa-symbol)
-      (emit-code p "~&for ~a in " (atext p))
 (input-char p #\=)
 (call-rule p #'esa-expr)
-      (emit-code p ") {~%")
 (input-symbol p "in")
 (call-rule p #'script-body)
-      (emit-code p "} /* end map */ ~%")
 (input-symbol p "end")
 (input-symbol p "map")
 ) ; rule
 
 (defmethod exit-map-statement ((p parser))
 (input-symbol p "exit-map")
-     (emit-code p "~&return; /* exit map */ ~%")
 ) ; rule
 
 (defmethod loop-statement ((p parser))
 (input-symbol p "loop")
-     (emit-code p "~&while (true) {~%")
 (call-rule p #'script-body)
-     (emit-code p "~&} /*end loop*/ ~%")
 (input-symbol p "end")
 (input-symbol p "loop")
 ) ; rule
 
 (defmethod exit-when-statement ((p parser))
 (input-symbol p "exit-when")
-     (emit-code p "~&if (")
 (call-rule p #'esa-expr)
-     (emit-code p ") return; /* exit-when */ ~%")
 ) ; rule
 
 (defmethod if-statement ((p parser))
 (input-symbol p "if")
-    (emit-code p "~&if (")
 (call-rule p #'esa-expr)
-    (emit-code p ") {~%")
 (input-symbol p "then")
 (call-rule p #'script-body)
-    (emit-code p "~&}  /* end if */ ~%")
 (cond
-((parser-success-p (look-symbol? p "else"))(input-symbol p "else")    (emit-code p "~&else {~%")(call-rule p #'script-body)    (emit-code p "~&} /* end else */ ~%"));choice clause
+((parser-success-p (look-symbol? p "else"))(input-symbol p "else")(call-rule p #'script-body));choice clause
 ( t 
 );choice alt
 );choice
@@ -529,26 +487,22 @@
 (defmethod script-call ((p parser))
 (input-char p #\@)
 (call-rule p #'qualified-symbol)
-    (emit-code p "~&this.~a(); /* call script */ ~%" (atext p))
 ) ; rule
 
 (defmethod method-call ((p parser))
 (call-rule p #'qualified-symbol)
-    (emit-code p "~&this.~a(); /* call method */ ~%" (atext p))
 ) ; rule
 
 (defmethod return-statement ((p parser))
 (input-char p #\>)
 (input-char p #\>)
 (cond
-((parser-success-p (look-symbol? p "true"))(input-symbol p "true")                (emit-code p "~&return true; /* return true */ ~%"));choice clause
+((parser-success-p (look-symbol? p "true"))(input-symbol p "true"));choice clause
 ((parser-success-p (look-symbol? p "false"))
 (input-symbol p "false")
-                (emit-code p "~&return false; /* return false */ ~%")
 );choice alt
 ( t 
 (call-rule p #'esa-symbol)
-                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
 );choice alt
 );choice
 
@@ -564,29 +518,14 @@
 
 ) ; rule
 
-(defmethod qualifiers ((p parser))
-(loop
-(cond
-((parser-success-p (look-char? p #\.))(call-rule p #'dotted-symbol));choice clause
-( t 
-(return)
-);choice alt
-);choice
-
-) ;;loop
-
-) ; rule
-
 (defmethod dotted-symbol ((p parser))
 (input-char p #\.)
-(call-external p #'symbol-enstack-apply)
 (call-rule p #'esa-symbol)
-(call-external p #'symbol-pop-apply)
 ) ; rule
 
 (defmethod esa-symbol ((p parser))
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'symbol-open)(input p :SYMBOL)(call-external p #'symbol-append-symbol)(call-rule p #'esa-symbol-follow)(call-external p #'convert-symbol-to-accepted-token)(call-external p #'symbol-close));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(input p :SYMBOL)(call-rule p #'esa-symbol-follow));choice clause
 ( t 
 );choice alt
 );choice
@@ -596,21 +535,17 @@
 (defmethod esa-symbol-follow ((p parser))
 (loop
 (cond
-((parser-success-p (look-char? p #\/))(input-char p #\/)(call-external p #'symbol-append-slash)(input p :SYMBOL)(call-external p #'symbol-append-symbol));choice clause
+((parser-success-p (look-char? p #\/))(input-char p #\/)(input p :SYMBOL));choice clause
 ((parser-success-p (look-char? p #\-))
 (input-char p #\-)
-(call-external p #'symbol-append-dash)
 (input p :SYMBOL)
-(call-external p #'symbol-append-symbol)
 );choice alt
 ((parser-success-p (look-char? p #\?))
 (input-char p #\?)
-(call-external p #'symbol-append-question)
 (return)
 );choice alt
 ((parser-success-p (look-char? p #\'))
 (input-char p #\')
-(call-external p #'symbol-append-primed)
 (return)
 );choice alt
 ( t 
@@ -623,7 +558,6 @@
 ) ; rule
 
 (defmethod esa-expr ((p parser))
-(call-external p #'expr-open)
 (cond
 ((parser-success-p (look-char? p #\@))(input-char p #\@));choice clause
 ( t 
@@ -631,12 +565,9 @@
 );choice
 
 (cond
-((parser-success-p (look-symbol? p "true"))(input-symbol p "true")(call-external p #'symbol-open)(call-external p #'symbol-append-true)(call-external p #'symbol-close));choice clause
+((parser-success-p (look-symbol? p "true"))(input-symbol p "true"));choice clause
 ((parser-success-p (look-symbol? p "false"))
 (input-symbol p "false")
-(call-external p #'symbol-open)
-(call-external p #'symbol-append-false)
-(call-external p #'symbol-close)
 );choice alt
 ( t 
 (call-rule p #'esa-symbol)
@@ -650,9 +581,7 @@
 
 ) ;;loop
 
-(call-external p #'expr-set-functor)
 (call-rule p #'actuals)
-(call-external p #'expr-close)
 );choice alt
 );choice
 
@@ -662,7 +591,7 @@
 (cond
 ((parser-success-p (look-char? p #\())(input-char p #\()(loop
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-external p #'expr-open)(call-rule p #'esa-expr)(call-external p #'expr-add-as-argument)(call-external p #'expr-close));choice clause
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-expr));choice clause
 ( t 
 (return)
 );choice alt

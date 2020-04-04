@@ -1,4 +1,4 @@
-(in-package :arrowgrams/esa)
+(in-package :arrowgrams/build)
 
 (defmethod read-next-token ((p parser) &optional (debug t))
   (unless (eq :eof (token-kind (accepted-token p)))
@@ -18,12 +18,8 @@
 	       (format nil "~&parser error in ~s - got ~s ~s at line ~a position ~a~%" (current-rule p)
 		       (token-kind nt) (token-text nt) (token-line nt) (token-position nt)))))
     (error "parser error ~s" error-message)
-    ;(read-next-token p)
+    (read-next-token p)
     :fail)))
-
-(defmethod semantic-error ((p parser) fmtstr &rest fmtargs)
-  (let ((msg (apply 'format nil fmtstr fmtargs)))
-    (error msg))) ;; parser should try to continue - error only during bootstrap
 
 (defmethod initialize ((p parser))
   (setf (next-token p) (pop (token-stream p))))
@@ -164,7 +160,13 @@
 
 ;; esa mechanisms
 
-#+nil (defmethod combine-text ((p parser))
+(defmethod clear-saved-text ((p parser))
+  (setf (saved-text p) ""))
+
+(defmethod save-text ((p parser))
+  (setf (saved-text p) (token-text (accepted-token p))))
+
+(defmethod combine-text ((p parser))
   (let ((text (token-text (accepted-token p))))
     (let ((combined-text (strip-quotes (concatenate 'string (saved-text p) (string text)))))
       (setf (token-text (accepted-token p)) combined-text)
@@ -188,9 +190,53 @@
       (subseq s 1 (1- (length s)))
     s))
 
-(defmethod emit ((p parser) fmtstr &rest args)
-  (let ((str (apply #'format nil fmtstr args)))
-    (write-string str (output-stream p))))
 
-(defmethod emit-package ((p parser))
-  (emit p "(in-package :arrowgrams/esa)"))
+(defmethod string-stack-open ((p parser))
+  (let ((entry (make-instance 'string-stack-entry)))
+    (setf (counter entry) 0)
+    (setf (str-stack entry) nil)
+    (push entry (string-stack p))))
+
+
+(defmethod top-of-string-stack ((p parser))
+  (first (string-stack p)))
+
+(defmethod push-string ((p parser))
+  (push (atext p) (str-stack (top-of-string-stack p))))
+
+(defmethod string-stack-empty ((p parser))
+  (null (str-stack (top-of-string-stack p))))
+
+(defmethod string-stack-has-only-one-item ((p parser))
+  (let ((len (length (str-stack (top-of-string-stack p)))))
+    (assert (>= len 0))
+    (= len 1)))
+
+(defmethod emit-string-pop ((p parser))
+  (let ((str (pop (str-stack (top-of-string-stack p)))))
+    (emit p " ~a" str)))
+
+(defmethod emit-lpar-inc-count ((p parser))
+  (emit p "(")
+  (incf (counter (top-of-string-stack p))))
+
+(defmethod set-lpar-count-to-1 ((p parser))
+  (setf (counter (top-of-string-stack p)) 1))
+
+(defmethod emit-rpars-count-less-1 ((p parser))
+  (assert (>= (counter (top-of-string-stack p)) 0))
+  (@:loop
+    (@:exit-when (<= (counter (top-of-string-stack p)) 1))
+    (decf (counter (top-of-string-stack p)))
+    (emit p ")")))
+
+(defmethod emit-rpars ((p parser))
+  (assert (or (= 0 (counter (top-of-string-stack p)))
+              (= 1 (counter (top-of-string-stack p)))))
+  (when (= 1 (counter (top-of-string-stack p)))
+    (emit p ")")))
+
+(defmethod string-stack-close ((p parser))
+  (pop (string-stack p)))
+
+

@@ -1,6 +1,6 @@
+% v2 esa.rp
+
 = esa-dsl
-$   (emit p "(in-package :arrowgrams/esa)")
-  reset-classes
   @type-decls
   @situations
   @classes
@@ -70,14 +70,11 @@ $   (emit p "(in-package :arrowgrams/esa)")
 = class-def
   SYMBOL/class
   @esa-symbol
-       set-current-class
-  open-new-class-descriptor
   @field-decl-begin @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
-  close-new-class-descriptor
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
@@ -89,24 +86,18 @@ $   (emit p "(in-package :arrowgrams/esa)")
   [ ?SYMBOL/map
     SYMBOL/map 
     @esa-symbol
-    open-new-method-descriptor
-    set-current-method-as-map
   | &non-keyword-symbol @esa-symbol
-    open-new-method-descriptor
   ]
-  close-new-method-descriptor
 
 = when-declaration
   SYMBOL/when
   @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
   @class-ref
-  open-existing-class-descriptor
   {[ ?SYMBOL/script @script-declaration
    | ?SYMBOL/method @method-declaration
    | * >
   ]}
   SYMBOL/end SYMBOL/when
-  close-existing-class-descriptor
 
 = situation-ref
   @esa-symbol % should be checked to be a situation
@@ -119,47 +110,30 @@ $   (emit p "(in-package :arrowgrams/esa)")
 
 = method-declaration % "when" is always a declaration
   SYMBOL/method @esa-symbol
-  open-new-method-descriptor
   @generic-typed-formals
   @optional-return-type-declaration
-  method-attach-to-class
-  close-new-method-descriptor
   
 = script-declaration  % this is a declaration of scripts to be defined
   SYMBOL/script @esa-symbol
-  open-new-method-descriptor
   @generic-typed-formals
   @optional-return-type-declaration
-  method-attach-to-class
-  close-new-method-descriptor
 
 = generic-typed-formals
-   reset-formals-index
   [ ?'(' '(' generic-type-list ')'
   | *
   ]
 
 = generic-type-list
   @esa-symbol
-  add-formal-type-at-index
-  inc-formals-index
   {[ &non-keyword-symbol @esa-symbol
-     add-formal-type-at-index
-     inc-formals-index
    | * >
   ]}
 
 = optional-return-type-declaration
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map @esa-symbol
-           push-new-return-type
-           set-return-type-as-map
          | * @esa-symbol
-           push-new-return-type
-
   ]
-  add-return-type-to-method
-  pop-new-return-type
   | *
   ]
 
@@ -168,18 +142,13 @@ $   (emit p "(in-package :arrowgrams/esa)")
 = script-definition
   SYMBOL/script
   @esa-symbol
-  open-existing-class-descriptor
   @esa-symbol
-  open-existing-method-descriptor
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
-  close-existing-method-descriptor
-  close-existing-class-descriptor
   SYMBOL/end SYMBOL/script
 
 = optional-formals-definition
-  reset-formals-index
   {[ ?'(' '(' untyped-formals-definition ')'
    | * >
   ]}
@@ -187,8 +156,6 @@ $   (emit p "(in-package :arrowgrams/esa)")
 = untyped-formals-definition
   {[ &non-keyword-symbol @esa-symbol
      % index and type
-     add-formal-name-at-index
-     inc-formals-index
    | * >
   ]}
   
@@ -203,7 +170,6 @@ $   (emit p "(in-package :arrowgrams/esa)")
   
 = script-body
   {
-$     (emit p "~%")
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
    | ?SYMBOL/exit-map @exit-map-statement
@@ -221,11 +187,9 @@ $     (emit p "~%")
 = let-statement
   SYMBOL/let
    @esa-symbol
-$      (emit-code p "~&let ~a =" (atext p))
    '='
    [ ?SYMBOL/map SYMBOL/map | * ]
    @esa-expr
-$      (emit-code p "; /* let */ ~%")
    SYMBOL/in 
    @script-body
    SYMBOL/end SYMBOL/let
@@ -233,15 +197,12 @@ $      (emit-code p "; /* let */ ~%")
 = create-statement
   SYMBOL/create
    @esa-symbol
-$      (emit-code p "~&let ~a = " (atext p))
    '=' 
    [ ?SYMBOL/map SYMBOL/map | * ]
    [ ?'*' '*'
      @class-ref
-$      (emit-code p "new *~a(); /* create* */ ~%" (atext p))
    | *
    @class-ref
-$      (emit-code p "new ~a(); /* create */ ~%" (atext p))
    ]
    SYMBOL/in 
    @script-body
@@ -251,69 +212,49 @@ $      (emit-code p "new ~a(); /* create */ ~%" (atext p))
   SYMBOL/set
    @esa-expr
    '=' 
-$      (emit-code p " = ")
    @esa-expr
-$      (emit-code p " ; /* set */~% ")
   
 = map-statement
   SYMBOL/map @esa-symbol
-$      (emit-code p "~&for ~a in " (atext p))
   '='
   @esa-expr
-$      (emit-code p ") {~%")
   SYMBOL/in @script-body
-$      (emit-code p "} /* end map */ ~%")
   SYMBOL/end SYMBOL/map
 
 = exit-map-statement
   SYMBOL/exit-map
-$     (emit-code p "~&return; /* exit map */ ~%")
 
 = loop-statement
   SYMBOL/loop
-$     (emit-code p "~&while (true) {~%")
     @script-body
-$     (emit-code p "~&} /*end loop*/ ~%")
   SYMBOL/end SYMBOL/loop
   
 = exit-when-statement
   SYMBOL/exit-when
-$     (emit-code p "~&if (")
     @esa-expr
-$     (emit-code p ") return; /* exit-when */ ~%")
 
 = if-statement
   SYMBOL/if
-$    (emit-code p "~&if (")
     @esa-expr
-$    (emit-code p ") {~%")
   SYMBOL/then
     @script-body
-$    (emit-code p "~&}  /* end if */ ~%")
   [ ?SYMBOL/else SYMBOL/else
-$    (emit-code p "~&else {~%")
      @script-body
-$    (emit-code p "~&} /* end else */ ~%")
   | *
   ]
   SYMBOL/end SYMBOL/if
 
 = script-call
   '@' @qualified-symbol
-$    (emit-code p "~&this.~a(); /* call script */ ~%" (atext p))
 
 = method-call
   @qualified-symbol
-$    (emit-code p "~&this.~a(); /* call method */ ~%" (atext p))
 
 = return-statement
   '>' '>'
   [ ?SYMBOL/true SYMBOL/true
-$                (emit-code p "~&return true; /* return true */ ~%")
   | ?SYMBOL/false SYMBOL/false
-$                (emit-code p "~&return false; /* return false */ ~%")
   | * @esa-symbol
-$                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
   ]
 
 = qualified-symbol
@@ -324,61 +265,43 @@ $                (emit-code p "~&return ~a; /* return value */ ~%" (atext p))
 
 = dotted-symbol
   '.' 
-  symbol-enstack-apply
   @esa-symbol
-  symbol-pop-apply
 
 = esa-symbol
   [ &non-keyword-symbol
-    symbol-open
     SYMBOL
-    symbol-append-symbol
     @esa-symbol-follow
-    convert-symbol-to-accepted-token
-    symbol-close
   | *
   ]
 
 = esa-symbol-follow
   {[ ?'/' '/' 
-     symbol-append-slash 
      SYMBOL
-     symbol-append-symbol
    | ?'-' '-' 
-     symbol-append-dash
      SYMBOL
-     symbol-append-symbol
    | ?'?' '?'
-     symbol-append-question
       >
    | ?CHARACTER/' CHARACTER/' 
-     symbol-append-primed
      >
    | * >
   ]}
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
-  [ ?SYMBOL/true SYMBOL/true symbol-open symbol-append-true symbol-close
-  | ?SYMBOL/false SYMBOL/false symbol-open symbol-append-false symbol-close
+  [ ?SYMBOL/true SYMBOL/true
+  | ?SYMBOL/false SYMBOL/false
   | *
-    expr-open
     @esa-symbol
     {[ ?'.' @dotted-symbol
      | * >
     ]}
-    expr-set-functor
     @actuals
-    expr-close
    ]
 
 = actuals
  [ ?'(' '('
    {[ &non-keyword-symbol 
-     expr-open
       @esa-expr
-      expr-add-as-argument
-      expr-close
     | * > 
     ]}
     ')'
