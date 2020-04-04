@@ -238,6 +238,7 @@
                                                    ))))))
 
 
+
 (defsystem :arrowgrams/rephrase-compiler
     :depends-on (:arrowgrams/cl-event-passing-no-esrap :alexandria)
     :around-compile (lambda (next)
@@ -246,7 +247,7 @@
                                   (speed 0)))
                       (funcall next))
     :components ((:module "source"
-                          :pathname "./build_process/esa"
+                          :pathname "./build_process/rp"
                           :components ((:file "package")
                                        (:file "token" :depends-on ("package"))
                                        (:file "classes" :depends-on ("package"))
@@ -273,8 +274,7 @@
 							   "symbols" "integers"))
                                        (:file "rp-rules" :depends-on ("parser-mechanisms"))
                                        (:file "rp-parser" :depends-on ("rp-rules"))
-                                       (:file "file-writer" :depends-on ("package" "classes"))
-                                       (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
+                                       (:file "file-writer" :depends-on ("package" "classes"))))))
 
 (defsystem :arrowgrams/esa
     :depends-on (:arrowgrams/rephrase-compiler)
