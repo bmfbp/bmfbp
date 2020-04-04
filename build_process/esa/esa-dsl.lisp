@@ -486,11 +486,11 @@
 
 (defmethod script-call ((p parser))
 (input-char p #\@)
-(call-rule p #'qualified-symbol)
+(call-rule p #'field-call)
 ) ; rule
 
 (defmethod method-call ((p parser))
-(call-rule p #'qualified-symbol)
+(call-rule p #'field-call)
 ) ; rule
 
 (defmethod return-statement ((p parser))
@@ -508,17 +508,51 @@
 
 ) ; rule
 
-(defmethod qualified-symbol ((p parser))
+(defmethod field-call ((p parser))
 (call-rule p #'esa-symbol)
 (cond
-((parser-success-p (look-char? p #\.))(call-rule p #'dotted-symbol));choice clause
+((parser-success-p (look-char? p #\.))(call-rule p #'dotted-field-call));choice clause
 ( t 
 );choice alt
 );choice
 
 ) ; rule
 
-(defmethod dotted-symbol ((p parser))
+(defmethod esa-symbol ((p parser))
+(cond
+((parser-success-p (call-predicate p #'non-keyword-symbol))(input p :SYMBOL)(call-rule p #'esa-symbol-follow));choice clause
+( t 
+);choice alt
+);choice
+
+) ; rule
+
+(defmethod esa-symbol-follow ((p parser))
+(loop
+(cond
+((parser-success-p (look-char? p #\/))(input-char p #\/)(input p :SYMBOL));choice clause
+((parser-success-p (look-char? p #\-))
+(input-char p #\-)
+(input p :SYMBOL)
+);choice alt
+((parser-success-p (look-char? p #\?))
+(input-char p #\?)
+(return)
+);choice alt
+((parser-success-p (look-char? p #\'))
+(input-char p #\')
+(return)
+);choice alt
+( t 
+(return)
+);choice alt
+);choice
+
+) ;;loop
+
+) ; rule
+
+(defmethod dotted-field-call ((p parser))
 (input-char p #\.)
 (call-rule p #'esa-symbol)
 ) ; rule
@@ -532,7 +566,16 @@
 
 ) ; rule
 
-(defmethod esa-symbol-follow ((p parser))
+(defmethod esa-field ((p parser))
+(cond
+((parser-success-p (call-predicate p #'non-keyword-symbol))(input p :SYMBOL)(call-rule p #'esa-symbol-follow));choice clause
+( t 
+);choice alt
+);choice
+
+) ; rule
+
+(defmethod esa-field-follow ((p parser))
 (loop
 (cond
 ((parser-success-p (look-char? p #\/))(input-char p #\/)(input p :SYMBOL));choice clause
@@ -570,10 +613,10 @@
 (input-symbol p "false")
 );choice alt
 ( t 
-(call-rule p #'esa-symbol)
+(call-rule p #'esa-field)
 (loop
 (cond
-((parser-success-p (look-char? p #\.))(call-rule p #'dotted-symbol));choice clause
+((parser-success-p (look-char? p #\.))(call-rule p #'dotted-field-call));choice clause
 ( t 
 (return)
 );choice alt
