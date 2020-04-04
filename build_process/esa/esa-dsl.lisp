@@ -486,11 +486,11 @@
 
 (defmethod script-call ((p parser))
 (input-char p #\@)
-(call-rule p #'field-call)
+(call-rule p #'esa-expr)
 ) ; rule
 
 (defmethod method-call ((p parser))
-(call-rule p #'field-call)
+(call-rule p #'esa-expr)
 ) ; rule
 
 (defmethod return-statement ((p parser))
@@ -552,14 +552,47 @@
 
 ) ; rule
 
-(defmethod dotted-field-call ((p parser))
-(input-char p #\.)
-(call-rule p #'esa-symbol)
+(defmethod esa-expr ((p parser))
+(cond
+((parser-success-p (look-char? p #\@))(input-char p #\@));choice clause
+( t 
+);choice alt
+);choice
+
+(cond
+((parser-success-p (look-symbol? p "true"))(input-symbol p "true"));choice clause
+((parser-success-p (look-symbol? p "false"))
+(input-symbol p "false")
+);choice alt
+( t 
+(call-rule p #'esa-field)
+(loop
+(cond
+((parser-success-p (look-char? p #\.))(input-char p #\.)(call-rule p #'esa-field)(call-rule p #'optional-actuals));choice clause
+( t 
+(return)
+);choice alt
+);choice
+
+) ;;loop
+
+);choice alt
+);choice
+
 ) ; rule
 
-(defmethod esa-symbol ((p parser))
+(defmethod optional-actuals ((p parser))
 (cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(input p :SYMBOL)(call-rule p #'esa-symbol-follow));choice clause
+((parser-success-p (look-char? p #\())(input-char p #\()(loop
+(cond
+((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-expr));choice clause
+( t 
+(return)
+);choice alt
+);choice
+
+) ;;loop
+(input-char p #\)));choice clause
 ( t 
 );choice alt
 );choice
@@ -597,54 +630,6 @@
 );choice
 
 ) ;;loop
-
-) ; rule
-
-(defmethod esa-expr ((p parser))
-(cond
-((parser-success-p (look-char? p #\@))(input-char p #\@));choice clause
-( t 
-);choice alt
-);choice
-
-(cond
-((parser-success-p (look-symbol? p "true"))(input-symbol p "true"));choice clause
-((parser-success-p (look-symbol? p "false"))
-(input-symbol p "false")
-);choice alt
-( t 
-(call-rule p #'esa-field)
-(loop
-(cond
-((parser-success-p (look-char? p #\.))(call-rule p #'dotted-field-call));choice clause
-( t 
-(return)
-);choice alt
-);choice
-
-) ;;loop
-
-(call-rule p #'actuals)
-);choice alt
-);choice
-
-) ; rule
-
-(defmethod actuals ((p parser))
-(cond
-((parser-success-p (look-char? p #\())(input-char p #\()(loop
-(cond
-((parser-success-p (call-predicate p #'non-keyword-symbol))(call-rule p #'esa-expr));choice clause
-( t 
-(return)
-);choice alt
-);choice
-
-) ;;loop
-(input-char p #\)));choice clause
-( t 
-);choice alt
-);choice
 
 ) ; rule
 

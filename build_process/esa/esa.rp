@@ -245,10 +245,10 @@
   SYMBOL/end SYMBOL/if
 
 = script-call
-  '@' @field-call
+  '@' @esa-expr
 
 = method-call
-  @field-call
+  @esa-expr
 
 = return-statement
   '>' '>'
@@ -283,20 +283,28 @@
   ]}
 
 
+%% emitting
 
-;; emit symbol as a field
-
-= dotted-field-call
-  '.' 
-  @esa-symbol
-
-= esa-symbol
-  [ &non-keyword-symbol
-    SYMBOL
-    @esa-symbol-follow
+= esa-expr
+  [ ?'@' '@' | * ]  % ignore @ (script call symbol)
+  [ ?SYMBOL/true SYMBOL/true
+  | ?SYMBOL/false SYMBOL/false
   | *
-  ]
+    @esa-field
+    {[ ?'.' '.' @esa-field @optional-actuals
+     | * >
+    ]}
+   ]
 
+= optional-actuals
+ [ ?'(' '('
+   {[ &non-keyword-symbol 
+      @esa-expr
+    | * > 
+    ]}
+    ')'
+ | * 
+ ]
 
 = esa-field
   [ &non-keyword-symbol
@@ -316,26 +324,4 @@
      >
    | * >
   ]}
-
-= esa-expr
-  [ ?'@' '@' | * ]  % ignore @ (script call symbol)
-  [ ?SYMBOL/true SYMBOL/true
-  | ?SYMBOL/false SYMBOL/false
-  | *
-    @esa-field
-    {[ ?'.' @dotted-field-call
-     | * >
-    ]}
-    @actuals
-   ]
-
-= actuals
- [ ?'(' '('
-   {[ &non-keyword-symbol 
-      @esa-expr
-    | * > 
-    ]}
-    ')'
- | * 
- ]
 
