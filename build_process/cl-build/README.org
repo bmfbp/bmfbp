@@ -65,7 +65,7 @@ terminating - ready list is nil
 #+begin_src lisp :results output
   (arrowgrams/build::build
     (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
-    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
+    (asdf:system-relative-pathname :arrowgrams "build_process/parts/graphs/helloworld.graph.json")
     (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.lisp"))
   (princ (get-universal-time))
 #+end_src
