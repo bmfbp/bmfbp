@@ -6,7 +6,7 @@
 #
 # 3. Run `docker build . --tag arrowgrams:0.1` in the directory that this file is in. You will see the following at the end:
 #
-# 4. Run the container: `docker run --name=arrowgrams -v (pwd):/root/quicklisp/local-projects/bmfbp -p 8080:80 arrowgrams:0.1`
+# 4. Run the container: `docker run --name=arrowgrams -v (pwd):/root/quicklisp/local-projects/bmfbp -p 8000:8000 arrowgrams:0.1`
 
 FROM ubuntu:18.04
 
@@ -43,12 +43,19 @@ RUN wget https://beta.quicklisp.org/quicklisp.lisp && \
   echo "#-quicklisp" >> /root/.sbclrc && \
   echo "(let ((quicklisp-init (merge-pathnames \"quicklisp/setup.lisp\" (user-homedir-pathname)))) (when (probe-file quicklisp-init) (load quicklisp-init)))" >> /root/.sbclrc
 
+# Install elm
+RUN wget https://github.com/elm/compiler/releases/download/0.19.0/binary-for-linux-64-bit.gz && \
+  gunzip binary-for-linux-64-bit.gz && \
+  chmod +x binary-for-linux-64-bit && \
+  mv binary-for-linux-64-bit /usr/local/bin/elm
+
 # Clone and set up Arrowgrams, then remove the repo. This is only to save set-up time at run-time.
 RUN cd /root/quicklisp/local-projects && \
   git clone https://github.com/bmfbp/bmfbp && \
   cd /root/quicklisp/local-projects/bmfbp && \
   git checkout pt-20200106 && \
-  ls -all && \
+  make && \
+  cd /root/quicklisp/local-projects/bmfbp/editor && \
   make && \
   cd /root && \
   rm -rf /root/quicklisp/local-projects/bmfbp
@@ -57,4 +64,6 @@ RUN cd /root/quicklisp/local-projects && \
 CMD cd /root/quicklisp/local-projects/bmfbp && \
   make && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit && \
-  sbcl --eval "(quicklisp:quickload :arrowgrams/build)" --eval "(arrowgrams/build::helloworld)" --quit
+  sbcl --eval "(quicklisp:quickload :arrowgrams/build)" --eval "(arrowgrams/build::helloworld)" --quit && \
+  cd /root/quicklisp/local-projects/bmfbp/editor && \
+  elm reactor
