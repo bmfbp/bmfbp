@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./make-esa-compiler-scanner.svg"
+  "kindType": "composite",
+  "platform": "nodejs",
+  "inPins": [
+      "pull",
+      "start"
+  ],
+  "outPins": [
+      "out",
+      "error"
+  ]
+}

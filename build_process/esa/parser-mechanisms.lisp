@@ -90,26 +90,26 @@
 
 ;;  code emission mechanisms
 
-(defmethod emit ((p parser) fmtstr &rest args)
+(defmethod rp-emit ((p parser) fmtstr &rest args)
   (let ((str (apply #'format nil fmtstr args)))
     (write-string str (output-stream p))))
 
-(defmethod emit-raw ((p parser) str)
+(defmethod rp-emit-raw ((p parser) str)
   (dotimes (i (length str))
     (write-char (char str i) (output-stream p))))
 
-(defmethod emit-true ((p parser))
+(defmethod rp-emit-true ((p parser))
   (write-string " :true" (output-stream p)))
 
-(defmethod emit-false ((p parser))
+(defmethod rp-emit-false ((p parser))
   (write-string " :false" (output-stream p)))
 
 
-(defmethod emit-to-method-stream ((p parser) fmtstr &rest args)
+(defmethod rp-emit-to-method-stream ((p parser) fmtstr &rest args)
   (let ((str (apply #'format nil fmtstr args)))
     (write-string str (method-stream p))))
 
-(defmethod emit-methods ((p parser))
+(defmethod rp-emit-methods ((p parser))
   (write-string (get-output-stream-string (method-stream p)) (output-stream p))
   (write-string "
 
@@ -188,9 +188,34 @@
       (subseq s 1 (1- (length s)))
     s))
 
-(defmethod emit ((p parser) fmtstr &rest args)
+#+nil(defmethod emit ((p parser) fmtstr &rest args)
   (let ((str (apply #'format nil fmtstr args)))
     (write-string str (output-stream p))))
 
-(defmethod emit-package ((p parser))
+#+nil(defmethod emit-package ((p parser))
   (emit p "(in-package :arrowgrams/esa)"))
+
+
+(defmethod emit-both ((p parser))
+  (format *standard-output* "~&emit both~%")
+  (let ((cl (cl-stream p)))
+    (format cl ";; common lisp~%")
+    (format cl "(in-package :arrowgrams)~%"))
+  (let ((js (js-stream p)))
+    (format js "// js~%"))
+  (write-streams p))
+
+(defmethod write-streams ((p parser))
+  (format *standard-output* "~&write streams~%")
+  (with-open-file (f (asdf:system-relative-pathname :arrowgrams "build_process/js-bundle/esa.js")
+		     :direction :output :if-exists :supersede :if-does-not-exist :create)
+    (let ((str (get-output-stream-string (js-stream p))))
+      (format f "~s" str)))
+  (with-open-file (f (asdf:system-relative-pathname :arrowgrams "build_process/cl-bundle/esa.lisp")
+		     :direction :output :if-exists :supersede :if-does-not-exist :create)
+    (let ((str (get-output-stream-string (cl-stream p))))
+      (format *standard-output* "~&cl stream /~s/~%" str)
+      (format f "~s" str)))
+)
+
+			    

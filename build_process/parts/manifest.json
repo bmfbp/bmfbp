@@ -1,0 +1,13 @@
+[
+    {"dir":"build_process/","file":"lispparts/hello.lisp","kindName":"hello","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},
+    {"dir":"build_process/","file":"lispparts/world.lisp","kindName":"world","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},
+    {"dir":"build_process/","file":"lispparts/string-join.lisp","kindName":"string-join","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}
+]
+
+manifest for scanner:
+[{"dir":"build_process/","file":"lispparts/tokenize.lisp","kindName":"tokenize","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/raw-text.lisp","kindName":"raw-text","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/comments.lisp","kindName":"comments","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/spaces.lisp","kindName":"spaces","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/strings.lisp","kindName":"strings","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/symbols.lisp","kindName":"symbols","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/integers.lisp","kindName":"integers","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}]
+
+
+manifest for esa-compiler:
+[{"dir":"build_process/","file":"lispparts/scanner.lisp","kindName":"scanner","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/esa-parser.lisp","kindName":"esa-paresr","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/file-writer.lisp","kindName":"file-writer","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/error-handler.lisp","kindName":"error-handler","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}]
+

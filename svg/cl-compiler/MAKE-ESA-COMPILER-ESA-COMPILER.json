@@ -1,0 +1,23 @@
+{
+  "name" : "MAKE-ESA-COMPILER-ESA-COMPILER",
+  "inputs" : ["OUTPUT-FILENAME", "START"],
+  "outputs" : [],
+  "parts" :
+  [
+    { "partName" : "FILE-WRITER", "kindName" : "FILE-WRITER"},
+    { "partName" : "ESA-PARSER", "kindName" : "ESA-PARSER"},
+    { "partName" : "ERROR-HANDLER", "kindName" : "ERROR-HANDLER"},
+    { "partName" : "SCANNER", "kindName" : "SCANNER"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "SCANNER", "pin" : "ERROR"}], "receivers" : [{"part" : "ERROR-HANDLER", "pin" : "ERROR"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "SCANNER", "pin" : "OUT"}], "receivers" : [{"part" : "ESA-PARSER", "pin" : "TOKEN"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "SELF", "pin" : "OUTPUT-FILENAME"}], "receivers" : [{"part" : "FILE-WRITER", "pin" : "FILENAME"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "SELF", "pin" : "START"}], "receivers" : [{"part" : "SCANNER", "pin" : "START"}]},
+      {"wire-index" : 4, "sources" : [{"part" : "ESA-PARSER", "pin" : "PULL"}], "receivers" : [{"part" : "SCANNER", "pin" : "PULL"}]},
+      {"wire-index" : 5, "sources" : [{"part" : "ESA-PARSER", "pin" : "OUT"}], "receivers" : [{"part" : "FILE-WRITER", "pin" : "WRITE"}]},
+      {"wire-index" : 6, "sources" : [{"part" : "ESA-PARSER", "pin" : "ERROR"}], "receivers" : [{"part" : "ERROR-HANDLER", "pin" : "ERROR"}]},
+      {"wire-index" : 7, "sources" : [{"part" : "FILE-WRITER", "pin" : "ERROR"}], "receivers" : [{"part" : "ERROR-HANDLER", "pin" : "ERROR"}]}
+    ]
+  }

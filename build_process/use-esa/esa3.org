@@ -1,0 +1,49 @@
+* type id
+** defines a handle for type
+** builtin keywords true and false
+* self
+** can be a part-name in which case it is a keyword
+* situation id
+** defines time/phase during which methods and scripts apply
+* kind id ... end kind
+** defines field names for a "class"
+** kinds are almost like OO classes, except they can have parts-lists and wiring defined at build time
+** can contain a symbol, or 'map symbol'
+** 'map symbol' means a mappable collection of symbol
+* when situation kind ... end when
+** describe methods and scripts allowed for kind during phase denoted by situation
+* method id [( kinds )] [>> return-kind]
+** method declaration
+** only allowed in situation definitions
+** defines an external routine that applies to the kind given for the situation
+** always has one formal - self (of kind given by enclosing kind (in when) definition)
+** optional: other formals are specified by a list of kinds in parens, kinds can be preceded by 'map'
+** optional: return kind can be given after >>, kind can be given as 'map kind'
+* script id [( kinds )] [>> return-kind]
+** script declaration
+** same as method (above), except that the script must be specified in a script definition (below)
+* script kind-id id [( names )] [>> return-kind]
+** script definition
+** there must be exactly one script definition for every script declaration
+** optional: formals are names (kinds must match with script declaration (in when))
+** optional: return-kind can be specified and must match script declaration (in when)
+* statements
+** let ... in ... end let
+** create ... in ... end create
+** map ... end map
+** set
+** if ... then ... [else ...] end if
+** loop ... end loop
+** exit-when ...
+** >> return statement
+** @  call script
+**    call method
+* expressions
+** [@] symbol [. symbol]* [( expression expression ... )]*
+** actuals are space-separated (not comma-separated as in most languages)
+* symbols
+** first char must be a-zA-Z 
+** following chars may be a-z-A-Z0-9 or / or -
+** final char can be a following char or ? or '
+* comment
+** % to end of line

@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./tokenize.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "start",
+      "pull"
+  ],
+  "outPins": [
+      "out",
+      "error"
+  ]
+}

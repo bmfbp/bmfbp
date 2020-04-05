@@ -1,0 +1,10 @@
+{
+  "entrypoint": "./error-handler.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "error"
+  ],
+  "outPins": [
+  ]
+}

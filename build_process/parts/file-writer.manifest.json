@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./file-writer.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "write",
+      "filename"
+  ],
+  "outPins": [
+      "error"
+  ]
+}

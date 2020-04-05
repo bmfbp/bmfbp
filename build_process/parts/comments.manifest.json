@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./comments.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "token"
+  ],
+  "outPins": [
+      "pull",
+      "out",
+      "error"
+  ]
+}

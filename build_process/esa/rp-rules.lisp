@@ -39,8 +39,8 @@
 ;; N.B. "<" and ">" are valid identifier characters in Common Lisp
 
 (defmethod <rp> ((p parser))
-  (emit p "(in-package :arrowgrams/esa)")
-  (emit p "
+  (rp-emit p "(in-package :arrowgrams/esa)")
+  (rp-emit p "
 
 ")
   (@:loop
@@ -56,7 +56,7 @@
   (cond ((parser-success-p (look-char? p #\'))
 	 (input-char p #\')
 	 (input p :character)
-             (emit p "(input-char p #\\~c)" (token-text (accepted-token p)))
+             (rp-emit p "(input-char p #\\~c)" (token-text (accepted-token p)))
          (input-char p #\')
 	 :ok)
 	((parser-success-p (look-upcase-symbol? p))
@@ -69,20 +69,20 @@
 	       (if (parser-success-p (look? p :character))
 		   (progn
 		     (input p :character)
-		     (emit p "(input-char p #\\~c)" (token-text (accepted-token p))))
+		     (rp-emit p "(input-char p #\\~c)" (token-text (accepted-token p))))
 		  (progn
 		    (input p :symbol)
-		    (emit p "(input-symbol p ~s)" (token-text (accepted-token p)))))
+		    (rp-emit p "(input-symbol p ~s)" (token-text (accepted-token p)))))
 	       )
 	   ;; unqualified token NAME
-           (emit p "(input p :~a)" (token-text (accepted-token p))))
+           (rp-emit p "(input p :~a)" (token-text (accepted-token p))))
 	 :ok)
 	(t :fail)))
 
 (defmethod <parse-noop> ((p parser))
   (cond ((parser-success-p (look-char? p #\*))
 	 (input-char p #\*)
-             (emit p " t ")
+             (rp-emit p " t ")
 	 :ok)
 	(t :fail)))
 
@@ -95,7 +95,7 @@
   (cond ((parser-success-p (look-char? p #\'))
 	 (input-char p #\')
 	 (input p :character)
-             (emit p "(parser-success-p (look-char? p #\\~c))" (token-text (accepted-token p)))
+             (rp-emit p "(parser-success-p (look-char? p #\\~c))" (token-text (accepted-token p)))
          (input-char p #\')
 	 :ok)
 	((parser-success-p (look-upcase-symbol? p))
@@ -107,19 +107,19 @@
                  (cond ((parser-success-p (look? p :character))
                         ;; q is :character
                         (input p :character)
-                        (emit p "(parser-success-p (look-char? p #\\~c))" (token-text (accepted-token p))))
+                        (rp-emit p "(parser-success-p (look-char? p #\\~c))" (token-text (accepted-token p))))
                        ;; else q is :symbol
                        (t
                         (input p :symbol)
-                        (emit p "(parser-success-p (look-symbol? p ~s))" (token-text (accepted-token p))))))
-               (t (emit p "(parser-success-p (look? p :~a))" (token-text (accepted-token p)))))
+                        (rp-emit p "(parser-success-p (look-symbol? p ~s))" (token-text (accepted-token p))))))
+               (t (rp-emit p "(parser-success-p (look? p :~a))" (token-text (accepted-token p)))))
          :ok)
         (t :fail)))
 
 (defmethod <parse-lookahead-noop> ((p parser))
   (cond ((parser-success-p (look-char? p #\*))
 	 (input-char p #\*)
-             (emit p " t ")
+             (rp-emit p " t ")
 	 :ok)
 	(t :fail)))
 
@@ -146,7 +146,7 @@
   (let ((result :fail))
   (@:loop
    (@:exit-when (not (parser-success-p (<parse-statement> p))))
-   (emit p "~%")
+   (rp-emit p "~%")
    (setf result :ok))
   result))
 
@@ -160,37 +160,37 @@
 (defmethod <parse-cycle> ((p parser))
   (cond ((parser-success-p (look-char? p #\{))
 	 (input-char p #\{)
-                 (emit p "~&(loop~%")
+                 (rp-emit p "~&(loop~%")
 	 (<parse-statements> p)
 	 (input-char p #\})
-                 (emit p ") ;;loop~%")
+                 (rp-emit p ") ;;loop~%")
 	 :ok)
 	(t :fail)))
 
 (defmethod <parse-choice> ((p parser))
   (cond ((parser-success-p (look-char? p #\[))
 	 (input-char p #\[)
-             (emit p "~&(cond~%")
-             (emit p "(")
+             (rp-emit p "~&(cond~%")
+             (rp-emit p "(")
 	 (<parse-choice-statements> p)
-             (emit p ");choice clause~%")
+             (rp-emit p ");choice clause~%")
          (@:loop
            (@:exit-when (not (parser-success-p (look-char? p #\|))))
            (input-char p #\|)
-               (emit p "(")
+               (rp-emit p "(")
            (<parse-statements> p)
-               (emit p ");choice alt~%"))
+               (rp-emit p ");choice alt~%"))
 	 (input-char p #\])
-            (emit p ");choice~%")
+            (rp-emit p ");choice~%")
 	 :ok)
 	(t :fail)))
 
 (defmethod <parse-choice-alternate> ((p parser))
   (cond ((parser-success-p (look-char? p #\|))
 	 (input-char p #\|)
-             (emit p "(")
+             (rp-emit p "(")
 	 (<parse-statements> p)
-             (emit p ") ;; alternate~%")
+             (rp-emit p ") ;; alternate~%")
 	 :ok)
 	(t :fail)))
 
@@ -213,7 +213,7 @@
   (cond ((parser-success-p (look-char? p #\@))
 	 (input-char p #\@)
 	 (input p :symbol)
-            (emit p "(call-rule p #'~a)" (token-text (accepted-token p)))
+            (rp-emit p "(call-rule p #'~a)" (token-text (accepted-token p)))
 	 :ok)
 	(t :fail)))
 
@@ -221,29 +221,29 @@
   (cond ((parser-success-p (look-char? p #\&))
 	 (input-char p #\&)
 	 (input p :symbol)
-            (emit p "(parser-success-p (call-predicate p #'~a))" (token-text (accepted-token p)))
+            (rp-emit p "(parser-success-p (call-predicate p #'~a))" (token-text (accepted-token p)))
 	 :ok)
 	(t :fail)))
 
 (defmethod <parse-external-call> ((p parser))
   (cond ((parser-success-p (look? p :symbol))
 	 (input p :symbol)
-               (emit p "(call-external p #'~a)" (token-text (accepted-token p)))
+               (rp-emit p "(call-external p #'~a)" (token-text (accepted-token p)))
 	 :ok)
 	(t :fail)))
 
 (defmethod <parse-raw-text> ((p parser))
   (cond ((parser-success-p (look? p :raw))
 	 (input p :raw)
-               (emit p "~&")
-               (emit-raw p (token-text (accepted-token p)))
+               (rp-emit p "~&")
+               (rp-emit-raw p (token-text (accepted-token p)))
 	 :ok)
 	(t :fail)))
 	
 (defmethod <parse-cycle-exit> ((p parser))
   (cond ((parser-success-p (look-char? p #\>))
 	 (input-char p #\>)
-           (emit p "(return)")
+           (rp-emit p "(return)")
 	 :ok)
 	(t :fail)))
 
@@ -254,11 +254,11 @@
 	 (error-if-not-success p
 	  (if (string= "fail" (token-text (accepted-token p)))
 	      (progn
-                      (emit p "(return-from ~a :fail)" (current-rule p))
+                      (rp-emit p "(return-from ~a :fail)" (current-rule p))
                 :ok)
 	      (if (string= "ok" (token-text (accepted-token p)))
 		  (progn
-                      (emit p "(return-from ~a :ok)" (current-rule p))
+                      (rp-emit p "(return-from ~a :ok)" (current-rule p))
                     :ok)
 		  :fail)))
 	 :ok)
@@ -268,9 +268,9 @@
   (input-char p #\=)
   (input p :symbol)
   (setf (current-rule p) (token-text (accepted-token p)))
-             (emit p "(defmethod ~a ((p parser))~%" (current-rule p))
+             (rp-emit p "(defmethod ~a ((p parser))~%" (current-rule p))
   (<parse-statements> p)
-             (emit p ") ; rule~%~%")
+             (rp-emit p ") ; rule~%~%")
   :ok
   )
 
@@ -278,9 +278,9 @@
   (input-char p #\-)
   (input p :symbol)
   (setf (current-rule p) (token-text (accepted-token p)))
-             (emit p "(defmethod ~a ((p parser)) ;; predicate~%" (current-rule p))
+             (rp-emit p "(defmethod ~a ((p parser)) ;; predicate~%" (current-rule p))
   (<parse-statements> p)
-             (emit p ") ; pred~%~%")
+             (rp-emit p ") ; pred~%~%")
   :ok
   )
 
