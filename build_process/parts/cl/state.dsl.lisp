@@ -229,7 +229,7 @@ Parens <- '(' Parens ')' / identifier
   (esrap:parse 'Parens "{;{;aaa;};};"))
 |#
 
-(esrap:defrule Parens (or (and "end" Parens "end" ) Ident))
+(esrap:defrule Parens (or (and SAME Parens SAME ) Ident))
 (esrap:defrule Ident (and IdentFirst (* IdentFollow) (* WhiteSpace)))
 (esrap:defrule IdentFirst (and (esrap:! Keyword) (esrap::character-ranges #\- (#\A #\Z) (#\a #\z) (#\0 #\9))))
 (esrap:defrule IdentFollow (esrap::character-ranges #\- (#\A #\Z) (#\a #\z) (#\0 #\9)))
@@ -245,9 +245,6 @@ Parens <- '(' Parens ')' / identifier
 (esrap:defrule WhiteSpace (or #\Space #\Tab #\Newline #\& #\, #\;))
 
 (defun test ()
-  ;(esrap:parse 'Parens "((aaa))"))
-  ;(esrap:parse 'Parens "( ( aaa) ) "))
-  ;(esrap:parse 'Parens "( ( aaa ) ) "))
-  ;(esrap:parse 'Parens "(;(;aaa;););"))
-  (esrap:parse 'Parens "endaaaend")) <--- non-terminal doesn't work
+  ;(esrap:parse 'Parens "==aaa=="))
+  (esrap:parse 'Parens "== aaa == "))
 
