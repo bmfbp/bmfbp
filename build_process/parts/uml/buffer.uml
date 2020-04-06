@@ -1,0 +1,33 @@
+@startuml
+
+[*] -down-> IDLE
+
+'   possible inputs:
+' token_from_upstream
+' token_from_peer
+' request_from_downstream
+' request_from_peer
+
+IDLE -> IDLE : token_from_upstream [sendTokenToPeer]
+IDLE -> WAIT_FOR_PEER : request_from_downstream [saveToken]
+IDLE -down-> BLOCK_PEER : token_from_peer [save token]
+IDLE -left-> ILLEGAL : request_from_peer
+
+BLOCK_PEER -> ILLEGAL : token_from_upstream
+BLOCK_PEER -right-> BLOCK_PEER2 : request_from_downstream [sendTokenDownstream]
+BLOCK_PEER -up-> IDLE : token_from_peer
+BLOCK_PEER -right-> BLOCK_PEER2 : request_from_peer
+
+BLOCK_PEER2 -up-> IDLE : token_from_upstream
+BLOCK_PEER2 -> WAIT_FOR_PEER : request_from_downstream
+BLOCK_PEER2 -> BLOCK_PEER : token_from_peer
+BLOCK_PEER2 -> ILLEGAL : request_from_peer
+
+WAIT_FOR_PEER -> IDLE : token_from_upstream
+WAIT_FOR_PEER -> WAIT_FOR_PEER : request_from_downstream
+WAIT_FOR_PEER -> WAIT_FOR_PEER : token_from_peer
+WAIT_FOR_PEER -> ILLEGAL : request_from_peer
+
+
+
+@enduml

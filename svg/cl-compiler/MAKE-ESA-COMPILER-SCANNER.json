@@ -1,0 +1,40 @@
+{
+  "name" : "MAKE-ESA-COMPILER-SCANNER",
+  "inputs" : ["START", "PULL"],
+  "outputs" : ["ERROR", "OUT"],
+  "parts" :
+  [
+    { "partName" : "INTEGERS", "kindName" : "INTEGERS"},
+    { "partName" : "SYMBOLS", "kindName" : "SYMBOLS"},
+    { "partName" : "STRINGS", "kindName" : "STRINGS"},
+    { "partName" : "SPACES", "kindName" : "SPACES"},
+    { "partName" : "RAW-TEXT", "kindName" : "RAW-TEXT"},
+    { "partName" : "COMMENTS", "kindName" : "COMMENTS"},
+    { "partName" : "TOKENIZE", "kindName" : "TOKENIZE"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "TOKENIZE", "pin" : "OUT"}], "receivers" : [{"part" : "RAW-TEXT", "pin" : "TOKEN"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "TOKENIZE", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "COMMENTS", "pin" : "OUT"}], "receivers" : [{"part" : "SPACES", "pin" : "TOKEN"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "COMMENTS", "pin" : "PULL"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "PULL"}]},
+      {"wire-index" : 4, "sources" : [{"part" : "COMMENTS", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 5, "sources" : [{"part" : "RAW-TEXT", "pin" : "OUT"}], "receivers" : [{"part" : "COMMENTS", "pin" : "TOKEN"}]},
+      {"wire-index" : 6, "sources" : [{"part" : "RAW-TEXT", "pin" : "PULL"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "PULL"}]},
+      {"wire-index" : 7, "sources" : [{"part" : "RAW-TEXT", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 8, "sources" : [{"part" : "SPACES", "pin" : "OUT"}], "receivers" : [{"part" : "STRINGS", "pin" : "TOKEN"}]},
+      {"wire-index" : 9, "sources" : [{"part" : "SPACES", "pin" : "PULL"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "PULL"}]},
+      {"wire-index" : 10, "sources" : [{"part" : "SPACES", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 11, "sources" : [{"part" : "STRINGS", "pin" : "OUT"}], "receivers" : [{"part" : "SYMBOLS", "pin" : "PULL"}]},
+      {"wire-index" : 12, "sources" : [{"part" : "STRINGS", "pin" : "PULL"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "PULL"}]},
+      {"wire-index" : 13, "sources" : [{"part" : "STRINGS", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 14, "sources" : [{"part" : "SYMBOLS", "pin" : "OUT"}], "receivers" : [{"part" : "INTEGERS", "pin" : "TOKEN"}]},
+      {"wire-index" : 15, "sources" : [{"part" : "SYMBOLS", "pin" : "PULL"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "PULL"}]},
+      {"wire-index" : 16, "sources" : [{"part" : "SYMBOLS", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 17, "sources" : [{"part" : "INTEGERS", "pin" : "OUT"}], "receivers" : [{"part" : "SELF", "pin" : "OUT"}]},
+      {"wire-index" : 18, "sources" : [{"part" : "INTEGERS", "pin" : "PULL"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "PULL"}]},
+      {"wire-index" : 19, "sources" : [{"part" : "INTEGERS", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 20, "sources" : [{"part" : "SELF", "pin" : "START"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "START"}]},
+      {"wire-index" : 21, "sources" : [{"part" : "SELF", "pin" : "PULL"}], "receivers" : [{"part" : "TOKENIZE", "pin" : "PULL"}]}
+    ]
+  }

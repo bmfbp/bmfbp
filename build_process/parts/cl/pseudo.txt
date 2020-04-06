@@ -1,0 +1,68 @@
+inputs : [request peer-token peer-request]
+outputs : [out request peer-wrapup token-to-peer]
+vars : [buffered-token]
+
+initially {
+  self.state = idle
+  self.buffered-token = nil
+}
+
+react (e : event) {
+  machine {
+    idle:
+      on upstream-token: pass-to-peer (e.data)
+      on downstream-request:         -> wait-for-peer
+      on peer-token:                 -> block
+      on peer-request: send-request
+    block: 
+      on upstream-token: pass-to-peer (e.data)
+      on downstream-request:                                          -> block2
+      on peer-token: save-peer-token ; send-saved-token-downstream ;  -> idle
+      on peer-request: send-request
+    block2:
+      on upstream-token: pass-to-peer (e.data)
+      on downstream-request: illegal
+      on peer-token: save-peer-token ; send-saved-token-downstream ; send-request ;  -> idle
+      on peer-request: illegal
+    wait-for-peer:
+      on upstream-token: pass-to-peer (e.data)
+      on downstream-request: illegal
+      on peer-token: save-peer-token ; send-saved-token-downstream ;  -> idle
+      on peer-request: send-request
+    }
+}
+
+
+// factor out common "on upstream-token", 
+// invent hierarchical state machine (similar to Harel StateChart, but no concurrency)
+
+
+react (e : event) {
+  machine {
+    on upstream-token: pass-to-peer(e.data)
+    else machine {
+      idle:
+	on downstream-request:         -> wait-for-peer
+	on peer-token:                 -> block
+	on peer-request: send-request
+      block: 
+	on downstream-request:                                          -> block2
+	on peer-token: save-peer-token ; send-saved-token-downstream ;  -> idle
+	on peer-request: send-request
+      block2:
+	on downstream-request: illegal
+	on peer-token: save-peer-token ; send-saved-token-downstream ; send-request ;  -> idle
+	on peer-request: illegal
+      wait-for-peer:
+	on downstream-request: illegal
+	on peer-token: save-peer-token ; send-saved-token-downstream ;  -> idle
+	on peer-request: send-request
+      }
+   }
+}
+
+
+method save-peer-token(e : event) { self.saved-token = e.data }
+method send-saved-token-downstream(e : event) { out <- e.data }
+method send-request { request <- true }
+method pass-to-peer (e : event) { token <- e.data }

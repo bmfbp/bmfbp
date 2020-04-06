@@ -1,0 +1,11 @@
+@startuml
+
+[*] --> IDLE
+IDLE --> [*]
+IDLE : this is a string
+IDLE : this is another string
+
+IDLE -> State2 : a
+State2 --> [*] : b
+
+@enduml

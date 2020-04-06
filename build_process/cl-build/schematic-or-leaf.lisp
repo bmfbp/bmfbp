@@ -67,7 +67,6 @@ basic algorithm:
                                  (@send self :child-descriptor descriptor-as-json-string :tag "sol child1")))
                            (progn
                              (let ((msg (format nil "file ~s does not exist" file-name)))
-                               (break)
                                (@send self :error msg) 
                                (error msg)))))) ;; lisp error only during bootstrapping
                       ((string= "loadedlisp" platform-str)
