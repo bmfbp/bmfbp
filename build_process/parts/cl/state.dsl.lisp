@@ -160,11 +160,13 @@ Parens <- '(' Parens ')' / identifier
 |#
 
 #|
-(esrap:defrule Parens (or (and #\( Parens #\) ) Ident))
-(esrap:defrule Ident (and IdentFirst (* IdentFollow)))
+(esrap:defrule Parens (or (and LPAR Parens RPAR ) Ident))
+(esrap:defrule Ident (and IdentFirst (* IdentFollow))) 
 (esrap:defrule IdentFirst (and (esrap:! Keyword) (esrap::character-ranges #\- (#\A #\Z) (#\a #\z) (#\0 #\9))))
 (esrap:defrule IdentFollow (esrap::character-ranges #\- (#\A #\Z) (#\a #\z) (#\0 #\9)))
 (esrap:defrule Keyword (or "inputs" "outputs" "vars" "initially" "end" "react" "machine" "on" "method" "$data" "$pin" "if" "else" "then"))
+(esrap:defrule LPAR (and #\( (* WhiteSpace)))
+(esrap:defrule RPAR (and #\) (* WhiteSpace)))
 (esrap:defrule LBRACKET (and #\[ (* WhiteSpace)))
 (esrap:defrule RBRACKET (and #\] (* WhiteSpace)))
 (esrap:defrule LBRACE (and #\{ (* WhiteSpace)))
@@ -174,18 +176,18 @@ Parens <- '(' Parens ')' / identifier
 (esrap:defrule WhiteSpace (or #\Space #\Tab #\Newline #\& #\, #\;))
 
 (defun test ()
-  (esrap:parse 'Parens "((aaa))"))
+  ;(esrap:parse 'Parens "((aaa))"))
+  ;(esrap:parse 'Parens "( ( aaa) ) "))
+  (esrap:parse 'Parens "( ( aaa ) ) "))
 |#
 
-(esrap:defrule Prog 
-    (and (* Anything) "method" Ident (esrap:? Params) (+ Statement) "end" "method" (* esrap::character) ENDOFFILE))
-(esrap:defrule Params (and LPAR (+ Param) RPAR))
-(esrap:defrule Param (and (or "$pin" "$data" Ident) (* WhiteSpace)))
-(esrap:defrule Statement (and (esrap:! "end") (* esrap::character)))
-(esrap:defrule Keyword (or "inputs" "outputs" "vars" "initially" "end" "react" "machine" "on" "method" "$data" "$pin" "if" "else" "then"))
-(esrap:defrule Ident (and IdentFirst (* IdentFollow)))
+(esrap:defrule Parens (or (and LPAR Parens RPAR ) Ident))
+(esrap:defrule Ident (and IdentFirst (* IdentFollow) (* WhiteSpace)))
 (esrap:defrule IdentFirst (and (esrap:! Keyword) (esrap::character-ranges #\- (#\A #\Z) (#\a #\z) (#\0 #\9))))
 (esrap:defrule IdentFollow (esrap::character-ranges #\- (#\A #\Z) (#\a #\z) (#\0 #\9)))
+(esrap:defrule Keyword (or "inputs" "outputs" "vars" "initially" "end" "react" "machine" "on" "method" "$data" "$pin" "if" "else" "then"))
+(esrap:defrule LPAR (and #\( (* WhiteSpace)))
+(esrap:defrule RPAR (and #\) (* WhiteSpace)))
 (esrap:defrule LBRACKET (and #\[ (* WhiteSpace)))
 (esrap:defrule RBRACKET (and #\] (* WhiteSpace)))
 (esrap:defrule LBRACE (and #\{ (* WhiteSpace)))
@@ -193,9 +195,10 @@ Parens <- '(' Parens ')' / identifier
 (esrap:defrule COLON (and #\: (* WhiteSpace)))
 (esrap:defrule SAME (and "==" (* WhiteSpace)))
 (esrap:defrule WhiteSpace (or #\Space #\Tab #\Newline #\& #\, #\;))
-(esrap:defrule ENDOFFILE (esrap:! esrap::character))
-  
-(esrap:defrule Anything (or keyword WhiteSpace esrap::character))
 
 (defun test ()
-  (esrap:parse 'Prog *test-string* :junk-allowed t))
+  ;(esrap:parse 'Parens "((aaa))"))
+  ;(esrap:parse 'Parens "( ( aaa) ) "))
+  ;(esrap:parse 'Parens "( ( aaa ) ) "))
+  (esrap:parse 'Parens "(;(;aaa;););"))
+
