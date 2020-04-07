@@ -110,11 +110,13 @@
 #+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
-(defun helloworld ()
-  (build
-   (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
-   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
-   ))
+(defun arrowgrams ()
+  (let ((args (my-command-line)))
+    (format *standard-output* "~&command line len=~a args=~s~%" (length args) args)
+    (build
+     (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
+     (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
+     )))
 
 (defun cl-user::from-esa ()
   ;; compilation steps after changing esa.dsl
