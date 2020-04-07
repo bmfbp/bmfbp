@@ -1,5 +1,7 @@
 (in-package :arrowgrams/compiler)
 
+(defparameter *warning* nil)
+
 (defclass fb (compiler-part)
   ((show-additions :accessor show-additions)
    (fb-as-iterable-list :accessor fb-as-iterable-list)))
@@ -101,10 +103,11 @@
           (writefb fb))))))
 
 (defmethod fb-warning ((self fb) format-string &rest format-args)
-  (@send self :error (apply #'cl:format
-                            nil
-                            (concatenate 'string "WARNING FB (pt only): " format-string)
-                            format-args)))
+  (when *warning*
+    (@send self :error (apply #'cl:format
+                              nil
+                              (concatenate 'string "WARNING FB (pt only): " format-string)
+                              format-args))))
 
 (defmethod fb-error ((self fb) format-string &rest format-args)
   (@send self :error (apply #'cl:format
