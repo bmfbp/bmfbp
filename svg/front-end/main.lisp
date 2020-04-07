@@ -157,6 +157,8 @@ So, for metadata, emit:
 
 (defun front-end-main (svg-filename)
   (setf *metadata-already-seen* nil)
+  (unless (probe-file svg-filename)
+    (error (format nil "file ~a does not exist" svg-filename)))
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
     (let ((cmd (format nil "~a <~a" command-svg-to-lisp svg-filename)))
       (let ((temp1-str (uiop:run-program cmd :output :string)))

@@ -205,7 +205,7 @@
 
 (defmethod ensure-kind-defined ((self part-definition))
   (unless (eq 'kind (type-of (part-kind self)))
-    (error "kind for part /~s/ is not defined (check if manifest is correct) ~s" (part-name self) self)))
+    (error (format nil "kind for part ~a is not defined (check if manifest is correct)" (part-name self)))))
 
 
 (defmethod memo-node ((self dispatcher) (n node))
