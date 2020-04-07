@@ -30,7 +30,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "make-unknown-port-names ")
              (make-unknown-port-names self)
              (@send self :done t)
              (e/part:first-time self))

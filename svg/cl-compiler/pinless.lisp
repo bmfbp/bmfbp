@@ -29,7 +29,6 @@
        (if (eq pin :fb)
            (progn
              (setf (state self) data)
-             (format *standard-output* "pinless ")
              (mark-pinless self)
              (@send self :done t)
              (e/part:first-time self))

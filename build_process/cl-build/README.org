@@ -24,9 +24,6 @@
 ** see also
 *** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
 
-* build results
-#+RESULTS: arrowgrams
-: 3794477685
 * build helloworld3
 #+name: arrowgrams
 #+begin_src lisp :results output
@@ -101,10 +98,29 @@
   (ql:quickload :arrowgrams/build)
 #+end_src
 #+name: arrowgrams
-#+results output
 #+begin_src lisp :results output
-  (arrowgrams/build::btest)
+  (arrowgrams/build::arrowgrams)
 #+end_src
+
+* build results
+#+RESULTS: arrowgrams
+#+begin_example
+command line len=1 args=("/usr/local/Cellar/sbcl/2.0.2/libexec/bin/sbcl")
+ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
+assign-parents-to-ellipses find-comments find-metadata 
+"WARNING FB (pt only): fact already exists (USED ID1963)"add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done 
+,**** build phase
+,**** runner gets pin :KIND-GRAPH
+,**** loading
+,**** injecting input into top node
+,**** initially
+,**** run phase
+"TOP" outputs on pin "result" : "worldhello"
+
+Dispatcher Finished
+
+terminating - ready list is nil
+#+end_example
 
 * build code snippets for esa builder and runner
 

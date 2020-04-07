@@ -7,7 +7,6 @@
 
 (defmethod react ((self world) (input-e event))
   (declare (ignore input-e))
-(format *standard-output* "~&react ~s~%" (name-in-container self))
   (let ((e (make-instance 'event))
         (pp (make-instance 'part-pin)))
     (setf (part-name pp) (name-in-container self))
