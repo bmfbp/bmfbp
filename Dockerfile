@@ -4,9 +4,9 @@
 #
 # 2. After installation, make sure your Docker engine is set to allow for at least 4 GB of memory.
 #
-# 3. Run `docker build . --tag arrowgrams:0.1` in the directory that this file is in. You will see the following at the end:
+# 3. Run `./build.sh` to build and run.
 #
-# 4. Run the container: `docker run --name=arrowgrams -v (pwd):/root/quicklisp/local-projects/bmfbp -p 8000:8000 arrowgrams:0.1`
+# 4. The editor is available at http://localhost:8000/dist/index.html
 
 FROM ubuntu:18.04
 
@@ -54,7 +54,7 @@ RUN cd /root/quicklisp/local-projects && \
   git clone https://github.com/bmfbp/bmfbp && \
   cd /root/quicklisp/local-projects/bmfbp && \
   git checkout pt-20200106 && \
-  make && \
+  make  && \
   cd /root/quicklisp/local-projects/bmfbp/editor && \
   make && \
   cd /root && \
@@ -62,7 +62,7 @@ RUN cd /root/quicklisp/local-projects && \
 
 # Make Arrowgrams, refresh quicklisp, and run hello-world. This is what you would run manually.
 CMD cd /root/quicklisp/local-projects/bmfbp && \
-  make && \
+  make  && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit && \
   sbcl --eval "(quicklisp:quickload :arrowgrams/build)" --eval "(arrowgrams/build::helloworld)" --quit && \
   cd /root/quicklisp/local-projects/bmfbp/editor && \
