@@ -29,7 +29,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "sem-speech-vs-comments ")
              ;; put code here
              (@send self :done t)
              (e/part:first-time self))
