@@ -8,7 +8,7 @@
 #
 # 4. The editor is available at http://localhost:8000/dist/index.html
 #
-# 5. After making a local change in the bmfbp repo, use Ctrl-Z to put running container in the background. Then run `docker kill arrowgrams` to stop it. Re-run `./build.sh` with the new change reflected.
+# 5. After making a local change in the bmfbp repo, use Ctrl-Z to put running container in the background. Re-run `./build.sh` with the new change reflected.
 
 FROM ubuntu:18.04
 
