@@ -10,4 +10,4 @@
   (ecase (@pin self e)
     (:in
      (let ((part-name (pathname-name (@data self e))))
-       (@send self :out part-name :tag "part-namer")))))
+       (@send self :out part-name )))))
