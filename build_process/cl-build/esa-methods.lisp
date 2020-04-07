@@ -215,7 +215,7 @@
   (setf (top-node self) n))
 
 (defmethod declare-finished ((self dispatcher))
-  (format *standard-output* "~&~%Dispatcher Finished~%~%"))
+  #+nil(format *standard-output* "~&~%Dispatcher Finished~%~%"))
 
 
 (defun string=-downcase (a b)
