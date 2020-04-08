@@ -4,13 +4,16 @@
 #
 # 2. After installation, make sure your Docker engine is set to allow for at least 4 GB of memory.
 #
-# 3. Run `./build.sh` to build and run.
+# 3. Run `./build.sh` to build and run. The session will exit after putting the docker container in the background.
 #
 # 4. The editor is available at http://localhost:8000/dist/index.html
 #
-# 5. After making a local change in the bmfbp repo, use Ctrl-Z to put running container in the background. Re-run `./build.sh` with the new change reflected.
+# 5. Repeat step 3 to rebuild after making a change.
 
 FROM ubuntu:18.04
+
+ENV program_path "build_process/parts/diagram/helloworld.svg"
+ENV project_root "/root/quicklisp/local-projects/bmfbp"
 
 # Install essentials
 RUN apt-get update && \
@@ -63,9 +66,9 @@ RUN cd /root/quicklisp/local-projects && \
   rm -rf /root/quicklisp/local-projects/bmfbp
 
 # Make Arrowgrams, refresh quicklisp, and run hello-world. This is what you would run manually.
-CMD cd /root/quicklisp/local-projects/bmfbp && \
+CMD cd ${project_root} && \
   make  && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit && \
-  sbcl --eval "(quicklisp:quickload :arrowgrams/build)" --eval "(arrowgrams/build::helloworld)" --quit && \
+  sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit ${project_root}/${program_path} && \
   cd /root/quicklisp/local-projects/bmfbp/editor && \
   elm reactor
