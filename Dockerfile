@@ -4,7 +4,7 @@
 #
 # 2. After installation, make sure your Docker engine is set to allow for at least 4 GB of memory.
 #
-# 3. Run `./build.sh` to build and run. The session will exit after putting the docker container in the background.
+# 3. Run `./build.sh ${programPath}` to build and run, where `programPath` is the path to the SVG file relative to the project's root (i.e. the directory that contains this file on your local machine). The session will exit after putting the docker container in the background.
 #
 # 4. The editor is available at http://localhost:8000/dist/index.html
 #
