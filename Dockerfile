@@ -1,15 +1,3 @@
-# Instructions:
-#
-# 1. Download Docker at `https://www.docker.com/`
-#
-# 2. After installation, make sure your Docker engine is set to allow for at least 4 GB of memory.
-#
-# 3. Run `./build.sh ${programPath}` to build and run, where `programPath` is the path to the SVG file relative to the project's root (i.e. the directory that contains this file on your local machine). The session will exit after putting the docker container in the background.
-#
-# 4. The editor is available at http://localhost:8000/dist/index.html
-#
-# 5. Repeat step 3 to rebuild after making a change.
-
 FROM ubuntu:18.04
 
 ENV program_path "build_process/parts/diagram/helloworld.svg"
@@ -65,10 +53,12 @@ RUN cd /root/quicklisp/local-projects && \
   cd /root && \
   rm -rf /root/quicklisp/local-projects/bmfbp
 
+COPY "${program_path}" "/root/program"
+
 # Make Arrowgrams, refresh quicklisp, and run hello-world. This is what you would run manually.
-CMD cd ${project_root} && \
+ENTRYPOINT cd ${project_root} && \
   make  && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit && \
-  sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit ${project_root}/${program_path} && \
+  sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit "/root/program" && \
   cd /root/quicklisp/local-projects/bmfbp/editor && \
   elm reactor

@@ -4,10 +4,10 @@ CURRENT_DIR="$(pwd)"
 VERSION=0.1
 PROJECT_ROOT="/root/quicklisp/local-projects/bmfbp"
 
-PROGRAM_PATH="$1"
+PROGRAM_PATH=$(realpath "$1")
 
 if [ ! -f "${PROGRAM_PATH}" ]; then
-  >&2 echo "ERROR: Program at ${PROGRAM_PATH} must be a file."
+  >&2 echo "ERROR: Program at ${PROGRAM_PATH} must be an SVG file."
   exit 3
 fi
 

@@ -74,3 +74,16 @@ Requirements:
 - Fetching Components using Git
 
 See initial discussion for context: https://github.com/bmfbp/bmfbp/issues/37
+
+
+## Instructions
+
+1. Download Docker at `https://www.docker.com/`
+2. After installation, make sure your Docker engine is set to allow for at
+   least 4 GB of memory.
+3. Run `./build.sh ${programPath}` to build and run, where `programPath` is the
+   path to the SVG file relative to the project's root (i.e. the directory that
+   contains this file on your local machine). The session will exit after
+   putting the docker container in the background.
+4. The editor is available at http://localhost:8000/dist/index.html
+5. Repeat step 3 to rebuild after making a change.
