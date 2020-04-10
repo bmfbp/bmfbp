@@ -1,8 +1,5 @@
 FROM ubuntu:18.04
 
-ENV program_path "build_process/parts/diagram/helloworld.svg"
-ENV project_root "/root/quicklisp/local-projects/bmfbp"
-
 # Install essentials
 RUN apt-get update && \
   apt-get install -y git && \
@@ -52,6 +49,9 @@ RUN cd /root/quicklisp/local-projects && \
   make && \
   cd /root && \
   rm -rf /root/quicklisp/local-projects/bmfbp
+
+ARG program_path
+ENV project_root "/root"
 
 COPY "${program_path}" "/root/program"
 
