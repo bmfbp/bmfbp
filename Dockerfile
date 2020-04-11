@@ -1,5 +1,6 @@
 FROM ubuntu:18.04
 
+ARG version
 ENV project_root "/root"
 
 # Install essential dependencies
@@ -22,7 +23,6 @@ RUN cd /root/quicklisp/local-projects && \
   git clone https://github.com/guitarvydas/sl.git
 
 ARG build_mode
-ARG version
 
 # Install Haskell stack
 RUN [ "$build_mode" = "full" ] && \
@@ -45,11 +45,13 @@ RUN [ "$build_mode" = "full" ] && \
   mv binary-for-linux-64-bit /usr/local/bin/elm || \
   echo
 
+ARG arrowgrams_branch
+
 # Clone Arrowgrams
 RUN cd /root/quicklisp/local-projects && \
   git clone https://github.com/bmfbp/bmfbp && \
   cd /root/quicklisp/local-projects/bmfbp && \
-  git checkout pt-20200106
+  git checkout "${arrowgrams_branch}"
 
 # Build binaries
 RUN [ "$build_mode" = "full" ] && \
@@ -59,6 +61,10 @@ RUN [ "$build_mode" = "full" ] && \
   make || \
   echo
 
+ARG program_path
+
+COPY "${program_path}" "/root/program"
+
 # Use pre-built binaries if available
 RUN [ "$build_mode" != "full" ] && \
   [ -d "/root/quicklisp/local-projects/bmfbp/prebuilt/${version}" ] && \
@@ -67,12 +73,8 @@ RUN [ "$build_mode" != "full" ] && \
   echo
 
 # Clean up
-RUN cd /root/bin && \
-  rm -rf /root/quicklisp/local-projects/bmfbp
-
-ARG program_path
-
-COPY "${program_path}" "/root/program"
+#RUN cd /root/bin && \
+#  rm -rf /root/quicklisp/local-projects/bmfbp
 
 # Make Arrowgrams, refresh quicklisp, and run hello-world. This is what you would run manually.
 ENTRYPOINT cd ${project_root} && \

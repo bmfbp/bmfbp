@@ -3,6 +3,7 @@
 CURRENT_DIR="$(pwd)"
 VERSION=0.1
 PROJECT_ROOT="/root/quicklisp/local-projects/bmfbp"
+ARROWGRAMS_BRANCH="pt-20200106-dockerized"
 
 PROGRAM_PATH="$1"
 
@@ -17,6 +18,7 @@ docker build . \
   --build-arg "build_mode=${BUILD_MODE}" \
   --build-arg "program_path=${PROGRAM_PATH}" \
   --build-arg "version=${VERSION}" \
+  --build-arg "arrowgrams_branch=${ARROWGRAMS_BRANCH}" \
   --tag arrowgrams:${VERSION}
 docker stop arrowgrams
 docker rm --force arrowgrams
