@@ -13,6 +13,7 @@ fi
 
 docker build . \
   --build-arg "program_path=${PROGRAM_PATH}" \
+  --build-arg "version=${VERSION}" \
   --tag arrowgrams:${VERSION}
 docker stop arrowgrams
 docker rm --force arrowgrams

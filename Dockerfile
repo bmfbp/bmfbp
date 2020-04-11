@@ -1,9 +1,17 @@
 FROM ubuntu:18.04
 
-# Install essentials
+ENV project_root "/root"
+
+# Install essential dependencies
 RUN apt-get update && \
   apt-get install -y git && \
-  mkdir -p /root/quicklisp/local-projects
+  apt-get install -y make && \
+  apt-get install -y wget && \
+  apt-get install -y sbcl && \
+  apt-get install -y python && \
+  mkdir -p /root/quicklisp/local-projects && \
+  mkdir -p /root/bin && \
+  export PATH=/root/.local/bin:/usr/local/bin:/root/.local/bin:$PATH
 
 # Clone Paul Tarvydas' tools
 RUN cd /root/quicklisp/local-projects && \
@@ -13,17 +21,13 @@ RUN cd /root/quicklisp/local-projects && \
   git clone https://github.com/guitarvydas/cl-peg && \
   git clone https://github.com/guitarvydas/sl.git
 
-# Set up system and install dependencies
-RUN apt-get update && \
-  apt-get install -y make && \
-  apt-get install -y wget && \
-  apt-get install -y sbcl && \
-  mkdir -p /root/quicklisp/local-projects && \
-  mkdir -p /root/bin && \
-  export PATH=/root/.local/bin:/usr/local/bin:/root/.local/bin:$PATH
+ARG build_mode
+ARG version
 
 # Install Haskell stack
-RUN wget -qO- https://get.haskellstack.org/ | sh
+RUN [ "$build_mode" = "full" ] && \
+  wget -qO- https://get.haskellstack.org/ | sh || \
+  echo
 
 # Set up quicklisp
 RUN wget https://beta.quicklisp.org/quicklisp.lisp && \
@@ -34,24 +38,39 @@ RUN wget https://beta.quicklisp.org/quicklisp.lisp && \
   echo "(let ((quicklisp-init (merge-pathnames \"quicklisp/setup.lisp\" (user-homedir-pathname)))) (when (probe-file quicklisp-init) (load quicklisp-init)))" >> /root/.sbclrc
 
 # Install elm
-RUN wget https://github.com/elm/compiler/releases/download/0.19.0/binary-for-linux-64-bit.gz && \
+RUN [ "$build_mode" = "full" ] && \
+  wget https://github.com/elm/compiler/releases/download/0.19.0/binary-for-linux-64-bit.gz && \
   gunzip binary-for-linux-64-bit.gz && \
   chmod +x binary-for-linux-64-bit && \
-  mv binary-for-linux-64-bit /usr/local/bin/elm
+  mv binary-for-linux-64-bit /usr/local/bin/elm || \
+  echo
 
-# Clone and set up Arrowgrams, then remove the repo. This is only to save set-up time at run-time.
+# Clone Arrowgrams
 RUN cd /root/quicklisp/local-projects && \
   git clone https://github.com/bmfbp/bmfbp && \
   cd /root/quicklisp/local-projects/bmfbp && \
-  git checkout pt-20200106 && \
-  make  && \
-  cd /root/quicklisp/local-projects/bmfbp/editor && \
+  git checkout pt-20200106
+
+# Build binaries
+RUN [ "$build_mode" = "full" ] && \
+  cd /root/quicklisp/local-projects/bmfbp/hs-vsh && \
   make && \
-  cd /root && \
+  cd /root/quicklisp/local-projects/bmfbp/editor && \
+  make || \
+  echo
+
+# Use pre-built binaries if available
+RUN [ "$build_mode" != "full" ] && \
+  [ -d "/root/quicklisp/local-projects/bmfbp/builds/${version}" ] && \
+  cp "/root/quicklisp/local-projects/bmfbp/builds/${version}"/* /root/bin || \
+  ls -al /root/quicklisp/local-projects/bmfbp/builds/0.1 || \
+  echo
+
+# Clean up
+RUN cd /root/bin && \
   rm -rf /root/quicklisp/local-projects/bmfbp
 
 ARG program_path
-ENV project_root "/root"
 
 COPY "${program_path}" "/root/program"
 
@@ -60,5 +79,5 @@ ENTRYPOINT cd ${project_root} && \
   make  && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit && \
   sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit "/root/program" && \
-  cd /root/quicklisp/local-projects/bmfbp/editor && \
-  elm reactor
+  cd /root/bin && \
+  python -m SimpleHTTPServer 8000
