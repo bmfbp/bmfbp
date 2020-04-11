@@ -76,7 +76,6 @@ COPY "${program_path}" "/root/program"
 
 # Make Arrowgrams, refresh quicklisp, and run hello-world. This is what you would run manually.
 ENTRYPOINT cd ${project_root} && \
-  make  && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit && \
   sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit "/root/program" && \
   cd /root/bin && \

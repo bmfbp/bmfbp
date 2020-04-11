@@ -11,6 +11,8 @@ if [ ! -f "${PROGRAM_PATH}" ]; then
   exit 3
 fi
 
+set -x
+
 docker build . \
   --build-arg "build_mode=${BUILD_MODE}" \
   --build-arg "program_path=${PROGRAM_PATH}" \
