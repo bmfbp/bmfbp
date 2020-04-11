@@ -122,4 +122,25 @@
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 This is the reason that operating systems use full preemption strategies.  Such strategies are expensive and are not needed by our language-level Arrowgrams system, but, the designer/programmer is entrusted to not create such infinite situations.  Infinite looping is a bug in every known programming language.  We tighten the definition to mean that long-lasting loops are also a bug.}]]></Comment>
+    <Comment ID="3624EF7B-5B47-4C5B-87AF-A00C6421A6BE" Author="Paul Tarvydas" Footnote="Yes" Color="0.949769 0.949769 0.949769"><![CDATA[{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Concurrency is quite efficient in Arrowgrams, almost as efficient as function calls.  Concurrency in Arrowgrams does not rely on threading and multi-tasking at the operating systems level.}]]></Comment>
+    <Comment ID="EDFE3EE7-9C5B-40E0-A35E-BCFF55B05F59" Author="Paul Tarvydas" Footnote="Yes" Color="0.949769 0.949769 0.949769"><![CDATA[{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 first-time}]]></Comment>
+    <Comment ID="08522E41-F9C6-4B79-A9C5-38DF4D36157D" Author="Paul Tarvydas" Footnote="Yes" Color="0.949769 0.949769 0.949769"><![CDATA[{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 react}]]></Comment>
 </Comments>

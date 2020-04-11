@@ -1,13 +1,9 @@
 (defpackage :arrowgrams/compiler
-  (:use :cl)
-  (:nicknames :acomp))
+  (:use :cl :cl-event-passing-user)
+  (:export
+   #:main
+   #:get-compiler-net
+   #:strip-quotes))
 
-(defpackage :arrowgrams/compiler/reader
-  (:use :cl))
 
-(defpackage :arrowgrams/compiler/writer
-  (:use :cl))
-
-(defpackage :arrowgrams/compiler/db
-  (:use :cl))
 

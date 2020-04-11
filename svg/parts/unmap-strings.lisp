@@ -60,7 +60,7 @@
     (when (or 
            (not (listp sexpr))
            (eq 'EOF sexpr))
-      (die (format nil "stdin doesn't contain an intermediate file~%")))
+      (die (format nil "stdin doesn't contain an intermediate file - must be lisp~%")))
     (setf *sexpr-to-be-fixed* sexpr)))
 
 (defun @replace-mapped-strings (to-be-fixed-up)

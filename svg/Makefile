@@ -2,6 +2,9 @@ BINDIR=~/bin
 
 all: build test test2 test3 test4 tee pass top
 
+hs :
+	cd ../hs-vsh && make
+
 build: build-compiler-shims
 	cd ../grash && make
 	cd ../hs-vsh && make

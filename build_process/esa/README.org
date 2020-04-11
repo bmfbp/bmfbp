@@ -1,0 +1,7 @@
+* usage
+** cl-user> (ql:quickload :arrowgrams/esa)
+** cl-user> (etest)
+* (etest1): :arrowgrams/esa inputs esa.rp outputs esa-dsl.lisp
+* (etest2): :arrowgrams/esa uses esa-dsl.lisp, inputs esa-dsl.lisp outputs ../cl-build/esa.lisp
+
+

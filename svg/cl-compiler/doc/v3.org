@@ -1,0 +1,118 @@
+* Compiler
+** part-kind: schematic
+** inputs: :svg-filename :prolog-output-filename
+** outputs: :metadata :json :lisp :error
+** parts: front-end compiler-test-bed passes file-namer back-end
+** wires:
+"
+passes.finished-pipeline -> compiler-testbed.finished-pipeline,compiler-testbed.reset
+
+self.svg-filename -> front-end.svg-filename
+front-end.output-string-stream -> compiler-testbed.prolog-factbase-string-stream
+
+passes.basename -> file-namer.basename
+passes.ir -> back-end.ir
+file-namer.json-filename -> back-end.json-filename
+file-namer.generic-filename -> back-end.generic-filename
+file-namer.lisp-filename -> back-end.lisp-filename
+
+back-end.metadata -> self.metadata
+back-end.json -> self.json
+back-end.lisp -> self.lisp
+
+self.prolog-output-filename -> compiler-testbed.prolog-output-filename
+
+compiler-testbed.step -> passes.step
+compiler-testbed.fb -> passes.fb
+
+passes.request-fb -> compiler-testbed.request-fb
+passes.add-fact -> compiler-testbed.add-fact
+passes.retract-fact -> compiler-testbed.retract-fact
+passes.done-step -> compiler-testbed.done-step
+
+compiler-testbed.error, passes.error, back-end.error -> self.error
+"
+
+*** front-end 
+**** part-kind: leaf
+**** inputs: :svg-filename
+**** outputs: :output-string-stream :error
+
+*** compiler-test-bed 
+**** part-kind: schematic
+**** inputs: :finished-pipeline :request-fb :prolog-output-filename :finished-pipeline :factbase-string-stream :retract-fact :add-fact :done-step :reset
+**** outputs: :step :fb :error
+**** wires:
+     ...
+
+*** passes
+**** part-kind: schematic
+**** inputs: :step :fb
+**** outputs: :finished-pipeline :error :ir :basename :retract-fact :add-fact :request-fb :done-step
+**** wires:
+     ...
+
+*** file-namer
+**** part-kind: leaf
+**** inputs: :basename
+**** ouputs: :json-filename :generic-filename :lisp-filename
+
+*** back-end
+**** part-kind: schematic
+**** inputs:
+**** outputs: :metadata :json :lisp :error
+**** parts: synchronizer back-end-parser
+**** wires:
+"
+self.ir -> synchronizer.ir
+self.json-filename -> synchronizer.json-filename
+self.generic-filename -> synchronizer.generic-filename
+self.lisp-filename -> synchronizer.lisp-filename
+
+synchronizer.ir -> back-end-parser.ir
+synchronizer.json-filename -> back-end-parser.json-filename
+synchronizer.generic-filename -> back-end-parser.generic-filename
+synchronizer.lisp-filename -> back-end-parser.lisp-filename
+
+back-end-parser.json-out -> self.json
+back-end-parser.lisp-out -> self.lisp
+back-end-parser.metadata -> self.metadata
+back-end-parser.error -> self.error
+"
+
+**** back-end-parser
+***** part-kind: schematic
+***** inputs: :start :ir :generic-filename :json-filename :lisp-filename
+***** outputs: :json-out :lisp-out :metadata :error
+***** parts: scanner preparse generic-emitter collector json1-emitter json-emitter lisp-emitter emitter-pass2-generic generic-file-writer json-file-writer lisp-file-writer
+***** wires:
+"
+               self.start -> scanner.start,preparse.start
+               self.ir -> scanner.ir,preparse.start
+
+               scanner.out -> preparse.token
+               preparse.request -> scanner.request
+
+               preparse.out -> generic-emitter.parse,collector.parse,lisp-emitter.parse,json1-emitter.parse
+
+               self.generic-filename -> generic-file-writer.filename
+               self.json-filename -> json-file-writer.filename
+               self.lisp-filename -> lisp-file-writer.filename
+
+               emitter-pass2-generic.out -> generic-file-writer.write
+
+               collector.out -> json-emitter.in,emitter-pass2-generic.in
+               collector.metadata -> self.metadata
+
+               lisp-emitter.out -> lisp-file-writer.write,self.lisp-out
+
+               json-emitter.out -> json-file-writer.write
+               json1-emitter.out -> self.json-out
+
+               scanner.error,generic-emitter.error,json-emitter.error,preparse.error,collector.error,lisp-emitter.error,
+                  generic-file-writer.error,
+                  json-file-writer.error,
+                  lisp-file-writer.error
+               -> self.error
+
+              "

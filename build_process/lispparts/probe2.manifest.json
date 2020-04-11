@@ -1,0 +1,11 @@
+{
+  "entrypoint": "./probe2.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+    "in"
+  ],
+  "outPins": [
+    "out"
+  ]
+}

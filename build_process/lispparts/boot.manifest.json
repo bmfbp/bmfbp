@@ -1,0 +1,37 @@
+[{"dir":"build_process/","file":"lispparts/compiler.lisp","kindName":"compiler","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/part-namer.lisp","kindName":"part-namer","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/json-array-splitter.svg","kindName":"build process","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/children-before-graph.lisp","kindName":"children-before-graph","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/build-collector.lisp","kindName":"build-collector","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/get-manifest-file.lisp","kindName":"get-manifest-file","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/schematic-or-leaf.lisp","kindName":"schematic-or-leaf","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/build-graph-in-memory.lisp","kindName":"build-graph-in-memory","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/runner.lisp","kindName":"runner","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}]
+
+
+
+
+
+{"dir":"build_process/","file":"lispparts/build-collector.lisp","kindName":"build-collector","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/children-before-graph.lisp","kindName":"children-before-graph","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}
+ 
+
+[{"dir":"build_process/","file":"lispparts/compiler.lisp","kindName":"compiler","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/part-namer.lisp","kindName":"part-namer","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/json-array-splitter.svg","kindName":"build process","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/probe3.svg","kindName":"probe3","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/get-manifest-file.lisp","kindName":"get-manifest-file","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/schematic-or-leaf.lisp","kindName":"schematic-or-leaf","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/children-before-graph.lisp","kindName":"children-before-graph","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/build-collector.lisp","kindName":"build-collector","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/children-before-graph.lisp","kindName":"children-before-graph","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}]
+
+name boot-boot
+graph {... boot-boot ...}
+leaf compiler
+leaf part-namer
+leaf json-array-splitter
+leaf children-before-graph
+leaf children-before-graph
+leaf build-collector
+leaf get-manifest-file
+leaf schematic-or-leaf
+
+leaf build-graph-in-memory
+leaf runner
+
+
+
+
+name boot-boot
+graph {... boot-boot ...}
+leaf compiler
+leaf part-namer
+leaf json-array-splitter
+leaf probe3
+
+
+[{"dir":"build_process/","file":"lispparts/compiler.lisp","kindName":"compiler","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/part-namer.lisp","kindName":"part-namer","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/json-array-splitter.svg","kindName":"build process","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/probe3.svg","kindName":"probe3","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/get-manifest-file.lisp","kindName":"get-manifest-file","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/schematic-or-leaf.lisp","kindName":"schematic-or-leaf","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/children-before-graph.lisp","kindName":"children-before-graph","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"},{"dir":"build_process/","file":"lispparts/build-collector.lisp","kindName":"build-collector","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}, {"dir":"build_process/","file":"lispparts/children-before-graph.lisp","kindName":"children-before-graph","ref":"master","repo":"https://github.com/bmfbp/bmfbp.git"}]

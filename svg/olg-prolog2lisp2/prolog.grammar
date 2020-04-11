@@ -1,0 +1,46 @@
+% from https://readthedocs.org/projects/prolog/downloads/pdf/latest/
+clause ::= <predicate> . |
+<predicate> :- <predicate_list> . |
+?- <predicate_list> .
+predicate_list ::= <predicate> |
+<predicate> , <predicate_list> |
+predicate ::= atom |
+<structure>
+structure ::= atom ( ) |
+atom ( <term_list> )
+term_list ::= <term> |
+<term> , <term_list>
+term ::= <constant> |
+atom |
+var |
+<structure>
+constant ::= int |
+float |
+string
+
+
+clause:
+| p = predicate; PERIOD { fact_sugar p }
+| p = predicate; RULE; pl = predicate_list; PERIOD { Clause (p, pl) }
+| QUERY; pl = predicate_list; PERIOD { Query pl }
+predicate_list:
+| p = predicate { [p] }
+| p = predicate; COMMA; pl = predicate_list { p :: pl }
+predicate:
+| a = ATOM { atom_sugar a }
+| s = structure { s }
+structure:
+| a = ATOM; LPAREN; RPAREN { atom_sugar a }
+| a = ATOM; LPAREN; tl = term_list; RPAREN { TermExp (a, tl) }
+term_list:
+| t = term { [t] }
+| t = term; COMMA; tl = term_list { t :: tl }
+term:
+| c = constant { ConstExp c }
+| a = ATOM { atom_sugar a }
+| v = VAR { VarExp v }
+| s = structure { s }
+constant:
+| i = INT { IntConst i }
+| f = FLOAT { FloatConst f }
+| s = STRING

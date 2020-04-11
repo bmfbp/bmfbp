@@ -1,0 +1,11 @@
+{
+  "entrypoint": "./runner.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "json-collection"
+  ],
+  "outPins": [
+      "error"
+  ]
+}

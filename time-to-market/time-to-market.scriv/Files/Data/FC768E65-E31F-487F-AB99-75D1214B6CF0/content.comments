@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Comments>
+    <Comment ID="CDC18CCA-F574-41A3-9A22-0FA59C1D6DE1" Author="Paul Tarvydas" Footnote="Yes" Color="0.949769 0.949769 0.949769"><![CDATA[{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 This is a variant of the Mutual Multi-Tasking model.  This model was tried in Windows 3, and discredited.  This model is not suitable for time-sharing systems (like Windows or MacOS), but is quite suitable for creating software products.}]]></Comment>
+    <Comment ID="CBBA4418-74D8-446F-8A1F-D9237CE0287F" Author="Paul Tarvydas" Footnote="Yes" Color="0.949769 0.949769 0.949769"><![CDATA[{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 None, one, or many output events, possibly on different output pins.}]]></Comment>
+</Comments>

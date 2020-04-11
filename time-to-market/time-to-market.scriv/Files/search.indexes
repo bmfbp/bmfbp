@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="3BB3571F-FEFB-4456-8DCB-5F1B402B8CA9">
+            <Title>Incoming Inspection</Title>
+            <Text>As assets arrive, e.g. from third parties, we must be able to easily test them for usability and how they fit in with the overall design.
+
+This means that we need to easily / quickly build up and tear down test jigs for incoming inspection of assets.
+
+Pipelines and scripting languages were a step in this direction.</Text>
+        </Document>
+        <Document ID="1D617DA5-FD56-4C3A-A19E-90BCCAD5EE1F">
+            <Title>The Arrowgrams Model of Distributed Components</Title>
+            <Text>In Arrowgrams, we design Components as if they each have their own computer.
+
+This philosophy simplifies Arrowgrams Designs and mimics the real world.
+
+</Text>
+            <Comments>Cpu + RAM, etc.
+IoT, multi-core, internet, etc.</Comments>
+        </Document>
+        <Document ID="69D30AF5-267F-4426-BD81-2C4037982A71">
+            <Title>Full Preemption</Title>
+            <Text>Full preemption is not supported by Arrowgrams.
+
+Many of the problems commonly associated with multi-tasking simply “go away” in Arrowgrams, because full preemption is not allowed.
+
+All Arrowgrams Components “run to completion” and cannot be interrupted.  Components cannot trip over their own feet.</Text>
+            <Comments>e.g. priority inversion</Comments>
+        </Document>
+        <Document ID="8A6F48F3-A78E-4F5C-AEDF-D820B9E0E78C">
+            <Title>RPC (Remote Procedure Calls)</Title>
+            <Text>Arrowgrams does not support Remote Procedure Calls (RPC) directly.
+
+All Arrowgrams components are concurrent and asynchronous.
+
+It is possible to explicitly create RPC if the design requires it.  This is done by a process called handshaking.  A Component can RPC to a downstream Component by sending it a request, then entering a state where it waits for a response from the downstream Component.  See Fig. &lt;$n:figure:RequestResponse&gt;.
+
+ #
+Fig. &lt;$n:figure:RequestResponse&gt;
+
+The advantage of breaking RPC down this way is that the tables can be turned - the Downstream component can request data from the Caller.</Text>
+            <Comments>Although, components composed of other components must wait until all inner components have subsided.
+In this case, the Downstream Component is a Client and the Upstream Component is a Server</Comments>
+        </Document>
+        <Document ID="29607397-2ABA-47FE-BEB5-62E92FF689D7">
+            <Title>Is This The Same As TDD?</Title>
+        </Document>
+        <Document ID="FC768E65-E31F-487F-AB99-75D1214B6CF0">
+            <Title>Event Loop Model</Title>
+            <Text>Arrowgrams Components are based on the Event Loop Model.
+
+A Component spins around watching its input ports for an event.
+
+When an event arrives, the Component reacts to it and may generate output events.</Text>
+            <Comments>This is a variant of the Mutual Multi-Tasking model.  This model was tried in Windows 3, and discredited.  This model is not suitable for time-sharing systems (like Windows or MacOS), but is quite suitable for creating software products.
+None, one, or many output events, possibly on different output pins.</Comments>
+        </Document>
+        <Document ID="98F1C629-1AC0-44DC-9FAF-82C2FA4CAF8E">
+            <Title>Libraries</Title>
+        </Document>
+        <Document ID="25C3367A-FFB7-4EFB-9A05-F854E2D9082B">
+            <Title>Design and Communicate</Title>
+        </Document>
+        <Document ID="294AE985-54AF-442F-9D55-E2EA90779B2D">
+            <Title>Frameworks</Title>
+        </Document>
+        <Document ID="FD73DC21-2306-40A7-96AD-A37F61BCFBF6">
+            <Title>Patterns</Title>
+            <Text>Reusability does not stop with Object-Oriented Software.  
+
+Arrowgrams lets us reuse Designs.
+
+Arrowgrams separates Design from Code.   
+
+Arrowgrams Designs can be reused.</Text>
+            <Comments>With simple operations like COPY &amp; PASTE.</Comments>
+        </Document>
+        <Document ID="6F247B52-0523-4532-A163-F089A9A7C68F">
+            <Title>Fairness</Title>
+            <Text>No longer an issue.
+
+Every Component spins waiting for an event on any of its input pins.
+
+If fair scheduling matters to a Design, it must be explicitly designed-in by the designer using control wires and ports.</Text>
+        </Document>
+        <Document ID="F157A412-99D5-4BAE-B610-36747C717D05">
+            <Title>Encapsulation</Title>
+            <Text>The holy grail of software development is encapsulation.
+
+OO (object oriented) encapsulates data and attempts to treat software as encapsulated data.
+
+Many other aspects of a Design can be encapsulated, not just data.
+
+Businesses already use hierarchy and encapsulation without realizing it.  For example, a department head owns five divisions where each division is headed by a manager and a group of employees.  The employees report directly to the managers, and the managers report directly to the department head.  In this way, the department head can control all of the employees without being swamped by talking to too many people.  Only the five managers report directly to the department head and they pass down directions from the department head to their employees.
+
+This is, also, the way to design products.  
+
+Divide and conquer.  
+
+Break every part of the Design down into constituent parts so as not to be overwhelmed by all of the design decisions required in the final product.
+
+Arrowgrams encourages such a hierarchical design process.  For example, you can Design a product in layers, examining each layer on its own.
+
+Arrowgrams Diagrams show the layers of a product Design via composition of rectangles and show the routing of information via wires.
+
+The diagrammatic nature of Arrowgrams immediately shows when a particular layer is too complicated</Text>
+            <Comments>Including software products
+Arrows between ports.
+Which, then, leads to a decision to break the layer down even further.</Comments>
+        </Document>
+        <Document ID="6C850017-6D4D-4ADF-B2EB-322165CE1979">
+            <Title>Early Integration</Title>
+            <Synopsis>- not at end</Synopsis>
+            <Text>When we draw a design on a whiteboard, we are specifying how software components are expected to fit together.  Ideally, such drawings would be made rigorous and automatically converted to software.
+
+With Arrowgrams, you can draw diagrams that compile directly to software.
+
+The Arrowgrams Component Diagram Editor lets you draw software components as boxes with ports.  Boxes are connected to other boxes by drawing lines between ports.
+
+Component boxes are loosely connected and do not create dependencies between components.
+
+A Design can be created as an Arrowgrams Diagram before any code is written.  Components can be integrated before any code is written.
+
+The Arrowgrams StateChart Diagram Editor lets you draw the internal workings of components as simple state machines.</Text>
+            <Comments>reactangles
+This is crucial for design refactoring.
+This is not a feature of most other software techniques, including the use of Libraries and Git.
+niy</Comments>
+        </Document>
+        <Document ID="5AD98323-E4D1-4801-8A1A-150DF6164FCB">
+            <Title>Arrowgrams is a Corporate Org Chart for Software</Title>
+        </Document>
+        <Document ID="5D3E2A33-6D7A-4AB2-A15E-5CF04F5C3D25">
+            <Title>Bottom Up</Title>
+        </Document>
+        <Document ID="EC656E5B-88D9-458D-8DE2-80079387BB89">
+            <Title>Film Production as a Model for Software Development</Title>
+            <Text>Ideally, Software should be produced in the same manner as films are produced.
+
+
+	•	Storyboard for overall film flow
+	•	A script
+	•	Characters, personalities, what happens if there are too many characters?  (Combine multiple characters into one).
+	•	Scenes - detailed storyboards for every component of the film.
+	•	rule of 7 plus minus 2 - keep things simple enough to understand / remember
+	•	Visual assets - scenery and green-screen visual shots (who decides which assets are acceptable / unacceptable?)
+	•	Audio assets - music (who decides what music is used, who decides what kind of music is needed for each scene?)
+	•	Scoring
+	•	Cut / splice points
+	•	Time sequencing
+	•	Final editing - what to leave on the cutting room floor?
+</Text>
+            <Comments>Or, Software should be produced in the way that Audio recordings are produced.</Comments>
+        </Document>
+        <Document ID="D4F3F615-9CE0-44E7-9764-E0BBBC3D1A7F">
+            <Title>Race Conditions</Title>
+            <Text>Many of the traditional problems of multi-tasking are not present in Arrowgrams designs.
+
+In the following, we discuss some of these problems and the Arrowgrams take on them.</Text>
+        </Document>
+        <Document ID="C86565D8-BF89-45FB-AF4A-9BC6D3114BDB">
+            <Title>Ports vs. APIs</Title>
+            <Text>Ports and wires are like a plugboard used in old-fashioned telephone exchanges, electronics and some musical synthesizers.
+
+Ports are like mini-APIs.  The only question to be asked is “can I plug this wire into this Component?”.
+
+There are input and output ports.  
+
+APIs tend to come in one, asymmetrical option - input apis.  And, APIs are much more complicated, with the user needing to know the type of every parameter.  
+
+Arrowgrams breaks types into two flavors. (1) Ports, and (2) the type of the data that flows on the wires into and out of the ports.  It turns out that types become less important in Arrowgrams</Text>
+            <Comments>event</Comments>
+        </Document>
+        <Document ID="5D8E12DA-CFE4-421C-B0CA-B87804CD8FDC">
+            <Title>Thread Safety</Title>
+            <Text>Thread safety is no longer an issue because Arrowgrams Components do not share memory.
+
+</Text>
+        </Document>
+        <Document ID="F0DBF7D2-1827-49CE-9CE2-E58432306710">
+            <Title>Micro-Services</Title>
+            <Text>
+
+The strategy used in Fig. &lt;$n:figure:RequestResponse&gt; can be used to create a micro-service based architecture.</Text>
+        </Document>
+        <Document ID="1DF4F670-C5FD-4790-AC49-4F265B5F3624">
+            <Title>Message Sending</Title>
+            <Text>Message Sending can only be done between components that are truly distinct.
+
+</Text>
+            <Comments>e.g. Concurrent.</Comments>
+        </Document>
+        <Document ID="91729996-BF52-4CDF-84F3-5211D0F3A733">
+            <Title>Snapping Software Components Together</Title>
+        </Document>
+        <Document ID="CA2087FF-7D0C-4A85-8228-4001E9034125">
+            <Title>Incorporate Assets Developed by Contractors</Title>
+        </Document>
+        <Document ID="46AE1BF0-C163-4ECE-9DBF-E78390709FCE">
+            <Title>Arrowgrams is a Language for Software Design</Title>
+            <Text>In designing Arrowgrams, we put emphasis on Design.  There are many languages for creating code, but precious few for expressing Software Design.
+
+We, also, put an emphasis on compiling the designs into software.  
+
+To make a change to an Arrowgrams Design, you use the Arrowgrams Diagram editor.  That way, designs are never out-of-date.  There is no round-trip processing in Arrowgrams, because round-tripping allows software developers to change Designs simply by changing code.  There is no way to make a “last minute hack” that is not reflected in the Arrowgrams Diagrams.  Arrowgrams Diagrams never become stale and out-of-synch with the code.</Text>
+            <Comments>Like comments.
+Converting Diagrams to code, then converting code back into diagrams.</Comments>
+        </Document>
+        <Document ID="DFB20FCF-DD58-416A-865E-5BB666641759">
+            <Title>Distributed Processing, Multi-Core</Title>
+            <Text>The combination of features in Arrowgrams make it ideal for distributed applications.
+
+Arrowgrams Components cannot share memory, so message sending is simple and easy.
+
+Message Sending remains simple in Arrowgrams.  Messages are routed from Component to Component by their enclosing Schematic.
+
+Diagrams instantly show where messages and wires are tangled and have become too complicated.  Designers can untangle wires using the hierarchical rules of Arrowgrams.
+
+The model for Arrowgrams Designs is shown in Fig. &lt;$n:figure:degenerate&gt;
+
+
+#
+
+Fig. &lt;$n:figure:degenerate&gt;
+
+All Arrowgrams Components “run to completion” and cannot be interrupted.</Text>
+            <Comments>Internet, IoT, etc.
+Mother part.
+This is the same problem as “global variables” in software.
+Components are arranged in layers.
+The places where the wire touches the rectangles are Arrowgrams Ports.  For simplicity, we do not show whether the ports are input or output in Fig. &lt;$n:figure:degenerate&gt;, although this is always required in a true Arrowgrams Diagram.</Comments>
+        </Document>
+        <Document ID="58CF4704-462E-467C-997F-730F2E2ADDD2">
+            <Title>Divide and Conquer</Title>
+        </Document>
+        <Document ID="B7C3610D-7F0F-4FE7-91D5-50AC8A01111A">
+            <Title>Exceptions</Title>
+            <Text>There are no Exceptions in Arrowgrams.
+
+When an error occurs, you SEND data out a port.
+
+You can designate as many ports as you need for error handling.</Text>
+        </Document>
+        <Document ID="81B8A280-1E41-4CF0-94BF-E3ECBC73EE31">
+            <Title>degenerate</Title>
+        </Document>
+        <Document ID="0CB55F6E-E8AB-4B25-BB11-786B14E9D919">
+            <Title>Refactoring Designs (Stealing Good Ideas)</Title>
+            <Text>Designs can be refactored by moving boxes and wires around on an Arrowgrams Diagram, using the Arrowgrams Diagram Editor.
+
+Good ideas can be lifted from other Designs using simple COPY/PASTE operations of the Arrowgrams Diagram Editor.</Text>
+        </Document>
+        <Document ID="EF0D60F4-6FCC-4291-81F9-D80C2FD936EF">
+            <Title>Pipelines</Title>
+        </Document>
+        <Document ID="722AC9A8-A438-4BF4-804B-CBA35EDBD1B1">
+            <Title>Memory Sharing</Title>
+            <Text>Arrowgrams Components do not share memory
+
+</Text>
+            <Comments>This rule can be broken when Components share the computer.  This practice is not recommended.</Comments>
+        </Document>
+        <Document ID="DF3F4762-DFB9-40FD-B49E-7A5A4BFC9E75">
+            <Title>What Can Be Encapsulated</Title>
+            <Text>	•	control flow
+	•	data
+	•	architecture
+	•	data transfer (message sending, parameters in calls, etc.)
+	•	global variables
+	•	local variables
+	•	continuations
+	•	callbacks
+	•	dynamic call chains
+	•	threading
+	•	inter-code dependencies
+	•	macros
+	•	pointers
+	•	abstraction
+	•	polymorphism
+	•	state
+	•	correctness proofs
+	•	types
+	•	namespaces
+	•	garbage collection, memory allocation
+	•	concurrency
+	•	componentization
+	•	overloading of operators
+	•	security
+	•	visualization of software
+	•	looping constructs (LOOP, recursion, etc)
+	•	testing
+	•	project scoping
+	•	multi-cores
+	•	distributed cpus, distributed computers
+	•	timing, sequencing.
+</Text>
+            <Comments>if/then/else, while, call, return, etc.
+Is this the same as Architecture or is it something else?</Comments>
+        </Document>
+        <Document ID="433E02F4-FAE9-4A5B-A569-F0CEA3A54B0E">
+            <Title>Improving Time to Market for Software Projects</Title>
+            <Text>The holy grail of software product development is time to market.
+
+Ideally, we should be able to:
+
+	•	snap software components together to create products
+	•	design software products and communicate the design to developers
+	•	have as few dependencies as possible
+	•	incorporate software assets developed by third parties (and/or in-house developers)
+	•	integrate early
+	•	perform inspection and testing of software assets developed by third parties
+	•	change the design when requirements change, at any point in the development process
+	•	keep Design separated from Code.
+</Text>
+            <Comments>Called “incoming inspection”.
+drastically</Comments>
+        </Document>
+        <Document ID="8E8F2837-EF81-4316-9D2F-B3C2CDBAFC68">
+            <Title>Top Down</Title>
+        </Document>
+        <Document ID="6854014B-8ABA-41B0-9CD7-95792DC3F8B6">
+            <Title>Only One Way to Communicate with Components</Title>
+            <Text>Arrowgrams simplifies communication between Components.
+
+You can only SEND data from a port to another Port.
+
+Instead of RETURNing data to the caller, you SEND the data.
+
+In fact, you can SEND many values to another Component.
+
+A Component can SEND data to many other Components, not just the caller.</Text>
+            <Comments>Return values</Comments>
+        </Document>
+        <Document ID="1E676EA2-91B7-4B24-BAAC-C1A163E9FC6B">
+            <Title>Every Component Makes Sense</Title>
+            <Text>Every Component in an Arrowgrams design can be fully understood on its own.
+
+Composite Components can be made using other Components, in layers.  Each layer makes sense.  There is no way for a Component at a lower layer to override the operation of a Component in a layer above it
+</Text>
+            <Comments>schematic
+Contrast this with OO (object oriented) technology, where inheritance allows a component to override the operations of a component in a layer above it.</Comments>
+        </Document>
+        <Document ID="5C5EE91D-7E2F-4637-A09E-0A2239CB2FE1">
+            <Title>Encapsulate Everything, Not Just Data</Title>
+            <Synopsis>- Structured Programming encapsulated some control flow - OO encapsulates data (only)
+- StateCharts encapsulate State</Synopsis>
+        </Document>
+        <Document ID="4E23C7F4-F943-48D6-B784-8C1DF96E689A">
+            <Title>Decomposing Software Projects</Title>
+        </Document>
+        <Document ID="93685F08-E0C6-4987-B5F6-4D853BC34110">
+            <Title>Loops, Unbounded Recursion</Title>
+            <Text>Loops are the exception, not the rule, in Arrowgrams.
+
+Loops are frowned upon.
+
+Infinite loops will cause system failure.
+
+Recursion is allowed only inside of code Components.  Arrowgrams is a notation for designing systems using Components that are plugged together by wires.  The concept of recursion does not apply to the description of Components that are plugged together by wires.</Text>
+            <Comments>Infinite loops cause system failure in every software language.</Comments>
+        </Document>
+        <Document ID="1E99966B-4DA4-4EDC-AC92-00E1BB2D4EED">
+            <Title>Why Not?</Title>
+            <Text>	◦	Software programs have too many dependencies
+	◦	Software languages don’t allow easy shuffling of components
+	◦	Time / sequencing is not explicitly handled, even though most business need to sequence interactions with their customers.
+	◦	Software programs do not “snap together” 
+	◦	Software programs cannot be understood by anyone outside of the programming community.
+	◦	Testability - programs are hard to test, even with TDD
+	◦	Programs are usually not designed in a hierarchical manner
+	◦	No language for Design (no blueprints)
+	◦	Hidden synchronizations cause problems (CALL / RETURN is a synchronization mechanism)
+	◦	
+</Text>
+            <Comments>Despite the existence of libraries
+APIs are too complicated.  Arrowgrams simplifies the concept.
+Despite attacks on global variables, structured programming.</Comments>
+        </Document>
+        <Document ID="A2C42AD3-4995-4451-A780-A4701E317D04">
+            <Title>Spaghetti, Encapsulation, Simplicity</Title>
+            <Text>Simplicity, Encapsulation and Spaghetti Programs
+
+What is spaghetti programming?  Any aspect of programming that is organized in an ad-hoc (and, thus, hard to follow) manner.  Here’s a list of programming aspects that I can think of of the top of my head:
+
+	•	control flow
+	•	data
+	•	architecture
+	•	data transfer (message sending, parameters in calls, etc.)
+	•	global variables
+	•	local variables
+	•	continuations
+	•	callbacks
+	•	dynamic call chains
+	•	threading
+	•	inter-code dependencies
+	•	macros
+	•	pointers
+	•	abstraction
+	•	polymorphism
+	•	state
+	•	correctness proofs
+	•	types
+	•	namespaces
+	•	garbage collection, memory allocation
+	•	concurrency
+	•	componentization
+	•	overloading of operators
+	•	security
+	•	visualization of software
+	•	looping constructs (LOOP, recursion, etc)
+	•	testing
+	•	project scoping
+	•	multi-cores
+	•	distributed cpus, distributed computers.
+
+
+I argue that simplicity comes from finding ways to encapsulate all of these aspects - all at the same time.
+
+The first aspect - control flow - was attacked using Structured Programming techniques in around 1968.
+
+Data spaghetti was attacked by the OOP paradigm around 1972.  OOP tended to spaghetti-fy control flow via inheritance, which is good for data, but poor for control flow.
+
+The current FP fad uses a blunt instrument (assign-once) to attack encapsulation of global variables, local variables and state.  FP also claims to support correctness proofs,  but doesn’t add structuring to the proofs.  
+
+Each fad tends to address a few of the aspects of spaghetti programming, but leaves many aspects unaddressed.
+
+In my view, implicit dependencies are mostly unrecognized and very injurious.   For example, almost every programming language uses the call-stack (call-return) without noticing that dynamic call/dependency chains are being inadvertently created.  Lack of recognition of this problem has led to many problems with concurrency and the general belief that “concurrency is hard”.
+
+The Silver Bullet?
+
+I don’t have a silver bullet that addresses all of these concerns at once.  I do, however, argue that many of these aspects can be encapsulated better than what is currently being offered, by using truly-concurrent design, scoping and hierarchy.  I argue that such considerations can lead to new research into better encapsulation and increased simplicity.
+
+Pipelines are a good starting point for addressing the above concerns.
+
+Programming Atoms
+
+I believe that the best way to understand these various aspects of programming spaghetti is to dissect programming and to derive the lowest common denominators of programming - I call them atoms.
+
+Call-return is not a programming atom.  A call-return involves 4 more-atomic operations - (1) deliver data to the target routine, (2) transfer control flow to the target routine, (3) deliver data to the caller and (4) resume control flow in the caller.  The general inability to recognize such atomic operations has led to syntactic warts such as “exception handlers” and problems with multi-threading.
+
+The UNIX system began work towards an atomic model, but was hampered by lack of efficiency of threads and later over-parameterization, probably caused by the inefficiency of threads and too-early attempts at optimisation of the wrong problems.
+
+Scoping
+
+One method that has been tried and proven successful is the scoping of variables.  This technique can be applied to many of the aspects listed above.
+
+DSLs
+
+It seems unlikely to me that most aspects, listed above, can be successfully addressed in a single language.  I argue that we should stop trying to shoe-horn everything into a single language and begin using DSLs again.  For example, Type Systems are becoming more elaborate. Shouldn’t type research be applied to all languages, not just one?  What if type checking were a DSL that worked with every language and could be processed by an elaborate type-checking server?
+
+Additionally, text (ASCII and Unicode) are universally accepted as the form for programs.  APL showed that non-standard glyphs could be used for programming.  We can we represent some aspects of programming as SVG diagrams.
+
+Paul Bassett (https://www.amazon.ca/Framing-Software-Reuse-Lessons-World/dp/013327859X) showed that is was practical to create programs via editing operations.
+
+Denotational Semantics
+
+Work on denotational semantics began to investigate programming atoms. At first, denotational semantics systems were mammoth in size.  Work by Peter Lee (Realistic Compiler Generation https://mitpress.mit.edu/books/realistic-compiler-generation) showed that, by using multiple passes, realistic compilers could be built using Denotational Semantics.
+
+Portability
+
+Portability is a chimera.  Either the languages are equivalent in power, or, a union of all possibilities results in a lesser system. The best that “portability” can do is to rearrange instruction sequences / expressions to suit each target and smooth differences over with syntactic sugar.  Portable libraries tend to rely on #ifdef (or  CL #+features).  The resulting code tends to be a mess and is usually hard to comprehend and to maintain. 
+
+Code would be less of a mess if we stopped relying on parameterization and relied instead on being able to “plug” software components together, snapping different modules in, as required, allowing the enclosing code module to act as a coordinator for a specific architecture.
+
+Some notable intermediate languages for portability include:
+
+	•	OCG (Cordy. “Orthogonal Code Generator”)
+	•	RTL (Fraser Davidson, “Register Transfer Language”)
+
+S/SL
+
+See Holt/Cordy/Wortman “An Introduction to S/SL: Syntax/Semantic Language” for a language that supports pipelines and the divide-and-conquer strategy, in making large problems tractable.
+Events Instead of Flows
+
+FBP and Unix use flows of data streams.   I argue that events are more general.  Events are almost like streams, but they consist of data packets that come, randomly, at irregular times.</Text>
+            <Comments>Suggestions welcome
+if/then/else, while, call, return, etc.
+Is this the same as Architecture or is it something else?
+And database research.
+win-lose
+I argue that concurrency is only hard if you try to implement asynchronous behaviour on top of an inherently synchronous system, e.g. call-return, using the presumption that CPUs are expensive, i.e that we need to continue need to use time-sharing concepts everywhere (thread libraries) in our code, instead of only in operating systems (Linux, Windows, MacOSX, etc.).  (Do we ever need time-sharing today?  I argue that operating systems should be deprecated anyway).
+The concept of pipelines was tangled up with emerging ideas about operating systems and never recovered from the damaging association.  I can think only of the various **sh language(s) that actually support pipelines.  Ironically, most modern languages include closures in one form or another (aka callbacks, etc.) that could directly support pipeline programming.
+I argue that the ideal routine would be a concurrent process (see later) with no parameters. (!). SEND subsumes all forms of parameterization and data transfer.
+I argue that the act of SENDing data to the callee is the same act as SENDing a return value to the caller, or, SENDing an exception value to the caller.  Handling of an exception by a parent can be performed by the inverse of inheritance (see StateCharts, where the parent overrides the action of a child (instead of the child overriding the operation of a parent as in inheritance)).
+e.g. in linux
+Why not optimise processes so that pipelines become cheap, instead of adding parameters to commands and accepting inefficiency of threads?  Why does no programming language implement efficient pipelines?  (FP is only a degenerate form of piplelining).  Threads should be easy to implement in any language that supports closures or continuations.
+A misguided form of premature optimization
+I argue that Architecture can be represented as concrete SVG diagrams.  In fact, I show, elsewhere, that parsing (concrete, compilable) diagrams is “easy” with current hardware and tools.  The main holdback is that existing diagram editors are not meant for editing diagrams that represent code (we need a 2D Emacs). 
+Another kind of “code reuse”, another way to achieve DRY (Don’t Repeat Yourself).
+Aka scoping, divide and conquer
+including #ifdef’ing and #+feature’ing 
+
+A thinly veiled promo for https://github.com/guitarvydas/cl-event-passing
+I argue that we wouldn’t need operating systems, if we had truly pluggable software modules.
+Albeit in a primitive sense
+Another project that uses divide and conquer is the afore-mentioned Realistic Compiler Generation https://mitpress.mit.edu/books/realistic-compiler-generation
+More “atomic”
+Sometimes with a lot of time in between events.</Comments>
+            <Notes>- (Continuation passing)
+- call return -&gt; implicit dependencies
+</Notes>
+        </Document>
+    </Documents>
+</SearchIndexes>
