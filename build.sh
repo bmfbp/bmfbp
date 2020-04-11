@@ -12,6 +12,7 @@ if [ ! -f "${PROGRAM_PATH}" ]; then
 fi
 
 docker build . \
+  --build-arg "build_mode=${BUILD_MODE}" \
   --build-arg "program_path=${PROGRAM_PATH}" \
   --build-arg "version=${VERSION}" \
   --tag arrowgrams:${VERSION}

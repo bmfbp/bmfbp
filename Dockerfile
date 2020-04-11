@@ -61,9 +61,9 @@ RUN [ "$build_mode" = "full" ] && \
 
 # Use pre-built binaries if available
 RUN [ "$build_mode" != "full" ] && \
-  [ -d "/root/quicklisp/local-projects/bmfbp/builds/${version}" ] && \
-  cp "/root/quicklisp/local-projects/bmfbp/builds/${version}"/* /root/bin || \
-  ls -al /root/quicklisp/local-projects/bmfbp/builds/0.1 || \
+  [ -d "/root/quicklisp/local-projects/bmfbp/prebuilt/${version}" ] && \
+  cp "/root/quicklisp/local-projects/bmfbp/prebuilt/${version}"/* /root/bin || \
+  ls -al /root/quicklisp/local-projects/bmfbp/prebuilt/0.1 || \
   echo
 
 # Clean up
