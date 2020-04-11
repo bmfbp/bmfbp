@@ -61,10 +61,6 @@ RUN [ "$build_mode" = "full" ] && \
   make || \
   echo
 
-ARG program_path
-
-COPY "${program_path}" "/root/program"
-
 # Use pre-built binaries if available
 RUN [ "$build_mode" != "full" ] && \
   [ -d "/root/quicklisp/local-projects/bmfbp/prebuilt/${version}" ] && \
@@ -72,13 +68,9 @@ RUN [ "$build_mode" != "full" ] && \
   ls -al /root/quicklisp/local-projects/bmfbp/prebuilt/0.1 || \
   echo
 
-# Clean up
-#RUN cd /root/bin && \
-#  rm -rf /root/quicklisp/local-projects/bmfbp
-
 # Make Arrowgrams, refresh quicklisp, and run hello-world. This is what you would run manually.
 ENTRYPOINT cd ${project_root} && \
   sbcl --eval "(quicklisp:register-local-projects)" --quit && \
-  sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit "/root/program" && \
+  sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit "/root/quicklisp/local-projects/bmfbp/__program" && \
   cd /root/bin && \
   python -m SimpleHTTPServer 8000

@@ -12,16 +12,22 @@ if [ ! -f "${PROGRAM_PATH}" ]; then
   exit 3
 fi
 
+# The program needs to be inside this directory
+cp $PROGRAM_PATH __program
+
+# Build the image
 docker build . \
   --build-arg "build_mode=${BUILD_MODE}" \
-  --build-arg "program_path=${PROGRAM_PATH}" \
   --build-arg "version=${VERSION}" \
   --build-arg "arrowgrams_branch=${ARROWGRAMS_BRANCH}" \
   --tag arrowgrams:${VERSION}
+
+# Stop existing container, if any
 docker stop arrowgrams
 docker rm --force arrowgrams
+
+# Run the container
 docker run \
-  -dt \
   --name=arrowgrams \
   -v "${CURRENT_DIR}:${PROJECT_ROOT}" \
   -e "project_root=${PROJECT_ROOT}" \
