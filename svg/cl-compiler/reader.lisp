@@ -1,28 +1,40 @@
-(in-package :arrowgrams/compiler/reader)
+(in-package :arrowgrams/compiler)
 
-; (:code reader (:file-name) (:string-fact :eof :error) #'arrowgrams/compiler/reader::react)
+(defclass reader (compiler-part) ())
 
-(defmethod first-time ((self e/part:part))
-  ;; nothing
-  )
+; (:code reader (:file-name) (:string-fact :eof :error))
 
-(defmethod react ((self e/part:part) ev-file-name)
-  (read-prolog-fb self (e/event:data ev-file-name)))
+(defmethod e/part:first-time ((self reader))
+  (call-next-method))
+  
+(defmethod e/part:react ((self reader) (e e/event:event))
+  (ecase (@pin self e)
+    (:file-name
+     (read-prolog-fb self (@data self e)))
+    (:in-stream
+     (read-prolog-stream self (@data self e)))))
 
-(defmethod read-prolog-fb ((self e/part:part) file-name)
+(defmethod read-prolog-fb ((self reader) file-name)
+  (with-open-file (f file-name :direction :input)
+      (read-prolog-stream self f)))
+
+(defmethod read-prolog-stream ((self reader) f)
   (let ((prolog-line nil))
-    (with-open-file (f file-name :direction :input)
-      (flet ((rdline () (setf prolog-line (read-line f nil :EOF))))
-        (rdline)
-        (@:loop
-          (@:exit-when (eq :EOF prolog-line))
-          (add-prolog-fact self prolog-line)
-          (rdline))))
-    (cl-event-passing-user::@send self :eof :eof)))
+    (flet ((rdline () (setf prolog-line (read-line f nil :EOF))))
+      (rdline)
+      (@:loop
+        (@:exit-when (eq :EOF prolog-line))
+        (add-prolog-fact self prolog-line)
+        (rdline)))
+    (@send self :eof :eof)))
 
 (defun add-prolog-fact (self prolog-line)
   ;;ex. (cl-ppcre:regex-replace "(a)(b)(c)" "abc" (list 2 1 0)) --> "cba"
   (let ((rw1 (cl-ppcre:regex-replace "^([^\\(]+)\\(([^\\)]+)\\)\\." prolog-line (list "(" 0 " " 1 ")"))))
-    (let ((rw2 (cl-ppcre:regex-replace-all "," rw1 " ")))
-      (cl-event-passing-user:@send self :string-fact rw2))))
+    (let ((rw2
+           (if (and (> (length prolog-line) 3)
+                    (string= "text" (subseq prolog-line 0 4)))
+               (cl-ppcre:regex-replace "," rw1 " ")
+             (cl-ppcre:regex-replace-all "," rw1 " "))))
+      (@send self :string-fact rw2))))
 

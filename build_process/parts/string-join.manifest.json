@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./string-join.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "a",
+      "b"
+  ],
+  "outPins": [
+      "c",
+      "error"
+  ]
+}

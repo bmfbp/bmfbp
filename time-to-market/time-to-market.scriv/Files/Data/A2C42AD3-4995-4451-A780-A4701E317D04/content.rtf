@@ -1,0 +1,177 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2511
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Palatino-Roman;\f2\froman\fcharset0 Palatino-Bold;
+\f3\froman\fcharset0 Palatino-Italic;\f4\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue233;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c93333;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_Ps::0>
+\f1\fs56 Simplicity, Encapsulation and Spaghetti Programs\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!$Scr_Ps::0>
+\f1\fs26 \
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+\cf0 What is spaghetti programming?  Any aspect of programming that is organized in an ad-hoc (and, thus, hard to follow) manner.  Here\'92s a list of programming aspects that I can think of of the top of my {\field{\*\fldinst{HYPERLINK "scrivcmt://C3C42447-DFDA-4954-B208-A981B0897EA0"}}{\fldrslt head}}:\
+\
+\pard\tx220\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\li720\fi-720\sl264\slmult1\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 {\listtext	\uc0\u8226 	}control {\field{\*\fldinst{HYPERLINK "scrivcmt://72A8D058-528C-4163-9C01-F1713E786A5D"}}{\fldrslt flow}}\
+{\listtext	\uc0\u8226 	}data\
+{\listtext	\uc0\u8226 	}architecture\
+{\listtext	\uc0\u8226 	}data transfer (message sending, parameters in calls, etc.)\
+{\listtext	\uc0\u8226 	}global variables\
+{\listtext	\uc0\u8226 	}local variables\
+{\listtext	\uc0\u8226 	}continuations\
+{\listtext	\uc0\u8226 	}callbacks\
+{\listtext	\uc0\u8226 	}dynamic call chains\
+{\listtext	\uc0\u8226 	}threading\
+{\listtext	\uc0\u8226 	}inter-code dependencies\
+{\listtext	\uc0\u8226 	}macros\
+{\listtext	\uc0\u8226 	}pointers\
+{\listtext	\uc0\u8226 	}abstraction\
+{\listtext	\uc0\u8226 	}polymorphism\
+{\listtext	\uc0\u8226 	}state\
+{\listtext	\uc0\u8226 	}correctness proofs\
+{\listtext	\uc0\u8226 	}types\
+{\listtext	\uc0\u8226 	}namespaces\
+{\listtext	\uc0\u8226 	}garbage collection, memory allocation\
+{\listtext	\uc0\u8226 	}concurrency\
+{\listtext	\uc0\u8226 	}componentization\
+{\listtext	\uc0\u8226 	}overloading of operators\
+{\listtext	\uc0\u8226 	}security\
+{\listtext	\uc0\u8226 	}visualization of software\
+{\listtext	\uc0\u8226 	}looping constructs (LOOP, recursion, etc)\
+{\listtext	\uc0\u8226 	}testing\
+{\listtext	\uc0\u8226 	}project {\field{\*\fldinst{HYPERLINK "scrivcmt://5D625B6C-681C-4546-9EF2-02EC1EC001E2"}}{\fldrslt scoping}}\
+{\listtext	\uc0\u8226 	}multi-cores\
+{\listtext	\uc0\u8226 	}distributed cpus, distributed computers.\
+\pard\tx560\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\sl264\slmult1\pardirnatural\partightenfactor0
+\cf0 \
+\
+I argue that \ul simplicity\ulnone  comes from finding ways to \ul encapsulate\ulnone  all of these aspects - all at the same time.\
+\
+The first aspect - control flow - was attacked using Structured Programming techniques in around 1968.\
+\
+Data spaghetti was attacked by the OOP paradigm around {\field{\*\fldinst{HYPERLINK "scrivcmt://150BD965-B723-4CC6-AA08-3C519A6D700E"}}{\fldrslt 1972.}}  OOP tended to spaghetti-fy control flow via inheritance, which is good for data, but poor for control {\field{\*\fldinst{HYPERLINK "scrivcmt://19BB11B6-6167-445B-923F-955FB60FEB43"}}{\fldrslt flow.}}\
+\
+The current FP fad uses a blunt instrument (assign-once) to attack encapsulation of global variables, local variables and state.  FP also claims to support correctness proofs,  but doesn\'92t add structuring to the proofs.  \
+\
+Each fad tends to address a few of the aspects of spaghetti programming, but leaves many aspects unaddressed.\
+\
+In my view, implicit dependencies are mostly unrecognized and very injurious.   For example, almost every programming language uses the call-stack (call-return) without noticing that dynamic call/dependency chains are being inadvertently created.  Lack of recognition of this problem has led to many problems with concurrency and the general belief that \'93concurrency is {\field{\*\fldinst{HYPERLINK "scrivcmt://536C1BA1-C8AE-450A-B1B0-0F985B00C386"}}{\fldrslt hard\'94.}}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 The Silver Bullet?\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+I don\'92t have a silver bullet that addresses all of these concerns at once.  I do, however, argue that many of these aspects can be encapsulated better than what is currently being offered, by using truly-\ul concurrent\ulnone  \ul design,\ulnone  \ul scoping\ulnone  and \ul hierarchy\ulnone .  I argue that such considerations can lead to new research into better encapsulation and increased simplicity.\
+\
+Pipelines are a good starting point for addressing the above {\field{\*\fldinst{HYPERLINK "scrivcmt://0692AFFF-9523-413A-8F56-A54BACF12ED4"}}{\fldrslt concerns.}}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 Programming Atoms\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+I believe that the best way to understand these various aspects of programming spaghetti is to dissect programming and to derive the \ul lowest common denominators\ulnone  of programming - I call them \ul atoms\ulnone .\
+\
+Call-return is 
+\f3\i not
+\f1\i0  a programming atom.  A call-return involves 4 more-atomic operations - (1) deliver data to the target routine, (2) transfer control flow to the target routine, (3) deliver data to the caller and (4) resume control flow in the {\field{\*\fldinst{HYPERLINK "scrivcmt://438590CB-82D0-450A-8A21-9F64E9FE7C03"}}{\fldrslt caller.}}  The general inability to recognize such atomic operations has led to syntactic warts such as \'93exception {\field{\*\fldinst{HYPERLINK "scrivcmt://784D30B0-53CB-48C1-AD67-95701B8A69BE"}}{\fldrslt handlers\'94}} and problems with multi-threading.\
+\
+The UNIX system began work towards an atomic model, but was hampered by lack of efficiency of threads and later {\field{\*\fldinst{HYPERLINK "scrivcmt://F1514E5A-21FE-4DC2-A3B0-BFB2B35CB3F5"}}{\fldrslt over-parameterization,}} probably caused by the inefficiency of threads and too-early attempts at optimisation of the wrong {\field{\*\fldinst{HYPERLINK "scrivcmt://83B3A346-133B-4C2E-903F-2B37060FA9C9"}}{\fldrslt problems.}}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 Scoping\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+One method that has been tried and proven successful is the scoping of variables.  This technique can be applied to many of the aspects listed above.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 DSLs\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+It seems unlikely to me that most aspects, listed above, can be successfully addressed in a single language.  I argue that we should stop trying to shoe-horn everything into a single {\field{\*\fldinst{HYPERLINK "scrivcmt://481D9442-98C0-47E3-855A-383C6D5862B1"}}{\fldrslt language}} and begin using DSLs again.  For example, Type Systems are becoming more elaborate. Shouldn\'92t type research be applied to \ul all\ulnone  languages, not just one?  What if type checking were a DSL that worked with every language and could be processed by an elaborate type-checking server?\
+\
+Additionally, text (ASCII and Unicode) are universally accepted as the 
+\f3\i form
+\f1\i0  for programs.  APL showed that non-standard glyphs could be used for programming.  We can we represent some aspects of programming as SVG {\field{\*\fldinst{HYPERLINK "scrivcmt://9059CC80-3739-447E-B6A3-E69E3DF38F26"}}{\fldrslt diagrams}}.\
+\
+Paul Bassett ({\field{\*\fldinst{HYPERLINK "https://www.amazon.ca/Framing-Software-Reuse-Lessons-World/dp/013327859X"}}{\fldrslt 
+\f4\fs24 \cf2 \expnd0\expndtw0\kerning0
+\ul \ulc2 https://www.amazon.ca/Framing-Software-Reuse-Lessons-World/dp/013327859X}}
+\f4\fs24 \cf2 \expnd0\expndtw0\kerning0
+\ul \ulc2 ) 
+\f1\fs26 \cf0 \kerning1\expnd0\expndtw0 \ulnone showed that is was practical to create programs via editing {\field{\*\fldinst{HYPERLINK "scrivcmt://A62A68BC-456B-422D-917E-949BB721BD40"}}{\fldrslt operations.}}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 Denotational Semantics\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+Work on denotational semantics began to investigate programming \ul atoms\ulnone . At first, denotational semantics systems were mammoth in size.  Work by Peter Lee (Realistic Compiler Generation {\field{\*\fldinst{HYPERLINK "https://mitpress.mit.edu/books/realistic-compiler-generation"}}{\fldrslt 
+\f4\fs24 \cf2 \expnd0\expndtw0\kerning0
+\ul https://mitpress.mit.edu/books/realistic-compiler-generation}}) showed that, by using multiple {\field{\*\fldinst{HYPERLINK "scrivcmt://530030D5-1803-477A-9BB0-6DEF9A080842"}}{\fldrslt passes}}, realistic compilers could be built using Denotational Semantics.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 Portability\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+Portability is a chimera.  Either the languages are equivalent in power, or, a union of all possibilities results in a lesser system. The best that \'93portability\'94 can do is to rearrange instruction sequences / expressions to suit each target and smooth differences over with syntactic sugar.  Portable libraries tend to rely on #ifdef (or  CL #+
+\f3\i features
+\f1\i0 ).  The resulting code tends to be a mess and is usually hard to comprehend and to maintain. \
+\
+Code would be less of a mess if we stopped relying on {\field{\*\fldinst{HYPERLINK "scrivcmt://7BB62B66-E7F7-44DF-BFF7-C6A116F2EC33"}}{\fldrslt parameterization}} and relied instead on being able to \'93plug\'94 software components {\field{\*\fldinst{HYPERLINK "scrivcmt://4D2D7E3C-FB0D-4EF7-BE9B-8AD02B7BBD56"}}{\fldrslt together,}} snapping different modules in, as required, allowing the enclosing code module to act as a coordinator for a specific {\field{\*\fldinst{HYPERLINK "scrivcmt://E7A73FCB-0890-4098-8C7E-C5483AB56834"}}{\fldrslt architecture.}}\
+\
+Some notable intermediate languages for portability include:\
+\
+\pard\tx220\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\li720\fi-720\sl264\slmult1\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8226 	}OCG (Cordy. \'93Orthogonal Code Generator\'94)\
+\ls2\ilvl0{\listtext	\uc0\u8226 	}RTL (Fraser Davidson, \'93Register Transfer Language\'94)\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 S/SL\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+See Holt/Cordy/Wortman \'93An Introduction to S/SL: Syntax/Semantic Language\'94 for a language that supports {\field{\*\fldinst{HYPERLINK "scrivcmt://725DB0D6-6BEA-440E-AF1C-F0F848636B21"}}{\fldrslt pipelines}} and the 
+\f3\i divide-and-conquer 
+\f1\i0 strategy, in making large problems {\field{\*\fldinst{HYPERLINK "scrivcmt://DBE156C6-B853-41AC-BE18-74F779EFCB94"}}{\fldrslt tractable.}}\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl264\slmult1\sb260\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <$ScrKeepWithNext><$Scr_H::1><$Scr_Ps::1>
+\f2\b\fs36 Events Instead of Flows\
+\pard\tx360\tx720\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\fi360\sl264\slmult1\pardirnatural\partightenfactor0
+
+\f0\b0\fs24 \cf0 <!$Scr_H::1><!$Scr_Ps::1>
+\f1\fs26 \
+FBP and Unix use flows of data streams.   I argue that events are more {\field{\*\fldinst{HYPERLINK "scrivcmt://69782E9C-CC44-4D18-B564-5D82AA49F0C8"}}{\fldrslt general.}}  Events are almost like streams, but they consist of data packets that come, randomly, at irregular {\field{\*\fldinst{HYPERLINK "scrivcmt://27ECAEB5-E50B-4379-BD9B-E41C901AC137"}}{\fldrslt times.}}}

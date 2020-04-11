@@ -1,0 +1,15 @@
+{
+  "entrypoint": "./compile-single-diagram.lisp",
+  "kindType": "leaf",
+  "platform": "loadedlisp",
+  "inPins": [
+    "svg-filename"
+  ],
+  "outPins": [
+    "name",
+    "json-file-ref",
+    "graph",
+    "lisp-graph",
+    "error"
+  ]
+}

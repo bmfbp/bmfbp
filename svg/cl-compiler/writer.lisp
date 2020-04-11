@@ -1,58 +1,79 @@
-(in-package :arrowgrams/compiler/writer)
+(in-package :arrowgrams/compiler)
 
-; (:code writer (:filename :start :next :no-more) (:request :error) #'arrowgrams/compiler/db::react #'arrowgrams/compiler/db::first-time)
+(defclass writer (compiler-part)
+  ((filename :accessor filename)
+   (chstream :accessor chstream)))
 
-(defmethod first-time ((self e/part:part))
-  (cl-event-passing-user::@set-instance-var self :state :idle)
-  (cl-event-passing-user::@set-instance-var self :filename nil)
-  (cl-event-passing-user::@set-instance-var self :stream *standard-output*))
+(defmethod e/part:busy-p ((self writer)) (call-next-method))
+(defmethod e/part:clone ((self writer)) (call-next-method))
+; (:code writer (:filename :start :next :no-more) (:request :error))
 
-(defmethod react ((self e/part:part) (e e/event:event))
+(defmethod e/part:first-time ((self writer))
+  (setf (filename self) nil)
+  (setf (chstream self) *standard-output*)
+  (call-next-method))
+
+(defmethod e/part:react ((self writer) (e e/event:event))
   (let ((action (e/event::sym e))
-        (state (cl-event-passing-user::@get-instance-var self :state)))
+        (state (state self)))
     (ecase state
       (:idle
        (ecase action
          (:filename
-          (cl-event-passing-user::@set-instance-var self :filname (e/event:data e))
+          (setf (filename self) (e/event:data e))
           (open-stream self))
          
          (:start
-          (cl-event-passing-user::@send self :request t)
-          (cl-event-passing-user::@set-instance-var self :state :writing))))
+          (@send self :request t)
+          (setf (state self) :writing))))
 
       (:writing
        (ecase action
          (:no-more
           (close-stream self)
-          (cl-event-passing-user::@set-instance-var self :state :idle))
+          (e/part:first-time self))
          (:next
           (write-fact self (e/event:data e))
-          (cl-event-passing-user::@send self :request t)))))))
+          (@send self :request t)))))))
 
-(defmethod open-stream ((self e/part:part))
-  (let ((filename (cl-event-passing-user::@get-instance-var self :filename)))
+(defmethod open-stream ((self writer))
+  (let ((filename (filename self)))
     (when filename
-      (let ((stream (open filename :direction :output :if-exists :supersede)))
-        (if stream
-            (cl-event-passing-user::@set-instance-var self :stream stream)
-          (cl-event-passing-user::@send self :error (format nil "can't open file ~S" filename)))))))
+      (let ((chstream (open filename :direction :output :if-exists :supersede)))
+        (if chstream
+            (setf (chstream self) chstream)
+          (@send self :error (format nil "can't open file ~S" filename)))))))
 
-(defmethod close-stream ((self e/part:part))
-  (let ((filename (cl-event-passing-user::@get-instance-var self :filename))
-        (stream (cl-event-passing-user::@get-instance-var self :stream)))
+(defmethod close-stream ((self writer))
+  (let ((filename (filename self))
+        (chstream (chstream self)))
     (when (and filename
-               stream
-               (not (eq *standard-output* stream)))
-      (close stream))))
+               chstream
+               (not (eq *standard-output* chstream)))
+      (close chstream))))
   
 
-(defmethod write-fact ((self e/part:part) fact)
-  (let ((stream (cl-event-passing-user::@get-instance-var self :stream)))
-    (if (= 2 (length fact))
-        (format stream "~a(~a).~%" (first fact) (second fact))
-      (if (= 3 (length fact))
-          (format stream "~a(~a,~a).~%" (first fact) (second fact) (third fact))
-        (cl-event-passing-user::@send self :error (format nil "facts must be length 2 or 3, but got ~S" fact))))))
-  
-  
+(defmethod write-fact ((self writer) lfact)
+  (let ((chstream (chstream self)))
+    (unless (listp lfact)
+      (@send self :error (format nil "facts must be a list, but got ~S" lfact)))
+    (let ((fact (car lfact)))
+      (if (not (or (= 3 (length fact)) (= 2 (length fact))))
+          (progn
+            (@send self :error (format nil "WRITER warning: facts must be length 2 or 3, but got ~S" lfact))
+            (ecase (length fact)
+              (4 (format chstream "~a(~s,~s,~s).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)))
+              (5 (format chstream "~a(~s,~s,~s,~s).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)
+                         (sixth fact)))
+              (6 (format chstream "~a(~s,~s,~s,~s,~s).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)
+                         (sixth fact) (seventh fact)))
+              (7 (format chstream "~a(~s,~s,~s,~s,~s,~s).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)
+                         (sixth fact) (seventh fact) (eighth fact)))
+              (8 (format chstream "~a(~s,~s,~s,~s,~s,~s,~s).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)
+                         (sixth fact) (seventh fact) (eighth fact) (ninth fact)))
+              (9 (format chstream "~a(~s,~s,~s,~s,~s,~s,~s,~s).~%" (first fact) (second fact) (third fact) (fourth fact) (fifth fact)
+                         (sixth fact) (seventh fact) (eighth fact) (ninth fact) (tenth fact)))))
+        (if (= 2 (length fact))
+            (format chstream "~a(~s).~%" (first fact) (second fact))
+          (if (= 3 (length fact))
+              (format chstream "~a(~s,~s).~%" (first fact) (second fact) (third fact))))))))

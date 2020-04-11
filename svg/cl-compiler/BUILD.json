@@ -1,0 +1,22 @@
+{
+  "name" : "BUILD",
+  "inputs" : ["SVG-FILENAME", "DONE"],
+  "outputs" : ["DONE", "JSON-COLLECTION", "ERROR"],
+  "parts" :
+  [
+    { "partName" : "BUILD-COLLECTOR", "kindName" : "BUILD-COLLECTOR"},
+    { "partName" : "BUILD-RECURSIVE", "kindName" : "BUILD-RECURSIVE"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "BUILD-RECURSIVE", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "BUILD-RECURSIVE", "pin" : "CODE-PART-DESCRIPTOR"}], "receivers" : [{"part" : "BUILD-COLLECTOR", "pin" : "DESCRIPTOR"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "BUILD-RECURSIVE", "pin" : "NAME"}], "receivers" : [{"part" : "BUILD-COLLECTOR", "pin" : "NAME"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "BUILD-RECURSIVE", "pin" : "GRAPH"}], "receivers" : [{"part" : "BUILD-COLLECTOR", "pin" : "GRAPH"}]},
+      {"wire-index" : 4, "sources" : [{"part" : "SELF", "pin" : "SVG-FILENAME"}], "receivers" : [{"part" : "BUILD-RECURSIVE", "pin" : "SVG-FILENAME"}]},
+      {"wire-index" : 5, "sources" : [{"part" : "BUILD-COLLECTOR", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 6, "sources" : [{"part" : "BUILD-COLLECTOR", "pin" : "FINAL-CODE"}], "receivers" : [{"part" : "SELF", "pin" : "JSON-COLLECTION"}]},
+      {"wire-index" : 7, "sources" : [{"part" : "BUILD-COLLECTOR", "pin" : "DONE"}], "receivers" : [{"part" : "SELF", "pin" : "DONE"}]},
+      {"wire-index" : 8, "sources" : [{"part" : "SELF", "pin" : "DONE"}], "receivers" : [{"part" : "BUILD-COLLECTOR", "pin" : "DONE"}]}
+    ]
+  }

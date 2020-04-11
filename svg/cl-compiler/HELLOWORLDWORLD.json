@@ -1,0 +1,20 @@
+{
+  "name" : "HELLOWORLDWORLD",
+  "inputs" : ["START"],
+  "outputs" : ["RESULT"],
+  "parts" :
+  [
+    { "partName" : "STRING-JOIN2", "kindName" : "STRING-JOIN2"},
+    { "partName" : "STRING-JOIN", "kindName" : "STRING-JOIN"},
+    { "partName" : "WORLD", "kindName" : "WORLD"},
+    { "partName" : "HELLO", "kindName" : "HELLO"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "HELLO", "pin" : "S"}], "receivers" : [{"part" : "STRING-JOIN", "pin" : "A"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "WORLD", "pin" : "S"}], "receivers" : [{"part" : "STRING-JOIN2", "pin" : "B"},{"part" : "STRING-JOIN", "pin" : "B"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "STRING-JOIN", "pin" : "C"}], "receivers" : [{"part" : "STRING-JOIN2", "pin" : "A"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "SELF", "pin" : "START"}], "receivers" : [{"part" : "WORLD", "pin" : "START"},{"part" : "HELLO", "pin" : "START"}]},
+      {"wire-index" : 4, "sources" : [{"part" : "STRING-JOIN2", "pin" : "C"}], "receivers" : [{"part" : "SELF", "pin" : "RESULT"}]}
+    ]
+  }

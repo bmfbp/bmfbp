@@ -73,5 +73,12 @@ Parts cannot communicate directly with each other - they can only send events up
 \f1\i0  delivered to its destination(s) immediately, but is placed on the output queue of the part.  The Dispatcher delivers the queued-up output events only after the part has completed processing of a single event.\
 {\listtext	\uc0\u9702 	}Parts must always run to completion.  Parts must not employ infinite loops (nor infinite {\field{\*\fldinst{HYPERLINK "scrivcmt://718EE856-1A86-4112-AFF9-D2963151A58C"}}{\fldrslt recursion)}}.\
 {\listtext	\uc0\u9702 	}Input pins of a schematic can be directly connected to the output pins of that same schematic.\
+{\listtext	\uc0\u9702 	}Arrograms Parts differ from functions in other languages, in that Parts are fully {\field{\*\fldinst{HYPERLINK "scrivcmt://3624EF7B-5B47-4C5B-87AF-A00C6421A6BE"}}{\fldrslt concurrent}} - it is not possible to know in what order Parts are invoked.\
 {\listtext	\uc0\u9702 	}The astute reader will notice that our system resembles the ideas of mutual multi-tasking and event loops.  These ideas were tried only in operating systems before being discarded.  The ideas, though, remain valid for programming-language level systems such as Arrowgrams.\
+{\listtext	\uc0\u9702 	}Every 
+\f2\i kind
+\f1\i0  specifies one or two operations - (1) an optional {\field{\*\fldinst{HYPERLINK "scrivcmt://EDFE3EE7-9C5B-40E0-A35E-BCFF55B05F59"}}{\fldrslt function}} that is called before the system starts and (2) a mandatory {\field{\*\fldinst{HYPERLINK "scrivcmt://08522E41-F9C6-4B79-A9C5-38DF4D36157D"}}{\fldrslt function}} that is called every time the Part is required to process one input event.\
+{\listtext	\uc0\u9702 	}Outputs from an output queue will be delivered in the order they were created.\
+\pard\tx560\tx1080\tx1440\tx1800\tx2160\tx2880\tx3600\tx4320\sl264\slmult1\pardirnatural\partightenfactor0
+\cf0 \
 }

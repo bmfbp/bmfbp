@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./build-graph-in-memory.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "done",
+      "json-script"
+  ],
+  "outPins": [
+      "json-collection",
+      "error"
+  ]
+}

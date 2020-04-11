@@ -190,14 +190,14 @@
 		<real>1.5</real>
 	</dict>
 	<key>mainWindowFrame</key>
-	<string>447 133 1246 882 0 0 1920 1057 </string>
+	<string>2033 144 1246 882 1920 0 1920 1057 </string>
 	<key>supportingDocumentEditor.dockedQRTextSettings</key>
 	<dict>
 		<key>textScaleFactor</key>
 		<real>1.5</real>
 	</dict>
 	<key>supportingDocumentEditor.scrollRect</key>
-	<string>{{0, 0}, {479.33333333333331, 516}}</string>
+	<string>{{0, 1170.6666666666667}, {479.33333333333331, 516}}</string>
 	<key>supportingDocumentEditor.textEditorState</key>
 	<dict>
 		<key>textScaleFactor</key>

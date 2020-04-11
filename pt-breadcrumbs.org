@@ -10,6 +10,13 @@
    (ql:quickload :arrowgrams/build/cl-build/atest)
    (arrowgrams/build/cl-build::atest)
 
+
+** working on bmfbp/svg/cl-compiler
+   (ctest)
+
+
+** add-kinds working, now on to add-self-ports
+
 * todo
 ** cut loops system over to bmfbp
 ** cut cl-event-passing system over to bmfbp
@@ -23,12 +30,27 @@
 ** esrap:trace-rule ... :recursive t dies if rule is not defined (typo)
 ** revert back to new esrap
 
+
+** remove cl-user:: from bounding box code
+
+** rewrite complete-fb in VALUEs returned by ...util::retract-fact
+
+
+** figure out why missing demux from parts list of passes did not raise an error, even though it was referenced (((:self :go))(demux :go))
+
 * git branches
 ** master
 ** pt-20191129-json - build json parser using PEG parser builder part in bmfbp/clparts
    no Spacing in test.peg --> first test is to remove all whitespace, when that works, we'll add Spacing rules
 
 ** pt-20191208-compiler - compiler rewrite
+
+<<<<<<< HEAD
+** pt-20191210-compiler - compiler with most parts stubbed out, 1st 5 parts working (up to and including assign-parents-to-ellipses)
+=======
+
+** pt-20191223-sample-diagrams - (stashed) pt working on diagrams from Ken
+** translate-editor-output-to-compiler-input - kens diagrams 20191224
 
 * git kraken
 ** merge, drag one branch and drop it onto another
@@ -67,3 +89,6 @@
 ** spec kernel in pseudo code / JS
 ** create new branch pt-20191208-compiler, new subdir bmfbp/svg/cl-compiler, used cl-event-passing and cl-holm-prolog to rebuild compiler
 ** create new branch pt-20191209-compiler, based off master, new subdir bmfbp/svg/cl-compiler, used cl-event-passing and cl-holm-prolog to rebuild compiler
+
+* rules
+** used(x) x is always a text-id, e.g. text(x,s)

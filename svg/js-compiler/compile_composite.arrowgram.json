@@ -1,0 +1,236 @@
+{
+    "canvasItems": [
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 14,
+            "item": {
+                "points": [
+                    {
+                        "x": 696,
+                        "y": 637
+                    },
+                    {
+                        "x": 655,
+                        "y": 802
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "manifestPath": "",
+            "kindName": "",
+            "sinkPinName": "",
+            "sourcePinName": "out"
+        },
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 13,
+            "item": {
+                "points": [
+                    {
+                        "x": 295,
+                        "y": 576
+                    },
+                    {
+                        "x": 291,
+                        "y": 711
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "manifestPath": "",
+            "kindName": "",
+            "sinkPinName": "",
+            "sourcePinName": "out"
+        },
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 12,
+            "item": {
+                "points": [
+                    {
+                        "x": 750,
+                        "y": 366
+                    },
+                    {
+                        "x": 694,
+                        "y": 536
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "manifestPath": "",
+            "kindName": "",
+            "sinkPinName": "in",
+            "sourcePinName": "out"
+        },
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 11,
+            "item": {
+                "points": [
+                    {
+                        "x": 652,
+                        "y": 366
+                    },
+                    {
+                        "x": 295,
+                        "y": 476
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "manifestPath": "",
+            "kindName": "",
+            "sinkPinName": "in",
+            "sourcePinName": "metadata"
+        },
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 10,
+            "item": {
+                "points": [
+                    {
+                        "x": 706,
+                        "y": 98
+                    },
+                    {
+                        "x": 752,
+                        "y": 266
+                    }
+                ],
+                "tag": "Polyline"
+            },
+            "manifestPath": "",
+            "kindName": "",
+            "sinkPinName": "in",
+            "sourcePinName": ""
+        },
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 6,
+            "item": {
+                "bottomRight": {
+                    "x": 332,
+                    "y": 828
+                },
+                "tag": "Ellipse",
+                "topLeft": {
+                    "x": 183,
+                    "y": 705
+                }
+            },
+            "manifestPath": "",
+            "kindName": "part refs",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp.git",
+            "id": 4,
+            "item": {
+                "bottomRight": {
+                    "x": 296,
+                    "y": 576
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 196,
+                    "y": 476
+                }
+            },
+            "manifestPath": "build_process/parts/json_array_splitter.json",
+            "kindName": "json array splitter",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 3,
+            "item": {
+                "bottomRight": {
+                    "x": 696,
+                    "y": 881
+                },
+                "tag": "Ellipse",
+                "topLeft": {
+                    "x": 499,
+                    "y": 791
+                }
+            },
+            "manifestPath": "",
+            "kindName": "schematic json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp.git",
+            "id": 2,
+            "item": {
+                "bottomRight": {
+                    "x": 697,
+                    "y": 636
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 597,
+                    "y": 536
+                }
+            },
+            "manifestPath": "build_process/parts/compile_one_diagram.json",
+            "kindName": "compile one arrowgram",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "gitRef": "master",
+            "gitUrl": "https://github.com/bmfbp/bmfbp.git",
+            "id": 1,
+            "item": {
+                "bottomRight": {
+                    "x": 753,
+                    "y": 366
+                },
+                "tag": "Rect",
+                "topLeft": {
+                    "x": 653,
+                    "y": 266
+                }
+            },
+            "manifestPath": "build_process/parts/split_diagram.json",
+            "kindName": "split arrowgram",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        },
+        {
+            "gitRef": "",
+            "gitUrl": "",
+            "id": 0,
+            "item": {
+                "bottomRight": {
+                    "x": 775,
+                    "y": 99
+                },
+                "tag": "Ellipse",
+                "topLeft": {
+                    "x": 621,
+                    "y": -8
+                }
+            },
+            "manifestPath": "",
+            "kindName": "arrowgram json",
+            "sinkPinName": "",
+            "sourcePinName": ""
+        }
+    ],
+    "moduleName": "default-component-name",
+    "version": "2019-12-19"
+}

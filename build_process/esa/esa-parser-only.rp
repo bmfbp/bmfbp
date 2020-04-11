@@ -1,0 +1,209 @@
+= esa-dsl
+  @types
+  @kinds
+  @aux
+  @scripts
+  EOF
+
+- keyword
+  [ ?SYMBOL
+    [ ?SYMBOL/type ^ok
+    | ?SYMBOL/kind ^ok
+    | ?SYMBOL/end ^ok
+    | ?SYMBOL/proto ^ok
+    | ?SYMBOL/method ^ok
+    | ?SYMBOL/script ^ok
+    | ?SYMBOL/aux ^ok
+    | ?SYMBOL/let ^ok
+    | ?SYMBOL/map ^ok
+    | ?SYMBOL/in ^ok
+    | ?SYMBOL/loop ^ok
+    | ?SYMBOL/if ^ok
+    | ?SYMBOL/then ^ok
+    | ?SYMBOL/else ^ok
+    | * ^fail
+    ]
+  | * ^fail
+  ]
+
+- non-keyword-symbol
+  [ ?SYMBOL
+    [ &keyword ^fail
+    | * ^ok
+    ]
+  | * ^fail
+  ]
+
+= types
+  {[ ?SYMBOL/type @type
+   | * >
+  ]}
+
+= type
+  SYMBOL/type @esa-symbol
+
+= kinds
+  {[ ?SYMBOL/kind @kind
+   | * >
+  ]}
+
+= aux
+  {[ ?SYMBOL/aux @aux
+   | * >
+  ]}
+
+= scripts
+  {[ ?SYMBOL/script @script-definition
+   | * >
+  ]}
+
+= kind
+  SYMBOL/kind
+  @esa-symbol
+  @optional-prototype
+  {[ ?SYMBOL/script @script-decl
+   | ?SYMBOL/method @method-decl
+   | ?SYMBOL/field @field-decl
+   | * >
+  ]}
+  SYMBOL/end SYMBOL/kind
+
+= optional-prototype
+  [ ?SYMBOL/proto SYMBOL/proto @esa-symbol
+  | *
+  ]
+
+= aux
+  SYMBOL/aux
+  @esa-symbol
+  {[ ?SYMBOL/field @field-decl
+   | ?SYMBOL/method @method-decl
+   | ?SYMBOL/script @script-decl
+   | * >
+  ]}
+  SYMBOL/end SYMBOL/aux
+
+= field-decl
+  SYMBOL/field
+  [ ?SYMBOL/map @map-decl
+  | &non-keyword-symbol @esa-symbol
+  | *
+  ]
+
+= method-decl
+  SYMBOL/method @esa-symbol @typed-formals @return-type
+  
+= script-decl
+  SYMBOL/script @esa-symbol @typed-formals @return-type
+
+= map-decl
+  SYMBOL/map @esa-symbol
+  
+= typed-formals
+  [ ?'(' '(' type-list ')'
+  | *
+  ]
+
+= type-list
+  @esa-symbol
+  {[ &non-keyword-symbol @esa-symbol
+   | * >
+  ]}
+  
+= return-type
+  [ ?'>' '>' '>' [ ?SYMBOL/map SYMBOL/map @esa-symbol | @esa-symbol ]
+  | *
+  ]
+  
+= script-definition
+  SYMBOL/script @qualified-symbol @formals @return-type
+  @script-body
+  SYMBOL/end SYMBOL/script
+
+= formals
+  {[ ?'(' '(' untyped-formals ')'
+   | * >
+  ]}
+
+= untyped-formals
+  {[ &non-keyword-symbol @esa-symbol
+   | * >
+  ]}
+
+= script-body
+  {[ ?SYMBOL/let @let-statement
+   | ?SYMBOL/map @map-statement
+   | ?SYMBOL/if @if-statement
+   | ?SYMBOL/loop @loop-statement
+   | ?SYMBOL/exit-when @exit-when-statement
+   | ?'>' @return-statement
+   | ?'@' @script-call
+   | &non-keyword-symbol @method-call
+   | * >
+  ]}
+
+= let-statement
+  SYMBOL/let @esa-symbol '=' @esa-expr SYMBOL/in @script-body SYMBOL/end SYMBOL/let
+  
+= map-statement
+  SYMBOL/map @esa-symbol '=' @esa-expr SYMBOL/in @script-body SYMBOL/end SYMBOL/map
+
+= loop-statement
+  SYMBOL/loop
+    @script-body
+  SYMBOL/end SYMBOL/loop
+  
+= exit-when-statement
+  SYMBOL/exit-when
+    @esa-expr
+
+= if-statement
+  SYMBOL/if
+    @esa-expr
+  SYMBOL/then
+    @script-body
+  [ ?SYMBOL/else SYMBOL/else @script-body
+  | *
+  ]
+  SYMBOL/end SYMBOL/if
+  
+= script-call
+  '@' @qualified-symbol
+  
+= method-call
+  @qualified-symbol
+
+= return-statement
+  '>' '>' @esa-symbol
+
+= qualified-symbol
+  @esa-symbol
+  @qualifiers
+  @actuals
+
+= qualifiers
+  {[ ?'.' @dotted-symbol
+   | * >
+  ]}
+  
+= actuals
+ [ ?'(' '(' {[ &non-keyword-symbol @esa-symbol | * > ]} ')'
+ | *
+ ]
+
+= dotted-symbol
+  '.' @esa-symbol
+
+= esa-symbol
+  SYMBOL @esa-symbol-follow
+
+= esa-symbol-follow
+  {[ ?'/' '/' SYMBOL
+   | ?'-' '-' SYMBOL
+   | ?'?' '?' >
+   | * >
+  ]}
+
+= esa-expr
+  [ ?'@' '@' | * ]
+  @qualified-symbol

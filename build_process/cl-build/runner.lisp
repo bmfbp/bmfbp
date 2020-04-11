@@ -1,0 +1,30 @@
+(in-package :arrowgrams/build)
+
+(defclass runner (builder)
+  ()
+)
+
+(defmethod e/part:first-time ((self runner))
+)
+
+(defmethod e/part:react ((self runner) e)
+  #+nil(format *standard-output* "~&**** runner gets pin ~s~%" (@pin self e))
+  (let ((kgraph (@data self e)))
+    (let ((d (make-instance 'dispatcher)))  ;; make one "global" dispatcher
+      #+nil(format *standard-output* "~&**** loading~%")
+      (let ((n (loader kgraph "TOP" nil d)))
+        (set-top-node d n)
+        #+nil(format *standard-output* "~&**** injecting input into top node~%")
+	(let ((ev (make-instance 'event))
+              (pp (make-instance 'part-pin)))
+	  (setf (part-name pp) "self")
+	  (setf (pin-name pp) "start")
+          (setf (partpin ev) pp)
+	  (setf (data ev) t)
+	  (enqueue-input n ev)
+          #+ni(format *standard-output* "~&**** initially~&")
+          (initialize-all d)
+          #+nil(format *standard-output* "~&**** run phase~%")
+          (run-graph d)
+          kgraph)))))
+

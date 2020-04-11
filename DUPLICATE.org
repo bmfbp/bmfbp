@@ -1,0 +1,58 @@
+* instructions for duplication March 29/2020
+  ** 0a. get SBCL  (mac brew? macports? installed with linux?)
+  ** 0b. get quicklisp (mac brew?) https://www.quicklisp.org/beta/ and install
+  ** 0c. install Haskell
+     linux mint: $ sudo apt-get install haskell-platform,
+     https://docs.haskellstack.org/en/stable/README/)
+  ** mkdir -p ~/bin
+**  1a. clone pt repos
+   os> cd ~/quicklisp/local-projects/
+   os> git clone git@github.com:guitarvydas/cl-event-passing.git
+   os> git clone git@github.com:guitarvydas/cl-holm-prolog.git
+   os> git clone git@github.com:guitarvydas/loops.git
+   os> git clone git@github.com:guitarvydas/cl-peg.git
+   os> git clone git@github.com:guitarvydas/sl.git
+**  1b. clone arrowgrams repo
+   os> git clone git@github.com:bmfbp/bmfbp.git
+   os> cd ~/quicklisp/local-projects/bmfbp
+   os> git checkout pt-20200106
+   # builds the Haskell arrowgrams front end into ~/bin
+   os> make
+** 2. refresh quicklisp
+   os> cd ~/quicklisp/local-projects/bmfbp
+   os> sbcl
+   sbcl> (quicklisp:register-local-projects)
+     (this returns NIL on success, with no other messages)
+   sbcl> (exit)
+** 3. run
+   os> cd ~/quicklisp/local-projects/bmfbp
+   os> sbcl
+   sbcl> (quicklisp:quickload :arrowgrams/build)
+   sbcl> (arrowgrams/build::helloworld)
+   << screen-fulls of debug - the last line matters the most 
+      "TOP" outputs on pin "result" : "helloworld" >>
+   sbcl> (exit)
+   ;; use ^D or (exit) to quit sbcl
+   ;; if you get a restart traceback choose the ABORT option and report to me - usually a single digit followed by RETURN
+** 4. edit and repeat
+   use drawio to make a simple change to ~/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.drawio
+     (for example, draw a line from the "start" ellipse and join it to the "result" ellipse, 
+      this should produce two outputs: T and "helloworld")
+     (Export as>>SVG >> EXPORT >> helloworld.svg >> SAVE)
+     (quit draw.io)
+   os> cd ~/quicklisp/local-projects/bmfbp
+   os> sbcl
+   sbcl> (quicklisp:quickload :arrowgrams/build)
+   sbcl> (arrowgrams/build::helloworld)
+    ...
+    react node "TOP"
+    "TOP" outputs on pin "result" : T
+    react "world"
+    react "string-join" with "string-join" "b" "world"
+    react "hello"
+    react "string-join" with "string-join" "a" "hello"
+    "TOP" outputs on pin "result" : "helloworld"
+   sbcl> (exit)
+
+** (5.) If you want to see the graph
+   os> vi ~/quicklisp/local-projects/bmfbp/build_process/cl-build/helloworld.graph.json

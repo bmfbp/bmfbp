@@ -1,0 +1,16 @@
+rect(id391).
+bounding_box_left(id391,3585.0).
+bounding_box_top(id391,450.0).
+bounding_box_right(id391,3665.0).
+bounding_box_bottom(id391,530.0).
+text(idUnusedText,struidG1).
+bounding_box_left(idUnusedText,3585.0).
+bounding_box_top(idUnusedText,450.0).
+bounding_box_right(idUnusedText,3665.0).
+bounding_box_bottom(idUnusedText,530.0).
+text(idUsedText,struidG2).
+bounding_box_left(idUsedText,3585.0).
+bounding_box_top(idUsedText,450.0).
+bounding_box_right(idUsedText,3665.0).
+bounding_box_bottom(idUsedText,530.0).
+used(idUsedText).

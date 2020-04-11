@@ -1,0 +1,62 @@
+
+Each Schematic (Composite) contains {parts-list, wiring-list}.  We might include a "kindName" and "partName" for the schematic, but they are redundant.  The kind is defined by the schematic itself.  The partName is never used inside the schematic itself and is completely redundant.  (A higher-level schematic needs to assign a unique partName to this schematic, if it uses this schematic in its part list).
+
+A parts-list is a list of parts.
+
+A Part is { unique-id, kind, first-time-function, reaction-function, input-list, output-list }.
+
+
+
+A wiring list contains a list of wires.
+
+Each wire (edge) is {unique-id, list-of-sources, list-of-sinks}.
+
+NCs (No-Connection) simply don't appear in the list (NCs do appear on the diagram, but the text list is not for human consumption and omits NCs).
+
+
+A source is { part-id, output-pin-name} or { "SELF" : self-input-pin-name }.
+
+Likewise, a sink is { part-id, input-pin-name } or { "SELF" : self-output-pin-name }.
+
+
+
+
+Here is the (untested) unoptimized version of composites.  This *should* be simpler than the optimized version:
+
+part :
+[
+"partName" : "SELF", // redundant?
+"partKind" : "<...>",
+"parts" : {
+  {
+    "partName" : <...>, // unique id for instance
+    "kindName" : <...>, // kind name
+    "first-time" : <function ref>,
+    "react" : <function ref>,
+    "inputs" : { "...", "...", ...},
+    "outputs" : { "...", "...", ...}
+  },
+  {
+    "partName" : <...>, // unique id for instance
+    "kindName" : <...>, // kind name
+    "first-time" : <function ref>,
+    "react" : <function ref>,
+    "inputs" : { "...", "...", ...},
+    "outputs" : { "...", "...", ...}
+  },
+  ...
+}
+"wiring" : { 
+  { "wire-id" : <...>, "sources" : <...>, "sinks" : <...> },
+  { "wire-id" : <...>, "sources" : <...>, "sinks" : <...> },
+  { "wire-id" : <...>, "sources" : <...>, "sinks" : <...> },
+  { "wire-id" : <...>, "sources" : <...>, "sinks" : <...> },
+  ...
+  }
+
+A source (and a sink) is:
+
+{ "part-id" : "pin-name" }
+
+
+A wiring list BELONGs to the parent schematic.  In our optimized version, we embedded the wiring list into each part (inPins and outPins) which then led to the need for "inMap" and "outMap".  We, also, assigned an integer to each wire (edge).
