@@ -29,7 +29,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "add-self-ports ")
              (create-self-ports self)
              (@send self :done t)
              (e/part:first-time self))

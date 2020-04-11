@@ -29,7 +29,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "/COMMENTED OUT sem-parts-have-some-ports/ ")
              ;(sem-parts-have-some-ports self)
              (@send self :done t)
              (e/part:first-time self))

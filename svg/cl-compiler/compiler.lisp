@@ -41,7 +41,6 @@
 	(compiler-event-passing filename map-filename output-filename)))))
 
 (defun get-compiler-net ()
-(format *standard-output* "~&in compiler-event-passing~%")
   (let ((compiler-net (cl-event-passing-user::@defnetwork compiler
 
            (:code probe (:in) (:out))
@@ -376,10 +375,8 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
   (load "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/package.lisp")
   (ql:quickload :arrowgrams/parser)
-  (format *standard-output* "~&~%test~%~%")
   (ql:quickload :arrowgrams/compiler)
   #+lispworks(hcl:change-directory "~/quicklisp/local-projects/bmfbp/svg/cl-compiler/")
-  (format *standard-output* "running (arrowgrams/compiler::compiler)~%")
   (arrowgrams/compiler::main))
 (defun cl-user::ctest () (arrowgrams/compiler::ctest))
 

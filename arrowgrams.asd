@@ -329,8 +329,10 @@
                                      (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json" "util" "graph-class"))
                                      (:file "graph" :depends-on ("package" "classes" "util" "esa" "graph-class"))
                                      (:file "runner" :depends-on ("package" "classes" "util" "graph"))
+                                     (:file "my-command-line" :depends-on ("package"))
 				     (:file "build" :depends-on ("package" "classes" "json"
                                                                  "probe" "probe2" "probe3"
+                                                                 "my-command-line"
                                                                  "file-writer"
                                                                  "part-namer" "json-array-splitter"
                                                                  "schematic-or-leaf" "build-collector"
