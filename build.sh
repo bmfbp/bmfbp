@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$(pwd)"
-VERSION="0.1"
+VERSION="0.1.1"
 PROJECT_ROOT="/root/quicklisp/local-projects/bmfbp"
 ARROWGRAMS_BRANCH="master"
 

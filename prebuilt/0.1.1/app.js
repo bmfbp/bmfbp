@@ -80,6 +80,271 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
 console.warn('Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.0/optimize for better performance and smaller assets.');
 
 
+var _List_Nil_UNUSED = { $: 0 };
+var _List_Nil = { $: '[]' };
+
+function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
+function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
+
+
+var _List_cons = F2(_List_Cons);
+
+function _List_fromArray(arr)
+{
+	var out = _List_Nil;
+	for (var i = arr.length; i--; )
+	{
+		out = _List_Cons(arr[i], out);
+	}
+	return out;
+}
+
+function _List_toArray(xs)
+{
+	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		out.push(xs.a);
+	}
+	return out;
+}
+
+var _List_map2 = F3(function(f, xs, ys)
+{
+	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
+	{
+		arr.push(A2(f, xs.a, ys.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map3 = F4(function(f, xs, ys, zs)
+{
+	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A3(f, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map4 = F5(function(f, ws, xs, ys, zs)
+{
+	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
+{
+	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
+	{
+		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
+	}
+	return _List_fromArray(arr);
+});
+
+var _List_sortBy = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		return _Utils_cmp(f(a), f(b));
+	}));
+});
+
+var _List_sortWith = F2(function(f, xs)
+{
+	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
+		var ord = A2(f, a, b);
+		return ord === elm$core$Basics$EQ ? 0 : ord === elm$core$Basics$LT ? -1 : 1;
+	}));
+});
+
+
+
+// EQUALITY
+
+function _Utils_eq(x, y)
+{
+	for (
+		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
+		isEqual && (pair = stack.pop());
+		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
+		)
+	{}
+
+	return isEqual;
+}
+
+function _Utils_eqHelp(x, y, depth, stack)
+{
+	if (depth > 100)
+	{
+		stack.push(_Utils_Tuple2(x,y));
+		return true;
+	}
+
+	if (x === y)
+	{
+		return true;
+	}
+
+	if (typeof x !== 'object' || x === null || y === null)
+	{
+		typeof x === 'function' && _Debug_crash(5);
+		return false;
+	}
+
+	/**/
+	if (x.$ === 'Set_elm_builtin')
+	{
+		x = elm$core$Set$toList(x);
+		y = elm$core$Set$toList(y);
+	}
+	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
+	{
+		x = elm$core$Dict$toList(x);
+		y = elm$core$Dict$toList(y);
+	}
+	//*/
+
+	/**_UNUSED/
+	if (x.$ < 0)
+	{
+		x = elm$core$Dict$toList(x);
+		y = elm$core$Dict$toList(y);
+	}
+	//*/
+
+	for (var key in x)
+	{
+		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+var _Utils_equal = F2(_Utils_eq);
+var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
+
+
+
+// COMPARISONS
+
+// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
+// the particular integer values assigned to LT, EQ, and GT.
+
+function _Utils_cmp(x, y, ord)
+{
+	if (typeof x !== 'object')
+	{
+		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
+	}
+
+	/**/
+	if (x instanceof String)
+	{
+		var a = x.valueOf();
+		var b = y.valueOf();
+		return a === b ? 0 : a < b ? -1 : 1;
+	}
+	//*/
+
+	/**_UNUSED/
+	if (typeof x.$ === 'undefined')
+	//*/
+	/**/
+	if (x.$[0] === '#')
+	//*/
+	{
+		return (ord = _Utils_cmp(x.a, y.a))
+			? ord
+			: (ord = _Utils_cmp(x.b, y.b))
+				? ord
+				: _Utils_cmp(x.c, y.c);
+	}
+
+	// traverse conses until end of a list or a mismatch
+	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
+	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
+}
+
+var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
+var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
+var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
+var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
+
+var _Utils_compare = F2(function(x, y)
+{
+	var n = _Utils_cmp(x, y);
+	return n < 0 ? elm$core$Basics$LT : n ? elm$core$Basics$GT : elm$core$Basics$EQ;
+});
+
+
+// COMMON VALUES
+
+var _Utils_Tuple0_UNUSED = 0;
+var _Utils_Tuple0 = { $: '#0' };
+
+function _Utils_Tuple2_UNUSED(a, b) { return { a: a, b: b }; }
+function _Utils_Tuple2(a, b) { return { $: '#2', a: a, b: b }; }
+
+function _Utils_Tuple3_UNUSED(a, b, c) { return { a: a, b: b, c: c }; }
+function _Utils_Tuple3(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
+
+function _Utils_chr_UNUSED(c) { return c; }
+function _Utils_chr(c) { return new String(c); }
+
+
+// RECORDS
+
+function _Utils_update(oldRecord, updatedFields)
+{
+	var newRecord = {};
+
+	for (var key in oldRecord)
+	{
+		newRecord[key] = oldRecord[key];
+	}
+
+	for (var key in updatedFields)
+	{
+		newRecord[key] = updatedFields[key];
+	}
+
+	return newRecord;
+}
+
+
+// APPEND
+
+var _Utils_append = F2(_Utils_ap);
+
+function _Utils_ap(xs, ys)
+{
+	// append Strings
+	if (typeof xs === 'string')
+	{
+		return xs + ys;
+	}
+
+	// append Lists
+	if (!xs.b)
+	{
+		return ys;
+	}
+	var root = _List_Cons(xs.a, ys);
+	xs = xs.b
+	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
+	{
+		curr = curr.b = _List_Cons(xs.a, ys);
+	}
+	return root;
+}
+
+
+
 var _JsArray_empty = [];
 
 function _JsArray_singleton(value)
@@ -525,271 +790,6 @@ function _Debug_regionToString(region)
 	}
 	return 'on lines ' + region.start.line + ' through ' + region.end.line;
 }
-
-
-
-// EQUALITY
-
-function _Utils_eq(x, y)
-{
-	for (
-		var pair, stack = [], isEqual = _Utils_eqHelp(x, y, 0, stack);
-		isEqual && (pair = stack.pop());
-		isEqual = _Utils_eqHelp(pair.a, pair.b, 0, stack)
-		)
-	{}
-
-	return isEqual;
-}
-
-function _Utils_eqHelp(x, y, depth, stack)
-{
-	if (depth > 100)
-	{
-		stack.push(_Utils_Tuple2(x,y));
-		return true;
-	}
-
-	if (x === y)
-	{
-		return true;
-	}
-
-	if (typeof x !== 'object' || x === null || y === null)
-	{
-		typeof x === 'function' && _Debug_crash(5);
-		return false;
-	}
-
-	/**/
-	if (x.$ === 'Set_elm_builtin')
-	{
-		x = elm$core$Set$toList(x);
-		y = elm$core$Set$toList(y);
-	}
-	if (x.$ === 'RBNode_elm_builtin' || x.$ === 'RBEmpty_elm_builtin')
-	{
-		x = elm$core$Dict$toList(x);
-		y = elm$core$Dict$toList(y);
-	}
-	//*/
-
-	/**_UNUSED/
-	if (x.$ < 0)
-	{
-		x = elm$core$Dict$toList(x);
-		y = elm$core$Dict$toList(y);
-	}
-	//*/
-
-	for (var key in x)
-	{
-		if (!_Utils_eqHelp(x[key], y[key], depth + 1, stack))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-var _Utils_equal = F2(_Utils_eq);
-var _Utils_notEqual = F2(function(a, b) { return !_Utils_eq(a,b); });
-
-
-
-// COMPARISONS
-
-// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
-// the particular integer values assigned to LT, EQ, and GT.
-
-function _Utils_cmp(x, y, ord)
-{
-	if (typeof x !== 'object')
-	{
-		return x === y ? /*EQ*/ 0 : x < y ? /*LT*/ -1 : /*GT*/ 1;
-	}
-
-	/**/
-	if (x instanceof String)
-	{
-		var a = x.valueOf();
-		var b = y.valueOf();
-		return a === b ? 0 : a < b ? -1 : 1;
-	}
-	//*/
-
-	/**_UNUSED/
-	if (typeof x.$ === 'undefined')
-	//*/
-	/**/
-	if (x.$[0] === '#')
-	//*/
-	{
-		return (ord = _Utils_cmp(x.a, y.a))
-			? ord
-			: (ord = _Utils_cmp(x.b, y.b))
-				? ord
-				: _Utils_cmp(x.c, y.c);
-	}
-
-	// traverse conses until end of a list or a mismatch
-	for (; x.b && y.b && !(ord = _Utils_cmp(x.a, y.a)); x = x.b, y = y.b) {} // WHILE_CONSES
-	return ord || (x.b ? /*GT*/ 1 : y.b ? /*LT*/ -1 : /*EQ*/ 0);
-}
-
-var _Utils_lt = F2(function(a, b) { return _Utils_cmp(a, b) < 0; });
-var _Utils_le = F2(function(a, b) { return _Utils_cmp(a, b) < 1; });
-var _Utils_gt = F2(function(a, b) { return _Utils_cmp(a, b) > 0; });
-var _Utils_ge = F2(function(a, b) { return _Utils_cmp(a, b) >= 0; });
-
-var _Utils_compare = F2(function(x, y)
-{
-	var n = _Utils_cmp(x, y);
-	return n < 0 ? elm$core$Basics$LT : n ? elm$core$Basics$GT : elm$core$Basics$EQ;
-});
-
-
-// COMMON VALUES
-
-var _Utils_Tuple0_UNUSED = 0;
-var _Utils_Tuple0 = { $: '#0' };
-
-function _Utils_Tuple2_UNUSED(a, b) { return { a: a, b: b }; }
-function _Utils_Tuple2(a, b) { return { $: '#2', a: a, b: b }; }
-
-function _Utils_Tuple3_UNUSED(a, b, c) { return { a: a, b: b, c: c }; }
-function _Utils_Tuple3(a, b, c) { return { $: '#3', a: a, b: b, c: c }; }
-
-function _Utils_chr_UNUSED(c) { return c; }
-function _Utils_chr(c) { return new String(c); }
-
-
-// RECORDS
-
-function _Utils_update(oldRecord, updatedFields)
-{
-	var newRecord = {};
-
-	for (var key in oldRecord)
-	{
-		newRecord[key] = oldRecord[key];
-	}
-
-	for (var key in updatedFields)
-	{
-		newRecord[key] = updatedFields[key];
-	}
-
-	return newRecord;
-}
-
-
-// APPEND
-
-var _Utils_append = F2(_Utils_ap);
-
-function _Utils_ap(xs, ys)
-{
-	// append Strings
-	if (typeof xs === 'string')
-	{
-		return xs + ys;
-	}
-
-	// append Lists
-	if (!xs.b)
-	{
-		return ys;
-	}
-	var root = _List_Cons(xs.a, ys);
-	xs = xs.b
-	for (var curr = root; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		curr = curr.b = _List_Cons(xs.a, ys);
-	}
-	return root;
-}
-
-
-
-var _List_Nil_UNUSED = { $: 0 };
-var _List_Nil = { $: '[]' };
-
-function _List_Cons_UNUSED(hd, tl) { return { $: 1, a: hd, b: tl }; }
-function _List_Cons(hd, tl) { return { $: '::', a: hd, b: tl }; }
-
-
-var _List_cons = F2(_List_Cons);
-
-function _List_fromArray(arr)
-{
-	var out = _List_Nil;
-	for (var i = arr.length; i--; )
-	{
-		out = _List_Cons(arr[i], out);
-	}
-	return out;
-}
-
-function _List_toArray(xs)
-{
-	for (var out = []; xs.b; xs = xs.b) // WHILE_CONS
-	{
-		out.push(xs.a);
-	}
-	return out;
-}
-
-var _List_map2 = F3(function(f, xs, ys)
-{
-	for (var arr = []; xs.b && ys.b; xs = xs.b, ys = ys.b) // WHILE_CONSES
-	{
-		arr.push(A2(f, xs.a, ys.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map3 = F4(function(f, xs, ys, zs)
-{
-	for (var arr = []; xs.b && ys.b && zs.b; xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A3(f, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map4 = F5(function(f, ws, xs, ys, zs)
-{
-	for (var arr = []; ws.b && xs.b && ys.b && zs.b; ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A4(f, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_map5 = F6(function(f, vs, ws, xs, ys, zs)
-{
-	for (var arr = []; vs.b && ws.b && xs.b && ys.b && zs.b; vs = vs.b, ws = ws.b, xs = xs.b, ys = ys.b, zs = zs.b) // WHILE_CONSES
-	{
-		arr.push(A5(f, vs.a, ws.a, xs.a, ys.a, zs.a));
-	}
-	return _List_fromArray(arr);
-});
-
-var _List_sortBy = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		return _Utils_cmp(f(a), f(b));
-	}));
-});
-
-var _List_sortWith = F2(function(f, xs)
-{
-	return _List_fromArray(_List_toArray(xs).sort(function(a, b) {
-		var ord = A2(f, a, b);
-		return ord === elm$core$Basics$EQ ? 0 : ord === elm$core$Basics$LT ? -1 : 1;
-	}));
-});
 
 
 
@@ -4448,39 +4448,14 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
-var author$project$Main$NoOp = {$: 'NoOp'};
-var author$project$Main$FreeFormCursor = {$: 'FreeFormCursor'};
-var author$project$Main$SingleSelect = {$: 'SingleSelect'};
-var author$project$Main$ToExplore = {$: 'ToExplore'};
-var elm$core$Maybe$Nothing = {$: 'Nothing'};
-var elm$core$Basics$EQ = {$: 'EQ'};
-var elm$core$Basics$LT = {$: 'LT'};
-var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
-var elm$core$Array$foldr = F3(
-	function (func, baseCase, _n0) {
-		var tree = _n0.c;
-		var tail = _n0.d;
-		var helper = F2(
-			function (node, acc) {
-				if (node.$ === 'SubTree') {
-					var subTree = node.a;
-					return A3(elm$core$Elm$JsArray$foldr, helper, acc, subTree);
-				} else {
-					var values = node.a;
-					return A3(elm$core$Elm$JsArray$foldr, func, acc, values);
-				}
-			});
-		return A3(
-			elm$core$Elm$JsArray$foldr,
-			helper,
-			A3(elm$core$Elm$JsArray$foldr, func, baseCase, tail),
-			tree);
+var elm$core$Array$branchFactor = 32;
+var elm$core$Array$Array_elm_builtin = F4(
+	function (a, b, c, d) {
+		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
 	});
-var elm$core$List$cons = _List_cons;
-var elm$core$Array$toList = function (array) {
-	return A3(elm$core$Array$foldr, elm$core$List$cons, _List_Nil, array);
-};
+var elm$core$Basics$EQ = {$: 'EQ'};
 var elm$core$Basics$GT = {$: 'GT'};
+var elm$core$Basics$LT = {$: 'LT'};
 var elm$core$Dict$foldr = F3(
 	function (func, acc, t) {
 		foldr:
@@ -4506,6 +4481,7 @@ var elm$core$Dict$foldr = F3(
 			}
 		}
 	});
+var elm$core$List$cons = _List_cons;
 var elm$core$Dict$toList = function (dict) {
 	return A3(
 		elm$core$Dict$foldr,
@@ -4533,34 +4509,30 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0.a;
 	return elm$core$Dict$keys(dict);
 };
-var author$project$Main$initialModel = {
-	currentItemUnderCursor: elm$core$Maybe$Nothing,
-	cursorCoords: {x: 0, y: 0},
-	cursorMode: author$project$Main$FreeFormCursor,
-	hoveredItem: elm$core$Maybe$Nothing,
-	instantiatedItems: _List_Nil,
-	intent: author$project$Main$ToExplore,
-	itemsUnderCursor: _List_Nil,
-	panCoords: {x: 0, y: 0},
-	selectedItems: _List_Nil,
-	selectionMode: author$project$Main$SingleSelect,
-	viewPortSize: _Utils_Tuple2(1000, 1000),
-	zoomFactor: 1.0
-};
-var elm$core$Basics$False = {$: 'False'};
-var elm$core$Basics$True = {$: 'True'};
-var elm$core$Result$isOk = function (result) {
-	if (result.$ === 'Ok') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var elm$core$Array$branchFactor = 32;
-var elm$core$Array$Array_elm_builtin = F4(
-	function (a, b, c, d) {
-		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
+var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
+var elm$core$Array$foldr = F3(
+	function (func, baseCase, _n0) {
+		var tree = _n0.c;
+		var tail = _n0.d;
+		var helper = F2(
+			function (node, acc) {
+				if (node.$ === 'SubTree') {
+					var subTree = node.a;
+					return A3(elm$core$Elm$JsArray$foldr, helper, acc, subTree);
+				} else {
+					var values = node.a;
+					return A3(elm$core$Elm$JsArray$foldr, func, acc, values);
+				}
+			});
+		return A3(
+			elm$core$Elm$JsArray$foldr,
+			helper,
+			A3(elm$core$Elm$JsArray$foldr, func, baseCase, tail),
+			tree);
 	});
+var elm$core$Array$toList = function (array) {
+	return A3(elm$core$Array$foldr, elm$core$List$cons, _List_Nil, array);
+};
 var elm$core$Basics$ceiling = _Basics_ceiling;
 var elm$core$Basics$fdiv = _Basics_fdiv;
 var elm$core$Basics$logBase = F2(
@@ -4685,6 +4657,7 @@ var elm$core$Array$builderToArray = F2(
 				builder.tail);
 		}
 	});
+var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$idiv = _Basics_idiv;
 var elm$core$Basics$lt = _Utils_lt;
 var elm$core$Elm$JsArray$initialize = _JsArray_initialize;
@@ -4730,11 +4703,20 @@ var elm$core$Array$initialize = F2(
 var elm$core$Maybe$Just = function (a) {
 	return {$: 'Just', a: a};
 };
+var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
 var elm$core$Result$Ok = function (a) {
 	return {$: 'Ok', a: a};
+};
+var elm$core$Basics$True = {$: 'True'};
+var elm$core$Result$isOk = function (result) {
+	if (result.$ === 'Ok') {
+		return true;
+	} else {
+		return false;
+	}
 };
 var elm$json$Json$Decode$Failure = F2(
 	function (a, b) {
@@ -4941,162 +4923,13 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 			}
 		}
 	});
-var elm$core$Platform$Cmd$batch = _Platform_batch;
-var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Main$init = F3(
-	function (flags, url, key) {
-		return _Utils_Tuple2(author$project$Main$initialModel, elm$core$Platform$Cmd$none);
-	});
-var author$project$Main$FileHasBeenRead = function (a) {
-	return {$: 'FileHasBeenRead', a: a};
-};
-var author$project$Main$KeyPress = function (a) {
-	return {$: 'KeyPress', a: a};
-};
-var author$project$Main$KeyUp = function (a) {
-	return {$: 'KeyUp', a: a};
-};
-var author$project$Main$MouseDown = function (a) {
-	return {$: 'MouseDown', a: a};
-};
-var author$project$Main$MouseMove = function (a) {
-	return {$: 'MouseMove', a: a};
-};
-var author$project$Main$MouseUp = function (a) {
-	return {$: 'MouseUp', a: a};
-};
-var author$project$Main$ViewPortHasResized = function (a) {
-	return {$: 'ViewPortHasResized', a: a};
-};
-var author$project$Main$File = F2(
-	function (moduleName, canvasItems) {
-		return {canvasItems: canvasItems, moduleName: moduleName};
-	});
-var author$project$Main$CanvasItemInstance = F9(
-	function (id, item, name, gitUrl, gitRef, contextDir, manifestPath, sourcePinName, sinkPinName) {
-		return {contextDir: contextDir, gitRef: gitRef, gitUrl: gitUrl, id: id, item: item, manifestPath: manifestPath, name: name, sinkPinName: sinkPinName, sourcePinName: sourcePinName};
-	});
-var author$project$Main$Ellipse = F2(
-	function (a, b) {
-		return {$: 'Ellipse', a: a, b: b};
-	});
-var author$project$Main$Polyline = function (a) {
-	return {$: 'Polyline', a: a};
-};
-var author$project$Main$Rect = F2(
-	function (a, b) {
-		return {$: 'Rect', a: a, b: b};
-	});
-var author$project$Main$Text = F3(
-	function (a, b, c) {
-		return {$: 'Text', a: a, b: b, c: c};
-	});
-var author$project$Main$Coordinates = F2(
+var elm$json$Json$Decode$field = _Json_decodeField;
+var elm$json$Json$Decode$string = _Json_decodeString;
+var author$project$App$keyDecoder = A2(elm$json$Json$Decode$field, 'key', elm$json$Json$Decode$string);
+var author$project$Model$Coordinates = F2(
 	function (x, y) {
 		return {x: x, y: y};
 	});
-var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$int = _Json_decodeInt;
-var elm$json$Json$Decode$map2 = _Json_map2;
-var author$project$Main$coordinatesDecoder = A3(
-	elm$json$Json$Decode$map2,
-	author$project$Main$Coordinates,
-	A2(elm$json$Json$Decode$field, 'x', elm$json$Json$Decode$int),
-	A2(elm$json$Json$Decode$field, 'y', elm$json$Json$Decode$int));
-var elm$json$Json$Decode$fail = _Json_fail;
-var elm$json$Json$Decode$list = _Json_decodeList;
-var elm$json$Json$Decode$map = _Json_map1;
-var elm$json$Json$Decode$map3 = _Json_map3;
-var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Main$canvasItemContent = function (contentType) {
-	switch (contentType) {
-		case 'Rect':
-			return A3(
-				elm$json$Json$Decode$map2,
-				author$project$Main$Rect,
-				A2(elm$json$Json$Decode$field, 'topLeft', author$project$Main$coordinatesDecoder),
-				A2(elm$json$Json$Decode$field, 'bottomRight', author$project$Main$coordinatesDecoder));
-		case 'Polyline':
-			return A2(
-				elm$json$Json$Decode$field,
-				'points',
-				A2(
-					elm$json$Json$Decode$map,
-					author$project$Main$Polyline,
-					elm$json$Json$Decode$list(author$project$Main$coordinatesDecoder)));
-		case 'Ellipse':
-			return A3(
-				elm$json$Json$Decode$map2,
-				author$project$Main$Ellipse,
-				A2(elm$json$Json$Decode$field, 'topLeft', author$project$Main$coordinatesDecoder),
-				A2(elm$json$Json$Decode$field, 'bottomRight', author$project$Main$coordinatesDecoder));
-		case 'Text':
-			return A4(
-				elm$json$Json$Decode$map3,
-				author$project$Main$Text,
-				A2(elm$json$Json$Decode$field, 'topLeft', author$project$Main$coordinatesDecoder),
-				A2(elm$json$Json$Decode$field, 'bottomRight', author$project$Main$coordinatesDecoder),
-				A2(elm$json$Json$Decode$field, 'text', elm$json$Json$Decode$string));
-		default:
-			return elm$json$Json$Decode$fail('Unrecognized canvas item content');
-	}
-};
-var elm$json$Json$Decode$andThen = _Json_andThen;
-var author$project$Main$canvasItemDecoder = A2(
-	elm$json$Json$Decode$andThen,
-	author$project$Main$canvasItemContent,
-	A2(elm$json$Json$Decode$field, 'tag', elm$json$Json$Decode$string));
-var elm$json$Json$Decode$succeed = _Json_succeed;
-var elm_community$json_extra$Json$Decode$Extra$andMap = elm$json$Json$Decode$map2(elm$core$Basics$apR);
-var author$project$Main$canvasItemInstanceDecoder = A2(
-	elm_community$json_extra$Json$Decode$Extra$andMap,
-	A2(elm$json$Json$Decode$field, 'sinkPinName', elm$json$Json$Decode$string),
-	A2(
-		elm_community$json_extra$Json$Decode$Extra$andMap,
-		A2(elm$json$Json$Decode$field, 'sourcePinName', elm$json$Json$Decode$string),
-		A2(
-			elm_community$json_extra$Json$Decode$Extra$andMap,
-			A2(elm$json$Json$Decode$field, 'manifestPath', elm$json$Json$Decode$string),
-			A2(
-				elm_community$json_extra$Json$Decode$Extra$andMap,
-				A2(elm$json$Json$Decode$field, 'contextDir', elm$json$Json$Decode$string),
-				A2(
-					elm_community$json_extra$Json$Decode$Extra$andMap,
-					A2(elm$json$Json$Decode$field, 'gitRef', elm$json$Json$Decode$string),
-					A2(
-						elm_community$json_extra$Json$Decode$Extra$andMap,
-						A2(elm$json$Json$Decode$field, 'gitUrl', elm$json$Json$Decode$string),
-						A2(
-							elm_community$json_extra$Json$Decode$Extra$andMap,
-							A2(elm$json$Json$Decode$field, 'kindName', elm$json$Json$Decode$string),
-							A2(
-								elm_community$json_extra$Json$Decode$Extra$andMap,
-								A2(elm$json$Json$Decode$field, 'item', author$project$Main$canvasItemDecoder),
-								A2(
-									elm_community$json_extra$Json$Decode$Extra$andMap,
-									A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int),
-									elm$json$Json$Decode$succeed(author$project$Main$CanvasItemInstance))))))))));
-var author$project$Main$fileDecoderSwitch = function (version) {
-	if (version === '2019-12-19') {
-		return A3(
-			elm$json$Json$Decode$map2,
-			author$project$Main$File,
-			A2(elm$json$Json$Decode$field, 'moduleName', elm$json$Json$Decode$string),
-			A2(
-				elm$json$Json$Decode$field,
-				'canvasItems',
-				elm$json$Json$Decode$list(author$project$Main$canvasItemInstanceDecoder)));
-	} else {
-		return elm$json$Json$Decode$fail('Unknown version: ' + version);
-	}
-};
-var author$project$Main$fileDecoder = A2(
-	elm$json$Json$Decode$andThen,
-	author$project$Main$fileDecoderSwitch,
-	A2(elm$json$Json$Decode$field, 'version', elm$json$Json$Decode$string));
-var elm$json$Json$Decode$value = _Json_decodeValue;
-var author$project$Main$fileHasBeenRead = _Platform_incomingPort('fileHasBeenRead', elm$json$Json$Decode$value);
-var author$project$Main$keyDecoder = A2(elm$json$Json$Decode$field, 'key', elm$json$Json$Decode$string);
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5156,9 +4989,11 @@ var elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
 		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
 	});
-var author$project$Main$mouseDecoder = A3(
+var elm$json$Json$Decode$int = _Json_decodeInt;
+var elm$json$Json$Decode$map2 = _Json_map2;
+var author$project$App$mouseDecoder = A3(
 	elm$json$Json$Decode$map2,
-	author$project$Main$Coordinates,
+	author$project$Model$Coordinates,
 	A2(
 		elm$json$Json$Decode$at,
 		_List_fromArray(
@@ -5174,12 +5009,191 @@ var elm$core$Tuple$pair = F2(
 		return _Utils_Tuple2(a, b);
 	});
 var elm$json$Json$Decode$index = _Json_decodeIndex;
-var author$project$Main$viewPortDecoder = A3(
+var author$project$App$viewPortDecoder = A3(
 	elm$json$Json$Decode$map2,
 	elm$core$Tuple$pair,
 	A2(elm$json$Json$Decode$index, 0, elm$json$Json$Decode$int),
 	A2(elm$json$Json$Decode$index, 1, elm$json$Json$Decode$int));
-var author$project$Main$viewPortHasResized = _Platform_incomingPort('viewPortHasResized', elm$json$Json$Decode$value);
+var elm$json$Json$Decode$value = _Json_decodeValue;
+var author$project$Interop$fileHasBeenRead = _Platform_incomingPort('fileHasBeenRead', elm$json$Json$Decode$value);
+var author$project$Interop$viewPortHasResized = _Platform_incomingPort('viewPortHasResized', elm$json$Json$Decode$value);
+var author$project$Model$FileHasBeenRead = function (a) {
+	return {$: 'FileHasBeenRead', a: a};
+};
+var author$project$Model$KeyPress = function (a) {
+	return {$: 'KeyPress', a: a};
+};
+var author$project$Model$KeyUp = function (a) {
+	return {$: 'KeyUp', a: a};
+};
+var author$project$Model$MouseDown = function (a) {
+	return {$: 'MouseDown', a: a};
+};
+var author$project$Model$MouseMove = function (a) {
+	return {$: 'MouseMove', a: a};
+};
+var author$project$Model$MouseUp = function (a) {
+	return {$: 'MouseUp', a: a};
+};
+var author$project$Model$ViewPortHasResized = function (a) {
+	return {$: 'ViewPortHasResized', a: a};
+};
+var author$project$Model$File = F2(
+	function (moduleName, canvasItems) {
+		return {canvasItems: canvasItems, moduleName: moduleName};
+	});
+var author$project$Model$CanvasItem = F9(
+	function (id, shape, name, gitUrl, gitRef, contextDir, manifestPath, sourcePinName, sinkPinName) {
+		return {contextDir: contextDir, gitRef: gitRef, gitUrl: gitUrl, id: id, manifestPath: manifestPath, name: name, shape: shape, sinkPinName: sinkPinName, sourcePinName: sourcePinName};
+	});
+var author$project$Model$Ellipse = F2(
+	function (a, b) {
+		return {$: 'Ellipse', a: a, b: b};
+	});
+var author$project$Model$Polyline = function (a) {
+	return {$: 'Polyline', a: a};
+};
+var author$project$Model$Rect = F2(
+	function (a, b) {
+		return {$: 'Rect', a: a, b: b};
+	});
+var author$project$Model$Text = F3(
+	function (a, b, c) {
+		return {$: 'Text', a: a, b: b, c: c};
+	});
+var author$project$Model$coordinatesDecoder = A3(
+	elm$json$Json$Decode$map2,
+	author$project$Model$Coordinates,
+	A2(elm$json$Json$Decode$field, 'x', elm$json$Json$Decode$int),
+	A2(elm$json$Json$Decode$field, 'y', elm$json$Json$Decode$int));
+var elm$json$Json$Decode$fail = _Json_fail;
+var elm$json$Json$Decode$list = _Json_decodeList;
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$map3 = _Json_map3;
+var author$project$Model$shapeContent = function (contentType) {
+	switch (contentType) {
+		case 'Rect':
+			return A3(
+				elm$json$Json$Decode$map2,
+				author$project$Model$Rect,
+				A2(elm$json$Json$Decode$field, 'topLeft', author$project$Model$coordinatesDecoder),
+				A2(elm$json$Json$Decode$field, 'bottomRight', author$project$Model$coordinatesDecoder));
+		case 'Polyline':
+			return A2(
+				elm$json$Json$Decode$field,
+				'points',
+				A2(
+					elm$json$Json$Decode$map,
+					author$project$Model$Polyline,
+					elm$json$Json$Decode$list(author$project$Model$coordinatesDecoder)));
+		case 'Ellipse':
+			return A3(
+				elm$json$Json$Decode$map2,
+				author$project$Model$Ellipse,
+				A2(elm$json$Json$Decode$field, 'topLeft', author$project$Model$coordinatesDecoder),
+				A2(elm$json$Json$Decode$field, 'bottomRight', author$project$Model$coordinatesDecoder));
+		case 'Text':
+			return A4(
+				elm$json$Json$Decode$map3,
+				author$project$Model$Text,
+				A2(elm$json$Json$Decode$field, 'topLeft', author$project$Model$coordinatesDecoder),
+				A2(elm$json$Json$Decode$field, 'bottomRight', author$project$Model$coordinatesDecoder),
+				A2(elm$json$Json$Decode$field, 'text', elm$json$Json$Decode$string));
+		default:
+			return elm$json$Json$Decode$fail('Unrecognized canvas item content');
+	}
+};
+var elm$json$Json$Decode$andThen = _Json_andThen;
+var author$project$Model$shapeDecoder = A2(
+	elm$json$Json$Decode$andThen,
+	author$project$Model$shapeContent,
+	A2(elm$json$Json$Decode$field, 'tag', elm$json$Json$Decode$string));
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var elm_community$json_extra$Json$Decode$Extra$andMap = elm$json$Json$Decode$map2(elm$core$Basics$apR);
+var author$project$Model$canvasItemDecoder = A2(
+	elm_community$json_extra$Json$Decode$Extra$andMap,
+	A2(elm$json$Json$Decode$field, 'sinkPinName', elm$json$Json$Decode$string),
+	A2(
+		elm_community$json_extra$Json$Decode$Extra$andMap,
+		A2(elm$json$Json$Decode$field, 'sourcePinName', elm$json$Json$Decode$string),
+		A2(
+			elm_community$json_extra$Json$Decode$Extra$andMap,
+			A2(elm$json$Json$Decode$field, 'manifestPath', elm$json$Json$Decode$string),
+			A2(
+				elm_community$json_extra$Json$Decode$Extra$andMap,
+				A2(elm$json$Json$Decode$field, 'contextDir', elm$json$Json$Decode$string),
+				A2(
+					elm_community$json_extra$Json$Decode$Extra$andMap,
+					A2(elm$json$Json$Decode$field, 'gitRef', elm$json$Json$Decode$string),
+					A2(
+						elm_community$json_extra$Json$Decode$Extra$andMap,
+						A2(elm$json$Json$Decode$field, 'gitUrl', elm$json$Json$Decode$string),
+						A2(
+							elm_community$json_extra$Json$Decode$Extra$andMap,
+							A2(elm$json$Json$Decode$field, 'kindName', elm$json$Json$Decode$string),
+							A2(
+								elm_community$json_extra$Json$Decode$Extra$andMap,
+								A2(elm$json$Json$Decode$field, 'shape', author$project$Model$shapeDecoder),
+								A2(
+									elm_community$json_extra$Json$Decode$Extra$andMap,
+									A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int),
+									elm$json$Json$Decode$succeed(author$project$Model$CanvasItem))))))))));
+var author$project$Model$canvasItemDecoder20191219 = A2(
+	elm_community$json_extra$Json$Decode$Extra$andMap,
+	A2(elm$json$Json$Decode$field, 'sinkPinName', elm$json$Json$Decode$string),
+	A2(
+		elm_community$json_extra$Json$Decode$Extra$andMap,
+		A2(elm$json$Json$Decode$field, 'sourcePinName', elm$json$Json$Decode$string),
+		A2(
+			elm_community$json_extra$Json$Decode$Extra$andMap,
+			A2(elm$json$Json$Decode$field, 'manifestPath', elm$json$Json$Decode$string),
+			A2(
+				elm_community$json_extra$Json$Decode$Extra$andMap,
+				A2(elm$json$Json$Decode$field, 'contextDir', elm$json$Json$Decode$string),
+				A2(
+					elm_community$json_extra$Json$Decode$Extra$andMap,
+					A2(elm$json$Json$Decode$field, 'gitRef', elm$json$Json$Decode$string),
+					A2(
+						elm_community$json_extra$Json$Decode$Extra$andMap,
+						A2(elm$json$Json$Decode$field, 'gitUrl', elm$json$Json$Decode$string),
+						A2(
+							elm_community$json_extra$Json$Decode$Extra$andMap,
+							A2(elm$json$Json$Decode$field, 'kindName', elm$json$Json$Decode$string),
+							A2(
+								elm_community$json_extra$Json$Decode$Extra$andMap,
+								A2(elm$json$Json$Decode$field, 'item', author$project$Model$shapeDecoder),
+								A2(
+									elm_community$json_extra$Json$Decode$Extra$andMap,
+									A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int),
+									elm$json$Json$Decode$succeed(author$project$Model$CanvasItem))))))))));
+var author$project$Model$fileDecoderSwitch = function (version) {
+	switch (version) {
+		case '2019-12-19':
+			return A3(
+				elm$json$Json$Decode$map2,
+				author$project$Model$File,
+				A2(elm$json$Json$Decode$field, 'moduleName', elm$json$Json$Decode$string),
+				A2(
+					elm$json$Json$Decode$field,
+					'canvasItems',
+					elm$json$Json$Decode$list(author$project$Model$canvasItemDecoder20191219)));
+		case '2020-03-21':
+			return A3(
+				elm$json$Json$Decode$map2,
+				author$project$Model$File,
+				A2(elm$json$Json$Decode$field, 'moduleName', elm$json$Json$Decode$string),
+				A2(
+					elm$json$Json$Decode$field,
+					'canvasItems',
+					elm$json$Json$Decode$list(author$project$Model$canvasItemDecoder)));
+		default:
+			return elm$json$Json$Decode$fail('Unknown version: ' + version);
+	}
+};
+var author$project$Model$fileDecoder = A2(
+	elm$json$Json$Decode$andThen,
+	author$project$Model$fileDecoderSwitch,
+	A2(elm$json$Json$Decode$field, 'version', elm$json$Json$Decode$string));
 var elm$browser$Browser$Events$Document = {$: 'Document'};
 var elm$browser$Browser$Events$MySub = F3(
 	function (a, b, c) {
@@ -5847,54 +5861,31 @@ var elm$core$Basics$composeR = F3(
 	});
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$json$Json$Decode$decodeValue = _Json_run;
-var author$project$Main$subscriptions = function (model) {
+var author$project$App$subscriptions = function (model) {
 	return elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
 				elm$browser$Browser$Events$onMouseDown(
-				A2(elm$json$Json$Decode$map, author$project$Main$MouseDown, author$project$Main$mouseDecoder)),
+				A2(elm$json$Json$Decode$map, author$project$Model$MouseDown, author$project$App$mouseDecoder)),
 				elm$browser$Browser$Events$onMouseUp(
-				A2(elm$json$Json$Decode$map, author$project$Main$MouseUp, author$project$Main$mouseDecoder)),
+				A2(elm$json$Json$Decode$map, author$project$Model$MouseUp, author$project$App$mouseDecoder)),
 				elm$browser$Browser$Events$onMouseMove(
-				A2(elm$json$Json$Decode$map, author$project$Main$MouseMove, author$project$Main$mouseDecoder)),
+				A2(elm$json$Json$Decode$map, author$project$Model$MouseMove, author$project$App$mouseDecoder)),
 				elm$browser$Browser$Events$onKeyDown(
-				A2(elm$json$Json$Decode$map, author$project$Main$KeyPress, author$project$Main$keyDecoder)),
+				A2(elm$json$Json$Decode$map, author$project$Model$KeyPress, author$project$App$keyDecoder)),
 				elm$browser$Browser$Events$onKeyUp(
-				A2(elm$json$Json$Decode$map, author$project$Main$KeyUp, author$project$Main$keyDecoder)),
-				author$project$Main$viewPortHasResized(
+				A2(elm$json$Json$Decode$map, author$project$Model$KeyUp, author$project$App$keyDecoder)),
+				author$project$Interop$viewPortHasResized(
 				A2(
 					elm$core$Basics$composeR,
-					elm$json$Json$Decode$decodeValue(author$project$Main$viewPortDecoder),
-					author$project$Main$ViewPortHasResized)),
-				author$project$Main$fileHasBeenRead(
+					elm$json$Json$Decode$decodeValue(author$project$App$viewPortDecoder),
+					author$project$Model$ViewPortHasResized)),
+				author$project$Interop$fileHasBeenRead(
 				A2(
 					elm$core$Basics$composeR,
-					elm$json$Json$Decode$decodeValue(author$project$Main$fileDecoder),
-					author$project$Main$FileHasBeenRead))
+					elm$json$Json$Decode$decodeValue(author$project$Model$fileDecoder),
+					author$project$Model$FileHasBeenRead))
 			]));
-};
-var author$project$Main$DragCursor = function (a) {
-	return {$: 'DragCursor', a: a};
-};
-var author$project$Main$SelectionInProgress = {$: 'SelectionInProgress'};
-var author$project$Main$ToCreatePolyline = F2(
-	function (a, b) {
-		return {$: 'ToCreatePolyline', a: a, b: b};
-	});
-var author$project$Main$ToMovePath = F3(
-	function (a, b, c) {
-		return {$: 'ToMovePath', a: a, b: b, c: c};
-	});
-var author$project$Main$ToPanViewBox = F2(
-	function (a, b) {
-		return {$: 'ToPanViewBox', a: a, b: b};
-	});
-var author$project$Main$ToResizeCanvasItemInstance = F3(
-	function (a, b, c) {
-		return {$: 'ToResizeCanvasItemInstance', a: a, b: b, c: c};
-	});
-var author$project$Main$ToType = function (a) {
-	return {$: 'ToType', a: a};
 };
 var elm$core$List$maximum = function (list) {
 	if (list.b) {
@@ -5915,7 +5906,7 @@ var elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var author$project$Main$findLargestId = A2(
+var author$project$App$findLargestId = A2(
 	elm$core$Basics$composeR,
 	elm$core$List$map(
 		function ($) {
@@ -5925,9 +5916,9 @@ var author$project$Main$findLargestId = A2(
 		elm$core$Basics$composeR,
 		elm$core$List$maximum,
 		elm$core$Maybe$withDefault(0)));
-var author$project$Main$copyCanvasItemInstance = F2(
+var author$project$App$copyCanvasItem = F2(
 	function (model, canvasItem) {
-		var newId = author$project$Main$findLargestId(model.instantiatedItems) + 1;
+		var newId = author$project$App$findLargestId(model.instantiatedItems) + 1;
 		return _Utils_update(
 			canvasItem,
 			{id: newId});
@@ -5935,189 +5926,65 @@ var author$project$Main$copyCanvasItemInstance = F2(
 var elm$core$Basics$negate = function (n) {
 	return -n;
 };
-var author$project$Main$createNewCanvasItemInstance = F2(
-	function (model, canvasItem) {
+var author$project$App$createNewCanvasItem = F2(
+	function (model, shape) {
 		var newItem = A2(
-			author$project$Main$copyCanvasItemInstance,
+			author$project$App$copyCanvasItem,
 			model,
-			{contextDir: '', gitRef: '', gitUrl: '', id: -1, item: canvasItem, manifestPath: '', name: '', sinkPinName: '', sourcePinName: ''});
+			{contextDir: '', gitRef: '', gitUrl: '', id: -1, manifestPath: '', name: '', shape: shape, sinkPinName: '', sourcePinName: ''});
 		return _Utils_update(
 			model,
 			{
 				instantiatedItems: A2(elm$core$List$cons, newItem, model.instantiatedItems)
 			});
 	});
-var author$project$Main$addArrow = F2(
+var author$project$Model$ToExplore = {$: 'ToExplore'};
+var author$project$App$addArrow = F2(
 	function (model, points) {
 		var model2 = A2(
-			author$project$Main$createNewCanvasItemInstance,
+			author$project$App$createNewCanvasItem,
 			model,
-			author$project$Main$Polyline(points));
+			author$project$Model$Polyline(points));
 		return _Utils_update(
 			model2,
-			{intent: author$project$Main$ToExplore});
+			{intent: author$project$Model$ToExplore});
+	});
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var author$project$App$addPointToPolyline = F2(
+	function (cursor, item) {
+		var _n0 = item.shape;
+		if (_n0.$ === 'Polyline') {
+			var points = _n0.a;
+			return _Utils_update(
+				item,
+				{
+					shape: author$project$Model$Polyline(
+						A2(
+							elm$core$List$append,
+							points,
+							_List_fromArray(
+								[cursor])))
+				});
+		} else {
+			return item;
+		}
 	});
 var elm$core$Basics$round = _Basics_round;
-var author$project$Main$calculateActualCoords = F2(
+var author$project$App$calculateActualCoords = F2(
 	function (model, coords) {
 		return {
 			x: elm$core$Basics$round(coords.x * model.zoomFactor) + model.panCoords.x,
 			y: elm$core$Basics$round(coords.y * model.zoomFactor) + model.panCoords.y
 		};
 	});
-var elm$json$Json$Encode$int = _Json_wrap;
-var elm$json$Json$Encode$object = function (pairs) {
-	return _Json_wrap(
-		A3(
-			elm$core$List$foldl,
-			F2(
-				function (_n0, obj) {
-					var k = _n0.a;
-					var v = _n0.b;
-					return A3(_Json_addField, k, v, obj);
-				}),
-			_Json_emptyObject(_Utils_Tuple0),
-			pairs));
-};
-var author$project$Main$encodeCoordinates = function (coords) {
-	return elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				'x',
-				elm$json$Json$Encode$int(coords.x)),
-				_Utils_Tuple2(
-				'y',
-				elm$json$Json$Encode$int(coords.y))
-			]));
-};
-var elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(_Utils_Tuple0),
-				entries));
-	});
-var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Main$encodeCanvasItem = function (canvasItem) {
-	switch (canvasItem.$) {
-		case 'Rect':
-			var topLeft = canvasItem.a;
-			var bottomRight = canvasItem.b;
-			return elm$json$Json$Encode$object(
-				_List_fromArray(
-					[
-						_Utils_Tuple2(
-						'tag',
-						elm$json$Json$Encode$string('Rect')),
-						_Utils_Tuple2(
-						'topLeft',
-						author$project$Main$encodeCoordinates(topLeft)),
-						_Utils_Tuple2(
-						'bottomRight',
-						author$project$Main$encodeCoordinates(bottomRight))
-					]));
-		case 'Polyline':
-			var points = canvasItem.a;
-			return elm$json$Json$Encode$object(
-				_List_fromArray(
-					[
-						_Utils_Tuple2(
-						'tag',
-						elm$json$Json$Encode$string('Polyline')),
-						_Utils_Tuple2(
-						'points',
-						A2(elm$json$Json$Encode$list, author$project$Main$encodeCoordinates, points))
-					]));
-		case 'Ellipse':
-			var topLeft = canvasItem.a;
-			var bottomRight = canvasItem.b;
-			return elm$json$Json$Encode$object(
-				_List_fromArray(
-					[
-						_Utils_Tuple2(
-						'tag',
-						elm$json$Json$Encode$string('Ellipse')),
-						_Utils_Tuple2(
-						'topLeft',
-						author$project$Main$encodeCoordinates(topLeft)),
-						_Utils_Tuple2(
-						'bottomRight',
-						author$project$Main$encodeCoordinates(bottomRight))
-					]));
-		default:
-			var topLeft = canvasItem.a;
-			var bottomRight = canvasItem.b;
-			var text = canvasItem.c;
-			return elm$json$Json$Encode$object(
-				_List_fromArray(
-					[
-						_Utils_Tuple2(
-						'tag',
-						elm$json$Json$Encode$string('Text')),
-						_Utils_Tuple2(
-						'topLeft',
-						author$project$Main$encodeCoordinates(topLeft)),
-						_Utils_Tuple2(
-						'bottomRight',
-						author$project$Main$encodeCoordinates(bottomRight)),
-						_Utils_Tuple2(
-						'text',
-						elm$json$Json$Encode$string(text))
-					]));
-	}
-};
-var author$project$Main$encodeCanvasItemInstance = function (canvasItem) {
-	return elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				'id',
-				elm$json$Json$Encode$int(canvasItem.id)),
-				_Utils_Tuple2(
-				'item',
-				author$project$Main$encodeCanvasItem(canvasItem.item)),
-				_Utils_Tuple2(
-				'kindName',
-				elm$json$Json$Encode$string(canvasItem.name)),
-				_Utils_Tuple2(
-				'gitUrl',
-				elm$json$Json$Encode$string(canvasItem.gitUrl)),
-				_Utils_Tuple2(
-				'gitRef',
-				elm$json$Json$Encode$string(canvasItem.gitRef)),
-				_Utils_Tuple2(
-				'contextDir',
-				elm$json$Json$Encode$string(canvasItem.contextDir)),
-				_Utils_Tuple2(
-				'manifestPath',
-				elm$json$Json$Encode$string(canvasItem.manifestPath)),
-				_Utils_Tuple2(
-				'sourcePinName',
-				elm$json$Json$Encode$string(canvasItem.sourcePinName)),
-				_Utils_Tuple2(
-				'sinkPinName',
-				elm$json$Json$Encode$string(canvasItem.sinkPinName))
-			]));
-};
-var author$project$Main$versionCanonicalFormat = '2019-12-19';
-var author$project$Main$encodeFile = function (file) {
-	return elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				'version',
-				elm$json$Json$Encode$string(author$project$Main$versionCanonicalFormat)),
-				_Utils_Tuple2(
-				'moduleName',
-				elm$json$Json$Encode$string(file.moduleName)),
-				_Utils_Tuple2(
-				'canvasItems',
-				A2(elm$json$Json$Encode$list, author$project$Main$encodeCanvasItemInstance, file.canvasItems))
-			]));
-};
+var author$project$Constants$cursorSnapTolerance = 20;
 var elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
@@ -6132,7 +5999,7 @@ var elm$core$List$minimum = function (list) {
 		return elm$core$Maybe$Nothing;
 	}
 };
-var author$project$Main$inBetween = F3(
+var author$project$Graphics$inBetween = F3(
 	function (min, max, num) {
 		var _n0 = elm$core$List$minimum(
 			_List_fromArray(
@@ -6149,20 +6016,20 @@ var author$project$Main$inBetween = F3(
 			return min;
 		}
 	});
-var author$project$Main$getClosestPoint = F3(
+var author$project$Graphics$getClosestPoint = F3(
 	function (topLeft, bottomRight, point) {
-		var y = A3(author$project$Main$inBetween, topLeft.y, bottomRight.y, point.y);
-		var x = A3(author$project$Main$inBetween, topLeft.x, bottomRight.x, point.x);
+		var y = A3(author$project$Graphics$inBetween, topLeft.y, bottomRight.y, point.y);
+		var x = A3(author$project$Graphics$inBetween, topLeft.x, bottomRight.x, point.x);
 		return {x: x, y: y};
 	});
 var elm$core$Basics$ge = _Utils_ge;
-var author$project$Main$withinView = F3(
+var author$project$Graphics$pointWithinView = F3(
 	function (point, upperLeft, lowerRight) {
 		return (_Utils_cmp(point.x, upperLeft.x) > -1) && ((_Utils_cmp(point.y, upperLeft.y) > -1) && ((_Utils_cmp(point.x, lowerRight.x) < 1) && (_Utils_cmp(point.y, lowerRight.y) < 1)));
 	});
-var author$project$Main$getCursorDropPointCoords = F2(
+var author$project$App$getCursorDropPointCoords = F2(
 	function (canvasItems, cursorCoords) {
-		var tolerance = 20;
+		var tolerance = author$project$Constants$cursorSnapTolerance;
 		var moveTopLeft = F2(
 			function (point, by) {
 				return _Utils_update(
@@ -6180,7 +6047,7 @@ var author$project$Main$getCursorDropPointCoords = F2(
 				if (found.$ === 'Just') {
 					return found;
 				} else {
-					var _n1 = item.item;
+					var _n1 = item.shape;
 					switch (_n1.$) {
 						case 'Polyline':
 							var points = _n1.a;
@@ -6191,20 +6058,20 @@ var author$project$Main$getCursorDropPointCoords = F2(
 							var topLeft = _n1.a;
 							var bottomRight = _n1.b;
 							return A3(
-								author$project$Main$withinView,
+								author$project$Graphics$pointWithinView,
 								cursorCoords,
 								A2(moveTopLeft, topLeft, tolerance),
 								A2(moveBottomRight, bottomRight, tolerance)) ? elm$core$Maybe$Just(
-								A3(author$project$Main$getClosestPoint, topLeft, bottomRight, cursorCoords)) : elm$core$Maybe$Nothing;
+								A3(author$project$Graphics$getClosestPoint, topLeft, bottomRight, cursorCoords)) : elm$core$Maybe$Nothing;
 						default:
 							var topLeft = _n1.a;
 							var bottomRight = _n1.b;
 							return A3(
-								author$project$Main$withinView,
+								author$project$Graphics$pointWithinView,
 								cursorCoords,
 								A2(moveTopLeft, topLeft, tolerance),
 								A2(moveBottomRight, bottomRight, tolerance)) ? elm$core$Maybe$Just(
-								A3(author$project$Main$getClosestPoint, topLeft, bottomRight, cursorCoords)) : elm$core$Maybe$Nothing;
+								A3(author$project$Graphics$getClosestPoint, topLeft, bottomRight, cursorCoords)) : elm$core$Maybe$Nothing;
 					}
 				}
 			});
@@ -6213,38 +6080,37 @@ var author$project$Main$getCursorDropPointCoords = F2(
 			cursorCoords,
 			A3(elm$core$List$foldl, findFirstClosestItem, elm$core$Maybe$Nothing, canvasItems));
 	});
-var author$project$Main$MultipleSelect = {$: 'MultipleSelect'};
-var author$project$Main$foldCopy = F3(
+var author$project$App$foldCopy = F3(
 	function (model, item, newItems) {
-		var newItem = A2(author$project$Main$copyCanvasItemInstance, model, item);
+		var newItem = A2(author$project$App$copyCanvasItem, model, item);
 		return A2(elm$core$List$cons, newItem, newItems);
 	});
-var author$project$Main$moveCoordinates = F3(
+var author$project$Model$moveCoordinates = F3(
 	function (deltaX, deltaY, coords) {
 		return _Utils_update(
 			coords,
 			{x: coords.x + deltaX, y: coords.y + deltaY});
 	});
-var author$project$Main$moveItem = F3(
+var author$project$App$moveItem = F3(
 	function (deltaX, deltaY, item) {
-		var move = A2(author$project$Main$moveCoordinates, deltaX, deltaY);
+		var move = A2(author$project$Model$moveCoordinates, deltaX, deltaY);
 		switch (item.$) {
 			case 'Rect':
 				var upperLeft = item.a;
 				var lowerRight = item.b;
 				return A2(
-					author$project$Main$Rect,
+					author$project$Model$Rect,
 					move(upperLeft),
 					move(lowerRight));
 			case 'Polyline':
 				var points = item.a;
-				return author$project$Main$Polyline(
+				return author$project$Model$Polyline(
 					A2(elm$core$List$map, move, points));
 			case 'Ellipse':
 				var upperLeft = item.a;
 				var lowerRight = item.b;
 				return A2(
-					author$project$Main$Ellipse,
+					author$project$Model$Ellipse,
 					move(upperLeft),
 					move(lowerRight));
 			default:
@@ -6252,31 +6118,24 @@ var author$project$Main$moveItem = F3(
 				var lowerRight = item.b;
 				var label = item.c;
 				return A3(
-					author$project$Main$Text,
+					author$project$Model$Text,
 					move(upperLeft),
 					move(lowerRight),
 					label);
 		}
 	});
-var elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
-		}
-	});
-var author$project$Main$copySelectedCanvasItemInstances = function (model) {
+var author$project$Constants$itemCopyingOffset = 20;
+var author$project$App$copySelectedCanvasItems = function (model) {
 	var move = function (instance) {
 		return _Utils_update(
 			instance,
 			{
-				item: A3(author$project$Main$moveItem, 20, 20, instance.item)
+				shape: A3(author$project$App$moveItem, author$project$Constants$itemCopyingOffset, author$project$Constants$itemCopyingOffset, instance.shape)
 			});
 	};
 	var copiedItems = A3(
 		elm$core$List$foldl,
-		author$project$Main$foldCopy(model),
+		author$project$App$foldCopy(model),
 		_List_Nil,
 		model.selectedItems);
 	var newItems = A2(elm$core$List$map, move, copiedItems);
@@ -6329,7 +6188,7 @@ var elm$core$List$member = F2(
 			},
 			xs);
 	});
-var author$project$Main$deleteSelectedCanvasItemInstances = function (model) {
+var author$project$App$deleteSelectedCanvasItems = function (model) {
 	return _Utils_update(
 		model,
 		{
@@ -6342,7 +6201,9 @@ var author$project$Main$deleteSelectedCanvasItemInstances = function (model) {
 			selectedItems: _List_Nil
 		});
 };
-var author$project$Main$zoom = F2(
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var author$project$App$zoom = F2(
 	function (model, zoomBy) {
 		return _Utils_Tuple2(
 			_Utils_update(
@@ -6350,8 +6211,9 @@ var author$project$Main$zoom = F2(
 				{zoomFactor: model.zoomFactor * zoomBy}),
 			elm$core$Platform$Cmd$none);
 	});
-var author$project$Main$zoomStepSize = 0.1;
-var author$project$Main$handleKeyDown = F2(
+var author$project$Constants$zoomStepSize = 0.1;
+var author$project$Model$MultipleSelect = {$: 'MultipleSelect'};
+var author$project$App$handleKeyDown = F2(
 	function (model, key) {
 		var defaultCmd = elm$core$Platform$Cmd$none;
 		switch (key) {
@@ -6359,52 +6221,135 @@ var author$project$Main$handleKeyDown = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{selectionMode: author$project$Main$MultipleSelect}),
+						{selectionMode: author$project$Model$MultipleSelect}),
 					defaultCmd);
 			case 'Backspace':
 				return _Utils_Tuple2(
-					author$project$Main$deleteSelectedCanvasItemInstances(model),
+					author$project$App$deleteSelectedCanvasItems(model),
 					defaultCmd);
 			case 'c':
 				return _Utils_Tuple2(
-					author$project$Main$copySelectedCanvasItemInstances(model),
+					author$project$App$copySelectedCanvasItems(model),
 					defaultCmd);
 			case '=':
-				return A2(author$project$Main$zoom, model, 1.0 - author$project$Main$zoomStepSize);
+				return A2(author$project$App$zoom, model, 1.0 - author$project$Constants$zoomStepSize);
 			case '+':
-				return A2(author$project$Main$zoom, model, 1.0 - author$project$Main$zoomStepSize);
+				return A2(author$project$App$zoom, model, 1.0 - author$project$Constants$zoomStepSize);
 			case '-':
-				return A2(author$project$Main$zoom, model, 1.0 + author$project$Main$zoomStepSize);
+				return A2(author$project$App$zoom, model, 1.0 + author$project$Constants$zoomStepSize);
 			default:
 				return _Utils_Tuple2(model, defaultCmd);
 		}
 	});
-var author$project$Main$handleKeyUp = F2(
+var author$project$App$handleKeyUp = F2(
 	function (model, key) {
 		return model;
 	});
-var author$project$Main$isSelectedCanvasItemInstance = F2(
-	function (model, match) {
-		return A2(
-			elm$core$List$any,
-			function (i) {
-				return _Utils_eq(i.id, match.id);
-			},
-			model.selectedItems);
+var author$project$Constants$detectionPaddingSize = 10;
+var author$project$Graphics$intersectingBoxes = F4(
+	function (aUL, aLR, bUL, bLR) {
+		return ((_Utils_cmp(aUL.x, bUL.x) > 0) && ((_Utils_cmp(aUL.y, bUL.y) > 0) && ((_Utils_cmp(aUL.x, bLR.x) < 0) && (_Utils_cmp(aUL.y, bLR.y) < 0)))) || ((_Utils_cmp(aLR.x, bUL.x) > 0) && ((_Utils_cmp(aLR.y, bUL.y) > 0) && ((_Utils_cmp(aLR.x, bLR.x) < 0) && (_Utils_cmp(aLR.y, bLR.y) < 0))));
 	});
-var author$project$Main$loadFile = _Platform_outgoingPort('loadFile', elm$core$Basics$identity);
-var author$project$Main$replaceCanvasItemInstanceById = F3(
-	function (allItems, id, newItem) {
+var elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var author$project$Graphics$calculateClosestPointDelta = F4(
+	function (aUL, aLR, bUL, bLR) {
+		if (!A4(author$project$Graphics$intersectingBoxes, aUL, aLR, bUL, bLR)) {
+			return _Utils_Tuple2(0, 0);
+		} else {
+			var dyUL = bUL.y - aUL.y;
+			var dyLR = bLR.y - aUL.y;
+			var dy = (_Utils_cmp(
+				elm$core$Basics$abs(dyUL),
+				elm$core$Basics$abs(dyLR)) < 0) ? dyUL : dyLR;
+			var dxUL = bUL.x - aUL.x;
+			var dxLR = bLR.x - aUL.x;
+			var dx = (_Utils_cmp(
+				elm$core$Basics$abs(dxUL),
+				elm$core$Basics$abs(dxLR)) < 0) ? dxUL : dxLR;
+			return _Utils_Tuple2(dx, dy);
+		}
+	});
+var author$project$Graphics$padBoundingBox = F2(
+	function (_n0, padding) {
+		var ul = _n0.a;
+		var lr = _n0.b;
+		return _Utils_Tuple2(
+			_Utils_update(
+				ul,
+				{x: ul.x - padding, y: ul.y - padding}),
+			_Utils_update(
+				lr,
+				{x: lr.x + padding, y: lr.y + padding}));
+	});
+var author$project$App$matchPointWithRect = F2(
+	function (item, point) {
+		var _n0 = item.shape;
+		if (_n0.$ === 'Rect') {
+			var ul = _n0.a;
+			var lr = _n0.b;
+			var _n1 = A2(
+				author$project$Graphics$padBoundingBox,
+				_Utils_Tuple2(ul, lr),
+				author$project$Constants$detectionPaddingSize);
+			var bbUL = _n1.a;
+			var bbLR = _n1.b;
+			var _n2 = A4(author$project$Graphics$calculateClosestPointDelta, point, point, bbUL, bbLR);
+			var dx = _n2.a;
+			var dy = _n2.b;
+			var x = (dx < 0) ? ul.x : lr.x;
+			var y = (dy < 0) ? ul.y : lr.y;
+			return A4(author$project$Graphics$intersectingBoxes, point, point, bbUL, bbLR) ? ((_Utils_cmp(
+				elm$core$Basics$abs(dx),
+				elm$core$Basics$abs(dy)) < 0) ? {x: x, y: point.y} : {x: point.x, y: y}) : point;
+		} else {
+			return point;
+		}
+	});
+var elm$core$List$concat = function (lists) {
+	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
+};
+var author$project$App$matchClosestRect = F2(
+	function (items, points) {
+		if (points.b) {
+			var first = points.a;
+			var tail = points.b;
+			var _n1 = elm$core$List$reverse(tail);
+			if (_n1.b) {
+				var last = _n1.a;
+				var middle = _n1.b;
+				var newLast = A3(elm$core$List$foldl, author$project$App$matchPointWithRect, last, items);
+				var newFirst = A3(elm$core$List$foldl, author$project$App$matchPointWithRect, first, items);
+				return elm$core$List$concat(
+					_List_fromArray(
+						[
+							_List_fromArray(
+							[newFirst]),
+							middle,
+							_List_fromArray(
+							[newLast])
+						]));
+			} else {
+				return points;
+			}
+		} else {
+			return points;
+		}
+	});
+var author$project$App$replaceCanvasItemById = F3(
+	function (allItems, id, newShape) {
 		var replaceItem = function (item) {
 			return _Utils_eq(item.id, id) ? _Utils_update(
 				item,
-				{item: newItem}) : item;
+				{shape: newShape}) : item;
 		};
 		return A2(elm$core$List$map, replaceItem, allItems);
 	});
-var author$project$Main$resizeCanvasItem = F5(
+var author$project$Constants$itemResizeThreshold = 25;
+var author$project$App$resizeShape = F5(
 	function (zoomFactor, originalItem, startingCoords, currentCoords, anchor) {
-		var threshold = 25;
+		var threshold = author$project$Constants$itemResizeThreshold;
 		var deltaY = elm$core$Basics$round((currentCoords.y - startingCoords.y) * zoomFactor);
 		var deltaX = elm$core$Basics$round((currentCoords.x - startingCoords.x) * zoomFactor);
 		switch (originalItem.$) {
@@ -6414,7 +6359,7 @@ var author$project$Main$resizeCanvasItem = F5(
 				switch (anchor.$) {
 					case 'UpperLeft':
 						return A2(
-							author$project$Main$Rect,
+							author$project$Model$Rect,
 							{
 								x: A2(elm$core$Basics$min, lowerRight.x - threshold, upperLeft.x + deltaX),
 								y: A2(elm$core$Basics$min, lowerRight.y - threshold, upperLeft.y + deltaY)
@@ -6422,7 +6367,7 @@ var author$project$Main$resizeCanvasItem = F5(
 							lowerRight);
 					case 'UpperRight':
 						return A2(
-							author$project$Main$Rect,
+							author$project$Model$Rect,
 							{
 								x: upperLeft.x,
 								y: A2(elm$core$Basics$min, lowerRight.y - threshold, upperLeft.y + deltaY)
@@ -6433,7 +6378,7 @@ var author$project$Main$resizeCanvasItem = F5(
 							});
 					case 'LowerLeft':
 						return A2(
-							author$project$Main$Rect,
+							author$project$Model$Rect,
 							{
 								x: A2(elm$core$Basics$min, lowerRight.x - threshold, upperLeft.x + deltaX),
 								y: upperLeft.y
@@ -6444,7 +6389,7 @@ var author$project$Main$resizeCanvasItem = F5(
 							});
 					default:
 						return A2(
-							author$project$Main$Rect,
+							author$project$Model$Rect,
 							upperLeft,
 							{
 								x: A2(elm$core$Basics$max, upperLeft.x + threshold, lowerRight.x + deltaX),
@@ -6494,13 +6439,12 @@ var author$project$Main$resizeCanvasItem = F5(
 				}();
 				var newUpperLeft = _n2.a;
 				var newLowerRight = _n2.b;
-				return A2(author$project$Main$Ellipse, newUpperLeft, newLowerRight);
+				return A2(author$project$Model$Ellipse, newUpperLeft, newLowerRight);
 			default:
 				return originalItem;
 		}
 	});
-var author$project$Main$saveFile = _Platform_outgoingPort('saveFile', elm$core$Basics$identity);
-var author$project$Main$updateCanvasItemInstance = F3(
+var author$project$App$updateCanvasItem = F3(
 	function (model, target, f) {
 		var process = function (item) {
 			return _Utils_eq(item.id, target.id) ? f(item) : item;
@@ -6512,33 +6456,42 @@ var author$project$Main$updateCanvasItemInstance = F3(
 				selectedItems: A2(elm$core$List$map, process, model.selectedItems)
 			});
 	});
-var author$project$Main$updateModelOnly = function (model) {
+var author$project$App$updateModelOnly = function (model) {
 	return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 };
-var author$project$Main$updateItemCoordinates = F4(
+var author$project$Model$isSelectedCanvasItem = F2(
+	function (model, match) {
+		return A2(
+			elm$core$List$any,
+			function (i) {
+				return _Utils_eq(i.id, match.id);
+			},
+			model.selectedItems);
+	});
+var author$project$Model$updateItemCoordinates = F4(
 	function (zoomFactor, starting, ending, canvasItem) {
 		var dy = elm$core$Basics$round((ending.y - starting.y) * zoomFactor);
 		var dx = elm$core$Basics$round((ending.x - starting.x) * zoomFactor);
-		var move = A2(author$project$Main$moveCoordinates, dx, dy);
-		var item = function () {
-			var _n0 = canvasItem.item;
+		var move = A2(author$project$Model$moveCoordinates, dx, dy);
+		var shape = function () {
+			var _n0 = canvasItem.shape;
 			switch (_n0.$) {
 				case 'Rect':
 					var upperLeft = _n0.a;
 					var lowerRight = _n0.b;
 					return A2(
-						author$project$Main$Rect,
+						author$project$Model$Rect,
 						move(upperLeft),
 						move(lowerRight));
 				case 'Polyline':
 					var points = _n0.a;
-					return author$project$Main$Polyline(
+					return author$project$Model$Polyline(
 						A2(elm$core$List$map, move, points));
 				case 'Ellipse':
 					var upperLeft = _n0.a;
 					var lowerRight = _n0.b;
 					return A2(
-						author$project$Main$Ellipse,
+						author$project$Model$Ellipse,
 						move(upperLeft),
 						move(lowerRight));
 				default:
@@ -6546,7 +6499,7 @@ var author$project$Main$updateItemCoordinates = F4(
 					var lowerRight = _n0.b;
 					var label = _n0.c;
 					return A3(
-						author$project$Main$Text,
+						author$project$Model$Text,
 						move(upperLeft),
 						move(lowerRight),
 						label);
@@ -6554,7 +6507,7 @@ var author$project$Main$updateItemCoordinates = F4(
 		}();
 		return _Utils_update(
 			canvasItem,
-			{item: item});
+			{shape: shape});
 	});
 var elm$core$List$unzip = function (pairs) {
 	var step = F2(
@@ -6573,11 +6526,11 @@ var elm$core$List$unzip = function (pairs) {
 		_Utils_Tuple2(_List_Nil, _List_Nil),
 		pairs);
 };
-var author$project$Main$updateSelectedItemCoordinates = F3(
+var author$project$App$updateSelectedItemCoordinates = F3(
 	function (model, starting, ending) {
-		var updateCoordinates = A3(author$project$Main$updateItemCoordinates, model.zoomFactor, starting, ending);
+		var updateCoordinates = A3(author$project$Model$updateItemCoordinates, model.zoomFactor, starting, ending);
 		var process = function (item) {
-			if (A2(author$project$Main$isSelectedCanvasItemInstance, model, item)) {
+			if (A2(author$project$Model$isSelectedCanvasItem, model, item)) {
 				var updatedItem = updateCoordinates(item);
 				return _Utils_Tuple2(
 					updatedItem,
@@ -6595,6 +6548,186 @@ var author$project$Main$updateSelectedItemCoordinates = F3(
 			model,
 			{instantiatedItems: updatedItems, selectedItems: selectedItems});
 	});
+var author$project$Interop$loadFile = _Platform_outgoingPort('loadFile', elm$core$Basics$identity);
+var author$project$Interop$saveFile = _Platform_outgoingPort('saveFile', elm$core$Basics$identity);
+var author$project$Model$DragCursor = function (a) {
+	return {$: 'DragCursor', a: a};
+};
+var author$project$Model$FreeFormCursor = {$: 'FreeFormCursor'};
+var author$project$Model$SelectionInProgress = {$: 'SelectionInProgress'};
+var author$project$Model$SingleSelect = {$: 'SingleSelect'};
+var author$project$Model$ToCreatePolyline = F2(
+	function (a, b) {
+		return {$: 'ToCreatePolyline', a: a, b: b};
+	});
+var author$project$Model$ToMovePath = F3(
+	function (a, b, c) {
+		return {$: 'ToMovePath', a: a, b: b, c: c};
+	});
+var author$project$Model$ToPanViewBox = F2(
+	function (a, b) {
+		return {$: 'ToPanViewBox', a: a, b: b};
+	});
+var author$project$Model$ToResizeCanvasItem = F3(
+	function (a, b, c) {
+		return {$: 'ToResizeCanvasItem', a: a, b: b, c: c};
+	});
+var author$project$Model$ToType = function (a) {
+	return {$: 'ToType', a: a};
+};
+var author$project$Constants$versionCanonicalFormat = '2020-03-21';
+var elm$json$Json$Encode$int = _Json_wrap;
+var elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			elm$core$List$foldl,
+			F2(
+				function (_n0, obj) {
+					var k = _n0.a;
+					var v = _n0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var author$project$Model$encodeCoordinates = function (coords) {
+	return elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'x',
+				elm$json$Json$Encode$int(coords.x)),
+				_Utils_Tuple2(
+				'y',
+				elm$json$Json$Encode$int(coords.y))
+			]));
+};
+var elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
+var elm$json$Json$Encode$string = _Json_wrap;
+var author$project$Model$encodeShape = function (shape) {
+	switch (shape.$) {
+		case 'Rect':
+			var topLeft = shape.a;
+			var bottomRight = shape.b;
+			return elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						elm$json$Json$Encode$string('Rect')),
+						_Utils_Tuple2(
+						'topLeft',
+						author$project$Model$encodeCoordinates(topLeft)),
+						_Utils_Tuple2(
+						'bottomRight',
+						author$project$Model$encodeCoordinates(bottomRight))
+					]));
+		case 'Polyline':
+			var points = shape.a;
+			return elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						elm$json$Json$Encode$string('Polyline')),
+						_Utils_Tuple2(
+						'points',
+						A2(elm$json$Json$Encode$list, author$project$Model$encodeCoordinates, points))
+					]));
+		case 'Ellipse':
+			var topLeft = shape.a;
+			var bottomRight = shape.b;
+			return elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						elm$json$Json$Encode$string('Ellipse')),
+						_Utils_Tuple2(
+						'topLeft',
+						author$project$Model$encodeCoordinates(topLeft)),
+						_Utils_Tuple2(
+						'bottomRight',
+						author$project$Model$encodeCoordinates(bottomRight))
+					]));
+		default:
+			var topLeft = shape.a;
+			var bottomRight = shape.b;
+			var text = shape.c;
+			return elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'tag',
+						elm$json$Json$Encode$string('Text')),
+						_Utils_Tuple2(
+						'topLeft',
+						author$project$Model$encodeCoordinates(topLeft)),
+						_Utils_Tuple2(
+						'bottomRight',
+						author$project$Model$encodeCoordinates(bottomRight)),
+						_Utils_Tuple2(
+						'text',
+						elm$json$Json$Encode$string(text))
+					]));
+	}
+};
+var author$project$Model$encodeCanvasItem = function (canvasItem) {
+	return elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'id',
+				elm$json$Json$Encode$int(canvasItem.id)),
+				_Utils_Tuple2(
+				'shape',
+				author$project$Model$encodeShape(canvasItem.shape)),
+				_Utils_Tuple2(
+				'kindName',
+				elm$json$Json$Encode$string(canvasItem.name)),
+				_Utils_Tuple2(
+				'gitUrl',
+				elm$json$Json$Encode$string(canvasItem.gitUrl)),
+				_Utils_Tuple2(
+				'gitRef',
+				elm$json$Json$Encode$string(canvasItem.gitRef)),
+				_Utils_Tuple2(
+				'contextDir',
+				elm$json$Json$Encode$string(canvasItem.contextDir)),
+				_Utils_Tuple2(
+				'manifestPath',
+				elm$json$Json$Encode$string(canvasItem.manifestPath)),
+				_Utils_Tuple2(
+				'sourcePinName',
+				elm$json$Json$Encode$string(canvasItem.sourcePinName)),
+				_Utils_Tuple2(
+				'sinkPinName',
+				elm$json$Json$Encode$string(canvasItem.sinkPinName))
+			]));
+};
+var author$project$Model$encodeFile = function (file) {
+	return elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'version',
+				elm$json$Json$Encode$string(author$project$Constants$versionCanonicalFormat)),
+				_Utils_Tuple2(
+				'moduleName',
+				elm$json$Json$Encode$string(file.moduleName)),
+				_Utils_Tuple2(
+				'canvasItems',
+				A2(elm$json$Json$Encode$list, author$project$Model$encodeCanvasItem, file.canvasItems))
+			]));
+};
 var elm$core$Debug$log = _Debug_log;
 var elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
@@ -6723,29 +6856,29 @@ var elm$core$List$take = F2(
 		return A3(elm$core$List$takeFast, 0, n, list);
 	});
 var elm$json$Json$Encode$null = _Json_encodeNull;
-var author$project$Main$update = F2(
+var author$project$App$update = F2(
 	function (message, model) {
 		switch (message.$) {
 			case 'NoOp':
-				return author$project$Main$updateModelOnly(model);
+				return author$project$App$updateModelOnly(model);
 			case 'SaveSchematic':
 				var componentName = 'default-component-name';
-				var encodedFile = author$project$Main$encodeFile(
+				var encodedFile = author$project$Model$encodeFile(
 					{canvasItems: model.instantiatedItems, moduleName: componentName});
 				return _Utils_Tuple2(
 					model,
-					author$project$Main$saveFile(encodedFile));
+					author$project$Interop$saveFile(encodedFile));
 			case 'LoadSchematic':
 				return _Utils_Tuple2(
 					model,
-					author$project$Main$loadFile(elm$json$Json$Encode$null));
+					author$project$Interop$loadFile(elm$json$Json$Encode$null));
 			case 'AddRect':
 				return _Utils_Tuple2(
 					A2(
-						author$project$Main$createNewCanvasItemInstance,
+						author$project$App$createNewCanvasItem,
 						model,
 						A2(
-							author$project$Main$Rect,
+							author$project$Model$Rect,
 							{x: 100, y: 100},
 							{x: 200, y: 200})),
 					elm$core$Platform$Cmd$none);
@@ -6753,34 +6886,34 @@ var author$project$Main$update = F2(
 				var _n1 = model.intent;
 				if (_n1.$ === 'ToCreatePolyline') {
 					var points = _n1.b;
-					return author$project$Main$updateModelOnly(
-						A2(author$project$Main$addArrow, model, points));
+					return author$project$App$updateModelOnly(
+						A2(author$project$App$addArrow, model, points));
 				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								intent: A2(author$project$Main$ToCreatePolyline, model.cursorCoords, _List_Nil)
+								intent: A2(author$project$Model$ToCreatePolyline, model.cursorCoords, _List_Nil)
 							}),
 						elm$core$Platform$Cmd$none);
 				}
 			case 'AddEllipse':
 				return _Utils_Tuple2(
 					A2(
-						author$project$Main$createNewCanvasItemInstance,
+						author$project$App$createNewCanvasItem,
 						model,
 						A2(
-							author$project$Main$Ellipse,
+							author$project$Model$Ellipse,
 							{x: 100, y: 100},
-							{x: 300, y: 250})),
+							{x: 250, y: 200})),
 					elm$core$Platform$Cmd$none);
 			case 'AddText':
 				return _Utils_Tuple2(
 					A2(
-						author$project$Main$createNewCanvasItemInstance,
+						author$project$App$createNewCanvasItem,
 						model,
 						A3(
-							author$project$Main$Text,
+							author$project$Model$Text,
 							{x: 100, y: 100},
 							{x: 200, y: 200},
 							'text')),
@@ -6794,7 +6927,7 @@ var author$project$Main$update = F2(
 						{name: newName});
 				};
 				return _Utils_Tuple2(
-					A3(author$project$Main$updateCanvasItemInstance, model, item, updateName),
+					A3(author$project$App$updateCanvasItem, model, item, updateName),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateItemGitUrl':
 				var item = message.a;
@@ -6805,7 +6938,7 @@ var author$project$Main$update = F2(
 						{gitUrl: newGitUrl});
 				};
 				return _Utils_Tuple2(
-					A3(author$project$Main$updateCanvasItemInstance, model, item, updateGitUrl),
+					A3(author$project$App$updateCanvasItem, model, item, updateGitUrl),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateItemGitRef':
 				var item = message.a;
@@ -6816,7 +6949,7 @@ var author$project$Main$update = F2(
 						{gitRef: newGitRef});
 				};
 				return _Utils_Tuple2(
-					A3(author$project$Main$updateCanvasItemInstance, model, item, updateGitRef),
+					A3(author$project$App$updateCanvasItem, model, item, updateGitRef),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateItemContextDir':
 				var item = message.a;
@@ -6827,7 +6960,7 @@ var author$project$Main$update = F2(
 						{contextDir: newContextDir});
 				};
 				return _Utils_Tuple2(
-					A3(author$project$Main$updateCanvasItemInstance, model, item, updateContextDir),
+					A3(author$project$App$updateCanvasItem, model, item, updateContextDir),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateItemManifestPath':
 				var item = message.a;
@@ -6838,7 +6971,7 @@ var author$project$Main$update = F2(
 						{manifestPath: newManifestPath});
 				};
 				return _Utils_Tuple2(
-					A3(author$project$Main$updateCanvasItemInstance, model, item, updateManifestPath),
+					A3(author$project$App$updateCanvasItem, model, item, updateManifestPath),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateSourcePinName':
 				var item = message.a;
@@ -6849,7 +6982,7 @@ var author$project$Main$update = F2(
 						{sourcePinName: newName});
 				};
 				return _Utils_Tuple2(
-					A3(author$project$Main$updateCanvasItemInstance, model, item, updateSourcePinName),
+					A3(author$project$App$updateCanvasItem, model, item, updateSourcePinName),
 					elm$core$Platform$Cmd$none);
 			case 'UpdateSinkPinName':
 				var item = message.a;
@@ -6860,22 +6993,22 @@ var author$project$Main$update = F2(
 						{sinkPinName: newName});
 				};
 				return _Utils_Tuple2(
-					A3(author$project$Main$updateCanvasItemInstance, model, item, updateSinkPinName),
+					A3(author$project$App$updateCanvasItem, model, item, updateSinkPinName),
 					elm$core$Platform$Cmd$none);
 			case 'UserIsTyping':
 				var item = message.a;
-				return author$project$Main$updateModelOnly(
+				return author$project$App$updateModelOnly(
 					_Utils_update(
 						model,
 						{
-							intent: author$project$Main$ToType(item)
+							intent: author$project$Model$ToType(item)
 						}));
 			case 'UserIsNotTyping':
 				var item = message.a;
-				return author$project$Main$updateModelOnly(
+				return author$project$App$updateModelOnly(
 					_Utils_update(
 						model,
-						{intent: author$project$Main$ToExplore}));
+						{intent: author$project$Model$ToExplore}));
 			case 'MouseMove':
 				var coords = message.a;
 				var updatedModel = _Utils_update(
@@ -6887,35 +7020,38 @@ var author$project$Main$update = F2(
 						case 'ToMovePath':
 							var _n3 = _n2.b;
 							var id = _n3.a.id;
-							var item = _n3.a.item;
+							var shape = _n3.a.shape;
 							var index = _n3.b;
 							var point = _n3.c;
-							if (item.$ === 'Polyline') {
-								var points = item.a;
+							if (shape.$ === 'Polyline') {
+								var points = shape.a;
 								var updatePoint = F2(
 									function (i, pt) {
-										return _Utils_eq(i, index) ? A2(author$project$Main$calculateActualCoords, model, coords) : pt;
+										return _Utils_eq(i, index) ? A2(author$project$App$calculateActualCoords, model, coords) : pt;
 									});
-								var newPoints = A2(elm$core$List$indexedMap, updatePoint, points);
+								var newPoints = A2(
+									author$project$App$matchClosestRect,
+									model.instantiatedItems,
+									A2(elm$core$List$indexedMap, updatePoint, points));
 								var updatedItems = A3(
-									author$project$Main$replaceCanvasItemInstanceById,
+									author$project$App$replaceCanvasItemById,
 									updatedModel.instantiatedItems,
 									id,
-									author$project$Main$Polyline(newPoints));
+									author$project$Model$Polyline(newPoints));
 								return _Utils_update(
 									updatedModel,
 									{instantiatedItems: updatedItems});
 							} else {
 								return updatedModel;
 							}
-						case 'ToResizeCanvasItemInstance':
+						case 'ToResizeCanvasItem':
 							var _n5 = _n2.b;
 							var id = _n5.a.id;
-							var item = _n5.a.item;
+							var shape = _n5.a.shape;
 							var startingCoords = _n5.b;
 							var anchor = _n5.c;
-							var newItem = A5(author$project$Main$resizeCanvasItem, model.zoomFactor, item, startingCoords, updatedModel.cursorCoords, anchor);
-							var updatedItems = A3(author$project$Main$replaceCanvasItemInstanceById, updatedModel.instantiatedItems, id, newItem);
+							var newShape = A5(author$project$App$resizeShape, model.zoomFactor, shape, startingCoords, updatedModel.cursorCoords, anchor);
+							var updatedItems = A3(author$project$App$replaceCanvasItemById, updatedModel.instantiatedItems, id, newShape);
 							return _Utils_update(
 								updatedModel,
 								{instantiatedItems: updatedItems, selectedItems: _List_Nil});
@@ -6935,84 +7071,84 @@ var author$project$Main$update = F2(
 								updatedModel,
 								{
 									intent: A2(
-										author$project$Main$ToCreatePolyline,
-										A2(author$project$Main$getCursorDropPointCoords, updatedModel.instantiatedItems, coords),
+										author$project$Model$ToCreatePolyline,
+										A2(author$project$App$getCursorDropPointCoords, updatedModel.instantiatedItems, coords),
 										points)
 								});
 						default:
 							return updatedModel;
 					}
 				}();
-				return author$project$Main$updateModelOnly(newModel);
+				return author$project$App$updateModelOnly(newModel);
 			case 'KeyPress':
 				var key = message.a;
 				var _n8 = model.intent;
 				if (_n8.$ === 'ToType') {
-					return author$project$Main$updateModelOnly(model);
+					return author$project$App$updateModelOnly(model);
 				} else {
-					return A2(author$project$Main$handleKeyDown, model, key);
+					return A2(author$project$App$handleKeyDown, model, key);
 				}
 			case 'KeyUp':
 				var key = message.a;
 				var _n9 = model.intent;
 				if (_n9.$ === 'ToType') {
-					return author$project$Main$updateModelOnly(model);
+					return author$project$App$updateModelOnly(model);
 				} else {
-					return author$project$Main$updateModelOnly(
-						A2(author$project$Main$handleKeyUp, model, key));
+					return author$project$App$updateModelOnly(
+						A2(author$project$App$handleKeyUp, model, key));
 				}
 			case 'SelectItem':
 				var item = message.a;
 				var _n10 = model.selectionMode;
 				if (_n10.$ === 'SingleSelect') {
-					return author$project$Main$updateModelOnly(
+					return author$project$App$updateModelOnly(
 						_Utils_update(
 							model,
 							{
-								cursorMode: author$project$Main$SelectionInProgress,
+								cursorMode: author$project$Model$SelectionInProgress,
 								selectedItems: _List_fromArray(
 									[item])
 							}));
 				} else {
-					var selected = A2(author$project$Main$isSelectedCanvasItemInstance, model, item) ? model.selectedItems : A2(elm$core$List$cons, item, model.selectedItems);
-					var newSelectionMode = (!elm$core$List$length(selected)) ? author$project$Main$SingleSelect : model.selectionMode;
-					return author$project$Main$updateModelOnly(
+					var selected = A2(author$project$Model$isSelectedCanvasItem, model, item) ? model.selectedItems : A2(elm$core$List$cons, item, model.selectedItems);
+					var newSelectionMode = (!elm$core$List$length(selected)) ? author$project$Model$SingleSelect : model.selectionMode;
+					return author$project$App$updateModelOnly(
 						_Utils_update(
 							model,
-							{cursorMode: author$project$Main$SelectionInProgress, selectedItems: selected, selectionMode: newSelectionMode}));
+							{cursorMode: author$project$Model$SelectionInProgress, selectedItems: selected, selectionMode: newSelectionMode}));
 				}
 			case 'ResizeItem':
 				var item = message.a;
 				var startingCursorCoords = message.b;
 				var anchor = message.c;
-				return author$project$Main$updateModelOnly(
+				return author$project$App$updateModelOnly(
 					_Utils_update(
 						model,
 						{
-							intent: A3(author$project$Main$ToResizeCanvasItemInstance, item, startingCursorCoords, anchor)
+							intent: A3(author$project$Model$ToResizeCanvasItem, item, startingCursorCoords, anchor)
 						}));
 			case 'HoveredItem':
 				var item = message.a;
-				return author$project$Main$updateModelOnly(
+				return author$project$App$updateModelOnly(
 					_Utils_update(
 						model,
 						{
 							hoveredItem: elm$core$Maybe$Just(item)
 						}));
 			case 'UnhoveredItem':
-				return author$project$Main$updateModelOnly(
+				return author$project$App$updateModelOnly(
 					_Utils_update(
 						model,
 						{hoveredItem: elm$core$Maybe$Nothing}));
 			case 'DoubleClick':
-				var item = message.a;
-				var _n11 = _Utils_Tuple2(model.intent, item);
+				var itemMb = message.a;
+				var _n11 = _Utils_Tuple2(model.intent, itemMb);
 				if (_n11.a.$ === 'ToCreatePolyline') {
 					var _n12 = _n11.a;
 					var points = _n12.b;
-					return author$project$Main$updateModelOnly(
+					return author$project$App$updateModelOnly(
 						A2(
-							author$project$Main$addArrow,
+							author$project$App$addArrow,
 							model,
 							A2(
 								elm$core$List$take,
@@ -7020,17 +7156,25 @@ var author$project$Main$update = F2(
 								points)));
 				} else {
 					if (_n11.b.$ === 'Just') {
-						var i = _n11.b.a;
-						var _n13 = i.item;
-						if (_n13.$ === 'Text') {
-							return author$project$Main$updateModelOnly(
-								_Utils_update(
-									model,
-									{
-										intent: author$project$Main$ToType(i)
-									}));
-						} else {
-							return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+						var item = _n11.b.a;
+						var _n13 = item.shape;
+						switch (_n13.$) {
+							case 'Text':
+								return author$project$App$updateModelOnly(
+									_Utils_update(
+										model,
+										{
+											intent: author$project$Model$ToType(item)
+										}));
+							case 'Polyline':
+								return author$project$App$updateModelOnly(
+									A3(
+										author$project$App$updateCanvasItem,
+										model,
+										item,
+										author$project$App$addPointToPolyline(model.cursorCoords)));
+							default:
+								return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 						}
 					} else {
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
@@ -7040,21 +7184,21 @@ var author$project$Main$update = F2(
 				var path = message.a;
 				var index = message.b;
 				var point = message.c;
-				return author$project$Main$updateModelOnly(
+				return author$project$App$updateModelOnly(
 					_Utils_update(
 						model,
 						{
-							intent: A3(author$project$Main$ToMovePath, path, index, point)
+							intent: A3(author$project$Model$ToMovePath, path, index, point)
 						}));
 			case 'ClearSelection':
 				var _n14 = model.cursorMode;
 				if (_n14.$ === 'SelectionInProgress') {
 					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 				} else {
-					return author$project$Main$updateModelOnly(
+					return author$project$App$updateModelOnly(
 						_Utils_update(
 							model,
-							{selectedItems: _List_Nil, selectionMode: author$project$Main$SingleSelect}));
+							{selectedItems: _List_Nil, selectionMode: author$project$Model$SingleSelect}));
 				}
 			case 'MouseDown':
 				var coords = message.a;
@@ -7069,13 +7213,13 @@ var author$project$Main$update = F2(
 								model,
 								{
 									intent: A2(
-										author$project$Main$ToCreatePolyline,
+										author$project$Model$ToCreatePolyline,
 										dropPoint,
 										_Utils_ap(
 											points,
 											_List_fromArray(
 												[
-													A2(author$project$Main$calculateActualCoords, model, dropPoint)
+													A2(author$project$App$calculateActualCoords, model, dropPoint)
 												])))
 								}),
 							elm$core$Platform$Cmd$none);
@@ -7084,18 +7228,18 @@ var author$project$Main$update = F2(
 						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 					default:
 						if (!_n15.c.b) {
-							return author$project$Main$updateModelOnly(
+							return author$project$App$updateModelOnly(
 								_Utils_update(
 									model,
 									{
-										intent: A2(author$project$Main$ToPanViewBox, model.panCoords, model.cursorCoords)
+										intent: A2(author$project$Model$ToPanViewBox, model.panCoords, model.cursorCoords)
 									}));
 						} else {
-							return author$project$Main$updateModelOnly(
+							return author$project$App$updateModelOnly(
 								_Utils_update(
 									model,
 									{
-										cursorMode: author$project$Main$DragCursor(coords)
+										cursorMode: author$project$Model$DragCursor(coords)
 									}));
 						}
 				}
@@ -7107,27 +7251,27 @@ var author$project$Main$update = F2(
 					switch (_n18.b.$) {
 						case 'ToMovePath':
 							var _n19 = _n18.b;
-							return author$project$Main$updateModelOnly(
+							return author$project$App$updateModelOnly(
 								_Utils_update(
 									model,
-									{intent: author$project$Main$ToExplore}));
-						case 'ToResizeCanvasItemInstance':
+									{intent: author$project$Model$ToExplore}));
+						case 'ToResizeCanvasItem':
 							var _n20 = _n18.b;
-							return author$project$Main$updateModelOnly(
+							return author$project$App$updateModelOnly(
 								_Utils_update(
 									model,
-									{intent: author$project$Main$ToExplore}));
+									{intent: author$project$Model$ToExplore}));
 						case 'ToPanViewBox':
 							var _n21 = _n18.b;
-							return author$project$Main$updateModelOnly(
+							return author$project$App$updateModelOnly(
 								_Utils_update(
 									model,
-									{intent: author$project$Main$ToExplore}));
-						case 'ToCreateCanvasItemInstance':
+									{intent: author$project$Model$ToExplore}));
+						case 'ToCreateCanvasItem':
 							if (_n18.a.$ === 'DragCursor') {
 								var starting = _n18.a.a;
 								var item = _n18.b.a;
-								return author$project$Main$updateModelOnly(
+								return author$project$App$updateModelOnly(
 									_Utils_update(
 										model,
 										{
@@ -7139,62 +7283,86 @@ var author$project$Main$update = F2(
 						default:
 							if (_n18.a.$ === 'DragCursor') {
 								var starting = _n18.a.a;
-								var updatedModel = A3(author$project$Main$updateSelectedItemCoordinates, model, starting, coords);
-								return author$project$Main$updateModelOnly(
+								var updatedModel = A3(author$project$App$updateSelectedItemCoordinates, model, starting, coords);
+								return author$project$App$updateModelOnly(
 									_Utils_update(
 										updatedModel,
-										{cursorMode: author$project$Main$FreeFormCursor}));
+										{cursorMode: author$project$Model$FreeFormCursor}));
 							} else {
 								break _n18$5;
 							}
 					}
 				}
-				return author$project$Main$updateModelOnly(
+				return author$project$App$updateModelOnly(
 					_Utils_update(
 						model,
-						{cursorMode: author$project$Main$FreeFormCursor}));
+						{cursorMode: author$project$Model$FreeFormCursor}));
 			case 'ViewPortHasResized':
 				var result = message.a;
 				if (result.$ === 'Ok') {
 					var _n23 = result.a;
 					var width = _n23.a;
 					var height = _n23.b;
-					return author$project$Main$updateModelOnly(
+					return author$project$App$updateModelOnly(
 						_Utils_update(
 							model,
 							{
 								viewPortSize: _Utils_Tuple2(width, height)
 							}));
 				} else {
-					return author$project$Main$updateModelOnly(model);
+					return author$project$App$updateModelOnly(model);
 				}
 			default:
 				var result = message.a;
 				if (result.$ === 'Ok') {
 					var content = result.a;
-					return author$project$Main$updateModelOnly(
+					return author$project$App$updateModelOnly(
 						_Utils_update(
 							model,
 							{instantiatedItems: content.canvasItems}));
 				} else {
 					var e = result;
 					var x = A2(elm$core$Debug$log, 'Error loading file: ', e);
-					return author$project$Main$updateModelOnly(model);
+					return author$project$App$updateModelOnly(model);
 				}
 		}
 	});
-var author$project$Main$ClearSelection = {$: 'ClearSelection'};
-var author$project$Main$DoubleClick = function (a) {
+var author$project$Main$initialModel = {
+	currentItemUnderCursor: elm$core$Maybe$Nothing,
+	cursorCoords: {x: 0, y: 0},
+	cursorMode: author$project$Model$FreeFormCursor,
+	hoveredItem: elm$core$Maybe$Nothing,
+	instantiatedItems: _List_Nil,
+	intent: author$project$Model$ToExplore,
+	itemsUnderCursor: _List_Nil,
+	panCoords: {x: 0, y: 0},
+	selectedItems: _List_Nil,
+	selectionMode: author$project$Model$SingleSelect,
+	viewPortSize: _Utils_Tuple2(1000, 1000),
+	zoomFactor: 1.0
+};
+var author$project$Main$init = F3(
+	function (flags, url, key) {
+		return _Utils_Tuple2(author$project$Main$initialModel, elm$core$Platform$Cmd$none);
+	});
+var author$project$Model$NoOp = {$: 'NoOp'};
+var author$project$Constants$menuHeight = 30;
+var author$project$Graphics$pointsToString = function (points) {
+	var coordsToString = function (_n0) {
+		var x = _n0.x;
+		var y = _n0.y;
+		return elm$core$String$fromInt(x) + (',' + elm$core$String$fromInt(y));
+	};
+	return A2(
+		elm$core$String$join,
+		' ',
+		A2(elm$core$List$map, coordsToString, points));
+};
+var author$project$Model$ClearSelection = {$: 'ClearSelection'};
+var author$project$Model$DoubleClick = function (a) {
 	return {$: 'DoubleClick', a: a};
 };
-var author$project$Main$HoveredItem = function (a) {
-	return {$: 'HoveredItem', a: a};
-};
-var author$project$Main$SelectItem = function (a) {
-	return {$: 'SelectItem', a: a};
-};
-var author$project$Main$UnhoveredItem = {$: 'UnhoveredItem'};
-var author$project$Main$boundingBoxToEllipse = F2(
+var author$project$Graphics$boundingBoxToEllipse = F2(
 	function (upperLeft, lowerRight) {
 		var radiusY = ((lowerRight.y - upperLeft.y) / 2) | 0;
 		var radiusX = ((lowerRight.x - upperLeft.x) / 2) | 0;
@@ -7205,19 +7373,142 @@ var author$project$Main$boundingBoxToEllipse = F2(
 			radiusX,
 			radiusY);
 	});
-var author$project$Main$LowerLeft = {$: 'LowerLeft'};
-var author$project$Main$LowerRight = {$: 'LowerRight'};
-var author$project$Main$UpperLeft = {$: 'UpperLeft'};
-var author$project$Main$UpperRight = {$: 'UpperRight'};
-var author$project$Main$ResizeItem = F3(
-	function (a, b, c) {
-		return {$: 'ResizeItem', a: a, b: b, c: c};
+var author$project$Graphics$addConnectingPoint = F2(
+	function (next, _n0) {
+		var pt = _n0.a;
+		var pts = _n0.b;
+		var connectingPoint = {x: next.x, y: pt.y};
+		return _Utils_Tuple2(
+			next,
+			A2(
+				elm$core$List$cons,
+				connectingPoint,
+				A2(elm$core$List$cons, pt, pts)));
 	});
+var author$project$Graphics$straightenPolyline = function (points) {
+	if (points.b) {
+		var x = points.a;
+		var xs = points.b;
+		var _n1 = A3(
+			elm$core$List$foldr,
+			author$project$Graphics$addConnectingPoint,
+			_Utils_Tuple2(x, _List_Nil),
+			xs);
+		var last = _n1.a;
+		var list = _n1.b;
+		return elm$core$List$reverse(
+			A2(elm$core$List$cons, last, list));
+	} else {
+		return points;
+	}
+};
+var author$project$Model$HoveredItem = function (a) {
+	return {$: 'HoveredItem', a: a};
+};
+var author$project$Model$SelectItem = function (a) {
+	return {$: 'SelectItem', a: a};
+};
+var author$project$Model$UnhoveredItem = {$: 'UnhoveredItem'};
+var author$project$Constants$gapFromBoundingBox = 5;
+var author$project$Graphics$calculatePositionOutsideOfBoundingBox = F2(
+	function (bbox, _n0) {
+		var _n1 = _n0.a;
+		var itemUL = _n1.a;
+		var itemLR = _n1.b;
+		var _n2 = _Utils_Tuple2(itemUL.x + author$project$Constants$gapFromBoundingBox, itemUL.y + author$project$Constants$gapFromBoundingBox);
+		var itemX = _n2.a;
+		var itemY = _n2.b;
+		var _n3 = A2(author$project$Graphics$padBoundingBox, bbox, author$project$Constants$detectionPaddingSize);
+		var bbUL = _n3.a;
+		var bbLR = _n3.b;
+		var _n4 = A4(author$project$Graphics$calculateClosestPointDelta, itemUL, itemLR, bbUL, bbLR);
+		var dx = _n4.a;
+		var dy = _n4.b;
+		var _n5 = (dy < 0) ? _Utils_Tuple2(bbUL.y, 'baseline') : _Utils_Tuple2(bbLR.y, 'hanging');
+		var y = _n5.a;
+		var baseline = _n5.b;
+		var _n6 = (dx < 0) ? _Utils_Tuple2(bbUL.x, 'end') : _Utils_Tuple2(bbLR.x, 'start');
+		var x = _n6.a;
+		var anchor = _n6.b;
+		var _n7 = function () {
+			var _n8 = _Utils_Tuple3(
+				dx,
+				dy,
+				_Utils_cmp(
+					elm$core$Basics$abs(dx),
+					elm$core$Basics$abs(dy)) < 0);
+			_n8$0:
+			while (true) {
+				if (_n8.c) {
+					if ((!_n8.a) && (!_n8.b)) {
+						break _n8$0;
+					} else {
+						return _Utils_Tuple3(
+							{x: x, y: itemY},
+							anchor,
+							'baseline');
+					}
+				} else {
+					if ((!_n8.a) && (!_n8.b)) {
+						break _n8$0;
+					} else {
+						return _Utils_Tuple3(
+							{x: itemX, y: y},
+							'start',
+							baseline);
+					}
+				}
+			}
+			return _Utils_Tuple3(
+				{x: itemX, y: itemY},
+				'start',
+				'baseline');
+		}();
+		var ul = _n7.a;
+		var an = _n7.b;
+		var bl = _n7.c;
+		return _Utils_Tuple3(
+			_Utils_Tuple2(ul, ul),
+			an,
+			bl);
+	});
+var author$project$UI$calculatePinNamePosition = F2(
+	function (instantiatedItems, coords) {
+		var pinNameLR = {x: coords.x + 100, y: coords.y + 100};
+		var seed = _Utils_Tuple3(
+			_Utils_Tuple2(coords, pinNameLR),
+			'start',
+			'baseline');
+		var getCoords = function (item) {
+			if (item.$ === 'Rect') {
+				var upperLeft = item.a;
+				var lowerRight = item.b;
+				return elm$core$Maybe$Just(
+					_Utils_Tuple2(upperLeft, lowerRight));
+			} else {
+				return elm$core$Maybe$Nothing;
+			}
+		};
+		var rects = A2(
+			elm$core$List$filterMap,
+			A2(
+				elm$core$Basics$composeR,
+				function ($) {
+					return $.shape;
+				},
+				getCoords),
+			instantiatedItems);
+		return A3(elm$core$List$foldl, author$project$Graphics$calculatePositionOutsideOfBoundingBox, seed, rects);
+	});
+var author$project$Model$LowerLeft = {$: 'LowerLeft'};
+var author$project$Model$LowerRight = {$: 'LowerRight'};
+var author$project$Model$UpperLeft = {$: 'UpperLeft'};
+var author$project$Model$UpperRight = {$: 'UpperRight'};
 var elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
 var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var elm$svg$Svg$Attributes$visibility = _VirtualDom_attribute('visibility');
-var author$project$Main$movementCircleAttributes = function (toDisplay) {
+var author$project$Graphics$movementCircleAttributes = function (toDisplay) {
 	return _List_fromArray(
 		[
 			elm$svg$Svg$Attributes$d('M 5, 5 m -2, 0 a 2,2 0 1,0 5,0 a 2,2 0 1,0 -5,0'),
@@ -7227,6 +7518,10 @@ var author$project$Main$movementCircleAttributes = function (toDisplay) {
 			toDisplay ? 'visible' : 'hidden')
 		]);
 };
+var author$project$Model$ResizeItem = F3(
+	function (a, b, c) {
+		return {$: 'ResizeItem', a: a, b: b, c: c};
+	});
 var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var elm$svg$Svg$path = elm$svg$Svg$trustedNode('path');
 var elm$svg$Svg$Attributes$transform = _VirtualDom_attribute('transform');
@@ -7247,7 +7542,7 @@ var elm$svg$Svg$Events$onMouseDown = function (msg) {
 		'mousedown',
 		elm$json$Json$Decode$succeed(msg));
 };
-var author$project$Main$makeResizeCircles = F6(
+var author$project$UI$makeResizeCircles = F6(
 	function (cursorCoords, item, width, height, toDisplay, anchor) {
 		var _n0 = function () {
 			switch (anchor.$) {
@@ -7268,20 +7563,20 @@ var author$project$Main$makeResizeCircles = F6(
 		return A2(
 			elm$svg$Svg$path,
 			_Utils_ap(
-				author$project$Main$movementCircleAttributes(toDisplay),
+				author$project$Graphics$movementCircleAttributes(toDisplay),
 				_List_fromArray(
 					[
 						elm$svg$Svg$Attributes$transform('translate(' + (x + (',' + (y + ')')))),
 						elm$svg$Svg$Events$onMouseDown(
-						A3(author$project$Main$ResizeItem, item, cursorCoords, anchor))
+						A3(author$project$Model$ResizeItem, item, cursorCoords, anchor))
 					])),
 			_List_Nil);
 	});
-var author$project$Main$displayResizeOption = F6(
+var author$project$UI$displayResizeOption = F6(
 	function (isItemHovered, intent, item, cursorCoords, upperLeft, lowerRight) {
 		var width = lowerRight.x - upperLeft.x;
 		var isResizing = function () {
-			if (intent.$ === 'ToResizeCanvasItemInstance') {
+			if (intent.$ === 'ToResizeCanvasItem') {
 				return true;
 			} else {
 				return false;
@@ -7289,20 +7584,20 @@ var author$project$Main$displayResizeOption = F6(
 		}();
 		var toDisplay = isResizing || isItemHovered;
 		var height = lowerRight.y - upperLeft.y;
-		var makeCircle = A5(author$project$Main$makeResizeCircles, cursorCoords, item, width, height, toDisplay);
+		var makeCircle = A5(author$project$UI$makeResizeCircles, cursorCoords, item, width, height, toDisplay);
 		return _List_fromArray(
 			[
-				makeCircle(author$project$Main$UpperLeft),
-				makeCircle(author$project$Main$UpperRight),
-				makeCircle(author$project$Main$LowerLeft),
-				makeCircle(author$project$Main$LowerRight)
+				makeCircle(author$project$Model$UpperLeft),
+				makeCircle(author$project$Model$UpperRight),
+				makeCircle(author$project$Model$LowerLeft),
+				makeCircle(author$project$Model$LowerRight)
 			]);
 	});
-var author$project$Main$MovePath = F3(
+var author$project$Model$MovePath = F3(
 	function (a, b, c) {
 		return {$: 'MovePath', a: a, b: b, c: c};
 	});
-var author$project$Main$makeMovementCirlces = F3(
+var author$project$UI$makeMovementCirlces = F3(
 	function (item, toDisplay, points) {
 		var makeCircle = F2(
 			function (i, _n0) {
@@ -7311,14 +7606,14 @@ var author$project$Main$makeMovementCirlces = F3(
 				return A2(
 					elm$svg$Svg$path,
 					_Utils_ap(
-						author$project$Main$movementCircleAttributes(toDisplay),
+						author$project$Graphics$movementCircleAttributes(toDisplay),
 						_List_fromArray(
 							[
 								elm$svg$Svg$Attributes$transform(
 								'translate(' + (elm$core$String$fromInt(x - 5) + (',' + (elm$core$String$fromInt(y - 5) + ')')))),
 								elm$svg$Svg$Events$onMouseDown(
 								A3(
-									author$project$Main$MovePath,
+									author$project$Model$MovePath,
 									item,
 									i,
 									{x: x, y: y}))
@@ -7327,28 +7622,17 @@ var author$project$Main$makeMovementCirlces = F3(
 			});
 		return A2(elm$core$List$indexedMap, makeCircle, points);
 	});
-var author$project$Main$moveSelectedItems = F2(
+var author$project$UI$moveSelectedItems = F2(
 	function (model, item) {
 		var _n0 = _Utils_Tuple2(model.cursorMode, model.cursorCoords);
 		if (_n0.a.$ === 'DragCursor') {
 			var starting = _n0.a.a;
 			var current = _n0.b;
-			return A4(author$project$Main$updateItemCoordinates, model.zoomFactor, starting, current, item);
+			return A4(author$project$Model$updateItemCoordinates, model.zoomFactor, starting, current, item);
 		} else {
 			return item;
 		}
 	});
-var author$project$Main$pointsToString = function (points) {
-	var coordsToString = function (_n0) {
-		var x = _n0.x;
-		var y = _n0.y;
-		return elm$core$String$fromInt(x) + (',' + elm$core$String$fromInt(y));
-	};
-	return A2(
-		elm$core$String$join,
-		' ',
-		A2(elm$core$List$map, coordsToString, points));
-};
 var elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -7443,28 +7727,28 @@ var elm$svg$Svg$Events$onMouseOver = function (msg) {
 		'mouseover',
 		elm$json$Json$Decode$succeed(msg));
 };
-var author$project$Main$displayCanvasItemInstance = F2(
+var author$project$UI$displayCanvasItem = F2(
 	function (model, item) {
-		var isSelected = A2(author$project$Main$isSelectedCanvasItemInstance, model, item);
+		var isSelected = A2(author$project$Model$isSelectedCanvasItem, model, item);
 		var itemToDisplay = function () {
-			var _n7 = _Utils_Tuple2(isSelected, model.cursorMode);
-			if (_n7.a && (_n7.b.$ === 'DragCursor')) {
-				return A2(author$project$Main$moveSelectedItems, model, item);
+			var _n9 = _Utils_Tuple2(isSelected, model.cursorMode);
+			if (_n9.a && (_n9.b.$ === 'DragCursor')) {
+				return A2(author$project$UI$moveSelectedItems, model, item);
 			} else {
 				return item;
 			}
 		}();
 		var isItemHovered = function () {
-			var _n6 = model.hoveredItem;
-			if (_n6.$ === 'Just') {
-				var hovered = _n6.a;
+			var _n8 = model.hoveredItem;
+			if (_n8.$ === 'Just') {
+				var hovered = _n8.a;
 				return _Utils_eq(hovered, item);
 			} else {
 				return false;
 			}
 		}();
-		var toDisplayResizeOption = A4(author$project$Main$displayResizeOption, isItemHovered, model.intent, itemToDisplay, model.cursorCoords);
-		var _n0 = itemToDisplay.item;
+		var toDisplayResizeOption = A4(author$project$UI$displayResizeOption, isItemHovered, model.intent, itemToDisplay, model.cursorCoords);
+		var _n0 = itemToDisplay.shape;
 		switch (_n0.$) {
 			case 'Rect':
 				var upperLeft = _n0.a;
@@ -7481,10 +7765,10 @@ var author$project$Main$displayCanvasItemInstance = F2(
 					_List_fromArray(
 						[
 							elm$svg$Svg$Events$onMouseDown(
-							author$project$Main$SelectItem(item)),
+							author$project$Model$SelectItem(item)),
 							elm$svg$Svg$Events$onMouseOver(
-							author$project$Main$HoveredItem(item)),
-							elm$svg$Svg$Events$onMouseOut(author$project$Main$UnhoveredItem),
+							author$project$Model$HoveredItem(item)),
+							elm$svg$Svg$Events$onMouseOut(author$project$Model$UnhoveredItem),
 							elm$svg$Svg$Attributes$transform('translate(' + (x + (',' + (y + ')'))))
 						]),
 					_Utils_ap(
@@ -7519,12 +7803,18 @@ var author$project$Main$displayCanvasItemInstance = F2(
 							]),
 						resizeOption));
 			case 'Polyline':
-				var points = _n0.a;
-				var pointsString = author$project$Main$pointsToString(points);
-				var movementCircles = A3(author$project$Main$makeMovementCirlces, itemToDisplay, isItemHovered, points);
-				var makePinNameText = function (_n3) {
-					var coords = _n3.a;
-					var pinName = _n3.b;
+				var rawPoints = _n0.a;
+				var straightenedPoints = author$project$Graphics$straightenPolyline(rawPoints);
+				var pointsString = author$project$Graphics$pointsToString(straightenedPoints);
+				var movementCircles = A3(author$project$UI$makeMovementCirlces, itemToDisplay, isItemHovered, rawPoints);
+				var makePinNameText = function (_n5) {
+					var coords = _n5.a;
+					var pinName = _n5.b;
+					var _n3 = A2(author$project$UI$calculatePinNamePosition, model.instantiatedItems, coords);
+					var _n4 = _n3.a;
+					var newCoords = _n4.a;
+					var anchor = _n3.b;
+					var baseline = _n3.c;
 					return A2(
 						elm$svg$Svg$text_,
 						_List_fromArray(
@@ -7534,9 +7824,11 @@ var author$project$Main$displayCanvasItemInstance = F2(
 								elm$svg$Svg$Attributes$stroke(
 								isSelected ? 'blue' : 'black'),
 								elm$svg$Svg$Attributes$x(
-								elm$core$String$fromInt(coords.x + 10)),
+								elm$core$String$fromInt(newCoords.x)),
 								elm$svg$Svg$Attributes$y(
-								elm$core$String$fromInt(coords.y + 10))
+								elm$core$String$fromInt(newCoords.y)),
+								elm$svg$Svg$Attributes$textAnchor(anchor),
+								elm$svg$Svg$Attributes$alignmentBaseline(baseline)
 							]),
 						_List_fromArray(
 							[
@@ -7544,11 +7836,11 @@ var author$project$Main$displayCanvasItemInstance = F2(
 							]));
 				};
 				var _n1 = function () {
-					if (!points.b) {
+					if (!straightenedPoints.b) {
 						return _Utils_Tuple2(elm$core$Maybe$Nothing, elm$core$Maybe$Nothing);
 					} else {
-						var x = points.a;
-						var xs = points.b;
+						var x = straightenedPoints.a;
+						var xs = straightenedPoints.b;
 						return _Utils_Tuple2(
 							elm$core$Maybe$Just(x),
 							elm$core$List$head(
@@ -7584,10 +7876,10 @@ var author$project$Main$displayCanvasItemInstance = F2(
 					_List_fromArray(
 						[
 							elm$svg$Svg$Events$onMouseDown(
-							author$project$Main$SelectItem(item)),
+							author$project$Model$SelectItem(item)),
 							elm$svg$Svg$Events$onMouseOver(
-							author$project$Main$HoveredItem(item)),
-							elm$svg$Svg$Events$onMouseOut(author$project$Main$UnhoveredItem)
+							author$project$Model$HoveredItem(item)),
+							elm$svg$Svg$Events$onMouseOut(author$project$Model$UnhoveredItem)
 						]),
 					_Utils_ap(
 						_List_fromArray(
@@ -7614,7 +7906,13 @@ var author$project$Main$displayCanvasItemInstance = F2(
 										elm$svg$Svg$Attributes$points(pointsString),
 										elm$svg$Svg$Attributes$fillOpacity('0.0'),
 										elm$svg$Svg$Attributes$strokeOpacity('0.0'),
-										elm$svg$Svg$Attributes$strokeWidth('20')
+										elm$svg$Svg$Attributes$strokeWidth('5'),
+										A2(
+										elm$svg$Svg$Events$on,
+										'dblclick',
+										elm$json$Json$Decode$succeed(
+											author$project$Model$DoubleClick(
+												elm$core$Maybe$Just(item))))
 									]),
 								_List_Nil)
 							]),
@@ -7623,19 +7921,19 @@ var author$project$Main$displayCanvasItemInstance = F2(
 				var upperLeft = _n0.a;
 				var lowerRight = _n0.b;
 				var resizeOption = A2(toDisplayResizeOption, upperLeft, lowerRight);
-				var _n4 = A2(author$project$Main$boundingBoxToEllipse, upperLeft, lowerRight);
-				var center = _n4.a;
-				var radiusX = _n4.b;
-				var radiusY = _n4.c;
+				var _n6 = A2(author$project$Graphics$boundingBoxToEllipse, upperLeft, lowerRight);
+				var center = _n6.a;
+				var radiusX = _n6.b;
+				var radiusY = _n6.c;
 				return A2(
 					elm$svg$Svg$g,
 					_List_fromArray(
 						[
 							elm$svg$Svg$Events$onMouseDown(
-							author$project$Main$SelectItem(item)),
+							author$project$Model$SelectItem(item)),
 							elm$svg$Svg$Events$onMouseOver(
-							author$project$Main$HoveredItem(item)),
-							elm$svg$Svg$Events$onMouseOut(author$project$Main$UnhoveredItem),
+							author$project$Model$HoveredItem(item)),
+							elm$svg$Svg$Events$onMouseOut(author$project$Model$UnhoveredItem),
 							elm$svg$Svg$Attributes$transform(
 							'translate(' + (elm$core$String$fromInt(upperLeft.x) + (',' + (elm$core$String$fromInt(upperLeft.y) + ')'))))
 						]),
@@ -7695,9 +7993,9 @@ var author$project$Main$displayCanvasItemInstance = F2(
 				var lowerRight = _n0.b;
 				var label = _n0.c;
 				var isEditing = function () {
-					var _n5 = model.intent;
-					if (_n5.$ === 'ToType') {
-						var i = _n5.a;
+					var _n7 = model.intent;
+					if (_n7.$ === 'ToType') {
+						var i = _n7.a;
 						return _Utils_eq(i.id, item.id);
 					} else {
 						return false;
@@ -7708,12 +8006,12 @@ var author$project$Main$displayCanvasItemInstance = F2(
 					_List_fromArray(
 						[
 							elm$svg$Svg$Events$onMouseDown(
-							author$project$Main$SelectItem(item)),
+							author$project$Model$SelectItem(item)),
 							A2(
 							elm$svg$Svg$Events$on,
 							'dblclick',
 							elm$json$Json$Decode$succeed(
-								author$project$Main$DoubleClick(
+								author$project$Model$DoubleClick(
 									elm$core$Maybe$Just(item)))),
 							elm$svg$Svg$Attributes$transform(
 							'translate(' + (elm$core$String$fromInt(upperLeft.x) + (',' + (elm$core$String$fromInt(upperLeft.y) + ')'))))
@@ -7920,7 +8218,7 @@ var lukewestby$elm_string_interpolate$String$Interpolate$interpolate = F2(
 			lukewestby$elm_string_interpolate$String$Interpolate$applyInterpolation(asArray),
 			string);
 	});
-var author$project$Main$canvas = function (model) {
+var author$project$UI$canvas = function (model) {
 	var viewBoxDims = A2(
 		lukewestby$elm_string_interpolate$String$Interpolate$interpolate,
 		'{0} {1} {2} {3}',
@@ -7933,7 +8231,7 @@ var author$project$Main$canvas = function (model) {
 			]));
 	var canvasItems = A2(
 		elm$core$List$map,
-		author$project$Main$displayCanvasItemInstance(model),
+		author$project$UI$displayCanvasItem(model),
 		model.instantiatedItems);
 	var backgroundItems = _List_fromArray(
 		[
@@ -7983,7 +8281,7 @@ var author$project$Main$canvas = function (model) {
 			var cursorCoords = _n1.a;
 			var points = _n1.b;
 			return _Utils_Tuple2(
-				author$project$Main$pointsToString(points),
+				author$project$Graphics$pointsToString(points),
 				elm$core$Maybe$Just(cursorCoords));
 		} else {
 			return _Utils_Tuple2('', elm$core$Maybe$Nothing);
@@ -8100,20 +8398,19 @@ var author$project$Main$canvas = function (model) {
 			[
 				elm$svg$Svg$Attributes$width('100%'),
 				elm$svg$Svg$Attributes$height('100%'),
-				elm$svg$Svg$Events$onMouseDown(author$project$Main$ClearSelection),
+				elm$svg$Svg$Events$onMouseDown(author$project$Model$ClearSelection),
 				A2(
 				elm$svg$Svg$Events$on,
 				'dblclick',
 				elm$json$Json$Decode$succeed(
-					author$project$Main$DoubleClick(elm$core$Maybe$Nothing)))
+					author$project$Model$DoubleClick(elm$core$Maybe$Nothing)))
 			]),
 		_Utils_ap(
 			backgroundItems,
 			_Utils_ap(canvasItems, specialItems)));
 };
-var author$project$Main$LoadSchematic = {$: 'LoadSchematic'};
-var author$project$Main$SaveSchematic = {$: 'SaveSchematic'};
-var author$project$Main$menuHeight = 30;
+var author$project$Model$LoadSchematic = {$: 'LoadSchematic'};
+var author$project$Model$SaveSchematic = {$: 'SaveSchematic'};
 var mdgriffith$elm_ui$Internal$Model$Height = function (a) {
 	return {$: 'Height', a: a};
 };
@@ -8692,9 +8989,6 @@ var mdgriffith$elm_ui$Internal$Style$Supports = F2(
 	function (a, b) {
 		return {$: 'Supports', a: a, b: b};
 	});
-var elm$core$List$concat = function (lists) {
-	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
-};
 var elm$core$List$concatMap = F2(
 	function (f, list) {
 		return elm$core$List$concat(
@@ -13770,7 +14064,7 @@ var mdgriffith$elm_ui$Element$Font$size = function (i) {
 		mdgriffith$elm_ui$Internal$Flag$fontSize,
 		mdgriffith$elm_ui$Internal$Model$FontSize(i));
 };
-var author$project$Main$menu = function () {
+var author$project$UI$menu = function () {
 	var item = function (attrs) {
 		return mdgriffith$elm_ui$Element$el(
 			_Utils_ap(
@@ -13794,7 +14088,7 @@ var author$project$Main$menu = function () {
 		_List_fromArray(
 			[
 				mdgriffith$elm_ui$Element$height(
-				mdgriffith$elm_ui$Element$px(author$project$Main$menuHeight)),
+				mdgriffith$elm_ui$Element$px(author$project$Constants$menuHeight)),
 				mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill),
 				mdgriffith$elm_ui$Element$Font$size(14),
 				mdgriffith$elm_ui$Element$spacing(5),
@@ -13810,21 +14104,21 @@ var author$project$Main$menu = function () {
 				item,
 				_List_fromArray(
 					[
-						mdgriffith$elm_ui$Element$Events$onClick(author$project$Main$SaveSchematic)
+						mdgriffith$elm_ui$Element$Events$onClick(author$project$Model$SaveSchematic)
 					]),
 				mdgriffith$elm_ui$Element$text('Save')),
 				A2(
 				item,
 				_List_fromArray(
 					[
-						mdgriffith$elm_ui$Element$Events$onClick(author$project$Main$LoadSchematic)
+						mdgriffith$elm_ui$Element$Events$onClick(author$project$Model$LoadSchematic)
 					]),
 				mdgriffith$elm_ui$Element$text('Load'))
 			]));
 }();
-var author$project$Main$AddArrow = {$: 'AddArrow'};
-var author$project$Main$AddEllipse = {$: 'AddEllipse'};
-var author$project$Main$AddRect = {$: 'AddRect'};
+var author$project$Model$AddArrow = {$: 'AddArrow'};
+var author$project$Model$AddEllipse = {$: 'AddEllipse'};
+var author$project$Model$AddRect = {$: 'AddRect'};
 var mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
 var mdgriffith$elm_ui$Element$alignTop = mdgriffith$elm_ui$Internal$Model$AlignY(mdgriffith$elm_ui$Internal$Model$Top);
 var mdgriffith$elm_ui$Internal$Model$AsColumn = {$: 'AsColumn'};
@@ -13853,7 +14147,7 @@ var elm$core$Basics$always = F2(
 	});
 var mdgriffith$elm_ui$Internal$Model$unstyled = A2(elm$core$Basics$composeL, mdgriffith$elm_ui$Internal$Model$Unstyled, elm$core$Basics$always);
 var mdgriffith$elm_ui$Element$html = mdgriffith$elm_ui$Internal$Model$unstyled;
-var author$project$Main$palette = function () {
+var author$project$UI$palette = function () {
 	var item = F2(
 		function (attrs, svg) {
 			return A2(
@@ -13908,7 +14202,7 @@ var author$project$Main$palette = function () {
 						item,
 						_List_fromArray(
 							[
-								mdgriffith$elm_ui$Element$Events$onClick(author$project$Main$AddRect)
+								mdgriffith$elm_ui$Element$Events$onClick(author$project$Model$AddRect)
 							]),
 						A2(
 							elm$svg$Svg$rect,
@@ -13928,7 +14222,7 @@ var author$project$Main$palette = function () {
 						item,
 						_List_fromArray(
 							[
-								mdgriffith$elm_ui$Element$Events$onClick(author$project$Main$AddEllipse)
+								mdgriffith$elm_ui$Element$Events$onClick(author$project$Model$AddEllipse)
 							]),
 						A2(
 							elm$svg$Svg$ellipse,
@@ -13948,7 +14242,7 @@ var author$project$Main$palette = function () {
 						item,
 						_List_fromArray(
 							[
-								mdgriffith$elm_ui$Element$Events$onClick(author$project$Main$AddArrow)
+								mdgriffith$elm_ui$Element$Events$onClick(author$project$Model$AddArrow)
 							]),
 						A2(
 							elm$svg$Svg$polyline,
@@ -13965,38 +14259,38 @@ var author$project$Main$palette = function () {
 					]))
 			]));
 }();
-var author$project$Main$UpdateItemContextDir = F2(
+var author$project$Model$UpdateItemContextDir = F2(
 	function (a, b) {
 		return {$: 'UpdateItemContextDir', a: a, b: b};
 	});
-var author$project$Main$UpdateItemGitRef = F2(
+var author$project$Model$UpdateItemGitRef = F2(
 	function (a, b) {
 		return {$: 'UpdateItemGitRef', a: a, b: b};
 	});
-var author$project$Main$UpdateItemGitUrl = F2(
+var author$project$Model$UpdateItemGitUrl = F2(
 	function (a, b) {
 		return {$: 'UpdateItemGitUrl', a: a, b: b};
 	});
-var author$project$Main$UpdateItemManifestPath = F2(
+var author$project$Model$UpdateItemManifestPath = F2(
 	function (a, b) {
 		return {$: 'UpdateItemManifestPath', a: a, b: b};
 	});
-var author$project$Main$UpdateItemName = F2(
+var author$project$Model$UpdateItemName = F2(
 	function (a, b) {
 		return {$: 'UpdateItemName', a: a, b: b};
 	});
-var author$project$Main$UpdateSinkPinName = F2(
+var author$project$Model$UpdateSinkPinName = F2(
 	function (a, b) {
 		return {$: 'UpdateSinkPinName', a: a, b: b};
 	});
-var author$project$Main$UpdateSourcePinName = F2(
+var author$project$Model$UpdateSourcePinName = F2(
 	function (a, b) {
 		return {$: 'UpdateSourcePinName', a: a, b: b};
 	});
-var author$project$Main$UserIsNotTyping = function (a) {
+var author$project$Model$UserIsNotTyping = function (a) {
 	return {$: 'UserIsNotTyping', a: a};
 };
-var author$project$Main$UserIsTyping = function (a) {
+var author$project$Model$UserIsTyping = function (a) {
 	return {$: 'UserIsTyping', a: a};
 };
 var elm$html$Html$Events$onFocus = function (msg) {
@@ -14917,7 +15211,7 @@ var mdgriffith$elm_ui$Element$Input$text = mdgriffith$elm_ui$Element$Input$textH
 		spellchecked: false,
 		type_: mdgriffith$elm_ui$Element$Input$TextInputNode('text')
 	});
-var author$project$Main$itemPropertyPanel = function (item) {
+var author$project$UI$itemPropertyPanel = function (item) {
 	var fieldPlaceholder = function (label) {
 		return elm$core$Maybe$Just(
 			A2(
@@ -14942,9 +15236,9 @@ var author$project$Main$itemPropertyPanel = function (item) {
 				_List_fromArray(
 					[
 						mdgriffith$elm_ui$Element$Events$onFocus(
-						author$project$Main$UserIsTyping(item)),
+						author$project$Model$UserIsTyping(item)),
 						mdgriffith$elm_ui$Element$Events$onLoseFocus(
-						author$project$Main$UserIsNotTyping(item)),
+						author$project$Model$UserIsNotTyping(item)),
 						mdgriffith$elm_ui$Element$Font$size(12)
 					]),
 				{
@@ -14966,27 +15260,27 @@ var author$project$Main$itemPropertyPanel = function (item) {
 					mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill)
 				]),
 			function () {
-				var _n0 = item.item;
+				var _n0 = item.shape;
 				switch (_n0.$) {
 					case 'Rect':
 						return _List_fromArray(
 							[
-								A4(textField, author$project$Main$UpdateItemName, item.name, 'e.g. Compile composite', 'Part name'),
-								A4(textField, author$project$Main$UpdateItemGitUrl, item.gitUrl, 'e.g. https://github.com/arrowgrams/arrowgrams.git', 'Git URL'),
-								A4(textField, author$project$Main$UpdateItemGitRef, item.gitRef, 'e.g. 1b83cf3', 'Git ref'),
-								A4(textField, author$project$Main$UpdateItemContextDir, item.contextDir, 'e.g. build_process/parts/', 'Context directory to run in'),
-								A4(textField, author$project$Main$UpdateItemManifestPath, item.manifestPath, 'e.g. compile_composite.json', 'Manifest path relative to the context directory')
+								A4(textField, author$project$Model$UpdateItemName, item.name, 'e.g. Compile composite', 'Part name'),
+								A4(textField, author$project$Model$UpdateItemGitUrl, item.gitUrl, 'e.g. https://github.com/arrowgrams/arrowgrams.git', 'Git URL'),
+								A4(textField, author$project$Model$UpdateItemGitRef, item.gitRef, 'e.g. 1b83cf3', 'Git ref'),
+								A4(textField, author$project$Model$UpdateItemContextDir, item.contextDir, 'e.g. build_process/parts/', 'Context directory to run in'),
+								A4(textField, author$project$Model$UpdateItemManifestPath, item.manifestPath, 'e.g. compile_composite.json', 'Manifest path relative to the context directoryModel.')
 							]);
 					case 'Ellipse':
 						return _List_fromArray(
 							[
-								A4(textField, author$project$Main$UpdateItemName, item.name, 'Pin\'s name here', 'Pin name')
+								A4(textField, author$project$Model$UpdateItemName, item.name, 'Pin\'s name here', 'Pin name')
 							]);
 					case 'Polyline':
 						return _List_fromArray(
 							[
-								A4(textField, author$project$Main$UpdateSourcePinName, item.sourcePinName, 'source', 'Source pin name'),
-								A4(textField, author$project$Main$UpdateSinkPinName, item.sinkPinName, 'sink', 'Sink pin name')
+								A4(textField, author$project$Model$UpdateSourcePinName, item.sourcePinName, 'source', 'Source pin name'),
+								A4(textField, author$project$Model$UpdateSinkPinName, item.sinkPinName, 'sink', 'Sink pin name')
 							]);
 					default:
 						return _List_Nil;
@@ -14994,7 +15288,7 @@ var author$project$Main$itemPropertyPanel = function (item) {
 			}())
 		]);
 };
-var author$project$Main$propertyPanel = function (model) {
+var author$project$UI$propertyPanel = function (model) {
 	return A2(
 		mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
@@ -15022,7 +15316,7 @@ var author$project$Main$propertyPanel = function (model) {
 			} else {
 				if (!_n0.b.b) {
 					var item = _n0.a;
-					return author$project$Main$itemPropertyPanel(item);
+					return author$project$UI$itemPropertyPanel(item);
 				} else {
 					return _List_fromArray(
 						[
@@ -15297,7 +15591,7 @@ var mdgriffith$elm_ui$Element$Font$family = function (families) {
 var mdgriffith$elm_ui$Internal$Model$Monospace = {$: 'Monospace'};
 var mdgriffith$elm_ui$Element$Font$monospace = mdgriffith$elm_ui$Internal$Model$Monospace;
 var mdgriffith$elm_ui$Element$Font$sansSerif = mdgriffith$elm_ui$Internal$Model$SansSerif;
-var author$project$Main$view = function (model) {
+var author$project$UI$view = function (model) {
 	return {
 		body: _List_fromArray(
 			[
@@ -15320,7 +15614,7 @@ var author$project$Main$view = function (model) {
 						]),
 					_List_fromArray(
 						[
-							author$project$Main$menu,
+							author$project$UI$menu,
 							A2(
 							mdgriffith$elm_ui$Element$row,
 							_List_fromArray(
@@ -15330,14 +15624,14 @@ var author$project$Main$view = function (model) {
 								]),
 							_List_fromArray(
 								[
-									author$project$Main$palette,
+									author$project$UI$palette,
 									A2(
 									mdgriffith$elm_ui$Element$el,
 									_List_fromArray(
 										[
 											mdgriffith$elm_ui$Element$width(mdgriffith$elm_ui$Element$fill),
 											mdgriffith$elm_ui$Element$height(
-											mdgriffith$elm_ui$Element$px(model.viewPortSize.b - author$project$Main$menuHeight)),
+											mdgriffith$elm_ui$Element$px(model.viewPortSize.b - author$project$Constants$menuHeight)),
 											mdgriffith$elm_ui$Element$scrollbars
 										]),
 									A2(
@@ -15353,8 +15647,8 @@ var author$project$Main$view = function (model) {
 													[mdgriffith$elm_ui$Element$Font$monospace]))
 											]),
 										mdgriffith$elm_ui$Element$html(
-											author$project$Main$canvas(model)))),
-									author$project$Main$propertyPanel(model)
+											author$project$UI$canvas(model)))),
+									author$project$UI$propertyPanel(model)
 								]))
 						])))
 			]),
@@ -15366,14 +15660,14 @@ var author$project$Main$main = elm$browser$Browser$application(
 	{
 		init: author$project$Main$init,
 		onUrlChange: function (_n0) {
-			return author$project$Main$NoOp;
+			return author$project$Model$NoOp;
 		},
 		onUrlRequest: function (_n1) {
-			return author$project$Main$NoOp;
+			return author$project$Model$NoOp;
 		},
-		subscriptions: author$project$Main$subscriptions,
-		update: author$project$Main$update,
-		view: author$project$Main$view
+		subscriptions: author$project$App$subscriptions,
+		update: author$project$App$update,
+		view: author$project$UI$view
 	});
 _Platform_export({'Main':{'init':author$project$Main$main(
 	elm$json$Json$Decode$succeed(
