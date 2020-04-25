@@ -1,14 +1,13 @@
 
 * todo
-** x join builder to runner, build-graph-in-memory to run
-** x in -> out of top
+** join builder to runner, build-graph-in-memory to run
+** in -> out of top
 ** no metadata, null metadata
 ** initially set state for each code part
 ** write filter for rp that gives * and + operators
 *** rp is an assembler for parsing
 
 * usage
-** deprecated - see scripts below
   cl-user> (ql:quickload :arrowgrams/rephrase-compiler)
   cl-user> (ab::make-esa-dsl)
   cl-user> (ql:quickload :arrowgrams/esa)
@@ -25,21 +24,7 @@
 ** see also
 *** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
 
-* build results
-#+RESULTS: arrowgrams
-#+begin_example
-v4 compiler drawio :SVG-FILENAME #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
-front-end-main gets #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
-ellipse-bounding-boxes rectangle-bounding-boxes text-bounding-boxes speechbubble-bounding-boxes 
-assign-parents-to-ellipses find-comments find-metadata 
-"WARNING FB: fact already exists (USED ID630)"
-retract (:RECT :ID627)
-add-kinds add-self-ports make-unknown-port-names /create-centers COMMENTED OUT/ /calculate-distances COMMENTED OUT/ assign-portnames mark-indexed-ports coincident-ports /mark-directions (noop)/ match-ports-to-components mark-nc pinless /COMMENTED OUT sem-parts-have-some-ports/ sem-ports-have-sink-or-source /COMMENTED OUT sem-no-duplicate-kinds/ sem-speech-vs-comments assign-wire-numbers-to-edges self-input-pins self-output-pins input-pins output-pins emitter demux done FB RESET 
-back-end collector gets :PARSE ... 
-terminating - ready list is nil
-3794816315
-#+end_example
-* build helloworld.graph.json and helloworld.graph.lisp (alist)
+* build helloworld3
 #+name: arrowgrams
 #+begin_src lisp :results output
   (ql:quickload :arrowgrams/build)
@@ -48,14 +33,24 @@ terminating - ready list is nil
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::build
-    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
-    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
-    (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.lisp")
-    )
   (princ (get-universal-time))
 #+end_src
 
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::build
+  (asdf:system-relative-pathname
+   :arrowgrams
+     "build_process/parts/diagram/helloworld3.svg")))
+  (princ (get-universal-time))
+#+end_src
+
+* build worldhello
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (princ (get-universal-time))
+#+end_src
 
 #+name: arrowgrams
 #+begin_src lisp :results output
@@ -80,7 +75,9 @@ terminating - ready list is nil
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::build (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")))
+  #+nil(arrowgrams/build::build
+    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
+  (helloworld)
   (princ (get-universal-time))
 #+end_src
 * build esa from top
@@ -92,7 +89,7 @@ terminating - ready list is nil
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::make-esa-dsl)
+  (aqqrrowgrams/build::make-esa-dsl)
   (ql:quickload :arrowgrams/esa)
 #+end_src
 #+name: arrowgrams
@@ -101,10 +98,13 @@ terminating - ready list is nil
   (ql:quickload :arrowgrams/build)
 #+end_src
 #+name: arrowgrams
-#+results output
 #+begin_src lisp :results output
-  (arrowgrams/build::btest)
+  (arrowgrams/build::arrowgrams)
 #+end_src
+
+* build results
+#+RESULTS: arrowgrams
+| :ARROWGRAMS/REPHRASE-COMPILER |
 
 * build code snippets for esa builder and runner
 
