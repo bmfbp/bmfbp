@@ -74,3 +74,11 @@ Requirements:
 - Fetching Components using Git
 
 See initial discussion for context: https://github.com/bmfbp/bmfbp/issues/37
+
+
+## Instructions
+
+1. Download Docker at `https://www.docker.com/`.
+2. Run `./build.sh ${programPath}` to build and run, where `programPath` is the
+   path to the SVG file.
+3. Repeat step 2 to rebuild after making a change.

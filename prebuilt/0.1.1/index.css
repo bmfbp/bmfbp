@@ -1,0 +1,29 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+.file-drop-zone {
+  background-color: white;
+}
+
+.file-drop-zone div {
+  border-radius: 5px;
+  border: 2px dashed #bbb;
+  padding: 25px;
+  color: #bbb;
+  text-align: center;
+}
+
+.full-screen {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.no-display {
+  display: none;
+}

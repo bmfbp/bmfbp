@@ -64,7 +64,7 @@ basic algorithm:
                                              (cons :out-pins out-pins)
                                              (cons :kind (pathname-name file-name))
                                              (cons :filename (make-string-filename file-name))))))
-                                 (@send self :child-descriptor descriptor-as-json-string :tag "sol child1")))
+                                 (@send self :child-descriptor descriptor-as-json-string)))
                            (progn
                              (let ((msg (format nil "file ~s does not exist" file-name)))
                                (@send self :error msg) 
@@ -78,13 +78,13 @@ basic algorithm:
                                        (cons :in-pins in-pins)
                                        (cons :out-pins out-pins)
                                        (cons :kind (pathname-name file-name))))))) ;; no filename!  don't load it, just send :kind
-                         (@send self :child-descriptor descriptor-as-json-string :tag "sol child2")
+                         (@send self :child-descriptor descriptor-as-json-string)
                          (format *standard-output* "~&loaded lisp file \"\"~%")))))
                ;; no op
                
                ((string= "composite" kind-type-str)
                 (let ((file-name (merge-pathnames *diagram-dir* entry-point)))
-                  (@send self :schematic-filename file-name :tag "sol composite")))))))))
+                  (@send self :schematic-filename file-name)))))))))
 
 #+nil(defun fixup-filename (s)
   (let ((r1 (cl-ppcre:regex-replace-all " " s "-")))
