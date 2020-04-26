@@ -107,3 +107,5 @@ svg/cl-compiler/WORLDHELLO.json
 svg/cl-compiler/WORLDHELLO.lisp
 
 v4/cl-compiler/output.prolog
+
+build_process/cl-build/helloworld.graph.json
