@@ -89,12 +89,18 @@
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (aqqrrowgrams/build::make-esa-dsl)
+  (esa::make-esa-dsl)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp :results output
   (ql:quickload :arrowgrams/esa)
 #+end_src
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::make-esa)
+  (esa::make-esa)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp :results output
   (ql:quickload :arrowgrams/build)
 #+end_src
 #+name: arrowgrams
@@ -104,7 +110,7 @@
 
 * build results
 #+RESULTS: arrowgrams
-| :ARROWGRAMS/REPHRASE-COMPILER |
+: compiling #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
 
 * build code snippets for esa builder and runner
 

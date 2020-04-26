@@ -996,6 +996,7 @@
 	  (build
 	   infile
 	   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
+	   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.lisp")
 	   )))
     (end-of-file (c)
       (format *error-output* "FATAL 'end of file error; in main ~a~%" c))
