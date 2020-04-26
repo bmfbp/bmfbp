@@ -31,37 +31,32 @@
   (arrowgrams/build::arrowgrams)
 #+end_src
 
-* build helloworld
+* build helloworld json (build_process/cl-build/helloworld.graph.json)
 #+name: arrowgrams
 #+begin_src lisp :results output
   (ql:quickload :arrowgrams/build)
-  (princ (get-universal-time))
 #+end_src
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  #+nil(arrowgrams/build::build
-    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
-  (arrowgrams/build::arrowgrams)
-  (princ (get-universal-time))
+  (arrowgrams/build::arrowgrams-to-json)
 #+end_src
-* test-run
-#+name: arrowgrams
-#+begin_src lisp
-  (arrowgrams/build::test-run)
-#+end_src
-
 * build results
 #+RESULTS: arrowgrams
 : compiling #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
 : v4 compiler drawio :SVG-FILENAME #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
 : front-end-main gets #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
-: 3796881156
 
 
 
 
 * deprecated
+** test-run
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::test-run)
+#+end_src
+
 ** build helloworld3
 #+name: arrowgrams
 #+begin_src lisp :results output

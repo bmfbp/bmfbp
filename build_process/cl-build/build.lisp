@@ -3,7 +3,7 @@
 (defparameter *compiler-net* (arrowgrams/compiler:get-compiler-net))
 
 (defun build (filename output-filename alist-filename)
-  (let ((build-net #+nil (@defnetwork build-load-and-run
+  (let ((build-net #+nil (@defnetwork build-json
 
            (:code probe (:in) (:out))
            (:code probe2 (:in) (:out))
@@ -78,7 +78,7 @@
 
            (:code file-writer (:filename :write) (:error))
            (:code alist-writer (:filename :write) (:error))
-           (:schem build-load-and-run (:done :svg-filename :output-filename :alist-filename) (:error)
+           (:schem build-json (:done :svg-filename :output-filename :alist-filename) (:error)
             (build file-writer alist-writer)
             "
             self.svg-filename -> build.svg-filename
@@ -798,20 +798,20 @@
                                                :OUTPUT-PINS '(:ERROR)
                                                :FIRST-TIME-HANDLER
                                                #'CL-EVENT-PASSING-PART:FIRST-TIME)))
-                               (LET ((BUILD-LOAD-AND-RUN
+                               (LET ((BUILD-JSON
                                       (@NEW-SCHEMATIC :NAME
-                                                      "BUILD-LOAD-AND-RUN"
+                                                      "BUILD-JSON"
                                                       :INPUT-PINS
                                                       '(:DONE :SVG-FILENAME
                                                         :OUTPUT-FILENAME
                                                         :ALIST-FILENAME)
                                                       :OUTPUT-PINS '(:ERROR)
                                                       :FIRST-TIME-HANDLER NIL)))
-                                 (@ADD-PART-TO-SCHEMATIC BUILD-LOAD-AND-RUN
+                                 (@ADD-PART-TO-SCHEMATIC BUILD-JSON
                                                          BUILD)
-                                 (@ADD-PART-TO-SCHEMATIC BUILD-LOAD-AND-RUN
+                                 (@ADD-PART-TO-SCHEMATIC BUILD-JSON
                                                          FILE-WRITER)
-                                 (@ADD-PART-TO-SCHEMATIC BUILD-LOAD-AND-RUN
+                                 (@ADD-PART-TO-SCHEMATIC BUILD-JSON
                                                          ALIST-WRITER)
                                  (LET ((WIRE-611
                                         (CL-EVENT-PASSING::MAKE-WIRE
@@ -868,55 +868,55 @@
                                           (CL-EVENT-PASSING-RECEIVER::NEW-RECEIVER
                                            :PIN
                                            (CL-EVENT-PASSING-PIN::EXISTING-PIN
-                                            :PIN-PARENT BUILD-LOAD-AND-RUN
+                                            :PIN-PARENT BUILD-JSON
                                             :PIN-NAME :ERROR :DIRECTION
                                             :OUTPUT))))))
                                    (CL-EVENT-PASSING::MAKE-SOURCES-FOR-WIRE
-                                    BUILD-LOAD-AND-RUN WIRE-611
+                                    BUILD-JSON WIRE-611
                                     (LIST
                                      (CL-EVENT-PASSING-SOURCE::NEW-SOURCE :PIN
                                                                           (CL-EVENT-PASSING-PIN::EXISTING-PIN
                                                                            :PIN-PARENT
-                                                                           BUILD-LOAD-AND-RUN
+                                                                           BUILD-JSON
                                                                            :PIN-NAME
                                                                            :SVG-FILENAME
                                                                            :DIRECTION
                                                                            :INPUT))))
                                    (CL-EVENT-PASSING::MAKE-SOURCES-FOR-WIRE
-                                    BUILD-LOAD-AND-RUN WIRE-612
+                                    BUILD-JSON WIRE-612
                                     (LIST
                                      (CL-EVENT-PASSING-SOURCE::NEW-SOURCE :PIN
                                                                           (CL-EVENT-PASSING-PIN::EXISTING-PIN
                                                                            :PIN-PARENT
-                                                                           BUILD-LOAD-AND-RUN
+                                                                           BUILD-JSON
                                                                            :PIN-NAME
                                                                            :DONE
                                                                            :DIRECTION
                                                                            :INPUT))))
                                    (CL-EVENT-PASSING::MAKE-SOURCES-FOR-WIRE
-                                    BUILD-LOAD-AND-RUN WIRE-613
+                                    BUILD-JSON WIRE-613
                                     (LIST
                                      (CL-EVENT-PASSING-SOURCE::NEW-SOURCE :PIN
                                                                           (CL-EVENT-PASSING-PIN::EXISTING-PIN
                                                                            :PIN-PARENT
-                                                                           BUILD-LOAD-AND-RUN
+                                                                           BUILD-JSON
                                                                            :PIN-NAME
                                                                            :OUTPUT-FILENAME
                                                                            :DIRECTION
                                                                            :INPUT))))
                                    (CL-EVENT-PASSING::MAKE-SOURCES-FOR-WIRE
-                                    BUILD-LOAD-AND-RUN WIRE-614
+                                    BUILD-JSON WIRE-614
                                     (LIST
                                      (CL-EVENT-PASSING-SOURCE::NEW-SOURCE :PIN
                                                                           (CL-EVENT-PASSING-PIN::EXISTING-PIN
                                                                            :PIN-PARENT
-                                                                           BUILD-LOAD-AND-RUN
+                                                                           BUILD-JSON
                                                                            :PIN-NAME
                                                                            :ALIST-FILENAME
                                                                            :DIRECTION
                                                                            :INPUT))))
                                    (CL-EVENT-PASSING::MAKE-SOURCES-FOR-WIRE
-                                    BUILD-LOAD-AND-RUN WIRE-615
+                                    BUILD-JSON WIRE-615
                                     (LIST
                                      (CL-EVENT-PASSING-SOURCE::NEW-SOURCE :PIN
                                                                           (CL-EVENT-PASSING-PIN::EXISTING-PIN
@@ -927,7 +927,7 @@
                                                                            :DIRECTION
                                                                            :OUTPUT))))
                                    (CL-EVENT-PASSING::MAKE-SOURCES-FOR-WIRE
-                                    BUILD-LOAD-AND-RUN WIRE-616
+                                    BUILD-JSON WIRE-616
                                     (LIST
                                      (CL-EVENT-PASSING-SOURCE::NEW-SOURCE :PIN
                                                                           (CL-EVENT-PASSING-PIN::EXISTING-PIN
@@ -938,7 +938,7 @@
                                                                            :DIRECTION
                                                                            :OUTPUT))))
                                    (CL-EVENT-PASSING::MAKE-SOURCES-FOR-WIRE
-                                    BUILD-LOAD-AND-RUN WIRE-617
+                                    BUILD-JSON WIRE-617
                                     (LIST
                                      (CL-EVENT-PASSING-SOURCE::NEW-SOURCE :PIN
                                                                           (CL-EVENT-PASSING-PIN::EXISTING-PIN
@@ -965,10 +965,10 @@
                                                                            :DIRECTION
                                                                            :OUTPUT)))))
                                  (LET ()
-                                   (@TOP-LEVEL-SCHEMATIC BUILD-LOAD-AND-RUN)
+                                   (@TOP-LEVEL-SCHEMATIC BUILD-JSON)
                                    (CL-EVENT-PASSING-USER-UTIL::CHECK-TOP-LEVEL-SCHEMATIC-SANITY
-                                    BUILD-LOAD-AND-RUN)
-                                   BUILD-LOAD-AND-RUN))))))))))))))))))
+                                    BUILD-JSON)
+                                   BUILD-JSON))))))))))))))))))
 ))
 
     (@with-dispatch
@@ -986,7 +986,7 @@
 #+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
-(defun arrowgrams ()
+(defun arrowgrams-to-json ()
   (handler-case
       (let ((args (my-command-line)))
 	(let ((infile (if (> (length args) 1)
