@@ -28,7 +28,6 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (format *standard-output* "speechbubble-bounding-boxes ")
              (setf (fb self) data)
              (make-speechbubble-bounding-boxes self)
              (@send self :done t)

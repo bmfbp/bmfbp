@@ -23,11 +23,10 @@
 
 
 (defmethod e/part:react ((self build-graph-in-memory) e)
-  ;(format *standard-output* "~&build-graph-in-memory gets ~s ~s~%" (@pin self e) (chop-str (@data self e)))
   (ecase (@pin self e)
     (:json-script
      (let ((alist (json-to-alist (@data self e))))
-       (format *standard-output* "~&build-graph-in-memory pushes ~s ~s~%"
+       #+nil(format *standard-output* "~&build-graph-in-memory pushes ~s ~s~%"
 	       (cdr (assoc :item-kind alist))
 	       (cdr (assoc :name alist)))
        (push alist (code-stack self))))
@@ -35,7 +34,7 @@
     (:done
      (let ((code (code-stack self)))
        (@send self :json-graph (alist-to-json-string code))
-       (format t "~%build phase ***********~%~s~%" code)
+       ;(format t "~%**** build phase~%")
        (let ((top-most-kind (process-code self (code-stack self))))
          (@send self :kind-graph top-most-kind))))))
      
@@ -44,11 +43,8 @@
     (dolist (alist list-of-alists)
       (if (string= "leaf" (cdr (assoc :item-kind alist)))
           (progn
-            #+nil(format *standard-output* "~&build-graph processes ~s ~s~%"
-		    (get-kind alist) (cdr (assoc :name alist)))
             (build-leaf-in-mem self alist))
         (progn
-          #+nil(format *standard-output* "~&build-graph processes ~s ~s~%" (get-kind alist) (cdr (assoc :name alist)))
           (setf top-most-kind (build-graph-in-mem self alist))))) ;; set top-most-kind to the last graph processed (which is the top-most, since this is being done in reverse order)
     top-most-kind))
 
@@ -112,7 +108,6 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
         (name (get-name full-graph)))
     (let ((kind (make-instance 'kind)))
       (let ((kind-sym 'graph))
-        (format *standard-output* "~&define graph name ~s~%" name)
         (setf (kind-name kind) name)
         (setf (self-class kind) kind-sym)
         (setf (gethash kind-sym (kinds-by-name self)) kind)  ;; kind defined in esa
@@ -123,7 +118,6 @@ build-graph processes ((:ITEM-KIND . "graph") (:NAME . "compile-single-diagram")
         (dolist (part-as-alist (get-parts-list graph))
           (let ((kind-sym (make-class-name (get-part-kind part-as-alist)))
                 (part-name (make-pin-name (get-part-name part-as-alist))))
-            (format *standard-output* "~&need name ~s~%" kind-sym)
             (add-part kind part-name (gethash kind-sym (kinds-by-name self)) kind-sym)))  ;; calls esa
         ;; the wiring table is an array [] of wires
         ;; each wire is defined by: 1. index, 2. (list of) sources, 3. (list of) destinations
@@ -162,7 +156,6 @@ build-graph processes ((:ITEM-KIND . "leaf") (:IN-PINS "in") (:OUT-PINS "out") (
       (let ((k (make-instance 'kind)))  ;; defined by esa
         (setf (kind-name k) kind-sym)
         (setf (self-class k) kind-sym)
-        (format *standard-output* "~&define leaf name ~s~%" kind-sym)
         (when filename
           (load filename)) ;; load class into memory unless it has already been loaded (filename NIL)
         (dolist (ipin-str in-pins)

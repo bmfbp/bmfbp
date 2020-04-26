@@ -46,25 +46,25 @@
 (data :accessor data :initform nil)
 ))
 
-(defgeneric install-input-pin (self G11618))
-(defgeneric install-output-pin (self G11619))
-(defgeneric add-input-pin #|script|# (self G11620))
-(defgeneric add-output-pin #|script|# (self G11621))
-(defgeneric add-part #|script|# (self G11622 G11623 G11624))
-(defgeneric add-wire #|script|# (self G11625))
-(defgeneric install-wire (self G11626))
-(defgeneric install-part (self G11627 G11628 G11629))
+(defgeneric install-input-pin (self G922))
+(defgeneric install-output-pin (self G923))
+(defgeneric add-input-pin #|script|# (self G924))
+(defgeneric add-output-pin #|script|# (self G925))
+(defgeneric add-part #|script|# (self G926 G927 G928))
+(defgeneric add-wire #|script|# (self G929))
+(defgeneric install-wire (self G930))
+(defgeneric install-part (self G931 G932 G933))
 (defgeneric parts (self) #|returns map part-definition|# )
 
 
-(defgeneric install-class (self G11630))
-(defgeneric ensure-part-not-declared (self G11631))
-(defgeneric ensure-valid-input-pin (self G11632))
-(defgeneric ensure-valid-output-pin (self G11633))
-(defgeneric ensure-input-pin-not-declared (self G11634))
-(defgeneric ensure-output-pin-not-declared (self G11635))
-(defgeneric ensure-valid-source #|script|# (self G11636))
-(defgeneric ensure-valid-destination #|script|# (self G11637))
+(defgeneric install-class (self G934))
+(defgeneric ensure-part-not-declared (self G935))
+(defgeneric ensure-valid-input-pin (self G936))
+(defgeneric ensure-valid-output-pin (self G937))
+(defgeneric ensure-input-pin-not-declared (self G938))
+(defgeneric ensure-output-pin-not-declared (self G939))
+(defgeneric ensure-valid-source #|script|# (self G940))
+(defgeneric ensure-valid-destination #|script|# (self G941))
 
 
 (defgeneric ensure-kind-defined (self))
@@ -127,8 +127,8 @@
 (defgeneric refers-to-self? (self) #|returns boolean|# )
 
 
-(defgeneric install-source (self G11638 G11639))
-(defgeneric install-destination (self G11640 G11641))
+(defgeneric install-source (self G942 G943))
+(defgeneric install-destination (self G944 G945))
 
 
 (defmethod add-source #|script|# ((self wire) part  pin )
@@ -139,13 +139,13 @@
 ( install-destination self  part  pin )
 )#|end script|#
 
-(defgeneric loader #|script|# (self G11642 G11643 G11644) #|returns node|# )
+(defgeneric loader #|script|# (self G946 G947 G948) #|returns node|# )
 
 
 (defgeneric clear-input-queue (self))
 (defgeneric clear-output-queue (self))
-(defgeneric install-node (self G11645))
-(defgeneric add-child #|script|# (self G11646 G11647))
+(defgeneric install-node (self G949))
+(defgeneric add-child #|script|# (self G950 G951))
 
 
 (defmethod loader #|script|# ((self kind) my-name  my-container  dispatchr )
@@ -167,8 +167,8 @@
 )#|end let|#
 )#|end script|#
 
-(defgeneric memo-node (self G11648))
-(defgeneric set-top-node (self G11649))
+(defgeneric memo-node (self G952))
+(defgeneric set-top-node (self G953))
 
 
 (defmethod add-child #|script|# ((self node) nm  nd )
@@ -192,7 +192,7 @@
 ( initially self)
 )#|end script|#
 
-(defgeneric send (self G11650))
+(defgeneric send (self G954))
 (defgeneric distribute-output-events #|script|# (self))
 (defgeneric display-output-events-to-console-and-delete (self))
 (defgeneric get-output-events-and-delete (self) #|returns map event|# )
@@ -206,8 +206,8 @@
 (defgeneric declare-finished (self))
 
 
-(defgeneric find-wire-for-source (self G11651 G11652) #|returns wire|# )
-(defgeneric find-wire-for-self-source (self G11653) #|returns wire|# )
+(defgeneric find-wire-for-source (self G955 G956) #|returns wire|# )
+(defgeneric find-wire-for-self-source (self G957) #|returns wire|# )
 
 
 (defgeneric busy? #|script|# (self))
@@ -217,12 +217,12 @@
 (defgeneric flagged-as-busy? (self) #|returns boolean|# )
 (defgeneric dequeue-input (self))
 (defgeneric input-queue? (self))
-(defgeneric enqueue-input (self G11654))
-(defgeneric enqueue-output (self G11655))
-(defgeneric react (self G11656))
-(defgeneric run-reaction #|script|# (self G11657))
-(defgeneric run-composite-reaction #|script|# (self G11658))
-(defgeneric node-find-child (self G11659) #|returns named-part-instance|# )
+(defgeneric enqueue-input (self G958))
+(defgeneric enqueue-output (self G959))
+(defgeneric react (self G960))
+(defgeneric run-reaction #|script|# (self G961))
+(defgeneric run-composite-reaction #|script|# (self G962))
+(defgeneric node-find-child (self G963) #|returns named-part-instance|# )
 
 
 (defmethod busy? #|script|# ((self node))

@@ -28,7 +28,6 @@
       (:waiting-for-new-fb
        (if (eq pin :fb)
            (progn
-             (format *standard-output* "~&ellipse-bounding-boxes ")
              (setf (fb self) data)
              (make-bounding-boxes self)
              (@send self :done t)

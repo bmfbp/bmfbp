@@ -8,7 +8,6 @@
   (call-next-method))
 
 (defmethod e/part:react ((self collector) (e e/event:event))
-(format *standard-output* "~&back-end collector gets ~s ... ~%" (@pin self e) #+nil(@data self e))
   (let ((tok (e/event::data e))
         (no-print '(:ws :newline :eof)))
     (flet ((pull (id) (@send self :request id))

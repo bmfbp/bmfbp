@@ -986,13 +986,26 @@
 #+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
-(defun helloworld ()
-  (build
-   (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg")
-   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
-   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.lisp")
-   ))
+(defun arrowgrams ()
+  (handler-case
+      (let ((args (my-command-line)))
+	(let ((infile (if (> (length args) 1)
+			  (second args)
+ 			  (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))))
+	  (format *standard-output* "~&compiling ~s~%" infile)
+	  (build
+	   infile
+	   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
+	   )))
+    (end-of-file (c)
+      (format *error-output* "FATAL 'end of file error; in main ~a~%" c))
+    (simple-error (c)
+      (format *error-output* "FATAL error in main ~a~%" c))
+    (error (c)
+      (format *error-output* "FATAL error in main ~a~%" c))))
 
+
+#|
 (defun cl-user::from-esa ()
   ;; compilation steps after changing esa.dsl
   (ql:quickload :arrowgrams/build)
@@ -1003,4 +1016,5 @@
   (ql:quickload :arrowgrams/rephrase-compiler)
   (ab::make-esa-dsl)
   (ql:quickload :arrowgrams/build)
-  (ab::helloworld))
+  (ab::hwtest))
+|#

@@ -153,11 +153,12 @@ So, for metadata, emit:
       (progn
 	(run *standard-input*))
     (end-of-file (c)
-      (format *error-output* "FATAL 'end of file error; in main /~S/~%" c))
+      (format *error-output* "FATAL 'end of file error; in main ~a~%" c))
     (simple-error (c)
-      (format *error-output* "FATAL error in main /~S/~%" c))
+      (format *error-output* "1FATAL error1 in main~%")
+      (print-object c))
     (error (c)
-      (format *error-output* "FATAL error in main /~S/~%" c))))
+      (format *error-output* "2FATAL error2 in main ~a~%" c))))
 
 #+lispworks
 (defun main (fname)

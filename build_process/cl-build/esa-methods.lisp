@@ -93,7 +93,6 @@
 
 (defmethod install-source ((self wire) part-name pin-name)
   (let ((s (make-instance 'source)))
-(format *standard-output* "~&install-source ~s ~S~%" part-name pin-name)
     (setf (part-name s) (string-downcase part-name))
     (setf (pin-name s) (string-downcase pin-name))
     (push s (sources self))))
@@ -206,7 +205,7 @@
 
 (defmethod ensure-kind-defined ((self part-definition))
   (unless (eq 'kind (type-of (part-kind self)))
-    (error "kind for part /~s/ is not defined (check if manifest is correct) ~s" (part-name self) self)))
+    (error (format nil "kind for part ~a is not defined (check if manifest is correct)" (part-name self)))))
 
 
 (defmethod memo-node ((self dispatcher) (n node))
@@ -216,7 +215,7 @@
   (setf (top-node self) n))
 
 (defmethod declare-finished ((self dispatcher))
-  (format *standard-output* "~&~%Dispatcher Finished~%~%"))
+  #+nil(format *standard-output* "~&~%Dispatcher Finished~%~%"))
 
 
 (defun string=-downcase (a b)
@@ -228,5 +227,4 @@
     (setf (pin-name d) (pin-name self))))
 
 (defmethod react ((self node) (e event))
-  (format *standard-output* "~&react node ~s~%" (name-in-container self))
   (run-composite-reaction self e))
