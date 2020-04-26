@@ -8,13 +8,13 @@
 )
 
 (defmethod e/part:react ((self runner) e)
-  (format *standard-output* "~&**** runner gets pin ~s~%" (@pin self e))
+  #+nil(format *standard-output* "~&**** runner gets pin ~s~%" (@pin self e))
   (let ((kgraph (@data self e)))
     (let ((d (make-instance 'dispatcher)))  ;; make one "global" dispatcher
-      (format *standard-output* "~&**** loading~%")
+      #+nil(format *standard-output* "~&**** loading~%")
       (let ((n (loader kgraph "TOP" nil d)))
         (set-top-node d n)
-        (format *standard-output* "~&**** injecting input into top node~%")
+        #+nil(format *standard-output* "~&**** injecting input into top node~%")
 	(let ((ev (make-instance 'event))
               (pp (make-instance 'part-pin)))
 	  (setf (part-name pp) "self")
@@ -22,9 +22,9 @@
           (setf (partpin ev) pp)
 	  (setf (data ev) t)
 	  (enqueue-input n ev)
-          (format *standard-output* "~&**** initially~&")
+          #+ni(format *standard-output* "~&**** initially~&")
           (initialize-all d)
-          (format *standard-output* "~&**** run phase~%")
+          #+nil(format *standard-output* "~&**** run phase~%")
           (run-graph d)
           kgraph)))))
 

@@ -29,7 +29,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "mark-nc ")
              (mark-nc self)
              (@send self :done t)
              (e/part:first-time self))
