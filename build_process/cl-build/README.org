@@ -1,85 +1,8 @@
 
 * todo
-** join builder to runner, build-graph-in-memory to run
-** in -> out of top
-** no metadata, null metadata
-** initially set state for each code part
-** write filter for rp that gives * and + operators
-*** rp is an assembler for parsing
-
 * usage
-  cl-user> (ql:quickload :arrowgrams/rephrase-compiler)
-  cl-user> (ab::make-esa-dsl)
-  cl-user> (ql:quickload :arrowgrams/esa)
-  cl-user> (ab::make-esa)
-  cl-user> (ql:quickload :arrowgrams/build)
-  cl-user> (ab::hwtest)
-  cl-user> (ab::test-run)
-
-;; if adding (break) or changes only to files in cl-build...
-;; skip (ab::hwtest) which generates the graph - it's been captured and is part of test-run
-  cl-user> (ql:quickload :arrowgrams/build)
-  cl-user> (ab::test-run)
-
-** see also
-*** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
-
-* build helloworld3
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (ql:quickload :arrowgrams/build)
-  (princ (get-universal-time))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (princ (get-universal-time))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (arrowgrams/build::build
-  (asdf:system-relative-pathname
-   :arrowgrams
-     "build_process/parts/diagram/helloworld3.svg")))
-  (princ (get-universal-time))
-#+end_src
-
-* build worldhello
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (ql:quickload :arrowgrams/build)
-  (princ (get-universal-time))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (princ (get-universal-time))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (arrowgrams/build::build
-  (asdf:system-relative-pathname
-   :arrowgrams
-     "build_process/parts/diagram/worldhello.svg")))
-  (princ (get-universal-time))
-#+end_src
-
-* build helloworld
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (ql:quickload :arrowgrams/build)
-  (princ (get-universal-time))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  #+nil(arrowgrams/build::build
-    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
-  (helloworld)
-  (princ (get-universal-time))
-#+end_src
+  see "build helloworld" below
+  see "build esa from top" below
 * build esa from top
 #+name: arrowgrams
 #+begin_src lisp :results output
@@ -108,11 +31,80 @@
   (arrowgrams/build::arrowgrams)
 #+end_src
 
+* build helloworld
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  #+nil(arrowgrams/build::build
+    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
+  (arrowgrams/build::arrowgrams)
+  (princ (get-universal-time))
+#+end_src
+* test-run
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::test-run)
+#+end_src
+
 * build results
 #+RESULTS: arrowgrams
 : compiling #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
+: v4 compiler drawio :SVG-FILENAME #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
+: front-end-main gets #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
+: 3796881156
 
-* build code snippets for esa builder and runner
+
+
+
+* deprecated
+** build helloworld3
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::build
+  (asdf:system-relative-pathname
+   :arrowgrams
+     "build_process/parts/diagram/helloworld3.svg")))
+  (princ (get-universal-time))
+#+end_src
+
+** build worldhello
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (princ (get-universal-time))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::build
+  (asdf:system-relative-pathname
+   :arrowgrams
+     "build_process/parts/diagram/worldhello.svg")))
+  (princ (get-universal-time))
+#+end_src
+
+** build code snippets for esa builder and runner
 
 #+name: arrowgrams
 #+begin_src lisp
@@ -146,19 +138,13 @@
 
 #+RESULTS: arrowgrams
 : NIL
-* test-run
-#+name: arrowgrams
-#+begin_src lisp
-  (ab::test-run)
-#+end_src
-
-* graph capture - not needed, after graph has been captured
+** graph capture - not needed, after graph has been captured
 #+name: arrowgrams
 #+header: :var message="4a. hello world graph built"
 #+begin_src lisp :eval yes
   (format nil "~s ~s ~s" message (ab::hwtest) (get-universal-time))
 #+end_src
-* make sample.lisp
+** make sample.lisp
 #+name: arrowgrams
 #+header: :var message=".2a sample esa"
 #+begin_src lisp
@@ -171,7 +157,7 @@
   (ql:quickload :arrowgrams/rephrase-compiler)
 #+end_src
 
-* for building JS, click ^C^C on the grayed-out lisp lines, sequentially waiting for status line to change (many seconds), to generate js transpiler
+** for building JS, click ^C^C on the grayed-out lisp lines, sequentially waiting for status line to change (many seconds), to generate js transpiler
 
 #+name: arrowgrams_js
 #+begin_src lisp
@@ -193,7 +179,7 @@
 #+RESULTS: arrowgrams_js
 | :ARROWGRAMS/ESA-JS |
 
-* output from builder
+** output from builder
 ** see cl-build/graph.lisp/*test-descriptors*
 *** old stuff ...
 #+NAME: output-from-builder
@@ -219,7 +205,7 @@
 ]
 #+END_SRC
 
-* notes
+** notes
 ** bootstrap manifests are in ~/quicklisp/local-projects/bmfbp/build_process/lispparts
 
 
