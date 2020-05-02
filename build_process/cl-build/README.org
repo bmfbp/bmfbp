@@ -28,7 +28,7 @@
 #+end_src
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::arrowgrams)
+  (arrowgrams/build::arrowgrams-to-json)
 #+end_src
 
 * build helloworld json (build_process/cl-build/helloworld.graph.json)
@@ -43,9 +43,11 @@
 #+end_src
 * build results
 #+RESULTS: arrowgrams
-: compiling #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
-: v4 compiler drawio :SVG-FILENAME #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
-: front-end-main gets #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
+: To load "arrowgrams/build":
+:   Load 1 ASDF system:
+:     arrowgrams/build
+: ; Loading "arrowgrams/build"
+: 
 
 
 

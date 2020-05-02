@@ -30,6 +30,6 @@
 	  (run esa-disp)  ;; run is in esa.lisp
           )))))
 
-(defun test-lar ()
+(defun test-load-and-run ()
   (load-and-run (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")))
 
