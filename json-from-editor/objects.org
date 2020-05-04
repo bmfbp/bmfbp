@@ -1,0 +1,23 @@
+* common
+** "id":n
+** "shape":{}
+*** "tag":"Polyline" / "Ellipse" / "Rect"
+*** "topLeft" : {}
+**** { "x":nn, "y":mm }
+*** "bottomRight" : {}
+**** { "x":nn, "y":mm }
+*** "kindName" : "..."
+*** "gitUrl" : "..."
+*** "gitRef" : "..."
+*** "contextDir" : "build_process/"
+*** "manifestPath" : "listpparts/....lisp"
+*** "sourcePinName" : "..."
+*** "sinkPinName" : "..."
+* polyline
+** "points" : []
+* ellipse
+** "kindName" : "..."
+** gitUrl, gitRef, contextDir, manifestPath
+* rect
+** "kindName" : "..."
+** gitUrl, gitRef, contextDir, manifestPath
