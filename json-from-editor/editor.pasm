@@ -35,16 +35,7 @@
    | * >
    ]}
 
-= diagramObject
-  '{'
-  STRING stringEqId
-  ':'
-  INTEGER
-  ','
-  STRING
-  ':'
-  @hashmap
-  ',' 
+= gitLocation
   nameValuePair ','
   nameValuePair ','
   nameValuePair ','
@@ -52,6 +43,64 @@
   nameValuePair ','
   nameValuePair ','
   nameValuePair
+
+= points
+  STRING stringEqPoints
+  ':'
+  @jsonarray
+
+= bounds
+  STRING stringEqTopLeft
+  ':'
+  @object
+  ','
+  STRING stringEqBottomRight
+  ','
+  @object
+
+= polylineShapeDescriptor
+  STRING
+  ','
+  @points
+  
+= ellipseShapeDescriptor
+  STRING
+  ','
+  @bounds
+  
+= rectShapeDescriptor
+  STRING
+  ','
+  @bounds
+
+= shape
+  STRING
+  ':'
+   % isPolyline, isEllipse and isRect are defined as external predicates (see mechanisms.lisp)
+   [ &isPolyline @polyLineShapeDescriptor
+   | &isEllipse @ellipseShapeDescriptor
+   | &isRect @rectShapeDescriptor
+   ]
+
+= shapeDescriptor
+  '{'
+   STRING stringEqTag
+   ':'
+   @shape
+   '}'
+
+
+= diagramObject
+  '{'
+  STRING stringEqId
+  ':'
+  INTEGER
+  ','
+  STRING stringEqShape
+  ':'
+  @hashmap
+  ','
+  @gitLocation
   '}'
 
 = commaSeparatedDiagramObjects

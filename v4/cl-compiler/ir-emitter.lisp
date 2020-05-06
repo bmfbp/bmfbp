@@ -46,6 +46,11 @@
         (wires nil)
         (ellipses nil))
 
+(let ((fname (asdf:system-relative-pathname :arrowgrams "build_process/fb.pro")))
+  (with-open-file (ofb fname :direction :output :if-does-not-exist :create :if-exists :supersede)
+    (format *standard-output* "~&writing fb to ~s~%" fname)
+    (pprint (fb self) ofb)))
+
     (let ((goal '((:match_top_name (:? N)))))
       (let ((result (run-prolog self goal fb)))
         (unless (and (listp result) (= 1 (length (car result))))

@@ -1,15 +1,15 @@
 (((:ITEM-KIND . "leaf") (:NAME . "string-join") (:IN-PINS "a" "b")
   (:OUT-PINS "c" "error") (:KIND . "string-join")
   (:FILENAME
-   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./string-join.lisp"))
+   . "/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./string-join.lisp"))
  ((:ITEM-KIND . "leaf") (:NAME . "world") (:IN-PINS "start")
   (:OUT-PINS "s" "error") (:KIND . "world")
   (:FILENAME
-   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./world.lisp"))
+   . "/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./world.lisp"))
  ((:ITEM-KIND . "leaf") (:NAME . "hello") (:IN-PINS "start")
   (:OUT-PINS "s" "error") (:KIND . "hello")
   (:FILENAME
-   . "/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./hello.lisp"))
+   . "/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/cl/./hello.lisp"))
  ((:ITEM-KIND . "graph") (:NAME . "helloworld")
   (:GRAPH (:NAME . "HELLOWORLD") (:INPUTS "START") (:OUTPUTS "RESULT")
    (:PARTS ((:PART-NAME . "STRING-JOIN") (:KIND-NAME . "STRING-JOIN"))
@@ -23,6 +23,5 @@
     ((:WIRE-INDEX . 2) (:SOURCES ((:PART . "STRING-JOIN") (:PIN . "C")))
      (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))))
     ((:WIRE-INDEX . 3) (:SOURCES ((:PART . "SELF") (:PIN . "START")))
-     (:RECEIVERS ((:PART . "SELF") (:PIN . "RESULT"))
-      ((:PART . "WORLD") (:PIN . "START"))
+     (:RECEIVERS ((:PART . "WORLD") (:PIN . "START"))
       ((:PART . "HELLO") (:PIN . "START"))))))))

@@ -47,7 +47,10 @@
 :   Load 1 ASDF system:
 :     arrowgrams/build
 : ; Loading "arrowgrams/build"
-: 
+: ..................................................
+: [package arrowgrams/build].............
+: in compiler-event-passing
+: ........
 
 
 

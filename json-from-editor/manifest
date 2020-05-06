@@ -1,0 +1,3 @@
+{"kindName" : "string-join","gitUrl" : "https://github.com/bmfbp/bmfbp.git","gitRef" : "master","contextDir" : "build_process/","manifestPath" : "30"}
+{"kindName" : "world","gitUrl" : "https://github.com/bmfbp/bmfbp.git","gitRef" : "master","contextDir" : "build_process/","manifestPath" : "20"}
+{"kindName" : "hello","gitUrl" : "https://github.com/bmfbp/bmfbp.git","gitRef" : "master","contextDir" : "build_process/","manifestPath" : "10"}

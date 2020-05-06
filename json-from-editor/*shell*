@@ -1,0 +1,1322 @@
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ polyline 10 750 228 890 225 c ""
+polyline: command not found
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.sh 10 750 228 890 225 c ""
+./polyline.sh: 2: defaultFontWidth: not found
+./polyline.sh: 3: defaultFontHeight: not found
+./polyline.sh: 4: nnnn: not found
+./polyline.sh: 5: firstPointx: not found
+./polyline.sh: 6: firstPointy: not found
+./polyline.sh: 7: lastPointx: not found
+./polyline.sh: 8: lastPointy: not found
+./polyline.sh: 9: sourcePinName: not found
+./polyline.sh: 10: sinkPinName: not found
+./polyline.sh: 13: nnnn: not found
+./polyline.sh: 14: nnnn: not found
+./polyline.sh: 15: nnnn: not found
+./polyline.sh: 15: nnnn: not found
+./polyline.sh: 16: nnnn: not found
+./polyline.sh: 17: nnnn: not found
+./polyline.sh: 18: nnnn: not found
+./polyline.sh: 1: firstPointx: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 19: nnnn: not found
+./polyline.sh: 1: firstPointy: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 20: nnnn: not found
+./polyline.sh: 1: firstPointx: not found
+./polyline.sh: 21: nnnn: not found
+./polyline.sh: 1: firstPointy: not found
+./polyline.sh: 22: nnnn: not found
+./polyline.sh: 22: nnnn: not found
+./polyline.sh: 23: nnnn: not found
+./polyline.sh: 24: nnnn: not found
+./polyline.sh: 25: nnnn: not found
+./polyline.sh: 1: lastPointx: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 26: nnnn: not found
+./polyline.sh: 1: lastPointy: not found
+./polyline.sh: 1: exrp: not found
+./polyline.sh: 27: nnnn: not found
+./polyline.sh: 1: lastPointx: not found
+./polyline.sh: 28: nnnn: not found
+./polyline.sh: 1: lastPointy: not found
+./polyline.sh: 29: nnnn: not found
+./polyline.sh: 30: nnnn: not found
+./polyline.sh: 30: firstPointx: not found
+./polyline.sh: 31: nnnn: not found
+./polyline.sh: 31: firstPointy: not found
+./polyline.sh: 32: nnnn: not found
+./polyline.sh: 33: nnnn: not found
+./polyline.sh: 34: nnnn: not found
+./polyline.sh: 35: nnnn: not found
+./polyline.sh: 35: firstPointx: not found
+./polyline.sh: 36: nnnn: not found
+./polyline.sh: 36: firstPointy: not found
+./polyline.sh: 37: nnnn: not found
+./polyline.sh: 38: nnnn: not found
+
+edge(edge_).
+line(edge_).
+source(edge_, source_).
+eltype(source_,port).
+port(source_).
+bounding_box_left(source_, ).
+bounding_box_top(source_, ).
+bounding_box_right(source_, 20).
+bounding_box_bottom(source_, 20).
+sink(edge_, sink_).
+eltype(sink_,port).
+port(sink_).
+bounding_box_left(sink_, ).
+bounding_box_top(sink_, ).
+bounding_box_right(sink_, 20).
+bounding_box_bottom(sink_, 20).
+text(beginText_, ).
+geometry_center_x(beginText_, ).
+geometry_top_y(beginText_,  - half()).
+geometry_w(beginText_, sourcePinName.length*).
+geometry_h(beginText_, defaultFontHeight).
+text(endText_, sinkPinName.text).
+geometry_center_x(endText_, ).
+geometry_top_y(endText_,  - half()).
+geometry_w(endText_, sinkPinName.length*).
+geometry_h(endText_, ).
+
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.sh 10 750 228 890 225 c ""
+./polyline.sh: 13: nnnn: not found
+./polyline.sh: 14: nnnn: not found
+./polyline.sh: 15: nnnn: not found
+./polyline.sh: 15: nnnn: not found
+./polyline.sh: 16: nnnn: not found
+./polyline.sh: 17: nnnn: not found
+./polyline.sh: 18: nnnn: not found
+./polyline.sh: 1: firstPointx: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 19: nnnn: not found
+./polyline.sh: 1: firstPointy: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 20: nnnn: not found
+./polyline.sh: 1: firstPointx: not found
+./polyline.sh: 21: nnnn: not found
+./polyline.sh: 1: firstPointy: not found
+./polyline.sh: 22: nnnn: not found
+./polyline.sh: 22: nnnn: not found
+./polyline.sh: 23: nnnn: not found
+./polyline.sh: 24: nnnn: not found
+./polyline.sh: 25: nnnn: not found
+./polyline.sh: 1: lastPointx: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 26: nnnn: not found
+./polyline.sh: 1: lastPointy: not found
+./polyline.sh: 1: exrp: not found
+./polyline.sh: 27: nnnn: not found
+./polyline.sh: 1: lastPointx: not found
+./polyline.sh: 28: nnnn: not found
+./polyline.sh: 1: lastPointy: not found
+./polyline.sh: 29: nnnn: not found
+./polyline.sh: 30: nnnn: not found
+./polyline.sh: 30: firstPointx: not found
+./polyline.sh: 31: nnnn: not found
+./polyline.sh: 31: firstPointy: not found
+./polyline.sh: 32: nnnn: not found
+./polyline.sh: 33: nnnn: not found
+./polyline.sh: 34: nnnn: not found
+./polyline.sh: 35: nnnn: not found
+./polyline.sh: 35: firstPointx: not found
+./polyline.sh: 36: nnnn: not found
+./polyline.sh: 36: firstPointy: not found
+./polyline.sh: 37: nnnn: not found
+./polyline.sh: 38: nnnn: not found
+
+edge(edge_).
+line(edge_).
+source(edge_, source_).
+eltype(source_,port).
+port(source_).
+bounding_box_left(source_, ).
+bounding_box_top(source_, ).
+bounding_box_right(source_, 20).
+bounding_box_bottom(source_, 20).
+sink(edge_, sink_).
+eltype(sink_,port).
+port(sink_).
+bounding_box_left(sink_, ).
+bounding_box_top(sink_, ).
+bounding_box_right(sink_, 20).
+bounding_box_bottom(sink_, 20).
+text(beginText_, c).
+geometry_center_x(beginText_, ).
+geometry_top_y(beginText_,  - half(12)).
+geometry_w(beginText_, sourcePinName.length*12).
+geometry_h(beginText_, defaultFontHeight).
+text(endText_, sinkPinName.text).
+geometry_center_x(endText_, ).
+geometry_top_y(endText_,  - half(12)).
+geometry_w(endText_, sinkPinName.length*12).
+geometry_h(endText_, 12).
+
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.sh 10 750 228 890 225 c ""
+./polyline.sh: 1: firstPointx: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 1: firstPointy: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 1: firstPointx: not found
+./polyline.sh: 1: firstPointy: not found
+./polyline.sh: 1: lastPointx: not found
+expr: syntax error: unexpected argument ‘20’
+./polyline.sh: 1: lastPointy: not found
+./polyline.sh: 1: exrp: not found
+./polyline.sh: 1: lastPointx: not found
+./polyline.sh: 1: lastPointy: not found
+./polyline.sh: 30: firstPointx: not found
+./polyline.sh: 31: firstPointy: not found
+./polyline.sh: 35: firstPointx: not found
+./polyline.sh: 36: firstPointy: not found
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, ).
+bounding_box_top(source_10, ).
+bounding_box_right(source_10, 20).
+bounding_box_bottom(source_10, 20).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, ).
+bounding_box_top(sink_10, ).
+bounding_box_right(sink_10, 20).
+bounding_box_bottom(sink_10, 20).
+text(beginText_10, c).
+geometry_center_x(beginText_10, ).
+geometry_top_y(beginText_10,  - half(12)).
+geometry_w(beginText_10, sourcePinName.length*12).
+geometry_h(beginText_10, defaultFontHeight).
+text(endText_10, sinkPinName.text).
+geometry_center_x(endText_10, ).
+geometry_top_y(endText_10,  - half(12)).
+geometry_w(endText_10, sinkPinName.length*12).
+geometry_h(endText_10, 12).
+
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.sh 10 750 228 890 225 c ""
+./polyline.sh: 40: Syntax error: Unterminated quoted string
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.sh 10 750 228 890 225 c ""
+./polyline.sh: 40: Syntax error: Unterminated quoted string
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.sh 10 750 228 890 225 c ""
+./polyline.sh: line 39: unexpected EOF while looking for matching `"'
+./polyline.sh: line 40: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.sh 10 750 228 890 225 c ""
+./polyline.sh: line 39: unexpected EOF while looking for matching `"'
+./polyline.sh: line 40: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ mv polyline.sh polyline.bash
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ mv polyline.sh polyline.bash
+mv: cannot stat 'polyline.sh': No such file or directory
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash
+./polyline.bash: line 39: unexpected EOF while looking for matching `"'
+./polyline.bash: line 40: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ chmod a+x polyline.bsh
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+./polyline.bsh: line 38: unexpected EOF while looking for matching `"'
+./polyline.bsh: line 39: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+./polyline.bsh: line 38: unexpected EOF while looking for matching `"'
+./polyline.bsh: line 39: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+expr: syntax error: unexpected argument ‘20’
+expr: syntax error: unexpected argument ‘20’
+expr: syntax error: unexpected argument ‘20’
+expr: syntax error: unexpected argument ‘20’
+ edge(edge_). line(edge_). source(edge_, source_). eltype(source_,port). port(source_). bounding_box_left(source_, ). bounding_box_top(source_, ). bounding_box_right(source_, 20). bounding_box_bottom(source_, 20). sink(edge_, sink_). eltype(sink_,port). port(sink_). bounding_box_left(sink_, ). bounding_box_top(sink_, ). bounding_box_right(sink_, 20). bounding_box_bottom(sink_, 20). text(beginText_, ). geometry_center_x(beginText_, ). 
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+ edge(edge_). line(edge_). source(edge_, source_). eltype(source_,port). port(source_). 
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+ edge(edge_). line(edge_). source(edge_, source_). eltype(source_,port). port(source_). 
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+ edge(edge_). line(edge_). source(edge_, source_). eltype(source_,port). port(source_). tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+ edge(edge_). 
+line(edge_). source(edge_, source_). eltype(source_,port). port(source_). tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+ edge(edge_).
+line(edge_).
+source(edge_, source_).
+eltype(source_,port).
+port(source_).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+
+edge(edge_).
+line(edge_).
+source(edge_, source_).
+eltype(source_,port).
+port(source_).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh
+
+edge(edge_).
+line(edge_).
+source(edge_, source_).
+eltype(source_,port).
+port(source_).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+./polyline.bash: line 39: unexpected EOF while looking for matching `"'
+./polyline.bash: line 40: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bsh 10 750 228 890 225 c ""
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+ edge(edge_10). line(edge_10). source(edge_10, source_10). eltype(source_10,port). port(source_10). bounding_box_left(source_10, 730). bounding_box_top(source_10, 208). bounding_box_right(source_10, 770). bounding_box_bottom(source_10, 248). sink(edge_10, sink_10). eltype(sink_10,port). port(sink_10). bounding_box_left(sink_10, 870). bounding_box_top(sink_10, 205). bounding_box_right(sink_10, 910). bounding_box_bottom(sink_10, 245). text(beginText_10, c). geometry_center_x(beginText_10, 750). geometry_top_y(beginText_10, 228) - half(12)). geometry_w(beginText_10, sourcePinName.length*12). geometry_h(beginText_10, defaultFontHeight). text(endText_10, sinkPinName.text). geometry_center_x(endText_10, 750). geometry_top_y(endText_10, 228) - half(12)). geometry_w(endText_10, sinkPinName.length*12). geometry_h(endText_10, 12). 
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+ edge(edge_10).\nline(edge_10).\nsource(edge_10, source_10).\neltype(source_10,port).\nport(source_10).\nbounding_box_left(source_10, 730).\nbounding_box_top(source_10, 208).\nbounding_box_right(source_10, 770).\nbounding_box_bottom(source_10, 248).\nsink(edge_10, sink_10).\neltype(sink_10,port).\nport(sink_10).\nbounding_box_left(sink_10, 870).\nbounding_box_top(sink_10, 205).\nbounding_box_right(sink_10, 910).\nbounding_box_bottom(sink_10, 245).\ntext(beginText_10, c).\ngeometry_center_x(beginText_10, 750).\ngeometry_top_y(beginText_10, 228) - half(12)).\ngeometry_w(beginText_10, sourcePinName.length*12).\ngeometry_h(beginText_10, defaultFontHeight).\ntext(endText_10, sinkPinName.text).\ngeometry_center_x(endText_10, 750).\ngeometry_top_y(endText_10, 228) - half(12)).\ngeometry_w(endText_10, sinkPinName.length*12).\ngeometry_h(endText_10, 12).\n
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+ edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, `expr `228 - \( 12 / 2 \)`).
+geometry_w(beginText_10, `expr \( length sourcePinName \) \* 12).
+geometry_h(beginText_10, $defaultFontHeight).
+text(endText_10, $sinkPinName).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length*12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+./polyline.bash: line 31: unexpected EOF while looking for matching ``'
+./polyline.bash: line 40: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+expr: syntax error: expecting ')' instead of ‘2’
+ edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10,  )).
+geometry_w(beginText_10, sourcePinName.length*12).
+geometry_h(beginText_10, defaultFontHeight).
+text(endText_10, sinkPinName.text).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length*12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+expr: syntax error: expecting ')' instead of ‘2’
+ edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10,  )).
+geometry_w(beginText_10, sourcePinName.length* 12).
+geometry_h(beginText_10, 12).
+text(endText_10, sinkPinName.text).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c ""
+expr: syntax error: expecting ')' instead of ‘2’
+ edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10,  )).
+geometry_w(beginText_10, sourcePinName.length* 12).
+geometry_h(beginText_10, 12).
+text(endText_10, ).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+expr: syntax error: expecting ')' instead of ‘2’
+ edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10,  )).
+geometry_w(beginText_10, sourcePinName.length* 12).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+expr: syntax error: expecting ')' instead of ‘2’
+ edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10,  )).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, sourcePinName.length* 12).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+./polyline.bash: command substitution: line 40: syntax error near unexpected token `('
+./polyline.bash: command substitution: line 40: `expr $firstPointy - ( $defaultFontHeight / 2 )'
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10,  )).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, sourcePinName.length* 12).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, sourcePinName.length* 12).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+expr: syntax error: unexpected argument ‘classes.lisp’
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, ).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, 12).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 228) - half(12)).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, 12).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 222 ).
+geometry_w(endText_10, sinkPinName.length* 12).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c "xxx"
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, 12).
+geometry_h(beginText_10, 12).
+text(endText_10, xxx).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 222 ).
+geometry_w(endText_10, 36 ).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c '""'
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, 12).
+geometry_h(beginText_10, 12).
+text(endText_10, "").
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 222 ).
+geometry_w(endText_10, 24 ).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c '\'\''
+> '
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, 12).
+geometry_h(beginText_10, 12).
+text(endText_10, '
+).
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 222 ).
+geometry_w(endText_10, 24 ).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c \'\'
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, 12).
+geometry_h(beginText_10, 12).
+text(endText_10, '').
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 222 ).
+geometry_w(endText_10, 24 ).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./polyline.bash 10 750 228 890 225 c \'\'
+
+edge(edge_10).
+line(edge_10).
+source(edge_10, source_10).
+eltype(source_10,port).
+port(source_10).
+bounding_box_left(source_10, 730).
+bounding_box_top(source_10, 208).
+bounding_box_right(source_10, 770).
+bounding_box_bottom(source_10, 248).
+sink(edge_10, sink_10).
+eltype(sink_10,port).
+port(sink_10).
+bounding_box_left(sink_10, 870).
+bounding_box_top(sink_10, 205).
+bounding_box_right(sink_10, 910).
+bounding_box_bottom(sink_10, 245).
+text(beginText_10, c).
+geometry_center_x(beginText_10, 750).
+geometry_top_y(beginText_10, 222 )).
+geometry_w(beginText_10, 12).
+geometry_h(beginText_10, 12).
+text(endText_10, '').
+geometry_center_x(endText_10, 750).
+geometry_top_y(endText_10, 222 ).
+geometry_w(endText_10, 24 ).
+geometry_h(endText_10, 12).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ls
+ classes.lisp           junk.pasm           path.lisp        polyline.sh~
+ editor.pasm            maximal-json.dsl    polyline.bash   '#*shell*#'
+ generate.lisp          mechanisms.lisp     polyline.bash~  '*shell*'
+ hello_world.json       minimal-json.pasm   polyline.bsh
+ json-from-editor.asd   objects.org         polyline.bsh~
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ rm polyline.bsh*
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ls
+ classes.lisp       json-from-editor.asd   minimal-json.pasm   polyline.bash~
+ editor.pasm        junk.pasm              objects.org         polyline.sh~
+ generate.lisp      maximal-json.dsl       path.lisp          '#*shell*#'
+ hello_world.json   mechanisms.lisp        polyline.bash      '*shell*'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ls
+ classes.lisp       json-from-editor.asd   minimal-json.pasm   polyline.bash~
+ editor.pasm        junk.pasm              objects.org         polyline.sh~
+ generate.lisp      maximal-json.dsl       path.lisp          '#*shell*#'
+ hello_world.json   mechanisms.lisp        polyline.bash      '*shell*'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ chmod a+x ellipse.bash
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+
+expr: non-integer argument
+expr: non-integer argument
+expr: non-integer argument
+expr: non-integer argument
+./ellipse.bash: line 6: syntax error near unexpected token `ellipse_$nnnn'
+./ellipse.bash: line 6: `ellipse(ellipse_$nnnn).'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+
+expr: non-integer argument
+expr: non-integer argument
+expr: non-integer argument
+expr: non-integer argument
+./ellipse.bash: line 11: syntax error near unexpected token `ellipse_$nnnn'
+./ellipse.bash: line 11: `ellipse(ellipse_$nnnn).'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: non-integer argument
+expr: non-integer argument
+expr: non-integer argument
+expr: non-integer argument
+./ellipse.bash: line 11: syntax error near unexpected token `ellipse_$nnnn'
+./ellipse.bash: line 11: `ellipse(ellipse_$nnnn).'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: syntax error: unexpected argument ‘893’
+expr: syntax error: unexpected argument ‘2’
+expr: non-integer argument
+./ellipse.bash: line 11: syntax error near unexpected token `ellipse_$nnnn'
+./ellipse.bash: line 11: `ellipse(ellipse_$nnnn).'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: syntax error: unexpected argument ‘893’
+./ellipse.bash: line 7: ): command not found
+./ellipse.bash: line 8: ): command not found
+expr: syntax error: unexpected argument ‘2’
+./ellipse.bash: line 9: ): command not found
+expr: syntax error: unexpected argument ‘2’
+./ellipse.bash: line 10: ): command not found
+./ellipse.bash: line 11: syntax error near unexpected token `ellipse_$nnnn'
+./ellipse.bash: line 11: `ellipse(ellipse_$nnnn).'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: syntax error: unexpected argument ‘893’
+expr: syntax error: unexpected argument ‘2’
+expr: non-integer argument
+expr: syntax error: unexpected ')'
+expr: syntax error: unexpected ')'
+expr: syntax error: unexpected ')'
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,).
+geometry_center_y(ellipse_5,).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,).
+geometry_center_x(kindText_5, ).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, ).
+geometry_h(kindText_5, -).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: syntax error: unexpected argument ‘893’
+expr: syntax error: unexpected argument ‘2’
+expr: non-integer argument
+expr: syntax error: unexpected ')'
+expr: syntax error: unexpected ')'
+expr: syntax error: missing argument after ‘+’
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,).
+geometry_center_y(ellipse_5,).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,).
+geometry_center_x(kindText_5, ).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, ).
+geometry_h(kindText_5, -).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: syntax error: unexpected argument ‘893’
+expr: syntax error: unexpected argument ‘2’
+expr: non-integer argument
+expr: syntax error: unexpected ')'
+expr: syntax error: unexpected ')'
+expr: syntax error: missing argument after ‘+’
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,).
+geometry_center_y(ellipse_5,).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,result).
+geometry_center_x(kindText_5, ).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, ).
+geometry_h(kindText_5, -).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: non-integer argument
+expr: syntax error: unexpected ')'
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,968).
+geometry_center_y(ellipse_5,).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,result).
+geometry_center_x(kindText_5, 968).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, 150).
+geometry_h(kindText_5, -).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+expr: syntax error: missing argument after ‘-’
+expr: syntax error: unexpected argument ‘2’
+expr: syntax error: unexpected ')'
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,968).
+geometry_center_y(ellipse_5,).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,result).
+geometry_center_x(kindText_5, 968).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, 150).
+geometry_h(kindText_5, ).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+nnnn=$1
+topLeftx=$2
+topLefty=$3
+bottomRightx=$4
+bottomRighty=$5
+kindName=$6
+width=`expr $bottomRightx - $topLeftx`
+height=`expr $bottomRighty - $topRighty`
+expr: syntax error: missing argument after ‘-’
+halfWidth=`expr $width / 2`
+halfHeight=`expr $height / 2`
+expr: syntax error: unexpected argument ‘2’
+printf "\n\
+ellipse(ellipse_$nnnn).\n\
+eltype(ellipse_$nnnn,box).\n\
+geometry_center_x(ellipse_$nnnn,`expr $topLeftx + \( $halfWidth \) `).\n\
+geometry_center_y(ellipse_$nnnn,`expr $topLefty + \( $halfHeight \) `).\n\
+geometry_w(ellipse_$nnnn,width).\n\
+geometry_h(ellipse_$nnnn,height).\n\
+text(Text_$nnnn,$kindName).\n\
+geometry_center_x(kindText_$nnnn, `expr $topLeftx +  $halfWidth `).\n\
+geometry_$top_y(kindText_$nnnn, $topLefty).\n\
+geometry_w(kindText_$nnnn, $width).\n\
+geometry_h(kindText_$nnnn, $height).\n\
+"
+expr: syntax error: unexpected ')'
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,968).
+geometry_center_y(ellipse_5,).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,result).
+geometry_center_x(kindText_5, 968).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, 150).
+geometry_h(kindText_5, ).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
++ nnnn=5
++ topLeftx=893
++ topLefty=176
++ bottomRightx=1043
++ bottomRighty=276
++ kindName=result
+++ expr 1043 - 893
++ width=150
+++ expr 276 -
+expr: syntax error: missing argument after ‘-’
++ height=
+++ expr 150 / 2
++ halfWidth=75
+++ expr / 2
+expr: syntax error: unexpected argument ‘2’
++ halfHeight=
+++ expr 893 + '(' 75 ')'
+++ expr 176 + '(' ')'
+expr: syntax error: unexpected ')'
+++ expr 893 + 75
++ printf '\nellipse(ellipse_5).\neltype(ellipse_5,box).\ngeometry_center_x(ellipse_5,968).\ngeometry_center_y(ellipse_5,).\ngeometry_w(ellipse_5,width).\ngeometry_h(ellipse_5,height).\ntext(Text_5,result).\ngeometry_center_x(kindText_5, 968).\ngeometry_(kindText_5, 176).\ngeometry_w(kindText_5, 150).\ngeometry_h(kindText_5, ).\n'
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,968).
+geometry_center_y(ellipse_5,).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,result).
+geometry_center_x(kindText_5, 968).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, 150).
+geometry_h(kindText_5, ).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
++ nnnn=5
++ topLeftx=893
++ topLefty=176
++ bottomRightx=1043
++ bottomRighty=276
++ kindName=result
+++ expr 1043 - 893
++ width=150
+++ expr 276 - 176
++ height=100
+++ expr 150 / 2
++ halfWidth=75
+++ expr 100 / 2
++ halfHeight=50
+++ expr 893 + '(' 75 ')'
+++ expr 176 + '(' 50 ')'
+++ expr 893 + 75
++ printf '\nellipse(ellipse_5).\neltype(ellipse_5,box).\ngeometry_center_x(ellipse_5,968).\ngeometry_center_y(ellipse_5,226).\ngeometry_w(ellipse_5,width).\ngeometry_h(ellipse_5,height).\ntext(Text_5,result).\ngeometry_center_x(kindText_5, 968).\ngeometry_(kindText_5, 176).\ngeometry_w(kindText_5, 150).\ngeometry_h(kindText_5, 100).\n'
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,968).
+geometry_center_y(ellipse_5,226).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,result).
+geometry_center_x(kindText_5, 968).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, 150).
+geometry_h(kindText_5, 100).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./ellipse.bash 5 893 176 1043 276 result
+
+ellipse(ellipse_5).
+eltype(ellipse_5,box).
+geometry_center_x(ellipse_5,968).
+geometry_center_y(ellipse_5,226).
+geometry_w(ellipse_5,width).
+geometry_h(ellipse_5,height).
+text(Text_5,result).
+geometry_center_x(kindText_5, 968).
+geometry_(kindText_5, 176).
+geometry_w(kindText_5, 150).
+geometry_h(kindText_5, 100).
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ chmod a+x rect.bash
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ chmod a+x new.bash 
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
+./rect.bash: line 26: unexpected EOF while looking for matching ``'
+./rect.bash: line 38: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
+./rect.bash: line 29: unexpected EOF while looking for matching ``'
+./rect.bash: line 41: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
++ printf '\nrect(rect_3).\n'
+
+rect(rect_3).
+./rect.bash: line 34: unexpected EOF while looking for matching `"'
+./rect.bash: line 42: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
++ printf '\nrect(rect_3).\n'
+
+rect(rect_3).
+./rect.bash: line 34: unexpected EOF while looking for matching `"'
+./rect.bash: line 42: syntax error: unexpected end of file
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
++ printf '\nrect(rect_3).\n'
+
+rect(rect_3).
++ echo '\"kindName\"' : string-join
++ echo '\"gitUrl\"' : https://github.com/bmfbp/bmfbp.git
++ echo '\"gitRef\"' : master
++ echo '\"contextDir\"' : build_process/
++ echo '\"manifestPath\"' : 30
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
+++ expr 654 + 50
++ printf '\nrect(rect_3).\neltype(rect_3,box).\ngeometry_left_x(rect_3,654).\ngeometry_top_y(rect_3,175).\ngeometry_w(rect_3,width).\ngeometry_h(rect_3,height).\ntext(Text_3,string-join).\ngeometry_center_x(kindText_3, 704).\ngeometry_(kindText_3, 175).\ngeometry_w(kindText_3, 100).\ngeometry_h(kindText_3, 100).\n'
+
+rect(rect_3).
+eltype(rect_3,box).
+geometry_left_x(rect_3,654).
+geometry_top_y(rect_3,175).
+geometry_w(rect_3,width).
+geometry_h(rect_3,height).
+text(Text_3,string-join).
+geometry_center_x(kindText_3, 704).
+geometry_(kindText_3, 175).
+geometry_w(kindText_3, 100).
+geometry_h(kindText_3, 100).
++ echo '\"kindName\"' : string-join
++ echo '\"gitUrl\"' : https://github.com/bmfbp/bmfbp.git
++ echo '\"gitRef\"' : master
++ echo '\"contextDir\"' : build_process/
++ echo '\"manifestPath\"' : 30
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
+++ expr 654 + 50
++ printf '\nrect(rect_3).\neltype(rect_3,box).\ngeometry_left_x(rect_3,654).\ngeometry_top_y(rect_3,175).\ngeometry_w(rect_3,width).\ngeometry_h(rect_3,height).\ntext(Text_3,string-join).\ngeometry_center_x(kindText_3, 704).\ngeometry_(kindText_3, 175).\ngeometry_w(kindText_3, 100).\ngeometry_h(kindText_3, 100).\n'
+
+rect(rect_3).
+eltype(rect_3,box).
+geometry_left_x(rect_3,654).
+geometry_top_y(rect_3,175).
+geometry_w(rect_3,width).
+geometry_h(rect_3,height).
+text(Text_3,string-join).
+geometry_center_x(kindText_3, 704).
+geometry_(kindText_3, 175).
+geometry_w(kindText_3, 100).
+geometry_h(kindText_3, 100).
++ echo '"kindName"' : string-join
++ echo '"gitUrl"' : https://github.com/bmfbp/bmfbp.git
++ echo '"gitRef"' : master
++ echo '"contextDir"' : build_process/
++ echo '"manifestPath"' : 30
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
+++ expr 654 + 50
++ printf '\nrect(rect_3).\neltype(rect_3,box).\ngeometry_left_x(rect_3,654).\ngeometry_top_y(rect_3,175).\ngeometry_w(rect_3,width).\ngeometry_h(rect_3,height).\ntext(Text_3,string-join).\ngeometry_center_x(kindText_3, 704).\ngeometry_(kindText_3, 175).\ngeometry_w(kindText_3, 100).\ngeometry_h(kindText_3, 100).\n'
+
+rect(rect_3).
+eltype(rect_3,box).
+geometry_left_x(rect_3,654).
+geometry_top_y(rect_3,175).
+geometry_w(rect_3,width).
+geometry_h(rect_3,height).
+text(Text_3,string-join).
+geometry_center_x(kindText_3, 704).
+geometry_(kindText_3, 175).
+geometry_w(kindText_3, 100).
+geometry_h(kindText_3, 100).
++ echo '"kindName"' : '"' string-join '"'
++ echo '"gitUrl"' : '"' https://github.com/bmfbp/bmfbp.git '"'
++ echo '"gitRef"' : '"' master '"'
++ echo '"contextDir"' : '"' build_process/ '"'
++ echo '"manifestPath"' : '"' 30 '"'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
+++ expr 654 + 50
++ printf '\nrect(rect_3).\neltype(rect_3,box).\ngeometry_left_x(rect_3,654).\ngeometry_top_y(rect_3,175).\ngeometry_w(rect_3,width).\ngeometry_h(rect_3,height).\ntext(Text_3,string-join).\ngeometry_center_x(kindText_3, 704).\ngeometry_(kindText_3, 175).\ngeometry_w(kindText_3, 100).\ngeometry_h(kindText_3, 100).\n'
+
+rect(rect_3).
+eltype(rect_3,box).
+geometry_left_x(rect_3,654).
+geometry_top_y(rect_3,175).
+geometry_w(rect_3,width).
+geometry_h(rect_3,height).
+text(Text_3,string-join).
+geometry_center_x(kindText_3, 704).
+geometry_(kindText_3, 175).
+geometry_w(kindText_3, 100).
+geometry_h(kindText_3, 100).
++ printf '"kindName"' : '"' string-join '"'
++ echo '"gitUrl"' : '"' https://github.com/bmfbp/bmfbp.git '"'
++ echo '"gitRef"' : '"' master '"'
++ echo '"contextDir"' : '"' build_process/ '"'
++ echo '"manifestPath"' : '"' 30 '"'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
+++ expr 654 + 50
++ printf '\nrect(rect_3).\neltype(rect_3,box).\ngeometry_left_x(rect_3,654).\ngeometry_top_y(rect_3,175).\ngeometry_w(rect_3,width).\ngeometry_h(rect_3,height).\ntext(Text_3,string-join).\ngeometry_center_x(kindText_3, 704).\ngeometry_(kindText_3, 175).\ngeometry_w(kindText_3, 100).\ngeometry_h(kindText_3, 100).\n'
+
+rect(rect_3).
+eltype(rect_3,box).
+geometry_left_x(rect_3,654).
+geometry_top_y(rect_3,175).
+geometry_w(rect_3,width).
+geometry_h(rect_3,height).
+text(Text_3,string-join).
+geometry_center_x(kindText_3, 704).
+geometry_(kindText_3, 175).
+geometry_w(kindText_3, 100).
+geometry_h(kindText_3, 100).
++ printf '"kindName" :"%s"\n' string-join
++ echo '"gitUrl"' : '"' https://github.com/bmfbp/bmfbp.git '"'
++ echo '"gitRef"' : '"' master '"'
++ echo '"contextDir"' : '"' build_process/ '"'
++ echo '"manifestPath"' : '"' 30 '"'
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ ./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
++ nnnn=3
++ topLeftx=654
++ topLefty=175
++ bottomRightx=754
++ bottomRighty=275
++ kindName=string-join
++ gitUrl=https://github.com/bmfbp/bmfbp.git
++ gitRef=master
++ contextDir=build_process/
++ manifestPath=30
+++ expr 754 - 654
++ width=100
+++ expr 275 - 175
++ height=100
+++ expr 100 / 2
++ halfWidth=50
+++ expr 100 / 2
++ halfHeight=50
+++ expr 654 + 50
++ printf '\nrect(rect_3).\neltype(rect_3,box).\ngeometry_left_x(rect_3,654).\ngeometry_top_y(rect_3,175).\ngeometry_w(rect_3,width).\ngeometry_h(rect_3,height).\ntext(Text_3,string-join).\ngeometry_center_x(kindText_3, 704).\ngeometry_(kindText_3, 175).\ngeometry_w(kindText_3, 100).\ngeometry_h(kindText_3, 100).\n'
+
+rect(rect_3).
+eltype(rect_3,box).
+geometry_left_x(rect_3,654).
+geometry_top_y(rect_3,175).
+geometry_w(rect_3,width).
+geometry_h(rect_3,height).
+text(Text_3,string-join).
+geometry_center_x(kindText_3, 704).
+geometry_(kindText_3, 175).
+geometry_w(kindText_3, 100).
+geometry_h(kindText_3, 100).
++ printf '{"kindName" : "%s",' string-join
++ printf '"gitUrl" : "%s",' https://github.com/bmfbp/bmfbp.git
++ printf '"gitRef" : "%s",' master
++ printf '"contextDir" : "%s",' build_process/
++ printf '"manifestPath" : "%s"}\n' 30
+tarvydas@tarvydas-HP-ProDesk-600-G3-SFF:~/quicklisp/local-projects/bmfbp/json-from-editor$ 
