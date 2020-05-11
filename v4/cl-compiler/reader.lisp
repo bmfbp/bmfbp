@@ -21,12 +21,15 @@
 (defmethod read-prolog-stream ((self reader) f)
   (let ((prolog-line nil))
     (flet ((rdline () (setf prolog-line (read-line f nil :EOF))))
-      (rdline)
-      (@:loop
-        (@:exit-when (eq :EOF prolog-line))
-        (add-prolog-fact self prolog-line)
-        (rdline)))
-    (@send self :eof :eof)))
+      (with-open-file (outf (asdf:system-relative-pathname :arrowgrams "in.pro")
+			    :direction :output :if-exists :supersede :if-does-not-exist :create)
+	(rdline)
+	(@:loop
+	 (@:exit-when (eq :EOF prolog-line))
+	 (write-line prolog-line outf)
+	 (add-prolog-fact self prolog-line)
+	 (rdline))))
+      (@send self :eof :eof)))
 
 (defun add-prolog-fact (self prolog-line)
   ;;ex. (cl-ppcre:regex-replace "(a)(b)(c)" "abc" (list 2 1 0)) --> "cba"

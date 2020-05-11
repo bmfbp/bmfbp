@@ -41,6 +41,16 @@
 #+begin_src lisp :results output
   (arrowgrams/build::arrowgrams-to-json)
 #+end_src
+* build builder json (build_process/cl-build/build-*.graph.json)
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::arrowgrams-to-json-compile-single-diagram)
+#+end_src
 * build results
 #+RESULTS: arrowgrams
 : To load "arrowgrams/build":

@@ -1004,3 +1004,28 @@
       (format *error-output* "FATAL error in main ~a~%" c))
     (error (c)
       (format *error-output* "FATAL error in main ~a~%" c))))
+
+(defun arrowgrams-to-json1 () ;; to see in.pro from simple.svg
+  (let ((args (my-command-line)))
+    (let ((infile (if (> (length args) 1)
+		      (second args)
+		      (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/simple.svg"))))
+      (format *standard-output* "~&compiling ~s~%" infile)
+      (build
+       infile
+       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/simple.graph.json")
+       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/simple.graph.lisp")
+       ))))
+
+(defun arrowgrams-to-json-compile-single-diagram () ;; to lowest level of builder
+  (let ((args (my-command-line)))
+    (let ((infile (if (> (length args) 1)
+		      (second args)
+		      (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/build-compile-single-diagram.svg"))))
+      (format *standard-output* "~&compiling ~s~%" infile)
+      (build
+       infile
+       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/build-compile-single-diagrams.graph.json")
+       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/build-compile-single-diagram.graph.lisp")
+       ))))
+
