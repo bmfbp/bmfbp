@@ -1,3 +1,3 @@
-rm -rf ~/.cache/common-lisp ; rm -rf */*.fasl ; rm -rf */*~
-rm -rf */*.fasl
-rm -rf */*/*.fasl
+rm -rf ~/.cache/common-lisp
+rm -rf */*.fasl */*/*.fasl
+rm -rf */*~ */*/*~
