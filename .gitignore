@@ -109,3 +109,11 @@ svg/cl-compiler/WORLDHELLO.lisp
 v4/cl-compiler/output.prolog
 
 build_process/cl-build/helloworld.graph.json
+
+svg/cl-compiler/BUILD-BUILD-RECURSIVE.json
+
+svg/cl-compiler/BUILD-BUILD-RECURSIVE.lisp
+
+svg/cl-compiler/BUILD-COMPILE-SINGLE-DIAGRAM.json
+
+svg/cl-compiler/BUILD-COMPILE-SINGLE-DIAGRAM.lisp
