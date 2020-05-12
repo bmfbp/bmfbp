@@ -1,10 +1,9 @@
 {
-  "entrypoint": "./build.svg",
+  "entrypoint": "./build-recursive.svg",
   "kindType": "composite",
   "platform": "lisp",
   "inPins": [
-      "svg_filename",
-      "done"
+      "svg_filename"
   ],
   "outPins": [
       "graph",

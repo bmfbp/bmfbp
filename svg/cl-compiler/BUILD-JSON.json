@@ -1,0 +1,23 @@
+{
+  "name" : "BUILD-JSON",
+  "inputs" : ["ALIST-FILENAME", "OUTPUT-FILENAME", "SVG-FILENAME", "DONE"],
+  "outputs" : ["ERROR"],
+  "parts" :
+  [
+    { "partName" : "BUILD", "kindName" : "BUILD"},
+    { "partName" : "ALIST-WRITER", "kindName" : "ALIST-WRITER"},
+    { "partName" : "FILE-WRITER", "kindName" : "FILE-WRITER"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "SELF", "pin" : "ALIST-FILENAME"}], "receivers" : [{"part" : "ALIST-WRITER", "pin" : "FILENAME"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "SELF", "pin" : "OUTPUT-FILENAME"}], "receivers" : [{"part" : "FILE-WRITER", "pin" : "FILENAME"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "SELF", "pin" : "SVG-FILENAME"}], "receivers" : [{"part" : "BUILD", "pin" : "SVG-FILENAME"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "SELF", "pin" : "DONE"}], "receivers" : [{"part" : "BUILD", "pin" : "DONE"}]},
+      {"wire-index" : 4, "sources" : [{"part" : "FILE-WRITER", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 5, "sources" : [{"part" : "ALIST-WRITER", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 6, "sources" : [{"part" : "BUILD", "pin" : "ERROR"}], "receivers" : [{"part" : "SELF", "pin" : "ERROR"}]},
+      {"wire-index" : 7, "sources" : [{"part" : "BUILD", "pin" : "JSON-COLLECTION"}], "receivers" : [{"part" : "FILE-WRITER", "pin" : "WRITE"}]},
+      {"wire-index" : 8, "sources" : [{"part" : "BUILD", "pin" : "ALIST"}], "receivers" : [{"part" : "ALIST-WRITER", "pin" : "WRITE"}]}
+    ]
+  }

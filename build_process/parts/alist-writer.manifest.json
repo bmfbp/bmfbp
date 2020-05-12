@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./alist-writer.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "filename",
+      "write"
+  ],
+  "outPins": [
+      "error"
+  ]
+}
