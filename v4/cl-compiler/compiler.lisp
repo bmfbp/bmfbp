@@ -5839,7 +5839,10 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
 
 (defun main ()
   (new-main))
-  
+
+(defun compile-single (input-filename output-filename)  
+  (compiler-event-passing filename nil #| map-filename == NIL |# output-filename))
+
 (defun ctest ()
   #+nil#(system:run-shell-command "rm -rf ~/.cache/common-lisp")
   (asdf::run-program "rm -rf ~/.cache/common-lisp")
@@ -5857,3 +5860,4 @@ compiler-testbed.error, passes.error, back-end.error -> self.error
   (compile-file "~/quicklisp/local-projects/bmfbp/svg/back-end/json1-sl.lisp")
   (load "~/quicklisp/local-projects/bmfbp/svg/back-end/json1-sl")
   (arrowgrams/compiler::main))
+

@@ -6,7 +6,7 @@
 * build esa from top
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (uiop:run-program "rm -rf ~/.cache/common-lisp")
+(uiop:run-program "rm -rf ~/.cache/common-lisp")
   (ql:quickload :arrowgrams/rephrase-compiler)
 #+end_src
 
@@ -44,12 +44,17 @@
 * build builder json (build_process/cl-build/build-*.graph.json)
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (ql:quickload :arrowgrams/build)
+  (progn
+   (uiop:run-program "rm -rf ~/.cache/common-lisp")
+   (uiop:run-program "rm -rf */*.fasl */*/*.fasl")
+   (uiop:run-program "rm -rf */*~ */*/*~")
+   (ql:quickload :arrowgrams/build))
 #+end_src
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::arrowgrams-to-json-compile-single-diagram)
+  (arrowgrams/build::arrowgrams-svg-to-json "compile-single-diagram")
+  (arrowgrams/build::arrowgrams-svg-to-json "build-recursive")
 #+end_src
 * build results
 #+RESULTS: arrowgrams
@@ -57,10 +62,7 @@
 :   Load 1 ASDF system:
 :     arrowgrams/build
 : ; Loading "arrowgrams/build"
-: ..................................................
-: [package arrowgrams/build].............
-: in compiler-event-passing
-: ........
+: 
 
 
 

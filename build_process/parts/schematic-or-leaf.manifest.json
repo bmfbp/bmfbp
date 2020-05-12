@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./schematic-or-leaf.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "manifest-as-json-string"
+  ],
+  "outPins": [
+      "schematic-filename",
+      "child-descriptor",
+      "error"
+  ]
+}

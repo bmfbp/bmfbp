@@ -1017,15 +1017,36 @@
        (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/simple.graph.lisp")
        ))))
 
+
+(defun arrowgrams-svg-to-json (filename-string)
+  (let ((dir "build_process/parts"))
+    (let ((svg-filename (format nil "~a/diagram/~a.svg" dir filename-string))
+	  (json-graph-filename (format nil "~a/graph/~a.json" dir filename-string))
+	  (lisp-graph-filename (format nil "~a/graph/~a.lisp" dir filename-string)))
+      (let ((args (my-command-line)))
+	(let ((infile (if (> (length args) 1)
+			  (second args)
+			  (asdf:system-relative-pathname :arrowgrams svg-filename))))
+	  (format *standard-output* "~&compiling ~s~%" infile)
+	  (build
+	   infile
+	   (asdf:system-relative-pathname :arrowgrams json-graph-filename)
+	   (asdf:system-relative-pathname :arrowgrams lisp-graph-filename)
+	   ))))))
+
 (defun arrowgrams-to-json-compile-single-diagram () ;; to lowest level of builder
-  (let ((args (my-command-line)))
-    (let ((infile (if (> (length args) 1)
-		      (second args)
-		      (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/build-compile-single-diagram.svg"))))
-      (format *standard-output* "~&compiling ~s~%" infile)
-      (build
-       infile
-       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/build-compile-single-diagrams.graph.json")
-       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/build-compile-single-diagram.graph.lisp")
-       ))))
+  (arrowgrams-svg-to-json "build-compile-single-diagram"))
+
+
+(defmethod new-event ((self node) pin data)
+  (let ((e (make-instance 'event))
+        (pp (make-instance 'part-pin)))
+    (setf (part-name pp) (name-in-container self))
+    (setf (pin-name pp) pin)
+    (setf (partpin e) pp)
+    (setf (data    e) data)
+    e))
+
+(defmethod send-event ((self node) pin data)
+  (send self (new-event self pin data)))
 
