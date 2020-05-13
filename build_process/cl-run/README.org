@@ -27,6 +27,16 @@
     (cl-user::arrowgrams-run "hellohello"))
 #+end_src
 
+#+begin_src lisp :results output
+  (let ((arrowgrams/build::*verbose* nil))
+    (arrowgrams/build::arrowgrams-svg-to-json "hellohello")
+    (let ((str (alexandria:read-file-into-string 
+                   (asdf:system-relative-pathname :arrowgrams "build_process/parts/graph/hellohello.json"))))
+      (with-input-from-string (f str)
+        (let ((*standard-input* f))
+           (arrowgrams/build::arrowgrams-run)))))
+#+end_src
+
 * results
 #+RESULTS: runner
 : To load "arrowgrams/runner":
