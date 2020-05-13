@@ -119,3 +119,11 @@ svg/cl-compiler/BUILD-COMPILE-SINGLE-DIAGRAM.json
 svg/cl-compiler/BUILD-COMPILE-SINGLE-DIAGRAM.lisp
 
 svg/cl-compiler/BUILD-JSON.lisp
+
+svg/cl-compiler/HELLOHELLO.json
+
+svg/cl-compiler/HELLOHELLO.lisp
+
+build_process/parts/graph/hellohello.json
+
+build_process/parts/graph/hellohello.lisp

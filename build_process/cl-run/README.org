@@ -14,6 +14,20 @@
     (arrowgrams/build::test-load-and-run))
 #+end_src
 
+* build hellohello.json + run it
+#+name: runner
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (ql:quickload :arrowgrams/runner)
+#+end_src
+#+name: runner
+#+begin_src lisp :results output
+  (let ((arrowgrams/build::*verbose* nil))
+    (arrowgrams/build::arrowgrams-svg-to-json "hellohello")
+    (cl-user::arrowgrams-run "hellohello"))
+#+end_src
+
+* results
 #+RESULTS: runner
 : To load "arrowgrams/runner":
 :   Load 1 ASDF system:
