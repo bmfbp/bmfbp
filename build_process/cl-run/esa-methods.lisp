@@ -1,6 +1,6 @@
 (in-package :arrowgrams/build)
 
-(defparameter *verbose* t)
+(defparameter *verbose* nil)
 
 ;; for bootstrap - make names case insensitive - downcase everything
 
