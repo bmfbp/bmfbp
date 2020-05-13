@@ -154,7 +154,8 @@
 (defun make-esa ()
   (arrowgrams/esa::run-esa-compiler
    (asdf:system-relative-pathname :arrowgrams "build_process/esa/esa.dsl")
-   (asdf:system-relative-pathname :arrowgrams "build_process/cl-bundle/esa.lisp")))
+   (asdf:system-relative-pathname :arrowgrams "build_process/cl-run/esa.lisp")))
+;(asdf:system-relative-pathname :arrowgrams "build_process/cl-bundle/esa.lisp")))
 
 
 ;;; sample

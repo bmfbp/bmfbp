@@ -8,6 +8,23 @@
     (let ((str (apply 'concatenate 'string (reverse lis))))
       (arrowgrams-load-and-run str))))
 
+(defun main(argv)
+  (declare (ignore argv))
+  (handler-case
+      (progn
+	(arrowgrams-run)
+    (end-of-file (c)
+      (format *error-output* "0 FATAL 'end of file error; in main ~a~%" c))
+    (simple-error (c)
+      (format *error-output* "1 FATAL error1 in main~%")
+      (print-object c))
+    (error (c)
+      (format *error-output* "2 FATAL error2 in main ~a~%" c)))))
+
+
+
+
+
 (defun load-and-run (graph-filename)
   (let ((graph-string (alexandria:read-file-into-string graph-filename)))
     (arrowgrams-load-and-run graph-string)))
