@@ -53,9 +53,9 @@
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::arrowgrams-svg-to-json "compile-single-diagram")
-  (arrowgrams/build::arrowgrams-svg-to-json "build-recursive")
-  (arrowgrams/build::arrowgrams-svg-to-json "build")
+  #|(arrowgrams/build::arrowgrams-svg-to-json "compile-single-diagram")|#
+  #|(arrowgrams/build::arrowgrams-svg-to-json "build-recursive")|#
+  #|(arrowgrams/build::arrowgrams-svg-to-json "build")|#
   (arrowgrams/build::arrowgrams-svg-to-json "build-json")
 #+end_src
 * build results

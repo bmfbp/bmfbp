@@ -1,5 +1,5 @@
 (BUILD-JSON
-  :metadata "\"[{\"dir\":\"build_process/\",\"kindName\":\"file-writer\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/cl/file-writer.lisp\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"alist-writer\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/cl/alist-writer.lisp\",\"ref\":\"master\"}]\""
+  :metadata "\"[{\"dir\":\"build_process/\",\"kindName\":\"file-writer\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/cl/file-writer.lisp\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"alist-writer\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/cl/alist-writer.lisp\",\"ref\":\"master\"},{\"dir\":\"build_process/\",\"kindName\":\"build\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"parts/cl/build.lisp\",\"ref\":\"master\"}]\""
   
    (ALIST-FILENAME OUTPUT-FILENAME SVG-FILENAME DONE)
    (ERROR)
