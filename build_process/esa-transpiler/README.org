@@ -1,0 +1,66 @@
+* overview
+  This directory contains that ESA (Encapsulated Software Assets) transpiler.
+  The transpile is built using (2) pasm and (1) the stack language transpiler.
+  Pasm is used to create dsl.lisp from esa.pasm.
+  Stack-dsl is used to create exprtypes.lisp from exprtypes.dsl.
+  The final ESA transpiler is used in ../esa.
+  The final ESA transpiler uses parser-mechanisms.lisp and v2mechanisms.lisp to support its operation.
+* usage
+  use scripts, below
+  N.B. to ql:quickload :arrowgrams/esa..
+    1) create exprtype.lisp (from exprtype.dsl, see below, for script)
+    2) build esa-dsl.lisp from esa.rp 
+    3) load esa
+* 1) create exprtypes.lisp
+#+name: esa
+#+begin_src lisp :results output
+  (ql:quickload :stack-dsl/use)
+#+end_src
+#+name: esa
+#+begin_src lisp :results output
+  (stack-dsl:transpile-stack "ARROWGRAMS/ESA-TRANSPILER"
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.dsl")
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.lisp"))
+#+end_src
+* 2) create dsl.lisp (from dsl.pasm)
+#+name: esa
+#+begin_src lisp :results output
+   (uiop:run-program "rm -rf ~/.cache/common-lisp")
+   (uiop:run-program "rm -rf */*.fasl */*/*/.fasl")
+   (uiop:run-program "rm -rf */*~ */*/*/*~")
+  (ql:quickload :parsing-assembler/use)
+#+end_src
+#+name: esa
+#+begin_src lisp :results output
+  (pasm:pasm-to-file "ARROWGRAMS/ESA-TRANSPILER"
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/dsl.pasm")
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/dsl.lisp"))
+#+end_src
+* run ESA during development (see what is working, etc.)
+#+name: esa
+#+begin_src lisp :results output
+   (uiop:run-program "rm -rf ~/.cache/common-lisp")
+   (uiop:run-program "rm -rf */*.fasl */*/*/.fasl")
+   (uiop:run-program "rm -rf */*~ */*/*/*~")
+
+   (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+   (load "package.lisp")
+   (load "classes.lisp")
+   (load "dsl.lisp")
+   (load "exprtypes.lisp")
+   (load "parser-mechanisms.lisp")
+   (load "v2mechanisms.lisp")
+   (load "esa-parser.lisp")
+   (load "esa-transpile.lisp")
+#+end_src
+#+name: esa
+#+begin_src lisp :results output
+  (arrowgrams/esa-transpiler::transpile-esa
+     "ARROWGRAMS/ESA-TRANSPILER"
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/test.esa")
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/test.lisp"))
+#+end_src
+   
+* results
+#+RESULTS: esa
+

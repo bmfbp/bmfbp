@@ -43,11 +43,6 @@
    (current-class :accessor current-class)
    (current-method :accessor current-method)
 
-   ;; class stuff for v2 emission
-   (esa-classes :accessor esa-classes :initform (make-hash-table :test 'equal))
-   (class-desciptor-stack :accessor class-descriptor-stack)
-   (method-desciptor-stack :accessor method-descriptor-stack)
-   (parameter-descriptor-stack :accessor parameter-descriptor-stack :initform nil)
-   (symbol-stack :accessor symbol-stack :initform nil)
-   (expr-stack :accessor expr-stack :initform nil)
+   ;; v2 emitter
+   (env :accessor env :initform (make-instance 'environment))
    ))

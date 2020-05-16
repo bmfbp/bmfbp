@@ -238,7 +238,7 @@
                                                    ))))))
 
 
-(defsystem :arrowgrams/rephrase-compiler
+#+nil(defsystem :arrowgrams/rephrase-compiler
     :depends-on (:arrowgrams/cl-event-passing-no-esrap :alexandria)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
@@ -275,18 +275,6 @@
                                        (:file "rp-parser" :depends-on ("rp-rules"))
                                        (:file "file-writer" :depends-on ("package" "classes"))
                                        (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
-
-(defsystem :arrowgrams/esa
-    :depends-on (:arrowgrams/rephrase-compiler)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "esa-dsl")
-                                       (:file "esa-parser")))))
 
 #+nil (defsystem :arrowgrams/esa-js
     :depends-on (:arrowgrams/rephrase-compiler)
@@ -344,7 +332,7 @@
                                                                  ))
 				     ))))
 
-(defsystem :arrowgrams/runner
+#+deprecated(defsystem :arrowgrams/runner
   :depends-on (:arrowgrams/build :cl-json)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
@@ -562,5 +550,39 @@
                                                    "rules-util"
 
                                                    ))))))
+
+
+
+
+
+(defsystem :arrowgrams/esa-transpiler
+    :depends-on (:stack-dsl/use :parsing-assembler :arrowgrams/cl-event-passing-no-esrap :alexandria)
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+                          :pathname "./build_process/esa-transpiler/"
+                          :components ((:file "package")
+				       (:file "classes" :depends-on ("package"))
+				       (:file "exprtypes" :depends-on ("package" "classes"))
+				       (:file "v2mechanisms" :depends-on ("exprtypes"))
+				       (:file "esa-dsl")
+                                       (:file "esa-parser" :depends-on ("v2mechanisms"))))))
+
+
+
+(defsystem :arrowgrams/esa
+    :depends-on (:stack-dsl/use :parsing-assembler :arrowgrams/cl-event-passing-no-esrap :alexandria)
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+                          :pathname "./build_process/esa/"
+                          :components ((:file "package")))))
+
 
 
