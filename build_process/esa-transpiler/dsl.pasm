@@ -339,6 +339,7 @@
   | *
                                    $expr__SetKindObject
     @esa-object-name
+                                   $expr__setField_object_from_object
     {[ ?'.' '.'
       @esa-field 
       @optional-actuals
@@ -358,15 +359,19 @@
  | * 
  ]
 
+% >> object
 = esa-object-name
+                                $object__NewScope
+                                  $name__newScope
   @esa-field
-  
+                                    $symbol__GetName
+                                  $name__output
+                                $object__setField_name_from_name
+				
 = esa-field
   [ &non-keyword-symbol
-                         push-text
     SYMBOL
     @esa-symbol-follow
-                         pop-text
   | *
   ]
 

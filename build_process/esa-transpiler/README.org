@@ -37,7 +37,7 @@
      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/dsl.lisp"))
 #+end_src
 * 3) create (via manual edit) exprtypes.json
-* run ESA during development (see what is working, etc.)
+* 4) run ESA during development (see what is working, etc.)
 #+name: esa
 #+begin_src lisp :results output
    (uiop:run-program "rm -rf ~/.cache/common-lisp")
@@ -67,13 +67,4 @@
    
 * results
 #+RESULTS: esa
-: type "expression" #<STACK-DSL::STRUCTURE-DESCRIPTOR {10045467E3}>
-: type "kind" #<STACK-DSL::ENUM-DESCRIPTOR {1004546843}>
-: type "object" #<STACK-DSL::STRUCTURE-DESCRIPTOR {10045468B3}>
-: type "name" #<STACK-DSL::STRING-DESCRIPTOR {1004546913}>
-: type "fieldMap" #<STACK-DSL::MAP-DESCRIPTOR {1004546993}>
-: type "field" #<STACK-DSL::STRUCTURE-DESCRIPTOR {1004546A03}>
-: type "parameterList" #<STACK-DSL::COMPOUND-DESCRIPTOR {1004546A93}>
-: type "nameList" #<STACK-DSL::MAP-DESCRIPTOR {1004546B13}>
-: type "empty" #<STACK-DSL::NULL-DESCRIPTOR {1004546B73}>
 
