@@ -530,17 +530,6 @@
 
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
-(defmethod field-call ((p pasm:parser))
-  (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "field-call") (pasm::p-into-trace p)
-(pasm:call-rule p #'esa-symbol)
-(cond
-((pasm:parser-success? (pasm:lookahead-char? p #\.))(pasm:call-rule p #'dotted-field-call)
-)
-( t )
-)
-
-(setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
-
 (defmethod esa-symbol ((p pasm:parser))
   (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "esa-symbol") (pasm::p-into-trace p)
 (cond
@@ -584,15 +573,15 @@
 ( t )
 )
 
-(pasm:call-external p #'exprNewScope)
+(pasm:call-external p #'$exprNewScope)
 (cond
 ((pasm:parser-success? (pasm:lookahead-symbol? p "true"))(pasm:input-symbol p "true")
-(pasm:call-external p #'exprSetKindTrue)
+(pasm:call-external p #'$exprSetKindTrue)
 )
 ((pasm:parser-success? (pasm:lookahead-symbol? p "false"))(pasm:input-symbol p "false")
-(pasm:call-external p #'exprSetKindTrue)
+(pasm:call-external p #'$exprSetKindTrue)
 )
-( t (pasm:call-external p #'exprSetKindObject)
+( t (pasm:call-external p #'$exprSetKindObject)
 (pasm:call-rule p #'esa-object-name)
 (loop
 (cond
@@ -609,7 +598,7 @@
 )
 )
 
-(pasm:call-external p #'exprEmit)
+(pasm:call-external p #'$exprEmit)
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
 (defmethod optional-actuals ((p pasm:parser))
@@ -641,8 +630,10 @@
 (defmethod esa-field ((p pasm:parser))
   (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "esa-field") (pasm::p-into-trace p)
 (cond
-((pasm:parser-success? (pasm:call-predicate p #'non-keyword-symbol))(pasm:input p :SYMBOL)
+((pasm:parser-success? (pasm:call-predicate p #'non-keyword-symbol))(pasm:call-external p #'push-text)
+(pasm:input p :SYMBOL)
 (pasm:call-rule p #'esa-symbol-follow)
+(pasm:call-external p #'pop-text)
 )
 ( t )
 )

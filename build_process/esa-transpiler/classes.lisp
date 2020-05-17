@@ -1,4 +1,4 @@
-(in-package :arrowgrams/esa)
+(in-package :arrowgrams/esa-transpiler)
 
 (defclass string-stack-entry () 
   ((counter :accessor counter :initform 0)
@@ -31,7 +31,7 @@
    (map? :accessor map? :initform nil)))
 
 
-(defclass parser (e/part:code)
+(defclass parser (pasm:parser)
   ((token-stream :accessor token-stream :initarg :token-stream :initform nil) ;; actually, just a list
    (output-stream :accessor output-stream :initarg :output-stream :initform (make-string-output-stream))
    (next-token :accessor next-token :initform nil)
@@ -44,5 +44,7 @@
    (current-method :accessor current-method)
 
    ;; v2 emitter
-   (env :accessor env :initform (make-instance 'environment))
+   (env :accessor env :initform (make-instance 'cl-user::environment))
+   (saved-text :accessor saved-text)
    ))
+

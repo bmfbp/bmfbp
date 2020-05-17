@@ -1,0 +1,35 @@
+[
+    { "name" : "expression",
+      "descriptor" :
+      { "kind" : "structure",
+	"fields" : [
+	    { "fieldName" : "kind", "fieldType" : "kind" },
+	    { "fieldName" : "object", "fieldType" : "object" }]}},
+    {"name" : "kind",
+     "descriptor" :
+     {"kind" : "enum",
+      "valueList" : [ "true", "false", "object" ]}},
+    { "name" : "object",
+      "descriptor" :
+      { "kind" : "structure",
+	"fields" : [
+	    { "fieldName" : "name", "fieldType" : "name" },
+	    { "fieldName" : "fieldMap", "fieldType" : "fieldMap" }]}},
+    { "name" : "name",   "descriptor" : { "kind" : "string" }},
+    { "name" : "fieldMap",
+      "descriptor" :
+      { "kind" : "map", "elementType" : "field" }},
+    { "name" : "field",
+      "descriptor" :
+      { "kind" : "structure",
+	"fields" : [
+	    { "fieldName" : "name", "fieldType" : "name" },
+	    { "fieldName" : "parameterList", "fieldType" : "parameterList" }]}},
+    { "name" : "parameterList",
+      "descriptor" :
+      { "kind" : "compound", "types" : ["empty", "nameList"]}},
+    { "name" : "nameList",
+      "descriptor" :
+      { "kind" : "map", "elementType" : "name" }},
+    { "name" : "empty",   "descriptor" : { "kind" : "null" }}
+]

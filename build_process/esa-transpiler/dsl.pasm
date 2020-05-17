@@ -307,12 +307,6 @@
 %$                (emit p "(return-from ~a ~a)" (current-method p) (atext p))
   ]
 
-= field-call
-  @esa-symbol
-  [ ?'.' @dotted-field-call
-  | *
-  ]
-
 = esa-symbol
   [ &non-keyword-symbol
     SYMBOL
@@ -337,13 +331,13 @@
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
-                                 exprNewScope
+                                 $expr__NewScope
   [ ?SYMBOL/true SYMBOL/true
-                                   exprSetKindTrue
+                                   $expr__SetKindTrue
   | ?SYMBOL/false SYMBOL/false
-                                   exprSetKindTrue
+                                   $expr__SetKindTrue
   | *
-                                   exprSetKindObject
+                                   $expr__SetKindObject
     @esa-object-name
     {[ ?'.' '.'
       @esa-field 
@@ -351,7 +345,8 @@
      | * >
     ]}
    ]
-                                 exprEmit
+                                 $expr__Output
+                                 $expr__Emit
 
 = optional-actuals
  [ ?'(' '('
@@ -368,8 +363,10 @@
   
 = esa-field
   [ &non-keyword-symbol
+                         push-text
     SYMBOL
     @esa-symbol-follow
+                         pop-text
   | *
   ]
 

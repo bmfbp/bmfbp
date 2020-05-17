@@ -1,4 +1,4 @@
-(in-package :arrowgrams/esa)
+(in-package :arrowgrams/esa-transpiler)
 
 ;; see file exprtypes.lisp generated from exprtypes.dsl (see README.org)
 ;;
@@ -16,18 +16,24 @@
 ;; e.g. x.a.b.c
 ;; e.g. x.a(g).b(h i).c
 
-(defmethod exprNewScope ((p parser))
-  (stack-dsl:%push-empty (input-expression (env p))))
+(defmethod $expr__NewScope ((p parser))
+  (stack-dsl:%push-empty (cl-user::input-expression (env p))))
 
-(defmethod exprSetKindTrue ((p parser))
-  (stack-dsl:%ensure-field-type (input-expression (env p)) "kind" "true")
-  (stack-dsl:%set-field (stack-dsl:%top (input-expression (env p))) "kind" "true"))
-(defmethod exprSetKindFalse ((p parser))
-  (stack-dsl:%ensure-field-type (input-expression (env p)) "kind" "false")
-  (stack-dsl:%set-field (stack-dsl:%top (input-expression (env p))) "kind" "false"))
-(defmethod exprSetKindObject ((p parser))
-  (stack-dsl:%ensure-field-type (input-expression (env p)) "kind" "object")
-  (stack-dsl:%set-field (stack-dsl:%top (input-expression (env p))) "kind" "object"))
+(defmethod $expr__SetKindTrue ((p parser))
+  (stack-dsl:%ensure-field-type "expression" "kind" "true")
+  (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p))) "kind" "true"))
+(defmethod $expr__SetKindFalse ((p parser))
+  (stack-dsl:%ensure-field-type "expression" "kind" "false")
+  (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p))) "kind" "false"))
+(defmethod $expr__SetKindObject ((p parser))
+  (stack-dsl:%ensure-field-type "expression" "kind" "object")
+  (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p))) "kind" "object"))
 
-(defmethod exprEmit ((p parser))
-  (break))
+(defmethod $expr__Output ((p parser))
+  (stack-dsl:%output (output-expression (env p))) (input-expression (env p))
+  (stack-dsl:%pop (input-expression (env p))))
+
+
+(defmethod $expr__Emit ((p parser))
+  (break (stack-dsl:%top (cl-user::input-expression (env p))))
+  (stack-dsl:%pop (cl-user::output-expression (env p))))

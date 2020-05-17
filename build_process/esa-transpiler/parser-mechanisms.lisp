@@ -1,12 +1,18 @@
-(in-package :arrowgrams/esa)
+(in-package :arrowgrams/esa-transpiler)
+
+(defun all-upcase-p (s)
+  (dotimes (i (length s))
+    (unless (upper-case-p (char s i))
+      (return-from all-upcase-p nil)))
+  t)
 
 (defmethod read-next-token ((p parser) &optional (debug t))
-  (unless (eq :eof (token-kind (accepted-token p)))
+  (unless (eq :eof (scanner:token-kind (pasm:accepted-token p)))
     (setf (next-token p) (pop (token-stream p)))
     (when debug
-      (cond ((eq :eof (token-kind (accepted-token p)))
+      (cond ((eq :eof (scanner:token-kind (pasm:accepted-token p)))
              #+nil(format *standard-output* "		next-token: no more tokens~%"))
-            (t #+nil(format *standard-output* "		next-token ~s ~s ~a ~a~%" (token-kind (next-token p)) (token-text (next-token p))
+            (t #+nil(format *standard-output* "		next-token ~s ~s ~a ~a~%" (scanner:token-kind (next-token p)) (token-text (next-token p))
                        (token-line (next-token p)) (token-position (next-token p))))))))
 
 (defmethod parser-err ((p parser) kind text)
@@ -14,9 +20,9 @@
     (let ((error-message
 	   (if kind
                (format nil "~&parser error in ~s - wanted ~s ~s, but got ~s ~s at line ~a position ~a~%" (current-rule p)
-                       kind text (token-kind nt) (token-text nt) (token-line nt) (token-position nt))
+                       kind text (scanner:token-kind nt) (scanner:token-text nt) (scanner:token-line nt) (scanner:token-position nt))
 	       (format nil "~&parser error in ~s - got ~s ~s at line ~a position ~a~%" (current-rule p)
-		       (token-kind nt) (token-text nt) (token-line nt) (token-position nt)))))
+		       (scanner:token-kind nt) (scanner:token-text nt) (scanner:token-line nt) (scanner::token-position nt)))))
     (error "parser error ~s" error-message)
     ;(read-next-token p)
     :fail)))
@@ -30,62 +36,56 @@
 
 
 (defmethod accept ((p parser))
-  (setf (accepted-token p) (next-token p))
-  (format *standard-output* "~&~s" (token-text (accepted-token p)))
+  (setf (pasm:accepted-token p) (next-token p))
+  (format *standard-output* "~&~s" (scanner:token-text (pasm:accepted-token p)))
   (read-next-token p)
   :ok)
 
 (defmethod input ((p parser) kind)
-  (if (eq kind (token-kind (next-token p)))
+  (if (eq kind (scanner:token-kind (next-token p)))
       (accept p)
     (parser-err p kind "")))
 
 (defmethod input-symbol ((p parser) text)
-  (if (and (eq :symbol (token-kind (next-token p)))
-           (string= text (token-text (next-token p))))
+  (if (and (eq :symbol (scanner:token-kind (next-token p)))
+           (string= text (scanner:token-text (next-token p))))
       (accept p)
     (parser-err p :symbol text)))
 
 (defmethod input-upcase-symbol ((p parser))
-  (if (and (eq :symbol (token-kind (next-token p)))
-           (all-upcase-p (token-text (next-token p))))
+  (if (and (eq :symbol (scanner:token-kind (next-token p)))
+           (all-upcase-p (scanner:token-text (next-token p))))
         (accept p)
-    (parser-err p 'upcase-symbol (token-text (next-token p)))))
+    (parser-err p 'upcase-symbol (scanner:token-text (next-token p)))))
 
 (defmethod input-char ((p parser) char)
-  (if (and (eq :character (token-kind (next-token p)))
-           (char= (token-text (next-token p)) char))
+  (if (and (eq :character (scanner:token-kind (next-token p)))
+           (char= (scanner:token-text (next-token p)) char))
       (accept p)
     (parser-err p :character char)))
 
 (defmethod look-upcase-symbol? ((p parser))
-  (if (and (eq :symbol (token-kind (next-token p)))
-           (all-upcase-p (token-text (next-token p))))
+  (if (and (eq :symbol (scanner:token-kind (next-token p)))
+           (all-upcase-p (scanner:token-text (next-token p))))
       :ok
     :fail))
 
 (defmethod look-char? ((p parser) c)
-  (if (and (eq :character (token-kind (next-token p)))
-           (char= (token-text (next-token p)) c))
+  (if (and (eq :character (scanner:token-kind (next-token p)))
+           (char= (scanner:token-text (next-token p)) c))
       :ok
     :fail))
 
 (defmethod look? ((p parser) kind)
-  (if (eq kind (token-kind (next-token p)))
+  (if (eq kind (scanner:token-kind (next-token p)))
       :ok
     :fail))
 
 (defmethod look-symbol? ((p parser) text)
-  (if (and (eq :symbol (token-kind (next-token p)))
-           (string= text (token-text (next-token p))))
+  (if (and (eq :symbol (scanner:token-kind (next-token p)))
+           (string= text (scanner:token-text (next-token p))))
       :ok
     :fail))
-
-(defun all-upcase-p (s)
-  (dotimes (i (length s))
-    (unless (upper-case-p (char s i))
-      (return-from all-upcase-p nil)))
-  t)
 
 
 ;;  code emission mechanisms
@@ -164,14 +164,20 @@
 
 ;; esa mechanisms
 
-#+nil (defmethod combine-text ((p parser))
-  (let ((text (token-text (accepted-token p))))
+(defmethod push-text ((p parser))
+  (setf (saved-text p) (string (scanner:token-text (pasm:accepted-token p)))))
+
+(defmethod pop-text ((p parser))
+  (setf (scanner:token-text (pasm:accepted-token p)) (saved-text p)))
+
+(defmethod combine-text ((p parser))
+  (let ((text (scanner:token-text (pasm:accepted-token p))))
     (let ((combined-text (strip-quotes (concatenate 'string (saved-text p) (string text)))))
-      (setf (token-text (accepted-token p)) combined-text)
+      (setf (scanner:token-text (pasm:accepted-token p)) combined-text)
       (setf (saved-text p) combined-text))))
 
 (defmethod atext ((p parser))
-  (concatenate 'string "" (string (token-text (accepted-token p)))))
+  (concatenate 'string "" (string (scanner:token-text (pasm:accepted-token p)))))
 
 (defmethod clear-method-stream ((p parser))
   (setf (method-stream p) (make-string-output-stream)))

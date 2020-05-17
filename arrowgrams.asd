@@ -556,7 +556,7 @@
 
 
 (defsystem :arrowgrams/esa-transpiler
-    :depends-on (:stack-dsl/use :parsing-assembler :arrowgrams/cl-event-passing-no-esrap :alexandria)
+    :depends-on (:stack-dsl/use :parsing-assembler/use :arrowgrams/cl-event-passing-no-esrap :alexandria)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
                                   (safety 3)
@@ -564,16 +564,12 @@
                       (funcall next))
     :components ((:module "source"
                           :pathname "./build_process/esa-transpiler/"
-                          :components ((:file "package")
-				       (:file "classes" :depends-on ("package"))
-				       (:file "exprtypes" :depends-on ("package" "classes"))
-				       (:file "v2mechanisms" :depends-on ("exprtypes"))
-				       (:file "esa-dsl")
-                                       (:file "esa-parser" :depends-on ("v2mechanisms"))))))
+                          :components ((:file "package")))))
 
 
 
-(defsystem :arrowgrams/esa
+
+#+nil(defsystem :arrowgrams/esa
     :depends-on (:stack-dsl/use :parsing-assembler :arrowgrams/cl-event-passing-no-esrap :alexandria)
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
