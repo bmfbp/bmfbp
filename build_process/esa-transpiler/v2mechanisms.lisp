@@ -89,14 +89,18 @@
      "object"
      "fieldMap"
      val)
-    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-fieldMap (env p))) "fieldMap" val)
+    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-object (env p))) "fieldMap" val)
     (stack-dsl:%pop (cl-user::output-fieldMap (env p)))))
 
 
 
 ;; fieldMap
 (defmethod $fieldMap__NewScope ((p parser))
-  (stack-dsl:%push-empty (cl-user::input-object (env p))))
+  (stack-dsl:%push-empty (cl-user::input-fieldMap (env p))))
+
+(defmethod $fieldMap__Output ((p parser))
+  (stack-dsl:%output (cl-user::output-fieldMap (env p)) (cl-user::input-fieldMap (env p)))
+  (stack-dsl:%pop (cl-user::input-fieldMap (env p))))
 
 (defmethod $fieldMap_append_from_field ((p parser))
 )

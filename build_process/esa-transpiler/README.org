@@ -110,7 +110,6 @@
 (trace object__fields__field__parameters__pred-parameterBegin)
 (trace object__fields__field__parameters__parameter)
 (trace esaSymbol)
-(trace symbol__follow)
 #+end_src
 #+name: esa
 #+begin_src lisp :results output

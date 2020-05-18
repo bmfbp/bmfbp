@@ -348,6 +348,10 @@
                                  $object__NewScope
   @object__name
                                    $object__setField_name_from_name
+				   $fieldMap__NewScope
+  @object__optionalParameterMap
+                                   $fieldMap__Output
+                                   $object__setField_fieldMap_from_fieldMap
   @object__fieldList
                                  $object__Output
 
@@ -362,11 +366,22 @@
    | * >
   ]}
 
+
+= object__optionalParameterMap
+  @object__fieldList__field__optionalParameterMap
+  
+
 = object__fieldList__field
   '.'
+                                 $object__NewScope
   @object__fieldList__field__name
+                                   $object__setField_name_from_name
+				   $fieldMap__NewScope
   @object__fieldList__field__optionalParameterMap
-
+                                   $fieldMap__Output
+                                   $object__setField_fieldMap_from_fieldMap
+                                 $object__Output
+				 
 = object__fieldList__field__name
                                  $name__NewScope
   @esaSymbol
