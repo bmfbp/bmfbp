@@ -170,12 +170,6 @@
 (defmethod pop-text ((p parser))
   (setf (scanner:token-text (pasm:accepted-token p)) (saved-text p)))
 
-(defmethod combine-text ((p parser))
-  (let ((text (scanner:token-text (pasm:accepted-token p))))
-    (let ((combined-text (strip-quotes (concatenate 'string (saved-text p) (string text)))))
-      (setf (scanner:token-text (pasm:accepted-token p)) combined-text)
-      (setf (saved-text p) combined-text))))
-
 (defmethod atext ((p parser))
   (concatenate 'string "" (string (scanner:token-text (pasm:accepted-token p)))))
 

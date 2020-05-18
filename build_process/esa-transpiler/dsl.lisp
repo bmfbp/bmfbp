@@ -632,6 +632,7 @@
 (pasm:call-external p #'$symbol__GetName)
 (pasm:call-external p #'$name__output)
 (pasm:call-external p #'$object__setField_name_from_name)
+(pasm:call-external p #'$object__output)
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
 (defmethod esa-field ((p pasm:parser))

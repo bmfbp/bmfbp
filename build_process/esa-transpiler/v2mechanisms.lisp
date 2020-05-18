@@ -30,7 +30,7 @@
   (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p))) "kind" "object"))
 
 (defmethod $expr__setField_object_from_object ((p parser))
-  (let ((val (stack-dsl:%top "object")))
+  (let ((val (stack-dsl:%top (cl-user::output-object (env p)))))
     (stack-dsl:%ensure-field-type "expression" "object" val)
     (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p))) "object" val)
     (stack-dsl:%pop (cl-user::output-object (env p)))))
@@ -40,7 +40,7 @@
   (stack-dsl:%pop (cl-user::input-expression (env p))))
 
 (defmethod $expr__Emit ((p parser))
-  (break (stack-dsl:%top (cl-user::input-expression (env p))))
+  (break (stack-dsl:%top (cl-user::output-expression (env p))))
   (stack-dsl:%pop (cl-user::output-expression (env p))))
 
 ;; name 
@@ -48,11 +48,13 @@
   (stack-dsl:%push-empty (cl-user::input-name (env self))))
 
 (defmethod $symbol__GetName ((self arrowgrams/esa-transpiler::parser))
-  ;; put name onto output stack of "name"
+  ;; put accepted symbol name onto input stack of "name" (replace top of name stack)
   (let ((str (scanner:token-text (pasm:accepted-token self)))
 	(name-object (make-instance (stack-dsl:lisp-sym "name"))))
     (setf (stack-dsl:%value name-object) str)
-    (stack-dsl:%push (cl-user::output-name (env self)) name-object)))
+    ;; 2 steps to replace top of name stack (pop then push)
+    (stack-dsl:%pop (cl-user::input-name (env self)))
+    (stack-dsl:%push (cl-user::input-name (env self)) name-object)))
 
 (defmethod $name__Output ((self arrowgrams/esa-transpiler::parser))
   (stack-dsl:%output (cl-user::output-name (env self)) (cl-user::input-name (env self)))
@@ -72,6 +74,6 @@
      "object"
      "name"
      val)
-    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p)) "name" val))
-    (stack-dsl:%pop cl-user::output-name (env p))))
+    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-object (env p))) "name" val)
+    (stack-dsl:%pop (cl-user::output-name (env p)))))
 

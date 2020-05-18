@@ -364,9 +364,10 @@
                                 $object__NewScope
                                   $name__newScope
   @esa-field
-                                    $symbol__GetName
+                                      $name__GetName
                                   $name__output
-                                $object__setField_name_from_name
+                                  $object__setField_name_from_name
+                                $object__output
 				
 = esa-field
   [ &non-keyword-symbol
