@@ -310,11 +310,11 @@
 = esa-symbol
   [ &non-keyword-symbol
     SYMBOL
-    @esa-symbol-follow
+    @esa-field-follow-nonemitting
   | *
   ]
 
-= esa-symbol-follow
+= esa-field-follow-nonemitting
   {[ ?'/' '/' 
      SYMBOL
    | ?'-' '-' 
@@ -338,59 +338,71 @@
                                    $expr__SetKindTrue
   | *
                                    $expr__SetKindObject
-    @esa-object-name
+    @object__
                                    $expr__setField_object_from_object
-    {[ ?'.' '.'
-      @esa-field 
-      @optional-actuals
-     | * >
-    ]}
    ]
                                  $expr__Output
                                  $expr__Emit
 
-= optional-actuals
- [ ?'(' '('
-   {[ &non-keyword-symbol 
-      @esa-expr
-    | * > 
-    ]}
-    ')'
- | * 
- ]
+= object__
+                                 $object__NewScope
+  @object__name
+  @object__fieldList
+                                 $object__Output
 
-% >> object
-= esa-object-name
-                                $object__NewScope
-                                  $name__newScope
-  @esa-field
-                                      $name__GetName
-                                  $name__output
-                                  $object__setField_name_from_name
-                                $object__output
-				
-= esa-field
-  [ &non-keyword-symbol
-    SYMBOL
-    @esa-symbol-follow
+= object__name
+  @esaSymbol
+  
+= object__fieldList
+  {[ ?'.'
+     @object__fieldList__field
+   | * >
+  ]}
+
+= object__fieldList__field
+  '.'
+  @object__fieldList__field__name
+  @object__fieldList__field__optionalParameterMap
+
+= object__fieldList__field__name
+  @esaSymbol
+  
+= object__fieldList__field__optionalParameterMap
+  [ ?'(' 
+     '('
+       object__fieldList__field__rec-parameters
+     ')'
   | *
   ]
 
-= esa-field-follow
+= object__fieldList__field__rec-parameters
+  @object__fieldList__field__parameters__parameter
+  [ &object__fieldList__field__parameters__pred-parameterBegin
+    @object__fieldList__field__rec-parameters
+  | *
+  ]
+
+- object__fields__field__parameters__pred-parameterBegin
+  ?SYMBOL
+  
+= object__fields__field__parameters__parameter
+  @esaSymbol
+
+
+= esaSymbol
+  SYMBOL
+  @symbol__follow
+  
+= symbol__follow
   {[ ?'/' '/'
-              combine-text
      SYMBOL
-              combine-text
    | ?'-' '-' 
-              combine-text
      SYMBOL
-              combine-text
    | ?'?' '?'
-              combine-text
       >
    | ?CHARACTER/' CHARACTER/' 
-              combine-text
      >
    | * >
   ]}
 
+  

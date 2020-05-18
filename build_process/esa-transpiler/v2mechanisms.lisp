@@ -47,7 +47,7 @@
 (defmethod $name__NewScope ((self arrowgrams/esa-transpiler::parser))
   (stack-dsl:%push-empty (cl-user::input-name (env self))))
 
-(defmethod $symbol__GetName ((self arrowgrams/esa-transpiler::parser))
+(defmethod $name__GetName ((self arrowgrams/esa-transpiler::parser))
   ;; put accepted symbol name onto input stack of "name" (replace top of name stack)
   (let ((str (scanner:token-text (pasm:accepted-token self)))
 	(name-object (make-instance (stack-dsl:lisp-sym "name"))))
@@ -55,6 +55,12 @@
     ;; 2 steps to replace top of name stack (pop then push)
     (stack-dsl:%pop (cl-user::input-name (env self)))
     (stack-dsl:%push (cl-user::input-name (env self)) name-object)))
+
+(defmethod $name__combine ((p parser))
+  (let ((name-tos (stack-dsl:%top (cl-user::input-name (env p)))))
+    (let ((suffix (string (scanner:token-text (pasm:accepted-token p)))))
+      (let ((new-text (concatenate 'string (stack-dsl:%value name-tos) suffix)))
+	(setf (stack-dsl:%value name-tos) new-text)))))
 
 (defmethod $name__Output ((self arrowgrams/esa-transpiler::parser))
   (stack-dsl:%output (cl-user::output-name (env self)) (cl-user::input-name (env self)))
@@ -77,3 +83,24 @@
     (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-object (env p))) "name" val)
     (stack-dsl:%pop (cl-user::output-name (env p)))))
 
+(defmethod $object__setField_fieldMap_from_fieldMap ((p parser))
+  (let ((val (stack-dsl:%top (cl-user::output-fieldMap (env p)))))
+    (stack-dsl:%ensure-field-type
+     "object"
+     "fieldMap"
+     val)
+    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-fieldMap (env p))) "fieldMap" val)
+    (stack-dsl:%pop (cl-user::output-fieldMap (env p)))))
+
+
+
+;; fieldMap
+(defmethod $fieldMap__NewScope ((p parser))
+  (stack-dsl:%push-empty (cl-user::input-object (env self))))
+
+(defmethod $fieldMap_append_from_field ((p parser))
+)
+
+;; field
+(defmethod $field__NewScope ((p parser))
+  )
