@@ -96,7 +96,7 @@
 
 ;; fieldMap
 (defmethod $fieldMap__NewScope ((p parser))
-  (stack-dsl:%push-empty (cl-user::input-object (env self))))
+  (stack-dsl:%push-empty (cl-user::input-object (env p))))
 
 (defmethod $fieldMap_append_from_field ((p parser))
 )

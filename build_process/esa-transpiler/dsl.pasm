@@ -398,16 +398,13 @@
 = esaSymbol
   SYMBOL
                                  $name__GetName
-  @symbol__follow
-  
-= symbol__follow
-  {[ ?'/' '/'
-     SYMBOL
-   | ?'-' '-' 
-     SYMBOL
-   | ?'?' '?'
+  {[ ?'/' '/'                    $name__combine
+     SYMBOL                      $name__combine
+   | ?'-' '-'                    $name__combine
+     SYMBOL                      $name__combine
+   | ?'?' '?'                    $name__combine
       >
-   | ?CHARACTER/' CHARACTER/' 
+   | ?CHARACTER/' CHARACTER/'    $name__combine
      >
    | * >
   ]}
