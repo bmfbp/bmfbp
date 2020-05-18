@@ -347,11 +347,14 @@
 = object__
                                  $object__NewScope
   @object__name
+                                   $object__setField_name_from_name
   @object__fieldList
                                  $object__Output
 
 = object__name
+                                 $name__NewScope
   @esaSymbol
+                                 $name__Output
   
 = object__fieldList
   {[ ?'.'
@@ -365,7 +368,9 @@
   @object__fieldList__field__optionalParameterMap
 
 = object__fieldList__field__name
+                                 $name__NewScope
   @esaSymbol
+                                 $name__Output
   
 = object__fieldList__field__optionalParameterMap
   [ ?'(' 
@@ -386,11 +391,13 @@
   ?SYMBOL
   
 = object__fields__field__parameters__parameter
+                                 $name__NewScope
   @esaSymbol
-
+                                 $name_Output
 
 = esaSymbol
   SYMBOL
+                                 $name__GetName
   @symbol__follow
   
 = symbol__follow

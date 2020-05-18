@@ -595,13 +595,16 @@
   (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "object__") (pasm::p-into-trace p)
 (pasm:call-external p #'$object__NewScope)
 (pasm:call-rule p #'object__name)
+(pasm:call-external p #'$object__setField_name_from_name)
 (pasm:call-rule p #'object__fieldList)
 (pasm:call-external p #'$object__Output)
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
 (defmethod object__name ((p pasm:parser))
   (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "object__name") (pasm::p-into-trace p)
+(pasm:call-external p #'$name__NewScope)
 (pasm:call-rule p #'esaSymbol)
+(pasm:call-external p #'$name__Output)
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
 (defmethod object__fieldList ((p pasm:parser))
@@ -627,7 +630,9 @@
 
 (defmethod object__fieldList__field__name ((p pasm:parser))
   (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "object__fieldList__field__name") (pasm::p-into-trace p)
+(pasm:call-external p #'$name__NewScope)
 (pasm:call-rule p #'esaSymbol)
+(pasm:call-external p #'$name__Output)
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
 (defmethod object__fieldList__field__optionalParameterMap ((p pasm:parser))
@@ -660,12 +665,15 @@
 
 (defmethod object__fields__field__parameters__parameter ((p pasm:parser))
   (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "object__fields__field__parameters__parameter") (pasm::p-into-trace p)
+(pasm:call-external p #'$name__NewScope)
 (pasm:call-rule p #'esaSymbol)
+(pasm:call-external p #'$name_Output)
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
 (defmethod esaSymbol ((p pasm:parser))
   (let ((prev-rule (pasm:current-rule p)))     (setf (pasm:current-rule p) "esaSymbol") (pasm::p-into-trace p)
 (pasm:input p :SYMBOL)
+(pasm:call-external p #'$name__GetName)
 (pasm:call-rule p #'symbol__follow)
 (setf (pasm:current-rule p) prev-rule) (pasm::p-return-trace p)))
 
