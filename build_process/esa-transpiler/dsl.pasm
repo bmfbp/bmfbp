@@ -346,7 +346,6 @@
                                    $ekind__Output
                                    $expression__SetField_ekind_from_ekind
                                  $expression__Output
-                                 $expression__Emit
 
 % a(x).b(y z).c.d(v w)
 % a has parameterList [x] and field...
@@ -435,4 +434,5 @@
 = tester
   ~rmSpaces
   @esa-expr
+  $emit__expression
   

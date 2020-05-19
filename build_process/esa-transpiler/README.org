@@ -18,7 +18,7 @@
 #+end_src
 #+name: esa
 #+begin_src lisp :results output
-  (stack-dsl:transpile-stack "CL-USER" #|"ARROWGRAMS/ESA-TRANSPILER"|#
+  (stack-dsl:transpile-stack "ARROWGRAMS/ESA-TRANSPILER"
      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.dsl")
      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.lisp"))
 #+end_src
@@ -146,26 +146,16 @@
 (trace esaSymbol)
 #+end_src
 #+name: esa
-#+begin_src lisp :results output
-  (stack-dsl:initialize-types "exprtypes.json")
-#+end_src
-#+name: esa
 #+begin_src lisp
-  (arrowgrams/esa-transpiler::transpile-esa-to-file
-     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/test.esa")
-     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/test.lisp")
-     :tracing-accept t)
+  (let ()
+   (stack-dsl:set-target-package "ARROWGRAMS/ESA-TRANSPILER")
+   (stack-dsl:initialize-types "exprtypes.json")
+   (arrowgrams/esa-transpiler::transpile-esa-to-file
+      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/test.esa")
+      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/test.lisp")
+      :tracing-accept t))
 #+end_src
    
 * results
 #+RESULTS: esa
-: type "expression" #<STACK-DSL::STRUCTURE-DESCRIPTOR {1001EAA693}>
-: type "ekind" #<STACK-DSL::ENUM-DESCRIPTOR {1001EAA753}>
-: type "object" #<STACK-DSL::STRUCTURE-DESCRIPTOR {1001EAA8E3}>
-: type "name" #<STACK-DSL::STRING-DESCRIPTOR {1001EAA9A3}>
-: type "fieldMap" #<STACK-DSL::MAP-DESCRIPTOR {1001EAAA53}>
-: type "field" #<STACK-DSL::STRUCTURE-DESCRIPTOR {1001EAABA3}>
-: type "parameterList" #<STACK-DSL::COMPOUND-DESCRIPTOR {1001EAAC93}>
-: type "nameList" #<STACK-DSL::MAP-DESCRIPTOR {1001EAAD73}>
-: type "empty" #<STACK-DSL::NULL-DESCRIPTOR {1001EAAE33}>
 

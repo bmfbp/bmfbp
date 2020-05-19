@@ -600,7 +600,6 @@
 (pasm:call-external p #'$ekind__Output)
 (pasm:call-external p #'$expression__SetField_ekind_from_ekind)
 (pasm:call-external p #'$expression__Output)
-(pasm:call-external p #'$expression__Emit)
 )
 
 (defmethod object__ ((p pasm:parser))
@@ -723,5 +722,6 @@
      (setf (pasm:current-rule p) "tester")
 (pasm::pasm-filter-stream p #'rmSpaces)
 (pasm:call-rule p #'esa-expr)
+(pasm:call-external p #'$emit__expression)
 )
 

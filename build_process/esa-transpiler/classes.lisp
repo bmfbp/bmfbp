@@ -44,7 +44,7 @@
    (current-method :accessor current-method)
 
    ;; v2 emitter
-   (env :accessor env :initform (make-instance 'cl-user::environment))
+   (env :accessor env :initform (make-instance 'arrowgrams/esa-transpiler::environment))
    (saved-text :accessor saved-text)
    ))
 
