@@ -102,13 +102,11 @@
 (trace esa-expr)
 (trace object__)
 (trace object__name)
-(trace object__fieldList)
-(trace object__fieldList__field)
-(trace object__fieldList__field__name)
-(trace object__fieldList__field__optionalParameterMap)
-(trace object__fieldList__field__rec-parameters)
-(trace object__fields__field__parameters__pred-parameterBegin)
-(trace object__fields__field__parameters__parameter)
+(trace object__field)
+(trace object__optionalParameterMap)
+(trace object__field__rec-parameters)
+(trace object__field__parameters__pred-parameterBegin)
+(trace object__field__parameters__parameter)
 (trace esaSymbol)
 #+end_src
 #+name: esa
