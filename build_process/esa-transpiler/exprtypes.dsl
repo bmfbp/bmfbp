@@ -1,9 +1,8 @@
 expression = { kind object }
 kind = 'true' | 'false' | 'object'
-object = { name fieldMap }
+object = { name parameterList field }
 name = :string
-fieldMap = :map field
-field = { name parameterList }
+field =| empty | object
 parameterList =| empty | nameList
 nameList = :map name
 empty = :null

@@ -327,88 +327,87 @@
   ]}
 
 
-%% emitting
-
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
-                                 $expr__NewScope
+                                 $expression__NewScope
+				   $kind_NewScope
   [ ?SYMBOL/true SYMBOL/true
-                                   $expr__SetKindTrue
+                                     $kind__SetEnum_true
   | ?SYMBOL/false SYMBOL/false
-                                   $expr__SetKindTrue
+                                     $kind__SetEnum_false
   | *
-                                   $expr__SetKindObject
+                                     $kind__SetEnum_object
     @object__
-                                   $expr__setField_object_from_object
+                                   $expression__setField_object_from_object
    ]
-                                 $expr__Output
-                                 $expr__Emit
+                                   $kind__Output
+                                   $expression_SetField_kind_from_kind
+                                 $expression__Output
+                                 $expression__Emit
 
+% a(x).b(y z).c.d(v w)
+% a has parameterList [x] and field...
+%   b has parameterList [y z] and field ...
+%     c has parameterList :null and field ...
+%       d has parameterList [v w] and field :null
 = object__
                                  $object__NewScope
   @object__name
                                    $object__setField_name_from_name
-				   $fieldMap__NewScope
+				     $parameterList__NewScope
   @object__optionalParameterMap
-                                   $fieldMap__Output
-                                   $object__setField_fieldMap_from_fieldMap
-  @object__fieldList
+                                     $parameterList__Output
+                                   $object__setField_parameterList_from_parameterList
+  @object__field
+                                 $object_setField_field_from_field
                                  $object__Output
+				 
 
 = object__name
                                  $name__NewScope
   @esaSymbol
                                  $name__Output
+				 
   
-= object__fieldList
+= object__field
   {[ ?'.'
-     @object__fieldList__field
+     @object__
+                                 $field__CoerceFrom_object
    | * >
+                                   $empty__NewScope
+                                   $empty__Output
+                                 $field__CoerceFrom_empty
   ]}
 
 
 = object__optionalParameterMap
-  @object__fieldList__field__optionalParameterMap
-  
+  [ ?'(' 
+     '('
+                                $nameList__NewScope
+       object__field__rec-parameters
+     ')'
+                              $parameterList__CoerceFrom_nameList
+  | *
+                                $empty__NewScope
+                                $empty__Output
+                              $parameterList__CoerceFrom_empty
+  ]
 
-= object__fieldList__field
-  '.'
-                                 $object__NewScope
-  @object__fieldList__field__name
-                                   $object__setField_name_from_name
-				   $fieldMap__NewScope
-  @object__fieldList__field__optionalParameterMap
-                                   $fieldMap__Output
-                                   $object__setField_fieldMap_from_fieldMap
-                                 $object__Output
-				 
-= object__fieldList__field__name
+= object__field__rec-parameters
+  @object__field__parameters__parameter
+                               $nameList__AppendFrom_name
+  [ &object__field__parameters__pred-parameterBegin
+    @object__field__rec-parameters
+  | *
+  ]
+
+- object__field__parameters__pred-parameterBegin
+  ?SYMBOL
+  
+= object__field__parameters__parameter
                                  $name__NewScope
   @esaSymbol
                                  $name__Output
-  
-= object__fieldList__field__optionalParameterMap
-  [ ?'(' 
-     '('
-       object__fieldList__field__rec-parameters
-     ')'
-  | *
-  ]
-
-= object__fieldList__field__rec-parameters
-  @object__fieldList__field__parameters__parameter
-  [ &object__fieldList__field__parameters__pred-parameterBegin
-    @object__fieldList__field__rec-parameters
-  | *
-  ]
-
-- object__fields__field__parameters__pred-parameterBegin
-  ?SYMBOL
-  
-= object__fields__field__parameters__parameter
-                                 $name__NewScope
-  @esaSymbol
-                                 $name_Output
 
 = esaSymbol
   SYMBOL
