@@ -1,5 +1,5 @@
-expression = { kind object }
-kind = 'true' | 'false' | 'object'
+expression = { ekind object }
+ekind = 'true' | 'false' | 'object'
 object = { name parameterList field }
 name = :string
 field =| empty | object

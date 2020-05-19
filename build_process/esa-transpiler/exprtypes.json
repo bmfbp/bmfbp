@@ -3,9 +3,9 @@
       "descriptor" :
       { "kind" : "structure",
 	"fields" : [
-	    { "fieldName" : "kind", "fieldType" : "kind" },
+	    { "fieldName" : "ekind", "fieldType" : "ekind" },
 	    { "fieldName" : "object", "fieldType" : "object" }]}},
-    {"name" : "kind",
+    {"name" : "ekind",
      "descriptor" :
      {"kind" : "enum",
       "valueList" : [ "true", "false", "object" ]}},
@@ -14,7 +14,8 @@
       { "kind" : "structure",
 	"fields" : [
 	    { "fieldName" : "name", "fieldType" : "name" },
-	    { "fieldName" : "fieldMap", "fieldType" : "fieldMap" }]}},
+	    { "fieldName" : "parameterList", "fieldType" : "parameterList" },
+	    { "fieldName" : "field", "fieldType" : "field" }]}},
     { "name" : "name",   "descriptor" : { "kind" : "string" }},
     { "name" : "fieldMap",
       "descriptor" :

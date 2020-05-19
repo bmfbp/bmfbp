@@ -19,11 +19,11 @@
 (defmethod $expression__NewScope ((p parser))
   (stack-dsl:%push-empty (cl-user::input-expression (env p))))
 
-(defmethod $expression__setField_kind_from_kind ((p parser))
-  (let ((val (stack-dsl:%top (cl-user::output-kind (env p)))))
-    (stack-dsl:%ensure-field-type "expression" "kind" val)
-    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p))) "kind" val)
-    (stack-dsl:%pop (cl-user::output-kind (env p)))))
+(defmethod $expression__setField_ekind_from_ekind ((p parser))
+  (let ((val (stack-dsl:%top (cl-user::output-ekind (env p)))))
+    (stack-dsl:%ensure-field-type "expression" "ekind" val)
+    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-expression (env p))) "ekind" val)
+    (stack-dsl:%pop (cl-user::output-ekind (env p)))))
 
 (defmethod $expression__setField_object_from_object ((p parser))
   (let ((val (stack-dsl:%top (cl-user::output-object (env p)))))
@@ -39,21 +39,21 @@
   (break (stack-dsl:%top (cl-user::output-expression (env p))))
   (stack-dsl:%pop (cl-user::output-expression (env p))))
 
-;; kind
-(defmethod $kind__NewScope ((p parser))
-  (stack-dsl:%push-empty (cl-user::input-kind (env p))))
+;; ekind
+(defmethod $ekind__NewScope ((p parser))
+  (stack-dsl:%push-empty (cl-user::input-ekind (env p))))
 
-(defmethod $kind__Output ((p parser))
-  (stack-dsl:%output (cl-user::output-kind (env p))
-		     (cl-user::input-kind  (env p)))
-  (stack-dsl:%pop (cl-user::input-kind (env p))))
+(defmethod $ekind__Output ((p parser))
+  (stack-dsl:%output (cl-user::output-ekind (env p))
+		     (cl-user::input-ekind  (env p)))
+  (stack-dsl:%pop (cl-user::input-ekind (env p))))
 
-(defmethod $kind__SetEnum_true ((p parser))
-  (setf (%value (input-kind (env p))) "true"))
-(defmethod $kind__SetEnum_false ((p parser))
-  (setf (%value (input-kind (env p))) "false"))
-(defmethod $kind__SetEnum_object ((p parser))
-  (setf (%value (input-kind (env p))) "object"))
+(defmethod $ekind__SetEnum_true ((p parser))
+  (setf (stack-dsl:%value (stack-dsl:%top (cl-user::input-ekind (env p)))) "true"))
+(defmethod $ekind__SetEnum_false ((p parser))
+  (setf (stack-dsl:%value (stack-dsl:%top (cl-user::input-ekind (env p)))) "false"))
+(defmethod $ekind__SetEnum_object ((p parser))
+  (setf (stack-dsl:%value (stack-dsl:%top (cl-user::input-ekind (env p)))) "object"))
 
 ;; name 
 (defmethod $name__NewScope ((p arrowgrams/esa-transpiler::parser))
@@ -104,14 +104,14 @@
     (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-object (env p))) "parameterList" val)
     (stack-dsl:%pop (cl-user::output-parameterList (env p)))))
 
-(defmethod $object__setField_fieldMap_from_fieldMap ((p parser))
-  (let ((val (stack-dsl:%top (cl-user::output-fieldMap (env p)))))
+(defmethod $object__setField_field_from_field ((p parser))
+  (let ((val (stack-dsl:%top (cl-user::output-field (env p)))))
     (stack-dsl:%ensure-field-type
      "object"
-     "fieldMap"
+     "field"
      val)
-    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-object (env p))) "fieldMap" val)
-    (stack-dsl:%pop (cl-user::output-fieldMap (env p)))))
+    (stack-dsl:%set-field (stack-dsl:%top (cl-user::input-object (env p))) "field" val)
+    (stack-dsl:%pop (cl-user::output-field (env p)))))
 
 
 ;; field
@@ -124,16 +124,16 @@
 
 (defmethod $field__CoerceFrom_empty ((p parser))
   ;; push tos(empty) onto field, pop(empty)
-  (let ((val (stack-dsl:%top (output-empty (env p)))))
+  (let ((val (stack-dsl:%top (cl-user::output-empty (env p)))))
     (stack-dsl:%ensure-type "field" val)
-    (stack-dsl:%push (input-field (env p)) val)
-    (stack-dsl:%pop (output-empty (env p)))))
+    (stack-dsl:%push (cl-user::input-field (env p)) val)
+    (stack-dsl:%pop (cl-user::output-empty (env p)))))
 
 (defmethod $field__CoerceFrom_object ((p parser))
-  (let ((val (stack-dsl:%top (output-object (env p)))))
+  (let ((val (stack-dsl:%top (cl-user::output-object (env p)))))
     (stack-dsl:%ensure-type "field" val)
-    (stack-dsl:%push (input-field (env p)) val)
-    (stack-dsl:%pop (output-object (env p)))))
+    (stack-dsl:%push (cl-user::input-field (env p)) val)
+    (stack-dsl:%pop (cl-user::output-object (env p)))))
 
 ;; parameterList
 (defmethod $parameterList__NewScope ((p parser))
@@ -144,16 +144,16 @@
   (stack-dsl:%pop (cl-user::input-parameterList (env p))))
 
 (defmethod $parameterList__CoerceFrom_empty ((p parser))
-  (let ((val (stack-dsl:%top (output-empty (env p)))))
+  (let ((val (stack-dsl:%top (cl-user::output-empty (env p)))))
     (stack-dsl:%ensure-type "parameterList" val)
-    (stack-dsl:%push (input-parameterList (env p)) val)
-    (stack-dsl:%pop (output-empty (env p)))))
+    (stack-dsl:%push (cl-user::input-parameterList (env p)) val)
+    (stack-dsl:%pop (cl-user::output-empty (env p)))))
 
 (defmethod $parameterList__CoerceFrom_nameList ((p parser))
-  (let ((val (stack-dsl:%top (output-nameList (env p)))))
+  (let ((val (stack-dsl:%top (cl-user::output-nameList (env p)))))
     (stack-dsl:%ensure-type "parameterList" val)
-    (stack-dsl:%push (input-parameterList (env p)) val)
-    (stack-dsl:%pop (output-nameList (env p)))))
+    (stack-dsl:%push (cl-user::input-parameterList (env p)) val)
+    (stack-dsl:%pop (cl-user::output-nameList (env p)))))
 
 ;; nameList
 (defmethod $nameList__NewScope ((p parser))
@@ -164,12 +164,13 @@
   (stack-dsl:%pop (cl-user::input-nameList (env p))))
 
 (defmethod $nameList__AppendFrom_name ((p parser))
-  (let ((val (stack-dsl:%top (output-name (env p)))))
-    (stack-dsl:%ensure-appendable-type (input-nameList (env p)))
+  (let ((val (stack-dsl:%top (cl-user::output-name (env p)))))
+    (stack-dsl:%ensure-appendable-type (cl-user::input-nameList (env p)))
     (stack-dsl:%ensure-type (stack-dsl:%element-type 
-			     (stack-dsl:%top (input-nameList (env p))) val))
-    (stack-dsl::%append (stack-dsl:%top (input-nameList (env p))) val)
-    (stack-dsl:%pop (output-name (env p)))))
+			     (stack-dsl:%top (cl-user::input-nameList (env p))))
+			    val)
+    (stack-dsl::%append (stack-dsl:%top (cl-user::input-nameList (env p))) val)
+    (stack-dsl:%pop (cl-user::output-name (env p)))))
 
 ;; empty
 (defmethod $empty__NewScope ((p parser))

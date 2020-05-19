@@ -1,5 +1,8 @@
+= rmSpaces
+  [ ?SPACE | ?COMMENT | * . ]
 
 = esa-dsl
+  ~rmSpaces
                                   emitHeader
   @type-decls
   @situations
@@ -330,18 +333,18 @@
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
                                  $expression__NewScope
-				   $kind_NewScope
+				   $ekind__NewScope
   [ ?SYMBOL/true SYMBOL/true
-                                     $kind__SetEnum_true
+                                     $ekind__SetEnum_true
   | ?SYMBOL/false SYMBOL/false
-                                     $kind__SetEnum_false
+                                     $ekind__SetEnum_false
   | *
-                                     $kind__SetEnum_object
+                                     $ekind__SetEnum_object
     @object__
                                    $expression__setField_object_from_object
    ]
-                                   $kind__Output
-                                   $expression_SetField_kind_from_kind
+                                   $ekind__Output
+                                   $expression__SetField_ekind_from_ekind
                                  $expression__Output
                                  $expression__Emit
 
@@ -359,7 +362,7 @@
                                      $parameterList__Output
                                    $object__setField_parameterList_from_parameterList
   @object__field
-                                 $object_setField_field_from_field
+                                 $object__setField_field_from_field
                                  $object__Output
 				 
 
@@ -370,14 +373,16 @@
 				 
   
 = object__field
-  {[ ?'.'
+  [ ?'.'
+     '.'
      @object__
                                  $field__CoerceFrom_object
-   | * >
+   | *
                                    $empty__NewScope
                                    $empty__Output
                                  $field__CoerceFrom_empty
-  ]}
+  ]
+                                 $field__Output
 
 
 = object__optionalParameterMap
@@ -386,6 +391,7 @@
                                 $nameList__NewScope
        object__field__rec-parameters
      ')'
+                                $nameList__Output
                               $parameterList__CoerceFrom_nameList
   | *
                                 $empty__NewScope
@@ -396,13 +402,15 @@
 = object__field__rec-parameters
   @object__field__parameters__parameter
                                $nameList__AppendFrom_name
-  [ &object__field__parameters__pred-parameterBegin
+  [ &object__field__rec-parameters__pred-parameterBegin
     @object__field__rec-parameters
   | *
   ]
 
-- object__field__parameters__pred-parameterBegin
-  ?SYMBOL
+- object__field__rec-parameters__pred-parameterBegin
+  [ ?SYMBOL ^ok
+  | * ^fail
+  ]
   
 = object__field__parameters__parameter
                                  $name__NewScope
@@ -423,4 +431,8 @@
    | * >
   ]}
 
+
+= tester
+  ~rmSpaces
+  @esa-expr
   
