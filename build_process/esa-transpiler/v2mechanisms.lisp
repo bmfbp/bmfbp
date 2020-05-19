@@ -201,12 +201,14 @@
     (reverse result)))
 
 (defmethod lispify ((self STRING))
-  (intern (string-upcase self)))
+  (intern (string-upcase self)) "ESA")
 
 (defmethod lispify ((self stack-dsl:%string))
+(break)  
   (lispify (stack-dsl:%as-string self)))
 
 (defmethod lispify ((self arrowgrams/esa-transpiler::name))
+(break)  
   (lispify (stack-dsl:%value self)))
 
 (defmethod $emit__expression ((p parser))
@@ -217,6 +219,7 @@
   ;; abc(def ghi).klm(o).p -> (slot-value ((slot-value (abc def ghi) 'klm) o) 'p)
   (let ((e (stack-dsl:%top (arrowgrams/esa-transpiler::output-expression (env p)))))
     (let ((sexpr (walk-expression e)))
+(break)
       (format (output-stream p) "~s" sexpr))))
 
 (defmethod walk-expression ((e arrowgrams/esa-transpiler::expression))
