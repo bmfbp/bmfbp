@@ -1,4 +1,5 @@
 (in-package "ARROWGRAMS/ESA-TRANSPILER")
+(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 (defmethod rmSpaces ((p pasm:parser))
      (setf (pasm:current-rule p) "rmSpaces")

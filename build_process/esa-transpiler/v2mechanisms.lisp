@@ -1,4 +1,5 @@
 (in-package :arrowgrams/esa-transpiler)
+(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 ;; see file exprtypes.lisp generated from exprtypes.dsl (see README.org)
 ;;
@@ -34,10 +35,6 @@
 (defmethod $expression__Output ((p parser))
   (stack-dsl:%output (arrowgrams/esa-transpiler::output-expression (env p)) (arrowgrams/esa-transpiler::input-expression (env p)))
   (stack-dsl:%pop (arrowgrams/esa-transpiler::input-expression (env p))))
-
-(defmethod $expression__Emit ((p parser))
-  (break (stack-dsl:%top (arrowgrams/esa-transpiler::output-expression (env p))))
-  (stack-dsl:%pop (arrowgrams/esa-transpiler::output-expression (env p))))
 
 ;; ekind
 (defmethod $ekind__NewScope ((p parser))
@@ -201,26 +198,24 @@
     (reverse result)))
 
 (defmethod lispify ((self STRING))
-  (intern (string-upcase self)) "ESA")
+  ;(intern (string-upcase self) "ARROWGRAMS/ESA"))
+  ;; during early debug
+  (intern (string-upcase self) "CL-USER"))
 
 (defmethod lispify ((self stack-dsl:%string))
-(break)  
   (lispify (stack-dsl:%as-string self)))
 
 (defmethod lispify ((self arrowgrams/esa-transpiler::name))
-(break)  
   (lispify (stack-dsl:%value self)))
 
 (defmethod $emit__expression ((p parser))
   ;; abc --> abc
   ;; abc.klm -> (slot-value abc 'klm)
-  ;; abc.klm(o) -> ((slot-value abc 'klm) o)
-  ;; abc.klm(o).p -> (slot-value ((slot-value abc 'klm) o) 'p)
-  ;; abc(def ghi).klm(o).p -> (slot-value ((slot-value (abc def ghi) 'klm) o) 'p)
+  ;; abc.def(ghi) -> (slot-value abc (ghi def))
   (let ((e (stack-dsl:%top (arrowgrams/esa-transpiler::output-expression (env p)))))
     (let ((sexpr (walk-expression e)))
-(break)
-      (format (output-stream p) "~s" sexpr))))
+      (pasm:emit-string p "~s" sexpr)
+      )))
 
 (defmethod walk-expression ((e arrowgrams/esa-transpiler::expression))
   (cond ((true-p e)  :true)
@@ -230,16 +225,22 @@
 	 (walk-object (arrowgrams/esa-transpiler::object e)))))
 
 (defmethod walk-object ((obj arrowgrams/esa-transpiler::object))
-  (let ((name (arrowgrams/esa-transpiler::name obj))
-	(params (arrowgrams/esa-transpiler::parameterList obj))
-	(f (arrowgrams/esa-transpiler::field obj)))
-    (let ((item (if (empty-p params) 
-		    (lispify name)
-		    (cons name (params-as-list params)))))
-      (if (empty-p f)
-	  item
-	  `(slot-value ,item ,(walk-object f))))))
-			  
-
-		   
-		   
+  (unless (empty-p obj)
+    (let ((name (arrowgrams/esa-transpiler::name obj))
+	  (params (arrowgrams/esa-transpiler::parameterList obj))
+	  (f (arrowgrams/esa-transpiler::field obj)))
+      (let ((item (if (empty-p params) 
+		      (lispify name)
+		      (cons (lispify name) (params-as-list params)))))
+(break)
+	(if (empty-p f)
+	    item
+	    (let ((slot-name (walk-object f)))
+	      (let ((slot-ref 
+		     (if (atom slot-name)
+			 `(slot-value ,item ',slot-name)
+			 `(slot-value ,item ,slot-name))))
+		(if params
+		    `(,slot-ref ,@params)
+		    slot-ref)
+		)))))))

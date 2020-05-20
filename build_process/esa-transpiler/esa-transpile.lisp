@@ -11,7 +11,8 @@
 	(let ((result (get-output-stream-string (pasm:output-string-stream p))))
 	  (concatenate 'string 
 		       (format nil "(in-package :esa)~%~%")
-		       result))))))
+		       result)
+	  result)))))
 
 (defun transpile-esa-to-file (esa-input-filename output-filename &key (tracing-accept nil))
   (let ((str (transpile-esa-to-string esa-input-filename :tracing-accept tracing-accept)))
