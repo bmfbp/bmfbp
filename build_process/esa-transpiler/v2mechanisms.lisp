@@ -209,9 +209,17 @@
   (lispify (stack-dsl:%value self)))
 
 (defmethod $emit__expression ((p parser))
+  ;; instead of generalizing, I want to make this work soon
+  ;; hence, I will implement only the bare minimum required by my use of ../esa/esa.dsl
+  ;;
+  ;; so, a parameter list can only appear on a field expression that has no more fields (.e. the last .expr)
+
   ;; abc --> abc
-  ;; abc.klm -> (slot-value abc 'klm)
-  ;; abc.def(ghi) -> (slot-value abc (ghi def))
+  ;; self.def -> (slot-value self 'def)
+  ;; self.def.ghi (slot-value (slot-values self 'def) 'ghi)
+  ;; self.def(ghi) -> ((slot-value abc 'def) ghi)
+  ;; self.def(ghi).L -> *illegal for now* -> (slot-value ((slot-value abc 'def) ghi) 'L)
+  ;; self.ensure-input-pin-not-declared(name) -> ((slot-value self 'ensure-input-pin-not-declared) name)
   (let ((e (stack-dsl:%top (arrowgrams/esa-transpiler::output-expression (env p)))))
     (let ((sexpr (walk-expression e)))
       (pasm:emit-string p "~s" sexpr)
@@ -225,14 +233,15 @@
 	 (walk-object (arrowgrams/esa-transpiler::object e)))))
 
 (defmethod walk-object ((obj arrowgrams/esa-transpiler::object))
-  (unless (empty-p obj)
+  ;; as per the above comment, an object can have a field or a paramList, but not both
+  (unless (empty-p obj)  ;; this is probably redundant
     (let ((name (arrowgrams/esa-transpiler::name obj))
 	  (params (arrowgrams/esa-transpiler::parameterList obj))
 	  (f (arrowgrams/esa-transpiler::field obj)))
-      (let ((item (if (empty-p params) 
-		      (lispify name)
-		      (cons (lispify name) (params-as-list params)))))
-(break)
+      (assert (if (not (empty-p f)) (empty-p params)))
+      (assert (if (not (empty-p params)) (empty-p f)))
+      (let ((item (if (not (empty-p f)) 
+		      (lispify name))
 	(if (empty-p f)
 	    item
 	    (let ((slot-name (walk-object f)))
@@ -240,7 +249,7 @@
 		     (if (atom slot-name)
 			 `(slot-value ,item ',slot-name)
 			 `(slot-value ,item ,slot-name))))
-		(if params
-		    `(,slot-ref ,@params)
-		    slot-ref)
+		(if (empty-p params)
+		    slot-ref
+                  `(,slot-ref ,@params))
 		)))))))

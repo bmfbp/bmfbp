@@ -567,6 +567,7 @@
                           :pathname "./build_process/esa-transpiler/"
                           :components ((:file "package")
 				       (:file "classes")
+                                       (:file "path")
 				       (:file "dsl")
 				       (:file "exprtypes")
 				       (:file "v2mechanisms")

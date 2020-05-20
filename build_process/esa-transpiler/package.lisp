@@ -3,6 +3,7 @@
   (:shadow #:name)
   (:export
    #:transpile-esa-to-string
+   #:path
    ))
 
 (defpackage :arrowgrams/esa
