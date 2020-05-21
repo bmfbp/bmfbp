@@ -14,9 +14,9 @@
       { "kind" : "structure",
 	"fields" : [
 	    { "fieldName" : "name", "fieldType" : "name" },
-	    { "fieldName" : "parameterList", "fieldType" : "parameterList" },
-	    { "fieldName" : "field", "fieldType" : "field" }]}},
+	    { "fieldName" : "fieldMap", "fieldType" : "fieldMap" }]}},
     { "name" : "name",   "descriptor" : { "kind" : "string" }},
+    { "name" : "fieldName",   "descriptor" : { "kind" : "string" }},
     { "name" : "fieldMap",
       "descriptor" :
       { "kind" : "map", "elementType" : "field" }},
@@ -24,7 +24,7 @@
       "descriptor" :
       { "kind" : "structure",
 	"fields" : [
-	    { "fieldName" : "name", "fieldType" : "name" },
+	    { "fieldName" : "fieldName", "fieldType" : "name" },
 	    { "fieldName" : "parameterList", "fieldType" : "parameterList" }]}},
     { "name" : "parameterList",
       "descriptor" :
@@ -32,5 +32,8 @@
     { "name" : "nameList",
       "descriptor" :
       { "kind" : "map", "elementType" : "name" }},
+    { "name" : "fieldMap",
+      "descriptor" :
+      { "kind" : "map", "elementType" : "fieldMap" }},
     { "name" : "empty",   "descriptor" : { "kind" : "null" }}
 ]

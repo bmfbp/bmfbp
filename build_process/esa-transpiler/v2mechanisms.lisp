@@ -187,8 +187,10 @@
   (string= "object" (stack-dsl:%as-string (arrowgrams/esa-transpiler::ekind e))))
 
 (defmethod empty-p ((x T))
+(format *error-output* "~&empty-p T ~s~%" x)
   nil)
 (defmethod empty-p ((self arrowgrams/esa-transpiler::empty))
+(format *error-output* "~&empty-p self ~s~%" self)
   t)
 
 (defmethod params-as-list ((self arrowgrams/esa-transpiler::nameList))
@@ -232,16 +234,19 @@
 	 (assert (object-p e))
 	 (walk-object (arrowgrams/esa-transpiler::object e)))))
 
+(defun implies (test implication)
+  (or (and test (assert implication)) t))
+      
 (defmethod walk-object ((obj arrowgrams/esa-transpiler::object))
   ;; as per the above comment, an object can have a field or a paramList, but not both
   (unless (empty-p obj)  ;; this is probably redundant
     (let ((name (arrowgrams/esa-transpiler::name obj))
 	  (params (arrowgrams/esa-transpiler::parameterList obj))
 	  (f (arrowgrams/esa-transpiler::field obj)))
-      (assert (if (not (empty-p f)) (empty-p params)))
-      (assert (if (not (empty-p params)) (empty-p f)))
+      (implies (not (empty-p f)) (empty-p params))
+      (implies (not (empty-p params)) (empty-p f))
       (let ((item (if (not (empty-p f)) 
-		      (lispify name))
+		      (lispify name))))
 	(if (empty-p f)
 	    item
 	    (let ((slot-name (walk-object f)))
@@ -251,5 +256,5 @@
 			 `(slot-value ,item ,slot-name))))
 		(if (empty-p params)
 		    slot-ref
-                  `(,slot-ref ,@params))
+		    `(,slot-ref ,@params))
 		)))))))

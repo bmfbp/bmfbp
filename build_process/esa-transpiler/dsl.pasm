@@ -332,75 +332,75 @@
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
-                                 $expression__NewScope
-				   $ekind__NewScope
   [ ?SYMBOL/true SYMBOL/true
-                                     $ekind__SetEnum_true
   | ?SYMBOL/false SYMBOL/false
-                                     $ekind__SetEnum_false
   | *
-                                     $ekind__SetEnum_object
     @object__
-                                   $expression__setField_object_from_object
    ]
-                                   $ekind__Output
-                                   $expression__SetField_ekind_from_ekind
-                                 $expression__Output
 
-% a(x).b(y z).c.d(v w)
-% a has parameterList [x] and field...
-%   b has parameterList [y z] and field ...
-%     c has parameterList :null and field ...
-%       d has parameterList [v w] and field :null
+% DSL allows parameterList only for fields
+% self.a -> (slot-value self 'a)
+% self.a.b -> (slot-value (slot-value self 's) 'b)
+% self.array(i).b (slot-value ((slot-value self 'array) i) 'b)
+% self.array(i).b(j) ((slot-value ((slot-value self 'array) i) 'b) j)
+% fn -> fn
+% fn(i) -> (fn i)
+%
+% name.field(optionalparameters) -> object/field/params
 = object__
-                                 $object__NewScope
+                             $object__NewScope
   @object__name
-                                   $object__setField_name_from_name
-				     $parameterList__NewScope
-  @object__optionalParameterMap
-                                     $parameterList__Output
-                                   $object__setField_parameterList_from_parameterList
-  @object__field
-                                 $object__setField_field_from_field
-                                 $object__Output
-				 
+                               $object_SetField_name_from_name
+			       $fieldMap__NewScope
+  @object__tailList
+                               $object_SetField_fieldMap_from_fieldMap
+			     $object__Output
+
+% <<>>fieldMap
+= object__tailList
+
+{[ &object__field_p
+     @object__single_field
+   | * >
+  ]}
+
+- object__field_p
+  [ ?'.' ^ok
+  | ?'(' ^ok
+  | * ^fail
+  ]
+
+= object__single_field
+  [ ?'.'
+     @object__dotField
+     @object__optionalParameterMap
+  | ?'('
+     @object__optionalParameterMap
+  | *
+  ]
 
 = object__name
-                                 $name__NewScope
   @esaSymbol
-                                 $name__Output
 				 
   
-= object__field
+= object__dotField
   [ ?'.'
      '.'
      @object__
-                                 $field__CoerceFrom_object
    | *
-                                   $empty__NewScope
-                                   $empty__Output
-                                 $field__CoerceFrom_empty
   ]
-                                 $field__Output
 
 
 = object__optionalParameterMap
   [ ?'(' 
      '('
-                                $nameList__NewScope
        object__field__rec-parameters
      ')'
-                                $nameList__Output
-                              $parameterList__CoerceFrom_nameList
   | *
-                                $empty__NewScope
-                                $empty__Output
-                              $parameterList__CoerceFrom_empty
   ]
 
 = object__field__rec-parameters
   @object__field__parameters__parameter
-                               $nameList__AppendFrom_name
   [ &object__field__rec-parameters__pred-parameterBegin
     @object__field__rec-parameters
   | *
@@ -412,20 +412,20 @@
   ]
   
 = object__field__parameters__parameter
-                                 $name__NewScope
+                                 %$name__NewScope
   @esaSymbol
-                                 $name__Output
+                                 %$name__Output
 
 = esaSymbol
   SYMBOL
-                                 $name__GetName
-  {[ ?'/' '/'                    $name__combine
-     SYMBOL                      $name__combine
-   | ?'-' '-'                    $name__combine
-     SYMBOL                      $name__combine
-   | ?'?' '?'                    $name__combine
+                                 %$name__GetName
+  {[ ?'/' '/'                    %$name__combine
+     SYMBOL                      %$name__combine
+   | ?'-' '-'                    %$name__combine
+     SYMBOL                      %$name__combine
+   | ?'?' '?'                    %$name__combine
       >
-   | ?CHARACTER/' CHARACTER/'    $name__combine
+   | ?CHARACTER/' CHARACTER/'    %$name__combine
      >
    | * >
   ]}
