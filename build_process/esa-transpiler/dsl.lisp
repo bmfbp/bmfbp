@@ -595,8 +595,13 @@
 
 (defmethod object__ ((p pasm:parser))
      (setf (pasm:current-rule p) "object__")
+(pasm:call-external p #'$object__NewScope)
 (pasm:call-rule p #'object__name)
+(pasm:call-external p #'$object_SetField_name_from_name)
+(pasm:call-external p #'$fieldMap__NewScope)
 (pasm:call-rule p #'object__tailList)
+(pasm:call-external p #'$object_SetField_fieldMap_from_fieldMap)
+(pasm:call-external p #'$object__Output)
 )
 
 (defmethod object__tailList ((p pasm:parser))
@@ -720,7 +725,6 @@
 (defmethod tester ((p pasm:parser))
      (setf (pasm:current-rule p) "tester")
 (pasm::pasm-filter-stream p #'rmSpaces)
-(pasm:call-rule p #'esa-expr)
-(pasm:call-external p #'$emit__expression)
+(pasm:call-external p #'$mech-tester)
 )
 

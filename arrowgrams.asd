@@ -570,10 +570,26 @@
                                        (:file "path")
 				       (:file "dsl")
 				       (:file "exprtypes")
-				       (:file "v2mechanisms")
+				       (:file "mechanisms")
+				       (:file "manual-mechanisms")
 				       (:file "esa-transpile")
+				       ))))
+
+(defsystem :arrowgrams/esa-transpiler/tester
+  :depends-on (:arrowgrams/esa-transpiler)
+  :serial t
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+                          :pathname "./build_process/esa-transpiler/"
+                          :components ((:file "package")
+				       ;; for debug ...
 				       (:file "trace-rules")
 				       (:file "trace-mechs")
+				       (:file "mech-tester")
 				       ))))
 
 

@@ -433,6 +433,7 @@
 
 = tester
   ~rmSpaces
-  @esa-expr
-  $emit__expression
+  $mech-tester
+%  @esa-expr
+%  $emit__expression
   

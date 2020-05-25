@@ -11,7 +11,7 @@
     1) create exprtype.lisp (from exprtype.dsl, see below, for script)
     2) build esa-dsl.lisp from esa.rp 
     3) load esa
-* 1) create exprtypes.lisp
+* 1) create exprtypes.lisp, exprtypes.json, mechanisms.lisp
 #+name: esa
 #+begin_src lisp :results output
   (ql:quickload :stack-dsl/use)
@@ -20,7 +20,10 @@
 #+begin_src lisp :results output
   (stack-dsl:transpile-stack "ARROWGRAMS/ESA-TRANSPILER"
      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.dsl")
-     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.lisp"))
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.lisp")
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.json")
+     (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/mechanisms.lisp")
+     )
 #+end_src
 * 2) create dsl.lisp (from dsl.pasm)
 #+name: esa
@@ -36,7 +39,15 @@
      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/dsl.pasm")
      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/dsl.lisp"))
 #+end_src
-* 3) create (via manual edit) exprtypes.json
+* 3) run mechanism tests
+#+name: esa
+#+begin_src lisp :results output
+(ql:quickload :arrowgrams/esa-transpiler/tester)  
+#+end_src
+#+name: esa
+#+begin_src lisp :results output
+  (arrowgrams/esa-transpiler::$mech-tester)
+#+end_src
 * 4) run ESA
 #+name: esa
 #+begin_src lisp :results output
@@ -71,7 +82,7 @@
    (load "classes.lisp")
    (load "dsl.lisp")
    (load "exprtypes.lisp")
-   (load "v2mechanisms.lisp")
+   (load "mechanisms.lisp")
    (load "esa-transpile.lisp")
    (load "trace-rules")
    (load "trace-mechs")
@@ -97,9 +108,9 @@
    
 * results
 #+RESULTS: esa
-: To load "arrowgrams/esa-transpiler":
+: To load "parsing-assembler/use":
 :   Load 1 ASDF system:
-:     arrowgrams/esa-transpiler
-: ; Loading "arrowgrams/esa-transpiler"
-: ..
+:     parsing-assembler/use
+: ; Loading "parsing-assembler/use"
+: 
 

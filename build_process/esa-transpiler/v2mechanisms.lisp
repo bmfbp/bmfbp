@@ -177,6 +177,34 @@
   (stack-dsl:%output (arrowgrams/esa-transpiler::output-empty (env p)) (arrowgrams/esa-transpiler::input-empty (env p)))
   (stack-dsl:%pop (arrowgrams/esa-transpiler::input-empty (env p))))
 
+;; fieldMap
+(defmethod $fieldMap__NewScope ((p parser))
+  (stack-dsl:%push-empty (arrowgrams/esa-transpiler::input-fieldMap (env p))))
+
+(defmethod $fieldMap__Output ((p parser))
+  (stack-dsl:%output (arrowgrams/esa-transpiler::output-fieldMap (env p)) (arrowgrams/esa-transpiler::input-fieldMap (env p)))
+  (stack-dsl:%pop (arrowgrams/esa-transpiler::input-fieldMap (env p))))
+
+(defmethod $fieldMap__SetField_name_From_name ((p parser))
+  (let ((val (stack-dsl:%top (arrowgrams/esa-transpiler::output-fieldMap (env p)))))
+    (stack-dsl:%ensure-field-type
+     "object"
+     "field"
+     val)
+    (stack-dsl:%set-field (stack-dsl:%top (arrowgrams/esa-transpiler::input-object (env p))) "field" val)
+    (stack-dsl:%pop (arrowgrams/esa-transpiler::output-fieldMap (env p)))))
+
+
+
+  ;; nameMap
+(defmethod $nameMap__NewScope ((p parser))
+  (stack-dsl:%push-empty (arrowgrams/esa-transpiler::input-nameMap (env p))))
+
+(defmethod $nameMap__Output ((p parser))
+  (stack-dsl:%output (arrowgrams/esa-transpiler::output-nameMap (env p)) (arrowgrams/esa-transpiler::input-nameMap (env p)))
+  (stack-dsl:%pop (arrowgrams/esa-transpiler::input-nameMap (env p))))
+
+
 ;; emission
 
 (defmethod true-p ((e arrowgrams/esa-transpiler::expression))
@@ -189,7 +217,7 @@
 (defmethod empty-p ((x T))
 (format *error-output* "~&empty-p T ~s~%" x)
   nil)
-(defmethod empty-p ((self arrowgrams/esa-transpiler::empty))
+#+nil(defmethod empty-p ((self arrowgrams/esa-transpiler::empty))
 (format *error-output* "~&empty-p self ~s~%" self)
   t)
 
