@@ -48,6 +48,12 @@
 #+begin_src lisp :results output
   (arrowgrams/esa-transpiler::$mech-tester)
 #+end_src
+* 0) run make as an interpreted script
+#+name: esa
+#+begin_src lisp :results output
+ (load "make")
+ (make)
+#+end_src
 * 4) run ESA
 #+name: esa
 #+begin_src lisp :results output
