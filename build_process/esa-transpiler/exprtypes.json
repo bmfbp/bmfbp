@@ -10,7 +10,6 @@
 { "name" : "field" , "descriptor" : { "kind" : "structure", "fields" : [
 {"fieldName":"name","fieldType":"name"},
 {"fieldName":"parameterList","fieldType":"parameterList"}]}},
-{ "name" : "parameterList" , "descriptor" : { "kind" : "compound", "types" : ["nameMap"] }},
-{ "name" : "nameMap" , "descriptor" : { "kind" : "map", "elementType" : "name" }},
+{ "name" : "parameterList" , "descriptor" : { "kind" : "map", "elementType" : "name" }},
 { "name" : "name" , "descriptor" : { "kind" : "string" }}
 ]

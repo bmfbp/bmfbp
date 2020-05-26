@@ -70,3 +70,5 @@
   ;; self.ensure-input-pin-not-declared(name) -> ((slot-value self 'ensure-input-pin-not-declared) name)
   (let ((e (stack-dsl:%top (cl-user::output-expression (env p)))))
     (break e))) ;; this causes an error, but allows inspect of e - OK during early debug
+
+(defmethod $%map__NewScope ((p parser))

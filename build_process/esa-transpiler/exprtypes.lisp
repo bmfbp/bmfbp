@@ -49,18 +49,12 @@
 (defmethod initialize-instance :after ((self field-stack) &key &allow-other-keys)
   (setf (stack-dsl::%element-type self) "field"))
 
-
-(defclass parameterList (stack-dsl::%compound-type) () (:default-initargs :%type "parameterList"))
-(defmethod initialize-instance :after ((self parameterList) &key &allow-other-keys)
-  (setf (stack-dsl::%type-list self) '("nameMap")))
-(defclass parameterList-stack (stack-dsl::%typed-stack) () (:default-initargs :%element-type "parameterList"))
-
-(defclass nameMap (stack-dsl::%map) () (:default-initargs :%type "nameMap"))
-(defmethod initialize-instance :after ((self nameMap) &key &allow-other-keys)  ;; type for items in map
-(setf (stack-dsl::%element-type self) "nameMap"))
-(defclass nameMap-stack(stack-dsl::%typed-stack) ())
- (defmethod initialize-instance :after ((self nameMap-stack) &key &allow-other-keys)
-(setf (stack-dsl::%element-type self) "nameMap"))
+(defclass parameterList (stack-dsl::%map) () (:default-initargs :%type "parameterList"))
+(defmethod initialize-instance :after ((self parameterList) &key &allow-other-keys)  ;; type for items in map
+(setf (stack-dsl::%element-type self) "parameterList"))
+(defclass parameterList-stack(stack-dsl::%typed-stack) ())
+ (defmethod initialize-instance :after ((self parameterList-stack) &key &allow-other-keys)
+(setf (stack-dsl::%element-type self) "parameterList"))
 
 (defclass name (stack-dsl::%string) () (:default-initargs :%type "name"))
 (defclass name-stack (stack-dsl::%typed-stack) ())
@@ -77,7 +71,6 @@
 (stack-dsl::%ensure-existence 'fieldMap)
 (stack-dsl::%ensure-existence 'field)
 (stack-dsl::%ensure-existence 'parameterList)
-(stack-dsl::%ensure-existence 'nameMap)
 
 (defclass environment ()
 ((%water-mark :accessor %water-mark :initform nil)
@@ -95,8 +88,6 @@
 (output-field :accessor output-field :initform (make-instance 'field-stack))
 (input-parameterList :accessor input-parameterList :initform (make-instance 'parameterList-stack))
 (output-parameterList :accessor output-parameterList :initform (make-instance 'parameterList-stack))
-(input-nameMap :accessor input-nameMap :initform (make-instance 'nameMap-stack))
-(output-nameMap :accessor output-nameMap :initform (make-instance 'nameMap-stack))
 ))
 
 (defmethod %memoStacks ((self environment))
@@ -116,8 +107,6 @@
 (output-field self)
 (input-parameterList self)
 (output-parameterList self)
-(input-nameMap self)
-(output-nameMap self)
 )))
 
 (defmethod %memoCheck ((self environment))
@@ -137,7 +126,5 @@
 (eq (nth 11 wm) (output-field self))
 (eq (nth 12 wm) (input-parameterList self))
 (eq (nth 13 wm) (output-parameterList self))
-(eq (nth 14 wm) (input-nameMap self))
-(eq (nth 15 wm) (output-nameMap self))
 ))
 (error "stack depth incorrect")))

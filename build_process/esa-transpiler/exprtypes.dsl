@@ -3,6 +3,5 @@ ekind = 'true' | 'false' | 'object'
 object = { name fieldMap }
 fieldMap = :map field
 field = { name parameterList }
-parameterList =| nameMap
-nameMap = :map name
+parameterList = :map name
 name = :string
