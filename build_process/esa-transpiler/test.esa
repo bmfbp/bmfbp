@@ -1,8 +1,1 @@
 self.fn(x)
-
-(setf (scanner:token-text (pasm:accepted-token p)) "self")
-($name__GetName p)
-(setf (scanner:token-text (pasm:accepted-token p)) "fn")
-($name__GetName p)
-(setf (scanner:token-text (pasm:accepted-token p)) "x")
-($name__GetName p)
