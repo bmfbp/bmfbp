@@ -71,4 +71,9 @@
   (let ((e (stack-dsl:%top (cl-user::output-expression (env p)))))
     (break e))) ;; this causes an error, but allows inspect of e - OK during early debug
 
-(defmethod $%map__NewScope ((p parser))
+
+(defmethod set-current-method ((p parser))
+  (setf (current-method p) (scanner:token-text (pasm:accepted-token p))))
+
+(defmethod set-current-class ((p parser))
+  (setf (current-class p) (scanner:token-text (pasm:accepted-token p))))

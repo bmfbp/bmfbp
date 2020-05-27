@@ -73,7 +73,7 @@
 = class-def
   SYMBOL/class
   @esa-symbol
-%       set-current-class
+       set-current-class
 %$      (emit p "~&(defclass ~a ()~%(" (atext p))
   @field-decl-begin @field-decl
   {[ &field-decl-begin @field-decl

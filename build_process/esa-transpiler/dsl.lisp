@@ -168,6 +168,7 @@
      (setf (pasm:current-rule p) "class-def")
 (pasm:input-symbol p "class")
 (pasm:call-rule p #'esa-symbol)
+(pasm:call-external p #'set-current-class)
 (pasm:call-rule p #'field-decl-begin)
 (pasm:call-rule p #'field-decl)
 (loop

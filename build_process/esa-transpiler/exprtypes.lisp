@@ -71,7 +71,11 @@
 (stack-dsl::%ensure-existence 'fieldMap)
 (stack-dsl::%ensure-existence 'field)
 (stack-dsl::%ensure-existence 'parameterList)
-
+(defclass %map-stack (stack-dsl::%typed-stack) ())
+(defclass %bag-stack (stack-dsl::%typed-stack) ())
+(defmethod initialize-instance :after ((self %map-stack) &key &allow-other-keys)
+  (setf (stack-dsl::%element-type self) "%map"))(defmethod initialize-instance :after ((self %bag-stack) &key &allow-other-keys)
+  (setf (stack-dsl::%element-type self) "%bag"))
 (defclass environment ()
 ((%water-mark :accessor %water-mark :initform nil)
 (input-expression :accessor input-expression :initform (make-instance 'expression-stack))
