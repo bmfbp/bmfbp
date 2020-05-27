@@ -1,11 +1,13 @@
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+
+  #+nil(format *standard-output* \"cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp , then copy 12.lisp into mech-tester.lisp and manually edit the result to insert names\")
+
 (defparameter *script* "
-  (uiop:run-program \"rm -rf ~/.cache/common-lisp\")
+  (uiop:run-program \"rm -rf \~/.cache/common-lisp\")
   (uiop:run-program \"rm -rf *.fasl */*.fasl */*/*/.fasl\")
-  (uiop:run-program \"rm -rf *~ */*~ */*/*/*~\")  
+  (uiop:run-program \"rm -rf *~\")  
   (ql:quickload :stack-dsl)
   (ql:quickload :stack-dsl/use)
-  (format *standard-output* \"cd to ~~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp , then copy 12.lisp into mech-tester.lisp and manually edit the result to insert names\")
   (stack-dsl:transpile-stack 
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.dsl\")
      \"CL-USER\"
@@ -14,7 +16,7 @@
      \"ARROWGRAMS/ESA-TRANSPILER\"
      \"CL-USER\"
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/mechanisms.lisp\")
-     )     
+     )
   (ql:quickload :parsing-assembler/use)
   (pasm:pasm-to-file 
      \"ARROWGRAMS/ESA-TRANSPILER\"
