@@ -51,7 +51,7 @@
 
 (defclass parameterList (stack-dsl::%map) () (:default-initargs :%type "parameterList"))
 (defmethod initialize-instance :after ((self parameterList) &key &allow-other-keys)  ;; type for items in map
-(setf (stack-dsl::%element-type self) "name"))
+(setf (stack-dsl::%element-type self) "expression"))
 (defclass parameterList-stack(stack-dsl::%typed-stack) ())
  (defmethod initialize-instance :after ((self parameterList-stack) &key &allow-other-keys)
 (setf (stack-dsl::%element-type self) "parameterList"))

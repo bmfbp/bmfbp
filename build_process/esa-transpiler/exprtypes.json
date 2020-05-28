@@ -10,7 +10,7 @@
 { "name" : "field" , "descriptor" : { "kind" : "structure", "fields" : [
 {"fieldName":"name","fieldType":"name"},
 {"fieldName":"parameterList","fieldType":"parameterList"}]}},
-{ "name" : "parameterList" , "descriptor" : { "kind" : "map", "elementType" : "name" }},
+{ "name" : "parameterList" , "descriptor" : { "kind" : "map", "elementType" : "expression" }},
 { "name" : "name" , "descriptor" : { "kind" : "string" }},
 { "name" : "esaclass" , "descriptor" : { "kind" : "structure", "fields" : [
 {"fieldName":"name","fieldType":"name"}]}}

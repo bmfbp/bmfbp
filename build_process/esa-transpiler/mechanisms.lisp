@@ -95,13 +95,13 @@
   (stack-dsl:%output (CL-USER::output-parameterList (env p)) (CL-USER::input-parameterList (env p)))
   (stack-dsl:%pop (CL-USER::input-parameterList (env p))))
 
-(defmethod $parameterList__AppendFrom_name ((p parser))
-  (let ((val (stack-dsl:%top (CL-USER::output-name (env p)))))
+(defmethod $parameterList__AppendFrom_expression ((p parser))
+  (let ((val (stack-dsl:%top (CL-USER::output-expression (env p)))))
     (let ((dest (stack-dsl:%top (CL-USER::input-parameterList (env p)))))
       (stack-dsl:%ensure-appendable-type dest)
       (stack-dsl:%ensure-type (stack-dsl:%element-type dest) val)
       (stack-dsl::%append dest val)
-      (stack-dsl:%pop (CL-USER::output-name (env p))))))
+      (stack-dsl:%pop (CL-USER::output-expression (env p))))))
 
 (defmethod $name__NewScope ((p parser))
   (stack-dsl:%push-empty (CL-USER::input-name (env p))))

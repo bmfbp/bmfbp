@@ -3,7 +3,7 @@ ekind = 'true' | 'false' | 'object'
 object = { name fieldMap }
 fieldMap = :map field
 field = { name parameterList }
-parameterList = :map name
+parameterList = :map expression
 name = :string
 
 esaclass = { name }

@@ -71,12 +71,12 @@
 
 = class-def
                                        $esaclass__NewScope
-                                          $name_NewScope
+                                          $name__NewScope
   SYMBOL/class
   @esa-symbol
                                             $name__GetName
  					  $name__Output
-                                        $esaclass_SetField_name_from_name
+                                        $esaclass__SetField_name_from_name
   @field-decl-begin @field-decl
   {[ &field-decl-begin @field-decl
    | * >
@@ -412,8 +412,8 @@
   [ ?'('
                                 $parameterList__NewScope
      '('
-       @esaSymbol
-                                  $parameterList__AppendFrom_name
+       @esa-expr
+                                  $parameterList__AppendFrom_expression
        object__field__recursive-more-parameters
      ')'
                                 $parameterList__Output
@@ -459,8 +459,8 @@
   ~rmSpaces
 %  $mech-tester
 %   @object__
-%   @esa-expr  
-    @esa-dsl
+   @esa-expr  
+%    @esa-dsl
     $bp
 %  @esa-expr
 %  $emit__expression
