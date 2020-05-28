@@ -367,15 +367,22 @@
   @object__name
                                $object__SetField_name_from_name
 			       $fieldMap__NewScope
-  @object__tailList
+  @object__fields
+                               $fieldMap__Output
                                $object__SetField_fieldMap_from_fieldMap
 			     $object__Output
 
+= object__name
+  @esaSymbol
+				 
+  
 % <<>>fieldMap
-= object__tailList
-
-{[ &object__field_p
-     @object__single_field
+= object__fields
+  {[ &object__field_p
+                                  $field__NewScope
+         @object__single_field
+                                  $field__Output
+                                $fieldMap__AppendFrom_field
    | * >
   ]}
 
@@ -387,41 +394,40 @@
 
 = object__single_field
   [ ?'.'
-     @object__dotField
-     @object__optionalParameterMap
+     @object__dotFieldName
+     @object__parameterMap
   | ?'('
-     @object__optionalParameterMap
+     @object__parameterMap
   | *
   ]
 
-= object__name
+= object__dotFieldName
+  '.'
   @esaSymbol
-				 
-  
-= object__dotField
-  [ ?'.'
-     '.'
-     @object__
-   | *
-  ]
+                               $field__SetField_name_from_name
 
-
-= object__optionalParameterMap
-  [ ?'(' 
+= object__parameterMap
+  [ ?'('
+                                $parameterList__NewScope
      '('
-       object__field__rec-parameters
+       @esaSymbol
+                                  $parameterList__AppendFrom_name
+       object__field__recursive-more-parameters
      ')'
+                                $parameterList__Output
+                              $field__SetField_parameterList_from_parameterList
   | *
   ]
 
-= object__field__rec-parameters
-  @object__field__parameters__parameter
-  [ &object__field__rec-parameters__pred-parameterBegin
-    @object__field__rec-parameters
+= object__field__recursive-more-parameters
+  [ &object__field__parameters__pred-parameterBegin
+    object__field__parameters__parameter
+                                $parameterList__AppendFrom_name
+    @object__field__recursive-more-parameters
   | *
   ]
 
-- object__field__rec-parameters__pred-parameterBegin
+- object__field__parameters__pred-parameterBegin
   [ ?SYMBOL ^ok
   | * ^fail
   ]

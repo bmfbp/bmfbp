@@ -1,3 +1,5 @@
+  (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+
 (ql:quickload :stack-dsl/use)
 (stack-dsl:transpile-stack 
      (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/exprtypes.dsl")

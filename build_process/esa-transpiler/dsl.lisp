@@ -615,16 +615,25 @@
 (pasm:call-rule p #'object__name)
 (pasm:call-external p #'$object__SetField_name_from_name)
 (pasm:call-external p #'$fieldMap__NewScope)
-(pasm:call-rule p #'object__tailList)
+(pasm:call-rule p #'object__fields)
+(pasm:call-external p #'$fieldMap__Output)
 (pasm:call-external p #'$object__SetField_fieldMap_from_fieldMap)
 (pasm:call-external p #'$object__Output)
 )
 
-(defmethod object__tailList ((p pasm:parser))
-     (setf (pasm:current-rule p) "object__tailList")
+(defmethod object__name ((p pasm:parser))
+     (setf (pasm:current-rule p) "object__name")
+(pasm:call-rule p #'esaSymbol)
+)
+
+(defmethod object__fields ((p pasm:parser))
+     (setf (pasm:current-rule p) "object__fields")
 (loop
 (cond
-((pasm:parser-success? (pasm:call-predicate p #'object__field_p))(pasm:call-rule p #'object__single_field)
+((pasm:parser-success? (pasm:call-predicate p #'object__field_p))(pasm:call-external p #'$field__NewScope)
+(pasm:call-rule p #'object__single_field)
+(pasm:call-external p #'$field__Output)
+(pasm:call-external p #'$fieldMap__AppendFrom_field)
 )
 ( t (return)
 )
@@ -649,60 +658,57 @@
 (defmethod object__single_field ((p pasm:parser))
      (setf (pasm:current-rule p) "object__single_field")
 (cond
-((pasm:parser-success? (pasm:lookahead-char? p #\.))(pasm:call-rule p #'object__dotField)
-(pasm:call-rule p #'object__optionalParameterMap)
+((pasm:parser-success? (pasm:lookahead-char? p #\.))(pasm:call-rule p #'object__dotFieldName)
+(pasm:call-rule p #'object__parameterMap)
 )
-((pasm:parser-success? (pasm:lookahead-char? p #\())(pasm:call-rule p #'object__optionalParameterMap)
+((pasm:parser-success? (pasm:lookahead-char? p #\())(pasm:call-rule p #'object__parameterMap)
 )
 ( t )
 )
 
 )
 
-(defmethod object__name ((p pasm:parser))
-     (setf (pasm:current-rule p) "object__name")
+(defmethod object__dotFieldName ((p pasm:parser))
+     (setf (pasm:current-rule p) "object__dotFieldName")
+(pasm:input-char p #\.)
 (pasm:call-rule p #'esaSymbol)
+(pasm:call-external p #'$field__SetField_name_from_name)
 )
 
-(defmethod object__dotField ((p pasm:parser))
-     (setf (pasm:current-rule p) "object__dotField")
+(defmethod object__parameterMap ((p pasm:parser))
+     (setf (pasm:current-rule p) "object__parameterMap")
 (cond
-((pasm:parser-success? (pasm:lookahead-char? p #\.))(pasm:input-char p #\.)
-(pasm:call-rule p #'object__)
-)
-( t )
-)
-
-)
-
-(defmethod object__optionalParameterMap ((p pasm:parser))
-     (setf (pasm:current-rule p) "object__optionalParameterMap")
-(cond
-((pasm:parser-success? (pasm:lookahead-char? p #\())(pasm:input-char p #\()
-(pasm:call-external p #'object__field__rec-parameters)
+((pasm:parser-success? (pasm:lookahead-char? p #\())(pasm:call-external p #'$parameterList__NewScope)
+(pasm:input-char p #\()
+(pasm:call-rule p #'esaSymbol)
+(pasm:call-external p #'$parameterList__AppendFrom_name)
+(pasm:call-external p #'object__field__recursive-more-parameters)
 (pasm:input-char p #\))
+(pasm:call-external p #'$parameterList__Output)
+(pasm:call-external p #'$field__SetField_parameterList_from_parameterList)
 )
 ( t )
 )
 
 )
 
-(defmethod object__field__rec-parameters ((p pasm:parser))
-     (setf (pasm:current-rule p) "object__field__rec-parameters")
-(pasm:call-rule p #'object__field__parameters__parameter)
+(defmethod object__field__recursive-more-parameters ((p pasm:parser))
+     (setf (pasm:current-rule p) "object__field__recursive-more-parameters")
 (cond
-((pasm:parser-success? (pasm:call-predicate p #'object__field__rec-parameters__pred-parameterBegin))(pasm:call-rule p #'object__field__rec-parameters)
+((pasm:parser-success? (pasm:call-predicate p #'object__field__parameters__pred-parameterBegin))(pasm:call-external p #'object__field__parameters__parameter)
+(pasm:call-external p #'$parameterList__AppendFrom_name)
+(pasm:call-rule p #'object__field__recursive-more-parameters)
 )
 ( t )
 )
 
 )
 
-(defmethod object__field__rec-parameters__pred-parameterBegin ((p pasm:parser)) ;; predicate
+(defmethod object__field__parameters__pred-parameterBegin ((p pasm:parser)) ;; predicate
 (cond
-((pasm:parser-success? (pasm:lookahead? p :SYMBOL))(return-from object__field__rec-parameters__pred-parameterBegin pasm:+succeed+)
+((pasm:parser-success? (pasm:lookahead? p :SYMBOL))(return-from object__field__parameters__pred-parameterBegin pasm:+succeed+)
 )
-( t (return-from object__field__rec-parameters__pred-parameterBegin pasm:+fail+)
+( t (return-from object__field__parameters__pred-parameterBegin pasm:+fail+)
 )
 )
 

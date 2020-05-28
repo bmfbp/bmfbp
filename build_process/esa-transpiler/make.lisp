@@ -6,6 +6,9 @@
   (uiop:run-program \"rm -rf \~/.cache/common-lisp\")
   (uiop:run-program \"rm -rf *.fasl */*.fasl */*/*/.fasl\")
   (uiop:run-program \"rm -rf *~\")  
+
+  (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+
   (ql:quickload :stack-dsl)
   (ql:quickload :stack-dsl/use)
   (stack-dsl:transpile-stack 
