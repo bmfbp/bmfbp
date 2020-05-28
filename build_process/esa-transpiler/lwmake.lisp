@@ -26,6 +26,8 @@
   (load (arrowgrams/esa-transpiler::path "trace-mechs.lisp"))
   (ql:quickload :arrowgrams/esa-transpiler/tester)
   (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path "exprtypes.json"))
+  (trace-mechs)
+  (trace-rules)
   (arrowgrams/esa-transpiler::transpile-esa-to-string
    (arrowgrams/esa-transpiler::path "test.esa")
    :tracing-accept t)
