@@ -33,7 +33,7 @@
   (load \"trace-mechs.lisp\")
     (ql:quickload :arrowgrams/esa-transpiler/tester)
   (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path \"exprtypes.json\"))
-  (arrowgrams/esa-transpiler::test-esa-to-file \"test.esa\" \"test.lisp\" :tracing-accept t) 
+  (arrowgrams/esa-transpiler::transpile-esa-to-string \"test.esa\" :tracing-accept t) 
 ")
 
 (defun make ()
