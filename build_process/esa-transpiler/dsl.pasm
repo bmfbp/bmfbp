@@ -332,6 +332,7 @@
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
+                              $expression__NewScope
   [ ?SYMBOL/true SYMBOL/true
 			       $ekind__NewScope
 			         $ekind__SetEnum_true
@@ -350,6 +351,7 @@
     @object__
                                $expression__SetField_object_from_object
    ]
+                              $expression__Output
 
 % DSL allows parameterList only for fields
 % self.a -> (slot-value self 'a)
@@ -363,10 +365,10 @@
 = object__
                              $object__NewScope
   @object__name
-                               $object_SetField_name_from_name
+                               $object__SetField_name_from_name
 			       $fieldMap__NewScope
   @object__tailList
-                               $object_SetField_fieldMap_from_fieldMap
+                               $object__SetField_fieldMap_from_fieldMap
 			     $object__Output
 
 % <<>>fieldMap
@@ -446,7 +448,8 @@
 
 = tester
   ~rmSpaces
-  $mech-tester
+%  $mech-tester
+   @object__
 %  @esa-expr
 %  $emit__expression
   

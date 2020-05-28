@@ -583,6 +583,7 @@
 ( t )
 )
 
+(pasm:call-external p #'$expression__NewScope)
 (cond
 ((pasm:parser-success? (pasm:lookahead-symbol? p "true"))(pasm:input-symbol p "true")
 (pasm:call-external p #'$ekind__NewScope)
@@ -605,16 +606,17 @@
 )
 )
 
+(pasm:call-external p #'$expression__Output)
 )
 
 (defmethod object__ ((p pasm:parser))
      (setf (pasm:current-rule p) "object__")
 (pasm:call-external p #'$object__NewScope)
 (pasm:call-rule p #'object__name)
-(pasm:call-external p #'$object_SetField_name_from_name)
+(pasm:call-external p #'$object__SetField_name_from_name)
 (pasm:call-external p #'$fieldMap__NewScope)
 (pasm:call-rule p #'object__tailList)
-(pasm:call-external p #'$object_SetField_fieldMap_from_fieldMap)
+(pasm:call-external p #'$object__SetField_fieldMap_from_fieldMap)
 (pasm:call-external p #'$object__Output)
 )
 
@@ -739,6 +741,6 @@
 (defmethod tester ((p pasm:parser))
      (setf (pasm:current-rule p) "tester")
 (pasm::pasm-filter-stream p #'rmSpaces)
-(pasm:call-external p #'$mech-tester)
+(pasm:call-rule p #'object__)
 )
 

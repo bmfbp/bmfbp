@@ -6,8 +6,9 @@
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
 	(pasm:initially p token-stream)
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
-	  (esa-dsl p))  ;; call top rule
-	  #+nil(tester p)  ;; call mid-rule during development
+	  #+nil(esa-dsl p)  ;; call top rule
+	  (tester p)  ;; call mid-rule during development
+	  )
 	(let ((result (get-output-stream-string (pasm:output-string-stream p))))
 	  (concatenate 'string 
 		       (format nil "(in-package :esa)~%~%")
