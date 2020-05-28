@@ -77,3 +77,6 @@
 
 (defmethod set-current-class ((p parser))
   (setf (current-class p) (scanner:token-text (pasm:accepted-token p))))
+
+(defmethod $bp ((p parser))
+  (break p))

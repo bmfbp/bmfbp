@@ -34,7 +34,7 @@
 
 (defclass fieldMap (stack-dsl::%map) () (:default-initargs :%type "fieldMap"))
 (defmethod initialize-instance :after ((self fieldMap) &key &allow-other-keys)  ;; type for items in map
-(setf (stack-dsl::%element-type self) "fieldMap"))
+(setf (stack-dsl::%element-type self) "field"))
 (defclass fieldMap-stack(stack-dsl::%typed-stack) ())
  (defmethod initialize-instance :after ((self fieldMap-stack) &key &allow-other-keys)
 (setf (stack-dsl::%element-type self) "fieldMap"))
@@ -51,7 +51,7 @@
 
 (defclass parameterList (stack-dsl::%map) () (:default-initargs :%type "parameterList"))
 (defmethod initialize-instance :after ((self parameterList) &key &allow-other-keys)  ;; type for items in map
-(setf (stack-dsl::%element-type self) "parameterList"))
+(setf (stack-dsl::%element-type self) "name"))
 (defclass parameterList-stack(stack-dsl::%typed-stack) ())
  (defmethod initialize-instance :after ((self parameterList-stack) &key &allow-other-keys)
 (setf (stack-dsl::%element-type self) "parameterList"))

@@ -757,5 +757,6 @@
      (setf (pasm:current-rule p) "tester")
 (pasm::pasm-filter-stream p #'rmSpaces)
 (pasm:call-rule p #'object__)
+(pasm:call-external p #'$bp)
 )
 

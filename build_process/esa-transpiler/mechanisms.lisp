@@ -63,12 +63,11 @@
 
 (defmethod $fieldMap__AppendFrom_field ((p parser))
   (let ((val (stack-dsl:%top (CL-USER::output-field (env p)))))
-    (stack-dsl:%ensure-appendable-type (CL-USER::input-fieldMap (env p)))
-    (stack-dsl:%ensure-type (stack-dsl:%element-type 
-			     (stack-dsl:%top (CL-USER::input-fieldMap (env p))))
-			    val)
-    (stack-dsl::%append (stack-dsl:%top (CL-USER::input-fieldMap (env p))) val)
-    (stack-dsl:%pop (CL-USER::output-field (env p)))))
+    (let ((dest (stack-dsl:%top (CL-USER::input-fieldMap (env p)))))
+      (stack-dsl:%ensure-appendable-type dest)
+      (stack-dsl:%ensure-type (stack-dsl:%element-type dest) val)
+      (stack-dsl::%append dest val)
+      (stack-dsl:%pop (CL-USER::output-field (env p))))))
 
 (defmethod $field__NewScope ((p parser))
   (stack-dsl:%push-empty (CL-USER::input-field (env p))))
@@ -98,12 +97,11 @@
 
 (defmethod $parameterList__AppendFrom_name ((p parser))
   (let ((val (stack-dsl:%top (CL-USER::output-name (env p)))))
-    (stack-dsl:%ensure-appendable-type (CL-USER::input-parameterList (env p)))
-    (stack-dsl:%ensure-type (stack-dsl:%element-type 
-			     (stack-dsl:%top (CL-USER::input-parameterList (env p))))
-			    val)
-    (stack-dsl::%append (stack-dsl:%top (CL-USER::input-parameterList (env p))) val)
-    (stack-dsl:%pop (CL-USER::output-name (env p)))))
+    (let ((dest (stack-dsl:%top (CL-USER::input-parameterList (env p)))))
+      (stack-dsl:%ensure-appendable-type dest)
+      (stack-dsl:%ensure-type (stack-dsl:%element-type dest) val)
+      (stack-dsl::%append dest val)
+      (stack-dsl:%pop (CL-USER::output-name (env p))))))
 
 (defmethod $name__NewScope ((p parser))
   (stack-dsl:%push-empty (CL-USER::input-name (env p))))
