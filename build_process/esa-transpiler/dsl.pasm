@@ -333,9 +333,22 @@
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
   [ ?SYMBOL/true SYMBOL/true
+			       $ekind__NewScope
+			         $ekind__SetEnum_true
+			       $ekind__Output
+                               $expression__SetField_ekind_from_ekind
   | ?SYMBOL/false SYMBOL/false
+			       $ekind__NewScope
+			         $ekind__SetEnum_false
+			       $ekind__Output
+                               $expression__SetField_ekind_from_ekind
   | *
+			       $ekind__NewScope
+			         $ekind__SetEnum_object
+			       $ekind__Output
+                               $expression__SetField_ekind_from_ekind
     @object__
+                               $expression__SetField_object_from_object
    ]
 
 % DSL allows parameterList only for fields
