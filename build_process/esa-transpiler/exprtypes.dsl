@@ -3,20 +3,30 @@ esaprogram = { typeDecls situations classes scriptsAndWhens }
 typeDecls = :map typeDecl
 situation = :map situation
 classes = :map esaclass
-scriptsAndWhens = :map scriptOrWhen
+scriptsOrWhens = :map scriptOrWhen
 
 typeDecl = { name typeName }
 typeName = name
 situation = { name situationName }
 situationName = name
 esaclass = { name fieldMap }
-scriptOrWhen =| script | when
-when = { name esaKind methodsAndScripts }
-methodsAndScripts = :map methodOrScript
 
-methodOrScript =| methodDefinition | scriptDefinition
+scriptOrWhen =| scriptDefinition | whenDefinition
+whenDefinition = { name esaKind methodsAndScriptDefinitions }
+scriptDefinition = { esaKind name scriptSignature esaCode }
 
-scriptDefinition = { esaKind name signature esaCode }
+
+
+
+methodsAndScriptDefinitions = :map methodOrScriptDeclaration
+
+methodOrScript =| methodDeclaration | scriptDefinition
+
+methodDeclaration =
+
+
+scriptSignature =
+esaCode = 
 
 esaKind = name
 
