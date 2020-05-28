@@ -3,7 +3,6 @@
 
 = esa-dsl
   ~rmSpaces
-                                  emitHeader
   @type-decls
   @situations
   @classes
@@ -71,15 +70,18 @@
   ]}
 
 = class-def
+                                       $esaclass__NewScope
+                                          $name_NewScope
   SYMBOL/class
   @esa-symbol
-       set-current-class
-%$      (emit p "~&(defclass ~a ()~%(" (atext p))
+                                            $name__GetName
+ 					  $name__Output
+                                        $esaclass_SetField_name_from_name
   @field-decl-begin @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
-%$      (emit p "))~%")
+                                      $esaclass__Output
   SYMBOL/end SYMBOL/class
 
 - field-decl-begin
@@ -445,7 +447,8 @@
      SYMBOL                        $name__combine
    | ?'?' '?'                      $name__combine
       >
-   | ?CHARACTER/' CHARACTER/'      $name__combine
+   | ?CHARACTER/' CHARACTER/'
+                                   $name__combine
      >
    | * >
   ]}
@@ -456,8 +459,9 @@
   ~rmSpaces
 %  $mech-tester
 %   @object__
-    @esa-expr  
-   $bp
+%   @esa-expr  
+    @esa-dsl
+    $bp
 %  @esa-expr
 %  $emit__expression
   

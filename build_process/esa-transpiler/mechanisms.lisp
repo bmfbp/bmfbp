@@ -110,3 +110,16 @@
   (stack-dsl:%output (CL-USER::output-name (env p)) (CL-USER::input-name (env p)))
   (stack-dsl:%pop (CL-USER::input-name (env p))))
 
+(defmethod $esaclass__NewScope ((p parser))
+  (stack-dsl:%push-empty (CL-USER::input-esaclass (env p))))
+
+(defmethod $esaclass__Output ((p parser))
+  (stack-dsl:%output (CL-USER::output-esaclass (env p)) (CL-USER::input-esaclass (env p)))
+  (stack-dsl:%pop (CL-USER::input-esaclass (env p))))
+
+(defmethod $esaclass__setField_name_from_name ((p parser))
+  (let ((val (stack-dsl:%top (CL-USER::output-name (env p)))))
+    (stack-dsl:%ensure-field-type "esaclass" "name" val)
+    (stack-dsl:%set-field (stack-dsl:%top (CL-USER::input-esaclass (env p))) "name" val)
+    (stack-dsl:%pop (CL-USER::output-name (env p)))))
+

@@ -5,3 +5,5 @@ fieldMap = :map field
 field = { name parameterList }
 parameterList = :map name
 name = :string
+
+esaclass = { name }

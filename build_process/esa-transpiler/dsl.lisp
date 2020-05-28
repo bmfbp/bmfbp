@@ -14,7 +14,6 @@
 (defmethod esa-dsl ((p pasm:parser))
      (setf (pasm:current-rule p) "esa-dsl")
 (pasm::pasm-filter-stream p #'rmSpaces)
-(pasm:call-external p #'emitHeader)
 (pasm:call-rule p #'type-decls)
 (pasm:call-rule p #'situations)
 (pasm:call-rule p #'classes)
@@ -166,9 +165,13 @@
 
 (defmethod class-def ((p pasm:parser))
      (setf (pasm:current-rule p) "class-def")
+(pasm:call-external p #'$esaclass__NewScope)
+(pasm:call-external p #'$name_NewScope)
 (pasm:input-symbol p "class")
 (pasm:call-rule p #'esa-symbol)
-(pasm:call-external p #'set-current-class)
+(pasm:call-external p #'$name__GetName)
+(pasm:call-external p #'$name__Output)
+(pasm:call-external p #'$esaclass_SetField_name_from_name)
 (pasm:call-rule p #'field-decl-begin)
 (pasm:call-rule p #'field-decl)
 (loop
@@ -181,6 +184,7 @@
 
 )
 
+(pasm:call-external p #'$esaclass__Output)
 (pasm:input-symbol p "end")
 (pasm:input-symbol p "class")
 )
@@ -756,7 +760,7 @@
 (defmethod tester ((p pasm:parser))
      (setf (pasm:current-rule p) "tester")
 (pasm::pasm-filter-stream p #'rmSpaces)
-(pasm:call-rule p #'esa-expr)
+(pasm:call-rule p #'esa-dsl)
 (pasm:call-external p #'$bp)
 )
 

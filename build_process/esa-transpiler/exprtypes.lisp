@@ -61,6 +61,15 @@
 (defmethod initialize-instance :after ((self name-stack) &key &allow-other-keys)
   (setf (stack-dsl::%element-type self) "name"))
 
+(defclass esaclass (stack-dsl::%typed-value)
+((%field-type-name :accessor %field-type-name :initform "name")
+(name :accessor name)
+) (:default-initargs :%type "esaclass"))
+
+(defclass esaclass-stack (stack-dsl::%typed-stack) ())
+(defmethod initialize-instance :after ((self esaclass-stack) &key &allow-other-keys)
+  (setf (stack-dsl::%element-type self) "esaclass"))
+
 
 
 ;; check forward types
@@ -71,6 +80,7 @@
 (stack-dsl::%ensure-existence 'fieldMap)
 (stack-dsl::%ensure-existence 'field)
 (stack-dsl::%ensure-existence 'parameterList)
+(stack-dsl::%ensure-existence 'esaclass)
 (defclass %map-stack (stack-dsl::%typed-stack) ())
 (defclass %bag-stack (stack-dsl::%typed-stack) ())
 (defmethod initialize-instance :after ((self %map-stack) &key &allow-other-keys)
@@ -92,6 +102,8 @@
 (output-field :accessor output-field :initform (make-instance 'field-stack))
 (input-parameterList :accessor input-parameterList :initform (make-instance 'parameterList-stack))
 (output-parameterList :accessor output-parameterList :initform (make-instance 'parameterList-stack))
+(input-esaclass :accessor input-esaclass :initform (make-instance 'esaclass-stack))
+(output-esaclass :accessor output-esaclass :initform (make-instance 'esaclass-stack))
 ))
 
 (defmethod %memoStacks ((self environment))
@@ -111,6 +123,8 @@
 (output-field self)
 (input-parameterList self)
 (output-parameterList self)
+(input-esaclass self)
+(output-esaclass self)
 )))
 
 (defmethod %memoCheck ((self environment))
@@ -130,5 +144,7 @@
 (eq (nth 11 wm) (output-field self))
 (eq (nth 12 wm) (input-parameterList self))
 (eq (nth 13 wm) (output-parameterList self))
+(eq (nth 14 wm) (input-esaclass self))
+(eq (nth 15 wm) (output-esaclass self))
 ))
 (error "stack depth incorrect")))
