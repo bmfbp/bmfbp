@@ -60,17 +60,17 @@
 ** edit mech-tester.lisp to include latest 12.txt (from hier)
 ** edit mech-tester.lisp to insert names, eg.
 ** (setf (scanner:token-text (pasm:accepted-token p)) "self")
-** run test
+* 00) run mechanism test
 ** #+name: esa
 ** #+begin_src lisp :results output
-**  (arrowgrams/esa-transpiler::test-esa-to-file "test.esa" "test.lisp" t) 
+  (arrowgrams/esa-transpiler::test-esa-to-string "test.esa" :tracing-accept t) 
 ** #+end_src
 * results
 #+RESULTS: esa
 #+begin_example
 (UIOP/RUN-PROGRAM:RUN-PROGRAM "rm -rf ~/.cache/common-lisp")
-(UIOP/RUN-PROGRAM:RUN-PROGRAM "rm -rf */*.fasl */*/*/.fasl")
-(UIOP/RUN-PROGRAM:RUN-PROGRAM "rm -rf */*~ */*/*/*~")
+(UIOP/RUN-PROGRAM:RUN-PROGRAM "rm -rf *.fasl */*.fasl */*/*/.fasl")
+(UIOP/RUN-PROGRAM:RUN-PROGRAM "rm -rf *~")
 (QUICKLISP-CLIENT:QUICKLOAD :STACK-DSL)
 To load "stack-dsl":
   Load 1 ASDF system:
@@ -83,15 +83,17 @@ To load "stack-dsl/use":
     stack-dsl/use
 ; Loading "stack-dsl/use"
 
-(STACK-DSL:TRANSPILE-STACK "ARROWGRAMS/ESA-TRANSPILER"
-                           (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
-                                                                 "build_process/esa-transpiler/exprtypes.dsl")
-                           (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
-                                                                 "build_process/esa-transpiler/exprtypes.lisp")
-                           (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
-                                                                 "build_process/esa-transpiler/exprtypes.json")
-                           (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
-                                                                 "build_process/esa-transpiler/mechanisms.lisp"))
+(STACK-DSL:TRANSPILE-STACK
+ (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
+                                       "build_process/esa-transpiler/exprtypes.dsl")
+ "CL-USER"
+ (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
+                                       "build_process/esa-transpiler/exprtypes.lisp")
+ (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
+                                       "build_process/esa-transpiler/exprtypes.json")
+ "ARROWGRAMS/ESA-TRANSPILER" "CL-USER"
+ (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME :ARROWGRAMS
+                                       "build_process/esa-transpiler/mechanisms.lisp"))
 in stack-dsl
 ,*** calling initially on stack-dsl-parser
 ,*** calling initially on stack-dsl-parser
@@ -108,13 +110,36 @@ To load "parsing-assembler/use":
                                 (ASDF/SYSTEM:SYSTEM-RELATIVE-PATHNAME
                                  :ARROWGRAMS
                                  "build_process/esa-transpiler/dsl.lisp"))
+(QUICKLISP-CLIENT:QUICKLOAD :ARROWGRAMS/ESA-TRANSPILER)
+To load "arrowgrams/esa-transpiler":
+  Load 1 ASDF system:
+    arrowgrams/esa-transpiler
+; Loading "arrowgrams/esa-transpiler"
+.....
+(LOAD "package.lisp")
+(LOAD "classes.lisp")
+(LOAD "dsl.lisp")
+(LOAD "exprtypes.lisp")
+(LOAD "mechanisms.lisp")
+(LOAD "esa-transpile.lisp")
+(LOAD "trace-rules.lisp")
+(LOAD "trace-mechs.lisp")
 (QUICKLISP-CLIENT:QUICKLOAD :ARROWGRAMS/ESA-TRANSPILER/TESTER)
 To load "arrowgrams/esa-transpiler/tester":
   Load 1 ASDF system:
     arrowgrams/esa-transpiler/tester
 ; Loading "arrowgrams/esa-transpiler/tester"
-..................................................
 [package arrowgrams/esa-transpiler]...............
-[package arrowgrams/esa].
+[package arrowgrams/esa]
+(STACK-DSL:INITIALIZE-TYPES (ARROWGRAMS/ESA-TRANSPILER:PATH "exprtypes.json"))
+type "expression" #<STACK-DSL::STRUCTURE-DESCRIPTOR {1002593813}>
+type "ekind" #<STACK-DSL::ENUM-DESCRIPTOR {10025938D3}>
+type "object" #<STACK-DSL::STRUCTURE-DESCRIPTOR {1002593A23}>
+type "fieldMap" #<STACK-DSL::MAP-DESCRIPTOR {1002593B03}>
+type "field" #<STACK-DSL::STRUCTURE-DESCRIPTOR {1002593C53}>
+type "parameterList" #<STACK-DSL::MAP-DESCRIPTOR {1002593D33}>
+type "name" #<STACK-DSL::STRING-DESCRIPTOR {1002593DF3}>
+(ARROWGRAMS/ESA-TRANSPILER::TEST-ESA-TO-FILE "test.esa" "test.lisp"
+                                             :TRACING-ACCEPT T)
 #+end_example
 
