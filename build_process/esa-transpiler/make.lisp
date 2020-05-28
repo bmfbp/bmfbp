@@ -39,7 +39,8 @@
   (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path \"exprtypes.json\"))
   #+nil(arrowgrams/esa-transpiler::trace-mechs)
   #+nil(arrowgrams/esa-transpiler::trace-rules)
-  (arrowgrams/esa-transpiler::transpile-esa-to-string \"test.esa\" :tracing-accept t) 
+  (arrowgrams/esa-transpiler:path \"test.esa\" :tracing-accept t) 
+  #+nil(arrowgrams/esa-transpiler::transpile-esa-to-string \"test.esa\" :tracing-accept t) 
 ")
 
 (defun make ()
