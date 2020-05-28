@@ -427,23 +427,23 @@
   ]
   
 = object__field__parameters__parameter
-                                 %$name__NewScope
   @esaSymbol
-                                 %$name__Output
 
 = esaSymbol
+                                 $name__NewScope
   SYMBOL
-                                 %$name__GetName
-  {[ ?'/' '/'                    %$name__combine
-     SYMBOL                      %$name__combine
-   | ?'-' '-'                    %$name__combine
-     SYMBOL                      %$name__combine
-   | ?'?' '?'                    %$name__combine
+                                   $name__GetName
+  {[ ?'/' '/'                      $name__combine
+     SYMBOL                        $name__combine
+   | ?'-' '-'                      $name__combine
+     SYMBOL                        $name__combine
+   | ?'?' '?'                      $name__combine
       >
-   | ?CHARACTER/' CHARACTER/'    %$name__combine
+   | ?CHARACTER/' CHARACTER/'      $name__combine
      >
    | * >
   ]}
+                                 $name__Output
 
 
 = tester

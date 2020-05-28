@@ -715,19 +715,27 @@
 
 (defmethod esaSymbol ((p pasm:parser))
      (setf (pasm:current-rule p) "esaSymbol")
+(pasm:call-external p #'$name__NewScope)
 (pasm:input p :SYMBOL)
+(pasm:call-external p #'$name__GetName)
 (loop
 (cond
 ((pasm:parser-success? (pasm:lookahead-char? p #\/))(pasm:input-char p #\/)
+(pasm:call-external p #'$name__combine)
 (pasm:input p :SYMBOL)
+(pasm:call-external p #'$name__combine)
 )
 ((pasm:parser-success? (pasm:lookahead-char? p #\-))(pasm:input-char p #\-)
+(pasm:call-external p #'$name__combine)
 (pasm:input p :SYMBOL)
+(pasm:call-external p #'$name__combine)
 )
 ((pasm:parser-success? (pasm:lookahead-char? p #\?))(pasm:input-char p #\?)
+(pasm:call-external p #'$name__combine)
 (return)
 )
 ((pasm:parser-success? (pasm:lookahead-char? p #\'))(pasm:input-char p #\')
+(pasm:call-external p #'$name__combine)
 (return)
 )
 ( t (return)
@@ -736,6 +744,7 @@
 
 )
 
+(pasm:call-external p #'$name__Output)
 )
 
 (defmethod tester ((p pasm:parser))
