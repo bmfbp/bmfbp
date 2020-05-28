@@ -455,7 +455,8 @@
 = tester
   ~rmSpaces
 %  $mech-tester
-   @object__
+%   @object__
+    @esa-expr  
    $bp
 %  @esa-expr
 %  $emit__expression

@@ -756,7 +756,7 @@
 (defmethod tester ((p pasm:parser))
      (setf (pasm:current-rule p) "tester")
 (pasm::pasm-filter-stream p #'rmSpaces)
-(pasm:call-rule p #'object__)
+(pasm:call-rule p #'esa-expr)
 (pasm:call-external p #'$bp)
 )
 
