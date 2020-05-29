@@ -76,15 +76,16 @@
 
   (ql:quickload :stack-dsl)
   (ql:quickload :stack-dsl/use)
-  (stack-dsl:transpile-stack 
-     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.dsl\")
+  (let ((pasm:*pasm-accept-tracing* t))
+    (stack-dsl:transpile-stack 
+       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.dsl\")
      \"CL-USER\"
-     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.lisp\")
-     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.json\")
-     \"ARROWGRAMS/ESA-TRANSPILER\"
-     \"CL-USER\"
-     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/mechanisms.lisp\")
-     )
+       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.lisp\")
+       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.json\")
+       \"ARROWGRAMS/ESA-TRANSPILER\"
+       \"CL-USER\"
+       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/mechanisms.lisp\")
+     ))
   (ql:quickload :parsing-assembler/use)
   (let ((pasm:*pasm-accept-tracing* t))
     (pasm:pasm-to-file 
