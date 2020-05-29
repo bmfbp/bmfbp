@@ -11,24 +11,55 @@ situation = { name situationName }
 situationName = name
 esaclass = { name fieldMap }
 
-scriptOrWhen =| scriptDefinition | whenDefinition
-whenDefinition = { name esaKind methodsAndScriptDefinitions }
-scriptDefinition = { esaKind name scriptSignature esaCode }
+% a "declaration" declares the existence of something, but gives no definition
+%  for the thing, for example, a signature is a declaration
+% a "definition" defines the operation of something by giving its implementation
+%  in this DSL, only scripts can have definitions, methods are "outside of the scope"
+%  of the DSL (e.g. they are always external), hence, can only be declared
 
+scriptOrWhen =| scriptDefinition | whenDeclaration
+whenDeclaration = { situationName esaKind methodsAndScriptDeclarations }
 
+% declare external methods and forward references to scripts
+methodDeclaration = { name formalParameterList }
 
+% declare (forward reference) internal scripts
+scriptDeclaration = { name formalParameterList }
 
-methodsAndScriptDefinitions = :map methodOrScriptDeclaration
+% semantic ckecker should check that all declared scripts are defined later on...
+% and that all script declarations match preceding script definitions
 
-methodOrScript =| methodDeclaration | scriptDefinition
+% define the "code" for an internal script
+scriptImplementation = { name esaKind formalParameterList scriptStatements }
 
-methodDeclaration =
+situationName = name
+formalParameterList = :map name
+scriptStatements= :map scriptStatement
 
+scriptStatement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callScriptStatement | callExternalStatement
 
-scriptSignature =
-esaCode = 
+letStatement = { letVarName expression scriptStatements } 
+mapStatement = { mapVarName expression scriptStatements }
+createStatement = { createVarName expression scriptStatements }
+setStatement = { setVarName expression scriptStatements }
+exitMapStatement = { expression }
+ifStatement = { expression thenStatements elseStatements }
+loopStatement = { scriptStatements }
+exitWhenStatement = { expression }
+returnStatement = { expression }
+callScriptStatement = { internalScriptName }
+callExternalStatement = { externalMethodName }
+
+thenStatements = scriptStatements
+elseStatements = scriptStatements
 
 esaKind = name
+letVarName = name
+mapVarName = name
+createVarName = name
+setVarName = name
+internalScriptName = name
+externalMethodName = name
 
 
 
