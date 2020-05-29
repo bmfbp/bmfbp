@@ -76,7 +76,7 @@
 
   (ql:quickload :stack-dsl)
   (ql:quickload :stack-dsl/use)
-  (let ((pasm:*pasm-accept-tracing* t))
+  (let ((pasm:*pasm-accept-tracing* -1))
     (stack-dsl:transpile-stack 
        (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.dsl\")
      \"CL-USER\"

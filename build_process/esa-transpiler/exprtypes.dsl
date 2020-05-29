@@ -6,9 +6,9 @@ classes = :map esaclass
 scriptsOrWhens = :map scriptOrWhen
 
 typeDecl = { name typeName }
-typeName = name
+typeName = |name
 situation = { name situationName }
-situationName = name
+situationName =| name
 esaclass = { name fieldMap }
 
 % a "declaration" declares the existence of something, but gives no definition
@@ -32,9 +32,9 @@ scriptDeclaration = { name formalParameterList }
 % define the "code" for an internal script
 scriptImplementation = { name esaKind formalParameterList scriptStatements }
 
-situationName = name
+situationName =| name
 formalParameterList = :map name
-scriptStatements= :map scriptStatement
+scriptStatements = :map scriptStatement
 
 scriptStatement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callScriptStatement | callExternalStatement
 
@@ -50,16 +50,16 @@ returnStatement = { expression }
 callScriptStatement = { internalScriptName }
 callExternalStatement = { externalMethodName }
 
-thenStatements = scriptStatements
-elseStatements = scriptStatements
+thenStatements =| scriptStatements
+elseStatements =| scriptStatements
 
-esaKind = name
-letVarName = name
-mapVarName = name
-createVarName = name
-setVarName = name
-internalScriptName = name
-externalMethodName = name
+esaKind =| name
+letVarName =| name
+mapVarName =| name
+createVarName =| name
+setVarName =| name
+internalScriptName =| name
+externalMethodName =| name
 
 
 
