@@ -4,8 +4,8 @@
 = esa-dsl
   ~rmSpaces
                             $esaprogram__NewScope
-                                $typeDecls__NewScope
   @type-decls
+                                $typeDecls__NewScope
                                 $typeDecls__Output
                               $esaprogram__SetField_typeDecls_from_typeDecls
   @situations
@@ -50,17 +50,19 @@
   ]
 
 = type-decls
+                       $typeDecls__NewScope  
   {[ ?SYMBOL/type
     @type-decl
-                       $typeDecls__AppendFrom_typeDecl
+                         $typeDecls__AppendFrom_typeDecl
    | * >
   ]}
+                       $typeDecls__Output  
 
 = type-decl
                        $typeDecl__NewScope
   SYMBOL/type
+  @esaSymbol
                          $typeDecl__SetField_name_from_name
-  @esa-symbol
                        $typeDecl__Output
 
 = situations
@@ -81,18 +83,12 @@
   ]}
 
 = class-def
-                                       $esaclass__NewScope
-                                          $name__NewScope
   SYMBOL/class
-  @esa-symbol
-                                            $name__GetName
- 					  $name__Output
-                                        $esaclass__SetField_name_from_name
+  @esaSymbol
   @field-decl-begin @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
-                                      $esaclass__Output
   SYMBOL/end SYMBOL/class
 
 - field-decl-begin
@@ -104,8 +100,8 @@
 = field-decl
   [ ?SYMBOL/map
     SYMBOL/map 
-    @esa-symbol
-  | &non-keyword-symbol @esa-symbol
+    @esaSymbol
+  | &non-keyword-symbol @esaSymbol
 %$     (emit p "~&(~a :accessor ~a :initform nil)~%" (atext p) (atext p))
   ]
 
@@ -121,16 +117,16 @@
   SYMBOL/end SYMBOL/when
 
 = situation-ref
-  @esa-symbol % should be checked to be a situation
+  @esaSymbol % should be checked to be a situation
 
 = or-situation
   SYMBOL/or @situation-ref
   
 = class-ref
-  @esa-symbol  % should be checked to be a kind
+  @esaSymbol  % should be checked to be a kind
 
 = method-declaration % "when" is always a declaration
-  SYMBOL/method @esa-symbol
+  SYMBOL/method @esaSymbol
 %$      (emit-to-method-stream p "~%(defgeneric ~a (self" (atext p))
   @generic-typed-formals
 %$      (emit-to-method-stream p ")") ;; close parameter list
@@ -138,7 +134,7 @@
 %$      (emit-to-method-stream p ")") ;; close generic
   
 = script-declaration  % this is a declaration of scripts to be defined
-  SYMBOL/script @esa-symbol
+  SYMBOL/script @esaSymbol
 %$      (emit-to-method-stream p "~%(defgeneric ~a #|script|# (self" (atext p))
   @generic-typed-formals
 %$      (emit-to-method-stream p ")")
@@ -151,18 +147,18 @@
   ]
 
 = generic-type-list
-  @esa-symbol
+  @esaSymbol
 %$     (emit-to-method-stream p " ~a" (gensym))
-  {[ &non-keyword-symbol @esa-symbol
+  {[ &non-keyword-symbol @esaSymbol
 %$     (emit-to-method-stream p " ~a" (gensym))
    | * >
   ]}
 
 = optional-return-type-declaration
   [ ?'>' '>' '>'
-         [ ?SYMBOL/map SYMBOL/map @esa-symbol
+         [ ?SYMBOL/map SYMBOL/map @esaSymbol
 %$            (emit-to-method-stream p " #|returns map ~a|# " (atext p))
-         | * @esa-symbol
+         | * @esaSymbol
 %$            (emit-to-method-stream p " #|returns ~a|# " (atext p))
   ]
   | *
@@ -172,9 +168,9 @@
 
 = script-definition
   SYMBOL/script
-  @esa-symbol
+  @esaSymbol
                                    set-current-class
-  @esa-symbol
+  @esaSymbol
                                    set-current-method
 %$      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (current-method p) (current-class p))
   @optional-formals-definition
@@ -190,7 +186,7 @@
   ]}
 
 = untyped-formals-definition
-  {[ &non-keyword-symbol @esa-symbol
+  {[ &non-keyword-symbol @esaSymbol
      % index and type
 %$    (emit p " ~a " (atext p))
    | * >
@@ -198,8 +194,8 @@
   
 = optional-return-type-definition  % should check that return type matches the definition
   [ ?'>' '>' '>'
-         [ ?SYMBOL/map SYMBOL/map @esa-symbol
-         | * @esa-symbol
+         [ ?SYMBOL/map SYMBOL/map @esaSymbol
+         | * @esaSymbol
 
   ]
   | *
@@ -224,7 +220,7 @@
 
 = let-statement
   SYMBOL/let
-   @esa-symbol
+   @esaSymbol
 %$      (emit p "(let ((~a " (atext p))
    '='
    [ ?SYMBOL/map SYMBOL/map | * ]
@@ -237,7 +233,7 @@
 
 = create-statement
   SYMBOL/create
-   @esa-symbol
+   @esaSymbol
 %$      (emit p "(let ((~a " (atext p))
    '=' 
    [ ?SYMBOL/map SYMBOL/map | * ]
@@ -262,7 +258,7 @@
 %$      (emit p ")")
   
 = map-statement
-  SYMBOL/map @esa-symbol
+  SYMBOL/map @esaSymbol
 %$      (emit p "(block map (dolist (~a " (atext p))
   '='
   @esa-expr
@@ -319,29 +315,9 @@
 %$                (emit p "(return-from ~a :true)" (current-method p))
   | ?SYMBOL/false SYMBOL/false
 %$                (emit p "(return-from ~a :false)" (current-method p))
-  | * @esa-symbol
+  | * @esaSymbol
 %$                (emit p "(return-from ~a ~a)" (current-method p) (atext p))
   ]
-
-= esa-symbol
-  [ &non-keyword-symbol
-    SYMBOL
-    @esa-field-follow-nonemitting
-  | *
-  ]
-
-= esa-field-follow-nonemitting
-  {[ ?'/' '/' 
-     SYMBOL
-   | ?'-' '-' 
-     SYMBOL
-   | ?'?' '?'
-      >
-   | ?CHARACTER/' CHARACTER/' 
-     >
-   | * >
-  ]}
-
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
@@ -421,21 +397,21 @@
 
 = object__parameterMap
   [ ?'('
-                                $parameterList__NewScope
+                                $actualParameterList__NewScope
      '('
        @esa-expr
-                                  $parameterList__AppendFrom_expression
-       object__field__recursive-more-parameters
+                                  $actualParameterList__AppendFrom_expression
+       @object__field__recursive-more-parameters
      ')'
-                                $parameterList__Output
-                              $field__SetField_parameterList_from_parameterList
+                                $actualParameterList__Output
+                              $field__SetField_actualParameterList_from_actualParameterList
   | *
   ]
 
 = object__field__recursive-more-parameters
   [ &object__field__parameters__pred-parameterBegin
-    object__field__parameters__parameter
-                                $parameterList__AppendFrom_name
+    @esa-expr
+                                $actualParameterList__AppendFrom_expression
     @object__field__recursive-more-parameters
   | *
   ]

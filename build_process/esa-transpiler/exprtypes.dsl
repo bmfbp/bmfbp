@@ -6,7 +6,6 @@ classes = :map esaclass
 scriptsOrWhens = :map scriptOrWhen
 
 typeDecl = { name typeName }
-typeName = |name
 situation = { name situationName }
 situationName =| name
 esaclass = { name fieldMap }
@@ -24,19 +23,19 @@ methodDeclarationsAndScriptDeclarations = :map declarationMethodOrScript
 declarationMethodOrScript =| methodDeclaration | scriptDeclaration
 
 % declare external methods and forward references to scripts
-methodDeclaration = { name formalParameterList }
+methodDeclaration = { name formalList }
 
 % declare (forward reference) internal scripts
-scriptDeclaration = { name formalParameterList }
+scriptDeclaration = { name formalList }
 
 % semantic ckecker should check that all declared scripts are defined later on...
 % and that all script declarations match preceding script definitions
 
 % define the "code" for an internal script
-scriptImplementation = { name esaKind formalParameterList scriptStatements }
+scriptImplementation = { name esaKind formalList scriptStatements }
 
 situationName =| name
-formalParameterList = :map name
+formalList = :map name
 scriptStatements = :map scriptStatement
 
 scriptStatement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callScriptStatement | callExternalStatement
@@ -63,6 +62,7 @@ createVarName =| name
 setVarName =| name
 internalScriptName =| name
 externalMethodName =| name
+typeName =| name
 
 
 
@@ -71,6 +71,6 @@ expression = { ekind object }
 ekind = 'true' | 'false' | 'object'
 object = { name fieldMap }
 fieldMap = :map field
-field = { name parameterList }
-parameterList = :map expression
+field = { name actualParameterList }
+actualParameterList = :map expression
 name = :string

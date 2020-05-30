@@ -1,1 +1,1 @@
-self.ensure-valid-input-pin(s.pin-name)
+parent-composite-node.kind-field.find-wire-for-source(w.x.y a.b.c)
