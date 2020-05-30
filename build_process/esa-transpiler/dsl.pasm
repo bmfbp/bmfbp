@@ -3,10 +3,15 @@
 
 = esa-dsl
   ~rmSpaces
+                            $esaprogram__NewScope
+                                $typeDecls__NewScope
   @type-decls
+                                $typeDecls__Output
+                              $esaprogram__SetField_typeDecls_from_typeDecls
   @situations
   @classes
   @whens-and-scripts
+                            $esaprogram__Output
   EOF
 
 - keyword-symbol
@@ -45,12 +50,18 @@
   ]
 
 = type-decls
-  {[ ?SYMBOL/type @type-decl
+  {[ ?SYMBOL/type
+    @type-decl
+                       $typeDecls__AppendFrom_typeDecl
    | * >
   ]}
 
 = type-decl
-  SYMBOL/type @esa-symbol
+                       $typeDecl__NewScope
+  SYMBOL/type
+                         $typeDecl__SetField_name_from_name
+  @esa-symbol
+                       $typeDecl__Output
 
 = situations
   {[ ?SYMBOL/situation @situation | * > ]}

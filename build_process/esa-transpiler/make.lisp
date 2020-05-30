@@ -67,7 +67,7 @@
 
 
 
-(defparameter *escript* "
+#+nil(defparameter *escript* "
   (uiop:run-program \"rm -rf \~/.cache/common-lisp\")
   (uiop:run-program \"rm -rf *.fasl */*.fasl */*/*/.fasl\")
   (uiop:run-program \"rm -rf *~\")  
@@ -95,7 +95,7 @@
 ")
 
 ;; temporary helper while transpiling alpha exprtypes.dsl
-(defun emake ()
+#+nil(defun emake ()
   (with-input-from-string (s *escript*)
     (loop
        (let ((cmd (read s nil :EOF)))
