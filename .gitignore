@@ -127,3 +127,5 @@ svg/cl-compiler/HELLOHELLO.lisp
 build_process/parts/graph/hellohello.json
 
 build_process/parts/graph/hellohello.lisp
+
+build_process/esa-transpiler/exprtypes.json
