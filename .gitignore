@@ -129,3 +129,7 @@ build_process/parts/graph/hellohello.json
 build_process/parts/graph/hellohello.lisp
 
 build_process/esa-transpiler/exprtypes.json
+
+build_process/esa-transpiler/exprtypes.lisp
+
+build_process/esa-transpiler/mechanisms.lisp
