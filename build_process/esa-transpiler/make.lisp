@@ -3,9 +3,7 @@
   #+nil(format *standard-output* \"cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp , then copy 12.lisp into mech-tester.lisp and manually edit the result to insert names\")
 
 (defparameter *script* "
-  (uiop:run-program \"rm -rf \~/.cache/common-lisp\")
-  (uiop:run-program \"rm -rf *.fasl */*.fasl */*/*/.fasl\")
-  (uiop:run-program \"rm -rf *~\")  
+  (uiop:run-program \"~/quicklisp/local-projects/rm.bash\")
 
   (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
@@ -37,14 +35,15 @@
   (load (arrowgrams/esa-transpiler::path \"trace-mechs.lisp\"))
     (ql:quickload :arrowgrams/esa-transpiler/tester)
   (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path \"exprtypes.json\"))
-  #+nil(arrowgrams/esa-transpiler::trace-mechs)
-  #+nil(arrowgrams/esa-transpiler::trace-rules)
   (arrowgrams/esa-transpiler::transpile-esa-to-string 
     (arrowgrams/esa-transpiler:path \"../esa/esa.dsl\")
     :tracing-accept t)
-  #+nil(arrowgrams/esa-transpiler::transpile-esa-to-string 
-    (arrowgrams/esa-transpiler:path \"test.esa\")
-    :tracing-accept t)
+  #+nil(let ()
+    (arrowgrams/esa-transpiler::trace-mechs)
+    (arrowgrams/esa-transpiler::trace-rules)
+    (arrowgrams/esa-transpiler::test-transpile-esa-to-string 
+      (arrowgrams/esa-transpiler:path \"test.esa\")
+      :tracing-accept t))
 ")
 
 (defun make ()
@@ -62,6 +61,22 @@
 ;; run test
 ;; (test-esa-to-file "test.esa" "test.lisp" t) 
 ;;(esa-input-filename output-filename &key (tracing-accept nil))
+
+(defparameter *script2*
+  "(let ()
+    (arrowgrams/esa-transpiler::trace-mechs)
+    (arrowgrams/esa-transpiler::trace-rules)
+    (arrowgrams/esa-transpiler::test-transpile-esa-to-string 
+      (arrowgrams/esa-transpiler:path \"test.esa\")
+      :tracing-accept t))")
+
+(defun make2 ()
+  (with-input-from-string (s *script2*)
+    (loop
+       (let ((cmd (read s nil :EOF)))
+	 (when (eq :EOF cmd) (return))
+	 (format *standard-output* "~&~s~%" cmd)
+	 (eval cmd)))))
 
 
 
