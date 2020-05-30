@@ -1,7 +1,7 @@
-esaprogram = { typeDecls situations classes scriptsAndWhens }
+esaprogram = { typeDecls situations classes scriptsOrWhens }
 
 typeDecls = :map typeDecl
-situation = :map situation
+situations = :map situation
 classes = :map esaclass
 scriptsOrWhens = :map scriptOrWhen
 
@@ -17,8 +17,11 @@ esaclass = { name fieldMap }
 %  in this DSL, only scripts can have definitions, methods are "outside of the scope"
 %  of the DSL (e.g. they are always external), hence, can only be declared
 
-scriptOrWhen =| scriptDefinition | whenDeclaration
-whenDeclaration = { situationName esaKind methodsAndScriptDeclarations }
+scriptOrWhen =| scriptImplementation | whenDeclaration
+whenDeclaration = { situationName esaKind methodDeclarationsAndScriptDeclarations }
+
+methodDeclarationsAndScriptDeclarations = :map declarationMethodOrScript
+declarationMethodOrScript =| methodDeclaration | scriptDeclaration
 
 % declare external methods and forward references to scripts
 methodDeclaration = { name formalParameterList }
@@ -71,4 +74,3 @@ fieldMap = :map field
 field = { name parameterList }
 parameterList = :map expression
 name = :string
-
