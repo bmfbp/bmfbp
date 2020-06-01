@@ -7,7 +7,9 @@
   @type-decls
                                 $typeDecls__NewScope
                               $esaprogram__SetField_typeDecls_from_typeDecls
+			        $situations__NewScope
   @situations
+                              $esaprogram__SetField_situations_from_situations
   @classes
   @whens-and-scripts
                             $esaprogram__Output
@@ -65,10 +67,18 @@
                        $typeDecl__Output
 
 = situations
-  {[ ?SYMBOL/situation @situation | * > ]}
+                       $situations__NewScope
+  {[ ?SYMBOL/situation @situation 
+                         $situations__AppendFrom_situation
+   | * > ]}
+                       $situations__Output
 
 = situation
-  SYMBOL/situation SYMBOL
+                            $situation__NewScope
+  SYMBOL/situation 
+  @esaSymbol
+                              $situation__setField_name_from_name
+			    $situation__Output
 
 = classes
   {[ ?SYMBOL/class @class-def
