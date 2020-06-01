@@ -100,11 +100,15 @@
                             $esaclass__NewScope
   @esaSymbol
                               $esaclass__SetField_name_from_name
-  @field-decl-begin @field-decl
+			      $fieldMap__NewScope
+  @field-decl
+                                $fieldMap__AppendFrom_field
   {[ &field-decl-begin @field-decl
+                                $fieldMap__AppendFrom_field
    | * >
   ]}
   SYMBOL/end SYMBOL/class
+			      $esaclass__SetField_fieldMap_from_fieldMap
                             $esaclass__Output
 
 - field-decl-begin
@@ -114,12 +118,23 @@
  ]
 
 = field-decl
+                             $field__NewScope
   [ ?SYMBOL/map
     SYMBOL/map 
     @esaSymbol
+                                $fkind__NewScope
+                                  $fkind__SetEnum_map
+                                $fkind__Output
+                              $field__SetField_fkind_from_fkind
+                              $field__SetField_name_from_name
   | &non-keyword-symbol @esaSymbol
-%$     (emit p "~&(~a :accessor ~a :initform nil)~%" (atext p) (atext p))
+                                $fkind__NewScope
+                                  $fkind__SetEnum_simple
+                                $fkind__Output
+                              $field__SetField_fkind_from_fkind
+                              $field__SetField_name_from_name
   ]
+                            $field__Output
 
 = when-declaration
   SYMBOL/when
