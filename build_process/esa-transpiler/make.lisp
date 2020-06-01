@@ -54,13 +54,15 @@
 	 (format *standard-output* "~&~s~%" cmd)
 	 (eval cmd)))))
 
-;; after loading, do:
-;; edit mech-tester.lisp to include latest 12.txt (from hier)
-;; edit mech-tester.lisp to insert names, eg.
-;; (setf (scanner:token-text (pasm:accepted-token p)) "self")
-;; run test
-;; (test-esa-to-file "test.esa" "test.lisp" t) 
-;;(esa-input-filename output-filename &key (tracing-accept nil))
+#|
+after loading, do:
+edit mech-tester.lisp to include latest 12.txt (from hier)
+edit mech-tester.lisp to insert names, eg.
+(setf (scanner:token-text (pasm:accepted-token p)) "self")
+run test
+(test-esa-to-file "test.esa" "test.lisp" t) 
+(esa-input-filename output-filename &key (tracing-accept nil))
+|#
 
 (defparameter *script2*
   "(let ()
