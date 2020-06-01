@@ -6,7 +6,6 @@
                             $esaprogram__NewScope
   @type-decls
                                 $typeDecls__NewScope
-                                $typeDecls__Output
                               $esaprogram__SetField_typeDecls_from_typeDecls
   @situations
   @classes
