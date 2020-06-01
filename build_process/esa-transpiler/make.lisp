@@ -1,6 +1,8 @@
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
-  #+nil(format *standard-output* \"cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp , then copy 12.lisp into mech-tester.lisp and manually edit the result to insert names\")
+#|
+cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp , then copy 12.lisp into mech-tester.lisp and manually edit the result to insert names
+|#
 
 (defparameter *script* "
   (uiop:run-program \"~/quicklisp/local-projects/rm.bash\")
