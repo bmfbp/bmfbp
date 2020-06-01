@@ -108,6 +108,7 @@
    | * >
   ]}
   SYMBOL/end SYMBOL/class
+                              $fieldMap__Output
 			      $esaclass__SetField_fieldMap_from_fieldMap
                             $esaclass__Output
 
