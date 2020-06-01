@@ -11,6 +11,7 @@
   @situations
                               $esaprogram__SetField_situations_from_situations
   @classes
+                              $esaprogram__SetField_classes_from_classes
   @whens-and-scripts
                             $esaprogram__Output
   EOF
@@ -81,9 +82,12 @@
 			    $situation__Output
 
 = classes
+                       $classes__NewScope
   {[ ?SYMBOL/class @class-def
+                         $classes__AppendFrom_esaclass  
    | * >
   ]}
+                       $classes__Output
 
 = whens-and-scripts
   {[ ?SYMBOL/script @script-definition
@@ -93,12 +97,15 @@
 
 = class-def
   SYMBOL/class
+                            $esaclass__NewScope
   @esaSymbol
+                              $esaclass__SetField_name_from_name
   @field-decl-begin @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
+                            $esaclass__Output
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
