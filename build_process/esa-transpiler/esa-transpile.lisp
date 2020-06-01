@@ -12,6 +12,7 @@
 	  (concatenate 'string 
 		       (format nil "(in-package :esa)~%~%")
 		       result)
+(break)
 	  result)))))
 
 (defun transpile-esa-to-file (esa-input-filename output-filename &key (tracing-accept nil))
