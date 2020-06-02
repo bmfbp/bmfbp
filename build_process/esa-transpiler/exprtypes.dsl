@@ -34,7 +34,6 @@ scriptDeclaration = { name formalList }
 % define the "code" for an internal script
 scriptImplementation = { name esaKind formalList scriptStatements }
 
-situationName =| name
 formalList = :map name
 scriptStatements = :map scriptStatement
 
