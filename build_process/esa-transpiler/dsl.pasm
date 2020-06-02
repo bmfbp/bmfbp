@@ -78,7 +78,7 @@
                             $situation__NewScope
   SYMBOL/situation 
   @esaSymbol
-                              $situation__setField_name_from_name
+                              $situation__SetField_name_from_name
 			    $situation__Output
 
 = classes
@@ -149,7 +149,10 @@
   SYMBOL/end SYMBOL/when
 
 = situation-ref
+                                   $situationName__NewScope
   @esaSymbol % should be checked to be a situation
+                                     $situationName__CoerceFrom_name
+                                   $situationName__Output
 
 = or-situation
   SYMBOL/or @situation-ref
