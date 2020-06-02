@@ -69,12 +69,12 @@
 
 = situations
                        $situations__NewScope
-  {[ ?SYMBOL/situation @situation 
+  {[ ?SYMBOL/situation @parse-situation 
                          $situations__AppendFrom_situation
    | * > ]}
                        $situations__Output
 
-= situation
+= parse-situation
                             $situation__NewScope
   SYMBOL/situation 
   @esaSymbol
