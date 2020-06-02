@@ -1,14 +1,13 @@
 esaprogram = { typeDecls situations classes whens scripts }
 
 typeDecls = :map typeDecl
-situations = :map situation
+situations = :map situationDefinition
 classes = :map esaclass
 whens = :map whenDeclaration
 scripts = :map scriptImplementation
 
 typeDecl = { name typeName }
-situation = { name situationName }
-situationName =| name
+situationDefinition =| name
 esaclass = { name fieldMap }
 
 % a "declaration" declares the existence of something, but gives no definition
@@ -17,7 +16,8 @@ esaclass = { name fieldMap }
 %  in this DSL, only scripts can have definitions, methods are "outside of the scope"
 %  of the DSL (e.g. they are always external), hence, can only be declared
 
-whenDeclaration = { situationName esaKind methodDeclarationsAndScriptDeclarations }
+whenDeclaration = { situationReferenceName esaKind methodDeclarationsAndScriptDeclarations }
+situationReferenceName =| name
 
 methodDeclarationsAndScriptDeclarations = :map declarationMethodOrScript
 declarationMethodOrScript =| methodDeclaration | scriptDeclaration

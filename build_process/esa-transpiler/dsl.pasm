@@ -70,16 +70,12 @@
 = situations
                        $situations__NewScope
   {[ ?SYMBOL/situation @parse-situation 
-                         $situations__AppendFrom_situation
    | * > ]}
                        $situations__Output
 
 = parse-situation
-                            $situation__NewScope
   SYMBOL/situation 
   @esaSymbol
-                              $situation__SetField_name_from_name
-			    $situation__Output
 
 = classes
                        $classes__NewScope
@@ -149,10 +145,7 @@
   SYMBOL/end SYMBOL/when
 
 = situation-ref
-                                   $situationName__NewScope
   @esaSymbol % should be checked to be a situation
-                                     $situationName__CoerceFrom_name
-                                   $situationName__Output
 
 = or-situation
   SYMBOL/or @situation-ref
