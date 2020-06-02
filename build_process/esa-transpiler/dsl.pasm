@@ -12,7 +12,7 @@
                               $esaprogram__SetField_situations_from_situations
   @classes
                               $esaprogram__SetField_classes_from_classes
-  @whens-and-scripts
+  @parse-whens-and-scripts
                             $esaprogram__Output
   EOF
 
@@ -89,9 +89,9 @@
   ]}
                        $classes__Output
 
-= whens-and-scripts
-  {[ ?SYMBOL/script @script-definition
-   | ?SYMBOL/when @when-declaration
+= parse-whens-and-scripts
+  {[ ?SYMBOL/when @when-declaration
+   |?SYMBOL/script @script-definition
    | * >
   ]}
 
