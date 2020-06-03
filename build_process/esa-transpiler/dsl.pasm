@@ -7,6 +7,7 @@
   @type-decls
                                 $typeDecls__NewScope
                               $esaprogram__SetField_typeDecls_from_typeDecls
+			      
 			        $situations__NewScope
   @situations
                               $esaprogram__SetField_situations_from_situations
@@ -144,15 +145,18 @@
 
 = when-declaration
   SYMBOL/when
-                            $whenDeclaration__NewScope
-			      $situationReferenceList__NewScope
+                              $whenDeclaration__NewScope
+  			        $situationReferenceList__NewScope
   @situation-ref
-                                $situationReferenceList__AppendFrom_situationReferenceName
-  {[ ?SYMBOL/or
+                                  $situationReferenceList__AppendFrom_situationReferenceName
+  {
+  [ ?SYMBOL/or
       @or-situation 
-                                $situationReferenceList__AppendFrom_situationReferenceName
-   | * > ]}
-			      $situationReferenceList__Output
+                                  $situationReferenceList__AppendFrom_situationReferenceName
+  | * >
+  ]
+  }
+			        $situationReferenceList__Output
 			      $whenDeclaration__SetField_situationReferenceList_from_situationReferenceList
 
   @class-ref
@@ -162,15 +166,17 @@
                               $whenDeclaration__SetField_esaKind_from_esaKind
 
                                 $methodDeclarationsAndScriptDeclarations__NewScope
+  {
                                     $declarationMethodOrScript__NewScope
-  {[ ?SYMBOL/script @script-declaration
-                                      % - until script declarations are implemented - $declarationMethodOrScript__CoerceFrom_scriptDeclaration
+  [ ?SYMBOL/script @script-declaration
+                                      $declarationMethodOrScript__CoerceFrom_scriptDeclaration
    | ?SYMBOL/method @method-declaration
                                       $declarationMethodOrScript__CoerceFrom_methodDeclaration
+   | * >
+  ]
                                     $declarationMethodOrScript__Output
                                   $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
-   | * >
-  ]}
+  }
                                 $methodDeclarationsAndScriptDeclarations__Output
                               $whenDeclaration__SetField_methodDeclarationsAndScriptDeclarations_from_methodDeclarationsAndScriptDeclarations
   SYMBOL/end SYMBOL/when
@@ -199,9 +205,14 @@
                                       $methodDeclaration__Output
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
+                                      $scriptDeclaration__NewScope
   SYMBOL/script @esaSymbol
+                                        $scriptDeclaration__SetField_name_from_name
   @formals
+                                        $scriptDeclaration__SetField_formalList_from_formalList
   @return-type-declaration
+                                        $scriptDeclaration__SetField_returnType_from_returnType
+                                      $scriptDeclaration__Output
 
 = formals
                                     $formalList__NewScope
@@ -229,19 +240,22 @@
                                       $returnKind__NewScope
                                          $returnKind__SetEnum_map
                                       $returnKind__Output
-                                      $returnType__SetField_returnKind_from_returnKind
            @esaSymbol
 	                              $returnType__SetField_name_from_name
          | *
                                       $returnKind__NewScope
                                          $returnKind__SetEnum_simple
                                       $returnKind__Output
-                                      $returnType__SetField_returnKind_from_returnKind
            @esaSymbol
 	                              $returnType__SetField_name_from_name
   ]
   | *
+                                      $returnKind__NewScope
+                                         $returnKind__SetEnum_void
+                                      $returnKind__Output
   ]
+                                      $returnType__SetField_returnKind_from_returnKind
+
                                     $returnType__Output
 
 

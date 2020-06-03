@@ -40,7 +40,7 @@ methodDeclaration = { name formalList returnType }
 scriptDeclaration = { name formalList returnType }
 
 returnType = { returnKind name }
-returnKind = 'map' | 'simple'
+returnKind = 'map' | 'simple' | 'void'
 
 
 % semantic ckecker should check that all declared scripts are defined later on...
