@@ -69,11 +69,11 @@
 
 = situations
                        $situations__NewScope
-  {[ ?SYMBOL/situation @parse-situation 
+  {[ ?SYMBOL/situation @parse-situation-def 
    | * > ]}
                        $situations__Output
 
-= parse-situation
+= parse-situation-def
   SYMBOL/situation 
   @esaSymbol
 
@@ -87,7 +87,7 @@
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
-   |?SYMBOL/script @script-definition
+   |?SYMBOL/script @script-implementation
    | * >
   ]}
 
@@ -136,7 +136,6 @@
 = when-declaration
   SYMBOL/when
   @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
-%$      (clear-method-stream p)
   @class-ref
   {[ ?SYMBOL/script @script-declaration
    | ?SYMBOL/method @method-declaration
@@ -153,48 +152,66 @@
 = class-ref
   @esaSymbol  % should be checked to be a kind
 
-= method-declaration % "when" is always a declaration
+= method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
+                                      $methodDeclaration__NewScope
   SYMBOL/method @esaSymbol
-%$      (emit-to-method-stream p "~%(defgeneric ~a (self" (atext p))
+                                        $methodDeclaration__SetField_name_from_name
   @generic-typed-formals
-%$      (emit-to-method-stream p ")") ;; close parameter list
   @optional-return-type-declaration
-%$      (emit-to-method-stream p ")") ;; close generic
+                                      $methodDeclaration__Output
   
-= script-declaration  % this is a declaration of scripts to be defined
+= script-declaration  % this is a (forward) declaration of scripts which will be defined later
   SYMBOL/script @esaSymbol
-%$      (emit-to-method-stream p "~%(defgeneric ~a #|script|# (self" (atext p))
-  @generic-typed-formals
-%$      (emit-to-method-stream p ")")
-  @optional-return-type-declaration
-%$      (emit-to-method-stream p ")") ;; close generic
+  @formals
+  @return-type-declaration
 
-= generic-typed-formals
-  [ ?'(' '(' generic-type-list ')'
+= formals
+                                    $formalList__NewScope
+  [ ?'(' 
+     '(' 
+     type-list 
+     ')'
   | *
   ]
+                                    $formalList__Output
 
-= generic-type-list
+= type-list
   @esaSymbol
-%$     (emit-to-method-stream p " ~a" (gensym))
-  {[ &non-keyword-symbol @esaSymbol
-%$     (emit-to-method-stream p " ~a" (gensym))
+                                    $formalList__AppendFrom_name
+  {[ &non-keyword-symbol
+     @esaSymbol
+                                    $formalList__AppendFrom_name
    | * >
   ]}
 
-= optional-return-type-declaration
+= return-type-declaration
+                                    $returnType__NewScope
   [ ?'>' '>' '>'
-         [ ?SYMBOL/map SYMBOL/map @esaSymbol
-%$            (emit-to-method-stream p " #|returns map ~a|# " (atext p))
-         | * @esaSymbol
-%$            (emit-to-method-stream p " #|returns ~a|# " (atext p))
+         [ ?SYMBOL/map SYMBOL/map
+                                      $returnKind__NewScope
+                                         $returnKind__SetEnum_map
+                                      $returnKind__Output
+                                      $returnType__SetField_returnKind_from_returnKind
+           @esaSymbol
+	                              $returnType__SetField_name_from_name
+         | *
+                                      $returnKind__NewScope
+                                         $returnKind__SetEnum_simple
+                                      $returnKind__Output
+                                      $returnType__SetField_returnKind_from_returnKind
+           @esaSymbol
+	                              $returnType__SetField_name_from_name
   ]
   | *
   ]
+                                    $returnType__Output
 
 
 
-= script-definition
+
+% implement code ...
+
+= script-implementation
   SYMBOL/script
   @esaSymbol
                                    set-current-class
