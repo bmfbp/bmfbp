@@ -20,13 +20,14 @@ esaclass = { name fieldMap }
 % a "class" defines fields (only)
 % a "when" declares methods and declares the scripts (both are like forward references) associated with a class
 % a "script" *implements* a method based on simplistic ESA code rules, a "script" may refer to methods of the class
-% things declared as "methods" are not implemented but are left to be implemented in the unerlying base language
+% things declared as "methods" are not implemented but are left to be implemented in the underlying base language
 % (I lied - there are 2 kinds of implementation - "class" definitions define fields - these fields are a kind of "implementation" (they can be emitted))
 % "whens" also declare when (a time during which) particular methods (and scripts) are valid - the "situation", in ESA, I have 4 main phases - building, loading, initializing and running, I split "building" into two pieces - "building" and "building-aux" to separate the Architecturally important stuff ("building") from the less-important (Architecturally) details ("building-aux")
 
 % I deemed that I wanted to have script implementations "near" the definitions, so I allow intermingling of when declarations and script implementations
 
-whenDeclaration = { situationReferenceName esaKind methodDeclarationsAndScriptDeclarations }
+whenDeclaration = { situationReferenceList esaKind methodDeclarationsAndScriptDeclarations }
+situationReferenceList = :map situationReferenceName
 situationReferenceName =| name
 
 methodDeclarationsAndScriptDeclarations = :map declarationMethodOrScript

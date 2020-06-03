@@ -12,7 +12,11 @@
                               $esaprogram__SetField_situations_from_situations
   @classes
                               $esaprogram__SetField_classes_from_classes
+
+                              $whenDeclarations__NewScope
   @parse-whens-and-scripts
+                              $whenDeclarations__Output
+                              $esaprogram__SetField_whenDeclarations_from_whenDeclarations
                             $esaprogram__Output
   EOF
 
@@ -76,6 +80,10 @@
 = parse-situation-def
   SYMBOL/situation 
   @esaSymbol
+                         $situationDefinition__NewScope
+			   $situationDefinition__CoerceFrom_name
+                         $situationDefinition__Output
+                       $situations__AppendFrom_situationDefinition			 
 
 = classes
                        $classes__NewScope
@@ -87,6 +95,7 @@
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
+                              $whenDeclarations__AppendFrom_whenDeclaration
    |?SYMBOL/script @script-implementation
    | * >
   ]}
@@ -135,16 +144,43 @@
 
 = when-declaration
   SYMBOL/when
-  @situation-ref {[ ?SYMBOL/or @or-situation | * > ]}
+                            $whenDeclaration__NewScope
+			      $situationReferenceList__NewScope
+  @situation-ref
+                                $situationReferenceList__AppendFrom_situationReferenceName
+  {[ ?SYMBOL/or
+      @or-situation 
+                                $situationReferenceList__AppendFrom_situationReferenceName
+   | * > ]}
+			      $situationReferenceList__Output
+			      $whenDeclaration__SetField_situationReferenceList_from_situationReferenceList
+
   @class-ref
+                              $esaKind__NewScope
+                                $esaKind__CoerceFrom_name
+                              $esaKind__Output
+                              $whenDeclaration__SetField_esaKind_from_esaKind
+
+                                $methodDeclarationsAndScriptDeclarations__NewScope
+                                    $declarationMethodOrScript__NewScope
   {[ ?SYMBOL/script @script-declaration
+                                      % - until script declarations are implemented - $declarationMethodOrScript__CoerceFrom_scriptDeclaration
    | ?SYMBOL/method @method-declaration
+                                      $declarationMethodOrScript__CoerceFrom_methodDeclaration
+                                    $declarationMethodOrScript__Output
+                                  $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
    | * >
   ]}
+                                $methodDeclarationsAndScriptDeclarations__Output
+                              $whenDeclaration__SetField_methodDeclarationsAndScriptDeclarations_from_methodDeclarationsAndScriptDeclarations
   SYMBOL/end SYMBOL/when
+                            $whenDeclaration__Output
 
 = situation-ref
   @esaSymbol % should be checked to be a situation
+                            $situationReferenceName__NewScope
+                              $situationReferenceName__CoerceFrom_name
+                            $situationReferenceName__Output
 
 = or-situation
   SYMBOL/or @situation-ref
@@ -156,8 +192,10 @@
                                       $methodDeclaration__NewScope
   SYMBOL/method @esaSymbol
                                         $methodDeclaration__SetField_name_from_name
-  @generic-typed-formals
-  @optional-return-type-declaration
+  @formals
+                                        $methodDeclaration__SetField_formalList_from_formalList
+  @return-type-declaration
+                                        $methodDeclaration__SetField_returnType_from_returnType
                                       $methodDeclaration__Output
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
