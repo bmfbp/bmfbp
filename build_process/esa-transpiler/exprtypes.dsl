@@ -8,7 +8,7 @@ scriptImplementations = :map scriptImplementation
 
 typeDecl = { name typeName }
 situationDefinition =| name
-esaclass = { name fieldMap }
+esaclass = { name fieldMap externalMethodList scriptMethodList }
 
 % a "declaration" declares the existence of something, but gives no definition
 %  for the thing
@@ -78,7 +78,11 @@ internalScriptName =| name
 externalMethodName =| name
 typeName =| name
 
+externalMethodList = :map externalMethod
+scriptMethodList = :map scriptMethod
 
+externalMethod = { methodDeclaration }
+scriptMethod = { scriptDeclaration scriptImplementation }
 
 
 expression = { ekind object }

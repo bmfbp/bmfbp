@@ -9,6 +9,8 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
 
   (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
+*** ;; need to run pass2 on esa.dsl, too ***
+
   (ql:quickload :stack-dsl)
   (ql:quickload :stack-dsl/use)
   (stack-dsl:transpile-stack 
@@ -25,12 +27,19 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
      \"ARROWGRAMS/ESA-TRANSPILER\"
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl.pasm\")
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl.lisp\"))
+  (pasm:pasm-to-file 
+     \"ARROWGRAMS/ESA-TRANSPILER\"
+     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl-pass2.pasm\")
+     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl-pass2.lisp\"))
   (ql:quickload :arrowgrams/esa-transpiler)
   (load (arrowgrams/esa-transpiler::path \"package.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"classes.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"dsl.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"dsl-pass2.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"exprtypes.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"manual-types.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"mechanisms.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"manual-mechanisms.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"mech-tester.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"esa-transpile.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"trace-rules.lisp\"))

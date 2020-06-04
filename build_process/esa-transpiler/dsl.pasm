@@ -265,10 +265,8 @@
 
 = script-implementation
   SYMBOL/script
-  @esaSymbol
-                                   set-current-class
-  @esaSymbol
-                                   set-current-method
+  @esaSymbol  % class
+  @esaSymbol  % script method
 %$      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (current-method p) (current-class p))
   @optional-formals-definition
 %$      (emit p ")")  

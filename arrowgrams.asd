@@ -567,13 +567,7 @@
                           :pathname "./build_process/esa-transpiler/"
                           :components ((:file "package")
 				       (:file "classes")
-                                       (:file "path")
-				       (:file "dsl")
-				       (:file "exprtypes")
-				       (:file "mechanisms")
-				       (:file "manual-mechanisms")
-				       (:file "esa-transpile")
-				       ))))
+                                       (:file "path")))))
 
 (defsystem :arrowgrams/esa-transpiler/tester
   :depends-on (:arrowgrams/esa-transpiler)

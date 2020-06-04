@@ -6,13 +6,14 @@
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
 	(pasm:initially p token-stream)
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
-	  (esa-dsl p)  ;; call top rule
+	  (esa-dsl p)  ;; call top rule of 1st pass
+	  (pasm:initially p token-stream)
+	  (pass2-esa-dsl p)  ;; call top rule of 2nd pass
 	  )
 	(let ((result (get-output-stream-string (pasm:output-string-stream p))))
 	  (concatenate 'string 
 		       (format nil "(in-package :esa)~%~%")
 		       result)
-(break)
 	  result)))))
 
 (defun transpile-esa-to-file (esa-input-filename output-filename &key (tracing-accept nil))
