@@ -135,3 +135,5 @@ build_process/esa-transpiler/exprtypes.lisp
 build_process/esa-transpiler/mechanisms.lisp
 
 build_process/esa-transpiler/dsl.lisp
+
+build_process/esa-transpiler/dsl0.lisp
