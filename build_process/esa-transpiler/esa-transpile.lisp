@@ -6,9 +6,7 @@
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
 	(pasm:initially p token-stream)
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
-	  (esa-dsl p)  ;; call top rule of 1st pass
-	  (pasm:initially p token-stream)
-	  (pass2-esa-dsl p)  ;; call top rule of 2nd pass
+	  (esa-dsl-pass1 p)  ;; call top rule of 1st pass
 	  )
 	(let ((result (get-output-stream-string (pasm:output-string-stream p))))
 	  (concatenate 'string 
