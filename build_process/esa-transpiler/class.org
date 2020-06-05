@@ -1,0 +1,8 @@
+* namedClass
+** map of methods -- methodList
+** method
+*** name implementation
+**** N.B. formals collected by pass1, returnType collected by pass1
+**** implementation == map of statement
+***** statement
+****** letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callInternalStatement | callExternalStatement
