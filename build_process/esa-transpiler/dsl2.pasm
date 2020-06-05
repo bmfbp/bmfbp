@@ -1,3 +1,7 @@
+%
+% in pass2, we deal with creating a data structure for scripts
+% if we get here, the we can assume that all class and method (and script) definitions are OK and we don't need to check them
+%
 
 = rmSpaces
   [ ?SPACE | ?COMMENT | * . ]
@@ -66,9 +70,13 @@
   @esaSymbol
 
 = classes
+                                $$classTable__NewScope
   {[ ?SYMBOL/class @class-def
+                                   $$classTable__AppendFrom_namedClass
    | * >
   ]}
+                                $$classTable__Output
+                                $$classTable__Save
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
@@ -78,12 +86,16 @@
 
 = class-def
   SYMBOL/class
+                                $$namedClass__NewScope
   @esaSymbol
+                                  $$namedClass__SetField_name_from_name
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
+                                $$namedClass__Output
+			       
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
@@ -166,16 +178,25 @@
 
 
 
-% implement code ...
+% implementation code ...
 
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
+                                   $$namedClass__LookupBeginScope
+                                     $$method__NewScope
   @esaSymbol  % script method
+                                       $$method__CheckThatMethodExistsInNamedClass
   @optional-formals-definition
+                                       $$method__CheckFormals
   @optional-return-type-definition
+                                       $$method__CheckReturnType
   @script-body
+                                       $$method__SetField_code_from_code
   SYMBOL/end SYMBOL/script
+                                     $$method__Output
+                                     $$namedClass__LookupMethodBeginScope
+                                   $$namedClass__EndScope
 
 = optional-formals-definition
   {[ ?'(' '(' @untyped-formals-definition ')'
@@ -198,6 +219,7 @@
   ]  
   
 = script-body
+                                        $$implementation__NewScope
   {
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
@@ -212,6 +234,7 @@
    | &non-keyword-symbol @esa-expr
    | * >
   ]}
+                                       $$implementation__Output
 
 = let-statement
   SYMBOL/let

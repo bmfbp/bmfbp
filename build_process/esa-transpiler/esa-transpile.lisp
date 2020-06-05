@@ -13,7 +13,7 @@
 	(let ((result-pass1 (get-output-stream-string (pasm:output-string-stream p))))
 	  (pasm:initially p token-stream)
 	  (let ((pasm::*pasm-accept-tracing* tracing-accept))
-	    (esa-dsl-pass2 p))  ;; call top rule of 2nd pass to generate dsl2.lisp
+	    #+nil(esa-dsl-pass2 p))  ;; call top rule of 2nd pass to generate dsl2.lisp
 	  (let ((result-pass2 (get-output-stream-string (pasm:output-string-stream p))))
 	    (let ((final (concatenate 'string 
 				      (format nil "(in-package :esa)~%~%")
