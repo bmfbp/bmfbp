@@ -218,7 +218,7 @@
                                     $formalList__NewScope
   [ ?'(' 
      '(' 
-     type-list 
+     @type-list 
      ')'
   | *
   ]
@@ -276,7 +276,7 @@
   SYMBOL/end SYMBOL/script
 
 = optional-formals-definition
-  {[ ?'(' '(' untyped-formals-definition ')'
+  {[ ?'(' '(' @untyped-formals-definition ')'
    | * >
   ]}
 
