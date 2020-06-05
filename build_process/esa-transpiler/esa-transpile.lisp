@@ -6,8 +6,13 @@
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
 	(pasm:initially p token-stream)
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
-	  (esa-dsl-pass1 p)  ;; call top rule of 1st pass
-	  )
+	  (esa-dsl-pass0 p))  ;; call parser to check if syntax is OK
+	(pasm:initially p token-stream)
+	(let ((pasm::*pasm-accept-tracing* tracing-accept))
+	  (esa-dsl-pass1 p))  ;; call top rule of 1st pass to generate dsl1.lisp
+	(pasm:initially p token-stream)
+	(let ((pasm::*pasm-accept-tracing* tracing-accept))
+	  (esa-dsl-pass2 p))  ;; call top rule of 2nd pass to generate dsl2.lisp
 	(let ((result (get-output-stream-string (pasm:output-string-stream p))))
 	  (concatenate 'string 
 		       (format nil "(in-package :esa)~%~%")

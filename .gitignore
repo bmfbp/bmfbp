@@ -137,3 +137,7 @@ build_process/esa-transpiler/mechanisms.lisp
 build_process/esa-transpiler/dsl.lisp
 
 build_process/esa-transpiler/dsl0.lisp
+
+build_process/esa-transpiler/dsl1.lisp
+
+build_process/esa-transpiler/dsl2.lisp

@@ -29,13 +29,19 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
   (pasm:pasm-to-file 
      \"ARROWGRAMS/ESA-TRANSPILER\"
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl1.pasm\")
-     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl.lisp\")
+     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl1.lisp\")
      \"-PASS1\")
+  (pasm:pasm-to-file 
+     \"ARROWGRAMS/ESA-TRANSPILER\"
+     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl2.pasm\")
+     (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl2.lisp\")
+     \"-PASS2\")
   (ql:quickload :arrowgrams/esa-transpiler)
   (load (arrowgrams/esa-transpiler::path \"package.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"classes.lisp\"))
-  (load (arrowgrams/esa-transpiler::path \"dsl.lisp\"))
-  (load (arrowgrams/esa-transpiler::path \"dsl-pass2.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"dsl0.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"dsl1.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"dsl2.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"exprtypes.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"manual-types.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"mechanisms.lisp\"))
