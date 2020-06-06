@@ -15,3 +15,10 @@
     (when (string= (name-as-string c) class-name)
       (return-from lookup-class c)))
   (error (format nil "class ~a not found in esaprogram" class-name)))
+
+;; pass2 class
+(defmethod lookup-class ((self pass2) class-name)
+  (dolist (c (classTable self))
+    (when (string= (name-as-string c) class-name)
+      (return-from lookup-class c)))
+  (error (format nil "class ~a not found in esaprogram" class-name)))

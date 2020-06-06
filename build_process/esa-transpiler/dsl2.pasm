@@ -12,7 +12,7 @@
   @type-decls
   @situations
   @classes
-                                $$pass2__SetField_classTable_from_classTabl
+                                $$pass2__SetField_classTable_from_classTable
   @parse-whens-and-scripts
   EOF
                               $$pass2__Output
@@ -196,7 +196,7 @@
                                        $$method__SetField_code_from_code
   SYMBOL/end SYMBOL/script
                                      $$method__Output
-                                     $$namedClass__LookupMethodBeginScope
+                                     $$namedClass__EndScope
                                    $$namedClass__EndScope
 
 = optional-formals-definition
