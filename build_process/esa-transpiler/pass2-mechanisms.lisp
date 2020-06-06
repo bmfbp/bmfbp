@@ -33,5 +33,4 @@
 		     (cl-user::get-methods-list top-class))))
 
 (defmethod $methodsList__EndScope ((p parser))
-  (break)
   (stack-dsl:%pop (cl-user::input-methodsList (env p))))

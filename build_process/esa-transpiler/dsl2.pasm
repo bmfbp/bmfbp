@@ -254,6 +254,7 @@
                                          $letStatement__SetField_varName_from_varName
    '='
    @esa-expr
+                                         $letStatement__SetField_expression_from_expression
    SYMBOL/in
                                            $implementation__NewScope
    @script-body
