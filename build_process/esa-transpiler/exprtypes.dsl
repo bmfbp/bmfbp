@@ -66,22 +66,22 @@ name = :string
 pass2 = { classTable }
 classTable = :map namedClass
 namedClass = { name methodsList }
-methodsList = :map method
-method = { name implmentation }
+methodsList = :map esamethod
+esamethod = { name implementation }
 implementation = :map statement
 statement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callInternalStatement | callExternalStatement
 
 letStatement = { varName expression implementation }
-mapStatement = { varName mxpression implementation }
-exitMapStatement = { } 
+mapStatement = { varName expression implementation }
+exitMapStatement = { filler } 
 setStatement = { varName expression implementation }
 createStatement = { varName maybeIndirectExpression implementation }
-ifStatement { expression thenPart elsePart }
+ifStatement = { expression thenPart elsePart }
 loopStatement = { implementation }
 exitWhenStatement = { expression }
 returnStatement = { expression }
 callInternalStatement = { functionReference } 
-callExternalStatementlet = { functionReference }
+callExternalStatement = { functionReference }
 
 varName =| name
 functionReference =| expression
@@ -91,3 +91,5 @@ elsePart =| implementation
 maybeIndirectExpression = { indirectionKind expression }
 indirectionKind = 'indirect' | 'direct'
 
+% deficiency in stack-dsl parser - expects at least one field (we really want 0 fields here)
+filler =| name
