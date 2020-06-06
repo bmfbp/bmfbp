@@ -31,7 +31,7 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl1.pasm\")
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl1.lisp\")
      \"-PASS1\")
-  #+nil(pasm:pasm-to-file 
+  (pasm:pasm-to-file 
      \"ARROWGRAMS/ESA-TRANSPILER\"
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl2.pasm\")
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl2.lisp\")

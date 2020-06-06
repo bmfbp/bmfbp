@@ -221,29 +221,28 @@
   
 = script-body
                                        $$implementation__NewScope
-  {
-   [ ?SYMBOL/let @let-statement
+  {[ ?SYMBOL/let @let-statement
                                          $$implementation__AppendFrom_letStatement
    | ?SYMBOL/map @map-statement
-                                         $$implementation__AppendFrom_mapStatement
+%                                         $$implementation__AppendFrom_mapStatement
    | ?SYMBOL/exit-map @exit-map-statement
-                                         $$implementation__AppendFrom_exitMapStatement
+%                                         $$implementation__AppendFrom_exitMapStatement
    | ?SYMBOL/set @set-statement
-                                         $$implementation__AppendFrom_setStatement
+%                                         $$implementation__AppendFrom_setStatement
    | ?SYMBOL/create @create-statement
-                                         $$implementation__AppendFrom_createStatement
+%                                         $$implementation__AppendFrom_createStatement
    | ?SYMBOL/if @if-statement
-                                         $$implementation__AppendFrom_ifStatement
+%                                         $$implementation__AppendFrom_ifStatement
    | ?SYMBOL/loop @loop-statement
-                                         $$implementation__AppendFrom_loopStatement
+%                                         $$implementation__AppendFrom_loopStatement
    | ?SYMBOL/exit-when @exit-when-statement
-                                         $$implementation__AppendFrom_exitWhenStatement
+%                                         $$implementation__AppendFrom_exitWhenStatement
    | ?'>' @return-statement
-                                         $$implementation__AppendFrom_returnStatement
+%                                         $$implementation__AppendFrom_returnStatement
    | ?'@' @callInternalStatement
-                                         $$implementation__AppendFrom_callInternalStatement
+%                                         $$implementation__AppendFrom_callInternalStatement
    | &non-keyword-symbol @callExternalStatement
-                                         $$implementation__AppendFrom_callExternalStatement
+%                                         $$implementation__AppendFrom_callExternalStatement
    | * >
   ]}
                                        $$implementation__Output
@@ -251,9 +250,7 @@
 = let-statement
   SYMBOL/let
                                        $$letStatement__NewScope
-                                           $$varName__NewScope
-   @esaSymbol
-                                           $$varName__CoerceFrom_name
+   @varName
                                          $$letStatement__SetField_varName_varName
    '='
    @esa-expr
@@ -267,26 +264,41 @@
 
 = create-statement
   SYMBOL/create
-   @esaSymbol
+  @varName
+%                                      $$createStatement__SetField_varName_from_varName
    '=' 
-   [ ?SYMBOL/map SYMBOL/map | * ]
-   [ ?'*' '*'
+%                                      $$maybeIndirectExpression__NewScope
+   [ ?'*' '*'  %  * means use class contained in expression, instead of absolute name
+%                                          $$indirectionKind__NewScope
+%                                            $$indirectionKind__SetEnum_indirect
+%                                          $$indirectionKind__Output
+%                                        $$maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
      @class-ref
    | *
-   @class-ref
+%                                          $$indirectionKind__NewScope
+%                                            $$indirectionKind__SetEnum_direct
+%                                          $$indirectionKind__Output
+%                                        $$maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
+     @class-ref
    ]
+%                                       $$maybeIndirectExpression__SetField_expression_from_expression
+%                                      $$maybeIndirectExpression__Output
+%				      $$createStatement_SetField_maybeIndirectExpression_from_maybIndirectExpression
    SYMBOL/in 
+%                                           $$implementation__NewScope
    @script-body
+%                                           $$implementation__Output
    SYMBOL/end SYMBOL/create
 
 = set-statement
   SYMBOL/set
-   @esa-expr
+   @varName
    '=' 
    @esa-expr
   
 = map-statement
-  SYMBOL/map @esaSymbol
+  SYMBOL/map 
+  @varName
   '='
   @esa-expr
   SYMBOL/in @script-body
@@ -337,6 +349,12 @@
 
 = esa-object-expr
   @object__
+
+= varName
+                    $$varName__NewScope
+  @esaSymbol
+                      $$varName__CoerceFrom_name
+		    $$varName__Output
 
 = esa-expr
   [ ?SYMBOL/true SYMBOL/true
