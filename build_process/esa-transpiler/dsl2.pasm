@@ -81,7 +81,10 @@
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
+       %% ignore in pass2
    |?SYMBOL/script @script-implementation
+       %% >> esamethod
+       %% all pass2 work done in script-implementation
    | * >
   ]}
 
@@ -188,6 +191,7 @@
                                      $esamethod__NewScope
   @esaSymbol  % script method
                                        $esamethod__CheckThatMethodExistsInNamedClass
+				       $esamethod__SetField_name_from_name
   @optional-formals-definition
                                        $esamethod__CheckFormals
   @optional-return-type-definition
@@ -196,6 +200,9 @@
                                        $esamethod__SetField_implementation_from_implementation
   SYMBOL/end SYMBOL/script
                                      $esamethod__Output
+                                     $methodsList__BeginScopeFrom_namedClass
+                                       $methodsList__AppendFrom_esamethod
+                                     $methodsList__EndScope
                                    $namedClass__EndScope
 
 = optional-formals-definition
@@ -205,7 +212,7 @@
 
 = untyped-formals-definition
   {[ &non-keyword-symbol @esaSymbol
-     % index and type
+     % index and typex
    | * >
   ]}
   
@@ -250,6 +257,7 @@
    SYMBOL/in
                                            $implementation__NewScope
    @script-body
+ $bp
                                            $implementation__Output
                                          $letStatement__SetField_implementation_from_implementation
    SYMBOL/end SYMBOL/let
@@ -260,7 +268,7 @@
   SYMBOL/create
   @varName
    '=' 
-   [ ?'*' '*'  %  * means use class contained in expression, instead of absolute name
+   [ ?'*' '*'  %  * means use class contained in expression (indirect), instead of direct name
 %                                          $indirectionKind__NewScope
 %                                            $indirectionKind__SetEnum_indirect
 %                                          $indirectionKind__Output

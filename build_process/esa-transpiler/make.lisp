@@ -6,9 +6,7 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
 
 (defparameter *script* "
   (uiop:run-program \"~/quicklisp/local-projects/rm.bash\")
-
   (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-
   (ql:quickload :stack-dsl)
   (ql:quickload :stack-dsl/use)
   (stack-dsl:transpile-stack 
@@ -37,6 +35,7 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
      (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl2.lisp\")
      \"-PASS2\")
   (ql:quickload :arrowgrams/esa-transpiler)
+  (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
   (load (arrowgrams/esa-transpiler::path \"package.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"classes.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"dsl0.lisp\"))
@@ -69,8 +68,10 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
     (loop
        (let ((cmd (read s nil :EOF)))
 	 (when (eq :EOF cmd) (return))
-	 (format *standard-output* "~&~s~%" cmd)
-	 (eval cmd)))))
+	 (let ((debugcmd (append '(progn (proclaim '(optimize (debug 3) (safety 3) (speed 0))))
+			       (list cmd))))
+	   (format *standard-output* "~&~s~%" debugcmd)
+	   (eval debugcmd))))))
 
 #|
 after loading, do:

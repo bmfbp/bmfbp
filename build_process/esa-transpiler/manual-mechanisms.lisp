@@ -79,7 +79,7 @@
   (setf (current-class p) (scanner:token-text (pasm:accepted-token p))))
 
 (defmethod $bp ((p parser))
-  (break p))
+  (break p "forced break"))
 
 
 ;; methods + lookups during code emission
@@ -95,3 +95,4 @@
   (setf (cl-user::ekind (stack-dsl:%top (cl-user::output-expression (env p))))
 	(stack-dsl:%top (cl-user::output-ekind (env p))))
   (stack-dsl:%pop (cl-user::output-ekind (env p))))
+

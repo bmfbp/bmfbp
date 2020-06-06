@@ -25,3 +25,13 @@
 (defmethod $namedClass__EndScope ((p parser))
   ;; pop namedClass input stack
   (stack-dsl:%pop (cl-user::input-namedClass (env p))))
+
+;; pass2 mechanisms
+(defmethod $methodsList__BeginScopeFrom_namedClass ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::input-namedClass (env p)))))
+    (stack-dsl:%push (cl-user::input-methodsList (env p))
+		     (cl-user::get-methods-list top-class))))
+
+(defmethod $methodsList__EndScope ((p parser))
+  (break)
+  (stack-dsl:%pop (cl-user::input-methodsList (env p))))

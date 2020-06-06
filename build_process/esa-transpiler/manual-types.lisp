@@ -28,3 +28,8 @@
 (defmethod name-as-string ((self namedClass))
   (let ((n (name self)))
     (as-string n)))
+
+(defmethod get-methods-list ((self namedClass))
+  (if (slot-boundp self 'methodsList)
+      (methodsList self)
+      (make-instance 'methodsList)))
