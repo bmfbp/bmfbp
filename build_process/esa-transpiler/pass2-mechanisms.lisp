@@ -1,21 +1,27 @@
-(defmethod $$method__CheckThatMethodExistsInNamedClass ((p parser))
+(in-package :arrowgrams/esa-transpiler)
+
+(defmethod $esamethod__CheckThatMethodExistsInNamedClass ((p parser))
   ;; niy
   )
 
-(defmethod $$method__CheckFormals ((p parser))
+(defmethod $esamethod__CheckFormals ((p parser))
   ;; niy
   )
 
-(defmethod $$method__CheckReturnType((p parser))
+(defmethod $esamethod__CheckReturnType((p parser))
   ;; niy
   )
 
-
-(defmethod $$method__LookupBeginScope ((p parser))
+(defmethod $namedClass__LookupBeginScope ((p parser))
   ;; lookup named class in pass2 table and push the class onto the namedClass input stack
-  (let ((c (lookup-class (pass2 (env p)))))
-    (stack-dsl:%push (namedClass (env p)) c)))
+  (let ((class-name (cl-user::as-string 
+		     (stack-dsl:%top (cl-user::output-name (env p))))))
+    (let ((c (cl-user::lookup-class 
+	      (stack-dsl:%top (cl-user::input-pass2 (env p)))
+	      class-name)))
+      (stack-dsl:%push (cl-user::input-namedClass (env p)) c)))
+  (stack-dsl:%pop (cl-user::output-name (env p))))
 
-(defmethod $$method__EndScope ((p parser))
+(defmethod $namedClass__EndScope ((p parser))
   ;; pop namedClass input stack
-  (stack-dsl:%pop (namedClass (env p))))
+  (stack-dsl:%pop (cl-user::input-namedClass (env p))))

@@ -7,15 +7,15 @@
   [ ?SPACE | ?COMMENT | * . ]
 
 = esa-dsl
-                             $$pass2__NewScope
+                             $pass2__NewScope
   ~rmSpaces
   @type-decls
   @situations
   @classes
-                                $$pass2__SetField_classTable_from_classTable
+                                $pass2__SetField_classTable_from_classTable
   @parse-whens-and-scripts
   EOF
-                              $$pass2__Output
+                              $pass2__Output
 
 - keyword-symbol
   [ ?SYMBOL
@@ -72,12 +72,12 @@
 
 % in pass2, parsing of class definitions simply puts empty entries into a class table
 = classes
-                                $$classTable__NewScope
+                                $classTable__NewScope
   {[ ?SYMBOL/class @class-def
-                                   $$classTable__AppendFrom_namedClass
+                                   $classTable__AppendFrom_namedClass
    | * >
   ]}
-                                $$classTable__Output
+                                $classTable__Output
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
@@ -87,15 +87,15 @@
 
 = class-def
   SYMBOL/class
-                                $$namedClass__NewScope
+                                $namedClass__NewScope
   @esaSymbol
-                                  $$namedClass__SetField_name_from_name
+                                  $namedClass__SetField_name_from_name
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
-                                $$namedClass__Output
+                                $namedClass__Output
 			       
 
 - field-decl-begin
@@ -184,20 +184,19 @@
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
-                                   $$namedClass__LookupBeginScope
-                                     $$method__NewScope
+                                   $namedClass__LookupBeginScope
+                                     $esamethod__NewScope
   @esaSymbol  % script method
-                                       $$method__CheckThatMethodExistsInNamedClass
+                                       $esamethod__CheckThatMethodExistsInNamedClass
   @optional-formals-definition
-                                       $$method__CheckFormals
+                                       $esamethod__CheckFormals
   @optional-return-type-definition
-                                       $$method__CheckReturnType
+                                       $esamethod__CheckReturnType
   @script-body
-                                       $$method__SetField_code_from_code
+                                       $esamethod__SetField_implementation_from_implementation
   SYMBOL/end SYMBOL/script
-                                     $$method__Output
-                                     $$namedClass__EndScope
-                                   $$namedClass__EndScope
+                                     $esamethod__Output
+                                   $namedClass__EndScope
 
 = optional-formals-definition
   {[ ?'(' '(' @untyped-formals-definition ')'
@@ -220,79 +219,72 @@
   ]  
   
 = script-body
-                                       $$implementation__NewScope
-  {[ ?SYMBOL/let @let-statement
-                                         $$implementation__AppendFrom_letStatement
+                                       $implementation__NewScope
+  {
+                                         $statement__NewScope
+   [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
-%                                         $$implementation__AppendFrom_mapStatement
    | ?SYMBOL/exit-map @exit-map-statement
-%                                         $$implementation__AppendFrom_exitMapStatement
    | ?SYMBOL/set @set-statement
-%                                         $$implementation__AppendFrom_setStatement
    | ?SYMBOL/create @create-statement
-%                                         $$implementation__AppendFrom_createStatement
    | ?SYMBOL/if @if-statement
-%                                         $$implementation__AppendFrom_ifStatement
    | ?SYMBOL/loop @loop-statement
-%                                         $$implementation__AppendFrom_loopStatement
    | ?SYMBOL/exit-when @exit-when-statement
-%                                         $$implementation__AppendFrom_exitWhenStatement
    | ?'>' @return-statement
-%                                         $$implementation__AppendFrom_returnStatement
    | ?'@' @callInternalStatement
-%                                         $$implementation__AppendFrom_callInternalStatement
    | &non-keyword-symbol @callExternalStatement
-%                                         $$implementation__AppendFrom_callExternalStatement
    | * >
-  ]}
-                                       $$implementation__Output
+   ]
+                                         $statement__Output
+                                         $implementation__AppendFrom_statement
+  }
+                                       $implementation__Output
 
 = let-statement
   SYMBOL/let
-                                       $$letStatement__NewScope
+                                       $letStatement__NewScope
    @varName
-                                         $$letStatement__SetField_varName_varName
+                                         $letStatement__SetField_varName_from_varName
    '='
    @esa-expr
    SYMBOL/in
-                                           $$implementation__NewScope
+                                           $implementation__NewScope
    @script-body
-                                           $$implementation__Output
-                                         $$letStatement__SetField_implementation_from_implementation
+                                           $implementation__Output
+                                         $letStatement__SetField_implementation_from_implementation
    SYMBOL/end SYMBOL/let
-                                       $$letStatement__Output
+                                       $letStatement__Output
+                                       $statement__CoerceFrom_letStatement
 
 = create-statement
   SYMBOL/create
   @varName
-%                                      $$createStatement__SetField_varName_from_varName
    '=' 
-%                                      $$maybeIndirectExpression__NewScope
    [ ?'*' '*'  %  * means use class contained in expression, instead of absolute name
-%                                          $$indirectionKind__NewScope
-%                                            $$indirectionKind__SetEnum_indirect
-%                                          $$indirectionKind__Output
-%                                        $$maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
+%                                          $indirectionKind__NewScope
+%                                            $indirectionKind__SetEnum_indirect
+%                                          $indirectionKind__Output
+%                                        $maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
      @class-ref
    | *
-%                                          $$indirectionKind__NewScope
-%                                            $$indirectionKind__SetEnum_direct
-%                                          $$indirectionKind__Output
-%                                        $$maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
+%                                          $indirectionKind__NewScope
+%                                            $indirectionKind__SetEnum_direct
+%                                          $indirectionKind__Output
+%                                        $maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
      @class-ref
    ]
-%                                       $$maybeIndirectExpression__SetField_expression_from_expression
-%                                      $$maybeIndirectExpression__Output
-%				      $$createStatement_SetField_maybeIndirectExpression_from_maybIndirectExpression
+%                                       $maybeIndirectExpression__SetField_expression_from_expression
+%                                      $maybeIndirectExpression__Output
+%				      $createStatement_SetField_maybeIndirectExpression_from_maybIndirectExpression
    SYMBOL/in 
-%                                           $$implementation__NewScope
+%                                           $implementation__NewScope
    @script-body
-%                                           $$implementation__Output
+%                                           $implementation__Output
    SYMBOL/end SYMBOL/create
 
 = set-statement
   SYMBOL/set
-   @varName
+   @esa-expr
    '=' 
    @esa-expr
   
@@ -351,16 +343,20 @@
   @object__
 
 = varName
-                    $$varName__NewScope
+                    $varName__NewScope
   @esaSymbol
-                      $$varName__CoerceFrom_name
-		    $$varName__Output
+                      $varName__CoerceFrom_name
+		    $varName__Output
 
 = esa-expr
   [ ?SYMBOL/true SYMBOL/true
   | ?SYMBOL/false SYMBOL/false
   | *
-    @object__
+    [ ?'@' '@' 
+      @object__
+    | * 
+      @object__
+    ]
    ]
 
 % DSL allows parameterList only for fields
@@ -372,6 +368,8 @@
 % fn(i) -> (fn i)
 %
 % name.field(optionalparameters) -> object/field/params
+%
+% object__ >> expression
 = object__
   @object__name
   @object__fields

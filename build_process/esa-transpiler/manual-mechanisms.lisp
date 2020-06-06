@@ -83,10 +83,10 @@
 
 
 ;; methods + lookups during code emission
-(defmethod $$esaprogram__class_BeginScope_LookupByName ((p parser))
+(defmethod $esaprogram__class_BeginScope_LookupByName ((p parser))
   (stack-dsl:%push p (lookup-class p (output-name (env p))))
   (stack-dsl:%pop p (output-name (env p))))
 
-(defmethod $$class_EndScope ((p parser))
+(defmethod $class_EndScope ((p parser))
   (stack-dsl:%pop p (input-esaclass (env p))))
 
