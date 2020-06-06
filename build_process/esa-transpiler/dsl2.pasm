@@ -7,14 +7,15 @@
   [ ?SPACE | ?COMMENT | * . ]
 
 = esa-dsl
+                             $$pass2__NewScope
   ~rmSpaces
   @type-decls
-			      
   @situations
   @classes
-
+                                $$pass2__SetField_classTable_from_classTabl
   @parse-whens-and-scripts
   EOF
+                              $$pass2__Output
 
 - keyword-symbol
   [ ?SYMBOL
@@ -69,6 +70,7 @@
   SYMBOL/situation 
   @esaSymbol
 
+% in pass2, parsing of class definitions simply puts empty entries into a class table
 = classes
                                 $$classTable__NewScope
   {[ ?SYMBOL/class @class-def
@@ -76,7 +78,6 @@
    | * >
   ]}
                                 $$classTable__Output
-                                $$classTable__Save
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
@@ -219,32 +220,48 @@
   ]  
   
 = script-body
-                                        $$implementation__NewScope
+                                       $$implementation__NewScope
   {
    [ ?SYMBOL/let @let-statement
+                                         $$implementation__AppendFrom_letStatement
    | ?SYMBOL/map @map-statement
+                                         $$implementation__AppendFrom_mapStatement
    | ?SYMBOL/exit-map @exit-map-statement
+                                         $$implementation__AppendFrom_exitMapStatement
    | ?SYMBOL/set @set-statement
+                                         $$implementation__AppendFrom_setStatement
    | ?SYMBOL/create @create-statement
+                                         $$implementation__AppendFrom_createStatement
    | ?SYMBOL/if @if-statement
+                                         $$implementation__AppendFrom_ifStatement
    | ?SYMBOL/loop @loop-statement
+                                         $$implementation__AppendFrom_loopStatement
    | ?SYMBOL/exit-when @exit-when-statement
+                                         $$implementation__AppendFrom_exitWhenStatement
    | ?'>' @return-statement
-   | ?'@' @esa-expr
-   | &non-keyword-symbol @esa-expr
+                                         $$implementation__AppendFrom_returnStatement
+   | ?'@' @callInternalStatement
+                                         $$implementation__AppendFrom_callInternalStatement
+   | &non-keyword-symbol @callExternalStatement
+                                         $$implementation__AppendFrom_callExternalStatement
    | * >
   ]}
                                        $$implementation__Output
 
 = let-statement
   SYMBOL/let
+                                       $$letStatemenet__NewScope
+                                           $$varName__NewScope
    @esaSymbol
+                                           $$varName__CoerceFrom_name
+                                         $$letStatement__SetField_varName_varName
    '='
    [ ?SYMBOL/map SYMBOL/map | * ]
    @esa-expr
    SYMBOL/in 
    @script-body
    SYMBOL/end SYMBOL/let
+                                       $$letStatemenet__Output
 
 = create-statement
   SYMBOL/create
@@ -309,8 +326,17 @@
   | * @esaSymbol
   ]
 
+= callInternalStatement
+  '@'
+  @esa-object-expr
+
+= callExternalStatement
+  @esa-object-expr
+
+= esa-object-expr
+  @object__
+
 = esa-expr
-  [ ?'@' '@' | * ]  % ignore @ (script call symbol)
   [ ?SYMBOL/true SYMBOL/true
   | ?SYMBOL/false SYMBOL/false
   | *
@@ -385,23 +411,19 @@
   @esaSymbol
 
 = esaSymbol
-    SYMBOL
-  {[ ?'/' '/'
-     SYMBOL
-   | ?'-' '-'
-     SYMBOL
-   | ?'?' '?'
+                                 $name__NewScope
+  SYMBOL
+                                   $name__GetName
+  {[ ?'/' '/'                      $name__combine
+     SYMBOL                        $name__combine
+   | ?'-' '-'                      $name__combine
+     SYMBOL                        $name__combine
+   | ?'?' '?'                      $name__combine
       >
    | ?CHARACTER/' CHARACTER/'
+                                   $name__combine
      >
    | * >
   ]}
+                                 $name__Output
 
-
-= tester
-  ~rmSpaces
-%   @object__
-   @esa-expr  
-%    @esa-dsl
-%  @esa-expr
-  

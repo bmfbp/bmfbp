@@ -8,7 +8,7 @@ scriptImplementations = :map scriptImplementation
 
 typeDecl = { name typeName }
 situationDefinition =| name
-esaclass = { name fieldMap externalMethodList scriptMethodList }
+esaclass = { name fieldMap  }
 
 % a "declaration" declares the existence of something, but gives no definition
 %  for the thing
@@ -41,49 +41,14 @@ scriptDeclaration = { name formalList returnType }
 
 returnType = { returnKind name }
 returnKind = 'map' | 'simple' | 'void'
-
+formalList = :map name
 
 % semantic ckecker should check that all declared scripts are defined later on...
 % and that all script declarations match preceding script definitions
 
-% define the "code" for an internal script
-scriptImplementation = { name esaKind formalList scriptStatements }
-
-formalList = :map name
-scriptStatements = :map scriptStatement
-
-scriptStatement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callScriptStatement | callExternalStatement
-
-letStatement = { letVarName expression scriptStatements } 
-mapStatement = { mapVarName expression scriptStatements }
-createStatement = { createVarName expression scriptStatements }
-setStatement = { setVarName expression scriptStatements }
-exitMapStatement = { expression }
-ifStatement = { expression thenStatements elseStatements }
-loopStatement = { scriptStatements }
-exitWhenStatement = { expression }
-returnStatement = { expression }
-callScriptStatement = { internalScriptName }
-callExternalStatement = { externalMethodName }
-
-thenStatements =| scriptStatements
-elseStatements =| scriptStatements
 
 esaKind =| name
-letVarName =| name
-mapVarName =| name
-createVarName =| name
-setVarName =| name
-internalScriptName =| name
-externalMethodName =| name
 typeName =| name
-
-externalMethodList = :map externalMethod
-scriptMethodList = :map scriptMethod
-
-externalMethod = { methodDeclaration }
-scriptMethod = { scriptDeclaration scriptImplementation }
-
 
 expression = { ekind object }
 ekind = 'true' | 'false' | 'object'
