@@ -42,7 +42,7 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
    "-PASS2")
   (ql:quickload :arrowgrams/esa-transpiler))
 
-(defun run ()
+(defun lrun ()
   (load (arrowgrams/esa-transpiler::path "package.lisp"))
   (load (arrowgrams/esa-transpiler::path "classes.lisp"))
   (load (arrowgrams/esa-transpiler::path "dsl0.lisp"))
@@ -57,6 +57,12 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
   (load (arrowgrams/esa-transpiler::path "esa-transpile.lisp"))
   (load (arrowgrams/esa-transpiler::path "trace-rules.lisp"))
   (load (arrowgrams/esa-transpiler::path "trace-mechs.lisp"))
+  (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path "exprtypes.json"))
+  (arrowgrams/esa-transpiler::transpile-esa-to-string 
+   (arrowgrams/esa-transpiler:path "esa-test.dsl")
+   :tracing-accept t))
+
+(defun run ()
   (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path "exprtypes.json"))
   (arrowgrams/esa-transpiler::transpile-esa-to-string 
    (arrowgrams/esa-transpiler:path "esa-test.dsl")

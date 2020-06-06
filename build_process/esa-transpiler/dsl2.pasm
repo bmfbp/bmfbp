@@ -258,15 +258,14 @@
    SYMBOL/in
                                            $implementation__NewScope
    @script-body
- $bp
                                            $implementation__Output
                                          $letStatement__SetField_implementation_from_implementation
    SYMBOL/end SYMBOL/let
                                        $letStatement__Output
                                        $statement__CoerceFrom_letStatement
-
 = create-statement
   SYMBOL/create
+                                       $createStatement__NewScope
   @varName
    '=' 
    [ ?'*' '*'  %  * means use class contained in expression (indirect), instead of direct name
@@ -290,6 +289,7 @@
    @script-body
 %                                           $implementation__Output
    SYMBOL/end SYMBOL/create
+
 
 = set-statement
   SYMBOL/set
@@ -344,9 +344,27 @@
 = callInternalStatement
   '@'
   @esa-object-expr
+                           $statement__NewScope
+	                     $callInternalStatement__NewScope
+                                 $functionReference__NewScope
+                                   $functionReference__CoerceFrom_expression
+                                 $functionReference__Output
+                               $callInternalStatement__SetField_functionReference_from_functionReference
+	                     $callInternalStatement__Output
+  	                     $statement__CoerceFrom_callInternalStatement
+	                   $statement__Output
 
 = callExternalStatement
   @esa-object-expr
+                           $statement__NewScope
+	                     $callExternalStatement__NewScope
+                                 $functionReference__NewScope
+                                   $functionReference__CoerceFrom_expression
+                                 $functionReference__Output
+                               $callExternalStatement__SetField_functionReference_from_functionReference
+	                     $callExternalStatement__Output
+   	                     $statement__CoerceFrom_callExternalStatement
+	                   $statement__Output
 
 = esa-object-expr
   @object__
