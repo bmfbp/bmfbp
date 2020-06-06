@@ -217,7 +217,6 @@
   SYMBOL/let
    @esaSymbol
    '='
-   [ ?SYMBOL/map SYMBOL/map | * ]
    @esa-expr
    SYMBOL/in 
    @script-body
@@ -227,7 +226,6 @@
   SYMBOL/create
    @esaSymbol
    '=' 
-   [ ?SYMBOL/map SYMBOL/map | * ]
    [ ?'*' '*'
      @class-ref
    | *

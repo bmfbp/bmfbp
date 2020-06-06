@@ -250,18 +250,20 @@
 
 = let-statement
   SYMBOL/let
-                                       $$letStatemenet__NewScope
+                                       $$letStatement__NewScope
                                            $$varName__NewScope
    @esaSymbol
                                            $$varName__CoerceFrom_name
                                          $$letStatement__SetField_varName_varName
    '='
-   [ ?SYMBOL/map SYMBOL/map | * ]
    @esa-expr
-   SYMBOL/in 
+   SYMBOL/in
+                                           $$implementation__NewScope
    @script-body
+                                           $$implementation__Output
+                                         $$letStatement__SetField_implementation_from_implementation
    SYMBOL/end SYMBOL/let
-                                       $$letStatemenet__Output
+                                       $$letStatement__Output
 
 = create-statement
   SYMBOL/create

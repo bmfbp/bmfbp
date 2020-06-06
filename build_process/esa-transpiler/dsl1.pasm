@@ -318,7 +318,6 @@
    @esaSymbol
 %$      (emit p "(let ((~a " (atext p))
    '='
-   [ ?SYMBOL/map SYMBOL/map | * ]
    @esa-expr
 %$      (emit p "))")
    SYMBOL/in 
@@ -331,7 +330,6 @@
    @esaSymbol
 %$      (emit p "(let ((~a " (atext p))
    '=' 
-   [ ?SYMBOL/map SYMBOL/map | * ]
    [ ?'*' '*'
      @class-ref
 %$      (emit p "(make-instance ~a)))" (atext p))
