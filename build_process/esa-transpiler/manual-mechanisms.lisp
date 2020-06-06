@@ -90,3 +90,8 @@
 (defmethod $class_EndScope ((p parser))
   (stack-dsl:%pop p (input-esaclass (env p))))
 
+(defmethod $expression__OverwriteField_from_ekind ((p parser))
+  ;; reset field kind of TOs(output-expression)
+  (setf (cl-user::ekind (stack-dsl:%top (cl-user::output-expression (env p))))
+	(stack-dsl:%top (cl-user::output-ekind (env p))))
+  (stack-dsl:%pop (cl-user::output-ekind (env p))))

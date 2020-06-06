@@ -350,12 +350,28 @@
 
 = esa-expr
   [ ?SYMBOL/true SYMBOL/true
+                     $ekind__NewScope
+		       $ekind__SetEnum_true
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
   | ?SYMBOL/false SYMBOL/false
+                     $ekind__NewScope
+		       $ekind__SetEnum_false
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
   | *
     [ ?'@' '@' 
       @object__
-    | * 
+                     $ekind__NewScope
+		       $ekind__SetEnum_calledObject
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
+  | * 
       @object__
+                     $ekind__NewScope
+		       $ekind__SetEnum_object
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
     ]
    ]
 

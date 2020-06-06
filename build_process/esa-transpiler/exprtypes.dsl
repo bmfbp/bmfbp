@@ -51,7 +51,7 @@ esaKind =| name
 typeName =| name
 
 expression = { ekind object }
-ekind = 'true' | 'false' | 'object'
+ekind = 'true' | 'false' | 'object' | 'calledObject'
 object = { name fieldMap }
 fieldMap = :map field
 field = { name fkind actualParameterList }
