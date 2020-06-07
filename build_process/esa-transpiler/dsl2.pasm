@@ -6,6 +6,7 @@
 = rmSpaces
   [ ?SPACE | ?COMMENT | * . ]
 
+% pass2 {classTable}
 = esa-dsl
                              $pass2__NewScope
   ~rmSpaces
@@ -85,6 +86,7 @@
    |?SYMBOL/script @script-implementation
        %% >> esamethod
        %% all pass2 work done in script-implementation
+       %% {esamethod}
    | * >
   ]}
 
@@ -184,26 +186,26 @@
 
 % implementation code ...
 
+% {esaMethod {}->name {}->implementation}
+% {esaMethod {}->name {}->formalList {}->returnType {}->implementation}
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
-                                   $namedClass__LookupBeginScope
-                                     $esamethod__NewScope
+%                                   $namedClass__Lookup_BeginScope
+%                                     $methodList__FromClass_BeginScope
+%                                       $esamethod__LookupMethodInMethodList_BeginScope
   @esaSymbol  % script method
-                                       $esamethod__CheckThatMethodExistsInNamedClass
-				       $esamethod__SetField_name_from_name
+%                                         $esamethod__CheckThatMethodExistsInNamedClass
   @optional-formals-definition
-                                       $esamethod__CheckFormals
+%                                         $esamethod__CheckFormals
   @optional-return-type-definition
-                                       $esamethod__CheckReturnType
+%                                         $esamethod__CheckReturnType
   @script-body
-                                       $esamethod__SetField_implementation_from_implementation
+%                                         $esamethod__SetField_implementation_from_implementation
   SYMBOL/end SYMBOL/script
-                                     $esamethod__Output
-                                     $methodsList__BeginScopeFrom_namedClass
-                                       $methodsList__AppendFrom_esamethod
-                                     $methodsList__EndScope
-                                   $namedClass__EndScope
+%                                      $esaMethod__EndScope
+%                                     $methodList__EndScope
+%                                   $namedClass__EndScope
 
 = optional-formals-definition
   {[ ?'(' '(' @untyped-formals-definition ')'
@@ -226,9 +228,9 @@
   ]  
   
 = script-body
-                                       $implementation__NewScope
+%                                       $implementation__NewScope
   {
-                                         $statement__NewScope
+%                                         $statement__NewScope
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
    | ?SYMBOL/exit-map @exit-map-statement
@@ -242,30 +244,30 @@
    | &non-keyword-symbol @callExternalStatement
    | * >
    ]
-                                         $statement__Output
-                                         $implementation__AppendFrom_statement
+%                                        $statement__Output
+%                                        $implementation__AppendFrom_statement
   }
-                                       $implementation__Output
+%                                       $implementation__Output
 
 = let-statement
   SYMBOL/let
-                                       $letStatement__NewScope
+%                                       $letStatement__NewScope
    @varName
-                                         $letStatement__SetField_varName_from_varName
+%                                         $letStatement__SetField_varName_from_varName
    '='
    @esa-expr
-                                         $letStatement__SetField_expression_from_expression
+%                                         $letStatement__SetField_expression_from_expression
    SYMBOL/in
-                                           $implementation__NewScope
+%                                           $implementation__NewScope
    @script-body
-                                           $implementation__Output
-                                         $letStatement__SetField_implementation_from_implementation
+%                                           $implementation__Output
+%                                         $letStatement__SetField_implementation_from_implementation
    SYMBOL/end SYMBOL/let
-                                       $letStatement__Output
-                                       $statement__CoerceFrom_letStatement
+%                                       $letStatement__Output
+%                                       $statement__CoerceFrom_letStatement
 = create-statement
   SYMBOL/create
-                                       $createStatement__NewScope
+%                                       $createStatement__NewScope
   @varName
    '=' 
    [ ?'*' '*'  %  * means use class contained in expression (indirect), instead of direct name
@@ -344,27 +346,27 @@
 = callInternalStatement
   '@'
   @esa-object-expr
-                           $statement__NewScope
-	                     $callInternalStatement__NewScope
-                                 $functionReference__NewScope
-                                   $functionReference__CoerceFrom_expression
-                                 $functionReference__Output
-                               $callInternalStatement__SetField_functionReference_from_functionReference
-	                     $callInternalStatement__Output
-  	                     $statement__CoerceFrom_callInternalStatement
-	                   $statement__Output
+%                           $statement__NewScope
+%	                     $callInternalStatement__NewScope
+%                                 $functionReference__NewScope
+%                                   $functionReference__CoerceFrom_expression
+%                                 $functionReference__Output
+%                               $callInternalStatement__SetField_functionReference_from_functionReference
+%	                     $callInternalStatement__Output
+%  	                     $statement__CoerceFrom_callInternalStatement
+%	                   $statement__Output
 
 = callExternalStatement
-  @esa-object-expr
-                           $statement__NewScope
-	                     $callExternalStatement__NewScope
-                                 $functionReference__NewScope
-                                   $functionReference__CoerceFrom_expression
-                                 $functionReference__Output
-                               $callExternalStatement__SetField_functionReference_from_functionReference
-	                     $callExternalStatement__Output
-   	                     $statement__CoerceFrom_callExternalStatement
-	                   $statement__Output
+%  @esa-object-expr
+%                           $statement__NewScope
+%	                     $callExternalStatement__NewScope
+%                                 $functionReference__NewScope
+%                                   $functionReference__CoerceFrom_expression
+%                                 $functionReference__Output
+%                               $callExternalStatement__SetField_functionReference_from_functionReference
+%	                     $callExternalStatement__Output
+%   	                     $statement__CoerceFrom_callExternalStatement
+%	                   $statement__Output
 
 = esa-object-expr
   @object__

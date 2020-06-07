@@ -100,14 +100,7 @@ when building part-definition
 end when
 
 script kind ensure-valid-source(s)
-  if s.refers-to-self? then
-    self.ensure-valid-input-pin(s.pin-name)
-  else
-    let p = self.kind-find-part(s.part-name) in
-      p.ensure-kind-defined
-      p.part-kind.ensure-valid-output-pin(s.pin-name)
-    end let
-  end if
+  xx
 end script
 
 when building source

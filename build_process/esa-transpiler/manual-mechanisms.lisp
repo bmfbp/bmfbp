@@ -96,3 +96,10 @@
 	(stack-dsl:%top (cl-user::output-ekind (env p))))
   (stack-dsl:%pop (cl-user::output-ekind (env p))))
 
+(defmethod $methodDeclaraction__SetField_implementation_empty ((p parser))
+  (setf (cl-user::implementation (stack-dsl:%top (cl-user::methodDeclaration (env p))))
+        nil))
+
+(defmethod $scriptdDeclaraction__SetField_implementation_empty ((p parser))
+  (setf (cl-user::implementation (stack-dsl:%top (cl-user::scriptDeclaration (env p))))
+        nil))

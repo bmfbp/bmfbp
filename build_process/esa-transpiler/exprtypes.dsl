@@ -67,7 +67,7 @@ pass2 = { classTable }
 classTable = :map namedClass
 namedClass = { name methodsList }
 methodsList = :map esamethod
-esamethod = { name implementation }
+esamethod = { name formalList returnType implementation }
 implementation = :map statement
 statement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callInternalStatement | callExternalStatement
 
