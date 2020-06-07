@@ -16,20 +16,3 @@
       (return-from lookup-class c)))
   (error (format nil "class ~a not found in esaprogram" class-name)))
 
-;; pass2 class
-(defmethod lookup-class ((self pass2) class-name)
-  (dolist (c (stack-dsl:%ordered-list (classTable self)))
-   ;; c.name.name-as-string
-   (when (string= (name-as-string c) class-name)
-      (return-from lookup-class c)))
-  (error (format nil "class ~a not found in esaprogram" class-name)))
-
-;; pass2 namedClass class
-(defmethod name-as-string ((self namedClass))
-  (let ((n (name self)))
-    (as-string n)))
-
-(defmethod get-methods-list ((self namedClass))
-  (if (slot-boundp self 'methodsList)
-      (methodsList self)
-      (make-instance 'methodsList)))
