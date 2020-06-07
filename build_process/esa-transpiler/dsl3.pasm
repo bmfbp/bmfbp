@@ -1,6 +1,6 @@
 %
-% in pass2, we deal with creating a data structure every method for every class
-%  script methods are "internal" while non-script methods are "external"
+% in pass2, we deal with creating a data structure for scripts
+% if we get here, the we can assume that all class and method (and script) definitions are OK and we don't need to check them
 %
 
 = rmSpaces
@@ -8,12 +8,15 @@
 
 % pass2 {classTable}
 = esa-dsl
+                             $pass2__NewScope
   ~rmSpaces
   @type-decls
   @situations
   @classes
+                                $pass2__SetField_classTable_from_classTable
   @parse-whens-and-scripts
   EOF
+                              $pass2__Output
 
 - keyword-symbol
   [ ?SYMBOL
@@ -70,29 +73,34 @@
 
 % in pass2, parsing of class definitions simply puts empty entries into a class table
 = classes
+                                $classTable__NewScope
   {[ ?SYMBOL/class @class-def
+                                   $classTable__AppendFrom_namedClass
    | * >
   ]}
+                                $classTable__Output
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
-       %% create method descriptor for each method and associate it with the given class
-   |?SYMBOL/script @script-implementation
        %% ignore in pass2
-       %% although, we could check that script implementations match the definitions ...
+   |?SYMBOL/script @script-implementation
+       %% >> esamethod
+       %% all pass2 work done in script-implementation
+       %% {esamethod}
    | * >
   ]}
 
 = class-def
   SYMBOL/class
+                                $namedClass__NewScope
   @esaSymbol
-                                $esaclass__LookupByName_BeginScope
-  @field-decl                     % we skip fields in pass2 (already done in pass1)
+                                  $namedClass__SetField_name_from_name
+  @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
-                                $esaclass__EndScope
+                                $namedClass__Output
 			       
 
 - field-decl-begin
@@ -119,7 +127,7 @@
   }
 
   @class-ref
-                                $esaclass__LookupByName_BeginScope
+
   {
   [ ?SYMBOL/script @script-declaration
    | ?SYMBOL/method @method-declaration
@@ -127,7 +135,6 @@
   ]
   }
   SYMBOL/end SYMBOL/when
-                                $esaclass__EndScope
 
 = situation-ref
   @esaSymbol % should be checked to be a situation
@@ -138,68 +145,40 @@
 = class-ref
   @esaSymbol  % should be checked to be a kind
 
-
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
-  SYMBOL/method
-                                $externalMethod__NewScope
-  @esaSymbol
-                                  $externalMethod__SetField_name_from_name
+  SYMBOL/method @esaSymbol
   @formals
-                                  $externalMethod__SetField_formalList_from_formalList
   @return-type-declaration
-                                  $externalMethod__SetField_returnType_from_returnType
-                                $externalMethod__Output
-				
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
-  SYMBOL/script
-                                $internalMethod__NewScope
-  @esaSymbol
-                                  $internalMethod__SetField_name_from_name
+  SYMBOL/script @esaSymbol
   @formals
-                                  $internalMethod__SetField_formalList_from_formalList
   @return-type-declaration
-                                  $internalMethod__SetField_returnType_from_returnType
-                                $internalMethod__Output
-				
 
 = formals
-                                $formalList__NewScope
   [ ?'(' 
      '(' 
      @type-list 
      ')'
   | *
   ]
-                                $formalList__Output
 
 = type-list
   @esaSymbol
-                                $formalList__AppendFrom_name
   {[ &non-keyword-symbol
      @esaSymbol
-                                $formalList__AppendFrom_name
    | * >
   ]}
 
 = return-type-declaration
-                               $returnType__NewScope
-                                 $returnKind__NewScope
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map
-                                   $returnKind_SetEnum_map
            @esaSymbol
-	                           $returnKind__SetField_name_from_name
          | *
-                                   $returnKind_SetEnum_simple
            @esaSymbol
-	                           $returnKind__SetField_name_from_name
   ]
   | *
-                                   $returnKind_SetEnum_void
   ]
-                                 $returnType__SetField_returnKind_from_returnKind
-                               $returnType__NewScope
 
 
 
@@ -207,14 +186,26 @@
 
 % implementation code ...
 
+% {esaMethod {}->name {}->implementation}
+% {esaMethod {}->name {}->formalList {}->returnType {}->implementation}
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
+%                                   $namedClass__Lookup_BeginScope
+%                                     $methodList__FromClass_BeginScope
+%                                       $esamethod__LookupMethodInMethodList_BeginScope
   @esaSymbol  % script method
+%                                         $esamethod__CheckThatMethodExistsInNamedClass
   @optional-formals-definition
+%                                         $esamethod__CheckFormals
   @optional-return-type-definition
+%                                         $esamethod__CheckReturnType
   @script-body
+%                                         $esamethod__SetField_implementation_from_implementation
   SYMBOL/end SYMBOL/script
+%                                      $esaMethod__EndScope
+%                                     $methodList__EndScope
+%                                   $namedClass__EndScope
 
 = optional-formals-definition
   {[ ?'(' '(' @untyped-formals-definition ')'
@@ -237,7 +228,9 @@
   ]  
   
 = script-body
+%                                       $implementation__NewScope
   {
+%                                         $statement__NewScope
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
    | ?SYMBOL/exit-map @exit-map-statement
@@ -251,27 +244,52 @@
    | &non-keyword-symbol @callExternalStatement
    | * >
    ]
+%                                        $statement__Output
+%                                        $implementation__AppendFrom_statement
   }
+%                                       $implementation__Output
 
 = let-statement
   SYMBOL/let
+%                                       $letStatement__NewScope
    @varName
+%                                         $letStatement__SetField_varName_from_varName
    '='
    @esa-expr
+%                                         $letStatement__SetField_expression_from_expression
    SYMBOL/in
+%                                           $implementation__NewScope
    @script-body
+%                                           $implementation__Output
+%                                         $letStatement__SetField_implementation_from_implementation
    SYMBOL/end SYMBOL/let
+%                                       $letStatement__Output
+%                                       $statement__CoerceFrom_letStatement
 = create-statement
   SYMBOL/create
+%                                       $createStatement__NewScope
   @varName
    '=' 
    [ ?'*' '*'  %  * means use class contained in expression (indirect), instead of direct name
+%                                          $indirectionKind__NewScope
+%                                            $indirectionKind__SetEnum_indirect
+%                                          $indirectionKind__Output
+%                                        $maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
      @class-ref
    | *
+%                                          $indirectionKind__NewScope
+%                                            $indirectionKind__SetEnum_direct
+%                                          $indirectionKind__Output
+%                                        $maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
      @class-ref
    ]
+%                                       $maybeIndirectExpression__SetField_expression_from_expression
+%                                      $maybeIndirectExpression__Output
+%				      $createStatement_SetField_maybeIndirectExpression_from_maybIndirectExpression
    SYMBOL/in 
+%                                           $implementation__NewScope
    @script-body
+%                                           $implementation__Output
    SYMBOL/end SYMBOL/create
 
 
@@ -328,24 +346,61 @@
 = callInternalStatement
   '@'
   @esa-object-expr
+%                           $statement__NewScope
+%	                     $callInternalStatement__NewScope
+%                                 $functionReference__NewScope
+%                                   $functionReference__CoerceFrom_expression
+%                                 $functionReference__Output
+%                               $callInternalStatement__SetField_functionReference_from_functionReference
+%	                     $callInternalStatement__Output
+%  	                     $statement__CoerceFrom_callInternalStatement
+%	                   $statement__Output
 
 = callExternalStatement
-  @esa-object-expr
+%  @esa-object-expr
+%                           $statement__NewScope
+%	                     $callExternalStatement__NewScope
+%                                 $functionReference__NewScope
+%                                   $functionReference__CoerceFrom_expression
+%                                 $functionReference__Output
+%                               $callExternalStatement__SetField_functionReference_from_functionReference
+%	                     $callExternalStatement__Output
+%   	                     $statement__CoerceFrom_callExternalStatement
+%	                   $statement__Output
 
 = esa-object-expr
   @object__
 
 = varName
+                    $varName__NewScope
   @esaSymbol
+                      $varName__CoerceFrom_name
+		    $varName__Output
 
 = esa-expr
   [ ?SYMBOL/true SYMBOL/true
+                     $ekind__NewScope
+		       $ekind__SetEnum_true
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
   | ?SYMBOL/false SYMBOL/false
+                     $ekind__NewScope
+		       $ekind__SetEnum_false
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
   | *
     [ ?'@' '@' 
       @object__
+                     $ekind__NewScope
+		       $ekind__SetEnum_calledObject
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
   | * 
       @object__
+                     $ekind__NewScope
+		       $ekind__SetEnum_object
+                     $ekind__Output
+                     $expression__OverwriteField_from_ekind
     ]
    ]
 
@@ -419,15 +474,19 @@
   @esaSymbol
 
 = esaSymbol
+                                 $name__NewScope
   SYMBOL
-  {[ ?'/' '/'
-     SYMBOL
-   | ?'-' '-'
-     SYMBOL
-   | ?'?' '?'
+                                   $name__GetName
+  {[ ?'/' '/'                      $name__combine
+     SYMBOL                        $name__combine
+   | ?'-' '-'                      $name__combine
+     SYMBOL                        $name__combine
+   | ?'?' '?'                      $name__combine
       >
    | ?CHARACTER/' CHARACTER/'
+                                   $name__combine
      >
    | * >
   ]}
+                                 $name__Output
 

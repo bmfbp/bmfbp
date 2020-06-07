@@ -8,7 +8,7 @@ scriptImplementations = :map scriptImplementation
 
 typeDecl = { name typeName }
 situationDefinition =| name
-esaclass = { name fieldMap  }
+esaclass = { name fieldMap methodsTable scriptsTable }
 
 % a "declaration" declares the existence of something, but gives no definition
 %  for the thing
@@ -37,7 +37,7 @@ declarationMethodOrScript =| methodDeclaration | scriptDeclaration
 methodDeclaration = { name formalList returnType }
 
 % declare (forward reference) internal scripts
-scriptDeclaration = { name formalList returnType }
+scriptDeclaration = { name formalList returnType implementation }
 
 returnType = { returnKind name }
 returnKind = 'map' | 'simple' | 'void'
@@ -54,21 +54,22 @@ expression = { ekind object }
 ekind = 'true' | 'false' | 'object' | 'calledObject'
 object = { name fieldMap }
 fieldMap = :map field
-field = { name fkind actualParameterList }
+field = { name fkind } 
 fkind = 'map' | 'simple'
 actualParameterList = :map expression
 name = :string
 
+methodsTable = :map externalMethod
+scriptsTable = :map internalMethod
 
 %
 % pass2 data structures
 %
-pass2 = { classTable }
-classTable = :map namedClass
-namedClass = { name methodsList }
-methodsList = :map esamethod
-esamethod = { name formalList returnType implementation }
+externalMethod = { name formalList returnType }
+internalMethod = { name formalList returnType implementation }
 implementation = :map statement
+
+% pass3 data structures
 statement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callInternalStatement | callExternalStatement
 
 letStatement = { varName expression implementation }
