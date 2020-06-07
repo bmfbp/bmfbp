@@ -269,12 +269,9 @@
   SYMBOL/script
   @esaSymbol  % class
   @esaSymbol  % script method
-%$      (emit p "~%(defmethod ~a #|script|# ((self ~a)" (current-method p) (current-class p))
   @optional-formals-definition
-%$      (emit p ")")  
   @optional-return-type-definition
   @script-body
-%$      (emit p ")#|end script|#~%")
   SYMBOL/end SYMBOL/script
 
 = optional-formals-definition
@@ -285,7 +282,6 @@
 = untyped-formals-definition
   {[ &non-keyword-symbol @esaSymbol
      % index and type
-%$    (emit p " ~a " (atext p))
    | * >
   ]}
   
@@ -300,7 +296,6 @@
   
 = script-body
   {
-%$     (emit p "~%")
    [ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
    | ?SYMBOL/exit-map @exit-map-statement
@@ -325,19 +320,15 @@
 = let-statement
   SYMBOL/let
    @esaSymbol
-%$      (emit p "(let ((~a " (atext p))
    '='
    @esa-expr
-%$      (emit p "))")
    SYMBOL/in 
    @script-body
-%$      (emit p ")#|end let|#")   
    SYMBOL/end SYMBOL/let
 
 = create-statement
   SYMBOL/create
    @esaSymbol
-%$      (emit p "(let ((~a " (atext p))
    '=' 
    [ ?'*' '*'
      @class-ref
@@ -348,77 +339,55 @@
    ]
    SYMBOL/in 
    @script-body
-%$      (emit p ")#|end create|#")   
    SYMBOL/end SYMBOL/create
 
 = set-statement
   SYMBOL/set
-%$      (emit p "(setf ")
    @esa-expr
    '=' 
    @esa-expr
-%$      (emit p ")")
   
 = map-statement
   SYMBOL/map @esaSymbol
-%$      (emit p "(block map (dolist (~a " (atext p))
   '='
   @esa-expr
-%$      (emit p ")")
   SYMBOL/in @script-body
-%$      (emit p "))#|end map|#")   
   SYMBOL/end SYMBOL/map
 
 = exit-map-statement
   SYMBOL/exit-map
-%$     (emit p "(return-from map nil)")
 
 = loop-statement
   SYMBOL/loop
-%$     (emit p "(loop")
     @script-body
-%$     (emit p ")#|end loop|#")
   SYMBOL/end SYMBOL/loop
   
 = exit-when-statement
   SYMBOL/exit-when
-%$     (emit p "(when (esa-expr-true ")
     @esa-expr
-%$     (emit p ") (return))")
 
 = if-statement
   SYMBOL/if
-%$    (emit p "(cond ((esa-expr-true ")
     @esa-expr
-%$    (emit p ")")
   SYMBOL/then
-%$    (emit p ")")
     @script-body
   [ ?SYMBOL/else SYMBOL/else
-%$    (emit p "~%(t  ;else")
      @script-body
-%$    (emit p ")#|end else|#~%")
   | *
   ]
-%$    (emit p ")#|end if|#")
   SYMBOL/end SYMBOL/if
 
 = script-call
   '@' @esa-expr
-%$    (emit p "(call-script p ~a)" (atext p))
 
 = method-call
   @esa-expr
-%$    (emit p "(call-external p ~a)" (atext p))
 
 = return-statement
   '>' '>'
   [ ?SYMBOL/true SYMBOL/true
-%$                (emit p "(return-from ~a :true)" (current-method p))
   | ?SYMBOL/false SYMBOL/false
-%$                (emit p "(return-from ~a :false)" (current-method p))
   | * @esaSymbol
-%$                (emit p "(return-from ~a ~a)" (current-method p) (atext p))
   ]
 
 = esa-expr
