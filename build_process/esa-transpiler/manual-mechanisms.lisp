@@ -84,11 +84,11 @@
 
 ;; methods + lookups during code emission
 (defmethod $esaprogram__class_BeginScope_LookupByName ((p parser))
-  (stack-dsl:%push p (lookup-class p (output-name (env p))))
-  (stack-dsl:%pop p (output-name (env p))))
+  (stack-dsl:%push p (cl-user::lookup-class p (cl-user::output-name (env p))))
+  (stack-dsl:%pop p (cl-user::output-name (env p))))
 
 (defmethod $class_EndScope ((p parser))
-  (stack-dsl:%pop p (input-esaclass (env p))))
+  (stack-dsl:%pop p (cl-user::input-esaclass (env p))))
 
 (defmethod $expression__OverwriteField_from_ekind ((p parser))
   ;; reset field kind of TOs(output-expression)
@@ -107,27 +107,29 @@
 ;; pass2
 
 (defmethod $esaprogram__BeginScope ((p parser))
-  (stack-dsl:%push p (cl-user::input-esaprogram (env p)) (esaprogram (env p))))
+  ;; transpile-to-string sets (esaprogram p) to the result of pass1
+  (stack-dsl:%push (cl-user::input-esaprogram (env p)) (esaprogram p)))
 
 (defmethod $esaprogram__EndScope ((p parser))
-  (stack-dsl:%pop  p (cl-user::input-esaprogram (env p))))
+  (stack-dsl:%pop (cl-user::input-esaprogram (env p))))
 
 (defmethod $esaclass__LookupByName_BeginScope ((p parser))
-  (let ((name (as-string (stack-dsl:%top (output-name (env p))))))
-    (let ((c (lookup-class (stack-dsl:%top (input-esaprogram (env p))) name)))
-      (stack-dsl:%push p (input-esaclass (env p)) c))
-    (stack-dsl:%pop (output-name (env p)))))
+  (let ((name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
+(format *standard-output* "~&searching for class ~a~%" name)
+    (let ((c (cl-user::lookup-class (stack-dsl:%top (cl-user::input-esaprogram (env p))) name)))
+      (stack-dsl:%push (cl-user::input-esaclass (env p)) c))
+    (stack-dsl:%pop (cl-user::output-name (env p)))))
 
 (defmethod $esaclass__EndScope ((p parser))
-  (stack-dsl:%pop (input-esaclass (env p))))
+  (stack-dsl:%pop (cl-user::input-esaclass (env p))))
 
 (defmethod $esaclass__SetField_methodsTable_empty ((p parser))
   (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
-    (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl:%map :%element-type 'cl-user::methodsTable))))
+    (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl::%map :%element-type 'cl-user::methodsTable))))
 
 (defmethod $esaclass__SetField_scriptsTable_empty ((p parser))
   (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
-    (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl:%map :%element-type 'cl-user::scriptsTable))))
+    (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl::%map :%element-type 'cl-user::scriptsTable))))
 
 (defmethod $scriptsTable__BeginScopeFrom_esaclass ((p parser))
   (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
@@ -146,10 +148,10 @@
 
 (defmethod $methodsTable__BeginScopeFrom_esaclass ((p parser))
   (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
-    (stack-dsl:%push p (cl-user::methodsTable (env p)))))
+    (stack-dsl:%push (cl-user::methodsTable (env p)))))
 
 (defmethod $methodsTable__EndScope ((p parser))
-  (stack-dsl:%pop p (cl-user::methodsTable (env p))))
+  (stack-dsl:%pop (cl-user::methodsTable (env p))))
 
 (defmethod $methodsTable__AppendFrom_externalMethod ((p parser))
   (let ((top-methodsTable (stack-dsl:%top (cl-user::input-methodsTable (env p)))))
