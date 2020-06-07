@@ -15,6 +15,7 @@
 	  (let ((ep (stack-dsl:%top (cl-user::output-esaprogram (env p)))))
 	    (setf (esaprogram p) ep)
 	    (stack-dsl:%pop (cl-user::output-esaprogram (env p)))
+(check-stacks p)
 	    (cl-user::%memoCheck (env p))
 	    (let ((result-pass1 (get-output-stream-string (pasm:output-string-stream p))))
 	      (pasm:initially p token-stream)

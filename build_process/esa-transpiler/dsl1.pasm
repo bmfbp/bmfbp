@@ -74,8 +74,10 @@
 
 = situations
                        $situations__NewScope
-  {[ ?SYMBOL/situation @parse-situation-def 
-   | * > ]}
+  {[ ?SYMBOL/situation
+     @parse-situation-def 
+   | * > 
+   ]}
                        $situations__Output
 
 = parse-situation-def
@@ -308,10 +310,17 @@
    | ?SYMBOL/loop @loop-statement
    | ?SYMBOL/exit-when @exit-when-statement
    | ?'>' @return-statement
-   | ?'@' @esa-expr
-   | &non-keyword-symbol @esa-expr
+   | ?'@' @callInternalStatement
+   | &non-keyword-symbol @callExternalStatement
    | * >
   ]}
+
+= callInternalStatement
+  @esa-expr
+
+= callExternalStatement
+  @esa-expr
+                              
 
 = let-statement
   SYMBOL/let
@@ -332,10 +341,10 @@
    '=' 
    [ ?'*' '*'
      @class-ref
-%$      (emit p "(make-instance ~a)))" (atext p))
+                     $Name_EndOutputScope
    | *
    @class-ref
-%$      (emit p "(make-instance ~a)))" (atext p))
+                     $Name_EndOutputScope
    ]
    SYMBOL/in 
    @script-body

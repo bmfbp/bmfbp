@@ -160,3 +160,122 @@
       (stack-dsl:%append top-methodsTable top-externalMethod)
       (stack-dsl:%pop (cl-user::output-externalMethod (env p))))))
 
+(defmethod $name__EndOutputScope ((p parser))
+  (stack-dsl:%pop (output-name (env p))))
+
+(defparameter *stacks* '(
+			 input-esaprogram
+			 output-esaprogram
+			 input-typeDecls
+			 output-typeDecls
+			 input-situations
+			 output-situations
+			 input-classes
+			 output-classes
+			 input-whenDeclarations
+			 output-whenDeclarations
+			 input-scriptImplementations
+			 output-scriptImplementations
+			 input-typeDecl
+			 output-typeDecl
+			 input-name
+			 output-name
+			 input-typeName
+			 output-typeName
+			 input-situationDefinition
+			 output-situationDefinition
+			 input-esaclass
+			 output-esaclass
+			 input-fieldMap
+			 output-fieldMap
+			 input-methodsTable
+			 output-methodsTable
+			 input-scriptsTable
+			 output-scriptsTable
+			 input-whenDeclaration
+			 output-whenDeclaration
+			 input-situationReferenceList
+			 output-situationReferenceList
+			 input-esaKind
+			 output-esaKind
+			 input-methodDeclarationsAndScriptDeclarations
+			 output-methodDeclarationsAndScriptDeclarations
+			 input-situationReferenceName
+			 output-situationReferenceName
+			 input-declarationMethodOrScript
+			 output-declarationMethodOrScript
+			 input-methodDeclaration
+			 output-methodDeclaration
+			 input-scriptDeclaration
+			 output-scriptDeclaration
+			 input-formalList
+			 output-formalList
+			 input-returnType
+			 output-returnType
+			 input-implementation
+			 output-implementation
+			 input-returnKind
+			 output-returnKind
+			 input-expression
+			 output-expression
+			 input-ekind
+			 output-ekind
+			 input-object
+			 output-object
+			 input-field
+			 output-field
+			 input-fkind
+			 output-fkind
+			 input-actualParameterList
+			 output-actualParameterList
+			 input-externalMethod
+			 output-externalMethod
+			 input-internalMethod
+			 output-internalMethod
+			 input-statement
+			 output-statement
+			 input-letStatement
+			 output-letStatement
+			 input-mapStatement
+			 output-mapStatement
+			 input-exitMapStatement
+			 output-exitMapStatement
+			 input-setStatement
+			 output-setStatement
+			 input-createStatement
+			 output-createStatement
+			 input-ifStatement
+			 output-ifStatement
+			 input-loopStatement
+			 output-loopStatement
+			 input-exitWhenStatement
+			 output-exitWhenStatement
+			 input-returnStatement
+			 output-returnStatement
+			 input-callInternalStatement
+			 output-callInternalStatement
+			 input-callExternalStatement
+			 output-callExternalStatement
+			 input-varName
+			 output-varName
+			 input-filler
+			 output-filler
+			 input-maybeIndirectExpression
+			 output-maybeIndirectExpression
+			 input-thenPart
+			 output-thenPart
+			 input-elsePart
+			 output-elsePart
+			 input-functionReference
+			 output-functionReference
+			 input-indirectionKind
+			 output-indirectionKind
+			 ))
+
+(defun check-stacks (p)
+  (dolist (stack *stacks*)
+    (let ((name (symbol-name stack)))
+      (let ((sym (intern name "CL-USER")))
+	(unless (zerop (length (stack-dsl::%stack (slot-value (env p) sym))))
+	  (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym)))))))))
+

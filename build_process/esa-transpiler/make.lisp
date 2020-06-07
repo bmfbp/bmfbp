@@ -52,14 +52,8 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
     (ql:quickload :arrowgrams/esa-transpiler/tester)
   (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path \"exprtypes.json\"))
   (arrowgrams/esa-transpiler::transpile-esa-to-string 
-    (arrowgrams/esa-transpiler:path \"../esa/esa.dsl\")
+    (arrowgrams/esa-transpiler:path \"esa-test.dsl\")
     :tracing-accept t)
-  #+nil(let ()
-    (arrowgrams/esa-transpiler::trace-mechs)
-    (arrowgrams/esa-transpiler::trace-rules)
-    (arrowgrams/esa-transpiler::test-transpile-esa-to-string 
-      (arrowgrams/esa-transpiler:path \"test.esa\")
-      :tracing-accept t))
 ")
 
 (defun make ()
