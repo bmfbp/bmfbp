@@ -52,7 +52,6 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
   (load (arrowgrams/esa-transpiler::path "manual-types.lisp"))
   (load (arrowgrams/esa-transpiler::path "mechanisms.lisp"))
   (load (arrowgrams/esa-transpiler::path "manual-mechanisms.lisp"))
-  (load (arrowgrams/esa-transpiler::path "pass2-mechanisms.lisp"))
   (load (arrowgrams/esa-transpiler::path "mech-tester.lisp"))
   (load (arrowgrams/esa-transpiler::path "esa-transpile.lisp"))
   (load (arrowgrams/esa-transpiler::path "trace-rules.lisp"))

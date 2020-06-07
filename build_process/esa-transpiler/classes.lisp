@@ -36,6 +36,8 @@
    (current-class :accessor current-class)
    (current-method :accessor current-method)
 
+   (esaprogram :accessor esaprogram) ;; passing main data structure between passes
+   
    ;; v2 emitter
    (env :accessor env :initform (make-instance 'cl-user::environment))
    (saved-text :accessor saved-text)

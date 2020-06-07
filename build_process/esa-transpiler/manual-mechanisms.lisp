@@ -103,3 +103,58 @@
 (defmethod $scriptdDeclaraction__SetField_implementation_empty ((p parser))
   (setf (cl-user::implementation (stack-dsl:%top (cl-user::scriptDeclaration (env p))))
         nil))
+
+;; pass2
+
+(defmethod $esaprogram__BeginScope ((p parser))
+  (stack-dsl:%push p (cl-user::input-esaprogram (env p)) (esaprogram (env p))))
+
+(defmethod $esaprogram__EndScope ((p parser))
+  (stack-dsl:%pop  p (cl-user::input-esaprogram (env p))))
+
+(defmethod $esaclass__LookupByName_BeginScope ((p parser))
+  (let ((name (as-string (stack-dsl:%top (output-name (env p))))))
+    (let ((c (lookup-class (stack-dsl:%top (input-esaprogram (env p))) name)))
+      (stack-dsl:%push p (input-esaclass (env p)) c))
+    (stack-dsl:%pop (output-name (env p)))))
+
+(defmethod $esaclass__EndScope ((p parser))
+  (stack-dsl:%pop (input-esaclass (env p))))
+
+(defmethod $esaclass__SetField_methodsTable_empty ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
+    (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl:%map :%element-type 'cl-user::methodsTable))))
+
+(defmethod $esaclass__SetField_scriptsTable_empty ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
+    (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl:%map :%element-type 'cl-user::scriptsTable))))
+
+(defmethod $scriptsTable__BeginScopeFrom_esaclass ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
+    (stack-dsl:%push p (cl-user::scriptsTable (env p)))))
+
+(defmethod $scriptsTable__EndScope ((p parser))
+  (stack-dsl:%pop p (cl-user::scriptsTable (env p))))
+
+(defmethod $scriptsTable__AppendFrom_internalMethod ((p parser))
+  (let ((top-scriptsTable (stack-dsl:%top (cl-user::input-scriptsTable (env p)))))
+    (let ((top-internalMethod (stack-dsl:%top (cl-user::output-internalMethod (env p)))))
+      (stack-dsl:%ensure-appendable-type top-scriptsTable)
+      (stack-dsl:%append top-scriptsTable top-internalMethod)
+      (stack-dsl:%pop (cl-user::output-internalMethod (env p))))))
+
+
+(defmethod $methodsTable__BeginScopeFrom_esaclass ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
+    (stack-dsl:%push p (cl-user::methodsTable (env p)))))
+
+(defmethod $methodsTable__EndScope ((p parser))
+  (stack-dsl:%pop p (cl-user::methodsTable (env p))))
+
+(defmethod $methodsTable__AppendFrom_externalMethod ((p parser))
+  (let ((top-methodsTable (stack-dsl:%top (cl-user::input-methodsTable (env p)))))
+    (let ((top-internalMethod (stack-dsl:%top (cl-user::output-externalMethod (env p)))))
+      (stack-dsl:%ensure-appendable-type top-methodsTable)
+      (stack-dsl:%append top-methodsTable top-externalMethod)
+      (stack-dsl:%pop (cl-user::output-externalMethod (env p))))))
+

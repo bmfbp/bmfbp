@@ -6,14 +6,15 @@
 = rmSpaces
   [ ?SPACE | ?COMMENT | * . ]
 
-% pass2 {classTable}
 = esa-dsl
   ~rmSpaces
+                        $esaprogram__BeginScope
   @type-decls
   @situations
   @classes
   @parse-whens-and-scripts
   EOF
+                        $esaprogram__EndScope
 
 - keyword-symbol
   [ ?SYMBOL
@@ -87,6 +88,8 @@
   SYMBOL/class
   @esaSymbol
                                 $esaclass__LookupByName_BeginScope
+                                  $esaclass__SetField_methodsTable_empty
+                                  $esaclass__SetField_sciprtsTable_empty
   @field-decl                     % we skip fields in pass2 (already done in pass1)
   {[ &field-decl-begin @field-decl
    | * >
@@ -120,12 +123,18 @@
 
   @class-ref
                                 $esaclass__LookupByName_BeginScope
-  {
-  [ ?SYMBOL/script @script-declaration
-   | ?SYMBOL/method @method-declaration
+  {[ ?SYMBOL/script
+                                  $scriptsTable__BeginScopeFrom_esaclass
+     @script-declaration
+                                    $scriptsTable__AppendFrom_internalMethod
+                                  $scriptsTable_EndScope
+   | ?SYMBOL/method
+                                  $methodsTable_BeginScopeFrom_esaclass
+     @method-declaration
+                                    $methodsTable__AppendFrom_externalMethod
+                                  $methodsTable_EndScope
    | * >
-  ]
-  }
+   ]}
   SYMBOL/end SYMBOL/when
                                 $esaclass__EndScope
 

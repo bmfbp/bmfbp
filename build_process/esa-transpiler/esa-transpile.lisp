@@ -9,11 +9,12 @@
 	  (esa-dsl-pass0 p))  ;; call parser to check if syntax is OK
 	(pasm:initially p token-stream)
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
-	  (esa-dsl-pass1 p))  ;; call top rule of 1st pass to generate dsl1.lisp
+	  (esa-dsl-pass1 p)  ;; call top rule of 1st pass
+	  (setf (esaprogram (env p)) (cl-user::output-esaprogram (env p))))
 	(let ((result-pass1 (get-output-stream-string (pasm:output-string-stream p))))
 	  (pasm:initially p token-stream)
 	  (let ((pasm::*pasm-accept-tracing* tracing-accept))
-	    (esa-dsl-pass2 p))  ;; call top rule of 2nd pass to generate dsl2.lisp
+	    (esa-dsl-pass2 p))  ;; call top rule of 2nd pass
 	  (let ((result-pass2 (get-output-stream-string (pasm:output-string-stream p))))
 	    (let ((final (concatenate 'string 
 				      (format nil "(in-package :esa)~%~%")
