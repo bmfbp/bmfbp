@@ -5,12 +5,10 @@
   ~rmSpaces
                             $esaprogram__NewScope
   @type-decls
-                                $typeDecls__NewScope
                               $esaprogram__SetField_typeDecls_from_typeDecls
-			      
-			        $situations__NewScope
   @situations
                               $esaprogram__SetField_situations_from_situations
+
   @classes
                               $esaprogram__SetField_classes_from_classes
 

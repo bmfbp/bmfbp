@@ -273,9 +273,11 @@
 			 ))
 
 (defun check-stacks (p)
+(format *standard-output* "~&** check stacks **~%")
   (dolist (stack *stacks*)
     (let ((name (symbol-name stack)))
       (let ((sym (intern name "CL-USER")))
 	(unless (zerop (length (stack-dsl::%stack (slot-value (env p) sym))))
-	  (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym)))))))))
+	  (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym))))))))
+(format *standard-output* "~&** **~%"))
 
