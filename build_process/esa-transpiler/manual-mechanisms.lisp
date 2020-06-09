@@ -34,6 +34,9 @@
       (let ((new-text (concatenate 'string (stack-dsl:%value name-tos) suffix)))
 	(setf (stack-dsl:%value name-tos) new-text)))))
 
+(defmethod $name__EndOutputScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-name (env p))))
+
 ;; emission
 
 (defmethod true-p ((e cl-user::expression))
@@ -87,8 +90,11 @@
   (stack-dsl:%push p (cl-user::lookup-class p (cl-user::output-name (env p))))
   (stack-dsl:%pop p (cl-user::output-name (env p))))
 
-(defmethod $class_EndScope ((p parser))
+(defmethod $class__EndScope ((p parser))
   (stack-dsl:%pop p (cl-user::input-esaclass (env p))))
+
+(defmethod $expression__EndOutputScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-expression (env p))))
 
 (defmethod $expression__OverwriteField_from_ekind ((p parser))
   ;; reset field kind of TOs(output-expression)
@@ -159,9 +165,6 @@
       (stack-dsl:%ensure-appendable-type top-methodsTable)
       (stack-dsl:%append top-methodsTable top-externalMethod)
       (stack-dsl:%pop (cl-user::output-externalMethod (env p))))))
-
-(defmethod $name__EndOutputScope ((p parser))
-  (stack-dsl:%pop (output-name (env p))))
 
 (defparameter *stacks* '(
 			 input-esaprogram

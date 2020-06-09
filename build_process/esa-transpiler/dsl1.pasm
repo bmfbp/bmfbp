@@ -149,13 +149,11 @@
   			        $situationReferenceList__NewScope
   @situation-ref
                                   $situationReferenceList__AppendFrom_situationReferenceName
-  {
-  [ ?SYMBOL/or
+ {[ ?SYMBOL/or
       @or-situation 
                                   $situationReferenceList__AppendFrom_situationReferenceName
   | * >
-  ]
-  }
+  ]}
 			        $situationReferenceList__Output
 			      $whenDeclaration__SetField_situationReferenceList_from_situationReferenceList
 
@@ -166,17 +164,22 @@
                               $whenDeclaration__SetField_esaKind_from_esaKind
 
                                 $methodDeclarationsAndScriptDeclarations__NewScope
-  {
+  {[ ?SYMBOL/script @script-declaration
                                     $declarationMethodOrScript__NewScope
-  [ ?SYMBOL/script @script-declaration
                                       $declarationMethodOrScript__CoerceFrom_scriptDeclaration
-   | ?SYMBOL/method @method-declaration
-                                      $declarationMethodOrScript__CoerceFrom_methodDeclaration
-   | * >
-  ]
                                     $declarationMethodOrScript__Output
                                   $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
-  }
+   | ?SYMBOL/method @method-declaration
+                                    $declarationMethodOrScript__NewScope
+                                      $declarationMethodOrScript__CoerceFrom_methodDeclaration
+                                    $declarationMethodOrScript__Output
+                                  $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
+   | * 
+                                    $declarationMethodOrScript__NewScope
+                                    $declarationMethodOrScript__Output
+                                  $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
+     >
+  ]}
                                 $methodDeclarationsAndScriptDeclarations__Output
                               $whenDeclaration__SetField_methodDeclarationsAndScriptDeclarations_from_methodDeclarationsAndScriptDeclarations
   SYMBOL/end SYMBOL/when
@@ -293,8 +296,7 @@
   ]  
   
 = script-body
-  {
-   [ ?SYMBOL/let @let-statement
+  {[ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
    | ?SYMBOL/exit-map @exit-map-statement
    | ?SYMBOL/set @set-statement
@@ -309,31 +311,31 @@
   ]}
 
 = callInternalStatement
-  @esa-expr
+  @esa-expr-in-statement
 
 = callExternalStatement
-  @esa-expr
+  @esa-expr-in-statement
                               
 
 = let-statement
   SYMBOL/let
-   @esaSymbol
+   @esaSymbol-in-statement
    '='
-   @esa-expr
+   @esa-expr-in-statement
    SYMBOL/in 
    @script-body
    SYMBOL/end SYMBOL/let
 
 = create-statement
   SYMBOL/create
-   @esaSymbol
+   @esaSymbol-in-statement
    '=' 
    [ ?'*' '*'
      @class-ref
-                     $Name_EndOutputScope
+                     $name__EndOutputScope
    | *
    @class-ref
-                     $Name_EndOutputScope
+                     $name__EndOutputScope
    ]
    SYMBOL/in 
    @script-body
@@ -341,14 +343,14 @@
 
 = set-statement
   SYMBOL/set
-   @esa-expr
+   @esa-expr-in-statement
    '=' 
-   @esa-expr
+   @esa-expr-in-statement
   
 = map-statement
-  SYMBOL/map @esaSymbol
+  SYMBOL/map @esaSymbol-in-statement
   '='
-  @esa-expr
+  @esa-expr-in-statement
   SYMBOL/in @script-body
   SYMBOL/end SYMBOL/map
 
@@ -362,11 +364,11 @@
   
 = exit-when-statement
   SYMBOL/exit-when
-    @esa-expr
+    @esa-expr-in-statement
 
 = if-statement
   SYMBOL/if
-    @esa-expr
+    @esa-expr-in-statement
   SYMBOL/then
     @script-body
   [ ?SYMBOL/else SYMBOL/else
@@ -376,17 +378,25 @@
   SYMBOL/end SYMBOL/if
 
 = script-call
-  '@' @esa-expr
+  '@' @esa-expr-in-statement
 
 = method-call
-  @esa-expr
+  @esa-expr-in-statement
 
 = return-statement
   '>' '>'
   [ ?SYMBOL/true SYMBOL/true
   | ?SYMBOL/false SYMBOL/false
-  | * @esaSymbol
+  | * @esaSymbol-in-statement
   ]
+
+= esaSymbol-in-statement
+  @esaSymbol
+                       $name_EndOutputScope
+
+= esa-expr-in-statement
+  @esaSymbol
+                       $expression__EndOutputScope
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)

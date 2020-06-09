@@ -114,12 +114,10 @@
 = when-declaration
   SYMBOL/when
   @situation-ref
-  {
-  [ ?SYMBOL/or
+  {[ ?SYMBOL/or
       @or-situation 
   | * >
-  ]
-  }
+  ]}
 
   @class-ref
                                 $esaclass__LookupByName_BeginScope
@@ -246,8 +244,8 @@
   ]  
   
 = script-body
-  {
-   [ ?SYMBOL/let @let-statement
+  
+  {[ ?SYMBOL/let @let-statement
    | ?SYMBOL/map @map-statement
    | ?SYMBOL/exit-map @exit-map-statement
    | ?SYMBOL/set @set-statement
@@ -259,8 +257,7 @@
    | ?'@' @callInternalStatement
    | &non-keyword-symbol @callExternalStatement
    | * >
-   ]
-  }
+   ]}
 
 = let-statement
   SYMBOL/let
