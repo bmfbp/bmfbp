@@ -142,26 +142,34 @@
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method
                                  $externalMethod__NewScope
-  @esaSymbol-in-decl
+  @esaSymbol
+                                  $externalMethod__SetField_name_from_name
   @formals
+                                  $externalMethod__SetField_formalList_from_formalList
   @return-type-declaration
+                                  $externalMethod__SetField_returnType_from_returnType
                                  $externalMethod__Output
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
   SYMBOL/script
                                  $internalMethod__NewScope
-  @esaSymbol-in-decl
+  @esaSymbol
+                                  $internalMethod__SetField_name_from_name
   @formals
+                                  $internalMethod__SetField_formalList_from_formalList
   @return-type-declaration
+                                  $internalMethod__SetField_returnType_from_returnType
                                  $internalMethod__Output
 
 = formals
+                                 $formalList__NewScope
   [ ?'(' 
      '(' 
      @type-list 
      ')'
   | *
   ]
+                                 $formalList__Output
 
 = type-list
   @esaSymbol-in-decl
@@ -171,6 +179,7 @@
   ]}
 
 = return-type-declaration
+                                   $returnType__NewScope
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map
            @esaSymbol-in-decl
@@ -179,6 +188,7 @@
   ]
   | *
   ]
+                                   $returnType__Output
 
 = esaSymbol-in-decl
   @esaSymbol
