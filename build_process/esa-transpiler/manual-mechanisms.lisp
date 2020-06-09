@@ -124,7 +124,6 @@
 
 (defmethod $esaclass__LookupByName_BeginScope ((p parser))
   (let ((name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
-(format *standard-output* "~&searching for class ~a~%" name)
     (let ((c (cl-user::lookup-class (stack-dsl:%top (cl-user::input-esaprogram (env p))) name)))
       (stack-dsl:%push (cl-user::input-esaclass (env p)) c))
     (stack-dsl:%pop (cl-user::output-name (env p)))))
