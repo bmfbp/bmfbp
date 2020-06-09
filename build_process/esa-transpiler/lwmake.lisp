@@ -10,10 +10,9 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
 (uiop:run-program "rm -rf ~/.cache/common-lisp/")
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
-(defun ql ()
-  (ql:quickload :stack-dsl)
-  (ql:quickload :stack-dsl/use)
-  (ql:quickload :parsing-assembler/use))
+(ql:quickload :stack-dsl)
+(ql:quickload :stack-dsl/use)
+(ql:quickload :parsing-assembler/use)
 
 (defun gen ()
   (stack-dsl:transpile-stack 
@@ -39,8 +38,9 @@ cd to ~/quicklisp/local-projects/hier, then run awk -f 12.awk <12.txt >12.lisp ,
    "ARROWGRAMS/ESA-TRANSPILER"
    (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/dsl2.pasm")
    (asdf:system-relative-pathname :arrowgrams "build_process/esa-transpiler/dsl2.lisp")
-   "-PASS2")
-  (ql:quickload :arrowgrams/esa-transpiler))
+   "-PASS2"))
+
+(ql:quickload :arrowgrams/esa-transpiler)
 
 (defun lrun ()
   (load (arrowgrams/esa-transpiler::path "package.lisp"))
