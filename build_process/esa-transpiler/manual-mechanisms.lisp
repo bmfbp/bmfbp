@@ -281,7 +281,7 @@
     (dolist (stack *stacks*)
       (let ((name (symbol-name stack)))
 	(let ((sym (intern name "CL-USER")))
-	  (let ((wm (cl-user::%water-mark (env p))))
+	  #+nil(let ((wm (cl-user::%water-mark (env p))))
 	    (format *standard-output* "~&sym=~a i=~a eq=~a~%" sym i (eq (nth i wm) (stack-dsl::%stack (slot-value (env p) sym)))))
 	  (unless (zerop (length (stack-dsl::%stack (slot-value (env p) sym))))
 	    (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym)))))))
