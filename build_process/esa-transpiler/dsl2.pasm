@@ -159,6 +159,7 @@
 
 = esaSymbol-in-decl
   @esaSymbol
+                                    $name__IgnoreInPass2
 
 % implement code ...
 

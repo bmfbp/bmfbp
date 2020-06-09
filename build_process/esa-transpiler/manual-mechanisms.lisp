@@ -37,6 +37,9 @@
 (defmethod $name__IgnoreInPass1 ((p parser))
   (stack-dsl:%pop (cl-user::output-name (env p))))
 
+(defmethod $name__IgnoreInPass2 ((p parser))
+  (stack-dsl:%pop (cl-user::output-name (env p))))
+
 ;; emission
 
 (defmethod true-p ((e cl-user::expression))
