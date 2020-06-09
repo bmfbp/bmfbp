@@ -113,8 +113,16 @@
 
   @class-ref
                               $esaclass__LookupByName_BeginScope
-  {[ ?SYMBOL/script @script-declaration
-   | ?SYMBOL/method @method-declaration
+  {[ ?SYMBOL/script 
+                                  $scriptsTable__BeginScopeFrom_esaclass
+     @script-declaration
+                                    $scriptsTable__AppendFrom_internalMethod
+                                  $scriptsTable__EndScope
+   | ?SYMBOL/method
+                                  $methodsTable__BeginScopeFrom_esaclass
+     @method-declaration
+                                    $methodsTable__AppendFrom_externalMethod
+                                  $methodsTable__EndScope
    | * 
      >
   ]}
@@ -132,14 +140,20 @@
   @esaSymbol  % should be checked to be a kind
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
-  SYMBOL/method @esaSymbol-in-decl
+  SYMBOL/method
+                                 $externalMethod__NewScope
+  @esaSymbol-in-decl
   @formals
   @return-type-declaration
+                                 $externalMethod__Output
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
-  SYMBOL/script @esaSymbol-in-decl
+  SYMBOL/script
+                                 $internalMethod__NewScope
+  @esaSymbol-in-decl
   @formals
   @return-type-declaration
+                                 $internalMethod__Output
 
 = formals
   [ ?'(' 
