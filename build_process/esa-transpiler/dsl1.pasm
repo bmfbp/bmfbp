@@ -311,7 +311,6 @@
    | &non-keyword-symbol @callExternalStatement
    | * >
   ]}
-check-stacks
 
 = callInternalStatement
   @esa-expr-in-statement

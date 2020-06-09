@@ -16,14 +16,14 @@
 	  (let ((ep (stack-dsl:%top (cl-user::output-esaprogram (env p)))))
 	    (setf (esaprogram p) ep)
 	    (stack-dsl:%pop (cl-user::output-esaprogram (env p)))
-(format *standard-output* "~&*** check stacks 2 ***~%")
-(check-stacks p)
-(format *standard-output* "~&*** ***~%~%")
 	    (cl-user::%memoCheck (env p))
 	    (let ((result-pass1 (get-output-stream-string (pasm:output-string-stream p))))
 	      (pasm:initially p token-stream)
 	      (let ((pasm::*pasm-accept-tracing* tracing-accept))
 		(esa-dsl-pass2 p))  ;; call top rule of 2nd pass
+(format *standard-output* "~&*** check stacks pass 2 ***~%")
+(check-stacks p)
+(format *standard-output* "~&*** ***~%~%")
 	      (let ((result-pass2 (get-output-stream-string (pasm:output-string-stream p))))
 		(let ((final (concatenate 'string 
 					  (format nil "(in-package :esa)~%(proclaim '(optimize (debug 3) (safety 3) (speed 0)))~%~%")

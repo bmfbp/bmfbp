@@ -276,7 +276,6 @@
 			 ))
 
 (defun check-stacks (p)
-(format *standard-output* "~&** check stacks **~%")
   (let ((i 0))
     (dolist (stack *stacks*)
       (let ((name (symbol-name stack)))
@@ -285,6 +284,5 @@
 	    (format *standard-output* "~&sym=~a i=~a eq=~a~%" sym i (eq (nth i wm) (stack-dsl::%stack (slot-value (env p) sym)))))
 	  (unless (zerop (length (stack-dsl::%stack (slot-value (env p) sym))))
 	    (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym)))))))
-      (incf i))
-    (format *standard-output* "~&** **~%")))
+      (incf i))))
 
