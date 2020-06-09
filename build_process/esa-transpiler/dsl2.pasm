@@ -172,9 +172,11 @@
                                  $formalList__Output
 
 = type-list
-  @esaSymbol-in-decl
+  @esaSymbol
+                                   $formalList__AppendFrom_name
   {[ &non-keyword-symbol
-     @esaSymbol-in-decl
+     @esaSymbol
+                                   $formalList__AppendFrom_name
    | * >
   ]}
 
