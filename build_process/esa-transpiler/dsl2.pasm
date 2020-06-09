@@ -3,11 +3,13 @@
 
 = esa-dsl
   ~rmSpaces
+                        $esaprogram__BeginScope
   @type-decls
   @situations
   @classes
   @parse-whens-and-scripts
   EOF
+                        $esaprogram__EndScope
 
 - keyword-symbol
   [ ?SYMBOL
@@ -77,12 +79,16 @@
 
 = class-def
   SYMBOL/class
-  @esaSymbol-in-decl
+  @esaSymbol
+                                $esaclass__LookupByName_BeginScope
+                                  $esaclass__SetField_methodsTable_empty
+                                  $esaclass__SetField_scriptsTable_empty
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
+                                $esaclass__EndScope
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok

@@ -133,15 +133,15 @@
   (stack-dsl:%pop (cl-user::input-esaclass (env p))))
 
 (defmethod $esaclass__SetField_methodsTable_empty ((p parser))
-  (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
+  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
     (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl::%map :%element-type 'cl-user::methodsTable))))
 
 (defmethod $esaclass__SetField_scriptsTable_empty ((p parser))
-  (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
+  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
     (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl::%map :%element-type 'cl-user::scriptsTable))))
 
 (defmethod $scriptsTable__BeginScopeFrom_esaclass ((p parser))
-  (let ((top-class (stack-dsl:%top (cl-user::esaclass (env p)))))
+  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
     (stack-dsl:%push p (cl-user::scriptsTable (env p)))))
 
 (defmethod $scriptsTable__EndScope ((p parser))
