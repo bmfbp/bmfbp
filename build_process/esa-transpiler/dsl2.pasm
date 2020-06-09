@@ -182,14 +182,22 @@
 
 = return-type-declaration
                                    $returnType__NewScope
+                                     $returnKind__NewScope
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map
-           @esaSymbol-in-decl
+                                         $returnKind_SetEnum_map
+           @esaSymbol
+	                               $returnType__SetField_name_from_name
          | *
-           @esaSymbol-in-decl
+                                         $returnKind_SetEnum_simple
+           @esaSymbol
+	                               $returnType__SetField_name_from_name
   ]
   | *
+                                         $returnKind__SetEnum_void
   ]
+                                     $returnKind__Output
+                                     $returnType__SetField_returnKind_from_returnKind
                                    $returnType__Output
 
 = esaSymbol-in-decl
