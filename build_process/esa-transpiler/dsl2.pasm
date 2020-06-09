@@ -3,20 +3,10 @@
 
 = esa-dsl
   ~rmSpaces
-                            $esaprogram__NewScope
   @type-decls
-                              $esaprogram__SetField_typeDecls_from_typeDecls
   @situations
-                              $esaprogram__SetField_situations_from_situations
-
   @classes
-                              $esaprogram__SetField_classes_from_classes
-
-                              $whenDeclarations__NewScope
   @parse-whens-and-scripts
-                              $whenDeclarations__Output
-                              $esaprogram__SetField_whenDeclarations_from_whenDeclarations
-                            $esaprogram__Output
   EOF
 
 - keyword-symbol
@@ -55,68 +45,44 @@
   ]
 
 = type-decls
-                       $typeDecls__NewScope  
   {[ ?SYMBOL/type
     @type-decl
-                         $typeDecls__AppendFrom_typeDecl
    | * >
   ]}
-                       $typeDecls__Output  
 
 = type-decl
-                       $typeDecl__NewScope
   SYMBOL/type
-  @esaSymbol
-                         $typeDecl__SetField_name_from_name
-                       $typeDecl__Output
+  @esaSymbol-in-decl
 
 = situations
-                       $situations__NewScope
   {[ ?SYMBOL/situation
      @parse-situation-def 
    | * > 
    ]}
-                       $situations__Output
 
 = parse-situation-def
   SYMBOL/situation 
-  @esaSymbol
-                         $situationDefinition__NewScope
-			   $situationDefinition__CoerceFrom_name
-                         $situationDefinition__Output
-                       $situations__AppendFrom_situationDefinition			 
+  @esaSymbol-in-decl
 
 = classes
-                       $classes__NewScope
   {[ ?SYMBOL/class @class-def
-                         $classes__AppendFrom_esaclass  
    | * >
   ]}
-                       $classes__Output
 
 = parse-whens-and-scripts
   {[ ?SYMBOL/when @when-declaration
-                              $whenDeclarations__AppendFrom_whenDeclaration
    |?SYMBOL/script @script-implementation
    | * >
   ]}
 
 = class-def
   SYMBOL/class
-                            $esaclass__NewScope
-  @esaSymbol
-                              $esaclass__SetField_name_from_name
-			      $fieldMap__NewScope
+  @esaSymbol-in-decl
   @field-decl
-                                $fieldMap__AppendFrom_field
   {[ &field-decl-begin @field-decl
-                                $fieldMap__AppendFrom_field
    | * >
   ]}
   SYMBOL/end SYMBOL/class
-                              $fieldMap__Output
-			      $esaclass__SetField_fieldMap_from_fieldMap
-                            $esaclass__Output
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
@@ -125,152 +91,82 @@
  ]
 
 = field-decl
-                             $field__NewScope
   [ ?SYMBOL/map
     SYMBOL/map 
-    @esaSymbol
-                                $fkind__NewScope
-                                  $fkind__SetEnum_map
-                                $fkind__Output
-                              $field__SetField_fkind_from_fkind
-                              $field__SetField_name_from_name
-  | &non-keyword-symbol @esaSymbol
-                                $fkind__NewScope
-                                  $fkind__SetEnum_simple
-                                $fkind__Output
-                              $field__SetField_fkind_from_fkind
-                              $field__SetField_name_from_name
+    @esaSymbol-in-decl
+  | &non-keyword-symbol @esaSymbol-in-decl
   ]
-                            $field__Output
 
 = when-declaration
   SYMBOL/when
-                              $whenDeclaration__NewScope
-  			        $situationReferenceList__NewScope
   @situation-ref
-                                  $situationReferenceList__AppendFrom_situationReferenceName
  {[ ?SYMBOL/or
       @or-situation 
-                                  $situationReferenceList__AppendFrom_situationReferenceName
   | * >
   ]}
-			        $situationReferenceList__Output
-			      $whenDeclaration__SetField_situationReferenceList_from_situationReferenceList
 
   @class-ref
-                              $esaKind__NewScope
-                                $esaKind__CoerceFrom_name
-                              $esaKind__Output
-                              $whenDeclaration__SetField_esaKind_from_esaKind
-
-                                $methodDeclarationsAndScriptDeclarations__NewScope
   {[ ?SYMBOL/script @script-declaration
-                                    $declarationMethodOrScript__NewScope
-                                      $declarationMethodOrScript__CoerceFrom_scriptDeclaration
-                                    $declarationMethodOrScript__Output
-                                  $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
    | ?SYMBOL/method @method-declaration
-                                    $declarationMethodOrScript__NewScope
-                                      $declarationMethodOrScript__CoerceFrom_methodDeclaration
-                                    $declarationMethodOrScript__Output
-                                  $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
    | * 
-                                    $declarationMethodOrScript__NewScope
-                                    $declarationMethodOrScript__Output
-                                  $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
      >
   ]}
-                                $methodDeclarationsAndScriptDeclarations__Output
-                              $whenDeclaration__SetField_methodDeclarationsAndScriptDeclarations_from_methodDeclarationsAndScriptDeclarations
   SYMBOL/end SYMBOL/when
-                            $whenDeclaration__Output
 
 = situation-ref
-  @esaSymbol % should be checked to be a situation
-                            $situationReferenceName__NewScope
-                              $situationReferenceName__CoerceFrom_name
-                            $situationReferenceName__Output
+  @esaSymbol-in-decl % should be checked to be a situation
 
 = or-situation
   SYMBOL/or @situation-ref
   
 = class-ref
-  @esaSymbol  % should be checked to be a kind
+  @esaSymbol-in-decl  % should be checked to be a kind
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
-                                      $methodDeclaration__NewScope
-  SYMBOL/method @esaSymbol
-                                        $methodDeclaration__SetField_name_from_name
+  SYMBOL/method @esaSymbol-in-decl
   @formals
-                                        $methodDeclaration__SetField_formalList_from_formalList
   @return-type-declaration
-                                        $methodDeclaration__SetField_returnType_from_returnType
-                                      $methodDeclaration__Output
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
-                                      $scriptDeclaration__NewScope
-  SYMBOL/script @esaSymbol
-                                        $scriptDeclaration__SetField_name_from_name
+  SYMBOL/script @esaSymbol-in-decl
   @formals
-                                        $scriptDeclaration__SetField_formalList_from_formalList
   @return-type-declaration
-                                        $scriptDeclaration__SetField_returnType_from_returnType
-                                      $scriptDeclaration__Output
 
 = formals
-                                    $formalList__NewScope
   [ ?'(' 
      '(' 
      @type-list 
      ')'
   | *
   ]
-                                    $formalList__Output
 
 = type-list
-  @esaSymbol
-                                    $formalList__AppendFrom_name
+  @esaSymbol-in-decl
   {[ &non-keyword-symbol
-     @esaSymbol
-                                    $formalList__AppendFrom_name
+     @esaSymbol-in-decl
    | * >
   ]}
 
 = return-type-declaration
-                                    $returnType__NewScope
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map
-                                      $returnKind__NewScope
-                                         $returnKind__SetEnum_map
-                                      $returnKind__Output
-           @esaSymbol
-	                              $returnType__SetField_name_from_name
+           @esaSymbol-in-decl
          | *
-                                      $returnKind__NewScope
-                                         $returnKind__SetEnum_simple
-                                      $returnKind__Output
-           @esaSymbol
-	                              $returnType__SetField_name_from_name
+           @esaSymbol-in-decl
   ]
   | *
-                                      $returnKind__NewScope
-                                         $returnKind__SetEnum_void
-                                      $returnKind__Output
   ]
-                                      $returnType__SetField_returnKind_from_returnKind
 
-                                    $returnType__Output
-
-
-
+= esaSymbol-in-decl
+  @esaSymbol
 
 % implement code ...
 
 = script-implementation
   SYMBOL/script
-  @esaSymbol  % class
+  @esaSymbol-in-decl  % class
                                     $name__IgnoreInPass1
-  @esaSymbol  % script method
+  @esaSymbol-in-decl  % script method
                                     $name__IgnoreInPass1
   @optional-formals-definition
   @optional-return-type-definition
@@ -283,15 +179,15 @@
   ]}
 
 = untyped-formals-definition
-  {[ &non-keyword-symbol @esaSymbol
+  {[ &non-keyword-symbol @esaSymbol-in-decl
      % index and type
    | * >
   ]}
   
 = optional-return-type-definition  % should check that return type matches the definition
   [ ?'>' '>' '>'
-         [ ?SYMBOL/map SYMBOL/map @esaSymbol
-         | * @esaSymbol
+         [ ?SYMBOL/map SYMBOL/map @esaSymbol-in-decl
+         | * @esaSymbol-in-decl
 
   ]
   | *
