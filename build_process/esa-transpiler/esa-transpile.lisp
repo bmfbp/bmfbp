@@ -5,6 +5,7 @@
     (let ((token-stream (scanner:scanner in-string)))
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
 	(pasm:initially p token-stream)
+        (cl-user::%memoStacks (env p))
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
 	  (esa-dsl-pass0 p))  ;; call parser to check if syntax is OK
 	(pasm:initially p token-stream)

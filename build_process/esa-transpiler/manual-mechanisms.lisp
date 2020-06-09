@@ -34,8 +34,8 @@
       (let ((new-text (concatenate 'string (stack-dsl:%value name-tos) suffix)))
 	(setf (stack-dsl:%value name-tos) new-text)))))
 
-(defmethod $name__EndOutputScope ((p parser))
-  (stack-dsl:%pop (cl-user::input-name (env p))))
+(defmethod $name__IgnoreInPass1 ((p parser))
+  (stack-dsl:%pop (cl-user::output-name (env p))))
 
 ;; emission
 
@@ -93,8 +93,8 @@
 (defmethod $class__EndScope ((p parser))
   (stack-dsl:%pop p (cl-user::input-esaclass (env p))))
 
-(defmethod $expression__EndOutputScope ((p parser))
-  (stack-dsl:%pop (cl-user::input-expression (env p))))
+(defmethod $expression__IgnoreInPass1 ((p parser))
+  (stack-dsl:%pop (cl-user::output-expression (env p))))
 
 (defmethod $expression__OverwriteField_from_ekind ((p parser))
   ;; reset field kind of TOs(output-expression)
@@ -277,10 +277,14 @@
 
 (defun check-stacks (p)
 (format *standard-output* "~&** check stacks **~%")
-  (dolist (stack *stacks*)
-    (let ((name (symbol-name stack)))
-      (let ((sym (intern name "CL-USER")))
-	(unless (zerop (length (stack-dsl::%stack (slot-value (env p) sym))))
-	  (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym))))))))
-(format *standard-output* "~&** **~%"))
+  (let ((i 0))
+    (dolist (stack *stacks*)
+      (let ((name (symbol-name stack)))
+	(let ((sym (intern name "CL-USER")))
+	  (let ((wm (cl-user::%water-mark (env p))))
+	    (format *standard-output* "~&sym=~a i=~a eq=~a~%" sym i (eq (nth i wm) (stack-dsl::%stack (slot-value (env p) sym)))))
+	  (unless (zerop (length (stack-dsl::%stack (slot-value (env p) sym))))
+	    (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym)))))))
+      (incf i))
+    (format *standard-output* "~&** **~%")))
 

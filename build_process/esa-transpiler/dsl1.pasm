@@ -269,7 +269,9 @@
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
+                                    $name__IgnoreInPass1
   @esaSymbol  % script method
+                                    $name__IgnoreInPass1
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
@@ -309,13 +311,15 @@
    | &non-keyword-symbol @callExternalStatement
    | * >
   ]}
+check-stacks
 
 = callInternalStatement
   @esa-expr-in-statement
+                             $expression__IgnoreInPass1                              
 
 = callExternalStatement
   @esa-expr-in-statement
-                              
+                             $expression__IgnoreInPass1                              
 
 = let-statement
   SYMBOL/let
@@ -392,11 +396,9 @@
 
 = esaSymbol-in-statement
   @esaSymbol
-                       $name_EndOutputScope
 
 = esa-expr-in-statement
-  @esaSymbol
-                       $expression__EndOutputScope
+  @esa-expr
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)
