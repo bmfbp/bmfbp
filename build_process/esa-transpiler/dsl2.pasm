@@ -112,12 +112,15 @@
   ]}
 
   @class-ref
+                              $esaclass__LookupByName_BeginScope
   {[ ?SYMBOL/script @script-declaration
    | ?SYMBOL/method @method-declaration
    | * 
      >
   ]}
   SYMBOL/end SYMBOL/when
+                              $esaclass__EndScope
+
 
 = situation-ref
   @esaSymbol-in-decl % should be checked to be a situation
@@ -126,7 +129,7 @@
   SYMBOL/or @situation-ref
   
 = class-ref
-  @esaSymbol-in-decl  % should be checked to be a kind
+  @esaSymbol  % should be checked to be a kind
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method @esaSymbol-in-decl
