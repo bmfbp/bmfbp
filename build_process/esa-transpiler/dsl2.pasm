@@ -112,8 +112,7 @@
   ]}
 
   @class-ref
-                     $name__IgnoreInPass2
-%                              $esaclass__LookupByName_BeginScope
+                              $esaclass__LookupByName_BeginScope
   {[ ?SYMBOL/script 
      @script-declaration
    | ?SYMBOL/method
@@ -122,7 +121,7 @@
      >
   ]}
   SYMBOL/end SYMBOL/when
-%                              $esaclass__EndScope
+                              $esaclass__EndScope
 
 
 = situation-ref
