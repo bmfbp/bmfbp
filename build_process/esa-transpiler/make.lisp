@@ -95,39 +95,3 @@ run test
 
 
 
-
-#+nil(defparameter *escript* "
-  (uiop:run-program \"rm -rf \~/.cache/common-lisp\")
-  (uiop:run-program \"rm -rf *.fasl */*.fasl */*/*/.fasl\")
-  (uiop:run-program \"rm -rf *~\")  
-
-  (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
-
-  (ql:quickload :stack-dsl)
-  (ql:quickload :stack-dsl/use)
-  (let ((pasm:*pasm-accept-tracing* -1))
-    (stack-dsl:transpile-stack 
-       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.dsl\")
-     \"CL-USER\"
-       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.lisp\")
-       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/exprtypes.json\")
-       \"ARROWGRAMS/ESA-TRANSPILER\"
-       \"CL-USER\"
-       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/mechanisms.lisp\")
-     ))
-  (ql:quickload :parsing-assembler/use)
-  (let ((pasm:*pasm-accept-tracing* t))
-    (pasm:pasm-to-file 
-       \"ARROWGRAMS/ESA-TRANSPILER\"
-       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl.pasm\")
-       (asdf:system-relative-pathname :arrowgrams \"build_process/esa-transpiler/dsl.lisp\")))
-")
-
-;; temporary helper while transpiling alpha exprtypes.dsl
-#+nil(defun emake ()
-  (with-input-from-string (s *escript*)
-    (loop
-       (let ((cmd (read s nil :EOF)))
-	 (when (eq :EOF cmd) (return))
-	 (format *standard-output* "~&~s~%" cmd)
-	 (eval cmd)))))
