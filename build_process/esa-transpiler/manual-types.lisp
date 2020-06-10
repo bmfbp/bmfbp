@@ -36,4 +36,9 @@
 	       (eq 'scriptDeclaration (type-of s)))
       (return-from lookup-script s)))
   (error (format nil "no script named ~a" script-name)))
-  
+
+(defmethod as-list ((self methodDeclarationsAndScriptDeclarations))
+  (stack-dsl::%ordered-list self))
+
+(defmethod as-list ((self whenDeclarations))
+  (stack-dsl::%ordered-list self))

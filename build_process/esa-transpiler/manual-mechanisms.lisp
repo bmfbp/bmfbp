@@ -111,11 +111,11 @@
   (stack-dsl:%pop (cl-user::input-whenDeclarations (env p))))
 
 (defmethod $whenDeclarations__StartIteration ((p parser))
-  (let ((when-list (cl-user::input-whenDeclarations (env p))))
+  (let ((when-list (cl-user::as-list (stack-dsl:%top (cl-user::input-whenDeclarations (env p))))))
     (cl:push when-list (map-stack p))))
 
 (defmethod $whenDeclarations__FirstFromMap_BeginScope ((p parser))
-  (let ((first-when (car (map-stack p))))
+  (let ((first-when (cl:first (cl:first (map-stack p)))))
     (stack-dsl:%push (cl-user::input-whenDeclarations (env p)) first-when)))
 
 (defmethod $whenDeclarations__EndScope ((p parser))
@@ -147,11 +147,12 @@
 
 
 (defmethod $methodDeclarationsAndScriptDeclarations__StartIteration ((p parser))
-  (cl:push nil (map-stack p)))
+  (cl:push (cl-user::as-list (stack-dsl::%top (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))))
+           (map-stack p)))
 
 (defmethod $declarationMethodOrScript__FrontOfMap_BeginScope ((p parser))
   (stack-dsl:%push (cl-user::input-declarationMethodOrScript (env p))
-		   (cl:first (map-stack p))))
+		   (cl:first (cl:first (map-stack p)))))
 
 (defmethod $declarationMethodOrScript__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-declarationMethodOrScript (env p))))
@@ -161,12 +162,12 @@
 
 (defmethod $declarationMethodOrScript__Ensure_method_and_name ((p parser))
   (let ((top-method (stack-dsl:%top (cl-user::input-declarationMethodOrScript (env p)))))
-    (let ((name ((stack-dsl:%top (cl-user::output-name (env p))))))
+    (let ((name (stack-dsl:%top (cl-user::output-name (env p))))))
       (unless (eq 'methodDeclaration (cl:type-of top-method))
 	(error (format nil "~a is not a method, it is ~a" name (type-of top-method))))
       (unless (string= name (as-string (cl-user::name top-method)))
 	(error (format nil "method name ~a doesn't match up with ~a" (as-string (cl-user::name top-method)) name)))
-      (stack-dsl:%pop (cl-user::output-name (env p))))))
+      (stack-dsl:%pop (cl-user::output-name (env p)))))
 	
 
 (defun check-stacks (p)
