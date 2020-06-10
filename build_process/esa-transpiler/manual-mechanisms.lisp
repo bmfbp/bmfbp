@@ -146,6 +146,19 @@
   (stack-dsl:%pop (cl-user::input-methodsTable (env p))))
 
 
+(defmethod $methodDeclarationsAndScriptDeclarations__StartIteration ((p parser))
+  (cl:push nil (map-stack p)))
+
+(defmethod $declarationMethodOrScript__FrontOfMap_BeginScope ((p parser))
+  (stack-dsl:%push (cl-user::input-declarationMethodOrScript (env p))
+		   (cl:first (map-stack p))))
+
+(defmethod $declarationMethodOrScript__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-declarationMethodOrScript (env p))))
+
+(defmethod $declarationMethodOrScript__Next ((p parser))
+  (cl:pop (map-stack p)))
+
 
 (defun check-stacks (p)
   (let ((i 0))

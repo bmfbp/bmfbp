@@ -119,10 +119,19 @@
 
   @class-ref
                               $esaclass__LookupByName_BeginScope
+                              $methodDeclarationsAndScriptDeclarations__StartIteration
   {[ ?SYMBOL/script
+                                $declarationMethodOrScript__FrontOfMap_BeginScope
      @script-declaration
+                                $declarationMethodOrScript__EndScope
+                                $declarationMethodOrScript__Next
+
    | ?SYMBOL/method
+                                $declarationMethodOrScript__FrontOfMap_BeginScope
      @method-declaration
+                                $declarationMethodOrScript__EndScope
+                                $declarationMethodOrScript__Next
+
    | * 
      >
   ]}
