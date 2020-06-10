@@ -115,6 +115,14 @@
 (defmethod $esaprogram__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-esaprogram (env p))))
 
+
+(defmethod $whenDeclarations__FromProgram_BeginScope ((p parser))
+  (let ((top-esaprogram (stack-dsl:%top (cl-user::input-esaprogram (env p)))))
+    (stack-dsl:%push (cl-user::input-whenDeclarations (env p)) (cl-user::whenDeclarations top-esaprogram))))
+
+(defmethod $whenDeclarations__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-whenDeclarations (env p))))
+
 (defmethod $esaclass__LookupByName_BeginScope ((p parser))
   (let ((name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
     (let ((c (cl-user::lookup-class (stack-dsl:%top (cl-user::input-esaprogram (env p))) name)))
@@ -124,158 +132,15 @@
 (defmethod $esaclass__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-esaclass (env p))))
 
-(defmethod $esaclass__SetField_methodsTable_empty ((p parser))
-  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
-    (setf (cl-user::methodsTable top-class) (make-instance 'stack-dsl::%map :%element-type 'cl-user::externalMethod))))
-
-(defmethod $esaclass__SetField_scriptsTable_empty ((p parser))
-  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
-    (setf (cl-user::scriptsTable top-class) (make-instance 'stack-dsl::%map :%element-type 'cl-user::internalMethod))))
-
-(defmethod $scriptsTable__BeginScopeFrom_esaclass ((p parser))
-  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
-    (let ((stable (cl-user::scriptsTable top-class)))
-      (stack-dsl:%push (cl-user::input-scriptsTable (env p)) stable))))
-
-(defmethod $scriptsTable__EndScope ((p parser))
-  (stack-dsl:%pop p (cl-user::scriptsTable (env p))))
-
-(defmethod $scriptsTable__AppendFrom_internalMethod ((p parser))
-  (let ((top-scriptsTable (stack-dsl:%top (cl-user::input-scriptsTable (env p)))))
-    (let ((top-internalMethod (stack-dsl:%top (cl-user::output-internalMethod (env p)))))
-      (stack-dsl:%ensure-appendable-type top-scriptsTable)
-      (stack-dsl:%append top-scriptsTable top-internalMethod)
-      (stack-dsl:%pop (cl-user::output-internalMethod (env p))))))
 
 
-(defmethod $methodsTable__BeginScopeFrom_esaclass ((p parser))
-  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
-    (let ((mtable (cl-user::methodsTable top-class)))
-      (stack-dsl:%push (cl-user::input-methodsTable (env p)) mtable))))
 
 
-(defmethod $methodsTable__EndScope ((p parser))
-  (stack-dsl:%pop (cl-user::input-methodsTable (env p))))
 
-(defmethod $methodsTable__AppendFrom_externalMethod ((p parser))
-  (let ((top-methodsTable (stack-dsl:%top (cl-user::input-methodsTable (env p)))))
-    (let ((top-externalMethod (stack-dsl:%top (cl-user::output-externalMethod (env p)))))
-      (stack-dsl:%ensure-appendable-type top-methodsTable)
-      (stack-dsl:%append top-methodsTable top-externalMethod)
-      (stack-dsl:%pop (cl-user::output-externalMethod (env p))))))
-
-(defparameter *stacks* '(
-			 input-esaprogram
-			 output-esaprogram
-			 input-typeDecls
-			 output-typeDecls
-			 input-situations
-			 output-situations
-			 input-classes
-			 output-classes
-			 input-whenDeclarations
-			 output-whenDeclarations
-			 input-scriptImplementations
-			 output-scriptImplementations
-			 input-typeDecl
-			 output-typeDecl
-			 input-name
-			 output-name
-			 input-typeName
-			 output-typeName
-			 input-situationDefinition
-			 output-situationDefinition
-			 input-esaclass
-			 output-esaclass
-			 input-fieldMap
-			 output-fieldMap
-			 input-methodsTable
-			 output-methodsTable
-			 input-scriptsTable
-			 output-scriptsTable
-			 input-whenDeclaration
-			 output-whenDeclaration
-			 input-situationReferenceList
-			 output-situationReferenceList
-			 input-esaKind
-			 output-esaKind
-			 input-methodDeclarationsAndScriptDeclarations
-			 output-methodDeclarationsAndScriptDeclarations
-			 input-situationReferenceName
-			 output-situationReferenceName
-			 input-declarationMethodOrScript
-			 output-declarationMethodOrScript
-			 input-methodDeclaration
-			 output-methodDeclaration
-			 input-scriptDeclaration
-			 output-scriptDeclaration
-			 input-formalList
-			 output-formalList
-			 input-returnType
-			 output-returnType
-			 input-implementation
-			 output-implementation
-			 input-returnKind
-			 output-returnKind
-			 input-expression
-			 output-expression
-			 input-ekind
-			 output-ekind
-			 input-object
-			 output-object
-			 input-field
-			 output-field
-			 input-fkind
-			 output-fkind
-			 input-actualParameterList
-			 output-actualParameterList
-			 input-externalMethod
-			 output-externalMethod
-			 input-internalMethod
-			 output-internalMethod
-			 input-statement
-			 output-statement
-			 input-letStatement
-			 output-letStatement
-			 input-mapStatement
-			 output-mapStatement
-			 input-exitMapStatement
-			 output-exitMapStatement
-			 input-setStatement
-			 output-setStatement
-			 input-createStatement
-			 output-createStatement
-			 input-ifStatement
-			 output-ifStatement
-			 input-loopStatement
-			 output-loopStatement
-			 input-exitWhenStatement
-			 output-exitWhenStatement
-			 input-returnStatement
-			 output-returnStatement
-			 input-callInternalStatement
-			 output-callInternalStatement
-			 input-callExternalStatement
-			 output-callExternalStatement
-			 input-varName
-			 output-varName
-			 input-filler
-			 output-filler
-			 input-maybeIndirectExpression
-			 output-maybeIndirectExpression
-			 input-thenPart
-			 output-thenPart
-			 input-elsePart
-			 output-elsePart
-			 input-functionReference
-			 output-functionReference
-			 input-indirectionKind
-			 output-indirectionKind
-			 ))
 
 (defun check-stacks (p)
   (let ((i 0))
-    (dolist (stack *stacks*)
+    (dolist (stack cl-user::*stacks*)
       (let ((name (symbol-name stack)))
 	(let ((sym (intern name "CL-USER")))
 	  #+nil(let ((wm (cl-user::%water-mark (env p))))

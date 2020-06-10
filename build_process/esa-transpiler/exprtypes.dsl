@@ -25,6 +25,20 @@ esaclass = { name fieldMap methodsTable scriptsTable }
 
 % I deemed that I wanted to have script implementations "near" the definitions, so I allow intermingling of when declarations and script implementations
 
+% a synonym for "situation" might be "phase"
+% in this design, it is important that certain actions happen in a certain order, e.g. in classical CS: define, load, run,
+% e.g. in ESA, the (architectually) important phases are: build, load, intialize, run (where build is chopped up into two phases: very important (build) and less-architecturally-important (build-aux)
+% a synonym for "when" would, then, be "in phase xxx"
+% the word "phase" came to me much later and I, originally, used the word "situation" - also, I was looking for words that weren't already overloaded in meaning
+
+% declarations are important during phase 1
+% during phase 2, we pull up (lookup) classes and methods that were collected during phase 1 and embellish them with more meaning
+
+% the job of phase 1 is to collect things into fields of the datatype "esaprogram"
+% the job of phase 2 is to associate methods (external methods) and scripts (internal methods) with their corresponding classes, from the when declarations
+% the job of phase 3 is to collect code bodies for script methods (internal methods) - the bodies are lists of sequential statements
+% the job of phase 4 is to emit code - classes with fields and methods
+
 whenDeclaration = { situationReferenceList esaKind methodDeclarationsAndScriptDeclarations }
 situationReferenceList = :map situationReferenceName
 situationReferenceName =| name

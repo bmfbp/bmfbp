@@ -7,7 +7,9 @@
   @type-decls
   @situations
   @classes
+                          $whenDeclarations__FromProgram_BeginScope
   @parse-whens-and-scripts
+                          $whenDeclarations__EndScope
   EOF
                         $esaprogram__EndScope
 
@@ -81,8 +83,6 @@
   SYMBOL/class
   @esaSymbol
                                 $esaclass__LookupByName_BeginScope
-                                  $esaclass__SetField_methodsTable_empty
-                                  $esaclass__SetField_scriptsTable_empty
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
@@ -114,15 +114,9 @@
   @class-ref
                               $esaclass__LookupByName_BeginScope
   {[ ?SYMBOL/script 
-                                  $scriptsTable__BeginScopeFrom_esaclass
      @script-declaration
-                                    $scriptsTable__AppendFrom_internalMethod
-                                  $scriptsTable__EndScope
    | ?SYMBOL/method
-                                  $methodsTable__BeginScopeFrom_esaclass
      @method-declaration
-                                    $methodsTable__AppendFrom_externalMethod
-                                  $methodsTable__EndScope
    | * 
      >
   ]}
@@ -141,64 +135,40 @@
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method
-                                 $externalMethod__NewScope
   @esaSymbol
-                                  $externalMethod__SetField_name_from_name
   @formals
-                                  $externalMethod__SetField_formalList_from_formalList
   @return-type-declaration
-                                  $externalMethod__SetField_returnType_from_returnType
-                                 $externalMethod__Output
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
   SYMBOL/script
-                                 $internalMethod__NewScope
   @esaSymbol
-                                  $internalMethod__SetField_name_from_name
   @formals
-                                  $internalMethod__SetField_formalList_from_formalList
   @return-type-declaration
-                                  $internalMethod__SetField_returnType_from_returnType
-                                 $internalMethod__Output
 
 = formals
-                                 $formalList__NewScope
   [ ?'(' 
      '(' 
      @type-list 
      ')'
   | *
   ]
-                                 $formalList__Output
 
 = type-list
   @esaSymbol
-                                   $formalList__AppendFrom_name
   {[ &non-keyword-symbol
      @esaSymbol
-                                   $formalList__AppendFrom_name
    | * >
   ]}
 
 = return-type-declaration
-                                   $returnType__NewScope
-                                     $returnKind__NewScope
   [ ?'>' '>' '>'
          [ ?SYMBOL/map SYMBOL/map
-                                         $returnKind_SetEnum_map
            @esaSymbol
-	                               $returnType__SetField_name_from_name
          | *
-                                         $returnKind_SetEnum_simple
            @esaSymbol
-	                               $returnType__SetField_name_from_name
   ]
   | *
-                                         $returnKind__SetEnum_void
   ]
-                                     $returnKind__Output
-                                     $returnType__SetField_returnKind_from_returnKind
-                                   $returnType__Output
 
 = esaSymbol-in-decl
   @esaSymbol
