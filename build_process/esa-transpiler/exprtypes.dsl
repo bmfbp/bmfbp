@@ -1,10 +1,9 @@
-esaprogram = { typeDecls situations classes whenDeclarations scriptImplementations }
+esaprogram = { typeDecls situations classes whenDeclarations  }
 
 typeDecls = :map typeDecl
 situations = :map situationDefinition
 classes = :map esaclass
 whenDeclarations = :map whenDeclaration
-scriptImplementations = :map scriptImplementation
 
 typeDecl = { name typeName }
 situationDefinition =| name
