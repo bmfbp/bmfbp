@@ -73,6 +73,7 @@ end class
 
 when building part-definition
   method ensure-kind-defined	
+  script eeee
 end when
 
 %script kind a

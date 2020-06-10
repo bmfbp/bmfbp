@@ -142,7 +142,7 @@
   
 = script-declaration  % this is a (forward) declaration of scripts which will be defined later
   SYMBOL/script
-  @esaSymbol
+  @esaSymbol-in-decl
   @formals
   @return-type-declaration
 
