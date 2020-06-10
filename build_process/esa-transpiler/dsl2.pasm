@@ -74,15 +74,21 @@
   ]}
 
 = parse-whens-and-scripts
+                                      $whenDeclarations__StartIteration
+                                        $whenDeclarations__FirstFromMap_BeginScope
   {[ ?SYMBOL/when @when-declaration
+                                      $whenDeclarations__EndScope
+                                        $whenDeclarations__Next
+                                        $whenDeclarations__FirstFromMap_BeginScope
    |?SYMBOL/script @script-implementation
    | * >
   ]}
+                                      $whenDeclarations__EndScope
 
 = class-def
   SYMBOL/class
   @esaSymbol
-                                $esaclass__LookupByName_BeginScope
+                                $esaclass__LookupByName_BeginScope  %% no-op, but consumes a Name
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
@@ -113,7 +119,7 @@
 
   @class-ref
                               $esaclass__LookupByName_BeginScope
-  {[ ?SYMBOL/script 
+  {[ ?SYMBOL/script
      @script-declaration
    | ?SYMBOL/method
      @method-declaration
@@ -121,6 +127,7 @@
      >
   ]}
   SYMBOL/end SYMBOL/when
+check-stacks  
                               $esaclass__EndScope
 
 
@@ -185,6 +192,7 @@
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
+check-stacks
   SYMBOL/end SYMBOL/script
                                     $esaclass__EndScope
 

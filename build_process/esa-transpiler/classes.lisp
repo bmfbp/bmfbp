@@ -41,5 +41,6 @@
    ;; v2 emitter
    (env :accessor env :initform (make-instance 'cl-user::environment))
    (saved-text :accessor saved-text)
+   (map-stack :accessor map-stack :initform nil)
    ))
 

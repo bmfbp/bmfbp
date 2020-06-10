@@ -110,6 +110,21 @@
 (defmethod $whenDeclarations__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-whenDeclarations (env p))))
 
+(defmethod $whenDeclarations__StartIteration ((p parser))
+  (let ((when-list (cl-user::input-whenDeclarations (env p))))
+    (cl:push when-list (map-stack p))))
+
+(defmethod $whenDeclarations__FirstFromMap_BeginScope ((p parser))
+  (let ((first-when (car (map-stack p))))
+    (stack-dsl:%push (cl-user::input-whenDeclarations (env p)) first-when)))
+
+(defmethod $whenDeclarations__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-whenDeclarations (env p))))
+
+(defmethod $whenDeclarations__Next ((p parser))
+  (cl:pop (map-stack p)))
+
+
 (defmethod $esaclass__LookupByName_BeginScope ((p parser))
   (let ((name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
     (let ((c (cl-user::lookup-class (stack-dsl:%top (cl-user::input-esaprogram (env p))) name)))
@@ -120,8 +135,15 @@
   (stack-dsl:%pop (cl-user::input-esaclass (env p))))
 
 
+(defmethod $methodsTable__FromWhens_BeginScope ((p parser))
+  (let ((top-when (stack-dsl:%top (cl-user::input-whenDeclarations (env p)))))
+    (let ((method-name (stack-dsl:%top (cl-user::output-name (env p)))))
+      (let ((mdesc (cl-user::lookup-method top-when method-name)))
+	(stack-dsl:%push (cl-user::input-methodsTable (env p)) mdesc))))
+  (stack-dsl:%pop (cl-user::output-name (env p))))
 
-
+(defmethod $methodsTable__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-methodsTable (env p))))
 
 
 

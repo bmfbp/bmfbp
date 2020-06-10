@@ -16,3 +16,24 @@
       (return-from lookup-class c)))
   (error (format nil "class ~a not found in esaprogram" class-name)))
 
+
+(defmethod name-as-string ((self methodDeclaration))
+  (as-string (name self)))
+
+(defmethod name-as-string ((self scriptDeclaration))
+  (as-string (name self)))
+
+(defmethod lookup-method ((self whenDeclaration) method-name)
+  (dolist (m (stack-dsl:%ordered-list self))
+    (when (and (string= (name-as-string m) method-name)
+	       (eq 'methodDeclaration (type-of m)))
+      (return-from lookup-method m)))
+  (error (format nil "no method named ~a" method-name)))
+  
+(defmethod lookup-script ((self whenDeclaration) script-name)
+  (dolist (s (stack-dsl:%ordered-list self))
+    (when (and (string= (name-as-string s) script-name)
+	       (eq 'scriptDeclaration (type-of s)))
+      (return-from lookup-script s)))
+  (error (format nil "no script named ~a" script-name)))
+  
