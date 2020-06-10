@@ -151,7 +151,7 @@ check-stacks
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method
-  @esaSymbol-in-decl
+  @esaSymbol
                             $declarationMethodOrScript__Ensure_method_and_name
   @formals
   @return-type-declaration
