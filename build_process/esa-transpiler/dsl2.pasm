@@ -208,14 +208,15 @@
 
 = script-implementation
   SYMBOL/script
-  @esaSymbol-in-decl  % class
-                                    $name__IgnoreInPass1
-  @esaSymbol-in-decl  % script method
+  @esaSymbol  % class
+                                    $esaclass__LookupByName_BeginScope
+  @esaSymbol  % script method
                                     $name__IgnoreInPass1
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
   SYMBOL/end SYMBOL/script
+                                    $esaclass__EndScope
 
 = optional-formals-definition
   {[ ?'(' '(' @untyped-formals-definition ')'

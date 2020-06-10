@@ -77,5 +77,4 @@ end when
 
 script kind a
   x
-  y
 end script
