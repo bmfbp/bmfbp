@@ -112,7 +112,8 @@
   ]}
 
   @class-ref
-                              $esaclass__LookupByName_BeginScope
+                     $name__IgnoreInPass2
+%                              $esaclass__LookupByName_BeginScope
   {[ ?SYMBOL/script 
      @script-declaration
    | ?SYMBOL/method
@@ -121,7 +122,7 @@
      >
   ]}
   SYMBOL/end SYMBOL/when
-                              $esaclass__EndScope
+%                              $esaclass__EndScope
 
 
 = situation-ref
@@ -135,7 +136,7 @@
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method
-  @esaSymbol
+  @esaSymbol-in-decl
   @formals
   @return-type-declaration
   

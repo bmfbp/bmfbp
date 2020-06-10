@@ -40,6 +40,9 @@
 (defmethod $name__IgnoreInPass2 ((p parser))
   (stack-dsl:%pop (cl-user::output-name (env p))))
 
+(defmethod $expression__IgnoreInPass1 ((p parser))
+  (stack-dsl:%pop (cl-user::output-expression (env p))))
+
 ;; emission
 
 (defmethod true-p ((e cl-user::expression))
@@ -88,22 +91,6 @@
   (break p "forced break"))
 
 
-;; methods + lookups during code emission
-(defmethod $esaprogram__class_BeginScope_LookupByName ((p parser))
-  (stack-dsl:%push p (cl-user::lookup-class p (cl-user::output-name (env p))))
-  (stack-dsl:%pop p (cl-user::output-name (env p))))
-
-(defmethod $class__EndScope ((p parser))
-  (stack-dsl:%pop p (cl-user::input-esaclass (env p))))
-
-(defmethod $expression__IgnoreInPass1 ((p parser))
-  (stack-dsl:%pop (cl-user::output-expression (env p))))
-
-(defmethod $expression__OverwriteField_from_ekind ((p parser))
-  ;; reset field kind of TOs(output-expression)
-  (setf (cl-user::ekind (stack-dsl:%top (cl-user::output-expression (env p))))
-	(stack-dsl:%top (cl-user::output-ekind (env p))))
-  (stack-dsl:%pop (cl-user::output-ekind (env p))))
 
 
 ;; pass2

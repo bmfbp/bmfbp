@@ -75,6 +75,6 @@ when building part-definition
   method ensure-kind-defined	
 end when
 
-script kind a
-  x
-end script
+%script kind a
+%  x
+%end script
