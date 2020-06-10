@@ -159,6 +159,15 @@
 (defmethod $declarationMethodOrScript__Next ((p parser))
   (cl:pop (map-stack p)))
 
+(defmethod $declarationMethodOrScript__Ensure_method_and_name ((p parser))
+  (let ((top-method (stack-dsl:%top (cl-user::input-declarationMethodOrScript (env p)))))
+    (let ((name ((stack-dsl:%top (cl-user::output-name (env p))))))
+      (unless (eq 'methodDeclaration (cl:type-of top-method))
+	(error (format nil "~a is not a method, it is ~a" name (type-of top-method))))
+      (unless (string= name (as-string (cl-user::name top-method)))
+	(error (format nil "method name ~a doesn't match up with ~a" (as-string (cl-user::name top-method)) name)))
+      (stack-dsl:%pop (cl-user::output-name (env p))))))
+	
 
 (defun check-stacks (p)
   (let ((i 0))
