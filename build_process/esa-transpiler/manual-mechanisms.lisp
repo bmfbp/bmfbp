@@ -153,18 +153,24 @@
 
 
 (defmethod $methodDeclaration__FromMap_BeginScope ((p parser))
-  (stack-dsl:%push (input-methodDeclaration (env p))
-		   (cl:first (map-stack p))))
+  (let ((methodDeclaration (cl:first (cl:first (map-stack p)))))
+    (unless (eq 'cl-user::methodDeclaration (type-of methodDeclaration))
+      (error (format nil "~a must be a methodDeclaration, but is ~a"
+		     methodDeclaration (type-of methodDeclaration))))
+    (stack-dsl:%push (cl-user::input-methodDeclaration (env p)) methodDeclaration)))
 
 (defmethod $methodDeclaration__FromMap_EndScope ((p parser))
-  (stack-dsl:%pop (input-methodDeclaration (env p))))
+  (stack-dsl:%pop (cl-user::input-methodDeclaration (env p))))
 
 (defmethod $scriptDeclaration__FromMap_BeginScope ((p parser))
-  (stack-dsl:%push (input-methodDeclaration (env p))
-		   (cl:first (map-stack p))))
+  (let ((scriptDeclaration (cl:first (cl:first (map-stack p)))))
+    (unless (eq 'cl-user::scriptDeclaration (type-of scriptDeclaration))
+      (error (format nil "~a must be a scriptDeclaration, but is ~a"
+		     scriptDeclaration (type-of scriptDeclaration))))
+    (stack-dsl:%push (cl-user::input-scriptDeclaration (env p)) scriptDeclaration)))
 
 (defmethod $scriptDeclaration__FromMap_EndScope ((p parser))
-  (stack-dsl:%pop (input-methodDeclaration (env p))))
+  (stack-dsl:%pop (cl-user::input-scriptDeclaration (env p))))
 
     
 (defun check-stacks (p)
