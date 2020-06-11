@@ -74,27 +74,26 @@
   ]}
 
 = parse-whens-and-scripts
-                                      $whenDeclarations__StartIteration
-                                        $whenDeclarations__FirstFromMap_BeginScope
-  {[ ?SYMBOL/when @when-declaration
-                                      $whenDeclarations__EndScope
-                                        $whenDeclarations__Next
-                                        $whenDeclarations__FirstFromMap_BeginScope
+                                      $whenDeclarations__BeginMapping
+  {[ ?SYMBOL/when
+                                          $whenDeclaration__FromMap_BeginScope
+     @when-declaration
+                                          $whenDeclaration__EndScope
+                                      $whenDeclarations__Next
+				      
    |?SYMBOL/script @script-implementation
    | * >
   ]}
-                                      $whenDeclarations__EndScope
+                                      $whenDeclarations__EndMapping
 
 = class-def
   SYMBOL/class
-  @esaSymbol
-                                $esaclass__LookupByName_BeginScope  %% no-op, but consumes a Name
+  @esaSymbol-in-decl
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
-                                $esaclass__EndScope
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
@@ -111,6 +110,8 @@
 
 = when-declaration
   SYMBOL/when
+			      $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope
+                                $methodDeclarationsAndScriptDeclarations__BeginMapping
   @situation-ref
  {[ ?SYMBOL/or
       @or-situation 
@@ -118,26 +119,24 @@
   ]}
 
   @class-ref
-                              $esaclass__LookupByName_BeginScope
-                              $methodDeclarationsAndScriptDeclarations__StartIteration
   {[ ?SYMBOL/script
-                                $declarationMethodOrScript__FrontOfMap_BeginScope
+                                  $declarationMethodOrScript__FromMap_BeginScope
      @script-declaration
-                                $declarationMethodOrScript__EndScope
-                                $declarationMethodOrScript__Next
+                                  $declarationMethodOrScript__EndScope
+                                $methodDeclarationsAndScriptDeclarations__Next
 
    | ?SYMBOL/method
-                                $declarationMethodOrScript__FrontOfMap_BeginScope
+                                  $declarationMethodOrScript__FromMap_BeginScope
      @method-declaration
-                                $declarationMethodOrScript__EndScope
-                                $declarationMethodOrScript__Next
+                                  $declarationMethodOrScript__EndScope
+                                $methodDeclarationsAndScriptDeclarations__Next
 
    | * 
      >
   ]}
   SYMBOL/end SYMBOL/when
-check-stacks  
-                              $esaclass__EndScope
+                                $methodDeclarationsAndScriptDeclarations__EndMapping
+			      $methodDeclarationsAndScriptDeclarations__EndScope
 
 
 = situation-ref
@@ -196,7 +195,7 @@ check-stacks
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
-                                    $esaclass__LookupByName_BeginScope
+                                    $name__IgnoreInPass1
   @esaSymbol  % script method
                                     $name__IgnoreInPass1
   @optional-formals-definition

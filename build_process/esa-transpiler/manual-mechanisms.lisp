@@ -1,4 +1,5 @@
 (in-package :arrowgrams/esa-transpiler)
+(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 ;; see file exprtypes.lisp generated from exprtypes.dsl (see README.org)
 ;;
@@ -103,6 +104,7 @@
   (stack-dsl:%pop (cl-user::input-esaprogram (env p))))
 
 
+
 (defmethod $whenDeclarations__FromProgram_BeginScope ((p parser))
   (let ((top-esaprogram (stack-dsl:%top (cl-user::input-esaprogram (env p)))))
     (stack-dsl:%push (cl-user::input-whenDeclarations (env p)) (cl-user::whenDeclarations top-esaprogram))))
@@ -110,66 +112,54 @@
 (defmethod $whenDeclarations__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-whenDeclarations (env p))))
 
-(defmethod $whenDeclarations__StartIteration ((p parser))
-  (let ((when-list (cl-user::as-list (stack-dsl:%top (cl-user::input-whenDeclarations (env p))))))
-    (cl:push when-list (map-stack p))))
-
-(defmethod $whenDeclarations__FirstFromMap_BeginScope ((p parser))
-  (let ((first-when (cl:first (cl:first (map-stack p)))))
-    (stack-dsl:%push (cl-user::input-whenDeclarations (env p)) first-when)))
-
-(defmethod $whenDeclarations__EndScope ((p parser))
-  (stack-dsl:%pop (cl-user::input-whenDeclarations (env p))))
+(defmethod $whenDeclarations__BeginMapping ((p parser))
+  (let ((whenDeclaration-list (cl-user::as-list (stack-dsl:%top (cl-user::input-whenDeclarations (env p))))))
+    (cl:push whenDeclaration-list (map-stack p))))
 
 (defmethod $whenDeclarations__Next ((p parser))
+  (cl:pop (cl:first (map-stack p))))
+
+(defmethod $whenDeclarations__EndMapping ((p parser))
   (cl:pop (map-stack p)))
 
 
-(defmethod $esaclass__LookupByName_BeginScope ((p parser))
-  (let ((name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
-    (let ((c (cl-user::lookup-class (stack-dsl:%top (cl-user::input-esaprogram (env p))) name)))
-      (stack-dsl:%push (cl-user::input-esaclass (env p)) c))
-    (stack-dsl:%pop (cl-user::output-name (env p)))))
 
-(defmethod $esaclass__EndScope ((p parser))
-  (stack-dsl:%pop (cl-user::input-esaclass (env p))))
+(defmethod $whenDeclaration__FromMap_BeginScope ((p parser))
+  (let ((first-when (cl:first (cl:first (map-stack p)))))
+    (stack-dsl:%push (cl-user::input-whenDeclarations (env p)) first-when)))
 
-
-(defmethod $methodsTable__FromWhens_BeginScope ((p parser))
-  (let ((top-when (stack-dsl:%top (cl-user::input-whenDeclarations (env p)))))
-    (let ((method-name (stack-dsl:%top (cl-user::output-name (env p)))))
-      (let ((mdesc (cl-user::lookup-method top-when method-name)))
-	(stack-dsl:%push (cl-user::input-methodsTable (env p)) mdesc))))
-  (stack-dsl:%pop (cl-user::output-name (env p))))
-
-(defmethod $methodsTable__EndScope ((p parser))
-  (stack-dsl:%pop (cl-user::input-methodsTable (env p))))
+(defmethod $whenDeclaration__EndScope((p parser))
+  (stack-dsl:%pop (cl-user::input-whenDeclaration (env p))))
 
 
-(defmethod $methodDeclarationsAndScriptDeclarations__StartIteration ((p parser))
-  (cl:push (cl-user::as-list (stack-dsl::%top (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))))
-           (map-stack p)))
 
-(defmethod $declarationMethodOrScript__FrontOfMap_BeginScope ((p parser))
+(defmethod $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope ((p parser))
+  (let ((top-when (stack-dsl:%top (cl-user::input-whenDeclaration (env p)))))
+    (stack-dsl:%push (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))
+		     (cl-user::methodDeclarationsAndScriptDeclarations top-when))))
+
+(defmethod $methodDeclarationsAndScriptDeclarations__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))))
+
+(defmethod $methodDeclarationsAndScriptDeclarations__BeginMapping ((p parser))
+  (cl:push (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))
+	   (map-stack p)))
+
+(defmethod $methodDeclarationsAndScriptDeclarations__Next ((p parser))
+  (cl:pop (cl:first (map-stack p))))
+
+(defmethod $methodDeclarationsAndScriptDeclarations__EndMapping ((p parser))
+  (cl:pop (map-stack p)))
+
+
+(defmethod $declarationMethodOrScript__FromMap_BeginScope ((p parser))
   (stack-dsl:%push (cl-user::input-declarationMethodOrScript (env p))
-		   (cl:first (cl:first (map-stack p)))))
+		   (cl:first (map-stack p))))
 
 (defmethod $declarationMethodOrScript__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-declarationMethodOrScript (env p))))
 
-(defmethod $declarationMethodOrScript__Next ((p parser))
-  (cl:pop (map-stack p)))
-
-(defmethod $declarationMethodOrScript__Ensure_method_and_name ((p parser))
-  (let ((top-method (stack-dsl:%top (cl-user::input-declarationMethodOrScript (env p)))))
-    (let ((name (stack-dsl:%top (cl-user::output-name (env p))))))
-      (unless (eq 'methodDeclaration (cl:type-of top-method))
-	(error (format nil "~a is not a method, it is ~a" name (type-of top-method))))
-      (unless (string= name (as-string (cl-user::name top-method)))
-	(error (format nil "method name ~a doesn't match up with ~a" (as-string (cl-user::name top-method)) name)))
-      (stack-dsl:%pop (cl-user::output-name (env p)))))
-	
-
+    
 (defun check-stacks (p)
   (let ((i 0))
     (dolist (stack cl-user::*stacks*)
