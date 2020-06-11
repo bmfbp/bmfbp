@@ -118,8 +118,10 @@
   | * >
   ]}
   @class-ref
+                                    $esaclass__LookupFromClasses_BeginScope
+
                                     $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope
-                                      $methodDeclarationsAndScriptDeclarations__Beginmapping
+                                      $methodDeclarationsAndScriptDeclarations__BeginMapping
   {[ ?SYMBOL/script
                                         $scriptDeclaration__FromMap_BeginScope
      @script-declaration
@@ -137,6 +139,8 @@
                                       $methodDeclarationsAndScriptDeclarations__EndMapping
                                     $methodDeclarationsAndScriptDeclarations__EndScope
 
+                                    $esaclass__EndScope
+
 = situation-ref
   @esaSymbol-in-decl % should be checked to be a situation
 
@@ -148,7 +152,7 @@
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method
-  @esaSymbol
+  @esaSymbol-in-decl
   @formals
   @return-type-declaration
   

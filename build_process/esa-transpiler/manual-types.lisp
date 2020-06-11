@@ -11,11 +11,13 @@
   
 ;; esaprogram class
 (defmethod lookup-class ((self esaprogram) class-name)
-  (dolist (c (stack-dsl:%ordered-list (classes self)))
-    (when (string= (name-as-string c) class-name)
-      (return-from lookup-class c)))
-  (error (format nil "class ~a not found in esaprogram" class-name)))
+  (lookup-class (classes self) class-name))
 
+(defmethod lookup-class ((self cl-user::classes) class-name)
+  (dolist (esa-c (stack-dsl:%ordered-list self))
+    (when (string= (name-as-string esa-c) class-name)
+      (return-from lookup-class esa-c)))
+  (error (format nil "class ~a not found in esaprogram" class-name)))
 
 (defmethod name-as-string ((self methodDeclaration))
   (as-string (name self)))

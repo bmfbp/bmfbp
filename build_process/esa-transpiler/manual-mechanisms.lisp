@@ -182,6 +182,16 @@
   (stack-dsl:%pop (cl-user::input-classes (env p))))
 
 
+(defmethod $esaclass__LookupFromClasses_BeginScope ((p parser))
+  (let ((top-name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
+    (let ((top-classmap (stack-dsl:%top (cl-user::input-classes (env p)))))
+      (let ((found-class (cl-user::lookup-class top-classmap top-name)))
+	(stack-dsl:%push (cl-user::input-esaclass (env p)) found-class))))
+  (stack-dsl:%pop (cl-user::output-name (env p))))
+
+(defmethod $esaclass__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-esaclass (env p))))
+
 (defun check-stacks (p)
   (let ((i 0))
     (dolist (stack cl-user::*stacks*)
