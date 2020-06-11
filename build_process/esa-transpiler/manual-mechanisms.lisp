@@ -134,7 +134,7 @@
 
 
 (defmethod $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope ((p parser))
-  (let ((top-when (stack-dsl:%top (cl-user::input-whenDeclaration (env p)))))
+  (let ((top-when (cl:first (stack-dsl:%top (cl-user::input-whenDeclaration (env p))))))
     (stack-dsl:%push (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))
 		     (cl-user::methodDeclarationsAndScriptDeclarations top-when))))
 

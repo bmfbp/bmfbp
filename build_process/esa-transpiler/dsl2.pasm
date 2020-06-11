@@ -110,8 +110,6 @@
 
 = when-declaration
   SYMBOL/when
-			      $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope
-                                $methodDeclarationsAndScriptDeclarations__BeginMapping
   @situation-ref
  {[ ?SYMBOL/or
       @or-situation 
@@ -120,23 +118,13 @@
 
   @class-ref
   {[ ?SYMBOL/script
-                                  $declarationMethodOrScript__FromMap_BeginScope
      @script-declaration
-                                  $declarationMethodOrScript__EndScope
-                                $methodDeclarationsAndScriptDeclarations__Next
-
    | ?SYMBOL/method
-                                  $declarationMethodOrScript__FromMap_BeginScope
      @method-declaration
-                                  $declarationMethodOrScript__EndScope
-                                $methodDeclarationsAndScriptDeclarations__Next
 
-   | * 
      >
   ]}
   SYMBOL/end SYMBOL/when
-                                $methodDeclarationsAndScriptDeclarations__EndMapping
-			      $methodDeclarationsAndScriptDeclarations__EndScope
 
 
 = situation-ref
@@ -151,7 +139,6 @@
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method
   @esaSymbol
-                            $declarationMethodOrScript__Ensure_method_and_name
   @formals
   @return-type-declaration
   
