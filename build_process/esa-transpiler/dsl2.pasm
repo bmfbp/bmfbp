@@ -76,7 +76,7 @@
 = parse-whens-and-scripts
                                       $whenDeclarations__BeginMapping
   {[ ?SYMBOL/when
-                                          $whenDeclaration__FromMap_BeginScope
+                                          $whenDeclaration__FromWhenDeclarationsMap_BeginScope
      @when-declaration
                                           $whenDeclaration__EndScope
                                       $whenDeclarations__Next
@@ -115,17 +115,21 @@
       @or-situation 
   | * >
   ]}
-
   @class-ref
+                                    $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope
+                                      $methodDeclarationsAndScriptDeclarations__BeginMapping
   {[ ?SYMBOL/script
      @script-declaration
+                                      $methodDeclarationsAndScriptDeclarations__Next
    | ?SYMBOL/method
      @method-declaration
-
+                                      $methodDeclarationsAndScriptDeclarations__Next
+   | *
      >
   ]}
   SYMBOL/end SYMBOL/when
-
+                                      $methodDeclarationsAndScriptDeclarations__EndMapping
+                                    $methodDeclarationsAndScriptDeclarations__EndScope
 
 = situation-ref
   @esaSymbol-in-decl % should be checked to be a situation

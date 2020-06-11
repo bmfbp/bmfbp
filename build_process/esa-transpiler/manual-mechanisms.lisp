@@ -124,9 +124,9 @@
 
 
 
-(defmethod $whenDeclaration__FromMap_BeginScope ((p parser))
+(defmethod $whenDeclaration__FromWhenDeclarationsMap_BeginScope ((p parser))
   (let ((first-when (cl:first (cl:first (map-stack p)))))
-    (stack-dsl:%push (cl-user::input-whenDeclarations (env p)) first-when)))
+    (stack-dsl:%push (cl-user::input-whenDeclaration (env p)) first-when)))
 
 (defmethod $whenDeclaration__EndScope((p parser))
   (stack-dsl:%pop (cl-user::input-whenDeclaration (env p))))
@@ -134,7 +134,7 @@
 
 
 (defmethod $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope ((p parser))
-  (let ((top-when (cl:first (stack-dsl:%top (cl-user::input-whenDeclaration (env p))))))
+  (let ((top-when (stack-dsl:%top (cl-user::input-whenDeclaration (env p)))))
     (stack-dsl:%push (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))
 		     (cl-user::methodDeclarationsAndScriptDeclarations top-when))))
 
@@ -142,7 +142,7 @@
   (stack-dsl:%pop (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))))
 
 (defmethod $methodDeclarationsAndScriptDeclarations__BeginMapping ((p parser))
-  (cl:push (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))
+  (cl:push (cl-user::as-list (stack-dsl:%top (cl-user::input-methodDeclarationsAndScriptDeclarations (env p))))
 	   (map-stack p)))
 
 (defmethod $methodDeclarationsAndScriptDeclarations__Next ((p parser))
@@ -150,6 +150,9 @@
 
 (defmethod $methodDeclarationsAndScriptDeclarations__EndMapping ((p parser))
   (cl:pop (map-stack p)))
+
+
+
 
 
 (defmethod $declarationMethodOrScript__FromMap_BeginScope ((p parser))
