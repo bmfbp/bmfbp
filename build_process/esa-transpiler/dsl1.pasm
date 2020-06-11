@@ -175,9 +175,6 @@
                                     $declarationMethodOrScript__Output
                                   $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
    | * 
-                                    $declarationMethodOrScript__NewScope
-                                    $declarationMethodOrScript__Output
-                                  $methodDeclarationsAndScriptDeclarations__AppendFrom_declarationMethodOrScript
      >
   ]}
                                 $methodDeclarationsAndScriptDeclarations__Output
