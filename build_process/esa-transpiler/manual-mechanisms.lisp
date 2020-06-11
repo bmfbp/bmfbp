@@ -172,7 +172,16 @@
 (defmethod $scriptDeclaration__FromMap_EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-scriptDeclaration (env p))))
 
-    
+
+(defmethod $classes__FromProgram_BeginScope ((p parser))
+  (let ((top-program (stack-dsl:%top (cl-user::input-esaprogram (env p)))))
+    (stack-dsl:%push (cl-user::input-classes (env p))
+		     (cl-user::classes top-program))))
+
+(defmethod $classes__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-classes (env p))))
+
+
 (defun check-stacks (p)
   (let ((i 0))
     (dolist (stack cl-user::*stacks*)

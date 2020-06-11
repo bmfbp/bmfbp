@@ -4,6 +4,7 @@
 = esa-dsl
   ~rmSpaces
                         $esaprogram__BeginScope
+			  $classes__FromProgram_BeginScope
   @type-decls
   @situations
   @classes
@@ -11,6 +12,7 @@
   @parse-whens-and-scripts
                           $whenDeclarations__EndScope
   EOF
+			  $classes__EndScope
                         $esaprogram__EndScope
 
 - keyword-symbol
@@ -88,7 +90,7 @@
 
 = class-def
   SYMBOL/class
-  @esaSymbol-in-decl
+  @esaSymbol
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
