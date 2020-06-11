@@ -117,12 +117,16 @@
   ]}
   @class-ref
                                     $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope
-                                      $methodDeclarationsAndScriptDeclarations__BeginMapping
+                                      $methodDeclarationsAndScriptDeclarations__Beginmapping
   {[ ?SYMBOL/script
+                                        $scriptDeclaration__FromMap_BeginScope
      @script-declaration
+                                        $scriptDeclaration__FromMap_EndScope
                                       $methodDeclarationsAndScriptDeclarations__Next
    | ?SYMBOL/method
+                                        $methodDeclaration__FromMap_BeginScope
      @method-declaration
+                                        $methodDeclaration__FromMap_EndScope
                                       $methodDeclarationsAndScriptDeclarations__Next
    | *
      >

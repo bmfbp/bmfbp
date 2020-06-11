@@ -152,15 +152,19 @@
   (cl:pop (map-stack p)))
 
 
-
-
-
-(defmethod $declarationMethodOrScript__FromMap_BeginScope ((p parser))
-  (stack-dsl:%push (cl-user::input-declarationMethodOrScript (env p))
+(defmethod $methodDeclaration__FromMap_BeginScope ((p parser))
+  (stack-dsl:%push (input-methodDeclaration (env p))
 		   (cl:first (map-stack p))))
 
-(defmethod $declarationMethodOrScript__EndScope ((p parser))
-  (stack-dsl:%pop (cl-user::input-declarationMethodOrScript (env p))))
+(defmethod $methodDeclaration__FromMap_EndScope ((p parser))
+  (stack-dsl:%pop (input-methodDeclaration (env p))))
+
+(defmethod $scriptDeclaration__FromMap_BeginScope ((p parser))
+  (stack-dsl:%push (input-methodDeclaration (env p))
+		   (cl:first (map-stack p))))
+
+(defmethod $scriptDeclaration__FromMap_EndScope ((p parser))
+  (stack-dsl:%pop (input-methodDeclaration (env p))))
 
     
 (defun check-stacks (p)
