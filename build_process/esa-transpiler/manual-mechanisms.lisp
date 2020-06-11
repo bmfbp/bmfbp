@@ -159,7 +159,7 @@
 		     methodDeclaration (type-of methodDeclaration))))
     (stack-dsl:%push (cl-user::input-methodDeclaration (env p)) methodDeclaration)))
 
-(defmethod $methodDeclaration__FromMap_EndScope ((p parser))
+(defmethod $methodDeclaration__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-methodDeclaration (env p))))
 
 (defmethod $scriptDeclaration__FromMap_BeginScope ((p parser))
@@ -169,7 +169,7 @@
 		     scriptDeclaration (type-of scriptDeclaration))))
     (stack-dsl:%push (cl-user::input-scriptDeclaration (env p)) scriptDeclaration)))
 
-(defmethod $scriptDeclaration__FromMap_EndScope ((p parser))
+(defmethod $scriptDeclaration__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-scriptDeclaration (env p))))
 
 
