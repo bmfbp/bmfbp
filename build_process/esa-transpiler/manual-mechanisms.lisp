@@ -192,6 +192,13 @@
 (defmethod $esaclass__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-esaclass (env p))))
 
+
+(defmethod $esaclass__SetField_methodsTable_empty ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
+    (setf (cl-user::methodsTable top-class) nil)))
+
+
+
 (defun check-stacks (p)
   (let ((i 0))
     (dolist (stack cl-user::*stacks*)

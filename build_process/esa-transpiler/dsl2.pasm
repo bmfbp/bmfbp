@@ -91,11 +91,14 @@
 = class-def
   SYMBOL/class
   @esaSymbol
+                                     $esaclass__LookupFromClasses_BeginScope
+				       $esaclass__SetField_methodsTable_empty
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
+                                     $esaclass__EndScope
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
