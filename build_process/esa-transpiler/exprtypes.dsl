@@ -7,7 +7,7 @@ whenDeclarations = :map whenDeclaration
 
 typeDecl = { name typeName }
 situationDefinition =| name
-esaclass = { name fieldMap methodsTable scriptsTable }
+esaclass = { name fieldMap methodsTable }
 
 % a "declaration" declares the existence of something, but gives no definition
 %  for the thing
@@ -73,7 +73,6 @@ actualParameterList = :map expression
 name = :string
 
 methodsTable = :map externalMethod
-scriptsTable = :map internalMethod
 
 %
 % pass2 data structures
