@@ -13,7 +13,8 @@
                           $whenDeclarations__EndScope
   EOF
 			  $classes__EndScope
-                        $esaprogram__EndScope
+                        $esaprogram__Output
+$bp
 
 - keyword-symbol
   [ ?SYMBOL
@@ -135,10 +136,17 @@
 					    $methodsTable__FromClass_BeginScope
                                               $methodsTable__AppendFrom_declarationMethodOrScript
 					    $methodsTable__EndScope
+                                      $methodDeclarationsAndScriptDeclarations__Next
    | ?SYMBOL/method
                                         $methodDeclaration__FromMap_BeginScope
      @method-declaration
-                                        $methodDeclaration__EndScope
+					$methodDeclaration__Output
+					$declarationMethodOrScript__NewScope
+                                          $declarationMethodOrScript__CoerceFrom_methodDeclaration
+					$declarationMethodOrScript__Output
+					    $methodsTable__FromClass_BeginScope
+                                              $methodsTable__AppendFrom_declarationMethodOrScript
+					    $methodsTable__EndScope
                                       $methodDeclarationsAndScriptDeclarations__Next
    | *
      >

@@ -89,7 +89,8 @@
   (setf (current-class p) (scanner:token-text (pasm:accepted-token p))))
 
 (defmethod $bp ((p parser))
-  (break p "forced break"))
+  (break "forced break")
+  (format *standard-output* "~&forced break ~s~%" p))
 
 
 
