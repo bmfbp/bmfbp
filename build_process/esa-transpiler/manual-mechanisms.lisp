@@ -195,8 +195,17 @@
 
 (defmethod $esaclass__SetField_methodsTable_empty ((p parser))
   (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
-    (setf (cl-user::methodsTable top-class) nil)))
+    (setf (cl-user::methodsTable top-class) 
+	  (stack-dsl:make-empty-map "declarationMethodOrScript"))))
 
+
+(defmethod $methodsTable__FromClass_BeginScope ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
+    (let ((m-list (cl-user::methodsTable top-class)))
+      (stack-dsl:%push (cl-user::input-methodsTable (env p)) m-list))))
+
+(defmethod $methodsTable__EndScope ((p parser))
+  (stack-dsl:%pop (cl-user::input-methodsTable (env p))))
 
 
 (defun check-stacks (p)

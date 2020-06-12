@@ -72,7 +72,7 @@ fkind = 'map' | 'simple'
 actualParameterList = :map expression
 name = :string
 
-methodsTable = :map externalMethod
+methodsTable = :map declarationMethodOrScript
 
 %
 % pass2 data structures

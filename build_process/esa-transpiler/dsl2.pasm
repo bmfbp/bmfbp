@@ -128,8 +128,13 @@
   {[ ?SYMBOL/script
                                         $scriptDeclaration__FromMap_BeginScope
      @script-declaration
-                                        $scriptDeclaration__EndScope
-                                      $methodDeclarationsAndScriptDeclarations__Next
+					$scriptDeclaration__Output
+					$declarationMethodOrScript__NewScope
+                                          $declarationMethodOrScript__CoerceFrom_scriptDeclaration
+					$declarationMethodOrScript__Output
+					    $methodsTable__FromClass_BeginScope
+                                              $methodsTable__AppendFrom_declarationMethodOrScript
+					    $methodsTable__EndScope
    | ?SYMBOL/method
                                         $methodDeclaration__FromMap_BeginScope
      @method-declaration
