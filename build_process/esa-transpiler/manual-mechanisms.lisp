@@ -197,7 +197,7 @@
 (defmethod $esaclass__SetField_methodsTable_empty ((p parser))
   (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
     (setf (cl-user::methodsTable top-class) 
-	  (stack-dsl:make-empty-map "declarationMethodOrScript"))))
+	  (stack-dsl:%make-empty-map "declarationMethodOrScript"))))
 
 
 (defmethod $methodsTable__FromClass_BeginScope ((p parser))
@@ -207,6 +207,26 @@
 
 (defmethod $methodsTable__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-methodsTable (env p))))
+
+
+(defmethod $scriptDeclaration__LookupFromTable_BeginScope ((p parser))
+  (let ((script-name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
+    (let ((top-table (stack-dsl:%top (cl-user::input-methodsTable (env p)))))
+      (let ((m (cl-user::lookup-method top-table script-name)))
+	(unless (eq 'cl-user::scriptDeclaration (type-of m))
+	  (error (format nil "~s is not a script ; it is declared as a ~s" script-name (type-of m))))
+	(unless (cl-user::implementation-empty-p m)
+	  (error (format nil "~s is multiply defined" script-name)))
+	(stack-dsl:%push (cl-user::input-scriptDeclaration (env p)) m)))
+    (stack-dsl::%pop (cl-user::output-name (env p)))))
+
+(defmethod $scriptDeclaration__EndScope ((p parser))
+  (stack-dsl::%pop (cl-user::input-scriptDeclaration (env p))))
+
+(defmethod $scriptDeclaration__SetField_implementation_empty ((p parser))
+  (let ((top-script (stack-dsl:%top (cl-user::input-scriptDeclaration (env p)))))
+    (setf (cl-user::implementation top-script)
+	  (stack-dsl:%make-empty-map "statement"))))
 
 
 (defun check-stacks (p)
