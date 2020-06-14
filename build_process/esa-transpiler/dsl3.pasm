@@ -250,8 +250,6 @@
                                          $statement__Output
                                        $implementation__AppendFrom_statement
    | ?'@' @callInternalStatement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | &non-keyword-symbol @callExternalStatement
                                        $implementation__AppendFrom_statement
@@ -260,10 +258,10 @@
 
 = callInternalStatement
   @esa-expr-in-statement
-                             $expression__IgnoreInPass1                              
 
 = callExternalStatement
   @esa-expr-in-statement
+                         $statement__Newscope
                            $functionReference__NewScope             
                              $functionReference__CoerceFrom_expression
                            $functionReference__Output
@@ -272,6 +270,7 @@
                                $callExternalStatement__SetField_functionReference_from_functionReference
                              $callExternalStatement__Output
                           $statement__CoerceFrom_callExternalStatement
+                         $statement__Output
 
 
 = let-statement
