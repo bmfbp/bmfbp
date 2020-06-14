@@ -290,7 +290,7 @@
                               $letStatement__SetField_varName_from_varName
    '='
    @esa-expr-in-statement
-                             $letStatement__SetField_expression_from_expression
+                              $letStatement__SetField_expression_from_expression
    SYMBOL/in 
    @script-body
                               $letStatement__SetField_implementation_from_implementation
