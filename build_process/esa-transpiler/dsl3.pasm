@@ -182,7 +182,10 @@
                                         $scriptDeclaration__LookupFromTable_BeginScope
   @optional-formals-definition
   @optional-return-type-definition
+                                          $implementation__NewScope
   @script-body
+                                          $implementation__Output
+					  $scriptDeclaration__SetField_implementation_from_implementation
   SYMBOL/end SYMBOL/script
                                         $scriptDeclaration__EndScope
 				      $methodsTable__EndScope
@@ -207,19 +210,53 @@
   ]
   | *
   ]  
-  
+
+%% <<>> implementation
 = script-body
   {[ ?SYMBOL/let @let-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/map @map-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/exit-map @exit-map-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/set @set-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/create @create-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/if @if-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/loop @loop-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/exit-when @exit-when-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?'>' @return-statement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | ?'@' @callInternalStatement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | &non-keyword-symbol @callExternalStatement
+                                         $statement__NewScope
+                                         $statement__Output
+                                       $implementation__AppendFrom_statement
    | * >
   ]}
 
