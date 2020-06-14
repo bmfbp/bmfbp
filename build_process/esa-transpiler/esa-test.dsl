@@ -79,6 +79,8 @@ when building part-definition
 end when
 
 script part-definition a
+  let a = b in
     x
     @y
+  end let
 end script
