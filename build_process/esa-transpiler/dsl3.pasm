@@ -254,8 +254,6 @@
                                          $statement__Output
                                        $implementation__AppendFrom_statement
    | &non-keyword-symbol @callExternalStatement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | * >
   ]}
@@ -266,7 +264,15 @@
 
 = callExternalStatement
   @esa-expr-in-statement
-                             $expression__IgnoreInPass1                              
+                           $functionReference__NewScope             
+                             $functionReference__CoerceFrom_expression
+                           $functionReference__Output
+                           $statement__NewScope
+                             $callExternalStatement__NewScope
+                               $callExternalStatement__SetField_functionReference_from_functionReference
+                             $callExternalStatement__Output
+                          $statement__CoerceFrom_callExternalStatement
+
 
 = let-statement
   SYMBOL/let
