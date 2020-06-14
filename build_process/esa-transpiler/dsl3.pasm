@@ -214,8 +214,6 @@
 %% <<>> implementation
 = script-body
   {[ ?SYMBOL/let @let-statement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/map @map-statement
                                          $statement__NewScope
@@ -283,13 +281,28 @@
 
 = let-statement
   SYMBOL/let
+$bp
+                          $statement__NewScope
+                            $letStatement__NewScope
    @esaSymbol-in-statement
+check-stacks
+                              $letStatement_SetField_varName_from_name
+check-stacks
    '='
    @esa-expr-in-statement
+check-stacks
+                              $letStatement_SetField_expression_from_expression
+check-stacks
    SYMBOL/in 
    @script-body
+check-stacks
+                              $letStatement_SetField_implementation_from_implementation
+check-stacks
    SYMBOL/end SYMBOL/let
-
+                            $letStatement__Output
+                            $statement__CoerceFrom_letStatement
+                          $statement__Output
+ 
 = create-statement
   SYMBOL/create
    @esaSymbol-in-statement
