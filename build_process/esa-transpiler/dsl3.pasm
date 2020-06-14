@@ -215,8 +215,6 @@
   {[ ?SYMBOL/let @let-statement
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/map @map-statement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/exit-map @exit-map-statement
                                          $statement__NewScope
@@ -299,6 +297,27 @@
                             $statement__CoerceFrom_letStatement
                           $statement__Output
  
+= map-statement
+  SYMBOL/map
+                          $statement__NewScope
+                            $mapStatement__NewScope
+  @esaSymbol-in-statement
+                              $varName__NewScope
+                                $varName__CoerceFrom_name
+                              $varName__Output
+                              $mapStatement__SetField_varName_from_varName
+  '='
+  @esa-expr-in-statement
+                              $mapStatement__SetField_expression_from_expression
+  SYMBOL/in
+  @script-body
+                              $mapStatement__SetField_implementation_from_implementation
+  SYMBOL/end SYMBOL/map
+                            $mapStatement__Output
+                            $statement__CoerceFrom_mapStatement
+                          $statement__Output
+ 
+
 = create-statement
   SYMBOL/create
    @esaSymbol-in-statement
@@ -320,13 +339,6 @@
    '=' 
    @esa-expr-in-statement
   
-= map-statement
-  SYMBOL/map @esaSymbol-in-statement
-  '='
-  @esa-expr-in-statement
-  SYMBOL/in @script-body
-  SYMBOL/end SYMBOL/map
-
 = exit-map-statement
   SYMBOL/exit-map
 

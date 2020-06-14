@@ -81,6 +81,13 @@ end when
 script part-definition a
   let a = b in
     x
-    @y
+   @y
   end let
+end script
+
+script part-definition eeee
+  map a = b in
+    x
+   @y
+  end map
 end script
