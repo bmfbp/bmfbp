@@ -121,41 +121,14 @@
   | * >
   ]}
   @class-ref
-                                    $esaclass__LookupFromClasses_BeginScope
-
-                                    $methodDeclarationsAndScriptDeclarations__FromWhenDeclaration_BeginScope
-                                      $methodDeclarationsAndScriptDeclarations__BeginMapping
   {[ ?SYMBOL/script
-                                        $scriptDeclaration__FromMap_BeginScope
      @script-declaration-in-when
-                                          $scriptDeclaration__SetField_implementation_empty
-					$scriptDeclaration__Output
-					$declarationMethodOrScript__NewScope
-                                          $declarationMethodOrScript__CoerceFrom_scriptDeclaration
-					$declarationMethodOrScript__Output
-					    $methodsTable__FromClass_BeginScope
-                                              $methodsTable__AppendFrom_declarationMethodOrScript
-					    $methodsTable__EndScope
-                                      $methodDeclarationsAndScriptDeclarations__Next
    | ?SYMBOL/method
-                                        $methodDeclaration__FromMap_BeginScope
      @method-declaration-in-when
-					$methodDeclaration__Output
-					$declarationMethodOrScript__NewScope
-                                          $declarationMethodOrScript__CoerceFrom_methodDeclaration
-					$declarationMethodOrScript__Output
-					    $methodsTable__FromClass_BeginScope
-                                              $methodsTable__AppendFrom_declarationMethodOrScript
-					    $methodsTable__EndScope
-                                      $methodDeclarationsAndScriptDeclarations__Next
    | *
      >
   ]}
   SYMBOL/end SYMBOL/when
-                                      $methodDeclarationsAndScriptDeclarations__EndMapping
-                                    $methodDeclarationsAndScriptDeclarations__EndScope
-
-                                    $esaclass__EndScope
 
 = situation-ref
   @esaSymbol-in-decl % should be checked to be a situation
@@ -164,7 +137,7 @@
   SYMBOL/or @situation-ref
   
 = class-ref
-  @esaSymbol  % should be checked to be a kind
+  @esaSymbol-in-decl  % should be checked to be a kind
 
 = method-declaration-in-when % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method      % should check declaration against definition, but, we'll skip this step during bootstrap
