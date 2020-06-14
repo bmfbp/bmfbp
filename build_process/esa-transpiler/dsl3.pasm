@@ -258,14 +258,22 @@
 
 = callInternalStatement
   @esa-expr-in-statement
-
-= callExternalStatement
-  @esa-expr-in-statement
-                         $statement__Newscope
                            $functionReference__NewScope             
                              $functionReference__CoerceFrom_expression
                            $functionReference__Output
-                           $statement__NewScope
+                         $statement__NewScope
+                             $callInternalStatement__NewScope
+                               $callInternalStatement__SetField_functionReference_from_functionReference
+                             $callInternalStatement__Output
+                          $statement__CoerceFrom_callInternalStatement
+                         $statement__Output
+
+= callExternalStatement
+  @esa-expr-in-statement
+                           $functionReference__NewScope             
+                             $functionReference__CoerceFrom_expression
+                           $functionReference__Output
+                         $statement__NewScope
                              $callExternalStatement__NewScope
                                $callExternalStatement__SetField_functionReference_from_functionReference
                              $callExternalStatement__Output

@@ -80,4 +80,5 @@ end when
 
 script part-definition a
   x
+  @y
 end script
