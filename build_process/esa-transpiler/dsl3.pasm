@@ -216,33 +216,19 @@
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/map @map-statement
                                        $implementation__AppendFrom_statement
-   | ?SYMBOL/exit-map @exit-map-statement
-                                         $statement__NewScope
-                                         $statement__Output
-                                       $implementation__AppendFrom_statement
    | ?SYMBOL/set @set-statement
-                                         $statement__NewScope
-                                         $statement__Output
+                                       $implementation__AppendFrom_statement
+   | ?SYMBOL/exit-map @exit-map-statement
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/create @create-statement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/if @if-statement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/loop @loop-statement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/exit-when @exit-when-statement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | ?'>' @return-statement
-                                         $statement__NewScope
-                                         $statement__Output
                                        $implementation__AppendFrom_statement
    | ?'@' @callInternalStatement
                                        $implementation__AppendFrom_statement
@@ -318,6 +304,22 @@
                           $statement__Output
  
 
+= set-statement
+  SYMBOL/set
+                          $statement__NewScope
+                            $setStatement__NewScope
+   @esa-expr-in-statement
+                              $varName__NewScope
+                                $varName__CoerceFrom_name
+                              $varName__Output
+                              $setStatement__SetField_varName_from_varName
+   '=' 
+   @esa-expr-in-statement
+                              $setStatement__SetField_expression_from_expression
+                            $setStatement__Output
+                            $statement__CoerceFrom_setStatement
+                          $statement__Output
+  
 = create-statement
   SYMBOL/create
    @esaSymbol-in-statement
@@ -333,12 +335,6 @@
    @script-body
    SYMBOL/end SYMBOL/create
 
-= set-statement
-  SYMBOL/set
-   @esa-expr-in-statement
-   '=' 
-   @esa-expr-in-statement
-  
 = exit-map-statement
   SYMBOL/exit-map
 

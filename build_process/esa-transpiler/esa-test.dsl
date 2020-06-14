@@ -76,18 +76,23 @@ when building part-definition
   script eeee
   method m2
   script a
+  script b
 end when
 
-script part-definition a
+script part-definition eeee
   let a = b in
     x
    @y
   end let
 end script
 
-script part-definition eeee
-  map a = b in
+script part-definition a
+  map mapVarC = mapExprD in
     x
    @y
   end map
+end script
+
+script part-definition b
+  set setVarV = SetVarExprW
 end script
