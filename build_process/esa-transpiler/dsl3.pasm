@@ -182,9 +182,7 @@
                                         $scriptDeclaration__LookupFromTable_BeginScope
   @optional-formals-definition
   @optional-return-type-definition
-                                          $implementation__NewScope
   @script-body
-                                          $implementation__Output
 					  $scriptDeclaration__SetField_implementation_from_implementation
   SYMBOL/end SYMBOL/script
                                         $scriptDeclaration__EndScope
@@ -213,6 +211,7 @@
 
 %% <<>> implementation
 = script-body
+                                          $implementation__NewScope
   {[ ?SYMBOL/let @let-statement
                                        $implementation__AppendFrom_statement
    | ?SYMBOL/map @map-statement
@@ -253,6 +252,7 @@
                                        $implementation__AppendFrom_statement
    | * >
   ]}
+                                          $implementation__Output
 
 = callInternalStatement
   @esa-expr-in-statement
