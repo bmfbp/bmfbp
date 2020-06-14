@@ -23,14 +23,16 @@
 	    (let ((result-pass1 (get-output-stream-string (pasm:output-string-stream p))))
 	      (let ((pasm::*pasm-accept-tracing* tracing-accept))
 		(pasm:initially p token-stream)
-		(esa-dsl-pass2 p))  ;; call top rule of 2nd pass
+		(esa-dsl-pass2 p)  ;; call top rule of 2nd pass
+		(stack-dsl:%pop (cl-user::output-esaprogram (env p))))
 	      (format *standard-output* "~&*** check stacks pass 2 ***~%")
 	      (check-stacks p)
 	      (format *standard-output* "~&*** ***~%~%")
 	      (let ((result-pass2 (get-output-stream-string (pasm:output-string-stream p))))
 		(let ((pasm::*pasm-accept-tracing* tracing-accept))
 		  (pasm:initially p token-stream)
-		  (esa-dsl-pass3 p))  ;; call top rule of 3rd pass
+		  (esa-dsl-pass3 p)  ;; call top rule of 3rd pass
+		  (stack-dsl:%pop (cl-user::output-esaprogram (env p))))
 		(format *standard-output* "~&*** check stacks pass 3 ***~%")
 		(check-stacks p)
 		(format *standard-output* "~&*** ***~%~%")
