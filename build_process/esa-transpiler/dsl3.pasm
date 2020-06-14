@@ -78,7 +78,6 @@
 = parse-whens-and-scripts
   {[ ?SYMBOL/when
      @when-declaration
-				      
    |?SYMBOL/script @script-implementation
    | * >
   ]}
@@ -177,7 +176,8 @@
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
-                                    $name__IgnoreInPass1
+                                    $esaclass__LookupFromClasses_BeginScope
+				      $methodsTable__FromClass_BeginScope
   @esaSymbol  % script method
                                     $name__IgnoreInPass1
   @optional-formals-definition
@@ -185,6 +185,7 @@
   @script-body
 check-stacks
   SYMBOL/end SYMBOL/script
+				      $methodsTable__EndScope
                                     $esaclass__EndScope
 
 = optional-formals-definition
