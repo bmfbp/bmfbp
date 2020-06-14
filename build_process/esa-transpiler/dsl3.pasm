@@ -76,29 +76,21 @@
   ]}
 
 = parse-whens-and-scripts
-                                      $whenDeclarations__BeginMapping
   {[ ?SYMBOL/when
-                                          $whenDeclaration__FromWhenDeclarationsMap_BeginScope
      @when-declaration
-                                          $whenDeclaration__EndScope
-                                      $whenDeclarations__Next
 				      
    |?SYMBOL/script @script-implementation
    | * >
   ]}
-                                      $whenDeclarations__EndMapping
 
 = class-def
   SYMBOL/class
-  @esaSymbol
-                                     $esaclass__LookupFromClasses_BeginScope
-				       $esaclass__SetField_methodsTable_empty
+  @esaSymbol-in-decl
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
-                                     $esaclass__EndScope
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
