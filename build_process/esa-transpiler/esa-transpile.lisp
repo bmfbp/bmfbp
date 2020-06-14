@@ -35,6 +35,7 @@
 		(let ((pasm::*pasm-accept-tracing* tracing-accept))
 		  (pasm:initially p token-stream)
 		  (esa-dsl-pass3 p)  ;; call top rule of 3rd pass
+(break "test 3")
 		  (stack-dsl:%pop (cl-user::output-esaprogram (env p))))
 		(format *standard-output* "~&*** check stacks pass 3 ***~%")
 		(check-stacks p)
