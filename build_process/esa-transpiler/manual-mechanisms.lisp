@@ -220,9 +220,6 @@
 	(stack-dsl:%push (cl-user::input-scriptDeclaration (env p)) m)))
     (stack-dsl::%pop (cl-user::output-name (env p)))))
 
-(defmethod $scriptDeclaration__EndScope ((p parser))
-  (stack-dsl::%pop (cl-user::input-scriptDeclaration (env p))))
-
 (defmethod $scriptDeclaration__SetField_implementation_empty ((p parser))
   (let ((top-script (stack-dsl:%top (cl-user::input-scriptDeclaration (env p)))))
     (setf (cl-user::implementation top-script)
