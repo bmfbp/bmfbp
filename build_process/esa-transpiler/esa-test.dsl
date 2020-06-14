@@ -79,6 +79,8 @@ when building part-definition
 end when
 
 script part-definition a
-  x
-  @y
+  let a = w in
+    x
+    @y
+  end let
 end script
