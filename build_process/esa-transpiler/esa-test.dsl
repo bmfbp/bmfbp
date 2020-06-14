@@ -75,9 +75,9 @@ when building part-definition
   method ensure-kind-defined	
   script eeee
   method m2
-  script s2
+  script a
 end when
 
-%script kind a
-%  x
-%end script
+script part-definition a
+  x
+end script

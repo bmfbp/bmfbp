@@ -218,7 +218,6 @@
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
-check-stacks
   SYMBOL/end SYMBOL/script
                                     $esaclass__EndScope
 

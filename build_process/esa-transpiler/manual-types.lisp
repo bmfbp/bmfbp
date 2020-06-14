@@ -25,22 +25,21 @@
 (defmethod name-as-string ((self scriptDeclaration))
   (as-string (name self)))
 
-(defmethod lookup-method ((self whenDeclaration) method-name)
-  (dolist (m (stack-dsl:%ordered-list self))
-    (when (and (string= (name-as-string m) method-name)
-	       (eq 'methodDeclaration (type-of m)))
-      (return-from lookup-method m)))
-  (error (format nil "no method named ~a" method-name)))
-  
-(defmethod lookup-script ((self whenDeclaration) script-name)
-  (dolist (s (stack-dsl:%ordered-list self))
-    (when (and (string= (name-as-string s) script-name)
-	       (eq 'scriptDeclaration (type-of s)))
-      (return-from lookup-script s)))
-  (error (format nil "no script named ~a" script-name)))
-
 (defmethod as-list ((self methodDeclarationsAndScriptDeclarations))
   (stack-dsl::%ordered-list self))
 
 (defmethod as-list ((self whenDeclarations))
   (stack-dsl::%ordered-list self))
+
+(defmethod lookup-method ((self stack-dsl::%map) method-name)
+  ;; lookup method or script from methodsTable (a %map)
+  (dolist (s (stack-dsl:%ordered-list self))
+    (when (string= (name-as-string s) method-name)
+      (return-from lookup-method s)))
+  (error (format nil "no script named ~a" script-name)))
+  
+(defmethod implementation-empty-p ((self cl-user::scriptDeclaration))
+  (stack-dsl:%empty-p (cl-user::implementation self)))
+
+#+nil(defmethod implementation-empty-p ((self T)
+  nil))
