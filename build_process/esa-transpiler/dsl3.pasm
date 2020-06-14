@@ -179,12 +179,12 @@
                                     $esaclass__LookupFromClasses_BeginScope
 				      $methodsTable__FromClass_BeginScope
   @esaSymbol  % script method
-                                    $name__IgnoreInPass1
+                                        $scriptDeclaration__LookupFromTable_BeginScope
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
-check-stacks
   SYMBOL/end SYMBOL/script
+                                        $scriptDeclaration__EndScope
 				      $methodsTable__EndScope
                                     $esaclass__EndScope
 
