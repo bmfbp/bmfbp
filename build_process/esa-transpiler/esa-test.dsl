@@ -80,6 +80,10 @@ when building part-definition
   script c
   script ddd
   script fff
+  script ggg
+  script hhh
+  script iii
+  script jjj
 end when
 
 script part-definition eeee
@@ -117,4 +121,34 @@ script part-definition fff
    @y
    exit-when f
   end loop
+end script
+
+script part-definition ggg
+  create kkk = kind in
+    x
+   @y
+   exit-when f
+  end create
+end script
+
+script part-definition hhh
+  create kkk = *xyz in
+    x
+   @y
+   exit-when f
+  end create
+end script
+
+script part-definition iii
+  if i then
+   @y
+  end if
+end script
+
+script part-definition jjj
+  if j then
+   @s
+  else
+   @u
+  end if
 end script

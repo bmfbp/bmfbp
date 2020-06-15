@@ -350,51 +350,100 @@
                             $statement__CoerceFrom_exitWhenStatement
                           $statement__Output
 
-
-= create-statement
-  SYMBOL/create
-   @esaSymbol-in-statement
-   '=' 
-   [ ?'*' '*'
-     @class-ref
-                     $name__EndOutputScope
-   | *
-   @class-ref
-                     $name__EndOutputScope
-   ]
-   SYMBOL/in 
-   @script-body
-   SYMBOL/end SYMBOL/create
-
-= if-statement
-  SYMBOL/if
-    @esa-expr-in-statement
-  SYMBOL/then
-    @script-body
-  [ ?SYMBOL/else SYMBOL/else
-     @script-body
-  | *
-  ]
-  SYMBOL/end SYMBOL/if
-
 = script-call
   '@' @esa-expr-in-statement
 
 = method-call
   @esa-expr-in-statement
 
-= return-statement
-  '>' '>'
-  [ ?SYMBOL/true SYMBOL/true
-  | ?SYMBOL/false SYMBOL/false
-  | * @esaSymbol-in-statement
-  ]
 
 = esaSymbol-in-statement
   @esaSymbol
 
 = esa-expr-in-statement
   @esa-expr
+
+= return-statement
+  '>' '>'
+  [ ?SYMBOL/true SYMBOL/true
+                               $statement__NewScope
+                                 $returnTrueStatement__NewScope
+                                 $returnTrueStatement__Output
+                                 $statement__CoerceFrom_returnTrueStatement
+                               $statement__Output
+  | ?SYMBOL/false SYMBOL/false
+                               $statement__NewScope
+                                 $returnTFalseStatement__NewScope
+                                 $returnFalseStatement__Output
+                                 $statement__CoerceFrom_returnFalseStatement
+                               $statement__Output
+  | * 
+                               $statement__NewScope
+                                 $returnValueStatement__NewScope
+      @esaSymbol-in-statement
+                                   $returnValueStatement__SetField_name_from_name
+                                 $returnValueStatement__Output
+                                 $statement__CoerceFrom_returnValueStatement
+                               $statement__Output
+  ]
+
+
+= create-statement
+  SYMBOL/create
+                          $statement__NewScope
+                            $createStatement__NewScope
+   @esaSymbol-in-statement
+                              $varName__NewScope
+                                $varName__CoerceFrom_name
+                              $varName__Output
+                              $createStatement__SetField_varName_from_varName
+   '=' 
+                                $indirectionKind__NewScope
+   [ ?'*' '*'
+                                  $indirectionKind__SetEnum_indirect
+   | *
+                                  $indirectionKind__SetEnum_direct
+   ]
+                                $indirectionKind__Output
+                              $createStatement__SetField__indirectionKind_from_indirectionKind
+   @class-ref
+                              $createStatement__SetField_name_from_name
+   SYMBOL/in 
+   @script-body
+                              $createStatement__SetField_implementation_from_implementation
+   SYMBOL/end SYMBOL/create
+                            $createStatement__Output
+                            $statement__CoerceFrom_createStatement
+                          $statement__Output
+
+= if-statement
+                          $statement__NewScope
+                            $ifStatement__NewScope
+  SYMBOL/if
+    @esa-expr-in-statement
+                            $ifStatement__SetField_expression_from_expression
+  SYMBOL/then
+    @script-body
+                              $thenPart__NewScope
+                                $thenPart__SetField_implementation_from_implementation
+                              $thenPart__Output
+                              $ifStatement__SetField_thenPart_from_thenPart
+
+                              $elsePart__NewScope
+  [ ?SYMBOL/else SYMBOL/else
+     @script-body
+                                $elsePart__NewScope
+                                  $elsePart__SetField_implementation_from_implementation
+                                $elsePart__Output
+  | *
+  ]
+                             $ifStatement__SetField_elsePart_from_elsePart
+  SYMBOL/end SYMBOL/if
+                            $ifStatement__Output
+                            $statement__CoerceFrom_ifStatement
+                          $statement__Output
+
+
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)

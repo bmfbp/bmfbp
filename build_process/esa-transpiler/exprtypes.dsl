@@ -82,17 +82,19 @@ internalMethod = { name formalList returnType implementation }
 implementation = :map statement
 
 % pass3 data structures
-statement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callInternalStatement | callExternalStatement
+statement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | callInternalStatement | callExternalStatement | returnTrueStatement | returnFalseStatement | returnValueStatement
 
 letStatement = { varName expression implementation }
 mapStatement = { varName expression implementation }
 exitMapStatement = { filler } 
 setStatement = { varName expression }
-createStatement = { varName maybeIndirectExpression implementation }
+createStatement = { varName indirectionKind name implementation }
 ifStatement = { expression thenPart elsePart }
 loopStatement = { implementation }
 exitWhenStatement = { expression }
-returnStatement = { expression }
+returnTrueStatement = { filler }
+returnFalseStatement = { filler }
+returnValueStatement = { name }
 callInternalStatement = { functionReference } 
 callExternalStatement = { functionReference }
 
@@ -101,7 +103,6 @@ functionReference =| expression
 thenPart =| implementation
 elsePart =| implementation
 
-maybeIndirectExpression = { indirectionKind expression }
 indirectionKind = 'indirect' | 'direct'
 
 % deficiency in stack-dsl parser - expects at least one field (we really want 0 fields here)
