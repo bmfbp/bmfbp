@@ -235,7 +235,8 @@
    | &non-keyword-symbol @callExternalStatement
                                        $implementation__AppendFrom_statement
    | * >
-  ]}
+  ]
+  }
                                           $implementation__Output
 
 = callInternalStatement
@@ -308,7 +309,7 @@
   SYMBOL/set
                           $statement__NewScope
                             $setStatement__NewScope
-   @esa-expr-in-statement
+   @esaSymbol-in-statement
                               $varName__NewScope
                                 $varName__CoerceFrom_name
                               $varName__Output
