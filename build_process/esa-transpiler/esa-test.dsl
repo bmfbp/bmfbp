@@ -78,6 +78,7 @@ when building part-definition
   script a
   script b
   script c
+  script ddd
 end when
 
 script part-definition eeee
@@ -100,4 +101,11 @@ end script
 
 script part-definition c
   exit-map
+end script
+
+script part-definition ddd
+  loop
+    x
+   @y
+  end loop
 end script
