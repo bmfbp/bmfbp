@@ -340,6 +340,16 @@
                           $statement__Output
   SYMBOL/end SYMBOL/loop
   
+= exit-when-statement
+  SYMBOL/exit-when
+                          $statement__NewScope
+ 			    $exitWhenStatement__NewScope
+  @esa-expr-in-statement
+                              $exitWhenStatement__SetField_expression_from_expression
+                            $exitWhenStatement__Output
+                            $statement__CoerceFrom_exitWhenStatement
+                          $statement__Output
+
 
 = create-statement
   SYMBOL/create
@@ -355,10 +365,6 @@
    SYMBOL/in 
    @script-body
    SYMBOL/end SYMBOL/create
-
-= exit-when-statement
-  SYMBOL/exit-when
-    @esa-expr-in-statement
 
 = if-statement
   SYMBOL/if

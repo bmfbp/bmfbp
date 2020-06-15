@@ -79,6 +79,7 @@ when building part-definition
   script b
   script c
   script ddd
+  script fff
 end when
 
 script part-definition eeee
@@ -107,5 +108,13 @@ script part-definition ddd
   loop
     x
    @y
+  end loop
+end script
+
+script part-definition fff
+  loop
+    x
+   @y
+   exit-when f
   end loop
 end script
