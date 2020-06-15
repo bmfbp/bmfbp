@@ -32,26 +32,34 @@
 		(check-stacks p)
 		(format *standard-output* "~&*** ***~%~%")
 		(cl-user::%memoCheck (env p)))
-	      (cl-user::%memoStacks (env p))
 	      (let ((result-pass2 (get-output-stream-string (pasm:output-string-stream p))))
-		(let ((pasm::*pasm-accept-tracing* tracing-accept))
-		  (pasm:initially p token-stream)
-		  (esa-dsl-pass3 p)  ;; call top rule of 3rd pass
-(break "test 3")
-		  (stack-dsl:%pop (cl-user::output-esaprogram (env p))))
-		(let ()
-		  (format *standard-output* "~&*** check stacks pass 3 ***~%")
-		  (check-stacks p)
-		  (format *standard-output* "~&*** ***~%~%")
-		  (cl-user::%memoCheck (env p)))
-		(let ((result-pass3 (get-output-stream-string (pasm:output-string-stream p))))
-		  
-		  (let ((final (concatenate 'string 
-					    (format nil "(in-package :esa)~%(proclaim '(optimize (debug 3) (safety 3) (speed 0)))~%~%")
-					    result-pass1
-					    result-pass2
-					    result-pass3)))
-		    final))))))))))
+		
+		;; pass3
+		(let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
+		  (let ((pasm::*pasm-accept-tracing* tracing-accept))
+		    (cl-user::%memoStacks (env p))
+		    (pasm:initially p token-stream)
+		    ;... restore esaprogram
+		    (stack-dsl:%push (cl-user::output-esaprogram (env p)) ep)
+		    (setf (esaprogram p) ep)
+		    ;...
+		    (esa-dsl-pass3 p)  ;; call top rule of 3rd pass
+		    (break "test 3")
+		    (stack-dsl:%pop (cl-user::output-esaprogram (env p))))
+		  (let ()
+		    (format *standard-output* "~&*** check stacks pass 3 ***~%")
+		    (check-stacks p)
+		    (format *standard-output* "~&*** ***~%~%")
+		    (cl-user::%memoCheck (env p)))
+		  (let ((result-pass3 (get-output-stream-string (pasm:output-string-stream p))))
+
+		    
+		    (let ((final (concatenate 'string 
+					      (format nil "(in-package :esa)~%(proclaim '(optimize (debug 3) (safety 3) (speed 0)))~%~%")
+					      result-pass1
+					      result-pass2
+					      result-pass3)))
+		    final)))))))))))
 
 (defun transpile-esa-to-file (esa-input-filename output-filename &key (tracing-accept nil))
   (let ((str (transpile-esa-to-string esa-input-filename :tracing-accept tracing-accept)))
