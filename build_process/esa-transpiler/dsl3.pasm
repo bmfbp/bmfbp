@@ -405,8 +405,8 @@
                                   $indirectionKind__SetEnum_direct
    ]
                                 $indirectionKind__Output
-                              $createStatement__SetField__indirectionKind_from_indirectionKind
-   @class-ref
+                              $createStatement__SetField_indirectionKind_from_indirectionKind
+   @class-ref-in-statement
                               $createStatement__SetField_name_from_name
    SYMBOL/in 
    @script-body
@@ -415,6 +415,9 @@
                             $createStatement__Output
                             $statement__CoerceFrom_createStatement
                           $statement__Output
+
+= class-ref-in-statement
+  @esaSymbol-in-statement
 
 = if-statement
                           $statement__NewScope
@@ -425,14 +428,14 @@
   SYMBOL/then
     @script-body
                               $thenPart__NewScope
-                                $thenPart__SetField_implementation_from_implementation
+                                $thenPart__CoerceFrom_implementation
                               $thenPart__Output
                               $ifStatement__SetField_thenPart_from_thenPart
 
                               $elsePart__NewScope
   [ ?SYMBOL/else SYMBOL/else
      @script-body
-                                  $elsePart__SetField_implementation_from_implementation
+                                  $elsePart__CoerceFrom_implementation
   | *
   ]
                                 $elsePart__Output

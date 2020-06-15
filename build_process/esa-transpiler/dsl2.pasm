@@ -279,10 +279,10 @@
    '=' 
    [ ?'*' '*'
      @class-ref
-                     $name__IngoreInPass2
+                     $name__IgnoreInPass2
    | *
    @class-ref
-                     $name__IngoreInPass2
+                     $name__IgnoreInPass2
    ]
    SYMBOL/in 
    @script-body
