@@ -141,7 +141,7 @@ end script
 
 script part-definition iii
   if i then
-   @y
+   @p
   end if
 end script
 

@@ -432,16 +432,15 @@
                               $elsePart__NewScope
   [ ?SYMBOL/else SYMBOL/else
      @script-body
-                                $elsePart__NewScope
                                   $elsePart__SetField_implementation_from_implementation
-                                $elsePart__Output
   | *
   ]
+                                $elsePart__Output
                              $ifStatement__SetField_elsePart_from_elsePart
   SYMBOL/end SYMBOL/if
-                            $ifStatement__Output
-                            $statement__CoerceFrom_ifStatement
-                          $statement__Output
+                           $ifStatement__Output
+                           $statement__CoerceFrom_ifStatement
+                         $statement__Output
 
 
 
