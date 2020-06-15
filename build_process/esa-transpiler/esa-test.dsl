@@ -77,6 +77,7 @@ when building part-definition
   method m2
   script a
   script b
+  script c
 end when
 
 script part-definition eeee
@@ -95,4 +96,8 @@ end script
 
 script part-definition b
   set setVarV = SetVarExprW
+end script
+
+script part-definition c
+  exit-map
 end script

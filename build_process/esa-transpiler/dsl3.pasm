@@ -321,6 +321,14 @@
                             $statement__CoerceFrom_setStatement
                           $statement__Output
   
+= exit-map-statement
+  SYMBOL/exit-map
+                          $statement__NewScope
+                            $exitMapStatement__NewScope
+                            $exitMapStatement__Output
+                            $statement__CoerceFrom_exitMapStatement
+                          $statement__Output
+
 = create-statement
   SYMBOL/create
    @esaSymbol-in-statement
@@ -335,9 +343,6 @@
    SYMBOL/in 
    @script-body
    SYMBOL/end SYMBOL/create
-
-= exit-map-statement
-  SYMBOL/exit-map
 
 = loop-statement
   SYMBOL/loop
