@@ -45,5 +45,12 @@
 
 (defmethod asString ((self esaClass))
   (let ((name (format nil "class ~a~%" (asString (name self)))))
-    (let ((fields (mapcar #'(lambda (f) (format nil "  field ~a~%" (asString (name f)))) (stack-dsl:%list (fieldMap self)))))
-      (format nil "~a~{~a~}end class" name fields))))
+    (let ((fields (mapcar #'(lambda (f) (format nil "field ~a~%" (asString (name f)))) (stack-dsl:%list (fieldMap self)))))
+      (let ((methods (mapcar #'asString (stack-dsl:%list (methodsTable self)))))
+	(format nil "~a~{  ~a~}~{    ~a~}end class" name fields methods)))))
+
+(defmethod asString ((self methodDeclaration))
+  (format nil "ext-method ~a~%" (asString (name self))))
+
+(defmethod asString ((self scriptDeclaration))
+  (format nil "method ~a~%" (asString (name self))))
