@@ -572,4 +572,5 @@
 
 = print-tester
   ~rmSpaces
-  @esaSymbol
+  @esa-expr
+  
