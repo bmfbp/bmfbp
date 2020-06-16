@@ -27,7 +27,9 @@
   (let ((params (if (slot-boundp self 'cl-user::actualParameterList)
 		    (mapcar #'asString (stack-dsl:%list (cl-user::actualParameterList self)))
 		    nil)))
-    (format nil "~a(~{~a~^ ~})" (asString (name self)) params)))
+    (if (null params)
+	(format nil "(slot-value ~~a '~a)" (asString (name self)))
+	(format nil "((slot-value ~~a '~a) ~{~a~^ ~})" (asString (name self)) params))))
 
 (defmethod asString ((self callExternalStatement))
   (let ((fname (asString (functionReference self))))
