@@ -33,6 +33,10 @@
   (let ((fname (asString (functionReference self))))
     (format nil "callExternal ~a" fname)))
 
+(defmethod asString ((self callInternalStatement))
+  (let ((fname (asString (functionReference self))))
+    (format nil "callInternal ~a" fname)))
+
 (defmethod asString ((self implementation))
   (mapcar #'asString (stack-dsl:%list self)))
 
