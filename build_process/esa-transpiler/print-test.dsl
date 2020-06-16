@@ -20,7 +20,6 @@ when building part-definition
   method ensure-kind-defined	
   script eeee
   method m2
-  script a
   script b
   script c
   script ddd
@@ -29,6 +28,7 @@ when building part-definition
   script hhh
   script iii
   script jjj
+  script a
 end when
 
 script part-definition a
@@ -45,5 +45,15 @@ script part-definition a
   end map
 
   set p = q
+
+  create k = l in 
+    @x.y(d e).z(a b c)
+    w.u(f g).z(h i j)
+  end create
+
+  create h = *j in 
+    @x.y(d e).z(a b c)
+    w.u(f g).z(h i j)
+  end create
 
 end script

@@ -72,7 +72,19 @@
 	(code (asString (implementation self))))
     (format nil "map ~a=~a in ~{~%~a~}~%end map" vn e code)))
 
+(defmethod asString ((self createStatement))
+  (let ((vn (asString (varName self)))
+	(cn  (asString (name self)))
+	(i   (asString (indirectionKind self)))
+	(code (asString (implementation self))))
+    (if (string= "direct" i)
+	(format nil "create ~a=~a in ~{~%~a~}~%end create" vn cn code)
+	(format nil "createIndirect ~a=~a in ~{~%~a~}~%end create" vn cn code))))
+
 (defmethod asString ((self setStatement))
   (let ((vn (asString (varName self)))
 	(e  (asString (expression self))))
     (format nil "set ~a := ~a" vn e)))
+
+(defmethod asString ((self indirectionKind))
+  (stack-dsl:%value self))
