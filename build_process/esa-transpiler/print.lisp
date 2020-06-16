@@ -40,3 +40,10 @@
 (defmethod asString ((self implementation))
   (mapcar #'asString (stack-dsl:%list self)))
 
+(defmethod asString ((self esaprogram))
+  (mapcar #'asString (stack-dsl:%list (classes self))))
+
+(defmethod asString ((self esaClass))
+  (let ((name (format nil "class ~a~%" (asString (name self)))))
+    (let ((fields (mapcar #'(lambda (f) (format nil "  field ~a~%" (asString (name f)))) (stack-dsl:%list (fieldMap self)))))
+      (format nil "~a~{~a~}end class" name fields))))

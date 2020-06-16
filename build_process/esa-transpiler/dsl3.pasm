@@ -571,6 +571,4 @@
 
 
 = print-tester
-  ~rmSpaces
-  @script-body
-  
+  @esa-dsl
