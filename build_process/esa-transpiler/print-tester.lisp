@@ -8,6 +8,7 @@
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
 	  (cl-user::%memoStacks (env p))
 	  (print-tester-pass3 p)  ;; call print-test rule of 3rd pass
+	  (cl:trace cl-user::asString)
 	  (let ((n (stack-dsl:%top (cl-user::output-expression (env p)))))
 	    (format *standard-output* "~&~%~a~%" (cl-user::asString n)))
 )))))

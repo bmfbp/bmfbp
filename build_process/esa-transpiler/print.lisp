@@ -1,6 +1,8 @@
 (in-package :cl-user)
+(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 (defmethod asString ((self name))
+(format *standard-output* "~&asString name~%")
   (stack-dsl::%value self))
 
 (defmethod asString ((self expression))
@@ -13,8 +15,8 @@
 	  ((string= "object" k)
 	   (asString (object self)))
 	  ((string= "calledObject" k)
-	   (asString (object self))
-	   (t (assert nil))))))
+	   (asString (object self)))
+	  (t (assert nil)))))
 
 (defmethod asString ((self object))
   ; { name fieldMap }
@@ -23,11 +25,14 @@
 			      (stack-dsl:%list (fieldMap self)))))
     (if (null fieldStrings)
 	(format nil "~a" (asString (name self)))
-	(format nil "~a~a" (asString (name self)) fieldStrings))))
+	(format nil "~a~{~a~}" (asString (name self)) fieldStrings))))
 
 (defmethod asString ((self field))
   ; { name fkind actualParameterList }
-  (let ((params (mapcar #'(lambda (p) (format nil " ~a" (asString p))))))
+  (let ((params (if (slot-boundp self 'cl-user::actualParameterList)
+		    (mapcar #'(lambda (p) (format nil " ~a" (asString p)))
+			    (stack-dsl:%list (cl-user::actual-parameter-list self)))
+		    nil)))
     (if (null params)
 	(format nil "~a" (asString (name self)))
 	(format nil "~a(~a)" (asString (name self)) params))))
