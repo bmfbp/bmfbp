@@ -54,8 +54,14 @@
 
 (defmethod asString ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asString (stack-dsl:%list (implementation self))))))
-    (format nil "method ~a~{~&~v,T~a~%~}~&~4,Tend method~%" (asString (name self)) statements)))
+    (format nil "method ~a~{~&~v,T(~a)~%~}~&~4,Tend method~%" (asString (name self)) statements)))
 
 (defun insert-tab (n lis)
   (unless (null lis)
     `(,n ,(car lis) ,@(insert-tab n (cdr lis)))))
+
+(defmethod asString ((self letStatement))
+  (let ((vn (asString (varName self)))
+	(e  (asString (expression self)))
+	(code (asString (implementation self))))
+    (format nil "let ~a=~a in ~{~%~a~}~%end let" vn e code)))
