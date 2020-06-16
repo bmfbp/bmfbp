@@ -19,19 +19,12 @@
 
 (defmethod asString ((self object))
   ; { name fieldMap }
-  (let ((fieldStrings (mapcar #'(lambda (f)  
-				  (format nil ".~a" (asString f)))
-			      (stack-dsl:%list (fieldMap self)))))
-    (if (null fieldStrings)
-	(format nil "~a" (asString (name self)))
-	(format nil "~a~{~a~}" (asString (name self)) fieldStrings))))
+  (let ((fields (mapcar #'asString (stack-dsl:%list (fieldMap self)))))
+    (format nil "~a~{.~a~}" (asString (name self)) fields)))
 
 (defmethod asString ((self field))
   ; { name fkind actualParameterList }
   (let ((params (if (slot-boundp self 'cl-user::actualParameterList)
-		    (mapcar #'(lambda (p) (format nil "~a" (asString p)))
-			    (stack-dsl:%list (cl-user::actualParameterList self)))
+		    (mapcar #'asString (stack-dsl:%list (cl-user::actualParameterList self)))
 		    nil)))
-    (if (null params)
-	(format nil "~a" (asString (name self)))
-	(format nil "~a(~{~a~^,~})" (asString (name self)) params))))
+    (format nil "~a(~{~a~^,~})" (asString (name self)) params)))
