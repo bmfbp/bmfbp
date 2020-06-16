@@ -373,7 +373,7 @@
                                $statement__Output
   | ?SYMBOL/false SYMBOL/false
                                $statement__NewScope
-                                 $returnTFalseStatement__NewScope
+                                 $returnFalseStatement__NewScope
                                  $returnFalseStatement__Output
                                  $statement__CoerceFrom_returnFalseStatement
                                $statement__Output

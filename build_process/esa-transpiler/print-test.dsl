@@ -56,4 +56,26 @@ script part-definition a
     w.u(f g).z(h i j)
   end create
 
+
+  >> true
+  >> false
+  >> x
+  
+  loop
+    x
+    @y
+    exit-when z
+  end loop
+
+
+  if w then
+    @u
+  else
+    @v
+  end if
+
+  if x then
+    @y
+  end if
+
 end script

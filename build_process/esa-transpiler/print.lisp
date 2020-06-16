@@ -88,3 +88,30 @@
 
 (defmethod asString ((self indirectionKind))
   (stack-dsl:%value self))
+
+(defmethod asString ((self exitWhenStatement))
+  (let ((e (asString (expression self))))
+    (format nil "exitWhen ~a" e)))
+
+(defmethod asString ((self returnTrueStatement))
+  "return true")
+
+(defmethod asString ((self returnFalseStatement))
+  "return false")
+
+(defmethod asString ((self returnValueStatement))
+  (let ((n (asString (name self))))
+    (format nil "return ~a" n)))
+
+(defmethod asString ((self loopStatement))
+  (let ((code (asString (implementation self))))
+    (format nil "loop ~{~%~a~}~%end loop" code)))
+
+(defmethod asString ((self ifStatement))
+  (let ((e  (asString (expression self)))
+	(then (asString (thenPart self))))
+    (if (stack-dsl:%empty-p (elsePart self))
+	(format nil "(when ~a ~{~a~}~%end when" e then)
+	(let ((els (asString (elsePart self))))
+	  (format nil "if ~a ~{~a~}~%else~%~{~a~}~%end if" e then els)))))
+
