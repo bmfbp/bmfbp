@@ -60,9 +60,3 @@
 					      result-pass2
 					      result-pass3)))
 		    final)))))))))))
-
-(defun transpile-esa-to-file (esa-input-filename output-filename &key (tracing-accept nil))
-  (let ((str (transpile-esa-to-string esa-input-filename :tracing-accept tracing-accept)))
-    (with-open-file (outf output-filename :direction :output :if-exists :supersede :if-does-not-exist :create)
-      (write-string str outf))))
-

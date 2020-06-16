@@ -570,13 +570,8 @@
                                  $name__Output
 
 
-= tester
+= print-tester
   ~rmSpaces
-%  $mech-tester
-%   @object__
-   @esa-expr  
-%    @esa-dsl
-    $bp
-%  @esa-expr
-%  $emit__expression
+  @esaSymbol
+
   
