@@ -2,7 +2,6 @@
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 (defmethod asString ((self name))
-(format *standard-output* "~&asString name~%")
   (stack-dsl::%value self))
 
 (defmethod asString ((self expression))
