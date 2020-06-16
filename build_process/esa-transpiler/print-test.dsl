@@ -33,4 +33,5 @@ end when
 
 script part-definition a
   @x.y(d e).z(a b c)
+  w.u(f g).z(h i j)
 end script
