@@ -38,4 +38,12 @@ script part-definition a
     @x.y(d e).z(a b c)
     w.u(f g).z(h i j)
   end let
+
+  map z = b in 
+    @x.y(d e).z(a b c)
+    w.u(f g).z(h i j)
+  end map
+
+  set p = q
+
 end script

@@ -65,3 +65,14 @@
 	(e  (asString (expression self)))
 	(code (asString (implementation self))))
     (format nil "let ~a=~a in ~{~%~a~}~%end let" vn e code)))
+
+(defmethod asString ((self mapStatement))
+  (let ((vn (asString (varName self)))
+	(e  (asString (expression self)))
+	(code (asString (implementation self))))
+    (format nil "map ~a=~a in ~{~%~a~}~%end map" vn e code)))
+
+(defmethod asString ((self setStatement))
+  (let ((vn (asString (varName self)))
+	(e  (asString (expression self))))
+    (format nil "set ~a := ~a" vn e)))
