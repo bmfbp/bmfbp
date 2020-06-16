@@ -28,3 +28,11 @@
 		    (mapcar #'asString (stack-dsl:%list (cl-user::actualParameterList self)))
 		    nil)))
     (format nil "~a(~{~a~^,~})" (asString (name self)) params)))
+
+(defmethod asString ((self callExternalStatement))
+  (let ((fname (asString (functionReference self))))
+    (format nil "callExternal ~a" fname)))
+
+(defmethod asString ((self implementation))
+  (mapcar #'asString (stack-dsl:%list self)))
+
