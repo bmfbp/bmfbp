@@ -3,12 +3,6 @@
 (defmethod asString ((self name))
   (stack-dsl::%value self))
 
-(defmethod asString ((self returnTrueStatement))
-  ":true")
-
-(defmethod asString ((self returnFalsStatement))
-  nil)
-
 (defmethod asString ((self expression))
   ;; { ekind object }
   (cond ((string= "true" (ekind self))

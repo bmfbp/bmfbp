@@ -106,6 +106,7 @@
   (load (arrowgrams/esa-transpiler::path \"manual-types.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"mechanisms.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"manual-mechanisms.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"print.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"print-tester.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"esa-transpile.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"trace-rules.lisp\"))
