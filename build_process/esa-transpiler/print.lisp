@@ -86,7 +86,7 @@
   (let ((vn (asString (varName self)))
 	(e  (asString (expression self)))
 	(code (asString (implementation self))))
-    (format nil "(dolist (~a ~a) ~{~%~a~})" vn e code)))
+    (format nil "(block %map (dolist (~a ~a) ~{~%~a~}))" vn e code)))
 
 (defmethod asString ((self createStatement))
   (let ((vn (asString (varName self)))
@@ -108,6 +108,9 @@
 (defmethod asString ((self exitWhenStatement))
   (let ((e (asString (expression self))))
     (format nil "(when ~a (return))" e)))
+
+(defmethod asString ((self exitMapStatement))
+  "(return-from %map)")
 
 (defmethod asString ((self returnTrueStatement))
   ":true")
