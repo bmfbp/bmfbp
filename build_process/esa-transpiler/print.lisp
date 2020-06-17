@@ -59,7 +59,7 @@
 
 (defmethod asString ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asString (stack-dsl:%list (implementation self))))))
-    (format nil "method ~a~{~&~v,T(~a)~%~}~&~4,Tend method~%" (asString (name self)) statements)))
+    (format nil "method ~a~{~&~v,T~a~%~}~&~4,Tend method~%" (asString (name self)) statements)))
 
 (defun insert-tab (n lis)
   (unless (null lis)
@@ -75,7 +75,7 @@
   (let ((vn (asString (varName self)))
 	(e  (asString (expression self)))
 	(code (asString (implementation self))))
-    (format nil "map ~a=~a in ~{~%~a~}~%end map" vn e code)))
+    (format nil "(dolist (~a ~a) ~{~%~a~})" vn e code)))
 
 (defmethod asString ((self createStatement))
   (let ((vn (asString (varName self)))
@@ -83,40 +83,40 @@
 	(i   (asString (indirectionKind self)))
 	(code (asString (implementation self))))
     (if (string= "direct" i)
-	(format nil "create ~a=~a in ~{~%~a~}~%end create" vn cn code)
-	(format nil "createIndirect ~a=~a in ~{~%~a~}~%end create" vn cn code))))
+	(format nil "(let ((~a (make-instance '~a) ~{~%~a~})" vn cn code)
+	(format nil "(let ((~a (make-instance ~a) ~{~%~a~})" vn cn code))))
 
 (defmethod asString ((self setStatement))
   (let ((vn (asString (varName self)))
 	(e  (asString (expression self))))
-    (format nil "set ~a := ~a" vn e)))
+    (format nil "(setf ~a ~a)" vn e)))
 
 (defmethod asString ((self indirectionKind))
   (stack-dsl:%value self))
 
 (defmethod asString ((self exitWhenStatement))
   (let ((e (asString (expression self))))
-    (format nil "exitWhen ~a" e)))
+    (format nil "(when ~a (return))" e)))
 
 (defmethod asString ((self returnTrueStatement))
-  "return true")
+  ":true")
 
 (defmethod asString ((self returnFalseStatement))
-  "return false")
+  "nil")
 
 (defmethod asString ((self returnValueStatement))
   (let ((n (asString (name self))))
-    (format nil "return ~a" n)))
+    (format nil "~a" n)))
 
 (defmethod asString ((self loopStatement))
   (let ((code (asString (implementation self))))
-    (format nil "loop ~{~%~a~}~%end loop" code)))
+    (format nil "(loop ~{~%~a~})" code)))
 
 (defmethod asString ((self ifStatement))
   (let ((e  (asString (expression self)))
 	(then (asString (thenPart self))))
     (if (stack-dsl:%empty-p (elsePart self))
-	(format nil "(when ~a ~{~a~}~%end when" e then)
+	(format nil "(when ~a ~{~a~})" e then)
 	(let ((els (asString (elsePart self))))
-	  (format nil "if ~a ~{~a~}~%else~%~{~a~}~%end if" e then els)))))
+	  (format nil "(if ~a~%(progn ~{~a~})~%(progn ~{~a~}))" e then els)))))
 
