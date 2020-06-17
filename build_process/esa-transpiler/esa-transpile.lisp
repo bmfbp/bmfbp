@@ -1,13 +1,24 @@
 (in-package :arrowgrams/esa-transpiler)
 
+(defun run-pass (comment-string pass-parsing-func program token-stream tracing-accept)
+  (format *standard-output* "~&pass ~a~%" comment-string)
+  (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
+    (unless (null program)
+      (stack-dsl:%push (cl-user::esaProgram (env p))
+		       program))
+    (pasm:initially p token-stream)
+    (cl-user::%memoStacks (env p))
+    (let ((pasm::*pasm-accept-tracing* tracing-accept))
+      (funcall pass-parsing-func p))  ;; call parser for this pass
+    (cl-user::output-esaProgram (env p))  ;; return resulting program data structure up to this point
+    ))
+
 (defun transpile-esa-to-string (esa-input-filename &key (tracing-accept nil))
   (let ((in-string (alexandria:read-file-into-string esa-input-filename)))
     (let ((token-stream (scanner:scanner in-string)))
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
-	(pasm:initially p token-stream)
-        (cl-user::%memoStacks (env p))
-	(let ((pasm::*pasm-accept-tracing* tracing-accept))
-	  (esa-dsl-pass0 p))  ;; call parser to check if syntax is OK
+	(run-pass "0" #'esa-dsl-pass0 nil token-stream nil)
+
 	(pasm:initially p token-stream)
 	(let ((pasm::*pasm-accept-tracing* tracing-accept))
 	  (cl-user::%memoStacks (env p))
