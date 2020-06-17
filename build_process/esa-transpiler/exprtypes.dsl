@@ -47,10 +47,10 @@ methodDeclarationsAndScriptDeclarations = :map declarationMethodOrScript
 declarationMethodOrScript =| methodDeclaration | scriptDeclaration
 
 % declare external methods and forward references to scripts
-methodDeclaration = { name formalList returnType }
+methodDeclaration = { esaKind name formalList returnType }
 
 % declare (forward reference) internal scripts
-scriptDeclaration = { name formalList returnType implementation }
+scriptDeclaration = { esaKind name formalList returnType implementation }
 
 returnType = { returnKind name }
 returnKind = 'map' | 'simple' | 'void'
