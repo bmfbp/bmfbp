@@ -44,6 +44,9 @@
 (defmethod $expression__IgnoreInPass1 ((p parser))
   (stack-dsl:%pop (cl-user::output-expression (env p))))
 
+(defmethod $expression__IgnoreInPass2 ((p parser))
+  (stack-dsl:%pop (cl-user::output-expression (env p))))
+
 ;; emission
 
 (defmethod true-p ((e cl-user::expression))
@@ -99,7 +102,8 @@
 
 (defmethod $esaprogram__BeginScope ((p parser))
   ;; transpile-to-string sets (esaprogram p) to the result of pass1
-  (stack-dsl:%push (cl-user::input-esaprogram (env p)) (esaprogram p)))
+  ;;(stack-dsl:%push (cl-user::input-esaprogram (env p)) (esaprogram p)))
+)
 
 (defmethod $esaprogram__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-esaprogram (env p))))

@@ -215,10 +215,8 @@
 
 = script-implementation
   SYMBOL/script
-  @esaSymbol  % class
-                                    $name__IgnoreInPass1
-  @esaSymbol  % script method
-                                    $name__IgnoreInPass1
+  @esaSymbol-in-decl  % class
+  @esaSymbol-in-decl  % script method
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
@@ -231,7 +229,8 @@
   ]}
 
 = untyped-formals-definition
-  {[ &non-keyword-symbol @esaSymbol-in-decl
+  {[ &non-keyword-symbol
+     @esaSymbol-in-decl
      % index and type
    | * >
   ]}
