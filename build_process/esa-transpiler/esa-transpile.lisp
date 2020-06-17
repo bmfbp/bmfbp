@@ -10,10 +10,18 @@
     (cl-user::%memoStacks (env p))
     (let ((pasm::*pasm-accept-tracing* tracing-accept))
       (funcall pass-parsing-func p))  ;; call parser for this pass
+    (check-stacks p)
     (cl-user::output-esaProgram (env p))  ;; return resulting program data structure up to this point
     ))
 
 (defun transpile-esa-to-string (esa-input-filename &key (tracing-accept nil))
+  (let ((in-string (alexandria:read-file-into-string esa-input-filename)))
+    (let ((token-stream (scanner:scanner in-string)))
+      (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
+	(let ((program0 (run-pass "0" #'esa-dsl-pass0 nil token-stream nil)))
+	  (let ((program1 (run-pass "1" #'esa-dsl-pass1 nil token-stream nil)))))))))
+
+(defun old-transpile-esa-to-string (esa-input-filename &key (tracing-accept nil))
   (let ((in-string (alexandria:read-file-into-string esa-input-filename)))
     (let ((token-stream (scanner:scanner in-string)))
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
