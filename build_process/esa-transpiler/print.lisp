@@ -20,7 +20,10 @@
 (defmethod asString ((self object))
   ; { name fieldMap }
   (let ((fields (mapcar #'asString (stack-dsl:%list (fieldMap self)))))
-    (format nil "~a~{.~a~}" (asString (name self)) fields)))
+    (let ((result (asString (name self))))
+      (dolist (f fields)
+	(setf result (format nil f result)))
+      result)))
 
 (defmethod asString ((self field))
   ; { name fkind actualParameterList }
@@ -33,11 +36,11 @@
 
 (defmethod asString ((self callExternalStatement))
   (let ((fname (asString (functionReference self))))
-    (format nil "callExternal ~a" fname)))
+    (format nil "~a" fname)))
 
 (defmethod asString ((self callInternalStatement))
   (let ((fname (asString (functionReference self))))
-    (format nil "callInternal ~a" fname)))
+    (format nil "~a" fname)))
 
 (defmethod asString ((self implementation))
   (mapcar #'asString (stack-dsl:%list self)))

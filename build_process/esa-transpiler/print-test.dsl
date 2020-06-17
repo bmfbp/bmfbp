@@ -32,6 +32,9 @@ when building part-definition
 end when
 
 script part-definition a
+  x
+  x.y
+  x.y.z
   @x.y(d e).z(a b c)
   w.u(f g).z(h i j)
   let z = b in 
