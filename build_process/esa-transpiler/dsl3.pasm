@@ -116,9 +116,9 @@
   ]}
   @class-ref
   {[ ?SYMBOL/script
-     @script-declaration-in-when
+     @script-declaration
    | ?SYMBOL/method
-     @method-declaration-in-when
+     @method-declaration
    | *
      >
   ]}
@@ -133,13 +133,13 @@
 = class-ref
   @esaSymbol-in-decl  % should be checked to be a kind
 
-= method-declaration-in-when % "when" is always a declaration (of methods (external) and scripts (internal methods)
+= method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
   SYMBOL/method      % should check declaration against definition, but, we'll skip this step during bootstrap
   @esaSymbol-in-decl
   @formals
   @return-type-declaration
   
-= script-declaration-in-when  % this is a (forward) declaration of scripts which will be defined later
+= script-declaration % this is a (forward) declaration of scripts which will be defined later
   SYMBOL/script      % should check declaration against definition, but, we'll skip this step during bootstrap
   @esaSymbol-in-decl
   @formals
@@ -148,7 +148,7 @@
 = formals
   [ ?'(' 
      '(' 
-     @type-list 
+     @type-list
      ')'
   | *
   ]
