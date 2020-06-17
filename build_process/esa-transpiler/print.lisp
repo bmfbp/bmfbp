@@ -8,7 +8,7 @@
   ;; { ekind object }
   (let ((k (stack-dsl::%value (ekind self))))
     (cond ((string= "true" k)
-	 ":true")
+	 "t")
 	  ((string= "false" k)
 	   nil)
 	  ((string= "object" k)
@@ -114,7 +114,7 @@
   "(return-from %map)")
 
 (defmethod asString ((self returnTrueStatement))
-  ":true")
+  "t")
 
 (defmethod asString ((self returnFalseStatement))
   "nil")
