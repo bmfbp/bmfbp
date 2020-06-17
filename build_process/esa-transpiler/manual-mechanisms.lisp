@@ -235,7 +235,7 @@
 
 
 (defun check-stacks (p)
-  (format *standard-output* "~%*** check stacks ***~%")
+  (format *standard-output* "~&*** check stacks ***~%")
   (let ((i 0))
     (dolist (stack cl-user::*stacks*)
       (let ((name (symbol-name stack)))

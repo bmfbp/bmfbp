@@ -1,7 +1,7 @@
 (in-package :arrowgrams/esa-transpiler)
 
-(defun run-pass (comment-string pass-parsing-func program token-stream tracing-accept)
-  (format *standard-output* "~&pass ~a~%" comment-string)
+(defun run-pass (comment-string pass-parsing-func program token-stream tracing-accept br)
+  (format *standard-output* "~&* pass ~a~%" comment-string)
   (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
     (unless (null program)
       (stack-dsl:%push (cl-user::esaProgram (env p))
@@ -11,6 +11,8 @@
     (let ((pasm::*pasm-accept-tracing* tracing-accept))
       (funcall pass-parsing-func p))  ;; call parser for this pass
     (check-stacks p)
+    (when br
+      (break "break in run-pass"))
     (cl-user::output-esaProgram (env p))  ;; return resulting program data structure up to this point
     ))
 
@@ -18,8 +20,9 @@
   (let ((in-string (alexandria:read-file-into-string esa-input-filename)))
     (let ((token-stream (scanner:scanner in-string)))
       (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
-	(let ((program0 (run-pass "0" #'esa-dsl-pass0 nil token-stream nil)))
-	  (let ((program1 (run-pass "1" #'esa-dsl-pass1 nil token-stream nil)))))))))
+	(let ((program0 (run-pass "0" #'esa-dsl-pass0 nil token-stream nil nil)))
+	  (let ((program1 (run-pass "1" #'esa-dsl-pass1 nil token-stream nil nil)))))))))
+  
 
 (defun old-transpile-esa-to-string (esa-input-filename &key (tracing-accept nil))
   (let ((in-string (alexandria:read-file-into-string esa-input-filename)))
