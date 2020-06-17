@@ -8,12 +8,15 @@
   @type-decls
   @situations
   @classes
+
+
                           $whenDeclarations__FromProgram_BeginScope
   @parse-whens-and-scripts
                           $whenDeclarations__EndScope
   EOF
 			  $classes__EndScope
                         $esaprogram__Output
+
 
 - keyword-symbol
   [ ?SYMBOL
@@ -189,6 +192,7 @@
 				      $methodsTable__EndScope
                                     $esaclass__EndScope
 
+
 = optional-formals-definition
   {[ ?'(' '(' @untyped-formals-definition ')'
    | * >
@@ -235,8 +239,7 @@
    | &non-keyword-symbol @callExternalStatement
                                        $implementation__AppendFrom_statement
    | * >
-  ]
-  }
+  ]}
                                           $implementation__Output
 
 = callInternalStatement
