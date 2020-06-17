@@ -226,6 +226,14 @@
 	  (stack-dsl:%make-empty-map "statement"))))
 
 
+(defmethod $esaKind__FromClass_BeginOutputScope ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
+    (stack-dsl:%push (cl-user::output-esaKind (env p))
+		     (cl-user::name top-class))))
+		   
+
+
+
 (defun check-stacks (p)
   (format *standard-output* "~%*** check stacks ***~%")
   (let ((i 0))

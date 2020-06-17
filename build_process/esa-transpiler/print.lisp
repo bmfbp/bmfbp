@@ -49,17 +49,28 @@
   (mapcar #'asString (stack-dsl:%list (classes self))))
 
 (defmethod asString ((self esaClass))
-  (let ((name (format nil "class ~a~%" (asString (name self)))))
-    (let ((fields (mapcar #'(lambda (f) (format nil "field ~a~%" (asString (name f)))) (stack-dsl:%list (fieldMap self)))))
-      (let ((methods (mapcar #'asString (stack-dsl:%list (methodsTable self)))))
-	(format nil "~a~{~4,T~a~}~{~4,T~a~}end class" name fields methods)))))
+  (let ((name (format nil "~a" (asString (name self)))))
+    (let ((fields (mapcar #'(lambda (f) 
+			      (format nil "(~a :accessor ~a)" 
+				      (asString (name f)) 
+				      (asString (name f))))
+			  (stack-dsl:%list (fieldMap self)))))
+      (let ((def (if fields
+		     (format nil "(defclass ~a ()~%(~{~&~a~^~})~%" name fields)
+		     (format nil "(defclass ~a () ()" name))))
+	(let ((methods (mapcar #'asString (stack-dsl:%list (methodsTable self)))))
+	  (let ((methodstring (format nil "~{~&~a~}" methods)))
+	    (concatenate 'string def methodstring)))))))
 
 (defmethod asString ((self methodDeclaration))
-  (format nil "ext-method ~a~%" (asString (name self))))
+  (format nil "  #| external method (~a) ~a |#" (asString (esaKind self)) (asString (name self))))
 
 (defmethod asString ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asString (stack-dsl:%list (implementation self))))))
-    (format nil "method ~a~{~&~v,T~a~%~}~&~4,Tend method~%" (asString (name self)) statements)))
+    (format nil "(defmethod ~a ((self ~a))~{~&~v,T~a~%~})~%" 
+	    (asString (name self)) 
+	    (asString (esaKind self))
+	    statements)))
 
 (defun insert-tab (n lis)
   (unless (null lis)
@@ -83,8 +94,8 @@
 	(i   (asString (indirectionKind self)))
 	(code (asString (implementation self))))
     (if (string= "direct" i)
-	(format nil "(let ((~a (make-instance '~a) ~{~%~a~})" vn cn code)
-	(format nil "(let ((~a (make-instance ~a) ~{~%~a~})" vn cn code))))
+	(format nil "(let ((~a (make-instance '~a))) ~{~%~a~})" vn cn code)
+	(format nil "(let ((~a (make-instance ~a))) ~{~%~a~})" vn cn code))))
 
 (defmethod asString ((self setStatement))
   (let ((vn (asString (varName self)))

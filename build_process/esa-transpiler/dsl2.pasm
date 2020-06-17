@@ -127,6 +127,8 @@
                                       $methodDeclarationsAndScriptDeclarations__BeginMapping
   {[ ?SYMBOL/script
                                         $scriptDeclaration__FromMap_BeginScope
+					  $esaKind__FromClass_BeginOutputScope
+					  $scriptDeclaration__SetField_esaKind_from_esaKind
      @script-declaration-in-when
                                           $scriptDeclaration__SetField_implementation_empty
 					$scriptDeclaration__Output
@@ -139,6 +141,8 @@
                                       $methodDeclarationsAndScriptDeclarations__Next
    | ?SYMBOL/method
                                         $methodDeclaration__FromMap_BeginScope
+					  $esaKind__FromClass_BeginOutputScope
+					  $methodDeclaration__SetField_esaKind_from_esaKind
      @method-declaration-in-when
 					$methodDeclaration__Output
 					$declarationMethodOrScript__NewScope
