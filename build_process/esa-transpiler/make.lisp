@@ -59,7 +59,7 @@
            (arrowgrams/esa-transpiler::transpile-esa-to-string 
              (arrowgrams/esa-transpiler:path \"esa-test1.dsl\")
             :tracing-accept nil)))
-      (format *standard-output* \"~&result: ~a~%\" result)))
+      (format *standard-output* \"~&~a~%~%~%\" result)))
 ")
 
 

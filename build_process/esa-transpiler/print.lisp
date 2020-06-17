@@ -46,7 +46,8 @@
   (mapcar #'asString (stack-dsl:%list self)))
 
 (defmethod asString ((self esaprogram))
-  (mapcar #'asString (stack-dsl:%list (classes self))))
+  (let ((strings-list (mapcar #'asString (stack-dsl:%list (classes self)))))
+    (apply 'concatenate 'string strings-list)))
 
 (defmethod asString ((self esaClass))
   (let ((name (format nil "~a" (asString (name self)))))
@@ -56,18 +57,18 @@
 				      (asString (name f))))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
-		     (format nil "(defclass ~a ()~%(~{~&~a~^~})~%" name fields)
-		     (format nil "(defclass ~a () ()" name))))
+		     (format nil "~&~%(defclass ~a ()~%(~{~&~a~^~}))~%" name fields)
+		     (format nil "~&~%(defclass ~a () ())~%" name))))
 	(let ((methods (mapcar #'asString (stack-dsl:%list (methodsTable self)))))
-	  (let ((methodstring (format nil "~{~&~a~}" methods)))
-	    (concatenate 'string def methodstring)))))))
+	  (let ((methodsString (format nil "~{~&~a~}" methods)))
+	    (concatenate 'string def methodsString)))))))
 
 (defmethod asString ((self methodDeclaration))
-  (format nil "  #| external method (~a) ~a |#" (asString (esaKind self)) (asString (name self))))
+  (format nil "#| external method (~a) ~a |#~%" (asString (esaKind self)) (asString (name self))))
 
 (defmethod asString ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asString (stack-dsl:%list (implementation self))))))
-    (format nil "(defmethod ~a ((self ~a))~{~&~v,T~a~%~})~%" 
+    (format nil "(defmethod ~a ((self ~a))~{~&~v,T~a~^~%~})~%" 
 	    (asString (name self)) 
 	    (asString (esaKind self))
 	    statements)))
@@ -94,8 +95,8 @@
 	(i   (asString (indirectionKind self)))
 	(code (asString (implementation self))))
     (if (string= "direct" i)
-	(format nil "(let ((~a (make-instance '~a))) ~{~%~a~})" vn cn code)
-	(format nil "(let ((~a (make-instance ~a))) ~{~%~a~})" vn cn code))))
+	(format nil "(let ((~a (make-instance '~a)))~%~{~a~^~%~})" vn cn code)
+	(format nil "(let ((~a (make-instance ~a)))~%~{~a~&~%~})" vn cn code))))
 
 (defmethod asString ((self setStatement))
   (let ((lv (asString (lval self)))
@@ -130,7 +131,7 @@
   (let ((e  (asString (expression self)))
 	(then (asString (thenPart self))))
     (if (stack-dsl:%empty-p (elsePart self))
-	(format nil "(when ~a ~{~a~})" e then)
+	(format nil "(when ~a~%~{~a~%~^~})" e then)
 	(let ((els (asString (elsePart self))))
-	  (format nil "(if ~a~%(progn ~{~a~})~%(progn ~{~a~}))" e then els)))))
+	  (format nil "(if ~a~%(progn~%~{~a~%~^~})~%(progn~%~{~a~%~^~}))" e then els)))))
 
