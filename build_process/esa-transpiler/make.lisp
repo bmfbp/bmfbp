@@ -55,10 +55,11 @@
     (ql:quickload :arrowgrams/esa-transpiler/tester)
   (let ()
     (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path \"exprtypes.json\"))
-    (arrowgrams/esa-transpiler::transpile-esa-to-string 
-      (arrowgrams/esa-transpiler:path \"esa-test1.dsl\")
-      #| (arrowgrams/esa-transpiler:path \"../esa/esa.dsl\")    |#
-      :tracing-accept nil))
+    (let ((result 
+           (arrowgrams/esa-transpiler::transpile-esa-to-string 
+             (arrowgrams/esa-transpiler:path \"esa-test1.dsl\")
+            :tracing-accept nil)))
+      (format *standard-output* \"~&result: ~a~%\" result)))
 ")
 
 
