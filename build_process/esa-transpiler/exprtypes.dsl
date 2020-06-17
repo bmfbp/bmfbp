@@ -87,7 +87,7 @@ statement =| letStatement | mapStatement | exitMapStatement | setStatement | cre
 letStatement = { varName expression implementation }
 mapStatement = { varName expression implementation }
 exitMapStatement = { filler } 
-setStatement = { varName expression }
+setStatement = { lval expression }
 createStatement = { varName indirectionKind name implementation }
 ifStatement = { expression thenPart elsePart }
 loopStatement = { implementation }
@@ -98,6 +98,7 @@ returnValueStatement = { name }
 callInternalStatement = { functionReference } 
 callExternalStatement = { functionReference }
 
+lval =| expression
 varName =| name
 functionReference =| expression
 thenPart =| implementation

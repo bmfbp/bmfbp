@@ -98,9 +98,9 @@
 	(format nil "(let ((~a (make-instance ~a))) ~{~%~a~})" vn cn code))))
 
 (defmethod asString ((self setStatement))
-  (let ((vn (asString (varName self)))
+  (let ((lv (asString (lval self)))
 	(e  (asString (expression self))))
-    (format nil "(setf ~a ~a)" vn e)))
+    (format nil "(setf ~a ~a)" lv e)))
 
 (defmethod asString ((self indirectionKind))
   (stack-dsl:%value self))

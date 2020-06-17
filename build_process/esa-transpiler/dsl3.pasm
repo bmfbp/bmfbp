@@ -309,11 +309,11 @@
   SYMBOL/set
                           $statement__NewScope
                             $setStatement__NewScope
-   @esaSymbol-in-statement
-                              $varName__NewScope
-                                $varName__CoerceFrom_name
-                              $varName__Output
-                              $setStatement__SetField_varName_from_varName
+   @esa-expr-in-statement
+                              $lval__NewScope
+                                $lval__CoerceFrom_expression
+                              $lval__Output
+                              $setStatement__SetField_lval_from_lval
    '=' 
    @esa-expr-in-statement
                               $setStatement__SetField_expression_from_expression

@@ -36,7 +36,7 @@
   (dolist (s (stack-dsl:%ordered-list self))
     (when (string= (name-as-string s) method-name)
       (return-from lookup-method s)))
-  (error (format nil "no script named ~a" script-name)))
+  (error (format nil "no script named ~a (was it declared in a 'when'?)" script-name)))
   
 (defmethod implementation-empty-p ((self cl-user::scriptDeclaration))
   (stack-dsl:%empty-p (cl-user::implementation self)))

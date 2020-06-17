@@ -161,6 +161,8 @@ end when
 when building wire
   method install-source(name name)
   method install-destination(name name)
+  script add-source(name name)
+  script add-destination(name name)
 end when
 
 script wire add-source(part pin)
