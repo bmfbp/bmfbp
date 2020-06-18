@@ -26,7 +26,8 @@
 		    (mapcar #'asString (stack-dsl:%list (cl-user::actualParameterList self)))
 		    nil)))
 ;;...............................VVV leave ~a in string for format in caller
-	(format nil "(funcall ~a ~~a~{~^ ~a~^~})" (asString (name self)) params)))
+    ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asString (name self)) params)))
+    (format nil "(~a ~~a~{~^ ~a~^~})" (asString (name self)) params)))
 
 (defmethod asNestedString ((self object))
   ; { name fieldMap }
@@ -84,7 +85,7 @@
 	    (concatenate 'string def methodsString)))))))
 
 (defmethod asString ((self methodDeclaration))
-  (format nil "#| external method (~a) ~a |#~%" (asString (esaKind self)) (asString (name self))))
+  (format nil "#| external method ((self ~a)) ~a |#~%" (asString (esaKind self)) (asString (name self))))
 
 (defmethod asString ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asString (stack-dsl:%list (implementation self))))))
