@@ -17,7 +17,18 @@
 	   (asString (object self)))
 	  (t (assert nil)))))
 
-(defmethod asString ((self object))
+(defmethod parameters-p ((self object))
+  nil) ;; by definition in exprtypes.dsl
+
+(defmethod asString ((self field))
+  ; { name fkind actualParameterList }
+  (let ((params (if (slot-boundp self 'cl-user::actualParameterList)
+		    (mapcar #'asString (stack-dsl:%list (cl-user::actualParameterList self)))
+		    nil)))
+;;...............................VVV leave ~a in string for format in caller
+	(format nil "(funcall ~a ~~a~{~^ ~a~^~})" (asString (name self)) params)))
+
+(defmethod asNestedString ((self object))
   ; { name fieldMap }
   (let ((fields (mapcar #'asString (stack-dsl:%list (fieldMap self)))))
     (let ((result (asString (name self))))
@@ -25,14 +36,23 @@
 	(setf result (format nil f result)))
       result)))
 
-(defmethod asString ((self field))
-  ; { name fkind actualParameterList }
-  (let ((params (if (slot-boundp self 'cl-user::actualParameterList)
-		    (mapcar #'asString (stack-dsl:%list (cl-user::actualParameterList self)))
-		    nil)))
-    (if (null params)
-	(format nil "(slot-value ~~a '~a)" (asString (name self)))
-	(format nil "((slot-value ~~a '~a) ~{~a~^ ~})" (asString (name self)) params))))
+(defmethod asString ((self object))
+  ; { name fieldMap }
+
+  (let ((field-list (stack-dsl:%list (fieldMap self))))
+    (cond ((and (null field-list)
+		(not (parameters-p self)))
+	   ;; x -> "x"
+	   (asString (name self)))
+	  
+	  ((and (null field-list)
+		(parameters-p self))
+	   ;; illegal for esa.dsl
+	   ;; x() => assert fail during bootstrap
+	   (assert nil))
+
+	  (t 
+	   (asNestedString self)))))
 
 (defmethod asString ((self callExternalStatement))
   (let ((fname (asString (functionReference self))))
