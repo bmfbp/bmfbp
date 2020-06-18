@@ -118,7 +118,7 @@
 	(code (asString (implementation self))))
     (if (string= "direct" i)
 	(format nil "(let ((~a (make-instance '~a)))~%~{~a~^~%~})" vn cn code)
-	(format nil "(let ((~a (make-instance ~a)))~%~{~a~&~%~})" vn cn code))))
+	(format nil "(let ((~a (make-instance ~a)))~%~{~a~^~%~})" vn cn code))))
 
 (defmethod asString ((self setStatement))
   (let ((lv (asString (lval self)))
@@ -133,7 +133,7 @@
     (format nil "(when ~a (return))" e)))
 
 (defmethod asString ((self exitMapStatement))
-  "(return-from %map)")
+  "(return-from %map nil)")
 
 (defmethod asString ((self returnTrueStatement))
   "t")
