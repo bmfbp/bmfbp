@@ -68,9 +68,10 @@
 
 (defmethod asString ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asString (stack-dsl:%list (implementation self))))))
-    (format nil "(defmethod ~a ((self ~a))~{~&~v,T~a~^~%~})~%" 
+    (format nil "(defmethod ~a ((self ~a) ~{~a~^ ~})~{~&~v,T~a~^~%~})~%" 
 	    (asString (name self)) 
 	    (asString (esaKind self))
+            (mapcar #'asString (stack-dsl:%list (formalList self)))
 	    statements)))
 
 (defun insert-tab (n lis)

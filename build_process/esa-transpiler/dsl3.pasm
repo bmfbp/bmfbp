@@ -148,7 +148,8 @@
 = formals
   [ ?'(' 
      '(' 
-     @type-list
+     @type-list  % a (positional) type for each formal, e.g. (name name) is legal, meaning that 1st actual is a name and 2d actual is a name
+     % cheating: we ignore this completely in the bootstrap (assume that base language will catch problems, e.g. CL)
      ')'
   | *
   ]
@@ -194,12 +195,20 @@
 
 
 = optional-formals-definition
-  {[ ?'(' '(' @untyped-formals-definition ')'
+                                    $scriptDeclaration__ClearFormalsInBootstrap
+                                    $formalList__NewScope
+  {[ ?'('
+      '(' @untyped-formals-definition ')'  % a (positional) name for each formal (types have already been declared, above)
+     % bootstrap: these names must be recorded emitted - we let the base language catch type mismatches, e.g. CL
    | * >
   ]}
+                                    $formalList__Output
+                                    $scriptDeclaration__SetField_formalList_from_formalList
 
 = untyped-formals-definition
-  {[ &non-keyword-symbol @esaSymbol-in-decl
+  {[ &non-keyword-symbol
+     @esaSymbol
+                                    $formalList__AppendFrom_name
      % index and type
    | * >
   ]}

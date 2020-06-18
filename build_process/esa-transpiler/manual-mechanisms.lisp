@@ -167,6 +167,8 @@
 (defmethod $methodDeclaration__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-methodDeclaration (env p))))
 
+
+
 (defmethod $scriptDeclaration__FromMap_BeginScope ((p parser))
   (let ((scriptDeclaration (cl:first (cl:first (map-stack p)))))
     (unless (eq 'cl-user::scriptDeclaration (type-of scriptDeclaration))
@@ -176,6 +178,12 @@
 
 (defmethod $scriptDeclaration__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-scriptDeclaration (env p))))
+
+(defmethod $scriptDeclaration__ClearFormalsInBootstrap ((p parser))
+  ;; dsl2.pasm ignores the formals, so there is nothing to do
+  )
+
+
 
 
 (defmethod $classes__FromProgram_BeginScope ((p parser))
