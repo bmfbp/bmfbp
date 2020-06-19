@@ -555,7 +555,9 @@
 
 
 
+
 (defsystem :arrowgrams/esa-transpiler
+    ;; to build the esa-transpiler .lisp files, see bmfbp/build_process/esa-transpiler/make.lisp
   :depends-on (:stack-dsl/use :parsing-assembler/use :arrowgrams/cl-event-passing-no-esrap :alexandria)
   :serial t
     :around-compile (lambda (next)
@@ -567,24 +569,17 @@
                           :pathname "./build_process/esa-transpiler/"
                           :components ((:file "package")
 				       (:file "classes")
-                                       (:file "path")))))
-
-(defsystem :arrowgrams/esa-transpiler/tester
-  :depends-on (:arrowgrams/esa-transpiler)
-  :serial t
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa-transpiler/"
-                          :components ((:file "package")
-				       ;; for debug ...
-				       (:file "trace-rules")
-				       (:file "trace-mechs")
-				       (:file "mech-tester")
-				       ))))
+				       (:file "exprtypes")
+				       (:file "manual-types")
+				       (:file "print")
+				       (:file "mechanisms")
+				       (:file "manual-mechanisms")
+				       (:file "dsl0")
+				       (:file "dsl1")
+				       (:file "dsl2")
+				       (:file "dsl3")
+				       (:file "path")
+				       (:file "esa-transpile")))))
 
 
 
