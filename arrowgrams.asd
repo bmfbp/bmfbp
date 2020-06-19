@@ -238,99 +238,51 @@
                                                    ))))))
 
 
-#+nil(defsystem :arrowgrams/rephrase-compiler
-    :depends-on (:arrowgrams/cl-event-passing-no-esrap :alexandria)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "package")
-                                       (:file "token" :depends-on ("package"))
-                                       (:file "classes" :depends-on ("package"))
-                                       (:file "rp-macros" :depends-on ("package"))
-				       
-                                       (:file "dumper" :depends-on ("token" "classes"))
-
-				       (:file "tokenize" :depends-on ("token" "classes"))
-                                       (:file "comments" :depends-on ("token" "classes"))
-                                       (:file "raw-text" :depends-on ("token" "classes"))
-                                       (:file "strings" :depends-on ("token" "classes"))
-                                       (:file "spaces" :depends-on ("token" "classes"))
-                                       (:file "symbols" :depends-on ("token" "classes"))
-                                       (:file "integers" :depends-on ("token" "classes"))
-
-                                       (:file "error-manager" :depends-on ("token" "classes"))
-
-                                       (:file "parser-mechanisms"
-					      :depends-on ("package"
-							   "token" "classes" "dumper"
-                                                           "rp-macros"
-                                                           "error-manager"
-							   "tokenize" "comments" "raw-text" "strings" "spaces"
-							   "symbols" "integers"))
-                                       (:file "rp-rules" :depends-on ("parser-mechanisms"))
-                                       (:file "rp-parser" :depends-on ("rp-rules"))
-                                       (:file "file-writer" :depends-on ("package" "classes"))
-                                       (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
-
-#+nil (defsystem :arrowgrams/esa-js
-    :depends-on (:arrowgrams/rephrase-compiler)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "esa-dsl-js")
-                                       (:file "esa-parser")))))
 
 (defsystem :arrowgrams/build
-  :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler)
+  :depends-on (:cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
-  :components ((:module "arrowgrams-builder"
-                        :pathname "./build_process/cl-build/"
-                        :components ((:file "package")
-                                     (:file "classes" :depends-on ("package"))
-                                     (:file "util" :depends-on ("package"))
-                                     (:file "esa" :depends-on ("package" "classes" "util"))
-                                     (:file "json" :depends-on ("package"))
-                                     (:file "probe" :depends-on ("package" "classes" "util"))
-                                     (:file "probe2" :depends-on ("package" "classes" "util"))
-                                     (:file "probe3" :depends-on ("package" "classes" "util"))
-                                     (:file "file-writer" :depends-on ("package"))
-                                     (:file "graph-class" :depends-on ("package" "classes" "util" "esa"))
-                                     (:file "esa-methods" :depends-on ("package" "classes" "util" "esa"))
-                                     (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
-                                     (:file "part-namer" :depends-on ("package" "classes" "util"))
-                                     (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
-                                     (:file "get-code" :depends-on ("package" "classes" "util"))
-                                     (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
-                                     (:file "build-collector" :depends-on ("package" "classes" "util"))
-                                     (:file "children-before-graph" :depends-on ("package" "classes" "util" "esa" "esa-methods"))
-                                     (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json" "util" "graph-class"))
-                                     (:file "graph" :depends-on ("package" "classes" "util" "esa" "graph-class"))
-                                     (:file "runner" :depends-on ("package" "classes" "util" "graph"))
-                                     (:file "my-command-line" :depends-on ("package"))
-				     (:file "build" :depends-on ("package" "classes" "json"
-                                                                 "probe" "probe2" "probe3"
-                                                                 "my-command-line"
-                                                                 "file-writer"
-                                                                 "part-namer" "json-array-splitter"
-                                                                 "schematic-or-leaf" "build-collector"
-								 "children-before-graph"
-                                                                 "get-manifest-file" "get-code"
-                                                                 "build-graph-in-memory" "runner"
-                                                                 "esa" "esa-methods"
-                                                                 "graph"
-                                                                 "util"
-                                                                 ))
-				     ))))
+  :components 
+  ((:module "arrowgrams-builder"
+     :pathname "./build_process/cl-build/"
+     :components ((:file "package")
+		  (:file "classes" :depends-on ("package"))
+		  (:file "util" :depends-on ("package"))
+		  (:file "../esa/esa" :depends-on ("package" "classes" "util"))
+		  (:file "json" :depends-on ("package"))
+		  (:file "probe" :depends-on ("package" "classes" "util"))
+		  (:file "probe2" :depends-on ("package" "classes" "util"))
+		  (:file "probe3" :depends-on ("package" "classes" "util"))
+		  (:file "file-writer" :depends-on ("package"))
+		  (:file "graph-class" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "esa-methods" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
+		  (:file "part-namer" :depends-on ("package" "classes" "util"))
+		  (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
+		  (:file "get-code" :depends-on ("package" "classes" "util"))
+		  (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
+		  (:file "build-collector" :depends-on ("package" "classes" "util"))
+		  (:file "children-before-graph" :depends-on ("package" "classes" "util" "../esa/esa" "esa-methods"))
+		  (:file "build-graph-in-memory" :depends-on ("package" "classes" "../esa/esa" "json" "util" "graph-class"))
+		  (:file "graph" :depends-on ("package" "classes" "util" "../esa/esa" "graph-class"))
+		  (:file "runner" :depends-on ("package" "classes" "util" "graph"))
+		  (:file "my-command-line" :depends-on ("package"))
+		  (:file "build" :depends-on ("package" "classes" "json"
+							"probe" "probe2" "probe3"
+							"my-command-line"
+							"file-writer"
+							"part-namer" "json-array-splitter"
+							"schematic-or-leaf" "build-collector"
+							"children-before-graph"
+							"get-manifest-file" "get-code"
+							"build-graph-in-memory" "runner"
+							"../esa/esa" "esa-methods"
+							"graph"
+							"util"
+							))
+		  ))))
 
 #+deprecated(defsystem :arrowgrams/runner
   :depends-on (:arrowgrams/build :cl-json)
@@ -593,6 +545,5 @@
     :components ((:module "source"
                           :pathname "./build_process/esa/"
                           :components ((:file "package")))))
-
 
 

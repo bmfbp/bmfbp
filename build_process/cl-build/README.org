@@ -1,4 +1,38 @@
+* as of June 19 2020
+* build helloworld
+#+name: arrowgrams
+#+begin_src lisp
+  (ql:quickload :arrowgrams/build)
+#+end_src
 
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::build
+    (arrowgrams/build::diagram-path "helloworld.svg")
+    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp
+  (helloworld)
+  (princ (get-universal-time))
+#+end_src
+
+* build results
+#+RESULTS: arrowgrams
+| :ARROWGRAMS/BUILD |
+
+
+
+
+
+
+
+
+
+
+
+* deprecated >>>>
 * todo
 ** join builder to runner, build-graph-in-memory to run
 ** in -> out of top

@@ -22,12 +22,26 @@
              (arrowgrams/esa:path "esa.dsl")
             :tracing-accept nil)))
 	  (with-open-file (f "esa.lisp" :direction :output :if-exists :supersede :if-does-not-exist :create)
+	    (write-string "(in-package :arrowgrams/build)" f)
+	    (write-string "
+" f)
 	    (write-string result f))))
 #+end_src
 
 #+RESULTS: esa
-: To load "arrowgrams/esa-transpiler":
-:   Load 1 ASDF system:
-:     arrowgrams/esa-transpiler
-: ; Loading "arrowgrams/esa-transpiler"
-: ...
+#+begin_example
+,* pass 0
+,*** check stacks ***
+,* pass 1
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+,* pass 2
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 90
+OUTPUT-EXPRESSION 85
+,* pass 3
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 58
+#+end_example

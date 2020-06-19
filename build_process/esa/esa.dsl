@@ -255,7 +255,7 @@ end when
 when running dispatcher
   script start
   script distribute-all-outputs
-  script run
+  script dispatcher-run
   method declare-finished
 end when
 
@@ -304,11 +304,11 @@ end script
 
 script dispatcher start
   @self.distribute-all-outputs
-  @self.run
+  @self.dispatcher-run
 end script
 
 
-script dispatcher run
+script dispatcher dispatcher-run
   let done = true in
   loop
     set done = true
