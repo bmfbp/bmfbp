@@ -44,6 +44,9 @@
 (defmethod $expression__IgnoreInPass1 ((p parser))
   (stack-dsl:%pop (cl-user::output-expression (env p))))
 
+(defmethod $expression__IgnoreInPass2 ((p parser))
+  (stack-dsl:%pop (cl-user::output-expression (env p))))
+
 ;; emission
 
 (defmethod true-p ((e cl-user::expression))
@@ -99,7 +102,8 @@
 
 (defmethod $esaprogram__BeginScope ((p parser))
   ;; transpile-to-string sets (esaprogram p) to the result of pass1
-  (stack-dsl:%push (cl-user::input-esaprogram (env p)) (esaprogram p)))
+  ;;(stack-dsl:%push (cl-user::input-esaprogram (env p)) (esaprogram p)))
+)
 
 (defmethod $esaprogram__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-esaprogram (env p))))
@@ -163,6 +167,8 @@
 (defmethod $methodDeclaration__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-methodDeclaration (env p))))
 
+
+
 (defmethod $scriptDeclaration__FromMap_BeginScope ((p parser))
   (let ((scriptDeclaration (cl:first (cl:first (map-stack p)))))
     (unless (eq 'cl-user::scriptDeclaration (type-of scriptDeclaration))
@@ -172,6 +178,12 @@
 
 (defmethod $scriptDeclaration__EndScope ((p parser))
   (stack-dsl:%pop (cl-user::input-scriptDeclaration (env p))))
+
+(defmethod $scriptDeclaration__ClearFormalsInBootstrap ((p parser))
+  ;; dsl2.pasm ignores the formals, so there is nothing to do
+  )
+
+
 
 
 (defmethod $classes__FromProgram_BeginScope ((p parser))
@@ -197,7 +209,7 @@
 (defmethod $esaclass__SetField_methodsTable_empty ((p parser))
   (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
     (setf (cl-user::methodsTable top-class) 
-	  (stack-dsl:make-empty-map "declarationMethodOrScript"))))
+	  (stack-dsl:%make-empty-map "declarationMethodOrScript"))))
 
 
 (defmethod $methodsTable__FromClass_BeginScope ((p parser))
@@ -209,7 +221,33 @@
   (stack-dsl:%pop (cl-user::input-methodsTable (env p))))
 
 
+(defmethod $scriptDeclaration__LookupFromTable_BeginScope ((p parser))
+  (let ((script-name (cl-user::as-string (stack-dsl:%top (cl-user::output-name (env p))))))
+    (let ((top-table (stack-dsl:%top (cl-user::input-methodsTable (env p)))))
+      (let ((m (cl-user::lookup-method top-table script-name)))
+	(unless (eq 'cl-user::scriptDeclaration (type-of m))
+	  (error (format nil "~s is not a script ; it is declared as a ~s" script-name (type-of m))))
+	(unless (cl-user::implementation-empty-p m)
+	  (error (format nil "~s is multiply defined" script-name)))
+	(stack-dsl:%push (cl-user::input-scriptDeclaration (env p)) m)))
+    (stack-dsl::%pop (cl-user::output-name (env p)))))
+
+(defmethod $scriptDeclaration__SetField_implementation_empty ((p parser))
+  (let ((top-script (stack-dsl:%top (cl-user::input-scriptDeclaration (env p)))))
+    (setf (cl-user::implementation top-script)
+	  (stack-dsl:%make-empty-map "statement"))))
+
+
+(defmethod $esaKind__FromClass_BeginOutputScope ((p parser))
+  (let ((top-class (stack-dsl:%top (cl-user::input-esaclass (env p)))))
+    (stack-dsl:%push (cl-user::output-esaKind (env p))
+		     (cl-user::name top-class))))
+		   
+
+
+
 (defun check-stacks (p)
+  (format *standard-output* "~&*** check stacks ***~%")
   (let ((i 0))
     (dolist (stack cl-user::*stacks*)
       (let ((name (symbol-name stack)))

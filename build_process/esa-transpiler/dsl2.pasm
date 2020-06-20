@@ -14,7 +14,6 @@
   EOF
 			  $classes__EndScope
                         $esaprogram__Output
-$bp
 
 - keyword-symbol
   [ ?SYMBOL
@@ -128,7 +127,10 @@ $bp
                                       $methodDeclarationsAndScriptDeclarations__BeginMapping
   {[ ?SYMBOL/script
                                         $scriptDeclaration__FromMap_BeginScope
-     @script-declaration
+					  $esaKind__FromClass_BeginOutputScope
+					  $scriptDeclaration__SetField_esaKind_from_esaKind
+     @script-declaration-in-when
+                                          $scriptDeclaration__SetField_implementation_empty
 					$scriptDeclaration__Output
 					$declarationMethodOrScript__NewScope
                                           $declarationMethodOrScript__CoerceFrom_scriptDeclaration
@@ -139,7 +141,9 @@ $bp
                                       $methodDeclarationsAndScriptDeclarations__Next
    | ?SYMBOL/method
                                         $methodDeclaration__FromMap_BeginScope
-     @method-declaration
+					  $esaKind__FromClass_BeginOutputScope
+					  $methodDeclaration__SetField_esaKind_from_esaKind
+     @method-declaration-in-when
 					$methodDeclaration__Output
 					$declarationMethodOrScript__NewScope
                                           $declarationMethodOrScript__CoerceFrom_methodDeclaration
@@ -166,14 +170,14 @@ $bp
 = class-ref
   @esaSymbol  % should be checked to be a kind
 
-= method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
-  SYMBOL/method
+= method-declaration-in-when % "when" is always a declaration (of methods (external) and scripts (internal methods)
+  SYMBOL/method      % should check declaration against definition, but, we'll skip this step during bootstrap
   @esaSymbol-in-decl
   @formals
   @return-type-declaration
   
-= script-declaration  % this is a (forward) declaration of scripts which will be defined later
-  SYMBOL/script
+= script-declaration-in-when  % this is a (forward) declaration of scripts which will be defined later
+  SYMBOL/script      % should check declaration against definition, but, we'll skip this step during bootstrap
   @esaSymbol-in-decl
   @formals
   @return-type-declaration
@@ -211,14 +215,11 @@ $bp
 
 = script-implementation
   SYMBOL/script
-  @esaSymbol  % class
-                                    $name__IgnoreInPass1
-  @esaSymbol  % script method
-                                    $name__IgnoreInPass1
+  @esaSymbol-in-decl  % class
+  @esaSymbol-in-decl  % script method
   @optional-formals-definition
   @optional-return-type-definition
   @script-body
-check-stacks
   SYMBOL/end SYMBOL/script
                                     $esaclass__EndScope
 
@@ -228,7 +229,8 @@ check-stacks
   ]}
 
 = untyped-formals-definition
-  {[ &non-keyword-symbol @esaSymbol-in-decl
+  {[ &non-keyword-symbol
+     @esaSymbol-in-decl
      % index and type
    | * >
   ]}
@@ -280,10 +282,10 @@ check-stacks
    '=' 
    [ ?'*' '*'
      @class-ref
-                     $name__EndOutputScope
+                     $name__IgnoreInPass2
    | *
    @class-ref
-                     $name__EndOutputScope
+                     $name__IgnoreInPass2
    ]
    SYMBOL/in 
    @script-body

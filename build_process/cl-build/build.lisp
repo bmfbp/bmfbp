@@ -986,56 +986,23 @@
 #+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
 
-(defun arrowgrams-to-json ()
+(defun arrowgrams-to-json (&optional (opt-filename "helloworld"))
   (handler-case
       (let ((args (my-command-line)))
-	(let ((infile (if (> (length args) 1)
-			  (second args)
- 			  (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))))
-	  (format *standard-output* "~&compiling ~s~%" infile)
-	  (build
-	   infile
-	   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")
-	   (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.lisp")
-	   )))
+	(let ((fname (if (> (length args) 1)
+			 (second args)
+			 opt-filename)))
+	  (let ((in-file (diagram-path fname))
+		(json-file (json-graph-path fname))
+		(alist-file (alist-graph-path fname)))
+	    (format *standard-output* "~&compiling ~s~%" in-file)
+	    (build in-file json-file alist-file))))
     (end-of-file (c)
       (format *error-output* "FATAL 'end of file error; in main ~a~%" c))
     (simple-error (c)
       (format *error-output* "FATAL error in main ~a~%" c))
     (error (c)
       (format *error-output* "FATAL error in main ~a~%" c))))
-
-(defun arrowgrams-to-json1 () ;; to see in.pro from simple.svg
-  (let ((args (my-command-line)))
-    (let ((infile (if (> (length args) 1)
-		      (second args)
-		      (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/simple.svg"))))
-      (format *standard-output* "~&compiling ~s~%" infile)
-      (build
-       infile
-       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/simple.graph.json")
-       (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/simple.graph.lisp")
-       ))))
-
-
-(defun arrowgrams-svg-to-json (filename-string)
-  (let ((dir "build_process/parts"))
-    (let ((svg-filename (format nil "~a/diagram/~a.svg" dir filename-string))
-	  (json-graph-filename (format nil "~a/graph/~a.json" dir filename-string))
-	  (lisp-graph-filename (format nil "~a/graph/~a.lisp" dir filename-string)))
-      (let ((args (my-command-line)))
-	(let ((infile (if (> (length args) 1)
-			  (second args)
-			  (asdf:system-relative-pathname :arrowgrams svg-filename))))
-	  (format *standard-output* "~&compiling ~s~%" infile)
-	  (build
-	   infile
-	   (asdf:system-relative-pathname :arrowgrams json-graph-filename)
-	   (asdf:system-relative-pathname :arrowgrams lisp-graph-filename)
-	   ))))))
-
-(defun arrowgrams-to-json-compile-single-diagram () ;; to lowest level of builder
-  (arrowgrams-svg-to-json "build-compile-single-diagram"))
 
 
 (defmethod new-event ((self node) pin data)

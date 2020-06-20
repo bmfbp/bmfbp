@@ -1,82 +1,56 @@
-
-* todo
-* usage
-  see "build helloworld" below
-  see "build esa from top" below
-* build esa from top
-#+name: arrowgrams
-#+begin_src lisp :results output
-(uiop:run-program "rm -rf ~/.cache/common-lisp")
-  (ql:quickload :arrowgrams/rephrase-compiler)
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (esa::make-esa-dsl)
-#+end_src
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (ql:quickload :arrowgrams/esa)
-#+end_src
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (esa::make-esa)
-#+end_src
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (ql:quickload :arrowgrams/build)
-#+end_src
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (arrowgrams/build::arrowgrams-to-json)
-#+end_src
-
-* build helloworld json (build_process/cl-build/helloworld.graph.json)
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (ql:quickload :arrowgrams/build)
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (arrowgrams/build::arrowgrams-to-json)
-#+end_src
-* build builder json (build_process/cl-build/build-*.graph.json)
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (progn
-   (uiop:run-program "rm -rf ~/.cache/common-lisp")
-   (uiop:run-program "rm -rf */*.fasl */*/*.fasl")
-   (uiop:run-program "rm -rf */*~ */*/*~")
-   (ql:quickload :arrowgrams/build))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  #|(arrowgrams/build::arrowgrams-svg-to-json "compile-single-diagram")|#
-  #|(arrowgrams/build::arrowgrams-svg-to-json "build-recursive")|#
-  #|(arrowgrams/build::arrowgrams-svg-to-json "build")|#
-  (arrowgrams/build::arrowgrams-svg-to-json "build-json")
-#+end_src
-* build results
-#+RESULTS: arrowgrams
-: To load "arrowgrams/build":
-:   Load 1 ASDF system:
-:     arrowgrams/build
-: ; Loading "arrowgrams/build"
-: 
-
-
-
-
-* deprecated
-** test-run
+* as of June 19 2020
+* build helloworld to ../parts/graph/helloworld.graph.json
 #+name: arrowgrams
 #+begin_src lisp
-  (arrowgrams/build::test-run)
+  (ql:quickload :arrowgrams/build)
 #+end_src
 
-** build helloworld3
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::arrowgrams-to-json "helloworld")
+#+end_src
+
+* build results
+#+RESULTS: arrowgrams
+: build.lisp done
+
+
+
+
+
+
+
+
+
+
+
+* deprecated >>>>
+* todo
+** join builder to runner, build-graph-in-memory to run
+** in -> out of top
+** no metadata, null metadata
+** initially set state for each code part
+** write filter for rp that gives * and + operators
+*** rp is an assembler for parsing
+
+* usage
+  cl-user> (ql:quickload :arrowgrams/rephrase-compiler)
+  cl-user> (ab::make-esa-dsl)
+  cl-user> (ql:quickload :arrowgrams/esa)
+  cl-user> (ab::make-esa)
+  cl-user> (ql:quickload :arrowgrams/build)
+  cl-user> (ab::hwtest)
+  cl-user> (ab::test-run)
+
+;; if adding (break) or changes only to files in cl-build...
+;; skip (ab::hwtest) which generates the graph - it's been captured and is part of test-run
+  cl-user> (ql:quickload :arrowgrams/build)
+  cl-user> (ab::test-run)
+
+** see also
+*** ~/quicklisp/local-projects/build_process/cl-build/run.lisp
+
+* build helloworld3
 #+name: arrowgrams
 #+begin_src lisp :results output
   (ql:quickload :arrowgrams/build)
@@ -97,7 +71,18 @@
   (princ (get-universal-time))
 #+end_src
 
-** build worldhello
+* build worldhello
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+#+end_src
+
+#+name: arrowgrams
+#+begin_src lisp
+  (arrowgrams/build::arrowgrams-to-json "helloworld")
+#+end_src
+
+* build helloworld
 #+name: arrowgrams
 #+begin_src lisp :results output
   (ql:quickload :arrowgrams/build)
@@ -106,19 +91,40 @@
 
 #+name: arrowgrams
 #+begin_src lisp :results output
+  #+nil(arrowgrams/build::build
+    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
+  (helloworld)
   (princ (get-universal-time))
+#+end_src
+* build esa from top
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (uiop:run-program "rm -rf ~/.cache/common-lisp")
+  (ql:quickload :arrowgrams/rephrase-compiler)
 #+end_src
 
 #+name: arrowgrams
 #+begin_src lisp :results output
-  (arrowgrams/build::build
-  (asdf:system-relative-pathname
-   :arrowgrams
-     "build_process/parts/diagram/worldhello.svg")))
-  (princ (get-universal-time))
+  (arrowgrams/build::make-esa-dsl)
+  (ql:quickload :arrowgrams/esa)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::make-esa)
+  (ql:quickload :arrowgrams/build)
+#+end_src
+#+name: arrowgrams
+#+begin_src lisp :results output
+  (arrowgrams/build::arrowgrams)
 #+end_src
 
-** build code snippets for esa builder and runner
+* build results
+#+RESULTS: arrowgrams
+: compiling #P"/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"
+: "TOP" outputs on pin "result" : "worldhello"
+: terminating - ready list is nil
+
+* build code snippets for esa builder and runner
 
 #+name: arrowgrams
 #+begin_src lisp
@@ -152,13 +158,19 @@
 
 #+RESULTS: arrowgrams
 : NIL
-** graph capture - not needed, after graph has been captured
+* test-run
+#+name: arrowgrams
+#+begin_src lisp
+  (ab::test-run)
+#+end_src
+
+* graph capture - not needed, after graph has been captured
 #+name: arrowgrams
 #+header: :var message="4a. hello world graph built"
 #+begin_src lisp :eval yes
   (format nil "~s ~s ~s" message (ab::hwtest) (get-universal-time))
 #+end_src
-** make sample.lisp
+* make sample.lisp
 #+name: arrowgrams
 #+header: :var message=".2a sample esa"
 #+begin_src lisp
@@ -171,7 +183,7 @@
   (ql:quickload :arrowgrams/rephrase-compiler)
 #+end_src
 
-** for building JS, click ^C^C on the grayed-out lisp lines, sequentially waiting for status line to change (many seconds), to generate js transpiler
+* for building JS, click ^C^C on the grayed-out lisp lines, sequentially waiting for status line to change (many seconds), to generate js transpiler
 
 #+name: arrowgrams_js
 #+begin_src lisp
@@ -193,7 +205,7 @@
 #+RESULTS: arrowgrams_js
 | :ARROWGRAMS/ESA-JS |
 
-** output from builder
+* output from builder
 ** see cl-build/graph.lisp/*test-descriptors*
 *** old stuff ...
 #+NAME: output-from-builder
@@ -219,7 +231,7 @@
 ]
 #+END_SRC
 
-** notes
+* notes
 ** bootstrap manifests are in ~/quicklisp/local-projects/bmfbp/build_process/lispparts
 
 

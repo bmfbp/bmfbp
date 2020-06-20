@@ -280,16 +280,20 @@
   ]}
 
 = untyped-formals-definition
-  {[ &non-keyword-symbol @esaSymbol
+  {[ &non-keyword-symbol
+     @esaSymbol
+                              $name__IgnoreInPass1
      % index and type
    | * >
   ]}
   
 = optional-return-type-definition  % should check that return type matches the definition
   [ ?'>' '>' '>'
-         [ ?SYMBOL/map SYMBOL/map @esaSymbol
+         [ ?SYMBOL/map SYMBOL/map 
+           @esaSymbol
+                              $name__IgnoreInPass1
          | * @esaSymbol
-
+                              $name__IgnoreInPass1
   ]
   | *
   ]  
@@ -332,10 +336,10 @@
    '=' 
    [ ?'*' '*'
      @class-ref
-                     $name__EndOutputScope
+                     $name__IgnoreInPass1
    | *
    @class-ref
-                     $name__EndOutputScope
+                     $name__IgnoreInPass1
    ]
    SYMBOL/in 
    @script-body
@@ -344,11 +348,15 @@
 = set-statement
   SYMBOL/set
    @esa-expr-in-statement
+                     $expression__IgnoreInPass1
    '=' 
    @esa-expr-in-statement
+                     $expression__IgnoreInPass1
   
 = map-statement
-  SYMBOL/map @esaSymbol-in-statement
+  SYMBOL/map
+  @esaSymbol-in-statement
+                            $name__IgnoreInPass1
   '='
   @esa-expr-in-statement
   SYMBOL/in @script-body
@@ -392,9 +400,11 @@
 
 = esaSymbol-in-statement
   @esaSymbol
+                             $name__IgnoreInPass1
 
 = esa-expr-in-statement
   @esa-expr
+                             $expression__IgnoreInPass1
 
 = esa-expr
   [ ?'@' '@' | * ]  % ignore @ (script call symbol)

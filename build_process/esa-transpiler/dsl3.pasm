@@ -1,22 +1,22 @@
-%
-% in pass2, we deal with creating a data structure for scripts
-% if we get here, the we can assume that all class and method (and script) definitions are OK and we don't need to check them
-%
-
 = rmSpaces
   [ ?SPACE | ?COMMENT | * . ]
 
-% pass2 {classTable}
 = esa-dsl
-                             $pass2__NewScope
   ~rmSpaces
+                        $esaprogram__BeginScope
+			  $classes__FromProgram_BeginScope
   @type-decls
   @situations
   @classes
-                                $pass2__SetField_classTable_from_classTable
+
+
+                          $whenDeclarations__FromProgram_BeginScope
   @parse-whens-and-scripts
+                          $whenDeclarations__EndScope
   EOF
-                              $pass2__Output
+			  $classes__EndScope
+                        $esaprogram__Output
+
 
 - keyword-symbol
   [ ?SYMBOL
@@ -61,47 +61,38 @@
 
 = type-decl
   SYMBOL/type
-  @esaSymbol
+  @esaSymbol-in-decl
 
 = situations
-  {[ ?SYMBOL/situation @parse-situation-def 
-   | * > ]}
+  {[ ?SYMBOL/situation
+     @parse-situation-def 
+   | * > 
+   ]}
 
 = parse-situation-def
   SYMBOL/situation 
-  @esaSymbol
+  @esaSymbol-in-decl
 
-% in pass2, parsing of class definitions simply puts empty entries into a class table
 = classes
-                                $classTable__NewScope
   {[ ?SYMBOL/class @class-def
-                                   $classTable__AppendFrom_namedClass
    | * >
   ]}
-                                $classTable__Output
 
 = parse-whens-and-scripts
-  {[ ?SYMBOL/when @when-declaration
-       %% ignore in pass2
+  {[ ?SYMBOL/when
+     @when-declaration
    |?SYMBOL/script @script-implementation
-       %% >> esamethod
-       %% all pass2 work done in script-implementation
-       %% {esamethod}
    | * >
   ]}
 
 = class-def
   SYMBOL/class
-                                $namedClass__NewScope
-  @esaSymbol
-                                  $namedClass__SetField_name_from_name
+  @esaSymbol-in-decl
   @field-decl
   {[ &field-decl-begin @field-decl
    | * >
   ]}
   SYMBOL/end SYMBOL/class
-                                $namedClass__Output
-			       
 
 - field-decl-begin
   [ ?SYMBOL/map ^ok
@@ -112,53 +103,53 @@
 = field-decl
   [ ?SYMBOL/map
     SYMBOL/map 
-    @esaSymbol
-  | &non-keyword-symbol @esaSymbol
+    @esaSymbol-in-decl
+  | &non-keyword-symbol @esaSymbol-in-decl
   ]
 
 = when-declaration
   SYMBOL/when
   @situation-ref
-  {
-  [ ?SYMBOL/or
+ {[ ?SYMBOL/or
       @or-situation 
   | * >
-  ]
-  }
-
+  ]}
   @class-ref
-
-  {
-  [ ?SYMBOL/script @script-declaration
-   | ?SYMBOL/method @method-declaration
-   | * >
-  ]
-  }
+  {[ ?SYMBOL/script
+     @script-declaration
+   | ?SYMBOL/method
+     @method-declaration
+   | *
+     >
+  ]}
   SYMBOL/end SYMBOL/when
 
 = situation-ref
-  @esaSymbol % should be checked to be a situation
+  @esaSymbol-in-decl % should be checked to be a situation
 
 = or-situation
   SYMBOL/or @situation-ref
   
 = class-ref
-  @esaSymbol  % should be checked to be a kind
+  @esaSymbol-in-decl  % should be checked to be a kind
 
 = method-declaration % "when" is always a declaration (of methods (external) and scripts (internal methods)
-  SYMBOL/method @esaSymbol
+  SYMBOL/method      % should check declaration against definition, but, we'll skip this step during bootstrap
+  @esaSymbol-in-decl
   @formals
   @return-type-declaration
   
-= script-declaration  % this is a (forward) declaration of scripts which will be defined later
-  SYMBOL/script @esaSymbol
+= script-declaration % this is a (forward) declaration of scripts which will be defined later
+  SYMBOL/script      % should check declaration against definition, but, we'll skip this step during bootstrap
+  @esaSymbol-in-decl
   @formals
   @return-type-declaration
 
 = formals
   [ ?'(' 
      '(' 
-     @type-list 
+     @type-list  % a (positional) type for each formal, e.g. (name name) is legal, meaning that 1st actual is a name and 2d actual is a name
+     % cheating: we ignore this completely in the bootstrap (assume that base language will catch problems, e.g. CL)
      ')'
   | *
   ]
@@ -180,229 +171,316 @@
   | *
   ]
 
+= esaSymbol-in-decl
+  @esaSymbol
+                                    $name__IgnoreInPass2
 
+% implement code ...
 
-
-
-% implementation code ...
-
-% {esaMethod {}->name {}->implementation}
-% {esaMethod {}->name {}->formalList {}->returnType {}->implementation}
 = script-implementation
   SYMBOL/script
   @esaSymbol  % class
-%                                   $namedClass__Lookup_BeginScope
-%                                     $methodList__FromClass_BeginScope
-%                                       $esamethod__LookupMethodInMethodList_BeginScope
+                                    $esaclass__LookupFromClasses_BeginScope
+				      $methodsTable__FromClass_BeginScope
   @esaSymbol  % script method
-%                                         $esamethod__CheckThatMethodExistsInNamedClass
+                                        $scriptDeclaration__LookupFromTable_BeginScope
   @optional-formals-definition
-%                                         $esamethod__CheckFormals
   @optional-return-type-definition
-%                                         $esamethod__CheckReturnType
   @script-body
-%                                         $esamethod__SetField_implementation_from_implementation
+					  $scriptDeclaration__SetField_implementation_from_implementation
   SYMBOL/end SYMBOL/script
-%                                      $esaMethod__EndScope
-%                                     $methodList__EndScope
-%                                   $namedClass__EndScope
+                                        $scriptDeclaration__EndScope
+				      $methodsTable__EndScope
+                                    $esaclass__EndScope
+
 
 = optional-formals-definition
-  {[ ?'(' '(' @untyped-formals-definition ')'
+                                    $scriptDeclaration__ClearFormalsInBootstrap
+                                    $formalList__NewScope
+  {[ ?'('
+      '(' @untyped-formals-definition ')'  % a (positional) name for each formal (types have already been declared, above)
+     % bootstrap: these names must be recorded emitted - we let the base language catch type mismatches, e.g. CL
    | * >
   ]}
+                                    $formalList__Output
+                                    $scriptDeclaration__SetField_formalList_from_formalList
 
 = untyped-formals-definition
-  {[ &non-keyword-symbol @esaSymbol
-     % index and typex
+  {[ &non-keyword-symbol
+     @esaSymbol
+                                    $formalList__AppendFrom_name
+     % index and type
    | * >
   ]}
   
 = optional-return-type-definition  % should check that return type matches the definition
   [ ?'>' '>' '>'
-         [ ?SYMBOL/map SYMBOL/map @esaSymbol
-         | * @esaSymbol
+         [ ?SYMBOL/map SYMBOL/map @esaSymbol-in-decl
+         | * @esaSymbol-in-decl
 
   ]
   | *
   ]  
-  
+
+%% <<>> implementation
 = script-body
-%                                       $implementation__NewScope
-  {
-%                                         $statement__NewScope
-   [ ?SYMBOL/let @let-statement
+                                          $implementation__NewScope
+  {[ ?SYMBOL/let @let-statement
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/map @map-statement
-   | ?SYMBOL/exit-map @exit-map-statement
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/set @set-statement
+                                       $implementation__AppendFrom_statement
+   | ?SYMBOL/exit-map @exit-map-statement
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/create @create-statement
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/if @if-statement
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/loop @loop-statement
+                                       $implementation__AppendFrom_statement
    | ?SYMBOL/exit-when @exit-when-statement
+                                       $implementation__AppendFrom_statement
    | ?'>' @return-statement
+                                       $implementation__AppendFrom_statement
    | ?'@' @callInternalStatement
+                                       $implementation__AppendFrom_statement
    | &non-keyword-symbol @callExternalStatement
+                                       $implementation__AppendFrom_statement
    | * >
-   ]
-%                                        $statement__Output
-%                                        $implementation__AppendFrom_statement
-  }
-%                                       $implementation__Output
+  ]}
+                                          $implementation__Output
+
+= callInternalStatement
+  @esa-expr-in-statement
+                           $functionReference__NewScope             
+                             $functionReference__CoerceFrom_expression
+                           $functionReference__Output
+                         $statement__NewScope
+                             $callInternalStatement__NewScope
+                               $callInternalStatement__SetField_functionReference_from_functionReference
+                             $callInternalStatement__Output
+                          $statement__CoerceFrom_callInternalStatement
+                         $statement__Output
+
+= callExternalStatement
+  @esa-expr-in-statement
+                           $functionReference__NewScope             
+                             $functionReference__CoerceFrom_expression
+                           $functionReference__Output
+                         $statement__NewScope
+                             $callExternalStatement__NewScope
+                               $callExternalStatement__SetField_functionReference_from_functionReference
+                             $callExternalStatement__Output
+                          $statement__CoerceFrom_callExternalStatement
+                         $statement__Output
+
 
 = let-statement
   SYMBOL/let
-%                                       $letStatement__NewScope
-   @varName
-%                                         $letStatement__SetField_varName_from_varName
+                          $statement__NewScope
+                            $letStatement__NewScope
+   @esaSymbol-in-statement
+                              $varName__NewScope
+                                $varName__CoerceFrom_name
+                              $varName__Output
+                              $letStatement__SetField_varName_from_varName
    '='
-   @esa-expr
-%                                         $letStatement__SetField_expression_from_expression
-   SYMBOL/in
-%                                           $implementation__NewScope
-   @script-body
-%                                           $implementation__Output
-%                                         $letStatement__SetField_implementation_from_implementation
-   SYMBOL/end SYMBOL/let
-%                                       $letStatement__Output
-%                                       $statement__CoerceFrom_letStatement
-= create-statement
-  SYMBOL/create
-%                                       $createStatement__NewScope
-  @varName
-   '=' 
-   [ ?'*' '*'  %  * means use class contained in expression (indirect), instead of direct name
-%                                          $indirectionKind__NewScope
-%                                            $indirectionKind__SetEnum_indirect
-%                                          $indirectionKind__Output
-%                                        $maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
-     @class-ref
-   | *
-%                                          $indirectionKind__NewScope
-%                                            $indirectionKind__SetEnum_direct
-%                                          $indirectionKind__Output
-%                                        $maybeIndirectExpression__SetField_indirectionKind_from_indirectionKind
-     @class-ref
-   ]
-%                                       $maybeIndirectExpression__SetField_expression_from_expression
-%                                      $maybeIndirectExpression__Output
-%				      $createStatement_SetField_maybeIndirectExpression_from_maybIndirectExpression
+   @esa-expr-in-statement
+                              $letStatement__SetField_expression_from_expression
    SYMBOL/in 
-%                                           $implementation__NewScope
    @script-body
-%                                           $implementation__Output
-   SYMBOL/end SYMBOL/create
-
+                              $letStatement__SetField_implementation_from_implementation
+   SYMBOL/end SYMBOL/let
+                            $letStatement__Output
+                            $statement__CoerceFrom_letStatement
+                          $statement__Output
+ 
+= map-statement
+  SYMBOL/map
+                          $statement__NewScope
+                            $mapStatement__NewScope
+  @esaSymbol-in-statement
+                              $varName__NewScope
+                                $varName__CoerceFrom_name
+                              $varName__Output
+                              $mapStatement__SetField_varName_from_varName
+  '='
+  @esa-expr-in-statement
+                              $mapStatement__SetField_expression_from_expression
+  SYMBOL/in
+  @script-body
+                              $mapStatement__SetField_implementation_from_implementation
+  SYMBOL/end SYMBOL/map
+                            $mapStatement__Output
+                            $statement__CoerceFrom_mapStatement
+                          $statement__Output
+ 
 
 = set-statement
   SYMBOL/set
-   @esa-expr
+                          $statement__NewScope
+                            $setStatement__NewScope
+   @esa-expr-in-statement
+                              $lval__NewScope
+                                $lval__CoerceFrom_expression
+                              $lval__Output
+                              $setStatement__SetField_lval_from_lval
    '=' 
-   @esa-expr
+   @esa-expr-in-statement
+                              $setStatement__SetField_expression_from_expression
+                            $setStatement__Output
+                            $statement__CoerceFrom_setStatement
+                          $statement__Output
   
-= map-statement
-  SYMBOL/map 
-  @varName
-  '='
-  @esa-expr
-  SYMBOL/in @script-body
-  SYMBOL/end SYMBOL/map
-
 = exit-map-statement
   SYMBOL/exit-map
+                          $statement__NewScope
+                            $exitMapStatement__NewScope
+                            $exitMapStatement__Output
+                            $statement__CoerceFrom_exitMapStatement
+                          $statement__Output
 
 = loop-statement
   SYMBOL/loop
+                          $statement__NewScope
+                            $loopStatement__NewScope
     @script-body
+                              $loopStatement__SetField_implementation_from_implementation
+                            $loopStatement__Output
+                            $statement__CoerceFrom_loopStatement
+                          $statement__Output
   SYMBOL/end SYMBOL/loop
   
 = exit-when-statement
   SYMBOL/exit-when
-    @esa-expr
-
-= if-statement
-  SYMBOL/if
-    @esa-expr
-  SYMBOL/then
-    @script-body
-  [ ?SYMBOL/else SYMBOL/else
-     @script-body
-  | *
-  ]
-  SYMBOL/end SYMBOL/if
+                          $statement__NewScope
+ 			    $exitWhenStatement__NewScope
+  @esa-expr-in-statement
+                              $exitWhenStatement__SetField_expression_from_expression
+                            $exitWhenStatement__Output
+                            $statement__CoerceFrom_exitWhenStatement
+                          $statement__Output
 
 = script-call
-  '@' @esa-expr
+  '@' @esa-expr-in-statement
 
 = method-call
+  @esa-expr-in-statement
+
+
+= esaSymbol-in-statement
+  @esaSymbol
+
+= esa-expr-in-statement
   @esa-expr
 
 = return-statement
   '>' '>'
   [ ?SYMBOL/true SYMBOL/true
+                               $statement__NewScope
+                                 $returnTrueStatement__NewScope
+                                 $returnTrueStatement__Output
+                                 $statement__CoerceFrom_returnTrueStatement
+                               $statement__Output
   | ?SYMBOL/false SYMBOL/false
-  | * @esaSymbol
+                               $statement__NewScope
+                                 $returnFalseStatement__NewScope
+                                 $returnFalseStatement__Output
+                                 $statement__CoerceFrom_returnFalseStatement
+                               $statement__Output
+  | * 
+                               $statement__NewScope
+                                 $returnValueStatement__NewScope
+      @esaSymbol-in-statement
+                                   $returnValueStatement__SetField_name_from_name
+                                 $returnValueStatement__Output
+                                 $statement__CoerceFrom_returnValueStatement
+                               $statement__Output
   ]
 
-= callInternalStatement
-  '@'
-  @esa-object-expr
-%                           $statement__NewScope
-%	                     $callInternalStatement__NewScope
-%                                 $functionReference__NewScope
-%                                   $functionReference__CoerceFrom_expression
-%                                 $functionReference__Output
-%                               $callInternalStatement__SetField_functionReference_from_functionReference
-%	                     $callInternalStatement__Output
-%  	                     $statement__CoerceFrom_callInternalStatement
-%	                   $statement__Output
 
-= callExternalStatement
-%  @esa-object-expr
-%                           $statement__NewScope
-%	                     $callExternalStatement__NewScope
-%                                 $functionReference__NewScope
-%                                   $functionReference__CoerceFrom_expression
-%                                 $functionReference__Output
-%                               $callExternalStatement__SetField_functionReference_from_functionReference
-%	                     $callExternalStatement__Output
-%   	                     $statement__CoerceFrom_callExternalStatement
-%	                   $statement__Output
+= create-statement
+  SYMBOL/create
+                          $statement__NewScope
+                            $createStatement__NewScope
+   @esaSymbol-in-statement
+                              $varName__NewScope
+                                $varName__CoerceFrom_name
+                              $varName__Output
+                              $createStatement__SetField_varName_from_varName
+   '=' 
+                                $indirectionKind__NewScope
+   [ ?'*' '*'
+                                  $indirectionKind__SetEnum_indirect
+   | *
+                                  $indirectionKind__SetEnum_direct
+   ]
+                                $indirectionKind__Output
+                              $createStatement__SetField_indirectionKind_from_indirectionKind
+   @class-ref-in-statement
+                              $createStatement__SetField_name_from_name
+   SYMBOL/in 
+   @script-body
+                              $createStatement__SetField_implementation_from_implementation
+   SYMBOL/end SYMBOL/create
+                            $createStatement__Output
+                            $statement__CoerceFrom_createStatement
+                          $statement__Output
 
-= esa-object-expr
-  @object__
+= class-ref-in-statement
+  @esaSymbol-in-statement
 
-= varName
-                    $varName__NewScope
-  @esaSymbol
-                      $varName__CoerceFrom_name
-		    $varName__Output
+= if-statement
+                          $statement__NewScope
+                            $ifStatement__NewScope
+  SYMBOL/if
+    @esa-expr-in-statement
+                            $ifStatement__SetField_expression_from_expression
+  SYMBOL/then
+    @script-body
+                              $thenPart__NewScope
+                                $thenPart__CoerceFrom_implementation
+                              $thenPart__Output
+                              $ifStatement__SetField_thenPart_from_thenPart
+
+                              $elsePart__NewScope
+  [ ?SYMBOL/else SYMBOL/else
+     @script-body
+                                  $elsePart__CoerceFrom_implementation
+  | *
+  ]
+                                $elsePart__Output
+                             $ifStatement__SetField_elsePart_from_elsePart
+  SYMBOL/end SYMBOL/if
+                           $ifStatement__Output
+                           $statement__CoerceFrom_ifStatement
+                         $statement__Output
+
+
 
 = esa-expr
+  [ ?'@' '@' | * ]  % ignore @ (script call symbol)
+                              $expression__NewScope
   [ ?SYMBOL/true SYMBOL/true
-                     $ekind__NewScope
-		       $ekind__SetEnum_true
-                     $ekind__Output
-                     $expression__OverwriteField_from_ekind
+			       $ekind__NewScope
+			         $ekind__SetEnum_true
+			       $ekind__Output
+                               $expression__SetField_ekind_from_ekind
   | ?SYMBOL/false SYMBOL/false
-                     $ekind__NewScope
-		       $ekind__SetEnum_false
-                     $ekind__Output
-                     $expression__OverwriteField_from_ekind
+			       $ekind__NewScope
+			         $ekind__SetEnum_false
+			       $ekind__Output
+                               $expression__SetField_ekind_from_ekind
   | *
-    [ ?'@' '@' 
-      @object__
-                     $ekind__NewScope
-		       $ekind__SetEnum_calledObject
-                     $ekind__Output
-                     $expression__OverwriteField_from_ekind
-  | * 
-      @object__
-                     $ekind__NewScope
-		       $ekind__SetEnum_object
-                     $ekind__Output
-                     $expression__OverwriteField_from_ekind
-    ]
+			       $ekind__NewScope
+			         $ekind__SetEnum_object
+			       $ekind__Output
+                               $expression__SetField_ekind_from_ekind
+    @object__
+                               $expression__SetField_object_from_object
    ]
+                              $expression__Output
 
 % DSL allows parameterList only for fields
 % self.a -> (slot-value self 'a)
@@ -413,11 +491,15 @@
 % fn(i) -> (fn i)
 %
 % name.field(optionalparameters) -> object/field/params
-%
-% object__ >> expression
 = object__
+                             $object__NewScope
   @object__name
+                               $object__SetField_name_from_name
+			       $fieldMap__NewScope
   @object__fields
+                               $fieldMap__Output
+                               $object__SetField_fieldMap_from_fieldMap
+			     $object__Output
 
 = object__name
   @esaSymbol
@@ -426,7 +508,10 @@
 % <<>>fieldMap
 = object__fields
   {[ &object__field_p
+                                  $field__NewScope
          @object__single_field
+                                  $field__Output
+                                $fieldMap__AppendFrom_field
    | * >
   ]}
 
@@ -448,19 +533,25 @@
 = object__dotFieldName
   '.'
   @esaSymbol
+                               $field__SetField_name_from_name
 
 = object__parameterMap
   [ ?'('
+                                $actualParameterList__NewScope
      '('
        @esa-expr
+                                  $actualParameterList__AppendFrom_expression
        @object__field__recursive-more-parameters
      ')'
+                                $actualParameterList__Output
+                              $field__SetField_actualParameterList_from_actualParameterList
   | *
   ]
 
 = object__field__recursive-more-parameters
   [ &object__field__parameters__pred-parameterBegin
     @esa-expr
+                                $actualParameterList__AppendFrom_expression
     @object__field__recursive-more-parameters
   | *
   ]
@@ -490,3 +581,6 @@
   ]}
                                  $name__Output
 
+
+= print-tester
+  @esa-dsl

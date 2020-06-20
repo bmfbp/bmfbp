@@ -47,10 +47,10 @@ methodDeclarationsAndScriptDeclarations = :map declarationMethodOrScript
 declarationMethodOrScript =| methodDeclaration | scriptDeclaration
 
 % declare external methods and forward references to scripts
-methodDeclaration = { name formalList returnType }
+methodDeclaration = { esaKind name formalList returnType }
 
 % declare (forward reference) internal scripts
-scriptDeclaration = { name formalList returnType implementation }
+scriptDeclaration = { esaKind name formalList returnType implementation }
 
 returnType = { returnKind name }
 returnKind = 'map' | 'simple' | 'void'
@@ -82,26 +82,28 @@ internalMethod = { name formalList returnType implementation }
 implementation = :map statement
 
 % pass3 data structures
-statement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | returnStatement | callInternalStatement | callExternalStatement
+statement =| letStatement | mapStatement | exitMapStatement | setStatement | createStatement | ifStatement | loopStatement | exitWhenStatement | callInternalStatement | callExternalStatement | returnTrueStatement | returnFalseStatement | returnValueStatement
 
 letStatement = { varName expression implementation }
 mapStatement = { varName expression implementation }
 exitMapStatement = { filler } 
-setStatement = { varName expression implementation }
-createStatement = { varName maybeIndirectExpression implementation }
+setStatement = { lval expression }
+createStatement = { varName indirectionKind name implementation }
 ifStatement = { expression thenPart elsePart }
 loopStatement = { implementation }
 exitWhenStatement = { expression }
-returnStatement = { expression }
+returnTrueStatement = { filler }
+returnFalseStatement = { filler }
+returnValueStatement = { name }
 callInternalStatement = { functionReference } 
 callExternalStatement = { functionReference }
 
+lval =| expression
 varName =| name
 functionReference =| expression
 thenPart =| implementation
 elsePart =| implementation
 
-maybeIndirectExpression = { indirectionKind expression }
 indirectionKind = 'indirect' | 'direct'
 
 % deficiency in stack-dsl parser - expects at least one field (we really want 0 fields here)
