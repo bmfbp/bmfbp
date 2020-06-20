@@ -1,5 +1,5 @@
 * as of June 19 2020
-* build helloworld
+* build helloworld to ../parts/graph/helloworld.graph.json
 #+name: arrowgrams
 #+begin_src lisp
   (ql:quickload :arrowgrams/build)
@@ -7,20 +7,12 @@
 
 #+name: arrowgrams
 #+begin_src lisp
-  (arrowgrams/build::build
-    (arrowgrams/build::diagram-path "helloworld.svg")
-    (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/helloworld.svg"))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp
-  (helloworld)
-  (princ (get-universal-time))
+  (arrowgrams/build::arrowgrams-to-json "helloworld")
 #+end_src
 
 * build results
 #+RESULTS: arrowgrams
-| :ARROWGRAMS/BUILD |
+: build.lisp done
 
 
 
@@ -83,21 +75,11 @@
 #+name: arrowgrams
 #+begin_src lisp :results output
   (ql:quickload :arrowgrams/build)
-  (princ (get-universal-time))
 #+end_src
 
 #+name: arrowgrams
-#+begin_src lisp :results output
-  (princ (get-universal-time))
-#+end_src
-
-#+name: arrowgrams
-#+begin_src lisp :results output
-  (arrowgrams/build::build
-  (asdf:system-relative-pathname
-   :arrowgrams
-     "build_process/parts/diagram/worldhello.svg")))
-  (princ (get-universal-time))
+#+begin_src lisp
+  (arrowgrams/build::arrowgrams-to-json "helloworld")
 #+end_src
 
 * build helloworld

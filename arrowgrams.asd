@@ -250,6 +250,7 @@
      :components ((:file "package")
 		  (:file "classes" :depends-on ("package"))
 		  (:file "util" :depends-on ("package"))
+		  (:file "path" :depends-on ("package"))
 		  (:file "../esa/esa" :depends-on ("package" "classes" "util"))
 		  (:file "json" :depends-on ("package"))
 		  (:file "probe" :depends-on ("package" "classes" "util"))
@@ -257,19 +258,19 @@
 		  (:file "probe3" :depends-on ("package" "classes" "util"))
 		  (:file "file-writer" :depends-on ("package"))
 		  (:file "graph-class" :depends-on ("package" "classes" "util" "../esa/esa"))
-		  (:file "esa-methods" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "../esa/esa-methods" :depends-on ("package" "classes" "util" "../esa/esa"))
 		  (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
 		  (:file "part-namer" :depends-on ("package" "classes" "util"))
 		  (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
 		  (:file "get-code" :depends-on ("package" "classes" "util"))
 		  (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
 		  (:file "build-collector" :depends-on ("package" "classes" "util"))
-		  (:file "children-before-graph" :depends-on ("package" "classes" "util" "../esa/esa" "esa-methods"))
+		  (:file "children-before-graph" :depends-on ("package" "classes" "util" "../esa/esa" "../esa/esa-methods"))
 		  (:file "build-graph-in-memory" :depends-on ("package" "classes" "../esa/esa" "json" "util" "graph-class"))
 		  (:file "graph" :depends-on ("package" "classes" "util" "../esa/esa" "graph-class"))
 		  (:file "runner" :depends-on ("package" "classes" "util" "graph"))
 		  (:file "my-command-line" :depends-on ("package"))
-		  (:file "build" :depends-on ("package" "classes" "json"
+		  (:file "build" :depends-on ("package" "classes" "json" "path"
 							"probe" "probe2" "probe3"
 							"my-command-line"
 							"file-writer"
@@ -278,7 +279,7 @@
 							"children-before-graph"
 							"get-manifest-file" "get-code"
 							"build-graph-in-memory" "runner"
-							"../esa/esa" "esa-methods"
+							"../esa/esa" "../esa/esa-methods"
 							"graph"
 							"util"
 							))
@@ -532,18 +533,4 @@
 				       (:file "dsl3")
 				       (:file "path")
 				       (:file "esa-transpile")))))
-
-
-
-#+nil(defsystem :arrowgrams/esa
-    :depends-on (:stack-dsl/use :parsing-assembler :arrowgrams/cl-event-passing-no-esrap :alexandria)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa/"
-                          :components ((:file "package")))))
-
 

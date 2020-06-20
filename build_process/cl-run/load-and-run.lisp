@@ -25,28 +25,28 @@
 
 
 
-(defun load-and-run (graph-filename)
+(defun load-and-run-from-file (graph-filename)
   (let ((graph-string (alexandria:read-file-into-string graph-filename)))
     (arrowgrams-load-and-run graph-string)))
 
 (defun arrowgrams-load-and-run (graph-string)
   (let ((graph-alist (json-to-alist graph-string)))
-    #+nil(format *standard-output* "*** making kind from graph~%")
+    (format *standard-output* "*** making kind from graph~%")
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in esa.lisp
       
-      #+nil(format *standard-output* "*** creating dispatcher~%")
+      (format *standard-output* "*** creating dispatcher~%")
       (let ((esa-disp (make-instance 'dispatcher)))  ;; dispatcher defined in esa.lisp
 
-	#+nil(format *standard-output* "*** instantiating graph~%")
+	(format *standard-output* "*** instantiating graph~%")
 	(let ((top-node (instantiate-kind-recursively top-kind esa-disp)))
 
-	  #+nil(format *standard-output* "*** initializing instances~%")
+	  (format *standard-output* "*** initializing instances~%")
 	  (initialize-all esa-disp)  ;; initialize-all is in esa.lisp
 
-	  #+nil(format *standard-output* "*** distributing initial outputs~%")
+	  (format *standard-output* "*** distributing initial outputs~%")
 	  (distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in esa.lisp
 
-	  #+nil(format *standard-output* "*** injecting START~%")
+	  (format *standard-output* "*** injecting START~%")
 	  (let ((ev (make-instance 'event))
 		(pp (make-instance 'part-pin)))
 	    (setf (part-name pp) "self")
@@ -55,19 +55,8 @@
 	    (setf (data ev) t)
 	    (enqueue-input top-node ev))
 
-	  #+nil(format *standard-output* "*** running~%")
-	  (run esa-disp)  ;; run is in esa.lisp
+	  (format *standard-output* "*** running~%")
+	  (dispatcher-run esa-disp)  ;; dispatcher-run is in esa.lisp
           )))))
-
-#+nil(defun test-load-and-run ()
-  (load-and-run (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/helloworld.graph.json")))
-
-#+nil(defun cl-user::arrowgrams-run (filename)
-  (load-and-run (asdf:system-relative-pathname 
-		 :arrowgrams 
-		 (format nil "build_process/parts/graph/~a.json" filename))))
-
-(defun test-load-and-run ()
-  (cl-user::arrowgrams-run "hellohello"))
 
 

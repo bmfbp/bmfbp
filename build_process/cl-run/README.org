@@ -1,3 +1,50 @@
+* as of june 19 2020
+* build helloworld and run it
+#+name: runner
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/build)
+  (ql:quickload :arrowgrams/runner)
+#+end_src
+#+name: runner
+#+begin_src lisp :results output
+  (let ((arrowgrams/build::*verbose* nil))
+    (arrowgrams/build::arrowgrams-svg-to-json "hellohello")
+    (cl-user::arrowgrams-run "hellohello"))
+#+end_src
+
+#+begin_src lisp :results output
+  (let ((arrowgrams/build::*verbose* nil))
+    (arrowgrams/build::arrowgrams-svg-to-json "hellohello")
+    (let ((str (alexandria:read-file-into-string 
+                   (asdf:system-relative-pathname :arrowgrams "build_process/parts/graph/hellohello.json"))))
+      (with-input-from-string (f str)
+        (let ((*standard-input* f))
+           (arrowgrams/build::arrowgrams-run)))))
+#+end_src
+
+* results
+#+RESULTS: runner
+: To load "arrowgrams/runner":
+:   Load 1 ASDF system:
+:     arrowgrams/runner
+: ; Loading "arrowgrams/runner"
+: ............
+: in compiler-event-passing
+: ......................................
+: [package arrowgrams/build]......
+
+** verbose
+#+name: runner
+#+begin_src lisp :results output
+    (arrowgrams/build::test-lar)
+#+end_src
+
+
+
+
+
+
+
 * status
 ** doesn't use ESRAP
 ** if you dyn bind arrowgrams/build::*verbose* to nil, it will print values, but not messages
