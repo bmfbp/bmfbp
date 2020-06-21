@@ -136,14 +136,17 @@
   "(return-from %map :false)")
 
 (defmethod asString ((self returnTrueStatement))
-  ":true")
+  (let ((method-name (cl-user::methodName self)))
+    (format nil "(return-from ~a :true)" method-name)))
 
 (defmethod asString ((self returnFalseStatement))
-  ":false")
+  (let ((method-name (cl-user::methodName self)))
+    (format nil "(return-from ~a :false)" method-name)))
 
 (defmethod asString ((self returnValueStatement))
-  (let ((n (asString (name self))))
-    (format nil "~a" n)))
+  (let ((method-name (cl-user::methodName self)))
+    (let ((n (asString (name self))))
+      (format nil "(return-from ~a ~a" method-name n))))
 
 (defmethod asString ((self loopStatement))
   (let ((code (asString (implementation self))))
