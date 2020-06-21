@@ -14,17 +14,21 @@
 #+RESULTS: arrowgrams
 : build.lisp done
 
-
-
-
-
-
-
-
-
-
-
 * deprecated >>>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 * todo
 ** join builder to runner, build-graph-in-memory to run
 ** in -> out of top

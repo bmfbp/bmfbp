@@ -243,8 +243,15 @@
     (stack-dsl:%push (cl-user::output-esaKind (env p))
 		     (cl-user::name top-class))))
 		   
-
-
+(defmethod $name__FromScriptDeclaration_GetField_methodName_NewScope ((p parser))
+  (let ((top-script (stack-dsl:%top (cl-user::input-scriptDeclaration (env p)))))
+    (let ((script-name (cl-user::name top-script))) 
+      ;; almost same as $name__GetName
+      (let ((name-object (make-instance (stack-dsl:lisp-sym "name"))))
+	(setf (stack-dsl:%value name-object) script-name)
+	;; 2 steps to replace top of name stack (pop then push)
+	(stack-dsl:%pop (cl-user::input-name (env p)))
+	(stack-dsl:%push (cl-user::input-name (env p)) name-object)))))
 
 (defun check-stacks (p)
   (format *standard-output* "~&*** check stacks ***~%")

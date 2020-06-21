@@ -266,9 +266,6 @@
 		  (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
 		  (:file "build-collector" :depends-on ("package" "classes" "util"))
 		  (:file "children-before-graph" :depends-on ("package" "classes" "util" "../esa/esa" "../esa/esa-methods"))
-		  (:file "build-graph-in-memory" :depends-on ("package" "classes" "../esa/esa" "json" "util" "graph-class"))
-		  (:file "graph" :depends-on ("package" "classes" "util" "../esa/esa" "graph-class"))
-		  (:file "runner" :depends-on ("package" "classes" "util" "graph"))
 		  (:file "my-command-line" :depends-on ("package"))
 		  (:file "build" :depends-on ("package" "classes" "json" "path"
 							"probe" "probe2" "probe3"
@@ -278,32 +275,30 @@
 							"schematic-or-leaf" "build-collector"
 							"children-before-graph"
 							"get-manifest-file" "get-code"
-							"build-graph-in-memory" "runner"
 							"../esa/esa" "../esa/esa-methods"
-							"graph"
 							"util"
 							))
 		  ))))
 
-#+deprecated(defsystem :arrowgrams/runner
+(defsystem :arrowgrams/runner
   :depends-on (:arrowgrams/build :cl-json)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
-  :components ((:module "arrowgrams-runner-utility"
+  :components ((:module "arrowgrams-runner"
                         :pathname "./build_process/cl-run"
                         :components ((:file "../cl-build/package")
-                                     (:file "esa-methods" :depends-on ("../cl-build/package"))
-                                     (:file "esa" :depends-on ("../cl-build/package" "esa-methods"))
-                                     (:file "make-kind-from-graph" :depends-on ("esa"))
-                                     (:file "instantiate-kind-recursively" :depends-on ("esa"))
+                                     (:file "../esa/esa-methods" :depends-on ("../cl-build/package"))
+                                     (:file "../esa/esa" :depends-on ("../cl-build/package" "../esa/esa-methods"))
+                                     (:file "make-kind-from-graph" :depends-on ("../esa/esa"))
+                                     (:file "instantiate-kind-recursively" :depends-on ("../esa/esa"))
                                      (:file "load-and-run" 
 					    :depends-on (
 							 "make-kind-from-graph"
 							 "instantiate-kind-recursively"
 							 ))))))
 
-(defsystem :arrowgrams/bundle
+#+nil(defsystem :arrowgrams/bundle
   :depends-on (:arrowgrams/build :cl-json)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))

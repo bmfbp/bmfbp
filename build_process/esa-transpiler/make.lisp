@@ -1,6 +1,6 @@
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
-(defparameter *script* "
+(Defparameter *script* "
   (uiop:run-program \"~/quicklisp/local-projects/rm.bash\")
   (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
   (ql:quickload :stack-dsl)
@@ -48,11 +48,10 @@
   (load (arrowgrams/esa-transpiler::path \"print.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"mechanisms.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"manual-mechanisms.lisp\"))
-  (load (arrowgrams/esa-transpiler::path \"mech-tester.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"esa-transpile.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"trace-rules.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"trace-mechs.lisp\"))
-    (ql:quickload :arrowgrams/esa-transpiler/tester)
+  (ql:quickload :arrowgrams/esa-transpiler)
   (let ()
     (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path \"exprtypes.json\"))
     (let ((result 
