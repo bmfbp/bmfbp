@@ -380,12 +380,16 @@
   [ ?SYMBOL/true SYMBOL/true
                                $statement__NewScope
                                  $returnTrueStatement__NewScope
+                                   @$fetchMethodName
+                                   $returnTrueStatement__SetField_methodName_from_methodName
                                  $returnTrueStatement__Output
                                  $statement__CoerceFrom_returnTrueStatement
                                $statement__Output
   | ?SYMBOL/false SYMBOL/false
                                $statement__NewScope
                                  $returnFalseStatement__NewScope
+                                   @$fetchMethodName
+                                   $returnFalseStatement__SetField_methodName_from_methodName
                                  $returnFalseStatement__Output
                                  $statement__CoerceFrom_returnFalseStatement
                                $statement__Output
@@ -394,11 +398,20 @@
                                  $returnValueStatement__NewScope
       @esaSymbol-in-statement
                                    $returnValueStatement__SetField_name_from_name
+                                   @$fetchMethodName
+                                   $returnValueStatement__SetField_methodName_from_methodName
                                  $returnValueStatement__Output
                                  $statement__CoerceFrom_returnValueStatement
                                $statement__Output
   ]
 
+= $fetchMethodName
+  $methodName__NewScope
+    $name__NewScope
+      $name__FromScriptDeclaration_GetField_methodName_NewScope
+    $name__Output
+  $methodName__CoerceFrom_name
+  $methodName__Output
 
 = create-statement
   SYMBOL/create

@@ -59,9 +59,10 @@
   (error (format nil "pin /~a/ is not an output pin of ~s ~s" name (kind-name self) self)))
 
 (defmethod ensure-input-pin-not-declared ((self kind) name)
-  (dolist (pin-name (input-pins self))
-    (when (string=-downcase pin-name name)
-      (error (format nil "pin /~a/ is already declared as an input pin of ~s ~s" name (kind-name self) self))))
+  (when (slot-boundp self 'input-pins)
+    (dolist (pin-name (input-pins self))
+      (when (string=-downcase pin-name name)
+	(error (format nil "pin /~a/ is already declared as an input pin of ~s ~s" name (kind-name self) self)))))
   T)
 
 (defmethod ensure-output-pin-not-declared ((self kind) name)

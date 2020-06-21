@@ -8,9 +8,9 @@
   ;; { ekind object }
   (let ((k (stack-dsl::%value (ekind self))))
     (cond ((string= "true" k)
-	 "t")
+	 ":true")
 	  ((string= "false" k)
-	   nil)
+	   ":false")
 	  ((string= "object" k)
 	   (asString (object self)))
 	  ((string= "calledObject" k)
@@ -73,7 +73,7 @@
 (defmethod asString ((self esaClass))
   (let ((name (format nil "~a" (asString (name self)))))
     (let ((fields (mapcar #'(lambda (f) 
-			      (format nil "(~a :accessor ~a)" 
+			      (format nil "(~a :accessor ~a :initform nil)" 
 				      (asString (name f)) 
 				      (asString (name f))))
 			  (stack-dsl:%list (fieldMap self)))))
@@ -130,20 +130,23 @@
 
 (defmethod asString ((self exitWhenStatement))
   (let ((e (asString (expression self))))
-    (format nil "(when ~a (return))" e)))
+    (format nil "(when (esa-expr-true ~a) (return))" e)))
 
 (defmethod asString ((self exitMapStatement))
-  "(return-from %map nil)")
+  "(return-from %map :false)")
 
 (defmethod asString ((self returnTrueStatement))
-  "t")
+  (let ((method-name (asString (cl-user::methodName self))))
+    (format nil "(return-from ~a :true)" method-name)))
 
 (defmethod asString ((self returnFalseStatement))
-  "nil")
+  (let ((method-name (asString (cl-user::methodName self))))
+    (format nil "(return-from ~a :false)" method-name)))
 
 (defmethod asString ((self returnValueStatement))
-  (let ((n (asString (name self))))
-    (format nil "~a" n)))
+  (let ((method-name (asString (cl-user::methodName self))))
+    (let ((n (asString (name self))))
+      (format nil "(return-from ~a ~a)" method-name n))))
 
 (defmethod asString ((self loopStatement))
   (let ((code (asString (implementation self))))
@@ -153,7 +156,7 @@
   (let ((e  (asString (expression self)))
 	(then (asString (thenPart self))))
     (if (stack-dsl:%empty-p (elsePart self))
-	(format nil "(when ~a~%~{~a~%~^~})" e then)
+	(format nil "(when (esa-expr-true ~a)~%~{~a~%~^~})" e then)
 	(let ((els (asString (elsePart self))))
-	  (format nil "(if ~a~%(progn~%~{~a~%~^~})~%(progn~%~{~a~%~^~}))" e then els)))))
+	  (format nil "(if (esa-expr-true ~a)~%(progn~%~{~a~%~^~})~%(progn~%~{~a~%~^~}))" e then els)))))
 

@@ -28,6 +28,7 @@
 		(cl-user::asString program3)))))))))
 
 
+#+nil
 (defun old-transpile-esa-to-string (esa-input-filename &key (tracing-accept nil))
   (let ((in-string (alexandria:read-file-into-string esa-input-filename)))
     (let ((token-stream (scanner:scanner in-string)))

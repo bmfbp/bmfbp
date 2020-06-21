@@ -92,9 +92,9 @@ createStatement = { varName indirectionKind name implementation }
 ifStatement = { expression thenPart elsePart }
 loopStatement = { implementation }
 exitWhenStatement = { expression }
-returnTrueStatement = { filler }
-returnFalseStatement = { filler }
-returnValueStatement = { name }
+returnTrueStatement = { methodName }
+returnFalseStatement = { methodName }
+returnValueStatement = { methodName name }
 callInternalStatement = { functionReference } 
 callExternalStatement = { functionReference }
 
@@ -107,4 +107,5 @@ elsePart =| implementation
 indirectionKind = 'indirect' | 'direct'
 
 % deficiency in stack-dsl parser - expects at least one field (we really want 0 fields here)
+methodName =| name
 filler =| name

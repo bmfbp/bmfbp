@@ -2,7 +2,7 @@
 * build helloworld to ../parts/graph/helloworld.graph.json
 #+name: arrowgrams
 #+begin_src lisp
-  (ql:quickload :arrowgrams/build)
+(ql:quickload :arrowgrams/build)
 #+end_src
 
 #+name: arrowgrams
@@ -10,21 +10,24 @@
   (arrowgrams/build::arrowgrams-to-json "helloworld")
 #+end_src
 
-* build results
 #+RESULTS: arrowgrams
 : build.lisp done
 
-
-
-
-
-
-
-
-
-
-
 * deprecated >>>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 * todo
 ** join builder to runner, build-graph-in-memory to run
 ** in -> out of top
