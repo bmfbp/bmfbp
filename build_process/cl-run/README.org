@@ -17,7 +17,7 @@
   (arrowgrams/build::json-graph-path "helloworld"))
 #+end_src
 
-* results
+
 #+RESULTS: runner
 #+begin_example
 compiling "/home/tarvydas/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.svg"

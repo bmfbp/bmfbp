@@ -10,7 +10,6 @@
   (arrowgrams/build::arrowgrams-to-json "helloworld")
 #+end_src
 
-* build results
 #+RESULTS: arrowgrams
 : build.lisp done
 

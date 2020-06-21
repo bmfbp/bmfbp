@@ -146,7 +146,7 @@
 (defmethod asString ((self returnValueStatement))
   (let ((method-name (asString (cl-user::methodName self))))
     (let ((n (asString (name self))))
-      (format nil "(return-from ~a ~a" method-name n))))
+      (format nil "(return-from ~a ~a)" method-name n))))
 
 (defmethod asString ((self loopStatement))
   (let ((code (asString (implementation self))))
