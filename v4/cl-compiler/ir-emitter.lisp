@@ -28,7 +28,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "emitter ")
              (emitter self)
              (@send self :done t)
              (e/part:first-time self))
@@ -48,7 +47,6 @@
 
 (let ((fname (asdf:system-relative-pathname :arrowgrams "build_process/fb.pro")))
   (with-open-file (ofb fname :direction :output :if-does-not-exist :create :if-exists :supersede)
-    (format *standard-output* "~&writing fb to ~s~%" fname)
     (pprint (fb self) ofb)))
 
     (let ((goal '((:match_top_name (:? N)))))

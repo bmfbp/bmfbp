@@ -78,6 +78,7 @@ ENTRYPOINT cd ${project_root} && \
 # (uiop:run-program "~/quicklisp/local-projects/rm.bash")
 # (ql:register-local-projects)
 # restart
+# (uiop:run-program "~/quicklisp/local-projects/rm.bash")
 # (ql:quickload :arrowgrams/build)
 # (arrowgrams/build::arrowgrams-to-json "helloworld")
 # (ql:quickload :arrowgrams/runner)

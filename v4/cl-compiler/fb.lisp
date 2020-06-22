@@ -19,7 +19,6 @@
   (flet ((idle-handler (action state) (declare (ignorable state))
            (if (eq action :retract)
                (progn
-                 (format *standard-output* "~&retract ~S~%" (e/event:data e))
                  (setf (fb self) (remove-fact (e/event:data e) (fb self)))
                  (@send self :fb (fb self)))
              (if (eq action :string-fact)
@@ -38,7 +37,6 @@
                              (setf (state self) :iterating))
                          (if (eq action :reset)
                              (progn
-                               (format *standard-output* "FB RESET ")
                                (e/part::first-time self))
                            (@send self :error
                                   (format nil "FB in state :idle expected :retract, :string-fact, :lisp-fact, :go, :fb-request or :iterate, but got action ~S data ~S" action (e/event:data e)))))))))))))
@@ -104,7 +102,7 @@
           (writefb fb))))))
 
 (defmethod fb-warning ((self fb) format-string &rest format-args)
-  (@send self :error (apply #'cl:format
+  #+nil(@send self :error (apply #'cl:format
                             nil
                             (concatenate 'string "WARNING FB: " format-string)
                             format-args)))
