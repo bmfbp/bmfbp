@@ -6,7 +6,7 @@
   (call-next-method))
 
 (defmethod e/part:react ((self front-end) e)
-(format *standard-output* "~&v4 compiler drawio ~s ~S~%" (@pin self e) (@data self e))
+#+nil(format *standard-output* "~&v4 compiler drawio ~s ~S~%" (@pin self e) (@data self e))
   (ecase (state self)
     (:idle
      (let ((filename (cl-event-passing-user:@data self e)))

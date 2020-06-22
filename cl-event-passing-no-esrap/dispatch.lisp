@@ -66,7 +66,7 @@
    (e/dispatch::dispatch-output-queues)
    (@:exit-when (e/dispatch::all-parts-have-empty-input-queues-p))
    (@:exit-when (null (e/dispatch::dispatch-single-input))))
-  (format *standard-output* "~&terminating - ready list is nil~%")
+  ;(format *standard-output* "~&terminating - ready list is nil~%")
   (setf *dispatcher-running* nil)
   *all-parts*)
 

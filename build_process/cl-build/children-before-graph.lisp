@@ -14,7 +14,7 @@
   (setf (graph-name self) nil))
 
 (defmethod e/part:react ((self children-before-graph) e)
-(format *standard-output* "~&child-before-graphs in state ~s gets ~s~%"
+#+nil(format *standard-output* "~&child-before-graphs in state ~s gets ~s~%"
 	(state self) (@pin self e))
   (ecase (state self)
     (:idle
