@@ -359,7 +359,7 @@ script node distribute-outputs-upwards
     %% stops upward recursion at top node (no container)
   else
     let parent = self.container in
-      parent.distribute-output-events
+      @parent.distribute-output-events
     end let
   end if 
 end script
