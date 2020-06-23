@@ -1,13 +1,33 @@
 #~/bin/bash
 sbcl --noinform \
-     --eval '(uiop:run-program "~/quicklisp/local-projects/rm.bash")' \
      --eval '(ql:register-local-projects)' \
      --quit && \
-  sbcl --noinform \
-       --eval '(uiop:run-program "~/quicklisp/local-projects/rm.bash")' \
-       --eval '(ql:quickload :arrowgrams/build :silent t)' \
+  sbcl  \
+       --eval '(ql:quickload :arrowgrams/build :silent nil)' \
        --eval '(arrowgrams/build::arrowgrams-to-json "helloworld")' \
-       --eval '(ql:quickload :arrowgrams/runner :silent t)' \
+       --quit && \
+  sbcl  \
+       --eval '(ql:quickload :arrowgrams/runner :silent nil)' \
        --eval '(arrowgrams/build::load-and-run-from-file (arrowgrams/build::json-graph-path "helloworld"))' \
        --quit
+
+
+# echo "quicklisp register" && \
+# sbcl --noinform \
+#      --eval '(uiop:run-program "~/quicklisp/local-projects/rm.bash")' \
+#      --eval '(ql:register-local-projects)' \
+#      --quit && \
+# #  sbcl --noinform \
+# echo "compile" && \
+#   sbcl --noinform \
+#        --eval '(uiop:run-program "~/quicklisp/local-projects/rm.bash")' \
+#        --eval '(ql:quickload :arrowgrams/build :silent nil)' \
+#        --eval '(arrowgrams/build::arrowgrams-to-json "helloworld")' \
+#        --quit && \
+# echo "run" && \
+#   sbcl --noinform \
+#        --eval '(uiop:run-program "~/quicklisp/local-projects/rm.bash")' \
+#        --eval '(ql:quickload :arrowgrams/runner :silent nil)' \
+#        --eval '(arrowgrams/build::load-and-run-from-file (arrowgrams/build::json-graph-path "helloworld"))' \
+#        --quit
 
