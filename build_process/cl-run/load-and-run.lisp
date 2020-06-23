@@ -24,22 +24,11 @@
 
 (defun arrowgrams-load-and-run (json-graph-string)
   (let ((graph-alist (json-to-alist json-graph-string)))
-    (format *standard-output* "*** making kind from graph~%")
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in ../esa/esa.lisp
-      
-      (format *standard-output* "*** creating dispatcher~%")
       (let ((esa-disp (make-instance 'dispatcher)))  ;; dispatcher defined in ../esa/esa.lisp
-
-	(format *standard-output* "*** instantiating graph~%")
 	(let ((top-node (instantiate-kind-recursively top-kind esa-disp)))
-
-	  (format *standard-output* "*** initializing instances~%")
 	  (initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
-
-	  (format *standard-output* "*** distributing initial outputs~%")
 	  (distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
-
-	  (format *standard-output* "*** injecting START~%")
 	  (let ((ev (make-instance 'event))
 		(pp (make-instance 'part-pin)))
 	    (setf (part-name pp) "self")
@@ -47,8 +36,6 @@
             (setf (partpin ev) pp)
 	    (setf (data ev) t)
 	    (enqueue-input top-node ev))
-
-	  (format *standard-output* "*** running~%")
 	  (dispatcher-run esa-disp)  ;; dispatcher-run is in esa.lisp
           )))))
 
