@@ -1,7 +1,7 @@
 * build helloworld to ../parts/graph/helloworld.graph.json
 #+name: arrowgrams
 #+begin_src lisp
-(uiop:run-program \"~/quicklisp/local-projects/rm.bash\")
+(uiop:run-program "~/quicklisp/local-projects/rm.bash")
 (ql:quickload :arrowgrams/build)
 #+end_src
 
@@ -11,5 +11,5 @@
 #+end_src
 
 #+RESULTS: arrowgrams
-: build.lisp done
+: T
 
