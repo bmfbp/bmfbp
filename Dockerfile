@@ -75,10 +75,10 @@ ENTRYPOINT cd ${project_root} && \
   cd /root/bin && \
   python -m SimpleHTTPServer 8000
 
-# (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+# (uiop:run-program "~/quicklisp/local-projects/rm.bash") # not needed in docker
 # (ql:register-local-projects)
 # restart
-# (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+# (uiop:run-program "~/quicklisp/local-projects/rm.bash") # not needed in docker
 # (ql:quickload :arrowgrams/build)
 # (arrowgrams/build::arrowgrams-to-json "helloworld")
 # (ql:quickload :arrowgrams/runner)
