@@ -54,7 +54,7 @@
                   (e/util::util-trace)
                   (e/source::source-event source out-event)))
             ;; else this is the top-level part (no parent schem), so just printf the event data to stdout
-            (format *standard-output* "~&~S" (e/event:data out-event))))))))
+            (format *standard-output* "~&result ~S" (e/event:data out-event))))))))
 
 (defun run-first-times ()
   (dolist (part *all-parts*)
