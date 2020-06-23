@@ -25,7 +25,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "text-bounding-boxes ")
              (text-bb-make-bounding-boxes self)
              (@send self :done t)
              (e/part:first-time self))

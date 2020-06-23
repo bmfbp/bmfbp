@@ -29,7 +29,6 @@
        (if (eq pin :fb)
            (progn
              (setf (fb self) data)
-             (format *standard-output* "sem-ports-have-sink-or-source ")
              ;; put code here
              (@send self :done t)
              (e/part:first-time self))

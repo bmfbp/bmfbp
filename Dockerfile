@@ -74,3 +74,12 @@ ENTRYPOINT cd ${project_root} && \
   sbcl --eval '(ql:quickload :arrowgrams/build :silent nil)' --eval '(arrowgrams/build::arrowgrams)' --quit "/root/quicklisp/local-projects/bmfbp/__program" && \
   cd /root/bin && \
   python -m SimpleHTTPServer 8000
+
+# (uiop:run-program "~/quicklisp/local-projects/rm.bash") # not needed in docker
+# (ql:register-local-projects)
+# restart
+# (uiop:run-program "~/quicklisp/local-projects/rm.bash") # not needed in docker
+# (ql:quickload :arrowgrams/build)
+# (arrowgrams/build::arrowgrams-to-json "helloworld")
+# (ql:quickload :arrowgrams/runner)
+# (arrowgrams/build::load-and-run-from-file (arrowgrams/build::json-graph-path "helloworld"))

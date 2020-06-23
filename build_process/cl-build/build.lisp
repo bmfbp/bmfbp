@@ -981,7 +981,7 @@
         (@inject build-net pin alist-filename)) 
       (let ((pin (e/part::get-input-pin build-net :done)))
         (@inject build-net pin T )))) ;:tag "build-net done")))))
-  "build.lisp done")
+  T)
     
 #+nil(defun btest ()
   (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
@@ -995,7 +995,6 @@
 	  (let ((in-file (diagram-path fname))
 		(json-file (json-graph-path fname))
 		(alist-file (alist-graph-path fname)))
-	    (format *standard-output* "~&compiling ~s~%" in-file)
 	    (build in-file json-file alist-file))))
     (end-of-file (c)
       (format *error-output* "FATAL 'end of file error; in main ~a~%" c))

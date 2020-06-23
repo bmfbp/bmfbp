@@ -1,6 +1,6 @@
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
-(Defparameter *script* "
+(defparameter *script* "
   (uiop:run-program \"~/quicklisp/local-projects/rm.bash\")
   (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
   (ql:quickload :stack-dsl)
