@@ -4,6 +4,7 @@
   (declare (ignore argv))
   (handler-case
       (let ((lis nil))
+	(format *standard-output* "~&in load and run~%")
 	(loop for line = (read-line *standard-input* nil :eof)
 	   until (eq line :eof)
 	   do (push line lis))

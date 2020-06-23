@@ -41,7 +41,6 @@
 	(compiler-event-passing filename map-filename output-filename)))))
 
 (defun get-compiler-net ()
-(format *standard-output* "~&in compiler-event-passing~%")
   (let ((compiler-net #+nil(cl-event-passing-user::@defnetwork compiler
 
            (:code probe (:in) (:out))

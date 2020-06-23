@@ -126,7 +126,7 @@
 
 (defmethod display-output-events-to-console-and-delete ((self node))
   (dolist (e (get-output-events-and-delete self))
-    (format *standard-output* "~s" (name-in-container self) (data e))))
+    (format *standard-output* "~s" (data e))))
     ;(format *standard-output* "~&~s outputs on pin ~s : ~s~%" (name-in-container self) (pin-name (partpin e)) (data e))))
 
 (defmethod flagged-as-busy? ((self node))

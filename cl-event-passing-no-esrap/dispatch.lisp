@@ -44,6 +44,7 @@
     (dispatch-some-output-queues)))
 
 (defun dispatch-some-output-queues()
+  #+nil (format *standard-output* "~&dispatch-some-output-queues~%")
   (dolist (part *all-parts*)
     (when (e/part::has-output-p part)
       (let ((out-list (e/part::output-queue-as-list-and-delete part)))
@@ -54,7 +55,7 @@
                   (e/util::util-trace)
                   (e/source::source-event source out-event)))
             ;; else this is the top-level part (no parent schem), so just printf the event data to stdout
-            (format *standard-output* "~&result ~S" (e/event:data out-event))))))))
+            (format *standard-output* "~&result from bmfbp: ~S~%" (e/event:data out-event))))))))
 
 (defun run-first-times ()
   (dolist (part *all-parts*)
@@ -66,7 +67,7 @@
    (e/dispatch::dispatch-output-queues)
    (@:exit-when (e/dispatch::all-parts-have-empty-input-queues-p))
    (@:exit-when (null (e/dispatch::dispatch-single-input))))
-  ;(format *standard-output* "~&terminating - ready list is nil~%")
+  #+nil (format *standard-output* "~&terminating in bmfbp - ready list is nil~%")
   (setf *dispatcher-running* nil)
   *all-parts*)
 
