@@ -1,7 +1,7 @@
 (in-package :arrowgrams/build)
 
 (defun dir ()
-  (asdf:system-relative-pathname :arrowgrams (concatenate 'string "build_process/parts/")))
+  (asdf:system-relative-pathname :arrowgrams (concatenate 'string "parts/")))
   
 (defun diagram-path (fname)
   (format nil "~adiagram/~a.svg" (dir) fname))

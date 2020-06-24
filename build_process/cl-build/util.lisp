@@ -10,9 +10,9 @@
   (cl-ppcre:regex-replace-all "
 " s "."))
 
-(defparameter *final-manifest-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/"))
-(defparameter  *final-diagram-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/"))
-(defparameter      *final-src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/cl/"))
+(defparameter *final-manifest-dir* (asdf:system-relative-pathname :arrowgrams "parts/"))
+(defparameter  *final-diagram-dir* (asdf:system-relative-pathname :arrowgrams "parts/diagram/"))
+(defparameter      *final-src-dir* (asdf:system-relative-pathname :arrowgrams "parts/cl/"))
 
 (defparameter *manifest-dir* *final-manifest-dir*)
 (defparameter  *diagram-dir* *final-diagram-dir*)
