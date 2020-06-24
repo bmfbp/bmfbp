@@ -36,7 +36,7 @@ basic algorithm:
   (call-next-method))
 
 (defmethod e/part:react ((self schematic-or-leaf) e)
-  ;(format *standard-output* "~&schematic-or-leaf gets ~s ~s~%" (@pin self e) (subseq (@data self e) 0 60))
+  ;(format *standard-output* "~&bootstrap schematic-or-leaf gets ~s ~s~%" (@pin self e) (subseq (@data self e) 0 60))
   (ecase (@pin self e)
     (:manifest-as-json-string
      ;; during bootstrap: all files reside in a working directory
