@@ -6,14 +6,14 @@ sbcl --noinform \
 echo "" && \
 echo "compile" && \
 echo "" && \
-  sbcl  \
+  sbcl  --noinform \
        --eval '(ql:quickload :arrowgrams/build :silent nil)' \
        --eval '(arrowgrams/build::arrowgrams-to-json "helloworld")' \
        --quit && \
 echo "" && \
 echo "run" && \
 echo "" && \
-  sbcl  \
+  sbcl  --noinform \
        --eval '(ql:quickload :arrowgrams/runner :silent nil)' \
        --eval '(arrowgrams/build::load-and-run-from-file (arrowgrams/build::json-graph-path "helloworld"))' \
        --quit
