@@ -1,11 +1,18 @@
 #~/bin/bash
+echo "register" && \
 sbcl --noinform \
      --eval '(ql:register-local-projects)' \
      --quit && \
+echo "" && \
+echo "compile" && \
+echo "" && \
   sbcl  \
        --eval '(ql:quickload :arrowgrams/build :silent nil)' \
        --eval '(arrowgrams/build::arrowgrams-to-json "helloworld")' \
        --quit && \
+echo "" && \
+echo "run" && \
+echo "" && \
   sbcl  \
        --eval '(ql:quickload :arrowgrams/runner :silent nil)' \
        --eval '(arrowgrams/build::load-and-run-from-file (arrowgrams/build::json-graph-path "helloworld"))' \
