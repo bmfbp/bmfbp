@@ -983,10 +983,17 @@
         (@inject build-net pin T )))) ;:tag "build-net done")))))
   T)
     
-#+nil(defun btest ()
-  (build (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/boot-boot.svg")))
-
 (defun arrowgrams-to-json (&optional (opt-filename "helloworld"))
+  (let ((args (my-command-line)))
+    (let ((fname (if (> (length args) 1)
+		     (second args)
+		     opt-filename)))
+      (let ((in-file (diagram-path fname))
+	    (json-file (json-graph-path fname))
+	    (alist-file (alist-graph-path fname)))
+	(build in-file json-file alist-file)))))
+
+(defun standalone-arrowgrams-to-json (&optional (opt-filename "helloworld"))
   (handler-case
       (let ((args (my-command-line)))
 	(let ((fname (if (> (length args) 1)

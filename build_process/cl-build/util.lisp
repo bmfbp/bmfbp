@@ -10,17 +10,9 @@
   (cl-ppcre:regex-replace-all "
 " s "."))
 
-#|
-(defparameter *manifest-dir* (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/")) ;; for bootstrap
-(defparameter  *diagram-dir* (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/")) ;; for bootstrap
-(defparameter      *src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/" )) ;; for bootstrap
-|#
-(defparameter *final-manifest-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/"))
-(defparameter  *final-diagram-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/diagram/"))
-(defparameter      *final-src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/parts/cl/"))
-(defparameter *bootstrap-manifest-dir* (asdf:system-relative-pathname :arrowgrams "build_process/lispparts/"))
-(defparameter  *bootstrap-diagram-dir* (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/"))
-(defparameter      *bootstrap-src-dir* (asdf:system-relative-pathname :arrowgrams "build_process/cl-build/"))
+(defparameter *final-manifest-dir* (asdf:system-relative-pathname :arrowgrams "parts/"))
+(defparameter  *final-diagram-dir* (asdf:system-relative-pathname :arrowgrams "parts/diagram/"))
+(defparameter      *final-src-dir* (asdf:system-relative-pathname :arrowgrams "parts/cl/"))
 
 (defparameter *manifest-dir* *final-manifest-dir*)
 (defparameter  *diagram-dir* *final-diagram-dir*)
