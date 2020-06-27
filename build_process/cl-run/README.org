@@ -8,13 +8,13 @@
 build graph...
 #+name: runner
 #+begin_src lisp :results output
-  #| (arrowgrams/build::arrowgrams-to-json "helloworld") |#
+  (arrowgrams/build::arrowgrams-to-json "helloworld")
 #+end_src
 
 run graph...
 #+name: runner
 #+begin_src lisp :results output
-(arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "testhw"))
+  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "helloworld"))
 #+end_src
 
 
