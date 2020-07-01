@@ -281,7 +281,7 @@
 		  ))))
 
 (defsystem :arrowgrams/runner
-  :depends-on (:arrowgrams/build :cl-json)
+  :depends-on (:arrowgrams/build :cl-json :cl-ppcre)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -292,10 +292,12 @@
                                      (:file "../esa/esa" :depends-on ("../cl-build/package" "../esa/esa-methods"))
                                      (:file "make-kind-from-graph" :depends-on ("../esa/esa"))
                                      (:file "instantiate-kind-recursively" :depends-on ("../esa/esa"))
+                                     (:file "path")
                                      (:file "load-and-run" 
 					    :depends-on (
 							 "make-kind-from-graph"
 							 "instantiate-kind-recursively"
+							 "path"
 							 ))))))
 
 #+nil(defsystem :arrowgrams/bundle

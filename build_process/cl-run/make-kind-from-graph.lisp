@@ -147,7 +147,7 @@
 ;;;;;;;; lisp routines to access alists (from JSON)
 ;;;;;;;; used for building LEAF
 
-(defun get-filename (a)  (cdr (assoc :filename a)))
+(defun get-filename (a)  (fixup-root-reference (cdr (assoc :filename a))))
 (defun get-in-pins (a)  (cdr (assoc :in-pins a)))
 (defun get-out-pins (a)  (cdr (assoc :out-pins a)))
 (defun get-kind (a) (cdr (assoc :kind a)))

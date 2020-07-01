@@ -50,11 +50,11 @@
   (push (graph-alist self (name self) (graph self)) (graphs self)))
 
 (defmethod collect-leaf ((self build-collector) descriptor-as-json-string)
-  (push (json-to-alist descriptor-as-json-string) (leaves self)))
+  (let ((relstr (delete-root-pathname descriptor-as-json-string)))
+    (push (json-to-alist relstr) (leaves self))))
 
-#+nil(defmethod send-collection ((self build-collector) list-of-alist kind)
-  (dolist (alist list-of-alist)
-    (@send self :final-code (alist-to-json-string alist) ))) ;:tag (format nil "build-collector ~s" kind))))
+(defun delete-root-pathname (str)
+  (cl-ppcre:regex-replace-all  "\"filename\":\".*parts" str "\"filename\":\"$/parts"))
 
 (defmethod finalize-and-send-collection ((self build-collector))
   ;; leaves and graphs are alists

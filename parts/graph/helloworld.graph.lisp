@@ -1,15 +1,12 @@
 (((:ITEM-KIND . "leaf") (:NAME . "string-join") (:IN-PINS "a" "b")
   (:OUT-PINS "c" "error") (:KIND . "string-join")
-  (:FILENAME
-   . "/home/tarvydas/quicklisp/local-projects/bmfbp/parts/cl/./string-join.lisp"))
+  (:FILENAME . "$/parts/cl/./string-join.lisp"))
  ((:ITEM-KIND . "leaf") (:NAME . "world") (:IN-PINS "start")
   (:OUT-PINS "s" "error") (:KIND . "world")
-  (:FILENAME
-   . "/home/tarvydas/quicklisp/local-projects/bmfbp/parts/cl/./world.lisp"))
+  (:FILENAME . "$/parts/cl/./world.lisp"))
  ((:ITEM-KIND . "leaf") (:NAME . "hello") (:IN-PINS "start")
   (:OUT-PINS "s" "error") (:KIND . "hello")
-  (:FILENAME
-   . "/home/tarvydas/quicklisp/local-projects/bmfbp/parts/cl/./hello.lisp"))
+  (:FILENAME . "$/parts/cl/./hello.lisp"))
  ((:ITEM-KIND . "graph") (:NAME . "helloworld")
   (:GRAPH (:NAME . "HELLOWORLD") (:INPUTS "START") (:OUTPUTS "RESULT")
    (:PARTS ((:PART-NAME . "STRING-JOIN") (:KIND-NAME . "STRING-JOIN"))
