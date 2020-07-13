@@ -1,5 +1,3 @@
-(in-package :arrowgrams/build)
-
 (defclass hello (node) ()  )
 
 (defmethod initially ((self hello))
@@ -12,5 +10,5 @@
     (setf (part-name pp) (name-in-container self))
     (setf (pin-name pp) "s")
     (setf (partpin e) pp)
-    (setf (data    e) "hello")
+    (setf (data    e) "HELLO")
     (send self e)))

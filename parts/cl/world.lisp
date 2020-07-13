@@ -1,5 +1,3 @@
-(in-package :arrowgrams/build)
-
 (defclass world (node) () )
 
 (defmethod initially ((self world))
@@ -12,5 +10,5 @@
     (setf (part-name pp) (name-in-container self))
     (setf (pin-name  pp) "s")
     (setf (partpin e) pp)
-    (setf (data    e) "world")
+    (setf (data    e) "WORLD")
     (send self e)))

@@ -288,10 +288,10 @@
   :components ((:module "arrowgrams-runner"
                         :pathname "./build_process/cl-run"
                         :components ((:file "../cl-build/package")
-                                     (:file "../esa/esa-methods" :depends-on ("../cl-build/package"))
-                                     (:file "../esa/esa" :depends-on ("../cl-build/package" "../esa/esa-methods"))
-                                     (:file "make-kind-from-graph" :depends-on ("../esa/esa"))
-                                     (:file "instantiate-kind-recursively" :depends-on ("../esa/esa"))
+                                     (:file "../esa/cl-user-esa" :depends-on ("../cl-build/package"))
+                                     (:file "../esa/cl-user-esa-methods" :depends-on ("../cl-build/package" "../esa/cl-user-esa"))
+                                     (:file "make-kind-from-graph" :depends-on ("../esa/cl-user-esa"))
+                                     (:file "instantiate-kind-recursively" :depends-on ("../esa/cl-user-esa"))
                                      (:file "path")
                                      (:file "load-and-run" 
 					    :depends-on (
