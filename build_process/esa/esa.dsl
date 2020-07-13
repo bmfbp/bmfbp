@@ -1,3 +1,4 @@
+
 type name
 type function
 type boolean
@@ -160,6 +161,8 @@ end when
 when building wire
   method install-source(name name)
   method install-destination(name name)
+  script add-source(name name)
+  script add-destination(name name)
 end when
 
 script wire add-source(part pin)
@@ -252,7 +255,7 @@ end when
 when running dispatcher
   script start
   script distribute-all-outputs
-  script run
+  script dispatcher-run
   method declare-finished
 end when
 
@@ -264,6 +267,7 @@ end when
 when running node
   script busy?
   script ready?
+  script invoke
   method has-inputs-or-outputs? >> boolean
   method children? >> boolean
   method flagged-as-busy? >> boolean
@@ -300,11 +304,11 @@ end script
 
 script dispatcher start
   @self.distribute-all-outputs
-  @self.run
+  @self.dispatcher-run
 end script
 
 
-script dispatcher run
+script dispatcher dispatcher-run
   let done = true in
   loop
     set done = true
@@ -355,7 +359,7 @@ script node distribute-outputs-upwards
     %% stops upward recursion at top node (no container)
   else
     let parent = self.container in
-      parent.distribute-output-events
+      @parent.distribute-output-events
     end let
   end if 
 end script

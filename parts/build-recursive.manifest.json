@@ -1,0 +1,14 @@
+{
+  "entrypoint": "./build-recursive.svg",
+  "kindType": "composite",
+  "platform": "lisp",
+  "inPins": [
+      "svg_filename"
+  ],
+  "outPins": [
+      "graph",
+      "name",
+      "descriptor",
+      "error"
+  ]
+}

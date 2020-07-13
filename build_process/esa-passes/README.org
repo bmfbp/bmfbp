@@ -1,0 +1,20 @@
+* run
+#+name: esa-transpiler
+#+begin_src lisp
+  (ql:quickload :parsing-assembler/use)
+#+end_src
+#+name: esa-transpiler
+#+begin_src lisp
+(let ((dirpath (asdf:system-relative-pathname :arrowgrams "build_process/esa-passes/")))
+  (let ((dirstring (cl:namestring dirpath)))
+    (let ((esa-filename (format nil "~a~a" dirstring "esa.dsl")))
+      (pasm:pasm-to-file 
+        "CL-USER"
+	(format nil "~a~a" dirstring "0.pasm")
+	(format nil "~a~a" dirstring "0.lisp"))
+      (load (format nil "~a~a" dirstring "0.lisp"))
+      (load (format nil "~a~a" dirstring "transpile.lisp"))
+      (transpile-esa-to-string esa-filename :tracing-accept nil))))
+#+end_src
+
+#+RESULTS: esa-transpiler

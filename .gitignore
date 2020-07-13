@@ -80,8 +80,6 @@ svg/cl-compiler/COMPILE_COMPOSITE.json
 
 svg/cl-compiler/COMPILE_COMPOSITE.lisp
 
-build_process/cl-build/esa.lisp
-
 build_process/esa/esa-dsl.lisp
 
 svg/cl-compiler/COMPILE-SINGLE-DIAGRAM.json
@@ -106,3 +104,42 @@ svg/cl-compiler/WORLDHELLO.json
 
 svg/cl-compiler/WORLDHELLO.lisp
 
+v4/cl-compiler/output.prolog
+
+build_process/cl-build/helloworld.graph.json
+
+svg/cl-compiler/BUILD-BUILD-RECURSIVE.json
+
+svg/cl-compiler/BUILD-BUILD-RECURSIVE.lisp
+
+svg/cl-compiler/BUILD-COMPILE-SINGLE-DIAGRAM.json
+
+svg/cl-compiler/BUILD-COMPILE-SINGLE-DIAGRAM.lisp
+
+svg/cl-compiler/BUILD-JSON.lisp
+
+svg/cl-compiler/HELLOHELLO.json
+
+svg/cl-compiler/HELLOHELLO.lisp
+
+build_process/parts/graph/hellohello.json
+
+build_process/parts/graph/hellohello.lisp
+
+build_process/esa-transpiler/exprtypes.json
+
+build_process/esa-transpiler/exprtypes.lisp
+
+build_process/esa-transpiler/mechanisms.lisp
+
+build_process/esa-transpiler/dsl.lisp
+
+build_process/esa-transpiler/dsl0.lisp
+
+build_process/esa-transpiler/dsl1.lisp
+
+build_process/esa-transpiler/dsl2.lisp
+
+build_process/esa-transpiler/dsl3.lisp
+
+build_process/esa-transpiler/old.dsl2.pasm

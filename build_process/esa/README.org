@@ -1,7 +1,53 @@
-* usage
-** cl-user> (ql:quickload :arrowgrams/esa)
-** cl-user> (etest)
-* (etest1): :arrowgrams/esa inputs esa.rp outputs esa-dsl.lisp
-* (etest2): :arrowgrams/esa uses esa-dsl.lisp, inputs esa-dsl.lisp outputs ../cl-build/esa.lisp
+* overview
+** esa stands for Encapsulate Software Assets
+** we build a "kernel" that runs software assets as Components connected by wires that send events to one another
+** the DI (Design Intent, aka Architecture) for ESA is captured in esa.dsl
+** esa.dsl is transpiled into esa.lisp (which is used by ../cl_build)
+* transpiler details
+** see ../esa-transpiler/README.org for details.
+* build
+#+name: esa
+#+begin_src lisp :results output
+  (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+  (ql:quickload :arrowgrams/esa-transpiler)
+  (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/package.lisp"))
+  (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/path.lisp"))
+#+end_src
 
+#+name: esa
+#+begin_src lisp :results output
+  (let ()
+    (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path "exprtypes.json"))
+    (let ((result 
+           (arrowgrams/esa-transpiler::transpile-esa-to-string 
+             (arrowgrams/esa:path "esa.dsl")
+            :tracing-accept nil)))
+	  (with-open-file (f (arrowgrams/esa:path "esa.lisp") :direction :output :if-exists :supersede :if-does-not-exist :create)
+	    (write-string "(in-package :arrowgrams/build)" f)
+	    (write-string "
+" f)
+	    (write-string result f))
+          (with-open-file (f (arrowgrams/esa:path "cl-user-esa.lisp") :direction :output :if-exists :supersede :if-does-not-exist :create)
+	    (write-string "(in-package :cl-user)" f)
+	    (write-string "
+" f)
+	    (write-string result f))))
+#+end_src
 
+#+RESULTS: esa
+#+begin_example
+,* pass 0
+,*** check stacks ***
+,* pass 1
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+,* pass 2
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 90
+OUTPUT-EXPRESSION 85
+,* pass 3
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 58
+#+end_example

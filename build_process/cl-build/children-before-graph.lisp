@@ -14,6 +14,8 @@
   (setf (graph-name self) nil))
 
 (defmethod e/part:react ((self children-before-graph) e)
+#+nil(format *standard-output* "~&child-before-graphs in state ~s gets ~s~%"
+	(state self) (@pin self e))
   (ecase (state self)
     (:idle
      (ecase (@pin self e)
@@ -23,16 +25,22 @@
        (:graph-name
 	(save-graph-name self e)
 	(setf (state self) (send-if-have-both self)))
+
        (:graph
 	(save-graph self e)
 	(setf (state self) (send-if-have-both self)))))
     (:waiting-for-graph-name
      (ecase (@pin self e)
+       (:child
+	(assert nil))
        (:graph-name
 	(save-graph-name self e)
 	(setf (state self) (send-if-have-both self)))))
     (:waiting-for-graph
      (ecase (@pin self e)
+       (:child
+        ;(format *standard-output* "~&child-before-graph sends ~s~%" (@data self e))
+	(@send self :descriptor (@data self e)))
        (:graph
 	(save-graph self e)
 	(setf (state self) (send-if-have-both self)))))))

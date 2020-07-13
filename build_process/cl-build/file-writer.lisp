@@ -19,6 +19,9 @@
 
     (:write
      (let ((str (e/event:data e)))
-       (assert (stringp str))
        (with-open-file (f (filename self) :direction :output :if-exists :supersede :if-does-not-exist :create)
-         (write-string str f))))))
+	 (if (stringp str)
+             (write-string str f)
+	    (format f "~S" str)))))))
+
+(defclass alist-writer (file-writer) () )

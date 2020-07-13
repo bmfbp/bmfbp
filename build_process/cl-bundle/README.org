@@ -1,0 +1,22 @@
+* cache disabling
+** put this in .zshrc (and .bashrc?), but doesn't work as documented
+  export ASDF_OUTPUT_TRANSLATIONS=/:
+
+
+* testing script(s)
+#+name: bundle
+#+begin_src lisp :results output
+  (ql:quickload :arrowgrams/bundle)
+#+end_src
+
+#+name: bundle
+#+begin_src lisp :results output
+  (let ((arrowgrams/build::*verbose* nil))
+    (arrowgrams/build::main))
+#+end_src
+
+#+RESULTS: bundle
+: T"helloworld"
+: 
+: Dispatcher Finished
+: 

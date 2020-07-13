@@ -1,0 +1,16 @@
+{
+  "entrypoint": "./children-before-graph.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "graph-name",
+      "graph",
+      "child"
+  ],
+  "outPins": [
+      "name",
+      "graph",
+      "descriptor",
+      "error"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "entrypoint": "./build-json.svg",
+  "kindType": "composite",
+  "platform": "lisp",
+  "inPins": [
+      "svg-filename",
+      "done",
+      "output-filename",
+      "alist-filename"
+  ],
+  "outPins": [
+      "error"
+  ]
+}

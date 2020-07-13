@@ -50,25 +50,19 @@
   (push (graph-alist self (name self) (graph self)) (graphs self)))
 
 (defmethod collect-leaf ((self build-collector) descriptor-as-json-string)
-  (push (json-to-alist descriptor-as-json-string) (leaves self)))
+  (let ((relstr (delete-root-pathname descriptor-as-json-string)))
+    (push (json-to-alist relstr) (leaves self))))
 
-(defmethod send-collection ((self build-collector) list-of-alist kind)
-  (dolist (alist list-of-alist)
-    (@send self :final-code (alist-to-json-string alist) ))) ;:tag (format nil "build-collector ~s" kind))))
+(defun delete-root-pathname (str)
+  (cl-ppcre:regex-replace-all  "\"filename\":\".*parts" str "\"filename\":\"$/parts"))
 
 (defmethod finalize-and-send-collection ((self build-collector))
   ;; leaves and graphs are alists
-  (send-collection self (graphs self) "leaf")
-  (send-collection self (leaves self) "graph")
+  (let ((final-alist (append (leaves self) (graphs self))))
+    (@send self :alist final-alist)
+    (@send self :final-code (alist-to-json-string final-alist)))
   (@send self :done t ) ;:tag "build-collector done")
   (clear self))
-
-#+nil(defmethod leaf-alist ((self build-collector) file-ref-pathname)
-  ;; file-ref is a pathname like #P"/Users/tarvydas/quicklisp/local-projects/bmfbp/build_process/lispparts/split_diagram.lisp"
-  ;; result is a string JSON map with 3 items
-  (let ((file-ref-str (namestring file-ref-pathname)))
-    (let ((name (pathname-name file-ref-pathname)))
-      (json:encode-json-to-string `( (:item-kind . "leaf") (:name . ,name) (:file-name . ,file-ref-str))))))
 
 (defmethod graph-alist ((self build-collector) name json-graph)
 ;(format *standard-output* "~&graph-alist /~s/~%" json-graph)  

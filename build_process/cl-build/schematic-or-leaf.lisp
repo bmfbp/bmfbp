@@ -36,7 +36,7 @@ basic algorithm:
   (call-next-method))
 
 (defmethod e/part:react ((self schematic-or-leaf) e)
-  ;(format *standard-output* "~&schematic-or-leaf gets ~s ~s~%" (@pin self e) (subseq (@data self e) 0 60))
+  ;(format *standard-output* "~&bootstrap schematic-or-leaf gets ~s ~s~%" (@pin self e) (subseq (@data self e) 0 60))
   (ecase (@pin self e)
     (:manifest-as-json-string
      ;; during bootstrap: all files reside in a working directory
@@ -67,7 +67,6 @@ basic algorithm:
                                  (@send self :child-descriptor descriptor-as-json-string)))
                            (progn
                              (let ((msg (format nil "file ~s does not exist" file-name)))
-                               (break)
                                (@send self :error msg) 
                                (error msg)))))) ;; lisp error only during bootstrapping
                       ((string= "loadedlisp" platform-str)
@@ -85,7 +84,10 @@ basic algorithm:
                
                ((string= "composite" kind-type-str)
                 (let ((file-name (merge-pathnames *diagram-dir* entry-point)))
-                  (@send self :schematic-filename file-name)))))))))
+(format *standard-output* "~&schematic-or-leaf sends composite ~s~%" file-name)
+                  (@send self :schematic-filename file-name)))
+
+	       (t (assert nil))))))))
 
 #+nil(defun fixup-filename (s)
   (let ((r1 (cl-ppcre:regex-replace-all " " s "-")))

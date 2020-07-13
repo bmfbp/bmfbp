@@ -1,0 +1,237 @@
+* common
+** "id":n
+** "shape":{}
+*** "tag":"Polyline" / "Ellipse" / "Rect"
+*** "topLeft" : {}
+**** { "x":nn, "y":mm }
+*** "bottomRight" : {}
+**** { "x":nn, "y":mm }
+*** "kindName" : "..."
+*** "gitUrl" : "..."
+*** "gitRef" : "..."
+*** "contextDir" : "build_process/"
+*** "manifestPath" : "listpparts/....lisp"
+*** "sourcePinName" : "..."
+*** "sinkPinName" : "..."
+** gitUrl, gitRef, contextDir, manifestPath, kindName
+* polyline
+** "points" : []
+** discard: gitUrl, gitRef, contextDir, manifestPath, kindName
+** "sourcePinName"
+** "sinkPinName"
+* ellipse
+** "kindName" : "..." --> name of ellipse
+** "topLeft":{"x":nnn,"y":mmm}
+** "bottomRight":{"x":nnn,"y":mmm}
+** discard: gitUrl, gitRef, contextDir, manifestPath, kindName
+* rect
+** "kindName" : "..." --.> name of part
+** "topLeft":{"x":nnn,"y":mmm}
+** "bottomRight":{"x":nnn,"y":mmm}
+** collect into ->metadata: gitUrl, gitRef, contextDir, manifestPath, kindName
+
+
+* factbase
+  "id"nnnn -> :IDnnnn
+** polyline 
+   -> grab first point
+   -> grab last point
+    edge(edge_nnnn).
+    line(edge_nnnn).
+*** source port @ first point +- 20
+    source(edge_nnnn, source_nnnn).
+    eltype(source_nnnn,port).
+    port(source_nnnn).
+    bounding_box_left(source_nnnn, firstPoint.x - 20).
+    bounding_box_top(source_nnnn, firstPoint.y - 20).
+    bounding_box_right(source_nnnn, firstPoint.x + 20).
+    bounding_box_bottom(source_nnnn, firstPoint.y + 20).
+*** sink port   @ last point  +- 20
+    sink(edge_nnnn, sink_nnnn).
+    eltype(sink_nnnn,port).
+    port(sink_nnnn).
+    bounding_box_left(sink_nnnn, lastPoint.x - 20).
+    bounding_box_top(sink_nnnn, lastPoint.y - 20).
+    bounding_box_right(sink_nnnn, lastPoint.x + 20).
+    bounding_box_bottom(sink_nnnn, lastPoint.y + 20).
+*** polyline sourcePinName 
+    text(beginText_nnnn, sourcePinName.text).
+    geometry_center_x(beginText_nnnn, firstPoint.x).
+    geometry_top_y(beginText_nnnn, firstPoint.y - half(defaultFontHeight)).
+    geometry_w(beginText_nnnn, sourcePinName.length*defaultFontWidth).
+    geometry_h(beginText_nnnn, defaultFontHeight).
+*** polyline sinkPinName 
+    text(endText_nnnn, sinkPinName.text).
+    geometry_center_x(endText_nnnn, firstPoint.x).
+    geometry_top_y(endText_nnnn, firstPoint.y - half(defaultFontHeight)).
+    geometry_w(endText_nnnn, sinkPinName.length*defaultFontWidth).
+    geometry_h(endText_nnnn, defaultFontHeight).
+** rect
+   rect(rect_nnnn).
+   eltype(rect_nnnn,box).
+   let width = bottomRight.x - topLeft.x in
+     let height = bottomRight.y - topRight.y in
+       geometry_left_x(rect_nnnn,topLeft.x).
+       geometry_top_y(rect_nnnn,topLeft.y).
+       geometry_w(rect_nnnn,width). 
+       geometry_h(rect_nnnn,height).
+
+       text(Text_nnnn,kindName.text).
+       geometry_center_x(kindText_nnnn, topLeft.x + half(width)).
+       geometry_top_y(kindText_nnnn, topLeft.y).
+       geometry_w(kindText_nnnn, width).
+       geometry_h(kindText_nnnn, height).
+     end let
+   end let
+
+   collect manifest += { "kindName", "gitUrl", "gitRef", "contextDir", "manifestPath" }
+
+** ellipse
+   ellipse(ellipse_nnnn).
+   eltype(ellipse_nnnn,box).
+   let width = bottomRight.x - topLeft.x in
+     let height = bottomRight.y - topRight.y in
+       geometry_center_x(ellipse_nnnn,topLeft.x + half(width)).
+       geometry_center_y(ellipse_nnnn,topLeft.y + half(height)).
+       geometry_w(ellipse_nnnn,width). 
+       geometry_h(ellipse_nnnn,height).
+
+       text(Text_nnnn,kindName.text).
+       geometry_center_x(kindText_nnnn, topLeft.x + half(width)).
+       geometry_top_y(kindText_nnnn, topLeft.y).
+       geometry_w(kindText_nnnn, width).
+       geometry_h(kindText_nnnn, height).
+     end let
+   end let
+   # no manifest stuff for ellipses
+
+* metadata
+  at end, dump collected metadata into a string
+       text(metadataText_nnnn,allmetadata.text).
+       geometry_center_x(metadataText_nnnn, topLeft.x + half(width)).
+       geometry_top_y(metadataText_nnnn, topLeft.y).
+       geometry_w(metadataText_nnnn, width).
+       geometry_h(metadataText_nnnn, height).
+
+* what we have
+	{"id":10,
+	 "shape":{"tag":"Polyline", "points":[{"x":750,"y":228},{"x":890,"y":225}]},
+	 "kindName":"","gitUrl":"","gitRef":"","contextDir":"",
+	 "manifestPath":"","sourcePinName":"c", "sinkPinName":""},
+
+* what we want
+  const defaultFontWidth = 12
+  const defaultFontHeight = 12
+
+  edge(edge_10).
+  line(edge_10).
+  source(edge_10, source_10).
+  eltype(source_10,port).
+  port(source_10).
+  bounding_box_left(source_10, 750 - 20).
+  bounding_box_top(source_10, 228 - 20).
+  bounding_box_right(source_10, 750 + 20).
+  bounding_box_bottom(source_10, 228 + 20).
+  sink(edge_10, sink_10).
+  eltype(sink_10,port).
+  port(sink_10).
+  bounding_box_left(sink_10, 890 - 20).
+  bounding_box_top(sink_10, 225 - 20).
+  bounding_box_right(sink_10, 890 + 20).
+  bounding_box_bottom(sink_10, 225 + 20).
+  text(beginText_10, sourcePinName.text).
+  geometry_center_x(beginText_10, 750).
+  geometry_top_y(beginText_10, 228 - half(defaultFontHeight)).
+  geometry_w(beginText_10, sourcePinName.length*defaultFontWidth).
+  geometry_h(beginText_10, defaultFontHeight).
+  text(endText_10, sinkPinName.text).
+  geometry_center_x(endText_10, 750).
+  geometry_top_y(endText_10, 228 - half(defaultFontHeight)).
+  geometry_w(endText_10, sinkPinName.length*defaultFontWidth).
+  geometry_h(endText_10, defaultFontHeight).
+
+** shell script? for polyline
+#!/bin/bash
+defaultFontWidth=12
+defaultFontHeight=12
+nnnn=$1
+firstPointx=$2
+firstPointy=$3
+lastPointx=$4
+lastPointy=$5
+sourcePinName=$6
+sinkPinName=$7
+
+printf "\n\
+edge(edge_$nnnn).\n\
+line(edge_$nnnn).\n\
+source(edge_$nnnn, source_$nnnn).\n\
+eltype(source_$nnnn,port).\n\
+port(source_$nnnn).\n\
+bounding_box_left(source_$nnnn, `expr $firstPointx - 20`).\n\
+bounding_box_top(source_$nnnn, `expr $firstPointy - 20`).\n\
+bounding_box_right(source_$nnnn, `expr $firstPointx + 20`).\n\
+bounding_box_bottom(source_$nnnn, `expr $firstPointy + 20`).\n\
+sink(edge_$nnnn, sink_$nnnn).\n\
+eltype(sink_$nnnn,port).\n\
+port(sink_$nnnn).\n\
+bounding_box_left(sink_$nnnn, `expr $lastPointx - 20`).\n\
+bounding_box_top(sink_$nnnn, `expr $lastPointy - 20`).\n\
+bounding_box_right(sink_$nnnn, `expr $lastPointx + 20`).\n\
+bounding_box_bottom(sink_$nnnn, `expr $lastPointy + 20`).\n\
+text(beginText_$nnnn, $sourcePinName).\n\
+geometry_center_x(beginText_$nnnn, $firstPointx).\n\
+geometry_top_y(beginText_$nnnn, `expr $firstPointy - \( $defaultFontHeight / 2 \)` )).\n\
+geometry_w(beginText_$nnnn, `expr \( length $sourcePinName \) \* $defaultFontWidth`).\n\
+geometry_h(beginText_$nnnn, $defaultFontHeight).\n\
+text(endText_$nnnn, $sinkPinName).\n\
+geometry_center_x(endText_$nnnn, $firstPointx).\n\
+geometry_top_y(endText_$nnnn, `expr $firstPointy - \( $defaultFontHeight / 2 \)` ).\n\
+geometry_w(endText_$nnnn, `expr \( length $sinkPinName \) \* $defaultFontWidth` ).\n\
+geometry_h(endText_$nnnn, $defaultFontHeight).\n\
+"
+
+** shell script ellipses
+#!/bin/bash
+nnnn=$1
+topLeftx=$2
+topLefty=$3
+bottomRightx=$4
+bottomRighty=$5
+kindName=$6
+width=`expr $bottomRightx - $topLeftx`
+height=`expr $bottomRighty - $topLefty`
+halfWidth=`expr $width / 2`
+halfHeight=`expr $height / 2`
+printf "\n\
+ellipse(ellipse_$nnnn).\n\
+eltype(ellipse_$nnnn,box).\n\
+geometry_center_x(ellipse_$nnnn,`expr $topLeftx + \( $halfWidth \) `).\n\
+geometry_center_y(ellipse_$nnnn,`expr $topLefty + \( $halfHeight \) `).\n\
+geometry_w(ellipse_$nnnn,width).\n\
+geometry_h(ellipse_$nnnn,height).\n\
+text(Text_$nnnn,$kindName).\n\
+geometry_center_x(kindText_$nnnn, `expr $topLeftx +  $halfWidth `).\n\
+geometry_$top_y(kindText_$nnnn, $topLefty).\n\
+geometry_w(kindText_$nnnn, $width).\n\
+geometry_h(kindText_$nnnn, $height).\n\
+"
+
+** all 
+./new
+./polyline.bash 10 750 228 890 225 c \'\'
+./polyline.bash  9 438 340 700 277 s b
+./polyline.bash  8 442 121 695 176 s a
+./polyline.bash  7 194 229 387 289 \'\' start
+./polyline.bash  6 194 228 391 173 \'\' \'\'
+./ellipse.bash 5 893 176 1043 276 result
+./ellipse.bash 4 47 178 197 278 start
+./rect.bash 3 654 175 754 275 'string-join' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
+./rect.bash 2 342 289 442 389 'world' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
+./rect.bash 1 345 75 445 175 'hello' 'https://github.com/bmfbp/bmfbp.git' 'master' 'build_process/' 'lispparts/string-join.lisp'
+
+
+
+
+
+

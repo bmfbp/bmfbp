@@ -1,5 +1,5 @@
 (defsystem :arrowgrams
-  :depends-on (:cl-event-passing :cl-peg :loops)
+  :depends-on (:cl-peg :loops)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -42,7 +42,7 @@
                                      (:file "test.lisp" :depends-on ("rules.lisp"))))))
 
 (defsystem arrowgrams/parser
-  :depends-on (:arrowgrams :esrap :cl-event-passing :loops)
+  :depends-on (:arrowgrams #| :esrap |# :cl-event-passing :loops)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -61,7 +61,7 @@
                                      (:file "test" :depends-on ("gprolog-to-hprolog" "prolog-peg" "facts"))))))
 
 (defsystem arrowgrams/compiler/xform
-  :depends-on (:arrowgrams :esrap :cl-event-passing :loops :cl-peg)
+  :depends-on (:arrowgrams #| :esrap |# :cl-event-passing :loops :cl-peg)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -238,120 +238,296 @@
                                                    ))))))
 
 
-(defsystem :arrowgrams/rephrase-compiler
-    :depends-on (:cl-event-passing :alexandria)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "../cl-build/package")
-                                       (:file "token" :depends-on ("../cl-build/package"))
-                                       (:file "classes" :depends-on ("../cl-build/package"))
-                                       (:file "rp-macros" :depends-on ("../cl-build/package"))
-				       
-                                       (:file "dumper" :depends-on ("token" "classes"))
-
-				       (:file "tokenize" :depends-on ("token" "classes"))
-                                       (:file "comments" :depends-on ("token" "classes"))
-                                       (:file "raw-text" :depends-on ("token" "classes"))
-                                       (:file "strings" :depends-on ("token" "classes"))
-                                       (:file "spaces" :depends-on ("token" "classes"))
-                                       (:file "symbols" :depends-on ("token" "classes"))
-                                       (:file "integers" :depends-on ("token" "classes"))
-
-                                       (:file "error-manager" :depends-on ("token" "classes"))
-
-                                       (:file "parser-mechanisms"
-					      :depends-on ("../cl-build/package"
-							   "token" "classes" "dumper"
-                                                           "rp-macros"
-                                                           "error-manager"
-							   "tokenize" "comments" "raw-text" "strings" "spaces"
-							   "symbols" "integers"))
-                                       (:file "rp-rules" :depends-on ("parser-mechanisms"))
-                                       (:file "rp-parser" :depends-on ("rp-rules"))
-                                       (:file "file-writer" :depends-on ("../cl-build/package" "classes"))
-                                       (:file "parser-schem" :depends-on ("file-writer" "rp-parser"))))))
-
-(defsystem :arrowgrams/esa
-    :depends-on (:arrowgrams/rephrase-compiler)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "esa-dsl")
-                                       (:file "esa-parser")))))
-
-(defsystem :arrowgrams/esa-js
-    :depends-on (:arrowgrams/rephrase-compiler)
-    :around-compile (lambda (next)
-                      (proclaim '(optimize (debug 3)
-                                  (safety 3)
-                                  (speed 0)))
-                      (funcall next))
-    :components ((:module "source"
-                          :pathname "./build_process/esa"
-                          :components ((:file "esa-dsl-js")
-                                       (:file "esa-parser")))))
 
 (defsystem :arrowgrams/build
-  :depends-on (:arrowgrams/esa :cl-ppcre :cl-json :sl :loops :cl-event-passing :cl-holm-prolog
-			       :arrowgrams/compiler)
+  :depends-on (:cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
-  :components ((:module "arrowgrams-builder"
-                        :pathname "./build_process/cl-build/"
-                        :components ((:file "package")
-                                     (:file "classes" :depends-on ("package"))
-                                     (:file "util" :depends-on ("package"))
-                                     (:file "esa" :depends-on ("package" "classes" "util"))
-                                     (:file "json" :depends-on ("package"))
-                                     (:file "probe" :depends-on ("package" "classes" "util"))
-                                     (:file "probe2" :depends-on ("package" "classes" "util"))
-                                     (:file "probe3" :depends-on ("package" "classes" "util"))
-                                     (:file "file-writer" :depends-on ("package"))
-                                     (:file "graph-class" :depends-on ("package" "classes" "util" "esa"))
-                                     (:file "esa-methods" :depends-on ("package" "classes" "util" "esa"))
-                                     (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
-                                     (:file "part-namer" :depends-on ("package" "classes" "util"))
-                                     (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
-                                     (:file "get-code" :depends-on ("package" "classes" "util"))
-                                     (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
-                                     (:file "build-collector" :depends-on ("package" "classes" "util"))
-                                     (:file "children-before-graph" :depends-on ("package" "classes" "util" "esa" "esa-methods"))
-                                     (:file "build-graph-in-memory" :depends-on ("package" "classes" "esa" "json" "util" "graph-class"))
-                                     (:file "graph" :depends-on ("package" "classes" "util" "esa" "graph-class"))
-                                     (:file "runner" :depends-on ("package" "classes" "util" "graph"))
-                                     (:file "my-command-line" :depends-on ("package"))
-				     (:file "build" :depends-on ("package" "classes" "json"
-                                                                 "probe" "probe2" "probe3"
-                                                                 "my-command-line"
-                                                                 "file-writer"
-                                                                 "part-namer" "json-array-splitter"
-                                                                 "schematic-or-leaf" "build-collector"
-								 "children-before-graph"
-                                                                 "get-manifest-file" "get-code"
-                                                                 "build-graph-in-memory" "runner"
-                                                                 "esa" "esa-methods"
-                                                                 "graph"
-                                                                 "util"
-                                                                 ))
-				     ))))
+  :components 
+  ((:module "arrowgrams-builder"
+     :pathname "./build_process/cl-build/"
+     :components ((:file "package")
+		  (:file "classes" :depends-on ("package"))
+		  (:file "util" :depends-on ("package"))
+		  (:file "path" :depends-on ("package"))
+		  (:file "../esa/esa" :depends-on ("package" "classes" "util"))
+		  (:file "json" :depends-on ("package"))
+		  (:file "probe" :depends-on ("package" "classes" "util"))
+		  (:file "probe2" :depends-on ("package" "classes" "util"))
+		  (:file "probe3" :depends-on ("package" "classes" "util"))
+		  (:file "file-writer" :depends-on ("package"))
+		  (:file "graph-class" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "../esa/esa-methods" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
+		  (:file "part-namer" :depends-on ("package" "classes" "util"))
+		  (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
+		  (:file "get-code" :depends-on ("package" "classes" "util"))
+		  (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
+		  (:file "build-collector" :depends-on ("package" "classes" "util"))
+		  (:file "children-before-graph" :depends-on ("package" "classes" "util" "../esa/esa" "../esa/esa-methods"))
+		  (:file "my-command-line" :depends-on ("package"))
+		  (:file "build" :depends-on ("package" "classes" "json" "path"
+							"probe" "probe2" "probe3"
+							"my-command-line"
+							"file-writer"
+							"part-namer" "json-array-splitter"
+							"schematic-or-leaf" "build-collector"
+							"children-before-graph"
+							"get-manifest-file" "get-code"
+							"../esa/esa" "../esa/esa-methods"
+							"util"
+							))
+		  ))))
 
-(defsystem :arrowgrams/br
-  :depends-on (:arrowgrams)
+(defsystem :arrowgrams/runner
+  :depends-on (:arrowgrams/build :cl-json :cl-ppcre)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
-  :components ((:module "arrowgrams-builder-utility"
-                        :pathname "./build_process/cl-build/"
+  :components ((:module "arrowgrams-runner"
+                        :pathname "./build_process/cl-run"
+                        :components ((:file "../cl-build/package")
+                                     (:file "../esa/cl-user-esa" :depends-on ("../cl-build/package"))
+                                     (:file "../esa/cl-user-esa-methods" :depends-on ("../cl-build/package" "../esa/cl-user-esa"))
+                                     (:file "make-kind-from-graph" :depends-on ("../esa/cl-user-esa"))
+                                     (:file "instantiate-kind-recursively" :depends-on ("../esa/cl-user-esa"))
+                                     (:file "path")
+                                     (:file "load-and-run" 
+					    :depends-on (
+							 "make-kind-from-graph"
+							 "instantiate-kind-recursively"
+							 "path"
+							 ))))))
+
+#+nil(defsystem :arrowgrams/bundle
+  :depends-on (:arrowgrams/build :cl-json)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "arrowgrams-bundle"
+                        :pathname "./build_process/cl-bundle"
+                        :components ((:file "example")))))
+
+
+;;;;;;;;;;
+;;;;;;;;;; compiler v4
+;;;;;;;;;;
+
+(defsystem "arrowgrams/cl-event-passing-no-esrap"
+  :depends-on (:loops)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3)
+                                         (safety 3)
+                                         (speed 0)))
+                    (funcall next))
+  :components ((:module "source"
+                        :pathname "./cl-event-passing-no-esrap"
                         :components ((:file "package")
-                                     (:file "run" :depends-on ("package"))
-				     ))))
+                                     (:file "util" :depends-on ("package"))
+                                     (:file "net-parser" :depends-on ("package"))
+                                     (:file "pin" :depends-on ("package" "event"))
+                                     (:file "part" :depends-on ("package" "pin"))
+                                     (:file "schematic" :depends-on ("package" "pin" "part" "source" "event"))
+                                     (:file "event" :depends-on ("package"))
+                                     (:file "source" :depends-on ("package" "pin" "event" "wire"))
+                                     (:file "receiver" :depends-on ("package" "pin" "event" "part"))
+                                     (:file "wire" :depends-on ("package" "util" "receiver" "pin"))
+                                     (:file "dispatch" :depends-on ("package" "util" "part" "event"))
+				     (:file "macro-support"  :depends-on ("package" "util" "pin" "part" "schematic" "event"
+                                                                          "source" "receiver" "wire" "dispatch"))
+				     (:file "macro"  :depends-on ("package" "util" "pin" "part" "schematic" "event"
+                                                                          "source" "receiver" "wire" "dispatch"))
+				     (:file "api"  :depends-on ("package" "util" "pin" "part"
+                                                                "schematic" "event" "source" "receiver" "wire" "dispatch"))
+				     (:file "logging"  :depends-on ("api" "macro" "macro-support" "package" "util" "pin" "part"
+                                                                "schematic" "event" "source" "receiver" "wire" "dispatch"))
+				     (:file "checking"  :depends-on ("api" "macro" "macro-support" "package" "util" "pin" "part"
+                                                                "schematic" "event" "source" "receiver" "wire" "dispatch"))))))
+
+(defsystem :arrowgrams/v4compiler/top
+  :depends-on (:arrowgrams/cl-event-passing-no-esrap :cl-holm-prolog :cl-ppcre :cl-json :alexandria)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "v4compiler-top"
+                        :pathname "./v4/"
+                        :components ((:file "package")
+                                     (:file "part" :depends-on ("package"))
+                                     (:file "classes" :depends-on ("package" "part"))
+                                     (:file "util" :depends-on ("package" "part" "classes"))
+))))
+
+(defsystem :arrowgrams/v4compiler/front-end
+  :depends-on (:arrowgrams/v4compiler/top)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "front-end"
+                        :pathname "./v4/front-end/"
+                        :components ((:file "main")
+                                     (:file "drawio" :depends-on ("main"))))))
+
+(defsystem arrowgrams/v4compiler/back-end
+  :depends-on (:arrowgrams/v4compiler/top)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module contents
+			:pathname "./v4/back-end"
+			:components ((:file "token")
+				     (:file "synchronizer" :depends-on ("token"))
+				     (:file "tokenize" :depends-on ("token"))
+				     (:file "parens" :depends-on ("token"))
+				     (:file "ws" :depends-on ("token"))
+				     (:file "spaces" :depends-on ("token"))
+				     (:file "strings" :depends-on ("token"))
+				     (:file "symbols" :depends-on ("token"))
+				     (:file "integers" :depends-on ("token"))
+				     (:file "dumper" :depends-on ("token"))
+				     (:file "parse-util" :depends-on ("token"))
+				     (:file "preparse" :depends-on ("token"))
+				     (:file "file-writer" :depends-on ("token"))
+                                     (:file "schem-unparse" :depends-on ("token" "parse-util"))
+                                     (:file "collector-sl" :depends-on ("token" "parse-util"))
+                                     (:file "file-namer")
+                                     (:file "collector" :depends-on ("token" "parse-util" "collector-sl" "schem-unparse"))
+                                     (:file "emitter-pass2-generic-sl" :depends-on ("token" "parse-util"))
+                                     (:file "emitter-pass2-generic" :depends-on ("token" "parse-util" "emitter-pass2-generic-sl"))
+                                     (:file "json-emitter-sl" :depends-on ("token" "parse-util"))
+                                     (:file "json-emitter" :depends-on ("token" "parse-util" "json-emitter-sl"))
+                                     (:file "generic-sl" :depends-on ("token"))
+				     (:file "generic-emitter" :depends-on ("token" "parse-util" "generic-sl"))
+                                     (:file "lisp-sl" :depends-on ("token"))
+				     (:file "lisp-emitter" :depends-on ("token" "parse-util" "lisp-sl"))
+                                     (:file "json1-sl" :depends-on ("token"))
+				     (:file "json1-emitter" :depends-on ("token" "parse-util" "json1-sl"))
+				     (:file "parser" :depends-on ("token" "tokenize" "strings" "ws"
+                                                                  "symbols" "integers" "spaces" "preparse" "file-writer"
+                                                                  "generic-emitter" "collector" "lisp-emitter" "json1-emitter"
+                                                                  "emitter-pass2-generic" "json-emitter" "file-namer" "synchronizer"))))))
+
+(defsystem :arrowgrams/v4compiler
+  :depends-on (:arrowgrams/v4compiler/top :arrowgrams/v4compiler/front-end :arrowgrams/v4compiler/back-end)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "cl-compiler"
+                        :pathname "./v4/cl-compiler/"
+                        :components (
+                                     (:file "probe")
+
+                                     (:file "fb")
+                                     (:file "sequencer")
+                                     (:file "unmapper")
+                                     (:file "reader")
+                                     (:file "writer")
+                                     (:file "convert-to-keywords")
+                                     (:file "ellipse-bounding-boxes")
+                                     (:file "rectangle-bounding-boxes")
+                                     (:file "speechbubble-bounding-boxes")
+                                     (:file "text-bounding-boxes")
+                                     (:file "assign-parents-to-ellipses")
+
+                                     (:file "rules")
+
+                                     (:file "demux")
+                                     (:file "find-comments")
+                                     (:file "find-metadata")
+                                     (:file "add-kinds" :depends-on ("rules"))
+                                     (:file "add-self-ports" :depends-on ("rules"))
+                                     (:file "create-centers" :depends-on ("rules"))
+                                     (:file "calculate-distances" :depends-on ("rules"))
+                                     (:file "make-unknown-port-names")
+                                     (:file "closest")
+                                     (:file "assign-portnames" :depends-on ("closest"))
+                                     (:file "mark-indexed-ports")
+                                     (:file "coincident-ports")
+                                     (:file "mark-directions")
+                                     (:file "mark-nc")
+                                     (:file "match-ports-to-components")
+                                     (:file "pinless")
+                                     (:file "sem-parts-have-some-ports")
+                                     (:file "sem-ports-have-sink-or-source")
+                                     (:file "sem-no-duplicate-kinds")
+                                     (:file "sem-speech-vs-comments")
+                                     (:file "assign-wire-numbers-to-edges" :depends-on ("rules-util" ))
+                                     (:file "self-input-pins")
+                                     (:file "self-output-pins")
+                                     (:file "input-pins")
+                                     (:file "output-pins")
+
+                                     (:file "ir-emitter")
+
+                                     (:file "rules-util")
+
+                                     (:file "compiler"
+                                      :depends-on ("probe"
+                                                   "reader" "unmapper" "fb" "writer" "convert-to-keywords" "sequencer"
+                                                   "ellipse-bounding-boxes" "rectangle-bounding-boxes"
+                                                   "speechbubble-bounding-boxes" "text-bounding-boxes"
+                                                   "assign-parents-to-ellipses"
+
+                                                   "demux"
+                                                   "find-comments"
+                                                   "find-metadata"
+                                                   "add-kinds"
+                                                   "add-self-ports"
+
+                                                   "make-unknown-port-names"
+                                                   "assign-portnames"
+                                                   "mark-indexed-ports"
+                                                   "coincident-ports"
+                                                   "mark-directions"
+                                                   "mark-nc"
+                                                   "match-ports-to-components"
+                                                   "pinless"
+                                                   "sem-parts-have-some-ports"
+                                                   "sem-ports-have-sink-or-source"
+                                                   "sem-no-duplicate-kinds"
+                                                   "sem-speech-vs-comments"
+                                                   "assign-wire-numbers-to-edges"
+                                                   "self-input-pins"
+                                                   "self-output-pins"
+                                                   "input-pins"
+                                                   "output-pins"
+
+                                                   "create-centers"
+                                                   "calculate-distances"
+
+						   "ir-emitter"
+
+                                                   "rules-util"
+
+                                                   ))))))
+
+
+
+
+
+
+(defsystem :arrowgrams/esa-transpiler
+    ;; to build the esa-transpiler .lisp files, see bmfbp/build_process/esa-transpiler/make.lisp
+  :depends-on (:stack-dsl/use :parsing-assembler/use :arrowgrams/cl-event-passing-no-esrap :alexandria)
+  :serial t
+    :around-compile (lambda (next)
+                      (proclaim '(optimize (debug 3)
+                                  (safety 3)
+                                  (speed 0)))
+                      (funcall next))
+    :components ((:module "source"
+                          :pathname "./build_process/esa-transpiler/"
+                          :components ((:file "package")
+				       (:file "classes")
+				       (:file "exprtypes")
+				       (:file "manual-types")
+				       (:file "print")
+				       (:file "mechanisms")
+				       (:file "manual-mechanisms")
+				       (:file "dsl0")
+				       (:file "dsl1")
+				       (:file "dsl2")
+				       (:file "dsl3")
+				       (:file "path")
+				       (:file "esa-transpile")))))
+

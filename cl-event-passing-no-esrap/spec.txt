@@ -1,0 +1,47 @@
+class pin {
+  name
+  parent
+};
+
+
+class input-pin inherits from pin {
+    input {
+	return true;
+    }
+    output {
+	return false;
+    }
+    clone-with-part(cloned-part proto) {
+	new input-pin(name : proto.name, parent : cloned-part);
+    }
+    fetch-pin(proto-self, proto-map, cloned-self, cloned-map) {
+	    .get-input-pin(self.name)
+    }
+    
+    <... unfinished ...>
+
+}
+
+class Part {
+    input-queue : Queue;
+    output-queue : Queue;
+    busy-flag : Boolean;
+    input-pins : PinBag;
+    output-pins : PinBag;
+    parent : Part;
+    instance-variables : StringMap;
+    function clone {
+	r = new part;
+	r.input-queue = nil;
+	r.output-queue = nil;
+	r.busy-flag = false;
+	r.input-pins = self.input-pins.clone-with-original(self);
+	r.input-pins = self.output-pins.clone-with-original(self);
+    }
+
+}
+
+class code inherits from part {
+    function first-time;	
+    function react(e : event);
+	

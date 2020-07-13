@@ -1,0 +1,24 @@
+* build helloworld and run it
+#+name: runner
+#+begin_src lisp :results output
+  (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+  (ql:quickload :arrowgrams/build)
+  (ql:quickload :arrowgrams/runner)
+#+end_src
+
+build graph...
+#+name: runner
+#+begin_src lisp :results output
+  (arrowgrams/build::arrowgrams-to-json "helloworld")
+#+end_src
+
+run graph...
+#+name: runner
+#+begin_src lisp :results output
+  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "helloworld"))
+#+end_src
+
+
+#+RESULTS: runner
+: "helloworld"
+

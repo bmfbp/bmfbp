@@ -1,0 +1,6 @@
+* latest
+** to build hello_world.json graph
+*** see build_process/cl_build/README.org "build helloworld json"
+*** see build_process/cl_build/README.org "build esa from top"
+* to run the graph
+** see build_process/cl-run/README.org "testing script(s)"

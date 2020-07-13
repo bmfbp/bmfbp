@@ -1,0 +1,61 @@
+* overview
+  This directory contains that ESA (Encapsulated Software Assets) transpiler.
+  The transpile is built using (2) pasm and (1) the stack language transpiler.
+  Pasm is used to create dsl.lisp from esa.pasm.
+  Stack-dsl is used to create exprtypes.lisp from exprtypes.dsl.
+  The final ESA transpiler is used in ../esa.
+  The final ESA transpiler uses parser-mechanisms.lisp and v2mechanisms.lisp to support its operation.
+* usage
+  use scripts, below
+  N.B. to ql:quickload :arrowgrams/esa..
+    1) create exprtype.lisp (from exprtype.dsl, see below, for script)
+    2) build esa-dsl.lisp from esa.rp 
+    3) load esa
+* transpiler details
+** The transpiler uses the PASM DSL (PASM is a low-level DSL for writing DSLs).
+   Another DSL, stack-dsl, is used to compile exprtypes.dsl to exprtypes.lisp.  It
+   defines the classes used in the esa-transpiler.
+   See parsing-assembler for details about PASM.
+   In the .pasm files for esa-transpiler, all passes use the same parser (copied and pasted).
+   The .pasm files are split into two functions: (1) parsing and, (2) semantics.
+   Semantic operations all begin with the "$" character and are found in
+     mechanisms.lisp (automatically generated) and manual-mechanisms.lisp (hand built).
+   Parsing operations are not further adorned.  The PASM transpiler adds a suffix to
+     each parser routine (and call) which is specified explicitly as a string parameter
+     to pasm:pasm-to-file.  This suffix allows each pass to use the same (copy/pasted)
+     grammar without duplicating names in the namespace (CL packages are supposed to handle
+     this kind of thing, but are not geared/intended for DSLs).
+** The ESA transpiler consists of 4 passes.
+   See exprtype.drawio for a diagram of the data structures handled by the passes.
+** Pass 0 does almost nothing.  It parses esa.dsl and checks its syntax.  It produces no output if there are no syntax errors.
+** Pass 1 produces an esaprogram class which is handed to pass 2.
+   Pass 1 handles most declarations (classes, types, situations)
+** Pass 2 
+   Bolts methods (and scripts) to the appropriate classes.
+** Pass 3
+   Handles Script declarations (actual code) and finalizes the esaprogram structures.
+** dsl0.pasm is pass 0.
+** dsl1.pasm is pass 1
+** dsl2.pasm is pass 2
+** dsl3.pasm is pass 3
+** print.lisp is an OO recursive descent tree walker on the esaprogram structure.  It produces a string containing Lisp code.
+   print-pseudo.lisp is the same tree walker which produces a string of pseudo-code.
+* cheating
+** Much of the real type-checking work is left to the base (underlying) language, in this case Common Lisp.
+** During bootstrap, I've left out many automate-able checks for brevity.  
+   YAGNI.
+   This thing needs to transpile only one file: esa.dsl.
+   Actions (generalizations) that weren't on the critical path to getting a working esa.dsl->esa.lisp transpiler
+     were (might have been) left out.  The implementation of missing checks should be "obvious".
+     For my purposes, it is enough to get esa.lisp emitted and to manually check it for sanity.
+* make.lisp
+** make.lisp (make) builds all of the .lisp files for the transpiler 
+#+name: esa
+#+begin_src lisp :results output
+  (make)
+#+end_src
+* results
+#+RESULTS: esa
+#+begin_example
+#+end_example
+

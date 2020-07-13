@@ -1,0 +1,14 @@
+{
+  "entrypoint": "./compile-single-diagram.svg",
+  "kindType": "composite",
+  "platform": "lisp",
+  "inPins": [
+      "svg_filename"
+  ],
+  "outPins": [
+      "name",
+      "json-file-ref",
+      "graph",
+      "error"
+  ]
+}

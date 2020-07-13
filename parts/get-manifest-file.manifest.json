@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./get-manifest-file.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "in"
+  ],
+  "outPins": [
+      "out",
+      "error"
+  ]
+}
