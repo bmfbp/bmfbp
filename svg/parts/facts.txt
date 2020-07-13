@@ -1,0 +1,41 @@
+existence
+line properties
+rect properties
+box properties
+dot poperties
+
+
+component(id).
+line(id).
+edge(id).
+source(id,id).
+sink(id,id).
+eltype(id,port).
+port(id).
+bounding_box_left(id,x).
+bounding_box_top(id,y).
+bounding_box_right(id,x).
+bounding_box_bottom(id,y).
+rect(id).
+eltype(id,box).
+geometry_left_x(id,x).
+geometry_top_y(id,y).
+geometry_w(id,n).
+geometry_h(id,n).
+metadata(id,text-id).
+elstype(id,metadata).
+used(id).
+roundedrect(id).
+eltype(id,roundedrect).
+geometry_center_x(id,n).
+speechbubble(id).
+eltype(id,speechbubble).
+text(id,string).
+geometry_top_y(id,n).
+ellipse(id).
+eltype(id,ellipse).
+dot(id).
+eltype(id,dot).
+arrow(id).
+arrow_x(id,x).
+arrow_y(id,y).

@@ -30,7 +30,7 @@ Scripts are a part of the Architecture.
 
 Scripts can be automatically compiled.
 
-The programmer needs only to write code for methods, not scripts.
+	The programmer needs only to write code for methods, not scripts.
     
 === scripts ===
 
