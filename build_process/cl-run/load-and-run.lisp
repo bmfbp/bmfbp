@@ -15,7 +15,7 @@
       (format *error-output* "0 FATAL 'end of file error; in main ~a~%" c))
     (simple-error (c)
       (format *error-output* "1 FATAL error1 in main~%")
-      (cl:print-object c))
+      (cl:print-object c *error-output*))
     (error (c)
       (format *error-output* "2 FATAL error2 in main ~a~%" c))))
 
@@ -26,18 +26,18 @@
 (defun arrowgrams-load-and-run (json-graph-string)
   (let ((graph-alist (json-to-alist json-graph-string)))
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in ../esa/esa.lisp
-      (let ((esa-disp (make-instance 'dispatcher)))  ;; dispatcher defined in ../esa/esa.lisp
+      (let ((esa-disp (make-instance 'cl-user::dispatcher)))  ;; dispatcher defined in ../esa/esa.lisp
 	(let ((top-node (instantiate-kind-recursively top-kind esa-disp)))
-	  (initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
-	  (distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
-	  (let ((ev (make-instance 'event))
-		(pp (make-instance 'part-pin)))
-	    (setf (part-name pp) "self")
-	    (setf (pin-name pp) "start")
-            (setf (partpin ev) pp)
-	    (setf (data ev) t)
-	    (enqueue-input top-node ev))
-	  (dispatcher-run esa-disp)  ;; dispatcher-run is in esa.lisp
+	  (cl-user::initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
+	  (cl-user::distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
+	  (let ((ev (make-instance 'cl-user::event))
+		(pp (make-instance 'cl-user::part-pin)))
+	    (setf (cl-user::part-name pp) "self")
+	    (setf (cl-user::pin-name pp) "start")
+            (setf (cl-user::partpin ev) pp)
+	    (setf (cl-user::data ev) t)
+	    (cl-user::enqueue-input top-node ev))
+	  (cl-user::dispatcher-run esa-disp)  ;; dispatcher-run is in esa.lisp
           )))))
 
 

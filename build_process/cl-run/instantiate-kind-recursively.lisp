@@ -8,7 +8,7 @@
   ;;
   ;; and memo each node within dispatcher (disp)
   ;;
-  ;; kind and dispatcher are defined in ../cl-build/esa.lisp
+  ;; kind and dispatcher are defined in ../cl-build/cl-user-esa.lisp
 
-  (let ((top-most-node (loader top-kind "TOP" nil disp)))
+  (let ((top-most-node (cl-user::loader top-kind "TOP" nil disp)))
     top-most-node))

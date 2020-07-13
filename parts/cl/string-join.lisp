@@ -1,5 +1,3 @@
-(in-package :arrowgrams/build)
-
 (defclass string-join (node)
   ((state :accessor state)
    (string-a :accessor string-a)

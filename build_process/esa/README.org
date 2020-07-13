@@ -22,8 +22,13 @@
            (arrowgrams/esa-transpiler::transpile-esa-to-string 
              (arrowgrams/esa:path "esa.dsl")
             :tracing-accept nil)))
-	  (with-open-file (f "esa.lisp" :direction :output :if-exists :supersede :if-does-not-exist :create)
+	  (with-open-file (f (arrowgrams/esa:path "esa.lisp") :direction :output :if-exists :supersede :if-does-not-exist :create)
 	    (write-string "(in-package :arrowgrams/build)" f)
+	    (write-string "
+" f)
+	    (write-string result f))
+          (with-open-file (f (arrowgrams/esa:path "cl-user-esa.lisp") :direction :output :if-exists :supersede :if-does-not-exist :create)
+	    (write-string "(in-package :cl-user)" f)
 	    (write-string "
 " f)
 	    (write-string result f))))
