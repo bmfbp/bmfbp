@@ -6,16 +6,32 @@
   (ql:quickload :arrowgrams/runner)
 #+end_src
 
-* build graph for tokenizer test
+* ahelloworld
+build graph...
+#+name: runner
+#+begin_src lisp :results output
+  (arrowgrams/build::arrowgrams-to-json "ahelloworld")
+#+end_src
+
+run graph...
+#+name: runner
+#+begin_src lisp :results output
+  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
+#+end_src
+
+
+
+* tokenizer test
 #+name: runner
 #+begin_src lisp :results output
   (arrowgrams/build::arrowgrams-to-json "tokenizer-tester")
 #+end_src
 
-* run tokenizer test
 #+name: runner
 #+begin_src lisp :results output
-  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "helloworld"))
+  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "tokenizer-tester"))
+inject filename
+inject request
 #+end_src
 
 

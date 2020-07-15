@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./token-dumper.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "token",
+      "eof"
+  ],
+  "outPins": [
+      "request",
+      "error"
+  ]
+}

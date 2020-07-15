@@ -87,7 +87,9 @@ basic algorithm:
 (format *standard-output* "~&schematic-or-leaf sends composite ~s~%" file-name)
                   (@send self :schematic-filename file-name)))
 
-	       (t (assert nil))))))))
+	       (t 
+                (format *standard-output* "~&schematic-or-leaf fails on kind-type-str ~s~%" kind-type-str)
+                (assert nil))))))))
 
 #+nil(defun fixup-filename (s)
   (let ((r1 (cl-ppcre:regex-replace-all " " s "-")))

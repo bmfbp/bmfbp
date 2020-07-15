@@ -1,0 +1,14 @@
+{
+  "entrypoint": "./tokenizer.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "filename",
+      "request"
+  ],
+  "outPins": [
+      "token",
+      "eof",
+      "error"
+  ]
+}

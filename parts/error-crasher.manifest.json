@@ -1,0 +1,10 @@
+{
+  "entrypoint": "./error-crasher.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "error"
+  ],
+  "outPins": [
+  ]
+}

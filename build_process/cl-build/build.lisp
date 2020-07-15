@@ -983,7 +983,7 @@
         (@inject build-net pin T )))) ;:tag "build-net done")))))
   T)
     
-(defun debugging-arrowgrams-to-json (&optional (opt-filename "helloworld"))
+#+lispworks(defun arrowgrams-to-json (&optional (opt-filename "helloworld"))
   (let ((args (my-command-line)))
     (let ((fname (if (> (length args) 1)
 		     (second args)
@@ -993,7 +993,7 @@
 	    (alist-file (alist-graph-path fname)))
 	(build in-file json-file alist-file)))))
 
-(defun arrowgrams-to-json (&optional (opt-filename "helloworld"))
+#-lispworks(defun arrowgrams-to-json (&optional (opt-filename "helloworld"))
   (handler-case
       (let ((args (my-command-line)))
 	(let ((fname (if (> (length args) 1)

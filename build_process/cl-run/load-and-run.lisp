@@ -28,6 +28,7 @@
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in ../esa/esa.lisp
       (let ((esa-disp (make-instance 'cl-user::dispatcher)))  ;; dispatcher defined in ../esa/esa.lisp
 	(let ((top-node (instantiate-kind-recursively top-kind esa-disp)))
+          (cl-user::set-top-node esa-disp top-node)
 	  (cl-user::initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
 	  (cl-user::distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
 	  (let ((ev (make-instance 'cl-user::event))
@@ -37,7 +38,7 @@
             (setf (cl-user::partpin ev) pp)
 	    (setf (cl-user::data ev) t)
 	    (cl-user::enqueue-input top-node ev))
-	  (cl-user::dispatcher-run esa-disp)  ;; dispatcher-run is in esa.lisp
+	  (cl-user::dispatcher-run esa-disp)  ;; dispatcher-run-to-completion is in esa.lisp
           )))))
 
 

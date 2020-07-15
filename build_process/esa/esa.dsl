@@ -255,6 +255,7 @@ end when
 when running dispatcher
   script start
   script distribute-all-outputs
+  script dispatcher-run-to-completion
   script dispatcher-run
   method declare-finished
 end when
@@ -308,7 +309,12 @@ script dispatcher start
 end script
 
 
-script dispatcher dispatcher-run
+script dispatcher dispatcher-run-to-completion
+  self.run
+  self.declare-finished
+end script
+
+script dispatcher run
   let done = true in
   loop
     set done = true
@@ -323,7 +329,18 @@ script dispatcher dispatcher-run
     exit-when done
   end loop
   end let
-  self.declare-finished
+end script
+
+script dispatcher dispatcher-serve
+  loop
+    @self.distribute-all-outputs
+    map part = self.all-parts in
+      if @part.ready? then
+        @part.invoke
+        exit-map
+      end if
+    end map
+  end loop
 end script
 
 script node invoke

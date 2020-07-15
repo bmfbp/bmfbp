@@ -3,7 +3,7 @@
 
 (defclass error-crasher (node) () )
 
-(defmethod initially ((self error-crashser))
+(defmethod initially ((self error-crasher))
   (declare (ignore self)))
 
 (defmethod react ((self error-crasher) (e event))

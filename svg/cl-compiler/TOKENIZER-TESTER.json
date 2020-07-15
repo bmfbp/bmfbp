@@ -1,0 +1,20 @@
+{
+  "name" : "TOKENIZER-TESTER",
+  "inputs" : ["FILENAME"],
+  "outputs" : [],
+  "parts" :
+  [
+    { "partName" : "TOKENIZER", "kindName" : "TOKENIZER"},
+    { "partName" : "TOKEN-DUMPER", "kindName" : "TOKEN-DUMPER"},
+    { "partName" : "ERROR-CRASHER", "kindName" : "ERROR-CRASHER"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "TOKENIZER", "pin" : "EOF"}], "receivers" : [{"part" : "TOKEN-DUMPER", "pin" : "EOF"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "TOKENIZER", "pin" : "ERROR"}], "receivers" : [{"part" : "ERROR-CRASHER", "pin" : "ERROR"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "TOKEN-DUMPER", "pin" : "REQUEST"}], "receivers" : [{"part" : "TOKENIZER", "pin" : "REQUEST"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "TOKEN-DUMPER", "pin" : "ERROR"}], "receivers" : [{"part" : "ERROR-CRASHER", "pin" : "ERROR"}]},
+      {"wire-index" : 4, "sources" : [{"part" : "TOKENIZER", "pin" : "TOKEN"}], "receivers" : [{"part" : "TOKEN-DUMPER", "pin" : "TOKEN"}]},
+      {"wire-index" : 5, "sources" : [{"part" : "SELF", "pin" : "FILENAME"}], "receivers" : [{"part" : "TOKENIZER", "pin" : "FILENAME"}]}
+    ]
+  }
