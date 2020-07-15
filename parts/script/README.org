@@ -1,0 +1,23 @@
+* load Arrowgrams
+#+name: runner
+#+begin_src lisp :results output
+  (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+  (ql:quickload :arrowgrams/build)
+  (ql:quickload :arrowgrams/runner)
+#+end_src
+
+* build graph for tokenizer test
+#+name: runner
+#+begin_src lisp :results output
+  (arrowgrams/build::arrowgrams-to-json "tokenizer-tester")
+#+end_src
+
+* run tokenizer test
+#+name: runner
+#+begin_src lisp :results output
+  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "helloworld"))
+#+end_src
+
+
+#+RESULTS: runner
+: "helloworld"
