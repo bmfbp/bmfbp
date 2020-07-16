@@ -184,8 +184,8 @@
     ;(format *standard-output* "~&find-wire-for-self-source B ~s sources=~s~%" w (sources w))
     (dolist (s (sources w))
       ;(format *standard-output* "~&find-wire-for-self-source C ~s ~s~%" pinname (pin-name s))
-      (when (string=-downcase pinname  (pin-name s)))
-      (return-from find-wire-for-self-source w)))
+      (when (string=-downcase pinname  (pin-name s))
+        (return-from find-wire-for-self-source w))))
   (assert nil)) ;; source not found - can't happen
 
 (defmethod find-wire-for-source ((self kind) part-name pin-name)
