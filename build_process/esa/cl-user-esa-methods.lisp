@@ -186,7 +186,7 @@
       ;(format *standard-output* "~&find-wire-for-self-source C ~s ~s~%" pinname (pin-name s))
       (when (string=-downcase pinname  (pin-name s))
         (return-from find-wire-for-self-source w))))
-  (assert nil)) ;; source not found - can't happen
+  (error (format nil "source pin ~a not found"  pinname)))
 
 (defmethod find-wire-for-source ((self kind) part-name pin-name)
   ;(format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-field self) self)
@@ -230,3 +230,12 @@
 
 (defmethod react ((self node) (e event))
   (run-composite-reaction self e))
+
+(defmethod create-top-event ((self dispatcher) pinName val)
+  (let ((e  (make-instance 'cl-user::event))
+        (pp (make-instance 'cl-user::part-pin)))
+    (setf (cl-user::part-name pp) "self")
+    (setf (cl-user::pin-name pp) pinName)
+    (setf (cl-user::partpin e) pp)
+    (setf (cl-user::data e) val)
+    e))

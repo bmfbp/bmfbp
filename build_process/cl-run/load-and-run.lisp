@@ -31,14 +31,12 @@
           (cl-user::set-top-node esa-disp top-node)
 	  (cl-user::initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
 	  (cl-user::distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
-	  (let ((ev (make-instance 'cl-user::event))
-		(pp (make-instance 'cl-user::part-pin)))
-	    (setf (cl-user::part-name pp) "self")
-	    (setf (cl-user::pin-name pp) "start")
-            (setf (cl-user::partpin ev) pp)
-	    (setf (cl-user::data ev) t)
-	    (cl-user::enqueue-input top-node ev))
-	  (cl-user::dispatcher-run esa-disp)  ;; dispatcher-run-to-completion is in esa.lisp
+          (format *standard-output* "~&first run:~%")
+          (cl-user::dispatcher-inject esa-disp "start" t)
+          (format *standard-output* "~&second run:~%")
+          (cl-user::dispatcher-inject esa-disp "start" t)
+          (format *standard-output* "~&third run:~%")
+          (cl-user::dispatcher-inject esa-disp "start" t)
           )))))
-
+  
 

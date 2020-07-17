@@ -256,9 +256,6 @@
 (defmethod initialize-all ((self dispatcher) )
         (block %map (dolist (part (all-parts self)) 
 (initialize part))))
-(defmethod start ((self dispatcher) )
-        (distribute-all-outputs self)
-        (dispatcher-run self))
 (defmethod distribute-all-outputs ((self dispatcher) )
         (block %map (dolist (p (all-parts self)) 
 (distribute-output-events p)
@@ -274,9 +271,12 @@
 (setf done :false)
 (return-from %map :false)
 )))
-(when (esa-expr-true done) (return))))
-        (declare-finished self))
-#| external method ((self dispatcher)) declare-finished |#
+(when (esa-expr-true done) (return)))))
+(defmethod dispatcher-inject ((self dispatcher) pin val)
+        (let ((e (create-top-event self pin val))) 
+(enqueue-input (top-node self) e)
+(dispatcher-run self)))
+#| external method ((self dispatcher)) create-top-event |#
 
 (defclass event ()
 (

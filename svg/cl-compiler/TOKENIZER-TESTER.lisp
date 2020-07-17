@@ -1,7 +1,7 @@
 (TOKENIZER-TESTER
   :metadata "\"[{\"dir\":\"parts/\",\"kindName\":\"tokenizer\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"cl/tokenizer.lisp\",\"ref\":\"master\"},{\"dir\":\"parts/\",\"kindName\":\"token-dumper\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"cl/token-dumper.lisp\",\"ref\":\"master\"},{\"dir\":\"parts/\",\"kindName\":\"error-crasher\",\"repo\":\"https://github.com/bmfbp/bmfbp.git\",\"file\":\"cl/error-crasher.lisp\",\"ref\":\"master\"}]\""
   
-   (FILENAME)
+   (FILENAME REQUEST)
    ()
   
   (:code TOKENIZER (FILENAME REQUEST) (TOKEN ERROR EOF))
@@ -14,4 +14,5 @@
     TOKEN-DUMPER.ERROR -> ERROR-CRASHER.ERROR
     TOKENIZER.TOKEN -> TOKEN-DUMPER.TOKEN
     SELF.FILENAME -> TOKENIZER.FILENAME
+    SELF.REQUEST -> TOKENIZER.REQUEST
     ")
