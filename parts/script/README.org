@@ -36,9 +36,12 @@ run graph...
 
 #+name: runner
 #+begin_src lisp :results output
-  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "tokenizer-tester"))
-inject filename
-inject request
+  (let ((dispatcher (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "tokenizer-tester"))))
+    (let ((fname (namestring (asdf:system-relative-pathname :arrowgrams "test.txt"))))
+      (format *standard-output* "~&injecting filename: ~s~%" fname)
+      (cl-user::dispatcher-inject dispatcher "filename" fname)
+      (format *standard-output* "~&injecting first request:~%")
+      (cl-user::dispatcher-inject dispatcher "request" t)))
 #+end_src
 
 

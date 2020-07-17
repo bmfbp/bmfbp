@@ -26,48 +26,47 @@
 (defmethod react ((self tokenizer) (e event))
   (ecase (state self)
     (:idle
-     (ecase (pin-name (partpin e))
-       (:filename 
-        (let ((filename (data e)))
-          (cond ((not (stringp filename))
-                 (send-to-pin self "error" (format nil ":filename input was not given a string (~a)" filename)))
-                ((not (cl:probe-file filename))
-                 (send-to-pin self "error" (format nil ":filename ~a not found" filename)))
-                (t
-                 (let ((f nil))
-                   (ignore-errors
+     (cond ((string= "filename" (pin-name (partpin e)))
+            (let ((filename (data e)))
+              (cond ((not (stringp filename))
+                     (send-to-pin self "error" (format nil ":filename input was not given a string (~a)" filename)))
+                    ((not (cl:probe-file filename))
+                     (send-to-pin self "error" (format nil ":filename ~a not found" filename)))
+                    (t
+                     (ignore-errors
                        (progn
-                         (setf f (cl:open filename :direction :input))
-                         (setf err nil)))
-                   (unless f
-                     (send-to-pn self "error" (format nil ":filename ~a could not be opened for input" filename))))))))
-     (otherwise
-        (send-to-pin self "error" (format nil "tokenizer in state :idle did not receive a filename (but received ~a)" (pin (partpin e)))))))
-
+                         (setf (file-stream self) (cl:open filename :direction :input))
+                         (setf (state self) :reading)))
+                     (unless (file-stream self)
+                       (send-to-pin self "error" (format nil ":filename ~a could not be opened for input" filename))
+                       (setf (state self) :idle))))))
+                       
+           (t
+            (send-to-pin self "error" (format nil "tokenizer in state :idle did not receive a filename (but received ~s)" (pin-name (partpin e)))))))
+  
     (:reading
-     (ecase (pin-name (partpin e))
-       (:request
-        (cond ((null (file-stream self))
-               (send-to-pin self "error" "tokenizer: file closed")
-               (setf (state self) :idle))
-              (t (let ((c nil))
-                   (ignore-errors
-                     (progn
-                       (setf c (readchar (filestream self) nil :eof))
-                       (if (eq :eof c)
-                           (progn
-                             (cl:close (filestream self))
-                             (setf (filestream self) nil)
-                             (send-to-pin self "eof" (make-eof-token self) t)
-                             (setf (state self) :idle))
-                         (send-to-pin self "token" (make-character-token self c))))))
-                 (unless c
-                   (send-to-pin self "error" (format nil "read error"))))))
-       (otherwise
-        (send-to-pin self "error" (format nil "tokenizer in state :request did not receive a :request (but received ~a)" (pin (partpin e)))))))
-
+     (cond ((string= "request" (pin-name (partpin e)))
+            (cond ((null (file-stream self))
+                   (send-to-pin self "error" "tokenizer: file closed")
+                   (setf (state self) :idle))
+                  (t (let ((c nil))
+                       (ignore-errors
+                         (progn
+                           (setf c (read-char (file-stream self) nil :eof))
+                           (if (eq :eof c)
+                               (progn
+                                 (cl:close (file-stream self))
+                                 (setf (file-stream self) nil)
+                                 (send-to-pin self "eof" (make-eof-token self))
+                                 (setf (state self) :idle))
+                             (send-to-pin self "token" (make-character-token self c)))))
+                       (unless c
+                         (send-to-pin self "error" (format nil "read error")))))))
+           (t
+            (send-to-pin self "error" (format nil "tokenizer in state :request did not receive a :request (but received ~a)" (pin-name (partpin e)))))))
+    
     (otherwise
-     (send-to-pin self "error" (format nil "tokenize in state ~a received an illegal event (~a)" (pin (partpin e))))
+     (send-to-pin self "error" (format nil "tokenize in state ~a received an illegal event (~a)" (pin-name (partpin e))))
      (setf (state self) :idle))))
 
 (defmethod reset ((self tokenizer))
@@ -86,16 +85,17 @@
   (eq #\Newline c))
 
 (defmethod make-character-token ((self tokenizer) c)
-  (if (newline-p c)
-      (progn
-        (incf (nline self))
-        (setf (nposition self) 1))
-    (incf (nposition self)))    
-  (make-token :kind :character
-              :text c
-              :line (nline self)
-              :position 0))
-
+  (prog1
+      (make-token :kind :character
+                  :text c
+                  :line (nline self)
+                  :position 0)
+    (if (newline-p c)
+        (progn
+          (incf (nline self))
+          (setf (nposition self) 1))
+      (incf (nposition self)))))
+    
 (defmethod send-to-pin ((self tokenizer) pin-string data)
   (let ((e (make-instance 'event))
         (pp (make-instance 'part-pin)))

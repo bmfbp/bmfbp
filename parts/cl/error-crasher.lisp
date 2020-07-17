@@ -8,6 +8,6 @@
 
 (defmethod react ((self error-crasher) (e event))
   (declare (ignore self))
-  (let ((error-message (format nil "ERROR: ~s~%" e)))
+  (let ((error-message (format nil "ERROR: ~s~%" (data e))))
     (format *standard-output* error-message)
     (error error-message)))

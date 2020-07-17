@@ -13,14 +13,13 @@
   )
 
 (defmethod react ((self token-dumper) (e event))
-  (ecase (pin-name (partpin e))
-    (:token
-     (format *standard-output* "token ~s~%" (data e))
-     (send-to-pin self "request" t))
-    (:eof
-     (format *standard-output* "EOF~%"))
-    (otherwise
-     (send-to-pin self "error" "error in token dumper on event ~s" e))))
+  (cond ((string= "token" (pin-name (partpin e)))
+         (format *standard-output* "token ~s~%" (data e))
+         (send-to-pin self "request" t))
+        ((string= "eof" (pin-name (partpin e)))
+         (format *standard-output* "EOF ~s~%" (data e)))
+        (t
+         (send-to-pin self "error" (format nil "error in token dumper on event ~s" e)))))
 
 (defmethod send-to-pin ((self token-dumper) pin-string data)
   (let ((e (make-instance 'event))
