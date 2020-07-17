@@ -1,9 +1,10 @@
 * load Arrowgrams
 #+name: runner
 #+begin_src lisp :results output
-  (uiop:run-program "~/quicklisp/local-projects/rm.bash")
-  (ql:quickload :arrowgrams/build)
-  (ql:quickload :arrowgrams/runner)
+  (progn
+    (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+    (ql:quickload :arrowgrams/build)
+    (ql:quickload :arrowgrams/runner))
 #+end_src
 
 * ahelloworld

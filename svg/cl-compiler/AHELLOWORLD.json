@@ -4,9 +4,9 @@
   "outputs" : ["RESULT"],
   "parts" :
   [
-    { "partName" : "ASTRING-JOIN", "kindName" : "ASTRING-JOIN"},
     { "partName" : "AWORLD", "kindName" : "AWORLD"},
-    { "partName" : "AHELLO", "kindName" : "AHELLO"}
+    { "partName" : "AHELLO", "kindName" : "AHELLO"},
+    { "partName" : "ASTRING-JOIN", "kindName" : "ASTRING-JOIN"}
   ],
   "wiring" :
     [

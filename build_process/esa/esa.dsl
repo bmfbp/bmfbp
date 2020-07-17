@@ -3,6 +3,7 @@ type name
 type function
 type boolean
 type node-class
+type value
 
 situation building
 situation building-aux
@@ -253,11 +254,10 @@ end when
 %=== running ===
 
 when running dispatcher
-  script start
   script distribute-all-outputs
-  script dispatcher-run-to-completion
   script dispatcher-run
-  method declare-finished
+  script dispatcher-inject
+  method create-top-event(name value) >> event
 end when
 
 when running kind
@@ -303,44 +303,28 @@ script node busy? >> boolean
   % end atomically
 end script
 
-script dispatcher start
-  @self.distribute-all-outputs
-  @self.dispatcher-run
-end script
-
-
-script dispatcher dispatcher-run-to-completion
-  self.run
-  self.declare-finished
-end script
-
-script dispatcher run
+script dispatcher dispatcher-run
   let done = true in
-  loop
-    set done = true
-    @self.distribute-all-outputs
-    map part = self.all-parts in
-      if @part.ready? then
-        @part.invoke
-	set done = false
-        exit-map
-      end if
-    end map
-    exit-when done
-  end loop
+    loop
+      set done = true
+      @self.distribute-all-outputs
+      map part = self.all-parts in
+        if @part.ready? then
+          @part.invoke
+          set done = false
+          exit-map
+        end if
+      end map
+      exit-when done
+    end loop
   end let
 end script
 
-script dispatcher dispatcher-serve
-  loop
-    @self.distribute-all-outputs
-    map part = self.all-parts in
-      if @part.ready? then
-        @part.invoke
-        exit-map
-      end if
-    end map
-  end loop
+script dispatcher dispatcher-inject(pin val)
+  let e = self.create-top-event(pin val) in
+    self.top-node.enqueue-input(e)
+    @self.dispatcher-run
+  end let
 end script
 
 script node invoke
