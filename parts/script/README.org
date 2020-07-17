@@ -17,7 +17,13 @@ build graph...
 run graph...
 #+name: runner
 #+begin_src lisp :results output
-  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
+  (let ((disp (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))))
+    (format *standard-output* "~&first run:~%")
+    (cl-user::dispatcher-inject disp "start" t)
+    (format *standard-output* "~&second run:~%")
+    (cl-user::dispatcher-inject disp "start" t)
+    (format *standard-output* "~&third run:~%")
+    (cl-user::dispatcher-inject disp "start" t))
 #+end_src
 
 

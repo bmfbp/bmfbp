@@ -31,12 +31,6 @@
           (cl-user::set-top-node esa-disp top-node)
 	  (cl-user::initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
 	  (cl-user::distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
-          (format *standard-output* "~&first run:~%")
-          (cl-user::dispatcher-inject esa-disp "start" t)
-          (format *standard-output* "~&second run:~%")
-          (cl-user::dispatcher-inject esa-disp "start" t)
-          (format *standard-output* "~&third run:~%")
-          (cl-user::dispatcher-inject esa-disp "start" t)
-          )))))
+          esa-disp)))))
   
 
