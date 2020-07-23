@@ -21,7 +21,7 @@ build graph...
   (arrowgrams/build::arrowgrams-to-json "jshelloworld")
 #+end_src
 
-run graph...
+* run ahelloworld graph...
 #+name: runner
 #+begin_src lisp :results output
   (let ((disp (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))))
@@ -33,9 +33,17 @@ run graph...
     (cl-user::dispatcher-inject disp "start" t))
 #+end_src
 
+#+RESULTS: runner
+: first run:
+: "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD"
+: second run:
+: "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD"
+: third run:
+: "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD"
 
 
-* tokenizer test
+
+* (ignore for now) tokenizer test
 #+name: runner
 #+begin_src lisp :results output
   (arrowgrams/build::arrowgrams-to-json "tokenizer-tester")
@@ -50,10 +58,3 @@ run graph...
       (format *standard-output* "~&injecting first request:~%")
       (cl-user::dispatcher-inject dispatcher "request" t)))
 #+end_src
-
-
-#+RESULTS: runner
-: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {100576A473}>
-: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {100576B903}>
-: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {10057A7BF3}>
-: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {10057A7983}>
