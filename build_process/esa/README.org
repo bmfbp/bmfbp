@@ -8,10 +8,11 @@
 * build
 #+name: esa
 #+begin_src lisp :results output
-  (uiop:run-program "~/quicklisp/local-projects/rm.bash")
-  (ql:quickload :arrowgrams/esa-transpiler)
-  (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/package.lisp"))
-  (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/path.lisp"))
+  (progn
+    (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+    (ql:quickload :arrowgrams/esa-transpiler)
+    (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/package.lisp"))
+    (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/path.lisp")))
 #+end_src
 
 #+name: esa
