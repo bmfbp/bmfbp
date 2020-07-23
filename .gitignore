@@ -143,3 +143,19 @@ build_process/esa-transpiler/dsl2.lisp
 build_process/esa-transpiler/dsl3.lisp
 
 build_process/esa-transpiler/old.dsl2.pasm
+
+parts/graph/ahelloworld.graph.json
+
+parts/graph/ahelloworld.graph.lisp
+
+parts/graph/jshelloworld.graph.json
+
+parts/graph/jshelloworld.graph.lisp
+
+svg/cl-compiler/AHELLOWORLD.json
+
+svg/cl-compiler/AHELLOWORLD.lisp
+
+svg/cl-compiler/JSHELLOWORLD.json
+
+svg/cl-compiler/JSHELLOWORLD.lisp

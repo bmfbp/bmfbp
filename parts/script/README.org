@@ -53,3 +53,7 @@ run graph...
 
 
 #+RESULTS: runner
+: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {100576A473}>
+: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {100576B903}>
+: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {10057A7BF3}>
+: file-writer: #<CL-EVENT-PASSING-EVENT:EVENT {10057A7983}>
