@@ -151,7 +151,7 @@
 
   (pprint (esrap:parse 'rule-TOP1 ":- initialization(main)."))
   (pprint (esrap:parse 'rule-TOP1 ":- include('head')."))
-  (pprint (esrap:parse 'rule-TOP1 ":- include('tail')."))
+GG  (pprint (esrap:parse 'rule-TOP1 ":- include('tail')."))
 
   (pprint (esrap:parse 'rule-TOP1 "ellispse(id391)."))
   (pprint (esrap:parse 'rule-TOP1 "createRectBoundingBox(ID) :-

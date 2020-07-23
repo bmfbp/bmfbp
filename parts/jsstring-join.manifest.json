@@ -1,0 +1,13 @@
+{
+  "entrypoint": "./jstring-join.lisp",
+  "kindType": "leaf",
+  "platform": "js",
+  "inPins": [
+      "a",
+      "b"
+  ],
+  "outPins": [
+      "c",
+      "error"
+  ]
+}
