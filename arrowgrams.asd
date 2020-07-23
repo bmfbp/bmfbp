@@ -522,6 +522,7 @@
 				       (:file "exprtypes")
 				       (:file "manual-types")
 				       (:file "emitLisp")
+				       (:file "emitJS")
 				       (:file "mechanisms")
 				       (:file "manual-mechanisms")
 				       (:file "dsl0")
