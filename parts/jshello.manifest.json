@@ -1,0 +1,12 @@
+{
+  "entrypoint": "./ahello.lisp",
+  "kindType": "leaf",
+  "platform": "lisp",
+  "inPins": [
+      "start"
+  ],
+  "outPins": [
+      "s",
+      "error"
+  ]
+}

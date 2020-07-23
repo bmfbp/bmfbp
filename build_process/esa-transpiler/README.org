@@ -54,7 +54,7 @@
 #+begin_src lisp :results output
   (make)
 #+end_src
-* results
+
 #+RESULTS: esa
 #+begin_example
 #+end_example
