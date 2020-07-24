@@ -8,9 +8,9 @@
   ;; { ekind object }
   (let ((k (stack-dsl::%value (ekind self))))
     (cond ((string= "true" k)
-	 ":true")
+	 "true")
 	  ((string= "false" k)
-	   ":false")
+	   "false")
 	  ((string= "object" k)
 	   (asJS (object self)))
 	  ((string= "calledObject" k)
@@ -27,7 +27,7 @@
 		    nil)))
 ;;...............................VVV leave ~a in string for format in caller
     ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asJS (name self)) params)))
-    (format nil "(~a ~~a~{~^ ~a~^~})" (asJS (name self)) params)))
+    (format nil "(~a, ~~a~{~^ ~a~^~})" (asJS (name self)) params)))
 
 (defmethod asNestedJS ((self object))
   ; { name fieldMap }
@@ -73,25 +73,24 @@
 (defmethod asJS ((self esaClass))
   (let ((name (format nil "~a" (asJS (name self)))))
     (let ((fields (mapcar #'(lambda (f) 
-			      (format nil "(~a :accessor ~a :initform nil)" 
-				      (asJS (name f)) 
-				      (asJS (name f))))
+			      (format nil "~a" (asJS (name f))))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
-		     (format nil "~&~%(defclass ~a ()~%(~{~&~a~^~}))~%" name fields)
-		     (format nil "~&~%(defclass ~a () ())~%" name))))
+		     (format nil "~&~%class ~a {~%~{~&  ~a;~^~}" name fields)
+		     (format nil "~&~%class ~a {~%" name))))
 	(let ((methods (mapcar #'asJS (stack-dsl:%list (methodsTable self)))))
-	  (let ((methodsString (format nil "~{~&~a~}" methods)))
-	    (concatenate 'string def methodsString)))))))
+	  (let ((methodsString (format nil "~%~{~&~a~}" methods)))
+	    (concatenate 'string def "
+  constructor () { super (); }"  methodsString "
+}")))))))
 
 (defmethod asJS ((self methodDeclaration))
-  (format nil "#| external method ((self ~a)) ~a |#~%" (asJS (esaKind self)) (asJS (name self))))
+  (format nil "  // external method ~a()" (asJS (name self))))
 
 (defmethod asJS ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asJS (stack-dsl:%list (implementation self))))))
-    (format nil "(defmethod ~a ((self ~a) ~{~a~^ ~})~{~&~v,T~a~^~%~})~%" 
+    (format nil "  ~a (~{~a~^| ~}) {~%~{~&~v,T~a;~^~%~}~%}~%" 
 	    (asJS (name self)) 
-	    (asJS (esaKind self))
             (mapcar #'asJS (stack-dsl:%list (formalList self)))
 	    statements)))
 
