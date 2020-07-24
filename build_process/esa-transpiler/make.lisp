@@ -46,6 +46,7 @@
   (load (arrowgrams/esa-transpiler::path \"exprtypes.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"manual-types.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"emitLisp.lisp\"))
+  (load (arrowgrams/esa-transpiler::path \"emitJS.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"mechanisms.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"manual-mechanisms.lisp\"))
   (load (arrowgrams/esa-transpiler::path \"esa-transpile.lisp\"))

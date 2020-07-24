@@ -159,3 +159,5 @@ svg/cl-compiler/AHELLOWORLD.lisp
 svg/cl-compiler/JSHELLOWORLD.json
 
 svg/cl-compiler/JSHELLOWORLD.lisp
+
+build_process/esa/esa.js

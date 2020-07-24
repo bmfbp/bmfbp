@@ -25,7 +25,10 @@
 	  (let ((program1 (run-pass "1" #'esa-dsl-pass1 nil token-stream nil nil)))
 	    (let ((program2 (run-pass "2" #'esa-dsl-pass2 program1 token-stream nil nil)))
 	      (let ((program3 (run-pass "3" #'esa-dsl-pass3 program2 token-stream nil nil)))
-		(cl-user::asLisp program3)))))))))
+                (values 
+                 (cl-user::asLisp program3)
+                 (cl-user::asJs program3))
+                 ))))))))
 
 
 
