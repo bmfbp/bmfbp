@@ -1,6 +1,12 @@
 (in-package :cl-user)
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
+(defmethod asJSDeclaration ((self stack-dsl::%stack-dsl-type))
+  (asJs self))
+
+(defmethod asJSStatement ((self stack-dsl::%stack-dsl-type))
+  (asJs self))
+
 (defmethod asJS ((self name))
   (stack-dsl::%value self))
 
@@ -27,7 +33,8 @@
 		    nil)))
 ;;...............................VVV leave ~a in string for format in caller
     ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asJS (name self)) params)))
-    (format nil "(~a, ~~a~{~^ ~a~^~})" (asJS (name self)) params)))
+    ;; method call mmm(self,{params})
+    (format nil "~a(~~a,~{~^~a~^,~})" (asJS (name self)) params)))
 
 (defmethod asNestedJS ((self object))
   ; { name fieldMap }
@@ -63,33 +70,44 @@
   (let ((fname (asJS (functionReference self))))
     (format nil "~a" fname)))
 
+
+
 (defmethod asJS ((self implementation))
   (mapcar #'asJS (stack-dsl:%list self)))
 
+
 (defmethod asJS ((self esaprogram))
-  (let ((strings-list (mapcar #'asJS (stack-dsl:%list (classes self)))))
+  (let ((strings-list (mapcar #'asJSDeclaration (stack-dsl:%list (classes self)))))
     (apply 'concatenate 'string strings-list)))
 
 (defmethod asJS ((self esaClass))
   (let ((name (format nil "~a" (asJS (name self)))))
     (let ((fields (mapcar #'(lambda (f) 
-			      (format nil "~a" (asJS (name f))))
+			      (format nil "~a" (asJSDeclaration (name f))))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
 		     (format nil "~&~%class ~a {~%~{~&  ~a;~^~}" name fields)
 		     (format nil "~&~%class ~a {~%" name))))
-	(let ((methods (mapcar #'asJS (stack-dsl:%list (methodsTable self)))))
+	(let ((methods (mapcar #'asJSStatement (stack-dsl:%list (methodsTable self)))))
 	  (let ((methodsString (format nil "~%~{~&~a~}" methods)))
 	    (concatenate 'string def "
   constructor () { super (); }"  methodsString "
 }")))))))
 
 (defmethod asJS ((self methodDeclaration))
-  (format nil "  // external method ~a()" (asJS (name self))))
+  (let ((statements nil))
+    (format nil "// external function ~a(~{~a~^,~}){}~%"
+            (asJS (name self))
+            (cons
+             (format nil "self /*:~a*/" (asJS (esaKind self)))
+             (mapcar #'(lambda (x)
+                         (concatenate 'string (format nil "~a /*:~a*/" (gensym "P") (asJS x))))
+                     (stack-dsl:%list (formalList self))))
+            statements)))
 
 (defmethod asJS ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asJS (stack-dsl:%list (implementation self))))))
-    (format nil "  ~a (~{~a~^| ~}) {~%~{~&~v,T~a;~^~%~}~%}~%" 
+    (format nil "  ~a (~{~a~^,~}) {~%~{~&~v,T~a;~^~%~}~%}~%" 
 	    (asJS (name self)) 
             (mapcar #'asJS (stack-dsl:%list (formalList self)))
 	    statements)))
