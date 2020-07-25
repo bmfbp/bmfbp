@@ -13,13 +13,7 @@
 (defmethod asJS ((self name))
   (stack-dsl::%value self))
 
-(defmethod asJS-inStatement ((self name))
-  (let ((s (stack-dsl::%value self)))
-    (if (string= "self" s)
-        "this"
-      s)))        
-
-(defmethod asJS ((self expression))
+<template id="a">
   ;; { ekind object }
   (let ((k (stack-dsl::%value (ekind self))))
     (cond ((string= "true" k)
@@ -29,8 +23,26 @@
 	  ((string= "object" k)
 	   (asJS (object self)))
 	  ((string= "calledObject" k)
+  <edit id="1">
 	   (asJS (object self)))
+  </edit id="1">
 	  (t (assert nil)))))
+
+(defmethod asJS ((self expression))
+<sameas id="a">
+  <edit id="1">
+	   (asJS (object self)))
+  </edit id="1">
+</sameas id="a">
+
+
+(defmethod asJS-inStatement ((self expression))
+<sameas id="a">
+  <edit id="1">
+	   (asJS-inStatement (object self)))
+  </edit id="1">
+</sameas id="a">
+</template id="a">
 
 (defmethod parameters-p ((self object))
   nil) ;; by definition in exprtypes.dsl

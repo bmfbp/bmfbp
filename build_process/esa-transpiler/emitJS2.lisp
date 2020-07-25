@@ -1,23 +1,8 @@
 (in-package :cl-user)
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
-(defmethod asJS-inDeclaration ((self stack-dsl::%stack-dsl-type))
-  (asJs self))
-
-(defmethod asJS-inStatement ((self stack-dsl::%stack-dsl-type))
-  (let ((s (asJs self)))
-    (if (string= s "self")
-        "this"
-      s)))
-
 (defmethod asJS ((self name))
   (stack-dsl::%value self))
-
-(defmethod asJS-inStatement ((self name))
-  (let ((s (stack-dsl::%value self)))
-    (if (string= "self" s)
-        "this"
-      s)))        
 
 (defmethod asJS ((self expression))
   ;; { ekind object }
@@ -32,6 +17,7 @@
 	   (asJS (object self)))
 	  (t (assert nil)))))
 
+
 (defmethod parameters-p ((self object))
   nil) ;; by definition in exprtypes.dsl
 
@@ -44,16 +30,6 @@
     ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asJS (name self)) params)))
     ;; method call mmm(self,{params})
     (format nil "~a(~~a,~{~^~a~^,~})" (asJS (name self)) params)))
-
-(defmethod asJS-inStatement ((self field))
-  ; { name fkind actualParameterList }
-  (let ((params (if (slot-boundp self 'cl-user::actualParameterList)
-		    (mapcar #'asJS (stack-dsl:%list (cl-user::actualParameterList self)))
-		    nil)))
-;;...............................VVV leave ~a in string for format in caller
-    ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asJS (name self)) params)))
-    ;; method call mmm(self,{params})
-    (format nil "~a(~~a,~{~^~a~^,~})" (asJS-inStatement (name self)) params)))
 
 (defmethod asNestedJS ((self object))
   ; { name fieldMap }
