@@ -1,6 +1,12 @@
-* latest
+* latest 202000810
 ** to build hello_world.json graph
-*** see build_process/cl_build/README.org "build helloworld json"
-*** see build_process/cl_build/README.org "build esa from top"
+   see bmfbp/parts/script/README.org
 * to run the graph
-** see build_process/cl-run/README.org "testing script(s)"
+   see bmfbp/parts/script/README.org
+* to build esa.lisp
+  bmfbp/build_process/esa/README.org
+  workhorse: (arrowgrams/esa-transpiler::transpile-esa-to-string 
+               (arrowgrams/esa:path "esa.dsl")
+               :tracing-accept nil)
+  which calls (cl-user::asLisp program3) --> emitLisp.lisp
+  need draw.io of data structures

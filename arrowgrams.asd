@@ -240,7 +240,7 @@
 
 
 (defsystem :arrowgrams/build
-  :depends-on (:cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler)
+  :depends-on (:cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler :arrowgrams/esa-transpiler)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))

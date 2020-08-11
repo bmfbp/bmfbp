@@ -14,13 +14,6 @@ build graph...
   (arrowgrams/build::arrowgrams-to-json "ahelloworld")
 #+end_src
 
-* jhelloworld
-build graph...
-#+name: runner
-#+begin_src lisp :results output
-  (arrowgrams/build::arrowgrams-to-json "jshelloworld")
-#+end_src
-
 * run ahelloworld graph...
 #+name: runner
 #+begin_src lisp :results output
