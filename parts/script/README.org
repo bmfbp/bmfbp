@@ -51,3 +51,7 @@ build graph...
       (format *standard-output* "~&injecting first request:~%")
       (cl-user::dispatcher-inject dispatcher "request" t)))
 #+end_src
+
+* (ignore - fooling with generation of esa.lisp)
+  see bmfbp/build_process/esa/README.org
+
