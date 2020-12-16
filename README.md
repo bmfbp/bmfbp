@@ -13,14 +13,12 @@ to kill:
 - use drawio (e.g. from Finder) to open
 - build_process/parts/diagram/helloworld.drawio (in my case ~/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.drawio)
 - open tab "worldhello" 
-- menu File>>Export As...>>SVG (click EXPORT) (change name to "worldhello.svg") (click Save) (if necessary, clisk Replace)
--(note: a and b are swapped)
-% ./build.sh build_process/parts/diagram/worldhello.svg
-...
-"TOP" outputs on pin "result" : "worldhello"
-...
-^Z
-% kill %1
+- menu File>>Export As...>>SVG (click EXPORT) (change name to "worldhello.svg") (click Save) (if necessary, click Replace)
+-  (note: a and b are swapped)
+- % ./build.sh build_process/parts/diagram/worldhello.svg
+- "TOP" outputs on pin "result" : "worldhello"
+- ^Z
+- % kill %1
 
 
 ## Instructions
