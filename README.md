@@ -1,9 +1,11 @@
 ## Example run
-> % ./build.sh build_process/parts/diagram/helloworld.svg
-> (lots of output, wait at least 30 seconds)
-> ...
-> "TOP" outputs on pin "result" : "helloworld"
-> ...
+```
+% ./build.sh build_process/parts/diagram/helloworld.svg
+(lots of output, wait at least 30 seconds)
+...
+"TOP" outputs on pin "result" : "helloworld"
+...
+```
 
 to kill:
 > ^Z
