@@ -10,11 +10,11 @@ to kill:
 % kill %1
 
 ## Example Edit Diagram
-  use drawio (e.g. from Finder) to open 
-  build_process/parts/diagram/helloworld.drawio (in my case ~/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.drawio)
-  open tab "worldhello" 
-  menu File>>Export As...>>SVG (click EXPORT) (change name to "worldhello.svg") (click Save) (if necessary, clisk Replace)
-  (note: a and b are swapped)
+- use drawio (e.g. from Finder) to open
+- build_process/parts/diagram/helloworld.drawio (in my case ~/quicklisp/local-projects/bmfbp/build_process/parts/diagram/helloworld.drawio)
+- open tab "worldhello" 
+- menu File>>Export As...>>SVG (click EXPORT) (change name to "worldhello.svg") (click Save) (if necessary, clisk Replace)
+-(note: a and b are swapped)
 % ./build.sh build_process/parts/diagram/worldhello.svg
 ...
 "TOP" outputs on pin "result" : "worldhello"
