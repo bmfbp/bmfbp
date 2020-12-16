@@ -1,0 +1,117 @@
+[
+{ "name" : "esaprogram" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"typeDecls","fieldType":"typeDecls"},
+{"fieldName":"situations","fieldType":"situations"},
+{"fieldName":"classes","fieldType":"classes"},
+{"fieldName":"whenDeclarations","fieldType":"whenDeclarations"}]}},
+{ "name" : "typeDecls" , "descriptor" : { "kind" : "map", "elementType" : "typeDecl" }},
+{ "name" : "situations" , "descriptor" : { "kind" : "map", "elementType" : "situationDefinition" }},
+{ "name" : "classes" , "descriptor" : { "kind" : "map", "elementType" : "esaclass" }},
+{ "name" : "whenDeclarations" , "descriptor" : { "kind" : "map", "elementType" : "whenDeclaration" }},
+{ "name" : "typeDecl" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"typeName","fieldType":"typeName"}]}},
+{ "name" : "situationDefinition" , "descriptor" : { "kind" : "compound", "types" : ["name"] }},
+{ "name" : "esaclass" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"fieldMap","fieldType":"fieldMap"},
+{"fieldName":"methodsTable","fieldType":"methodsTable"}]}},
+{ "name" : "whenDeclaration" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"situationReferenceList","fieldType":"situationReferenceList"},
+{"fieldName":"esaKind","fieldType":"esaKind"},
+{"fieldName":"methodDeclarationsAndScriptDeclarations","fieldType":"methodDeclarationsAndScriptDeclarations"}]}},
+{ "name" : "situationReferenceList" , "descriptor" : { "kind" : "map", "elementType" : "situationReferenceName" }},
+{ "name" : "situationReferenceName" , "descriptor" : { "kind" : "compound", "types" : ["name"] }},
+{ "name" : "methodDeclarationsAndScriptDeclarations" , "descriptor" : { "kind" : "map", "elementType" : "declarationMethodOrScript" }},
+{ "name" : "declarationMethodOrScript" , "descriptor" : { "kind" : "compound", "types" : ["methodDeclaration","scriptDeclaration"] }},
+{ "name" : "methodDeclaration" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"esaKind","fieldType":"esaKind"},
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"formalList","fieldType":"formalList"},
+{"fieldName":"returnType","fieldType":"returnType"}]}},
+{ "name" : "scriptDeclaration" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"esaKind","fieldType":"esaKind"},
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"formalList","fieldType":"formalList"},
+{"fieldName":"returnType","fieldType":"returnType"},
+{"fieldName":"implementation","fieldType":"implementation"}]}},
+{ "name" : "returnType" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"returnKind","fieldType":"returnKind"},
+{"fieldName":"name","fieldType":"name"}]}},
+{ "name" : "returnKind" , "descriptor" : { "kind" : "enum", "valueList" : ["map","simple","void"] }},
+{ "name" : "formalList" , "descriptor" : { "kind" : "map", "elementType" : "name" }},
+{ "name" : "esaKind" , "descriptor" : { "kind" : "compound", "types" : ["name"] }},
+{ "name" : "typeName" , "descriptor" : { "kind" : "compound", "types" : ["name"] }},
+{ "name" : "expression" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"ekind","fieldType":"ekind"},
+{"fieldName":"object","fieldType":"object"}]}},
+{ "name" : "ekind" , "descriptor" : { "kind" : "enum", "valueList" : ["true","false","object","calledObject"] }},
+{ "name" : "object" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"fieldMap","fieldType":"fieldMap"}]}},
+{ "name" : "fieldMap" , "descriptor" : { "kind" : "map", "elementType" : "field" }},
+{ "name" : "field" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"fkind","fieldType":"fkind"},
+{"fieldName":"actualParameterList","fieldType":"actualParameterList"}]}},
+{ "name" : "fkind" , "descriptor" : { "kind" : "enum", "valueList" : ["map","simple"] }},
+{ "name" : "actualParameterList" , "descriptor" : { "kind" : "map", "elementType" : "expression" }},
+{ "name" : "name" , "descriptor" : { "kind" : "string" }},
+{ "name" : "methodsTable" , "descriptor" : { "kind" : "map", "elementType" : "declarationMethodOrScript" }},
+{ "name" : "externalMethod" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"formalList","fieldType":"formalList"},
+{"fieldName":"returnType","fieldType":"returnType"}]}},
+{ "name" : "internalMethod" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"formalList","fieldType":"formalList"},
+{"fieldName":"returnType","fieldType":"returnType"},
+{"fieldName":"implementation","fieldType":"implementation"}]}},
+{ "name" : "implementation" , "descriptor" : { "kind" : "map", "elementType" : "statement" }},
+{ "name" : "statement" , "descriptor" : { "kind" : "compound", "types" : ["letStatement","mapStatement","exitMapStatement","setStatement","createStatement","ifStatement","loopStatement","exitWhenStatement","callInternalStatement","callExternalStatement","returnTrueStatement","returnFalseStatement","returnValueStatement"] }},
+{ "name" : "letStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"varName","fieldType":"varName"},
+{"fieldName":"expression","fieldType":"expression"},
+{"fieldName":"implementation","fieldType":"implementation"}]}},
+{ "name" : "mapStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"varName","fieldType":"varName"},
+{"fieldName":"expression","fieldType":"expression"},
+{"fieldName":"implementation","fieldType":"implementation"}]}},
+{ "name" : "exitMapStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"filler","fieldType":"filler"}]}},
+{ "name" : "setStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"lval","fieldType":"lval"},
+{"fieldName":"expression","fieldType":"expression"}]}},
+{ "name" : "createStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"varName","fieldType":"varName"},
+{"fieldName":"indirectionKind","fieldType":"indirectionKind"},
+{"fieldName":"name","fieldType":"name"},
+{"fieldName":"implementation","fieldType":"implementation"}]}},
+{ "name" : "ifStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"expression","fieldType":"expression"},
+{"fieldName":"thenPart","fieldType":"thenPart"},
+{"fieldName":"elsePart","fieldType":"elsePart"}]}},
+{ "name" : "loopStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"implementation","fieldType":"implementation"}]}},
+{ "name" : "exitWhenStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"expression","fieldType":"expression"}]}},
+{ "name" : "returnTrueStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"methodName","fieldType":"methodName"}]}},
+{ "name" : "returnFalseStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"methodName","fieldType":"methodName"}]}},
+{ "name" : "returnValueStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"methodName","fieldType":"methodName"},
+{"fieldName":"name","fieldType":"name"}]}},
+{ "name" : "callInternalStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"functionReference","fieldType":"functionReference"}]}},
+{ "name" : "callExternalStatement" , "descriptor" : { "kind" : "structure", "fields" : [
+{"fieldName":"functionReference","fieldType":"functionReference"}]}},
+{ "name" : "lval" , "descriptor" : { "kind" : "compound", "types" : ["expression"] }},
+{ "name" : "varName" , "descriptor" : { "kind" : "compound", "types" : ["name"] }},
+{ "name" : "functionReference" , "descriptor" : { "kind" : "compound", "types" : ["expression"] }},
+{ "name" : "thenPart" , "descriptor" : { "kind" : "compound", "types" : ["implementation"] }},
+{ "name" : "elsePart" , "descriptor" : { "kind" : "compound", "types" : ["implementation"] }},
+{ "name" : "indirectionKind" , "descriptor" : { "kind" : "enum", "valueList" : ["indirect","direct"] }},
+{ "name" : "methodName" , "descriptor" : { "kind" : "compound", "types" : ["name"] }},
+{ "name" : "filler" , "descriptor" : { "kind" : "compound", "types" : ["name"] }}
+]
