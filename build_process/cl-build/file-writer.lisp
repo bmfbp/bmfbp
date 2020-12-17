@@ -12,7 +12,6 @@
   (call-next-method))
 
 (defmethod e/part:react ((self file-writer) (e e/event:event))
-(format *standard-output* "~&file-writer: ~s~%" e)
   (ecase (e/event::sym e)
 
     (:filename
