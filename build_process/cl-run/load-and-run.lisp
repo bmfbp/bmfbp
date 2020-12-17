@@ -2,6 +2,7 @@
 
 (defun main(argv)
   (declare (ignore argv))
+(format *standard-output* "99~%")	  
   (handler-case
       (let ((lis nil))
 	(format *standard-output* "~&in load and run~%")
@@ -10,7 +11,10 @@
 	   do (push line lis))
 	(let ((str (apply 'concatenate 'string (reverse lis))))
 	  ; str is a json graph string
-	  (arrowgrams-load-and-run str)))
+(format *standard-output* "100~%")	  
+	  (arrowgrams-load-and-run str) 
+(format *standard-output* "101~%")	  
+))
     (end-of-file (c)
       (format *error-output* "0 FATAL 'end of file error; in main ~a~%" c))
     (simple-error (c)
@@ -21,7 +25,8 @@
 
 (defun load-and-run-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
-    (arrowgrams-load-and-run graph-string)))
+    (arrowgrams-load-and-run graph-string)
+))
 
 (defun arrowgrams-load-and-run (json-graph-string)
   (let ((graph-alist (json-to-alist json-graph-string)))
@@ -31,6 +36,8 @@
           (cl-user::set-top-node esa-disp top-node)
 	  (cl-user::initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
 	  (cl-user::distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
+	  (cl-user::dispatcher-run esa-disp)
+	  (setf cl-user::*dispatcher* esa-disp)
           esa-disp)))))
   
 

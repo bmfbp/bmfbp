@@ -13,9 +13,8 @@
 	     (setf (part-name pp) (name-in-container self))
 	     (setf (pin-name pp) "c")
              (setf (partpin out-e) pp)
-	     (setf (data out-e)    (concatenate 'string "parts/cl--" (string-a self) (string-b self)))
+	     (setf (data out-e)    (format nil "~a ~a~%" (string-a self) (string-b self)))
 	     (send self out-e))))
-    
     (ecase (state self)
       (:idle
        (cond ((and (string= (pin-name (partpin e)) "a") (stringp (data e)))

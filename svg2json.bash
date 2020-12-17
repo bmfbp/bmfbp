@@ -1,4 +1,5 @@
 #~/bin/bash
+# usage: ./svg2json helloworld
 echo "register" && \
 sbcl --noinform \
      --eval '(uiop:run-program "~/quicklisp/local-projects/rm.bash")' \
@@ -9,12 +10,5 @@ echo "compile" && \
 echo "" && \
   sbcl  --noinform \
        --eval '(ql:quickload :arrowgrams/build :silent nil)' \
-       --eval '(arrowgrams/build::arrowgrams-to-json "helloworld")' \
+       --eval '(arrowgrams/build::arrowgrams-to-json "$1")' \
        --quit
- echo "" && \
- echo "run" && \
- echo "" && \
-   sbcl  --noinform \
-        --eval '(ql:quickload :arrowgrams/runner :silent nil)' \
-        --eval '(arrowgrams/build::load-and-run-from-file (arrowgrams/build::json-graph-path "helloworld"))' \
-        --quit

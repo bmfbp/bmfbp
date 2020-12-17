@@ -1,6 +1,8 @@
-* save diagram as .SVG - must obey "rules" for acceptable diagram
-* run builder --> .JSON
-* kernel for CL 
-* kernel for JS
-* runner for CL
-* runner for JS
+* save diagram as .SVG
+must obey "rules" for acceptable diagram
+* separate programs
+** run builder --> .JSON
+** kernel for CL 
+** kernel for JS
+** runner for CL
+** runner for JS

@@ -1,3 +1,15 @@
+* latest 20201216
+  see ./atest.bash
+  runs ag on command line
+  transpiles ./parts/diagram/helloworld.svg --> ./parts/graph/helloworld.graph.json
+    and --> ./parts/graph/helloworld.graph.lisp
+  Q: what is $ in helloworld.graph.json?
+
+  new: ./svg2json.bash
+
+**  not working yet: ./clrun.bash
+   it appeat that "start" of main diagram is not being tickled
+
 * latest 202000810
 ** to build hello_world.json graph
    see bmfbp/parts/script/README.org
