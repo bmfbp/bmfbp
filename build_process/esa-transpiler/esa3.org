@@ -1,3 +1,25 @@
+* syntax overview
+  type id
+  self
+  situation id
+  kind id ... end kind
+  when sitation kind ... end when
+  method id [( kinds )] [>> return-kind]
+  script id [( kinds )] [>> return-kind]
+  script kind-id id [( names )] [>> return-kind]
+  let ... in ... end let
+  create ... in ... end create
+  map ... end map
+  set
+  if ... then ... [else ...] end if
+  loop ... end loop
+  exit-when ...
+  >> return statement
+  @  call script
+     call method
+  [@] symbol [. symbol]* [( expression expression ... )]*
+  % ...
+
 * type id
 ** defines a handle for type
 ** builtin keywords true and false
