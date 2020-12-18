@@ -36,9 +36,9 @@
 #| external method ((self wire)) install-source |#
 #| external method ((self wire)) install-destination |#
 (defmethod add-source ((self wire) part pin)
-        install-source (self, part, pin))
+        install_source (self, part, pin))
 (defmethod add-destination ((self wire) part pin)
-        install-destination (self, part, pin))
+        install_destination (self, part, pin))
 
 (defclass kind ()
 (
@@ -51,20 +51,20 @@
 #| external method ((self kind)) install-input-pin |#
 #| external method ((self kind)) install-output-pin |#
 (defmethod add-input-pin ((self kind) name)
-        ensure-input-pin-not-declared (self, name)
-        install-input-pin (self, name))
+        ensure_input_pin_not_declared (self, name)
+        install_input_pin (self, name))
 (defmethod add-output-pin ((self kind) name)
-        ensure-output-pin-not-declared (self, name)
-        install-output-pin (self, name))
+        ensure_output_pin_not_declared (self, name)
+        install_output_pin (self, name))
 (defmethod add-part ((self kind) nm k nclass)
-        ensure-part-not-declared (self, nm)
-        install-part (self, nm, k, nclass))
+        ensure_part_not_declared (self, nm)
+        install_part (self, nm, k, nclass))
 (defmethod add-wire ((self kind) w)
         (block %map (dolist (s sources) 
-ensure-valid-source (self, s)))
+ensure_valid_source (self, s)))
         (block %map (dolist (dest destinations) 
-ensure-valid-destination (self, dest)))
-        install-wire (self, w))
+ensure_valid_destination (self, dest)))
+        install_wire (self, w))
 #| external method ((self kind)) install-wire |#
 #| external method ((self kind)) install-part |#
 #| external method ((self kind)) parts |#
@@ -75,37 +75,37 @@ ensure-valid-destination (self, dest)))
 #| external method ((self kind)) ensure-input-pin-not-declared |#
 #| external method ((self kind)) ensure-output-pin-not-declared |#
 (defmethod ensure-valid-source ((self kind) s)
-        (if (esa-expr-true refers-to-self?)
+        (if (esa-expr-true refers_to_self?)
 (progn
-ensure-valid-input-pin (self, pin-name)
+ensure_valid_input_pin (self, pin_name)
 )
 (progn
-(let ((p kind-find-part (self, part-name))) 
-ensure-kind-defined
-ensure-valid-output-pin (part-kind, pin-name))
+(let ((p kind_find_part (self, part_name))) 
+ensure_kind_defined
+ensure_valid_output_pin (part_kind, pin_name))
 )))
 (defmethod ensure-valid-destination ((self kind) dest)
-        (if (esa-expr-true refers-to-self?)
+        (if (esa-expr-true refers_to_self?)
 (progn
-ensure-valid-output-pin (self, pin-name)
+ensure_valid_output_pin (self, pin_name)
 )
 (progn
-(let ((p kind-find-part (self, part-name))) 
-ensure-kind-defined
-ensure-valid-input-pin (part-kind, pin-name))
+(let ((p kind_find_part (self, part_name))) 
+ensure_kind_defined
+ensure_valid_input_pin (part_kind, pin_name))
 )))
 (defmethod loader ((self kind) my-name my-container dispatchr)
-        (let ((clss self-class)) 
+        (let ((clss self_class)) 
 (let ((inst (make-instance clss)))
-clear-input-queue
-clear-output-queue
-(setf kind-field self)
+clear_input_queue
+clear_output_queue
+(setf kind_field self)
 (setf container my-container)
-(setf name-in-container my-name)
+(setf name_in_container my-name)
 (block %map (dolist (part parts) 
-(let ((part-instance loader (part-kind, part-name, inst, dispatchr))) 
-add-child (inst, part-name, part-instance))))
-memo-node (dispatchr, inst)
+(let ((part-instance loader (part_kind, part_name, inst, dispatchr))) 
+add_child (inst, part_name, part-instance))))
+memo_node (dispatchr, inst)
 (return-from loader inst))))
 #| external method ((self kind)) find-wire-for-source |#
 #| external method ((self kind)) find-wire-for-self-source |#
@@ -123,28 +123,28 @@ memo-node (dispatchr, inst)
 #| external method ((self node)) clear-output-queue |#
 #| external method ((self node)) install-node |#
 (defmethod add-child ((self node) nm nd)
-        install-child (self, nm, nd))
+        install_child (self, nm, nd))
 (defmethod initialize ((self node) )
         initially)
 #| external method ((self node)) initially |#
 #| external method ((self node)) send |#
 (defmethod distribute-output-events ((self node) )
-        (if (esa-expr-true has-no-container?)
+        (if (esa-expr-true has_no_container?)
 (progn
-display-output-events-to-console-and-delete
+display_output_events_to_console_and_delete
 )
 (progn
 (let ((parent-composite-node container)) 
-(block %map (dolist (output get-output-events-and-delete) 
+(block %map (dolist (output get_output_events_and_delete) 
 (let ((dest partpin)) 
-(let ((w find-wire-for-source (kind-field, part-name, pin-name))) 
+(let ((w find_wire_for_source (kind_field, part_name, pin_name))) 
 (block %map (dolist (dest destinations) 
-(if (esa-expr-true refers-to-self?)
+(if (esa-expr-true refers_to_self?)
 (progn
 (let ((new-event (make-instance 'event)))
 (let ((pp (make-instance 'part-pin)))
-(setf part-name name-in-container)
-(setf pin-name pin-name)
+(setf part_name name_in_container)
+(setf pin_name pin_name)
 (setf partpin pp)
 (setf data data)
 send (parent-composite-node, new-event)))
@@ -152,34 +152,34 @@ send (parent-composite-node, new-event)))
 (progn
 (let ((new-event (make-instance 'event)))
 (let ((pp (make-instance 'part-pin)))
-(setf part-name part-name)
-(setf pin-name pin-name)
+(setf part_name part_name)
+(setf pin_name pin_name)
 (setf partpin pp)
 (setf data data)
-(let ((child-part-instance node-find-child (parent-composite-node, part-name))) 
-enqueue-input (instance-node, new-event))))
+(let ((child-part-instance node_find_child (parent-composite-node, part_name))) 
+enqueue_input (instance_node, new-event))))
 )))))))))
 )))
 #| external method ((self node)) display-output-events-to-console-and-delete |#
 #| external method ((self node)) get-output-events-and-delete |#
 #| external method ((self node)) has-no-container? |#
 (defmethod distribute-outputs-upwards ((self node) )
-        (if (esa-expr-true has-no-container?)
+        (if (esa-expr-true has_no_container?)
 (progn
 )
 (progn
 (let ((parent container)) 
-distribute-output-events)
+distribute_output_events)
 )))
 (defmethod busy? ((self node) )
-        (if (esa-expr-true flagged-as-busy?)
+        (if (esa-expr-true flagged_as_busy?)
 (progn
 (return-from busy? :true)
 )
 (progn
 (block %map (dolist (child-part-instance children) 
-(let ((child-node instance-node)) 
-(if (esa-expr-true has-inputs-or-outputs?)
+(let ((child-node instance_node)) 
+(if (esa-expr-true has_inputs_or_outputs?)
 (progn
 (return-from busy? :true)
 )
@@ -191,7 +191,7 @@ distribute-output-events)
 ))
         (return-from busy? :false))
 (defmethod ready? ((self node) )
-        (when (esa-expr-true input-queue?)
+        (when (esa-expr-true input_queue?)
 (if (esa-expr-true busy?)
 (progn
 (return-from ready? :false)
@@ -202,9 +202,9 @@ distribute-output-events)
 )
         (return-from ready? :false))
 (defmethod invoke ((self node) )
-        (let ((e dequeue-input)) 
-run-reaction (self, e)
-distribute-output-events))
+        (let ((e dequeue_input)) 
+run_reaction (self, e)
+distribute_output_events))
 #| external method ((self node)) has-inputs-or-outputs? |#
 #| external method ((self node)) children? |#
 #| external method ((self node)) flagged-as-busy? |#
@@ -217,32 +217,32 @@ distribute-output-events))
         react (self, e))
 (defmethod run-composite-reaction ((self node) e)
         (let ((w :true)) 
-(if (esa-expr-true has-no-container?)
+(if (esa-expr-true has_no_container?)
 (progn
-(setf w find-wire-for-self-source (kind-field, pin-name))
+(setf w find_wire_for_self_source (kind_field, pin_name))
 )
 (progn
-(setf w find-wire-for-source (kind-field, part-name, pin-name))
+(setf w find_wire_for_source (kind_field, part_name, pin_name))
 ))
 (block %map (dolist (dest destinations) 
 (let ((new-event (make-instance 'event)))
 (let ((pp (make-instance 'part-pin)))
-(if (esa-expr-true refers-to-self?)
+(if (esa-expr-true refers_to_self?)
 (progn
-(setf part-name part-name)
-(setf pin-name pin-name)
+(setf part_name part_name)
+(setf pin_name pin_name)
 (setf partpin pp)
 (setf data data)
 send (self, new-event)
 )
 (progn
 (when (esa-expr-true children?)
-(setf part-name part-name)
-(setf pin-name pin-name)
+(setf part_name part_name)
+(setf pin_name pin_name)
 (setf partpin pp)
 (setf data data)
-(let ((child-part-instance node-find-child (self, part-name))) 
-enqueue-input (instance-node, new-event))
+(let ((child-part-instance node_find_child (self, part_name))) 
+enqueue_input (instance_node, new-event))
 )
 ))))))))
 #| external method ((self node)) node-find-child |#
@@ -254,18 +254,18 @@ enqueue-input (instance-node, new-event))
 #| external method ((self dispatcher)) memo-node |#
 #| external method ((self dispatcher)) set-top-node |#
 (defmethod initialize-all ((self dispatcher) )
-        (block %map (dolist (part all-parts) 
+        (block %map (dolist (part all_parts) 
 initialize)))
 (defmethod distribute-all-outputs ((self dispatcher) )
-        (block %map (dolist (p all-parts) 
-distribute-output-events
-distribute-outputs-upwards)))
+        (block %map (dolist (p all_parts) 
+distribute_output_events
+distribute_outputs_upwards)))
 (defmethod dispatcher-run ((self dispatcher) )
         (let ((done :true)) 
 (loop 
 (setf done :true)
-distribute-all-outputs
-(block %map (dolist (part all-parts) 
+distribute_all_outputs
+(block %map (dolist (part all_parts) 
 (when (esa-expr-true ready?)
 invoke
 (setf done :false)
@@ -273,9 +273,9 @@ invoke
 )))
 (when (esa-expr-true done) (return)))))
 (defmethod dispatcher-inject ((self dispatcher) pin val)
-        (let ((e create-top-event (self, pin, val))) 
-enqueue-input (top-node, e)
-dispatcher-run))
+        (let ((e create_top_event (self, pin, val))) 
+enqueue_input (top_node, e)
+dispatcher_run))
 #| external method ((self dispatcher)) create-top-event |#
 
 (defclass event ()

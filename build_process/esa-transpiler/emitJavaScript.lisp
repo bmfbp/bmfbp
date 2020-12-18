@@ -1,13 +1,8 @@
 (in-package :cl-user)
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
-;; (defun uname (x)
-;;   (let ((nm (name x)))
-;;     (if (stringp nm)
-;; 	(substitute #\_ #\- nm)
-;; 	(if (symbolp nm)
-;; 	    (substitute #\_ #\- (symbol-name nm))
-;; 	    nm))))
+(defun filter-name (s)
+  (substitute #\_ #\- s))
 
 (defmethod asJS ((self name))
   (stack-dsl::%value self))
@@ -36,8 +31,8 @@
 ;;...............................VVV leave ~a in string for format in caller
     ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asJS (uname self)) params)))
     (if params
-	(format nil "~a (~~a~{~^, ~a~^~})" (asJS (name self)) params)
-	(format nil "~a" (asJS (name self))))))
+	(format nil "~a (~~a~{~^, ~a~^~})" (filter-name (asJS (name self))) params)
+	(format nil "~a" (filter-name (asJS (name self)))))))
 
 (defmethod asNestedLisp ((self object))
   ; { name fieldMap }
@@ -67,11 +62,11 @@
 
 (defmethod asJS ((self callExternalStatement))
   (let ((fname (asJS (functionReference self))))
-    (format nil "~a;" fname)))
+    (format nil "~a;" (filter-name fname))))
 
 (defmethod asJS ((self callInternalStatement))
   (let ((fname (asJS (functionReference self))))
-    (format nil "~a;" fname)))
+    (format nil "~a;" (filter-name fname))))
 
 (defmethod asJS ((self implementation))
   (mapcar #'asJS (stack-dsl:%list self)))
@@ -81,25 +76,25 @@
     (apply 'concatenate 'string strings-list)))
 
 (defmethod asJS ((self esaClass))
-  (let ((name (format nil "~a" (asJS (name self)))))
+  (let ((name (format nil "~a" (filter-name (asJS (name self))))))
     (let ((fields (mapcar #'(lambda (f) 
 			      (format nil "~a" 
-				      (asJS (name f))))
+				      (filter-name (asJS (name f)))))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
-		     (format nil "~&~%function ~a () {~%~{~&this.~a = null;~^~}~%}~%" name fields)
-		     (format nil "~&~%function ~a () {}~%" name))))
+		     (format nil "~&~%function ~a () {~%~{~&this.~a = null;~^~}~%}~%" (filter-name name) fields)
+		     (format nil "~&~%function ~a () {}~%" (filter-name name)))))
 	(let ((methods (mapcar #'asJS (stack-dsl:%list (methodsTable self)))))
 	  (let ((methodsString (format nil "~{~&~a~}" methods)))
 	    (concatenate 'string def methodsString)))))))
 
 (defmethod asJS ((self methodDeclaration))
-  (format nil "// external method ((self ~a)) ~a~%" (asJS (esaKind self)) (asJS (name self))))
+  (format nil "// external method ((self ~a)) ~a~%" (asJS (esaKind self)) (filter-name (asJS (name self)))))
 
 (defmethod asJS ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asJS (stack-dsl:%list (implementation self))))))
     (format nil "function ~a (self~{, ~a~^~}) {~{~&~v,T~a~^~%~}~%};~%" 
-	    (asJS (name self)) 
+	    (filter-name (asJS (name self)) )
             (mapcar #'asJS (stack-dsl:%list (formalList self)))
 	    statements)))
 
@@ -111,13 +106,13 @@
   (let ((vn (asJS (varName self)))
 	(e  (asJS (expression self)))
 	(code (asJS (implementation self))))
-    (format nil "(let ((~a ~a)) ~{~%~a~})" vn e code)))
+    (format nil "(let ((~a ~a)) ~{~%~a~})" (filter-name vn) e code)))
 
 (defmethod asJS ((self mapStatement))
   (let ((vn (asJS (varName self)))
 	(e  (asJS (expression self)))
 	(code (asJS (implementation self))))
-    (format nil "(block %map (dolist (~a ~a) ~{~%~a~}))" vn e code)))
+    (format nil "(block %map (dolist (~a ~a) ~{~%~a~}))" (filter-name vn) e code)))
 
 (defmethod asJS ((self createStatement))
   (let ((vn (asJS (varName self)))
@@ -125,13 +120,13 @@
 	(i   (asJS (indirectionKind self)))
 	(code (asJS (implementation self))))
     (if (string= "direct" i)
-	(format nil "{ let ~a = new ~a;~%~{~a~^~%~}}~%" vn cn code)
-	(format nil "(let ((~a (make-instance ~a)))~%~{~a~^~%~})" vn cn code))))
+	(format nil "{ let ~a = new ~a;~%~{~a~^~%~}}~%" (filter-name vn) cn code)
+	(format nil "(let ((~a (make-instance ~a)))~%~{~a~^~%~})" (filter-name vn) cn code))))
 
 (defmethod asJS ((self setStatement))
   (let ((lv (asJS (lval self)))
 	(e  (asJS (expression self))))
-    (format nil "~a = ~a;" lv e)))
+    (format nil "~a = ~a;" (filter-name lv) e)))
 
 (defmethod asJS ((self indirectionKind))
   (stack-dsl:%value self))
@@ -154,7 +149,7 @@
 (defmethod asJS ((self returnValueStatement))
   (let ((method-name (asJS (cl-user::methodName self))))
     (let ((n (asJS (name self))))
-      (format nil "return ~a;" method-name n))))
+      (format nil "return ~a;" (filter-name n)))))
 
 (defmethod asJS ((self loopStatement))
   (let ((code (asJS (implementation self))))
