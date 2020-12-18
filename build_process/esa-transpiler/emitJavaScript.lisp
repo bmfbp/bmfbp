@@ -31,8 +31,8 @@
 ;;...............................VVV leave ~a in string for format in caller
     ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asJS (uname self)) params)))
     (if params
-	(format nil "~a (~~a~{~^, ~a~^~})" (filter-name (asJS (name self))) params)
-	(format nil "~a" (filter-name (asJS (name self)))))))
+	(format nil ".~a (~~a~{~^, ~a~^~})" (filter-name (asJS (name self))) params)
+	(format nil ".~a" (filter-name (asJS (name self)))))))
 
 (defmethod asNestedLisp ((self object))
   ; { name fieldMap }
@@ -106,7 +106,7 @@
   (let ((vn (asJS (varName self)))
 	(e  (asJS (expression self)))
 	(code (asJS (implementation self))))
-    (format nil "(let ((~a ~a)) ~{~%~a~})" (filter-name vn) e code)))
+    (format nil "{ /*let*/~% let ~a = ~a; ~{~%~a~}~%}" (filter-name vn) e code)))
 
 (defmethod asJS ((self mapStatement))
   (let ((vn (asJS (varName self)))

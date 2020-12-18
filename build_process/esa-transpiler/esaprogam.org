@@ -1,0 +1,40 @@
+see diagram classes.drawio
+
+% DSL allows parameterList only for fields
+% self.a -> (slot-value self 'a)
+% self.a.b -> (slot-value (slot-value self 's) 'b)
+% self.array(i).b (slot-value ((slot-value self 'array) i) 'b)
+% self.array(i).b(j) ((slot-value ((slot-value self 'array) i) 'b) j)
+% fn -> fn
+% fn(i) -> (fn i)
+
+
+* esaprogram
+** ?
+** :map typeDecl
+*** name
+    :string 
+*** typeName
+    :string 
+** :map situations
+   ignore (not used in pass3)
+** :map esaClass
+*** name
+*** fieldMap = :map field
+**** name
+**** fkind ('map' | 'simple')
+**** actualParameterList
+***** = map expression
+
+*** methodsTable = :map declarationMethodOrScript
+*** name
+    :string
+*** fieldmap
+** :map whenDeclaration 
+   ignore (not used in pass3)
+
+** expression
+*** ekind ('true' | 'false' | 'object' | 'calledObject')
+*** object
+**** name
+**** fieldMap = :map field

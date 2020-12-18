@@ -20,6 +20,10 @@
   [@] symbol [. symbol]* [( expression expression ... )]*
   % ...
 
+* script vs method
+  both, scripts and methods boil down to a method call
+  scripts are defined in esa.dsl
+  methods are externals - not defined in esa.dsl - the method must be defined in a supporting file
 * type id
 ** defines a handle for type
 ** builtin keywords true and false
