@@ -27,5 +27,15 @@
 	      (let ((program3 (run-pass "3" #'esa-dsl-pass3 program2 token-stream nil nil)))
 		(cl-user::asLisp program3)))))))))
 
+(defun transpile-esa-to-js-string (esa-input-filename &key (tracing-accept nil))
+  (let ((in-string (alexandria:read-file-into-string esa-input-filename)))
+    (let ((token-stream (scanner:scanner in-string)))
+      (let ((p (make-instance 'arrowgrams/esa-transpiler::parser)))
+	(let ((program0 (run-pass "0" #'esa-dsl-pass0 nil token-stream nil nil)))
+	  (let ((program1 (run-pass "1" #'esa-dsl-pass1 nil token-stream nil nil)))
+	    (let ((program2 (run-pass "2" #'esa-dsl-pass2 program1 token-stream nil nil)))
+	      (let ((program3 (run-pass "3" #'esa-dsl-pass3 program2 token-stream nil nil)))
+		(cl-user::asJS program3)))))))))
+
 
 

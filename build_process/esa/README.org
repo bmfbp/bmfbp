@@ -6,10 +6,10 @@
 * transpiler details
 ** see ../esa-transpiler/README.org for details.
 * build
-  to build cl-user-esa.lisp
+  to build cl-user-esa.lisp & esa.js
   1) create the transpiler (../esa-transpiler/README.org)
   2) ^C^C both of the blocks below
-  result is ./cl-user-esa.lisp
+  result is ./esa.lisp & ./cl-user-esa.lisp & ./esa.js
 #+name: esa
 #+begin_src lisp :results output
   (progn
@@ -36,24 +36,16 @@
 	    (write-string "(in-package :cl-user)" f)
 	    (write-string "
 " f)
-	    (write-string result f))))
-#+end_src
+	    (write-string result f))
 
-  build esa.js
-#+name: esa
-#+begin_src lisp :results output
-  (let ()
-    (stack-dsl:initialize-types (arrowgrams/esa-transpiler:path "exprtypes.json"))
-    (let ((result 
-           (arrowgrams/esa-transpiler::transpile-esa-to-string 
-             (arrowgrams/esa:path "esa.dsl")
-            :tracing-accept nil)))
-          (with-open-file (f (arrowgrams/esa:path "esa.js") :direction :output :if-exists :supersede :if-does-not-exist :create)
-	    (write-string "(in-package :cl-user)" f)
+	    (with-open-file (f (arrowgrams/esa:path "esa.js") :direction :output :if-exists :supersede :if-does-not-exist :create)
 	    (write-string "
 " f)
-	    (write-string result f))))
+	    (write-string result f))
+
+	    ))
 #+end_src
+
 
 #+RESULTS: esa
 #+begin_example

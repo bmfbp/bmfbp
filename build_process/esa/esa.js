@@ -1,4 +1,4 @@
-(in-package :cl-user)
+
 
 (defclass part-definition ()
 (
