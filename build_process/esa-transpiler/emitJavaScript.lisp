@@ -75,11 +75,14 @@
 (defmethod asJS ((self esaClass))
   (let ((name (format nil "~a" (filter-name (asJS (name self))))))
     (let ((fields (mapcar #'(lambda (f) 
-			      (format nil "~a" 
-				      (filter-name (asJS (name f)))))
+			      (format nil "this.attribute_~a = null;~%this.~a = function () { return attribute_~a; };" 
+				      (filter-name (asJS (name f)))
+				      (filter-name (asJS (name f)))
+				      (filter-name (asJS (name f)))
+				      ))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
-		     (format nil "~&~%function ~a () {~%~{~&this.~a = null;~^~}~%}~%" (filter-name name) fields)
+		     (format nil "~&~%function ~a () {~%~{~a~^~%~}~%}~%" (filter-name name) fields)
 		     (format nil "~&~%function ~a () {}~%" (filter-name name)))))
 	(let ((methods (mapcar #'asJS (stack-dsl:%list (methodsTable self)))))
 	  (let ((methodsString (format nil "~{~&~a~}" methods)))
