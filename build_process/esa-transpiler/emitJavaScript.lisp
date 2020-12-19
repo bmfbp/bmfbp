@@ -95,7 +95,7 @@
   (let ((statements (insert-tab 8 (mapcar #'asJS (stack-dsl:%list (implementation self))))))
     (format nil "function ~a (self~{, ~a~^~}) {~{~&~v,T~a~^~%~}~%};~%" 
 	    (filter-name (asJS (name self)) )
-            (mapcar #'asJS (stack-dsl:%list (formalList self)))
+            (mapcar #'(lambda (x) (filter-name (asJS x))) (stack-dsl:%list (formalList self)))
 	    statements)))
 
 (defun insert-tab (n lis)
@@ -113,7 +113,7 @@
 	(e  (asJS (expression self)))
 	(code (asJS (implementation self))))
     ;; a :map becomes a function - return from map becomes return
-    (format nil "function () {~%for (const ~a in ~a) {~{~%~a~}~%};~%} ();" (filter-name vn) e code)))
+    (format nil "(function () {~%for (const ~a in ~a) {~{~%~a~}~%};~%}) ();" (filter-name vn) e code)))
     
 (defmethod asJS ((self createStatement))
   (let ((vn (asJS (varName self)))

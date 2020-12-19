@@ -84,16 +84,16 @@ function add_part (self, nm, k, nclass) {
     self.install_part (nm, k, nclass);
 };
 function add_wire (self, w) {
-    function () {
+    (function () {
 	for (const s in w.sources ()) {
 	    self.ensure_valid_source (s);
 	};
-    } ();
-    function () {
+    }) ();
+    (function () {
 	for (const dest in w.destinations ()) {
 	    self.ensure_valid_destination (dest);
 	};
-    } ();
+    }) ();
     self.install_wire (w);
 };
 // external method ((self kind)) install_wire
@@ -127,7 +127,7 @@ function ensure_valid_destination (self, dest) {
 	} /* end let */
     }
 };
-function loader (self, my-name, my-container, dispatchr) {
+function loader (self, my_name, my_container, dispatchr) {
     { /*let*/
 	let clss = self.self_class ();
 	{ let inst = new clss;
@@ -136,14 +136,14 @@ function loader (self, my-name, my-container, dispatchr) {
 	  inst.kind_field () = self;
 	  inst.container () = my-container;
 	  inst.name_in_container () = my-name;
-	  function () {
+	  (function () {
 	      for (const part in self.parts ()) {
 		  { /*let*/
 		      let part_instance = part.part_kind ().loader (part.part_name (), inst, dispatchr);
 		      inst.add_child (part.part_name (), part_instance);
 		  } /* end let */
 	      };
-	  } ();
+	  }) ();
 	  dispatchr.memo_node (inst);
 	  return inst;}
 
@@ -185,13 +185,13 @@ function distribute_output_events (self) {
     } else {
 	{ /*let*/
 	    let parent_composite_node = self.container ();
-	    function () {
+	    (function () {
 		for (const output in self.get_output_events_and_delete ()) {
 		    { /*let*/
 			let dest = output.partpin ();
 			{ /*let*/
 			    let w = parent_composite_node.kind_field ().find_wire_for_source (output.partpin ().part_name (), output.partpin ().pin_name ());
-			    function () {
+			    (function () {
 				for (const dest in w.destinations ()) {
 				    if (dest.refers_to_selfQ ()) {
 					{ let new_event = new event;
@@ -218,11 +218,11 @@ function distribute_output_events (self) {
 
 				    }
 				};
-			    } ();
+			    }) ();
 			} /* end let */
 		    } /* end let */
 		};
-	    } ();
+	    }) ();
 	} /* end let */
     }
 };
@@ -242,7 +242,7 @@ function busyQ (self) {
     if (self.flagged_as_busyQ ()) {
 	return true;
     } else {
-	function () {
+	(function () {
 	    for (const child_part_instance in self.children ()) {
 		{ /*let*/
 		    let child_node = child_part_instance.instance_node ();
@@ -256,7 +256,7 @@ function busyQ (self) {
 		    }
 		} /* end let */
 	    };
-	} ();
+	}) ();
     }
     return false;
 };
@@ -297,7 +297,7 @@ function run_composite_reaction (self, e) {
 	} else {
 	    w = self.container ().kind_field ().find_wire_for_source (e.partpin ().part_name (), e.partpin ().pin_name ());
 	}
-	function () {
+	(function () {
 	    for (const dest in w.destinations ()) {
 		{ let new_event = new event;
 		  { let pp = new part-pin;
@@ -323,7 +323,7 @@ function run_composite_reaction (self, e) {
 		}
 
 	    };
-	} ();
+	}) ();
     } /* end let */
 };
 // external method ((self node)) node_find_child
@@ -337,19 +337,19 @@ function dispatcher () {
 // external method ((self dispatcher)) memo_node
 // external method ((self dispatcher)) set_top_node
 function initialize_all (self) {
-    function () {
+    (function () {
 	for (const part in self.all_parts ()) {
 	    part.initialize ();
 	};
-    } ();
+    }) ();
 };
 function distribute_all_outputs (self) {
-    function () {
+    (function () {
 	for (const p in self.all_parts ()) {
 	    p.distribute_output_events ();
 	    p.distribute_outputs_upwards ();
 	};
-    } ();
+    }) ();
 };
 function dispatcher_run (self) {
     { /*let*/
@@ -357,7 +357,7 @@ function dispatcher_run (self) {
 	for (;;) {
 	    done = true;
 	    self.distribute_all_outputs ();
-	    function () {
+	    (function () {
 		for (const part in self.all_parts ()) {
 		    if (part.readyQ ()) {
 
@@ -366,7 +366,7 @@ function dispatcher_run (self) {
 			return;
 		    }
 		};
-	    } ();
+	    }) ();
 	    if (done) {break;};
 	}
     } /* end let */
