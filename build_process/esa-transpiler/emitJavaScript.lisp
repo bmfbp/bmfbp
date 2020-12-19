@@ -72,25 +72,35 @@
   (let ((strings-list (mapcar #'asJS (stack-dsl:%list (classes self)))))
     (apply 'concatenate 'string strings-list)))
 
+(defun simple-fkind-p (f)
+  (let ((k (fkind f)))
+    (string= "simple" (stack-dsl::%value k))))
+  
 (defmethod asJS ((self esaClass))
   (let ((name (format nil "~a" (filter-name (asJS (name self))))))
-    (let ((fields (mapcar #'(lambda (f) 
-			      (format nil "this.attribute_~a = null;~%this.~a = function () { return attribute_~a; };" 
+    (let ((fields (mapcar #'(lambda (f)
+			      (format nil "this.attribute_~a = ~a,~%this.~a = function () { return attribute_~a; },~%this.set_~a = function (val) { this.attribute_~a = val; }" 
+				      (filter-name (asJS (name f)))
+				      (if (simple-fkind-p f) "null" "[]")
+				      (filter-name (asJS (name f)))
 				      (filter-name (asJS (name f)))
 				      (filter-name (asJS (name f)))
 				      (filter-name (asJS (name f)))
 				      ))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
-		     (format nil "~&~%function ~a () {~%~{~a~^~%~}~%}~%" (filter-name name) fields)
+		     (format nil "~&~%function ~a () {~%~{~a~^,~%~}~%}~%" (filter-name name) fields)
 		     (format nil "~&~%function ~a () {}~%" (filter-name name)))))
 	(let ((methods (mapcar #'asJS (stack-dsl:%list (methodsTable self)))))
 	  (let ((methodsString (format nil "~{~&~a~}" methods)))
 	    (concatenate 'string def methodsString)))))))
 
 (defmethod asJS ((self methodDeclaration))
-  (format nil "// external method ((self ~a)) ~a~%" (asJS (esaKind self)) (filter-name (asJS (name self)))))
-
+  (format nil "// external function ~a ((self ~a)~{, (? ~a)~^~})~%" 
+	  (filter-name (asJS (name self)) )
+	  (filter-name (asJS (esaKind self)) )
+	  (mapcar #'(lambda (x) (filter-name (asJS x))) (stack-dsl:%list (formalList self)))))
+	  
 (defmethod asJS ((self scriptDeclaration))
   (let ((statements (insert-tab 8 (mapcar #'asJS (stack-dsl:%list (implementation self))))))
     (format nil "function ~a (self~{, ~a~^~}) {~{~&~v,T~a~^~%~}~%};~%" 
