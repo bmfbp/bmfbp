@@ -54,32 +54,32 @@
 
 #+RESULTS: esa
 #+begin_example
-,* pass 0
-,*** check stacks ***
-,* pass 1
-,*** check stacks ***
+* pass 0
+*** check stacks ***
+* pass 1
+*** check stacks ***
 OUTPUT-ESAPROGRAM 1
-,* pass 2
-,*** check stacks ***
+* pass 2
+*** check stacks ***
 OUTPUT-ESAPROGRAM 1
 OUTPUT-NAME 94
 OUTPUT-EXPRESSION 86
-,* pass 3
-,*** check stacks ***
+* pass 3
+*** check stacks ***
 OUTPUT-ESAPROGRAM 1
 OUTPUT-NAME 61
-,* pass 0
-,*** check stacks ***
-,* pass 1
-,*** check stacks ***
+* pass 0
+*** check stacks ***
+* pass 1
+*** check stacks ***
 OUTPUT-ESAPROGRAM 1
-,* pass 2
-,*** check stacks ***
+* pass 2
+*** check stacks ***
 OUTPUT-ESAPROGRAM 1
 OUTPUT-NAME 94
 OUTPUT-EXPRESSION 86
-,* pass 3
-,*** check stacks ***
+* pass 3
+*** check stacks ***
 OUTPUT-ESAPROGRAM 1
 OUTPUT-NAME 61
 #+end_example

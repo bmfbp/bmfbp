@@ -2,7 +2,9 @@
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 (defun filter-name (s)
-  (substitute #\_ #\- s))
+  (substitute #\P #\' 
+	      (substitute #\Q #\? 
+			  (substitute #\_ #\- s))))
 
 (defmethod asJS ((self name))
   (stack-dsl::%value self))
@@ -31,34 +33,29 @@
 ;;...............................VVV leave ~a in string for format in caller
     ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asJS (uname self)) params)))
     (if params
-	(format nil ".~a (~~a~{~^, ~a~^~})" (filter-name (asJS (name self))) params)
-	(format nil ".~a" (filter-name (asJS (name self)))))))
-
-(defmethod asNestedLisp ((self object))
-  ; { name fieldMap }
-  (let ((fields (mapcar #'asJS (stack-dsl:%list (fieldMap self)))))
-    (let ((result (asJS (name self))))
-      (dolist (f fields)
-	(setf result (format nil f result)))
-      result)))
+	(format nil ".~a (~{~a~^, ~})" (filter-name (asJS (name self))) params)
+	(format nil ".~a ()" (filter-name (asJS (name self)))))))
 
 (defmethod asJS ((self object))
   ; { name fieldMap }
 
-  (let ((field-list (stack-dsl:%list (fieldMap self))))
+  (let ((field-list (mapcar #'asJS (stack-dsl:%list (fieldMap self)))))
     (cond ((and (null field-list)
 		(not (parameters-p self)))
 	   ;; x -> "x"
 	   (asJS (name self)))
 	  
 	  ((and (null field-list)
-		(parameters-p self))
+	(parameters-p self))
 	   ;; illegal for esa.dsl
 	   ;; x() => assert fail during bootstrap
 	   (assert nil))
 
-	  (t 
-	   (asNestedLisp self)))))
+	  (t
+	   ;; at this point, (name object) will return the object's name
+	   ;; and field-list is a (lisp) list of fields
+	   (format nil "~a~{~a~}" (filter-name (asJS (name self))) field-list))
+	  )))
 
 (defmethod asJS ((self callExternalStatement))
   (let ((fname (asJS (functionReference self))))
@@ -106,22 +103,25 @@
   (let ((vn (asJS (varName self)))
 	(e  (asJS (expression self)))
 	(code (asJS (implementation self))))
-    (format nil "{ /*let*/~% let ~a = ~a; ~{~%~a~}~%}" (filter-name vn) e code)))
+    (format nil "{ /*let*/~%let ~a = ~a;~{~%~a~}~%} /* end let */" (filter-name vn) e code)))
 
 (defmethod asJS ((self mapStatement))
   (let ((vn (asJS (varName self)))
 	(e  (asJS (expression self)))
 	(code (asJS (implementation self))))
-    (format nil "(block %map (dolist (~a ~a) ~{~%~a~}))" (filter-name vn) e code)))
-
+    ;; a :map becomes a function - return from map becomes return
+    (format nil "function () {~%for (const ~a in ~a) {~{~%~a~}~%};~%} ();" (filter-name vn) e code)))
+    
 (defmethod asJS ((self createStatement))
   (let ((vn (asJS (varName self)))
 	(cn  (asJS (name self)))
 	(i   (asJS (indirectionKind self)))
 	(code (asJS (implementation self))))
+    ;; create is not special-cased in JS
+    ;; JS's "new" checks to see that its argument is a class or is a variable holding a class
     (if (string= "direct" i)
 	(format nil "{ let ~a = new ~a;~%~{~a~^~%~}}~%" (filter-name vn) cn code)
-	(format nil "(let ((~a (make-instance ~a)))~%~{~a~^~%~})" (filter-name vn) cn code))))
+	(format nil "{ let ~a = new ~a;~%~{~a~^~%~}}~%" (filter-name vn) cn code))))
 
 (defmethod asJS ((self setStatement))
   (let ((lv (asJS (lval self)))
@@ -133,10 +133,10 @@
 
 (defmethod asJS ((self exitWhenStatement))
   (let ((e (asJS (expression self))))
-    (format nil "if (~a) break;" e)))
+    (format nil "if (~a) {break;};~%" e)))
 
 (defmethod asJS ((self exitMapStatement))
-  "(return-from %map :false)")
+  "return;")
 
 (defmethod asJS ((self returnTrueStatement))
   (let ((method-name (asJS (cl-user::methodName self))))
@@ -153,14 +153,14 @@
 
 (defmethod asJS ((self loopStatement))
   (let ((code (asJS (implementation self))))
-    (format nil "for (;;) {~{~%~a~}}" code)))
-
+    (format nil "for (;;) {~{~%~a~}}" code))
+)
 (defmethod asJS ((self ifStatement))
   (let ((e  (asJS (expression self)))
 	(then (asJS (thenPart self))))
     (if (stack-dsl:%empty-p (elsePart self))
-	(format nil "if (esa_expr_true (~a)) {~%~%~{~a~%~^~}~%}" e then)
+	(format nil "if (~a) {~%~%~{~a~%~^~}}" e then)
 	(let ((els (asJS (elsePart self))))
-	  (format nil "if (esa_expr_true (~a))~%{~%~{~a~%~^~}~%}~%~%{~%~{~a~%~^~}~%}~%" e then els)))))
+	  (format nil "if (~a) {~%~{~a~%~^~}} else {~%~{~a~%~^~}}" e then els)))))
 
 
