@@ -72,8 +72,12 @@ class event
 end class
 
 %%%%
-% classes for loader
+% classes for builder
 %%%%
+
+class builder
+  ignore
+end class
 
 class kindsByName
   table
@@ -106,6 +110,7 @@ when building kind
   method install-wire(wire)
   method install-part(name kind node-class)
   method parts >> map part-definition
+
 end when
 
 when building-aux kind
@@ -485,15 +490,18 @@ end script
 
 %%%%%%%%%
 
-when building kind
+%% when building kind
+%%   script make-input-pins (partJSON)
+%%   script make-output-pins (partJSON)
+%% end when
+
+when building builder
   method make-hash-table-of-kinds-from-JSON
   script make-kind
   method load-file (Filename)
-  script make-input-pins (partJSON)
-  script make-output-pins (partJSON)
-  method make-type-name (name) >> kindName
   script make-leaf-kind (JSONforeign)
   script make-schematic-kind (JSONforeign)
+  method make-type-name (name) >> kindName
 end when
 
 when building JSONforeign
@@ -509,21 +517,90 @@ when building Symbol  % can be implemented as Strings for now (later we might op
   method symbolSchematic
 end when
 
-script kind make-kind
+when building kind
+  %%% builder
+  script make-input-pins (partJSON)
+  script make-output-pins (partJSON)
+end when
+
+script builder make-kind
   make-hash-table-of-kinds-from-JSON
   set-code-stack-empty
-  let arr = get-schematic-as-JSON in
-    map partJSON = arr in
-      if part.isLeaf then
-        @make-leaf-kind (partJSON)
-      else
-        if part.isSchematic then
-          @make-schematic-kind (partJSON)
-        else
-          fatalErrorInMakeKind
-        end if
-      end if
-    end map
-  end let  
+    let arr = get-schematic-as-JSON in
+      map partJSON = arr in
+	if part.isLeaf then
+	  @self.make-leaf-kind (partJSON)
+	else
+	  if part.isSchematic then
+	    @self.make-schematic-kind (partJSON)
+	  else
+	    fatalErrorInMakeKind
+	  end if
+	end if
+      end map
+    end let  
 end script
 
+script builder make-leaf-kind (partJSON)
+  let kindString = partJSON.getKind in
+    let filename = partJSON.getFilename in
+      create newKind = kind in
+        set newKind.kind-name = self.make-type-name (kindString)
+        set newKind.self-class = self.make-type-name (kindString)
+        self.load-file (filename)  % skip this until very basics are working
+        @newKind.make-input-pins (partJSON)
+        @newKind.make-output-pins (partJSON)
+        self.installInTable (kindString newKind)
+        >> newKind
+      end create
+    end let
+  end let
+end script
+
+script builder make-schematic-kind (partJSON)
+  let schematicJSON = partJSON.getSchematic in
+    let schematicName = partJSON.getSchematicName in
+      create newKind = kind in
+        set newKind.kind-name = partJSON.schematicName
+        set newKind.self-class = symbolSchematic
+        @newKind.make-input-pins (partJSON)
+        @newKind.make-output-pins (partJSON)
+        table.setKeyValue (kindString newKind)
+        map child = partJSON.getPartsList in
+          let partKind_name = child.kindName in
+            let part_kind = table.lookupKind (partKind_name) in
+              newKind.addPart (child.partName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
+            end let
+          end let
+        end map
+        map wJSON = partJSON.getWireArray in
+          create w = Wire in
+            set w.index = wJSON.getIndex
+            map sourceJSON = wJSON.getSources in
+              w.add-source (sourceJSON.getPart sourceJSON.getPin)
+            end map
+            map destinationJSON = wJSON.getDestination in
+              w.add-source (destinationJSON.getPart destinationJSON.getPin)
+            end map
+            newKind.add-wire (w)
+          end create
+        end map
+        self.installInTable (kindString newKind)
+        >> newKind
+      end create
+    end let
+  end let
+end script
+
+
+script kind make-input-pins (partJSON)
+  map inpin-name = partJSON.getInPins in
+    self.add-input-pin (inpin-name)
+  end map
+end script
+
+script kind make-output-pins (partJSON)
+  map outpin-name = partJSON.getOutPins in
+    self.add-output-pin (outpin-name)
+  end map
+end script

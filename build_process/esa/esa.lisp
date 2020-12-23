@@ -35,9 +35,9 @@
 (destinations :accessor destinations :initform nil)))
 #| external method ((self wire)) install-source |#
 #| external method ((self wire)) install-destination |#
-(defmethod add-source ((self wire) name name)
+(defmethod add-source ((self wire) part pin)
         (install-source self part pin))
-(defmethod add-destination ((self wire) name name)
+(defmethod add-destination ((self wire) part pin)
         (install-destination self part pin))
 
 (defclass kind ()
@@ -56,10 +56,10 @@
 (defmethod add-output-pin ((self kind) name)
         (ensure-output-pin-not-declared self name)
         (install-output-pin self name))
-(defmethod add-part ((self kind) name kind node-class)
+(defmethod add-part ((self kind) nm k nclass)
         (ensure-part-not-declared self nm)
         (install-part self nm k nclass))
-(defmethod add-wire ((self kind) wire)
+(defmethod add-wire ((self kind) w)
         (block %map (dolist (s (sources w)) 
 (ensure-valid-source self s)))
         (block %map (dolist (dest (destinations w)) 
@@ -74,7 +74,7 @@
 #| external method ((self kind)) ensure-valid-output-pin |#
 #| external method ((self kind)) ensure-input-pin-not-declared |#
 #| external method ((self kind)) ensure-output-pin-not-declared |#
-(defmethod ensure-valid-source ((self kind) source)
+(defmethod ensure-valid-source ((self kind) s)
         (if (esa-expr-true (refers-to-self? s))
 (progn
 (ensure-valid-input-pin self (pin-name s))
@@ -84,7 +84,7 @@
 (ensure-kind-defined p)
 (ensure-valid-output-pin (part-kind p) (pin-name s)))
 )))
-(defmethod ensure-valid-destination ((self kind) destination)
+(defmethod ensure-valid-destination ((self kind) dest)
         (if (esa-expr-true (refers-to-self? dest))
 (progn
 (ensure-valid-output-pin self (pin-name dest))
@@ -94,7 +94,7 @@
 (ensure-kind-defined p)
 (ensure-valid-input-pin (part-kind p) (pin-name dest)))
 )))
-(defmethod loader ((self kind) name node dispatcher)
+(defmethod loader ((self kind) my-name my-container dispatchr)
         (let ((clss (self-class self))) 
 (let ((inst (make-instance clss)))
 (clear-input-queue inst)
@@ -109,18 +109,12 @@
 (return-from loader inst))))
 #| external method ((self kind)) find-wire-for-source |#
 #| external method ((self kind)) find-wire-for-self-source |#
-#| external method ((self kind)) make-hash-table-of-kinds-from-JSON |#
-(defmethod make-kind ((self kind) )
-        make-hash-table-of-kinds-from-JSON
-        set-code-stack-empty
-        (let ((arr get-schematic-as-JSON)) 
-(block %map (dolist (partJSON arr) ))))
-#| external method ((self kind)) load-file |#
-(defmethod make-input-pins ((self kind) partJSON))
-(defmethod make-output-pins ((self kind) partJSON))
-#| external method ((self kind)) make-type-name |#
-(defmethod make-leaf-kind ((self kind) JSONforeign))
-(defmethod make-schematic-kind ((self kind) JSONforeign))
+(defmethod make-input-pins ((self kind) partJSON)
+        (block %map (dolist (inpin-name (getInPins partJSON)) 
+(add-input-pin self inpin-name))))
+(defmethod make-output-pins ((self kind) partJSON)
+        (block %map (dolist (outpin-name (getOutPins partJSON)) 
+(add-output-pin self outpin-name))))
 
 (defclass node ()
 (
@@ -134,7 +128,7 @@
 #| external method ((self node)) clear-input-queue |#
 #| external method ((self node)) clear-output-queue |#
 #| external method ((self node)) install-node |#
-(defmethod add-child ((self node) name node)
+(defmethod add-child ((self node) nm nd)
         (install-child self nm nd))
 (defmethod initialize ((self node) )
         (initially self))
@@ -225,9 +219,9 @@
 #| external method ((self node)) enqueue-input |#
 #| external method ((self node)) enqueue-output |#
 #| external method ((self node)) react |#
-(defmethod run-reaction ((self node) event)
+(defmethod run-reaction ((self node) e)
         (react self e))
-(defmethod run-composite-reaction ((self node) event)
+(defmethod run-composite-reaction ((self node) e)
         (let ((w :true)) 
 (if (esa-expr-true (has-no-container? self))
 (progn
@@ -284,7 +278,7 @@
 (return-from %map :false)
 )))
 (when (esa-expr-true done) (return)))))
-(defmethod dispatcher-inject ((self dispatcher) )
+(defmethod dispatcher-inject ((self dispatcher) pin val)
         (let ((e (create-top-event self pin val))) 
 (enqueue-input (top-node self) e)
 (dispatcher-run self)))
@@ -294,6 +288,65 @@
 (
 (partpin :accessor partpin :initform nil)
 (data :accessor data :initform nil)))
+
+(defclass builder ()
+(
+(ignore :accessor ignore :initform nil)))
+#| external method ((self builder)) make-hash-table-of-kinds-from-JSON |#
+(defmethod make-kind ((self builder) )
+        make-hash-table-of-kinds-from-JSON
+        set-code-stack-empty
+        (let ((arr get-schematic-as-JSON)) 
+(block %map (dolist (partJSON arr) 
+(if (esa-expr-true (isLeaf part))
+(progn
+(make-leaf-kind self partJSON)
+)
+(progn
+(if (esa-expr-true (isSchematic part))
+(progn
+(make-schematic-kind self partJSON)
+)
+(progn
+fatalErrorInMakeKind
+))
+))))))
+#| external method ((self builder)) load-file |#
+(defmethod make-leaf-kind ((self builder) partJSON)
+        (let ((kindString (getKind partJSON))) 
+(let ((filename (getFilename partJSON))) 
+(let ((newKind (make-instance 'kind)))
+(setf (kind-name newKind) (make-type-name self kindString))
+(setf (self-class newKind) (make-type-name self kindString))
+(load-file self filename)
+(make-input-pins newKind partJSON)
+(make-output-pins newKind partJSON)
+(installInTable self kindString newKind)
+(return-from make-leaf-kind newKind)))))
+(defmethod make-schematic-kind ((self builder) partJSON)
+        (let ((schematicJSON (getSchematic partJSON))) 
+(let ((schematicName (getSchematicName partJSON))) 
+(let ((newKind (make-instance 'kind)))
+(setf (kind-name newKind) (schematicName partJSON))
+(setf (self-class newKind) symbolSchematic)
+(make-input-pins newKind partJSON)
+(make-output-pins newKind partJSON)
+(setKeyValue table kindString newKind)
+(block %map (dolist (child (getPartsList partJSON)) 
+(let ((partKind_name (kindName child))) 
+(let ((part_kind (lookupKind table partKind_name))) 
+(addPart newKind (partName child) part_kind partKind_name)))))
+(block %map (dolist (wJSON (getWireArray partJSON)) 
+(let ((w (make-instance 'Wire)))
+(setf (index w) (getIndex wJSON))
+(block %map (dolist (sourceJSON (getSources wJSON)) 
+(add-source w (getPart sourceJSON) (getPin sourceJSON))))
+(block %map (dolist (destinationJSON (getDestination wJSON)) 
+(add-source w (getPart destinationJSON) (getPin destinationJSON))))
+(add-wire newKind w))))
+(installInTable self kindString newKind)
+(return-from make-schematic-kind newKind)))))
+#| external method ((self builder)) make-type-name |#
 
 (defclass kindsByName ()
 (

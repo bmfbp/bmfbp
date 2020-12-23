@@ -252,6 +252,7 @@
                                           $implementation__Output
 
 = callInternalStatement
+  '@'
   @esa-expr-in-statement
                            $functionReference__NewScope             
                              $functionReference__CoerceFrom_expression
@@ -540,6 +541,7 @@
      @object__parameterMap
   | ?'('
      @object__parameterMap
+                               $abort  %% not allowed: (...) instead of x.(...)
   | *
   ]
 
