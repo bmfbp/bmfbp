@@ -61,10 +61,10 @@ this.set_destinations = function (val) { this.attribute_destinations = val; }
 }
 // external function install_source ((self wire), (? name), (? name))
 // external function install_destination ((self wire), (? name), (? name))
-function add_source (self, part, pin) {
+function add_source (self, name, name) {
         self.install_source (part, pin);
 };
-function add_destination (self, part, pin) {
+function add_destination (self, name, name) {
         self.install_destination (part, pin);
 };
 
@@ -98,11 +98,11 @@ function add_output_pin (self, name) {
         self.ensure_output_pin_not_declared (name);
         self.install_output_pin (name);
 };
-function add_part (self, nm, k, nclass) {
+function add_part (self, name, kind, node_class) {
         self.ensure_part_not_declared (nm);
         self.install_part (nm, k, nclass);
 };
-function add_wire (self, w) {
+function add_wire (self, wire) {
         (function () {
 for (const s in w.sources ()) {
 self.ensure_valid_source (s);
@@ -124,7 +124,7 @@ self.ensure_valid_destination (dest);
 // external function ensure_valid_output_pin ((self kind), (? name))
 // external function ensure_input_pin_not_declared ((self kind), (? name))
 // external function ensure_output_pin_not_declared ((self kind), (? name))
-function ensure_valid_source (self, s) {
+function ensure_valid_source (self, source) {
         if (s.refers_to_selfQ ()) {
 self.ensure_valid_input_pin (s.pin_name ());
 } else {
@@ -135,7 +135,7 @@ p.part_kind ().ensure_valid_output_pin (s.pin_name ());
 } /* end let */
 }
 };
-function ensure_valid_destination (self, dest) {
+function ensure_valid_destination (self, destination) {
         if (dest.refers_to_selfQ ()) {
 self.ensure_valid_output_pin (dest.pin_name ());
 } else {
@@ -146,7 +146,7 @@ p.part_kind ().ensure_valid_input_pin (dest.pin_name ());
 } /* end let */
 }
 };
-function loader (self, my_name, my_container, dispatchr) {
+function loader (self, name, node, dispatcher) {
         { /*let*/
 let clss = self.self_class ();
 { let inst = new clss;
@@ -170,6 +170,28 @@ return inst;}
 };
 // external function find_wire_for_source ((self kind), (? name), (? name))
 // external function find_wire_for_self_source ((self kind), (? name))
+// external function make_hash_table_of_kinds_from_JSON ((self kind))
+function make_kind (self) {
+        make_hash_table_of_kinds_from_JSON;
+        set_code_stack_empty;
+        { /*let*/
+let arr = get-schematic-as-JSON;
+(function () {
+for (const partJSON in arr) {
+};
+}) ();
+} /* end let */
+};
+// external function load_file ((self kind), (? Filename))
+function make_input_pins (self, partJSON) {
+};
+function make_output_pins (self, partJSON) {
+};
+// external function make_type_name ((self kind), (? name))
+function make_leaf_kind (self, JSONforeign) {
+};
+function make_schematic_kind (self, JSONforeign) {
+};
 
 function node () {
 this.attribute_input_queue = null,
@@ -197,7 +219,7 @@ this.set_busy_flag = function (val) { this.attribute_busy_flag = val; }
 // external function clear_input_queue ((self node))
 // external function clear_output_queue ((self node))
 // external function install_node ((self node), (? node))
-function add_child (self, nm, nd) {
+function add_child (self, name, node) {
         self.install_child (nm, nd);
 };
 function initialize (self) {
@@ -312,10 +334,10 @@ self.distribute_output_events ();
 // external function enqueue_input ((self node), (? event))
 // external function enqueue_output ((self node), (? event))
 // external function react ((self node), (? event))
-function run_reaction (self, e) {
+function run_reaction (self, event) {
         self.react (e);
 };
-function run_composite_reaction (self, e) {
+function run_composite_reaction (self, event) {
         { /*let*/
 let w = true;
 if (self.has_no_containerQ ()) {
@@ -399,7 +421,7 @@ if (done) {break;};
 }
 } /* end let */
 };
-function dispatcher_inject (self, pin, val) {
+function dispatcher_inject (self) {
         { /*let*/
 let e = self.create_top_event (pin, val);
 self.top_node ().enqueue_input (e);
@@ -416,3 +438,34 @@ this.attribute_data = null,
 this.data = function () { return attribute_data; },
 this.set_data = function (val) { this.attribute_data = val; }
 }
+
+function kindsByName () {
+this.attribute_table = null,
+this.table = function () { return attribute_table; },
+this.set_table = function (val) { this.attribute_table = val; }
+}
+
+function JSONforeign () {
+this.attribute_ignore = null,
+this.ignore = function () { return attribute_ignore; },
+this.set_ignore = function (val) { this.attribute_ignore = val; }
+}
+// external function getKind ((self JSONforeign))
+// external function getFilename ((self JSONforeign))
+// external function getInPins ((self JSONforeign))
+// external function getOutPins ((self JSONforeign))
+// external function schematicName ((self JSONforeign))
+// external function getPartsList ((self JSONforeign))
+
+function Constants () {
+this.attribute_ignore = null,
+this.ignore = function () { return attribute_ignore; },
+this.set_ignore = function (val) { this.attribute_ignore = val; }
+}
+
+function Symbol () {
+this.attribute_ignore = null,
+this.ignore = function () { return attribute_ignore; },
+this.set_ignore = function (val) { this.attribute_ignore = val; }
+}
+// external function symbolSchematic ((self Symbol))

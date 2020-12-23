@@ -26,8 +26,10 @@
 		    (mapcar #'asLisp (stack-dsl:%list (cl-user::actualParameterList self)))
 		    nil)))
 ;;...............................VVV leave ~a in string for format in caller
-    ;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asLisp (name self)) params)))
-    (format nil "(~a ~~a~{~^ ~a~^~})" (asLisp (name self)) params)))
+					;(format nil "(funcall #'~a ~~a~{~^ ~a~^~})" (asLisp (name self)) params)))
+    (if (slot-boundp self 'cl-user::name)
+	(format nil "(~a ~~a~{~^ ~a~^~})" (asLisp (name self)) params)
+	(error "** field name not declared **"))))
 
 (defmethod asNestedLisp ((self object))
   ; { name fieldMap }

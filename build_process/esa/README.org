@@ -13,7 +13,7 @@
 #+name: esa
 #+begin_src lisp :results output
   (progn
-    (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+    (uiop:run-program "~/quicklisp/local-projects/rm.bash") 
     (ql:quickload :arrowgrams/esa-transpiler)
     (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/package.lisp"))
     (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/path.lisp")))
@@ -62,12 +62,13 @@ OUTPUT-ESAPROGRAM 1
 * pass 2
 *** check stacks ***
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 94
-OUTPUT-EXPRESSION 86
+OUTPUT-NAME 109
+OUTPUT-EXPRESSION 88
 * pass 3
 *** check stacks ***
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 61
+OUTPUT-NAME 74
+OUTPUT-FORMALVARIABLELIST 23
 * pass 0
 *** check stacks ***
 * pass 1
@@ -76,10 +77,11 @@ OUTPUT-ESAPROGRAM 1
 * pass 2
 *** check stacks ***
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 94
-OUTPUT-EXPRESSION 86
+OUTPUT-NAME 109
+OUTPUT-EXPRESSION 88
 * pass 3
 *** check stacks ***
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 61
+OUTPUT-NAME 74
+OUTPUT-FORMALVARIABLELIST 23
 #+end_example

@@ -35,9 +35,9 @@
 (destinations :accessor destinations :initform nil)))
 #| external method ((self wire)) install-source |#
 #| external method ((self wire)) install-destination |#
-(defmethod add-source ((self wire) part pin)
+(defmethod add-source ((self wire) name name)
         (install-source self part pin))
-(defmethod add-destination ((self wire) part pin)
+(defmethod add-destination ((self wire) name name)
         (install-destination self part pin))
 
 (defclass kind ()
@@ -56,10 +56,10 @@
 (defmethod add-output-pin ((self kind) name)
         (ensure-output-pin-not-declared self name)
         (install-output-pin self name))
-(defmethod add-part ((self kind) nm k nclass)
+(defmethod add-part ((self kind) name kind node-class)
         (ensure-part-not-declared self nm)
         (install-part self nm k nclass))
-(defmethod add-wire ((self kind) w)
+(defmethod add-wire ((self kind) wire)
         (block %map (dolist (s (sources w)) 
 (ensure-valid-source self s)))
         (block %map (dolist (dest (destinations w)) 
@@ -74,7 +74,7 @@
 #| external method ((self kind)) ensure-valid-output-pin |#
 #| external method ((self kind)) ensure-input-pin-not-declared |#
 #| external method ((self kind)) ensure-output-pin-not-declared |#
-(defmethod ensure-valid-source ((self kind) s)
+(defmethod ensure-valid-source ((self kind) source)
         (if (esa-expr-true (refers-to-self? s))
 (progn
 (ensure-valid-input-pin self (pin-name s))
@@ -84,7 +84,7 @@
 (ensure-kind-defined p)
 (ensure-valid-output-pin (part-kind p) (pin-name s)))
 )))
-(defmethod ensure-valid-destination ((self kind) dest)
+(defmethod ensure-valid-destination ((self kind) destination)
         (if (esa-expr-true (refers-to-self? dest))
 (progn
 (ensure-valid-output-pin self (pin-name dest))
@@ -94,7 +94,7 @@
 (ensure-kind-defined p)
 (ensure-valid-input-pin (part-kind p) (pin-name dest)))
 )))
-(defmethod loader ((self kind) my-name my-container dispatchr)
+(defmethod loader ((self kind) name node dispatcher)
         (let ((clss (self-class self))) 
 (let ((inst (make-instance clss)))
 (clear-input-queue inst)
@@ -109,6 +109,18 @@
 (return-from loader inst))))
 #| external method ((self kind)) find-wire-for-source |#
 #| external method ((self kind)) find-wire-for-self-source |#
+#| external method ((self kind)) make-hash-table-of-kinds-from-JSON |#
+(defmethod make-kind ((self kind) )
+        make-hash-table-of-kinds-from-JSON
+        set-code-stack-empty
+        (let ((arr get-schematic-as-JSON)) 
+(block %map (dolist (partJSON arr) ))))
+#| external method ((self kind)) load-file |#
+(defmethod make-input-pins ((self kind) partJSON))
+(defmethod make-output-pins ((self kind) partJSON))
+#| external method ((self kind)) make-type-name |#
+(defmethod make-leaf-kind ((self kind) JSONforeign))
+(defmethod make-schematic-kind ((self kind) JSONforeign))
 
 (defclass node ()
 (
@@ -122,7 +134,7 @@
 #| external method ((self node)) clear-input-queue |#
 #| external method ((self node)) clear-output-queue |#
 #| external method ((self node)) install-node |#
-(defmethod add-child ((self node) nm nd)
+(defmethod add-child ((self node) name node)
         (install-child self nm nd))
 (defmethod initialize ((self node) )
         (initially self))
@@ -213,9 +225,9 @@
 #| external method ((self node)) enqueue-input |#
 #| external method ((self node)) enqueue-output |#
 #| external method ((self node)) react |#
-(defmethod run-reaction ((self node) e)
+(defmethod run-reaction ((self node) event)
         (react self e))
-(defmethod run-composite-reaction ((self node) e)
+(defmethod run-composite-reaction ((self node) event)
         (let ((w :true)) 
 (if (esa-expr-true (has-no-container? self))
 (progn
@@ -272,7 +284,7 @@
 (return-from %map :false)
 )))
 (when (esa-expr-true done) (return)))))
-(defmethod dispatcher-inject ((self dispatcher) pin val)
+(defmethod dispatcher-inject ((self dispatcher) )
         (let ((e (create-top-event self pin val))) 
 (enqueue-input (top-node self) e)
 (dispatcher-run self)))
@@ -282,3 +294,26 @@
 (
 (partpin :accessor partpin :initform nil)
 (data :accessor data :initform nil)))
+
+(defclass kindsByName ()
+(
+(table :accessor table :initform nil)))
+
+(defclass JSONforeign ()
+(
+(ignore :accessor ignore :initform nil)))
+#| external method ((self JSONforeign)) getKind |#
+#| external method ((self JSONforeign)) getFilename |#
+#| external method ((self JSONforeign)) getInPins |#
+#| external method ((self JSONforeign)) getOutPins |#
+#| external method ((self JSONforeign)) schematicName |#
+#| external method ((self JSONforeign)) getPartsList |#
+
+(defclass Constants ()
+(
+(ignore :accessor ignore :initform nil)))
+
+(defclass Symbol ()
+(
+(ignore :accessor ignore :initform nil)))
+#| external method ((self Symbol)) symbolSchematic |#

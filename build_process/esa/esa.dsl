@@ -71,6 +71,28 @@ class event
   data
 end class
 
+%%%%
+% classes for loader
+%%%%
+
+class kindsByName
+  table
+end class
+
+class JSONforeign
+  % just methods
+  ignore
+end class
+
+class Constants
+  % just methods
+  ignore
+end class
+
+class Symbol
+  ignore
+end class
+
 %=== building kinds ===
 
 when building kind
@@ -455,5 +477,53 @@ script node run-composite-reaction(e)
       end create
     end map
   end let
+end script
+
+
+
+
+
+%%%%%%%%%
+
+when building kind
+  method make-hash-table-of-kinds-from-JSON
+  script make-kind
+  method load-file (Filename)
+  script make-input-pins (partJSON)
+  script make-output-pins (partJSON)
+  method make-type-name (name) >> kindName
+  script make-leaf-kind (JSONforeign)
+  script make-schematic-kind (JSONforeign)
+end when
+
+when building JSONforeign
+  method getKind >> name
+  method getFilename >> filename
+  method getInPins >> map Pin
+  method getOutPins >> map Pin
+  method schematicName >> name
+  method getPartsList >> map name
+end when
+
+when building Symbol  % can be implemented as Strings for now (later we might optimize)
+  method symbolSchematic
+end when
+
+script kind make-kind
+  make-hash-table-of-kinds-from-JSON
+  set-code-stack-empty
+  let arr = get-schematic-as-JSON in
+    map partJSON = arr in
+      if part.isLeaf then
+        @make-leaf-kind (partJSON)
+      else
+        if part.isSchematic then
+          @make-schematic-kind (partJSON)
+        else
+          fatalErrorInMakeKind
+        end if
+      end if
+    end map
+  end let  
 end script
 
