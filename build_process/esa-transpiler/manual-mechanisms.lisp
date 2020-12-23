@@ -262,3 +262,5 @@
 	    (format *standard-output* "~&~a ~a~%" name (length (stack-dsl::%stack (slot-value (env p) sym)))))))
       (incf i))))
 
+(defmethod $abort ((p parser))
+  (pasm::pasm-parse-error p "parser abort"))

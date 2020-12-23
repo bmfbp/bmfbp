@@ -61,10 +61,10 @@ this.set_destinations = function (val) { this.attribute_destinations = val; }
 }
 // external function install_source ((self wire), (? name), (? name))
 // external function install_destination ((self wire), (? name), (? name))
-function add_source (self, name, name) {
+function add_source (self, part, pin) {
         self.install_source (part, pin);
 };
-function add_destination (self, name, name) {
+function add_destination (self, part, pin) {
         self.install_destination (part, pin);
 };
 
@@ -98,11 +98,11 @@ function add_output_pin (self, name) {
         self.ensure_output_pin_not_declared (name);
         self.install_output_pin (name);
 };
-function add_part (self, name, kind, node_class) {
+function add_part (self, nm, k, nclass) {
         self.ensure_part_not_declared (nm);
         self.install_part (nm, k, nclass);
 };
-function add_wire (self, wire) {
+function add_wire (self, w) {
         (function () {
 for (const s in w.sources ()) {
 self.ensure_valid_source (s);
@@ -124,7 +124,7 @@ self.ensure_valid_destination (dest);
 // external function ensure_valid_output_pin ((self kind), (? name))
 // external function ensure_input_pin_not_declared ((self kind), (? name))
 // external function ensure_output_pin_not_declared ((self kind), (? name))
-function ensure_valid_source (self, source) {
+function ensure_valid_source (self, s) {
         if (s.refers_to_selfQ ()) {
 self.ensure_valid_input_pin (s.pin_name ());
 } else {
@@ -135,7 +135,7 @@ p.part_kind ().ensure_valid_output_pin (s.pin_name ());
 } /* end let */
 }
 };
-function ensure_valid_destination (self, destination) {
+function ensure_valid_destination (self, dest) {
         if (dest.refers_to_selfQ ()) {
 self.ensure_valid_output_pin (dest.pin_name ());
 } else {
@@ -146,7 +146,7 @@ p.part_kind ().ensure_valid_input_pin (dest.pin_name ());
 } /* end let */
 }
 };
-function loader (self, name, node, dispatcher) {
+function loader (self, my_name, my_container, dispatchr) {
         { /*let*/
 let clss = self.self_class ();
 { let inst = new clss;
@@ -170,27 +170,19 @@ return inst;}
 };
 // external function find_wire_for_source ((self kind), (? name), (? name))
 // external function find_wire_for_self_source ((self kind), (? name))
-// external function make_hash_table_of_kinds_from_JSON ((self kind))
-function make_kind (self) {
-        make_hash_table_of_kinds_from_JSON;
-        set_code_stack_empty;
-        { /*let*/
-let arr = get-schematic-as-JSON;
-(function () {
-for (const partJSON in arr) {
+function make_input_pins (self, partJSON) {
+        (function () {
+for (const inpin_name in partJSON.getInPins ()) {
+self.add_input_pin (inpin_name);
 };
 }) ();
-} /* end let */
-};
-// external function load_file ((self kind), (? Filename))
-function make_input_pins (self, partJSON) {
 };
 function make_output_pins (self, partJSON) {
+        (function () {
+for (const outpin_name in partJSON.getOutPins ()) {
+self.add_output_pin (outpin_name);
 };
-// external function make_type_name ((self kind), (? name))
-function make_leaf_kind (self, JSONforeign) {
-};
-function make_schematic_kind (self, JSONforeign) {
+}) ();
 };
 
 function node () {
@@ -219,7 +211,7 @@ this.set_busy_flag = function (val) { this.attribute_busy_flag = val; }
 // external function clear_input_queue ((self node))
 // external function clear_output_queue ((self node))
 // external function install_node ((self node), (? node))
-function add_child (self, name, node) {
+function add_child (self, nm, nd) {
         self.install_child (nm, nd);
 };
 function initialize (self) {
@@ -334,10 +326,10 @@ self.distribute_output_events ();
 // external function enqueue_input ((self node), (? event))
 // external function enqueue_output ((self node), (? event))
 // external function react ((self node), (? event))
-function run_reaction (self, event) {
+function run_reaction (self, e) {
         self.react (e);
 };
-function run_composite_reaction (self, event) {
+function run_composite_reaction (self, e) {
         { /*let*/
 let w = true;
 if (self.has_no_containerQ ()) {
@@ -421,7 +413,7 @@ if (done) {break;};
 }
 } /* end let */
 };
-function dispatcher_inject (self) {
+function dispatcher_inject (self, pin, val) {
         { /*let*/
 let e = self.create_top_event (pin, val);
 self.top_node ().enqueue_input (e);
@@ -438,6 +430,98 @@ this.attribute_data = null,
 this.data = function () { return attribute_data; },
 this.set_data = function (val) { this.attribute_data = val; }
 }
+
+function builder () {
+this.attribute_ignore = null,
+this.ignore = function () { return attribute_ignore; },
+this.set_ignore = function (val) { this.attribute_ignore = val; }
+}
+// external function make_hash_table_of_kinds_from_JSON ((self builder))
+function make_kind (self) {
+        make_hash_table_of_kinds_from_JSON;
+        set_code_stack_empty;
+        { /*let*/
+let arr = get-schematic-as-JSON;
+(function () {
+for (const partJSON in arr) {
+if (part.isLeaf ()) {
+self.make_leaf_kind (partJSON);
+} else {
+if (part.isSchematic ()) {
+self.make_schematic_kind (partJSON);
+} else {
+fatalErrorInMakeKind;
+}
+}
+};
+}) ();
+} /* end let */
+};
+// external function load_file ((self builder), (? Filename))
+function make_leaf_kind (self, partJSON) {
+        { /*let*/
+let kindString = partJSON.getKind ();
+{ /*let*/
+let filename = partJSON.getFilename ();
+{ let newKind = new kind;
+newKind.kind_name () = self.make_type_name (kindString);
+newKind.self_class () = self.make_type_name (kindString);
+self.load_file (filename);
+newKind.make_input_pins (partJSON);
+newKind.make_output_pins (partJSON);
+self.installInTable (kindString, newKind);
+return newKind;}
+
+} /* end let */
+} /* end let */
+};
+function make_schematic_kind (self, partJSON) {
+        { /*let*/
+let schematicJSON = partJSON.getSchematic ();
+{ /*let*/
+let schematicName = partJSON.getSchematicName ();
+{ let newKind = new kind;
+newKind.kind_name () = partJSON.schematicName ();
+newKind.self_class () = symbolSchematic;
+newKind.make_input_pins (partJSON);
+newKind.make_output_pins (partJSON);
+table.setKeyValue (kindString, newKind);
+(function () {
+for (const child in partJSON.getPartsList ()) {
+{ /*let*/
+let partKind_name = child.kindName ();
+{ /*let*/
+let part_kind = table.lookupKind (partKind_name);
+newKind.addPart (child.partName (), part_kind, partKind_name);
+} /* end let */
+} /* end let */
+};
+}) ();
+(function () {
+for (const wJSON in partJSON.getWireArray ()) {
+{ let w = new Wire;
+w.index () = wJSON.getIndex ();
+(function () {
+for (const sourceJSON in wJSON.getSources ()) {
+w.add_source (sourceJSON.getPart (), sourceJSON.getPin ());
+};
+}) ();
+(function () {
+for (const destinationJSON in wJSON.getDestination ()) {
+w.add_source (destinationJSON.getPart (), destinationJSON.getPin ());
+};
+}) ();
+newKind.add_wire (w);}
+
+};
+}) ();
+self.installInTable (kindString, newKind);
+return newKind;}
+
+} /* end let */
+} /* end let */
+};
+// external function make_type_name ((self builder), (? name))
 
 function kindsByName () {
 this.attribute_table = null,
