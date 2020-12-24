@@ -7,7 +7,7 @@
 
 #+name: arrowgrams
 #+begin_src lisp
-  (arrowgrams/build::arrowgrams-to-json "helloworld")
+  (arrowgrams/build::db-arrowgrams-to-json "helloworld")
 #+end_src
 
 #+RESULTS: arrowgrams

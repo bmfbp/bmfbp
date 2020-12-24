@@ -7,7 +7,7 @@
     (ql:quickload :arrowgrams/runner))
 #+end_src
 
-build graph...<
+build schematic...
 #+name: runner
 #+begin_src lisp :results output
   (arrowgrams/build::arrowgrams-to-json "ahelloworld")

@@ -94,7 +94,7 @@ class JSONpartNameAndKind  % e.g. {"partName":"xyz","kindName":"HELLO"}
   ignore_this_field
 end class
 
-class JSONPartNameAndPin  % e.g. {"part":"xyz","pin":"S"}
+class JSONpartNameAndPin  % e.g. {"part":"xyz","pin":"S"}
   ignore_this_field
 end class
 
@@ -525,6 +525,11 @@ when building JSONpart
   method getDestinationMap >> map JSONpartNameAndPin
 end when
 
+when building JSONpartNameAndPin
+  method getPartName >> name
+  method getPinName >> name
+end when 
+
 when building kind
   %%% builder
   script make-input-pins (partJSON)
@@ -580,11 +585,11 @@ script builder make-schematic-kind (json-part)
         map wJSON = json-part.getWireMap in
           create w = Wire in
             set w.index = wJSON.getIndex
-            map sourceJSON = wJSON.getSources in
-              w.add-source (sourceJSON.getPart sourceJSON.getPin)
+            map sourceJSON = wJSON.getSourceMap in
+              w.add-source (sourceJSON.getPartName sourceJSON.getPinName)
             end map
-            map destinationJSON = wJSON.getDestination in
-              w.add-source (destinationJSON.getPart destinationJSON.getPin)
+            map destinationJSON = wJSON.getDestinationMap in
+              w.add-source (destinationJSON.getPartName destinationJSON.getPinName)
             end map
             newKind.add-wire (w)
           end create
