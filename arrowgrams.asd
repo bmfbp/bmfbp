@@ -280,6 +280,7 @@
 							))
 		  ))))
 
+#+nil
 (defsystem :arrowgrams/runner
   :depends-on (:arrowgrams/build :cl-json :cl-ppcre)
   :around-compile (lambda (next)
@@ -299,6 +300,22 @@
 							 "instantiate-kind-recursively"
 							 "path"
 							 ))))))
+
+
+(defsystem :arrowgrams/runner
+  :depends-on (:arrowgrams/build :cl-json :cl-ppcre)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components ((:module "arrowgrams-runner"
+                        :pathname "./build_process/cl-run"
+                        :components ((:file "../cl-build/package")
+                                     (:file "../esa/cl-user-esa" :depends-on ("../cl-build/package"))
+                                     (:file "../esa/cl-user-esa-methods" :depends-on ("../cl-build/package" "../esa/cl-user-esa"))
+                                     (:file "builder-mechanisms" :depends-on ("../esa/cl-user-esa"))
+                                     (:file "path")
+				     ))))
+
 
 #+nil(defsystem :arrowgrams/bundle
   :depends-on (:arrowgrams/build :cl-json)

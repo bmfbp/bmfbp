@@ -76,25 +76,35 @@ end class
 %%%%
 
 class builder
-  ignore
+  tableOfKinds
+  alist
+  json-string
 end class
 
 class kindsByName
   table
 end class
 
-class JSONforeign
+class JSONpart
   % just methods
-  ignore
+  ignore_this_field
+end class
+
+class JSONpartNameAndKind  % e.g. {"partName":"xyz","kindName":"HELLO"}
+  ignore_this_field
+end class
+
+class JSONPartNameAndPin  % e.g. {"part":"xyz","pin":"S"}
+  ignore_this_field
+end class
+
+class JSONwire %% index, sources, destinations
+  ignore_this_field
 end class
 
 class Constants
   % just methods
-  ignore
-end class
-
-class Symbol
-  ignore
+  ignore_this_field
 end class
 
 %=== building kinds ===
@@ -490,31 +500,29 @@ end script
 
 %%%%%%%%%
 
-%% when building kind
-%%   script make-input-pins (partJSON)
-%%   script make-output-pins (partJSON)
-%% end when
-
 when building builder
-  method make-hash-table-of-kinds-from-JSON
-  script make-kind
-  method load-file (Filename)
+  script build >> kind  % returns kind of top schematic
+  method fatalErrorInBuild
+  method get-app-from-JSON-as-map >> map JSONpart
+  % method load-file (Filename)
   script make-leaf-kind (JSONforeign)
   script make-schematic-kind (JSONforeign)
   method make-type-name (name) >> kindName
+  method getPartKind (partJSON) >> name
+  method getFilename (partJSON) >> name
+  method schematicCommonClass >> name
 end when
 
-when building JSONforeign
+when building JSONpart
   method getKind >> name
   method getFilename >> filename
   method getInPins >> map Pin
   method getOutPins >> map Pin
   method schematicName >> name
-  method getPartsList >> map name
-end when
-
-when building Symbol  % can be implemented as Strings for now (later we might optimize)
-  method symbolSchematic
+  method getPartsMap >> map JSONpartNameAndKind
+  method getWireMap >> map JSONwire
+  method getSourceMap >> map JSONpartNameAndPin
+  method getDestinationMap >> map JSONpartNameAndPin
 end when
 
 when building kind
@@ -523,57 +531,53 @@ when building kind
   script make-output-pins (partJSON)
 end when
 
-script builder make-kind
-  make-hash-table-of-kinds-from-JSON
-  set-code-stack-empty
-    let arr = get-schematic-as-JSON in
-      map partJSON = arr in
+script builder build
+    self.initialize
+    let arr = self.get-app-from-JSON-as-map in
+      map json-part = arr in
 	if part.isLeaf then
-	  @self.make-leaf-kind (partJSON)
+	  @self.make-leaf-kind (json-part)
 	else
 	  if part.isSchematic then
-	    @self.make-schematic-kind (partJSON)
+	    @self.make-schematic-kind (json-part)
 	  else
-	    fatalErrorInMakeKind
+	    self.fatalErrorInBuild
 	  end if
 	end if
       end map
     end let  
 end script
 
-script builder make-leaf-kind (partJSON)
-  let kindString = partJSON.getKind in
-    let filename = partJSON.getFilename in
+script builder make-leaf-kind (json-part)
+  let kindString = self.getPartKind (json-part) in
+    let filename = self.getFilename (json-part) in
       create newKind = kind in
         set newKind.kind-name = self.make-type-name (kindString)
         set newKind.self-class = self.make-type-name (kindString)
-        self.load-file (filename)  % skip this until very basics are working
-        @newKind.make-input-pins (partJSON)
-        @newKind.make-output-pins (partJSON)
+        % self.load-file (filename)  % skip this until very basics are working
+        @newKind.make-input-pins (json-part)
+        @newKind.make-output-pins (json-part)
         self.installInTable (kindString newKind)
-        >> newKind
       end create
     end let
   end let
 end script
 
-script builder make-schematic-kind (partJSON)
-  let schematicJSON = partJSON.getSchematic in
-    let schematicName = partJSON.getSchematicName in
+script builder make-schematic-kind (json-part)
+    let schematicName = json-part.getName in
       create newKind = kind in
-        set newKind.kind-name = partJSON.schematicName
-        set newKind.self-class = symbolSchematic
-        @newKind.make-input-pins (partJSON)
-        @newKind.make-output-pins (partJSON)
-        table.setKeyValue (kindString newKind)
-        map child = partJSON.getPartsList in
-          let partKind_name = child.kindName in
-            let part_kind = table.lookupKind (partKind_name) in
+        set newKind.kind-name = schematicName
+        set newKind.self-class = self.schematicCommonClass
+        @newKind.make-input-pins (json-part)
+        @newKind.make-output-pins (json-part)
+        map child = json-part.getPartsMap in
+          let partKind_name = child.getKindName in
+            let part_kind = self.lookupKind (partKind_name) in
               newKind.addPart (child.partName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
             end let
           end let
         end map
-        map wJSON = partJSON.getWireArray in
+        map wJSON = json-part.getWireMap in
           create w = Wire in
             set w.index = wJSON.getIndex
             map sourceJSON = wJSON.getSources in
@@ -586,21 +590,19 @@ script builder make-schematic-kind (partJSON)
           end create
         end map
         self.installInTable (kindString newKind)
-        >> newKind
       end create
     end let
-  end let
 end script
 
 
-script kind make-input-pins (partJSON)
-  map inpin-name = partJSON.getInPins in
+script kind make-input-pins (json-part)
+  map inpin-name = json-part.getInPins in
     self.add-input-pin (inpin-name)
   end map
 end script
 
-script kind make-output-pins (partJSON)
-  map outpin-name = partJSON.getOutPins in
+script kind make-output-pins (json-part)
+  map outpin-name = json-part.getOutPins in
     self.add-output-pin (outpin-name)
   end map
 end script

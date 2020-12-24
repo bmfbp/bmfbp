@@ -54,30 +54,62 @@
 
 #+RESULTS: esa
 #+begin_example
-To load "arrowgrams/esa-transpiler":
-  Load 1 ASDF system:
-    arrowgrams/esa-transpiler
-; Loading "arrowgrams/esa-transpiler"
-[package loops]...................................
-[package alexandria.1.0.0]........................
-[package json]....................................
-[package json-rpc]................................
-[package scanner].................................
-[package parsing-assembler].......................
-[package stack-dsl]...............................
-[package cl-ppcre]................................
-..................................................
-[package cl-event-passing]........................
-[package cl-event-passing-user]...................
-[package cl-event-passing-part]...................
-[package cl-event-passing-event]..................
-[package cl-event-passing-source].................
-[package cl-event-passing-receiver]...............
-[package cl-event-passing-schematic]..............
-[package cl-event-passing-dispatch]...............
-[package cl-event-passing-user-util]..............
-[package cl-event-passing-user-wire]..............
-[package cl-event-passing-pin]....................
-[package arrowgrams/esa-transpiler]...............
-............................
+,* pass 0
+,*** check stacks ***
+,* pass 1
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+,* pass 2
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 132
+OUTPUT-EXPRESSION 111
+,* pass 3
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 83
+,* pass 0
+,*** check stacks ***
+,* pass 1
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+,* pass 2
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 132
+OUTPUT-EXPRESSION 111
+,* pass 3
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 83
+#+end_example
+#+begin_example
+* pass 0
+*** check stacks ***
+* pass 1
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+* pass 2
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 126
+OUTPUT-EXPRESSION 112
+* pass 3
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 74
+* pass 0
+*** check stacks ***
+* pass 1
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+* pass 2
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 126
+OUTPUT-EXPRESSION 112
+* pass 3
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 74
 #+end_example

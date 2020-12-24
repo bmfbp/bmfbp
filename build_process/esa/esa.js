@@ -170,16 +170,16 @@ return inst;}
 };
 // external function find_wire_for_source ((self kind), (? name), (? name))
 // external function find_wire_for_self_source ((self kind), (? name))
-function make_input_pins (self, partJSON) {
+function make_input_pins (self, json_part) {
         (function () {
-for (const inpin_name in partJSON.getInPins ()) {
+for (const inpin_name in json_part.getInPins ()) {
 self.add_input_pin (inpin_name);
 };
 }) ();
 };
-function make_output_pins (self, partJSON) {
+function make_output_pins (self, json_part) {
         (function () {
-for (const outpin_name in partJSON.getOutPins ()) {
+for (const outpin_name in json_part.getOutPins ()) {
 self.add_output_pin (outpin_name);
 };
 }) ();
@@ -432,73 +432,73 @@ this.set_data = function (val) { this.attribute_data = val; }
 }
 
 function builder () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
+this.attribute_tableOfKinds = null,
+this.tableOfKinds = function () { return attribute_tableOfKinds; },
+this.set_tableOfKinds = function (val) { this.attribute_tableOfKinds = val; },
+this.attribute_alist = null,
+this.alist = function () { return attribute_alist; },
+this.set_alist = function (val) { this.attribute_alist = val; },
+this.attribute_json_string = null,
+this.json_string = function () { return attribute_json_string; },
+this.set_json_string = function (val) { this.attribute_json_string = val; }
 }
-// external function make_hash_table_of_kinds_from_JSON ((self builder))
-function make_kind (self) {
-        make_hash_table_of_kinds_from_JSON;
-        set_code_stack_empty;
+function build (self) {
+        self.initialize ();
         { /*let*/
-let arr = get-schematic-as-JSON;
+let arr = self.get_app_from_JSON_as_map ();
 (function () {
-for (const partJSON in arr) {
+for (const json_part in arr) {
 if (part.isLeaf ()) {
-self.make_leaf_kind (partJSON);
+self.make_leaf_kind (json_part);
 } else {
 if (part.isSchematic ()) {
-self.make_schematic_kind (partJSON);
+self.make_schematic_kind (json_part);
 } else {
-fatalErrorInMakeKind;
+self.fatalErrorInBuild ();
 }
 }
 };
 }) ();
 } /* end let */
 };
-// external function load_file ((self builder), (? Filename))
-function make_leaf_kind (self, partJSON) {
+// external function fatalErrorInBuild ((self builder))
+// external function get_app_from_JSON_as_map ((self builder))
+function make_leaf_kind (self, json_part) {
         { /*let*/
-let kindString = partJSON.getKind ();
+let kindString = self.getPartKind (json-part);
 { /*let*/
-let filename = partJSON.getFilename ();
+let filename = self.getFilename (json-part);
 { let newKind = new kind;
 newKind.kind_name () = self.make_type_name (kindString);
 newKind.self_class () = self.make_type_name (kindString);
-self.load_file (filename);
-newKind.make_input_pins (partJSON);
-newKind.make_output_pins (partJSON);
-self.installInTable (kindString, newKind);
-return newKind;}
+newKind.make_input_pins (json_part);
+newKind.make_output_pins (json_part);
+self.installInTable (kindString, newKind);}
 
 } /* end let */
 } /* end let */
 };
-function make_schematic_kind (self, partJSON) {
+function make_schematic_kind (self, json_part) {
         { /*let*/
-let schematicJSON = partJSON.getSchematic ();
-{ /*let*/
-let schematicName = partJSON.getSchematicName ();
+let schematicName = json_part.getName ();
 { let newKind = new kind;
-newKind.kind_name () = partJSON.schematicName ();
-newKind.self_class () = symbolSchematic;
-newKind.make_input_pins (partJSON);
-newKind.make_output_pins (partJSON);
-table.setKeyValue (kindString, newKind);
+newKind.kind_name () = schematicName;
+newKind.self_class () = self.schematicCommonClass ();
+newKind.make_input_pins (json_part);
+newKind.make_output_pins (json_part);
 (function () {
-for (const child in partJSON.getPartsList ()) {
+for (const child in json_part.getPartsMap ()) {
 { /*let*/
-let partKind_name = child.kindName ();
+let partKind_name = child.getKindName ();
 { /*let*/
-let part_kind = table.lookupKind (partKind_name);
+let part_kind = self.lookupKind (partKind_name);
 newKind.addPart (child.partName (), part_kind, partKind_name);
 } /* end let */
 } /* end let */
 };
 }) ();
 (function () {
-for (const wJSON in partJSON.getWireArray ()) {
+for (const wJSON in json_part.getWireMap ()) {
 { let w = new Wire;
 w.index () = wJSON.getIndex ();
 (function () {
@@ -515,13 +515,14 @@ newKind.add_wire (w);}
 
 };
 }) ();
-self.installInTable (kindString, newKind);
-return newKind;}
+self.installInTable (kindString, newKind);}
 
-} /* end let */
 } /* end let */
 };
 // external function make_type_name ((self builder), (? name))
+// external function getPartKind ((self builder), (? partJSON))
+// external function getFilename ((self builder), (? partJSON))
+// external function schematicCommonClass ((self builder))
 
 function kindsByName () {
 this.attribute_table = null,
@@ -529,27 +530,41 @@ this.table = function () { return attribute_table; },
 this.set_table = function (val) { this.attribute_table = val; }
 }
 
-function JSONforeign () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
+function JSONpart () {
+this.attribute_ignore_this_field = null,
+this.ignore_this_field = function () { return attribute_ignore_this_field; },
+this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
 }
-// external function getKind ((self JSONforeign))
-// external function getFilename ((self JSONforeign))
-// external function getInPins ((self JSONforeign))
-// external function getOutPins ((self JSONforeign))
-// external function schematicName ((self JSONforeign))
-// external function getPartsList ((self JSONforeign))
+// external function getKind ((self JSONpart))
+// external function getFilename ((self JSONpart))
+// external function getInPins ((self JSONpart))
+// external function getOutPins ((self JSONpart))
+// external function schematicName ((self JSONpart))
+// external function getPartsMap ((self JSONpart))
+// external function getWireMap ((self JSONpart))
+// external function getSourceMap ((self JSONpart))
+// external function getDestinationMap ((self JSONpart))
+
+function JSONpartNameAndKind () {
+this.attribute_ignore_this_field = null,
+this.ignore_this_field = function () { return attribute_ignore_this_field; },
+this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
+}
+
+function JSONPartNameAndPin () {
+this.attribute_ignore_this_field = null,
+this.ignore_this_field = function () { return attribute_ignore_this_field; },
+this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
+}
+
+function JSONwire () {
+this.attribute_ignore_this_field = null,
+this.ignore_this_field = function () { return attribute_ignore_this_field; },
+this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
+}
 
 function Constants () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
+this.attribute_ignore_this_field = null,
+this.ignore_this_field = function () { return attribute_ignore_this_field; },
+this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
 }
-
-function Symbol () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
-}
-// external function symbolSchematic ((self Symbol))

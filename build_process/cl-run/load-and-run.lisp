@@ -23,7 +23,7 @@
     (error (c)
       (format *error-output* "2 FATAL error2 in main ~a~%" c))))
 
-(defun load-and-run-from-file (json-graph-filename)
+(defun manual-load-and-run-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
     (arrowgrams-load-and-run graph-string)
 ))
@@ -40,4 +40,8 @@
 	  (setf cl-user::*dispatcher* esa-disp)
           esa-disp)))))
   
-
+(defun load-and-run-from-file (json-graph-filename)
+  (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
+    (let ((b (make-instance 'builder)))
+      (setf (json b) graph-string)
+      (build b))))
