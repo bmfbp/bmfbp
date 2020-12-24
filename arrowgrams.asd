@@ -280,7 +280,6 @@
 							))
 		  ))))
 
-#+nil
 (defsystem :arrowgrams/runner
   :depends-on (:arrowgrams/build :cl-json :cl-ppcre)
   :around-compile (lambda (next)
@@ -302,6 +301,8 @@
 							 ))))))
 
 
+#+nil
+;; new version of runner using esa.dsl
 (defsystem :arrowgrams/runner
   :depends-on (:arrowgrams/build :cl-json :cl-ppcre)
   :around-compile (lambda (next)
@@ -539,6 +540,7 @@
 				       (:file "exprtypes")
 				       (:file "manual-types")
 				       (:file "emitLisp")
+				       (:file "emitJavaScript")
 				       (:file "mechanisms")
 				       (:file "manual-mechanisms")
 				       (:file "dsl0")
@@ -547,4 +549,5 @@
 				       (:file "dsl3")
 				       (:file "path")
 				       (:file "esa-transpile")))))
+
 
