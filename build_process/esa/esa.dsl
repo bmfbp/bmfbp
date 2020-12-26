@@ -86,19 +86,23 @@ class kindsByName
 end class
 
 class JSONpart
-  handle  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
+  foreign  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
 end class
 
 class JSONpartNameAndKind  % e.g. {"partName":"xyz","kindName":"HELLO"}
-  handle
+  foreign
 end class
 
 class JSONpartNameAndPin  % e.g. {"part":"xyz","pin":"S"}
-  handle
+  foreign
 end class
 
 class JSONwire %% index, sources, destinations
-  handle
+  foreign
+end class
+
+class JSONindex
+  foreign
 end class
 
 %=== building kinds ===
@@ -517,6 +521,7 @@ when building JSONpart
   method getDestinationMap >> map JSONpartNameAndPin
   method isLeaf >> boolean
   method isSchematic >> boolean
+  method getWire >> JSONwire
 end when
 
 when building JSONpartNameAndKind
@@ -532,6 +537,12 @@ end when
 when building kind
   script make-input-pins (partJSON)
   script make-output-pins (partJSON)
+end when
+
+when building JSONwire
+  method getIndex >> Index
+  method getSourceMap >> map JSONpartNameAndPin 
+  method getWireMap >> map JSONpartNameAndPin
 end when
 
 script isaBuilder isabuild

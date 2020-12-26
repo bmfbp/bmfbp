@@ -529,9 +529,9 @@ this.set_table = function (val) { this.attribute_table = val; }
 }
 
 function JSONpart () {
-this.attribute_handle = null,
-this.handle = function () { return attribute_handle; },
-this.set_handle = function (val) { this.attribute_handle = val; }
+this.attribute_foreign = null,
+this.foreign = function () { return attribute_foreign; },
+this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
 // external function getKind ((self JSONpart))
 // external function getFilename ((self JSONpart))
@@ -544,25 +544,35 @@ this.set_handle = function (val) { this.attribute_handle = val; }
 // external function getDestinationMap ((self JSONpart))
 // external function isLeaf ((self JSONpart))
 // external function isSchematic ((self JSONpart))
+// external function getWire ((self JSONpart))
 
 function JSONpartNameAndKind () {
-this.attribute_handle = null,
-this.handle = function () { return attribute_handle; },
-this.set_handle = function (val) { this.attribute_handle = val; }
+this.attribute_foreign = null,
+this.foreign = function () { return attribute_foreign; },
+this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
 // external function getPartName ((self JSONpartNameAndKind))
 // external function getKindName ((self JSONpartNameAndKind))
 
 function JSONpartNameAndPin () {
-this.attribute_handle = null,
-this.handle = function () { return attribute_handle; },
-this.set_handle = function (val) { this.attribute_handle = val; }
+this.attribute_foreign = null,
+this.foreign = function () { return attribute_foreign; },
+this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
 // external function getPartName ((self JSONpartNameAndPin))
 // external function getPinName ((self JSONpartNameAndPin))
 
 function JSONwire () {
-this.attribute_handle = null,
-this.handle = function () { return attribute_handle; },
-this.set_handle = function (val) { this.attribute_handle = val; }
+this.attribute_foreign = null,
+this.foreign = function () { return attribute_foreign; },
+this.set_foreign = function (val) { this.attribute_foreign = val; }
+}
+// external function getIndex ((self JSONwire))
+// external function getSourceMap ((self JSONwire))
+// external function getWireMap ((self JSONwire))
+
+function JSONindex () {
+this.attribute_foreign = null,
+this.foreign = function () { return attribute_foreign; },
+this.set_foreign = function (val) { this.attribute_foreign = val; }
 }

@@ -419,7 +419,7 @@
 
 (defclass JSONpart ()
 (
-(handle :accessor handle :initform nil)))
+(foreign :accessor foreign :initform nil)))
 #| external method ((self JSONpart)) getKind |#
 #| external method ((self JSONpart)) getFilename |#
 #| external method ((self JSONpart)) getInPins |#
@@ -431,19 +431,27 @@
 #| external method ((self JSONpart)) getDestinationMap |#
 #| external method ((self JSONpart)) isLeaf |#
 #| external method ((self JSONpart)) isSchematic |#
+#| external method ((self JSONpart)) getWire |#
 
 (defclass JSONpartNameAndKind ()
 (
-(handle :accessor handle :initform nil)))
+(foreign :accessor foreign :initform nil)))
 #| external method ((self JSONpartNameAndKind)) getPartName |#
 #| external method ((self JSONpartNameAndKind)) getKindName |#
 
 (defclass JSONpartNameAndPin ()
 (
-(handle :accessor handle :initform nil)))
+(foreign :accessor foreign :initform nil)))
 #| external method ((self JSONpartNameAndPin)) getPartName |#
 #| external method ((self JSONpartNameAndPin)) getPinName |#
 
 (defclass JSONwire ()
 (
-(handle :accessor handle :initform nil)))
+(foreign :accessor foreign :initform nil)))
+#| external method ((self JSONwire)) getIndex |#
+#| external method ((self JSONwire)) getSourceMap |#
+#| external method ((self JSONwire)) getWireMap |#
+
+(defclass JSONindex ()
+(
+(foreign :accessor foreign :initform nil)))
