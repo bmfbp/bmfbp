@@ -60,16 +60,16 @@
         (ensure-part-not-declared self nm)
         (install-part self nm k nclass))
 (defmethod add-wire ((self kind) w)
-        (block %map (dolist (s (stack-dsl::%ordered-list s))
+        (block %map (dolist (s (stack-dsl::%ordered-list (sources w)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (sources w)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of s))
                (eq (stack-dsl:%type s) (stack-dsl::%element-type (sources w))))
   (error (format nil "ESA: [~a] must be of type [~a]" s (stack-dsl::%element-type (sources w)))))
 
 (ensure-valid-source self s)))
-        (block %map (dolist (dest (stack-dsl::%ordered-list dest))
+        (block %map (dolist (dest (stack-dsl::%ordered-list (destinations w)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (destinations w)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of dest))
                (eq (stack-dsl:%type dest) (stack-dsl::%element-type (destinations w))))
   (error (format nil "ESA: [~a] must be of type [~a]" dest (stack-dsl::%element-type (destinations w)))))
 
@@ -112,9 +112,9 @@
 (setf (kind-field inst) self)
 (setf (container inst) my-container)
 (setf (name-in-container inst) my-name)
-(block %map (dolist (part (stack-dsl::%ordered-list part))
+(block %map (dolist (part (stack-dsl::%ordered-list (parts self)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (parts self)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of part))
                (eq (stack-dsl:%type part) (stack-dsl::%element-type (parts self))))
   (error (format nil "ESA: [~a] must be of type [~a]" part (stack-dsl::%element-type (parts self)))))
 
@@ -125,17 +125,17 @@
 #| external method ((self kind)) find-wire-for-source |#
 #| external method ((self kind)) find-wire-for-self-source |#
 (defmethod make-input-pins ((self kind) json-part)
-        (block %map (dolist (inpin-name (stack-dsl::%ordered-list inpin-name))
+        (block %map (dolist (inpin-name (stack-dsl::%ordered-list (inPins json-part)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (inPins json-part)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of inpin-name))
                (eq (stack-dsl:%type inpin-name) (stack-dsl::%element-type (inPins json-part))))
   (error (format nil "ESA: [~a] must be of type [~a]" inpin-name (stack-dsl::%element-type (inPins json-part)))))
 
 (add-input-pin self inpin-name))))
 (defmethod make-output-pins ((self kind) json-part)
-        (block %map (dolist (outpin-name (stack-dsl::%ordered-list outpin-name))
+        (block %map (dolist (outpin-name (stack-dsl::%ordered-list (outPins json-part)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (outPins json-part)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of outpin-name))
                (eq (stack-dsl:%type outpin-name) (stack-dsl::%element-type (outPins json-part))))
   (error (format nil "ESA: [~a] must be of type [~a]" outpin-name (stack-dsl::%element-type (outPins json-part)))))
 
@@ -166,17 +166,17 @@
 )
 (progn
 (let ((parent-composite-node (container self))) 
-(block %map (dolist (output (stack-dsl::%ordered-list output))
+(block %map (dolist (output (stack-dsl::%ordered-list (get-output-events-and-delete self)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (get-output-events-and-delete self)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of output))
                (eq (stack-dsl:%type output) (stack-dsl::%element-type (get-output-events-and-delete self))))
   (error (format nil "ESA: [~a] must be of type [~a]" output (stack-dsl::%element-type (get-output-events-and-delete self)))))
 
 (let ((dest (partpin output))) 
 (let ((w (find-wire-for-source (kind-field parent-composite-node) (part-name (partpin output)) (pin-name (partpin output))))) 
-(block %map (dolist (dest (stack-dsl::%ordered-list dest))
+(block %map (dolist (dest (stack-dsl::%ordered-list (destinations w)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (destinations w)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of dest))
                (eq (stack-dsl:%type dest) (stack-dsl::%element-type (destinations w))))
   (error (format nil "ESA: [~a] must be of type [~a]" dest (stack-dsl::%element-type (destinations w)))))
 
@@ -218,9 +218,9 @@
 (return-from busy? :true)
 )
 (progn
-(block %map (dolist (child-part-instance (stack-dsl::%ordered-list child-part-instance))
+(block %map (dolist (child-part-instance (stack-dsl::%ordered-list (children self)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (children self)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of child-part-instance))
                (eq (stack-dsl:%type child-part-instance) (stack-dsl::%element-type (children self))))
   (error (format nil "ESA: [~a] must be of type [~a]" child-part-instance (stack-dsl::%element-type (children self)))))
 
@@ -270,9 +270,9 @@
 (progn
 (setf w (find-wire-for-source (kind-field (container self)) (part-name (partpin e)) (pin-name (partpin e))))
 ))
-(block %map (dolist (dest (stack-dsl::%ordered-list dest))
+(block %map (dolist (dest (stack-dsl::%ordered-list (destinations w)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (destinations w)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of dest))
                (eq (stack-dsl:%type dest) (stack-dsl::%element-type (destinations w))))
   (error (format nil "ESA: [~a] must be of type [~a]" dest (stack-dsl::%element-type (destinations w)))))
 
@@ -305,17 +305,17 @@
 #| external method ((self dispatcher)) memo-node |#
 #| external method ((self dispatcher)) set-top-node |#
 (defmethod initialize-all ((self dispatcher) )
-        (block %map (dolist (part (stack-dsl::%ordered-list part))
+        (block %map (dolist (part (stack-dsl::%ordered-list (all-parts self)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (all-parts self)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of part))
                (eq (stack-dsl:%type part) (stack-dsl::%element-type (all-parts self))))
   (error (format nil "ESA: [~a] must be of type [~a]" part (stack-dsl::%element-type (all-parts self)))))
 
 (initialize part))))
 (defmethod distribute-all-outputs ((self dispatcher) )
-        (block %map (dolist (p (stack-dsl::%ordered-list p))
+        (block %map (dolist (p (stack-dsl::%ordered-list (all-parts self)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (all-parts self)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of p))
                (eq (stack-dsl:%type p) (stack-dsl::%element-type (all-parts self))))
   (error (format nil "ESA: [~a] must be of type [~a]" p (stack-dsl::%element-type (all-parts self)))))
 
@@ -326,9 +326,9 @@
 (loop 
 (setf done :true)
 (distribute-all-outputs self)
-(block %map (dolist (part (stack-dsl::%ordered-list part))
+(block %map (dolist (part (stack-dsl::%ordered-list (all-parts self)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (all-parts self)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of part))
                (eq (stack-dsl:%type part) (stack-dsl::%element-type (all-parts self))))
   (error (format nil "ESA: [~a] must be of type [~a]" part (stack-dsl::%element-type (all-parts self)))))
 
@@ -357,9 +357,9 @@
 (defmethod isabuild ((self isaBuilder) )
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
-(block %map (dolist (json-part (stack-dsl::%ordered-list json-part))
+(block %map (dolist (json-part (stack-dsl::%ordered-list arr))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of arr))
+(unless (and (eq 'stack-dsl:%typed-value (type-of json-part))
                (eq (stack-dsl:%type json-part) (stack-dsl::%element-type arr)))
   (error (format nil "ESA: [~a] must be of type [~a]" json-part (stack-dsl::%element-type arr))))
 
@@ -394,33 +394,33 @@
 (setf (self-class newKind) (schematicCommonClass self))
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
-(block %map (dolist (child (stack-dsl::%ordered-list child))
+(block %map (dolist (child (stack-dsl::%ordered-list (partsMap json-part)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (partsMap json-part)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of child))
                (eq (stack-dsl:%type child) (stack-dsl::%element-type (partsMap json-part))))
   (error (format nil "ESA: [~a] must be of type [~a]" child (stack-dsl::%element-type (partsMap json-part)))))
 
 (let ((partKind_name (kindName child))) 
 (let ((part_kind (lookupKind self partKind_name))) 
 (add-part newKind (partName child) part_kind partKind_name)))))
-(block %map (dolist (wJSON (stack-dsl::%ordered-list wJSON))
+(block %map (dolist (wJSON (stack-dsl::%ordered-list (wireMap json-part)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (wireMap json-part)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of wJSON))
                (eq (stack-dsl:%type wJSON) (stack-dsl::%element-type (wireMap json-part))))
   (error (format nil "ESA: [~a] must be of type [~a]" wJSON (stack-dsl::%element-type (wireMap json-part)))))
 
 (let ((w (make-instance 'Wire)))
 (setf (index w) (index wJSON))
-(block %map (dolist (sourceJSON (stack-dsl::%ordered-list sourceJSON))
+(block %map (dolist (sourceJSON (stack-dsl::%ordered-list (sourceMap wJSON)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (sourceMap wJSON)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of sourceJSON))
                (eq (stack-dsl:%type sourceJSON) (stack-dsl::%element-type (sourceMap wJSON))))
   (error (format nil "ESA: [~a] must be of type [~a]" sourceJSON (stack-dsl::%element-type (sourceMap wJSON)))))
 
 (add-source w (partName sourceJSON) (pinName sourceJSON))))
-(block %map (dolist (destinationJSON (stack-dsl::%ordered-list destinationJSON))
+(block %map (dolist (destinationJSON (stack-dsl::%ordered-list (destinationMap wJSON)))
 
-(unless (and (eq 'stack-dsl:%typed-value (type-of (destinationMap wJSON)))
+(unless (and (eq 'stack-dsl:%typed-value (type-of destinationJSON))
                (eq (stack-dsl:%type destinationJSON) (stack-dsl::%element-type (destinationMap wJSON))))
   (error (format nil "ESA: [~a] must be of type [~a]" destinationJSON (stack-dsl::%element-type (destinationMap wJSON)))))
 

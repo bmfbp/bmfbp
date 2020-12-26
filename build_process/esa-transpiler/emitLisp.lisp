@@ -116,7 +116,7 @@
                (eq (stack-dsl:%type ~a) (stack-dsl::%element-type ~a)))
   (error (format nil \"ESA: [~~a] must be of type [~~a]\" ~a (stack-dsl::%element-type ~a))))
 ~{~%~a~}))" 
-vn vn e vn e vn e code)))
+vn e vn vn e vn e code)))
 
 (defmethod asLisp ((self createStatement))
   (let ((vn (asLisp (varName self)))
