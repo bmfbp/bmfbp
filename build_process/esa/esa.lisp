@@ -60,9 +60,9 @@
         (ensure-part-not-declared self nm)
         (install-part self nm k nclass))
 (defmethod add-wire ((self kind) w)
-        (block %map (dolist (s (sources w)) 
+        (block %map (dolist (s (stack-dsl::%ordered-list (sources w))) 
 (ensure-valid-source self s)))
-        (block %map (dolist (dest (destinations w)) 
+        (block %map (dolist (dest (stack-dsl::%ordered-list (destinations w))) 
 (ensure-valid-destination self dest)))
         (install-wire self w))
 #| external method ((self kind)) install-wire |#
@@ -102,7 +102,7 @@
 (setf (kind-field inst) self)
 (setf (container inst) my-container)
 (setf (name-in-container inst) my-name)
-(block %map (dolist (part (parts self)) 
+(block %map (dolist (part (stack-dsl::%ordered-list (parts self))) 
 (let ((part-instance (loader (part-kind part) (part-name part) inst dispatchr))) 
 (add-child inst (part-name part) part-instance))))
 (memo-node dispatchr inst)
@@ -110,10 +110,10 @@
 #| external method ((self kind)) find-wire-for-source |#
 #| external method ((self kind)) find-wire-for-self-source |#
 (defmethod make-input-pins ((self kind) json-part)
-        (block %map (dolist (inpin-name (getInPins json-part)) 
+        (block %map (dolist (inpin-name (stack-dsl::%ordered-list (getInPins json-part))) 
 (add-input-pin self inpin-name))))
 (defmethod make-output-pins ((self kind) json-part)
-        (block %map (dolist (outpin-name (getOutPins json-part)) 
+        (block %map (dolist (outpin-name (stack-dsl::%ordered-list (getOutPins json-part))) 
 (add-output-pin self outpin-name))))
 
 (defclass node ()
@@ -141,10 +141,10 @@
 )
 (progn
 (let ((parent-composite-node (container self))) 
-(block %map (dolist (output (get-output-events-and-delete self)) 
+(block %map (dolist (output (stack-dsl::%ordered-list (get-output-events-and-delete self))) 
 (let ((dest (partpin output))) 
 (let ((w (find-wire-for-source (kind-field parent-composite-node) (part-name (partpin output)) (pin-name (partpin output))))) 
-(block %map (dolist (dest (destinations w)) 
+(block %map (dolist (dest (stack-dsl::%ordered-list (destinations w))) 
 (if (esa-expr-true (refers-to-self? dest))
 (progn
 (let ((new-event (make-instance 'event)))
@@ -183,7 +183,7 @@
 (return-from busy? :true)
 )
 (progn
-(block %map (dolist (child-part-instance (children self)) 
+(block %map (dolist (child-part-instance (stack-dsl::%ordered-list (children self))) 
 (let ((child-node (instance-node child-part-instance))) 
 (if (esa-expr-true (has-inputs-or-outputs? child-node))
 (progn
@@ -230,7 +230,7 @@
 (progn
 (setf w (find-wire-for-source (kind-field (container self)) (part-name (partpin e)) (pin-name (partpin e))))
 ))
-(block %map (dolist (dest (destinations w)) 
+(block %map (dolist (dest (stack-dsl::%ordered-list (destinations w))) 
 (let ((new-event (make-instance 'event)))
 (let ((pp (make-instance 'part-pin)))
 (if (esa-expr-true (refers-to-self? dest))
@@ -260,10 +260,10 @@
 #| external method ((self dispatcher)) memo-node |#
 #| external method ((self dispatcher)) set-top-node |#
 (defmethod initialize-all ((self dispatcher) )
-        (block %map (dolist (part (all-parts self)) 
+        (block %map (dolist (part (stack-dsl::%ordered-list (all-parts self))) 
 (initialize part))))
 (defmethod distribute-all-outputs ((self dispatcher) )
-        (block %map (dolist (p (all-parts self)) 
+        (block %map (dolist (p (stack-dsl::%ordered-list (all-parts self))) 
 (distribute-output-events p)
 (distribute-outputs-upwards p))))
 (defmethod dispatcher-run ((self dispatcher) )
@@ -271,7 +271,7 @@
 (loop 
 (setf done :true)
 (distribute-all-outputs self)
-(block %map (dolist (part (all-parts self)) 
+(block %map (dolist (part (stack-dsl::%ordered-list (all-parts self))) 
 (when (esa-expr-true (ready? part))
 (invoke part)
 (setf done :false)
@@ -297,7 +297,7 @@
 (defmethod isabuild ((self isaBuilder) )
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
-(block %map (dolist (json-part arr) 
+(block %map (dolist (json-part (stack-dsl::%ordered-list arr)) 
 (if (esa-expr-true (isLeaf part))
 (progn
 (make-leaf-kind self json-part)
@@ -329,16 +329,16 @@
 (setf (self-class newKind) (schematicCommonClass self))
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
-(block %map (dolist (child (getPartsMap json-part)) 
+(block %map (dolist (child (stack-dsl::%ordered-list (getPartsMap json-part))) 
 (let ((partKind_name (getKindName child))) 
 (let ((part_kind (lookupKind self partKind_name))) 
 (add-part newKind (getPartName child) part_kind partKind_name)))))
-(block %map (dolist (wJSON (getWireMap json-part)) 
+(block %map (dolist (wJSON (stack-dsl::%ordered-list (getWireMap json-part))) 
 (let ((w (make-instance 'Wire)))
 (setf (index w) (getIndex wJSON))
-(block %map (dolist (sourceJSON (getSourceMap wJSON)) 
+(block %map (dolist (sourceJSON (stack-dsl::%ordered-list (getSourceMap wJSON))) 
 (add-source w (getPartName sourceJSON) (getPinName sourceJSON))))
-(block %map (dolist (destinationJSON (getDestinationMap wJSON)) 
+(block %map (dolist (destinationJSON (stack-dsl::%ordered-list (getDestinationMap wJSON))) 
 (add-source w (getPartName destinationJSON) (getPinName destinationJSON))))
 (add-wire newKind w))))
 (installInTable self kindString newKind))))

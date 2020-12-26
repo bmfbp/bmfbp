@@ -111,7 +111,7 @@
   (let ((vn (asLisp (varName self)))
 	(e  (asLisp (expression self)))
 	(code (asLisp (implementation self))))
-    (format nil "(block %map (dolist (~a ~a) ~{~%~a~}))" vn e code)))
+    (format nil "(block %map (dolist (~a (stack-dsl::%ordered-list ~a)) ~{~%~a~}))" vn e code)))
 
 (defmethod asLisp ((self createStatement))
   (let ((vn (asLisp (varName self)))
