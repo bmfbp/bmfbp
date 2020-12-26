@@ -289,12 +289,12 @@
 (partpin :accessor partpin :initform nil)
 (data :accessor data :initform nil)))
 
-(defclass builder ()
+(defclass isaBuilder ()
 (
 (tableOfKinds :accessor tableOfKinds :initform nil)
 (alist :accessor alist :initform nil)
 (json-string :accessor json-string :initform nil)))
-(defmethod build ((self builder) )
+(defmethod build ((self isaBuilder) )
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
 (block %map (dolist (json-part arr) 
@@ -311,9 +311,9 @@
 (fatalErrorInBuild self)
 ))
 ))))))
-#| external method ((self builder)) fatalErrorInBuild |#
-#| external method ((self builder)) get-app-from-JSON-as-map |#
-(defmethod make-leaf-kind ((self builder) json-part)
+#| external method ((self isaBuilder)) fatalErrorInBuild |#
+#| external method ((self isaBuilder)) get-app-from-JSON-as-map |#
+(defmethod make-leaf-kind ((self isaBuilder) json-part)
         (let ((kindString (getPartKind self json-part))) 
 (let ((filename (getFilename self json-part))) 
 (let ((newKind (make-instance 'kind)))
@@ -322,7 +322,7 @@
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
 (installInTable self kindString newKind)))))
-(defmethod make-schematic-kind ((self builder) json-part)
+(defmethod make-schematic-kind ((self isaBuilder) json-part)
         (let ((schematicName (getName json-part))) 
 (let ((newKind (make-instance 'kind)))
 (setf (kind-name newKind) schematicName)
@@ -332,20 +332,20 @@
 (block %map (dolist (child (getPartsMap json-part)) 
 (let ((partKind_name (getKindName child))) 
 (let ((part_kind (lookupKind self partKind_name))) 
-(addPart newKind (partName child) part_kind partKind_name)))))
+(add-part newKind (getPartName child) part_kind partKind_name)))))
 (block %map (dolist (wJSON (getWireMap json-part)) 
 (let ((w (make-instance 'Wire)))
 (setf (index w) (getIndex wJSON))
-(block %map (dolist (sourceJSON (getSources wJSON)) 
-(add-source w (getPart sourceJSON) (getPin sourceJSON))))
-(block %map (dolist (destinationJSON (getDestination wJSON)) 
-(add-source w (getPart destinationJSON) (getPin destinationJSON))))
+(block %map (dolist (sourceJSON (getSourceMap wJSON)) 
+(add-source w (getPartName sourceJSON) (getPinName sourceJSON))))
+(block %map (dolist (destinationJSON (getDestinationMap wJSON)) 
+(add-source w (getPartName destinationJSON) (getPinName destinationJSON))))
 (add-wire newKind w))))
 (installInTable self kindString newKind))))
-#| external method ((self builder)) make-type-name |#
-#| external method ((self builder)) getPartKind |#
-#| external method ((self builder)) getFilename |#
-#| external method ((self builder)) schematicCommonClass |#
+#| external method ((self isaBuilder)) make-type-name |#
+#| external method ((self isaBuilder)) getPartKind |#
+#| external method ((self isaBuilder)) getFilename |#
+#| external method ((self isaBuilder)) schematicCommonClass |#
 
 (defclass kindsByName ()
 (
@@ -367,10 +367,14 @@
 (defclass JSONpartNameAndKind ()
 (
 (ignore_this_field :accessor ignore_this_field :initform nil)))
+#| external method ((self JSONpartNameAndKind)) getPartName |#
+#| external method ((self JSONpartNameAndKind)) getKindName |#
 
-(defclass JSONPartNameAndPin ()
+(defclass JSONpartNameAndPin ()
 (
 (ignore_this_field :accessor ignore_this_field :initform nil)))
+#| external method ((self JSONpartNameAndPin)) getPartName |#
+#| external method ((self JSONpartNameAndPin)) getPinName |#
 
 (defclass JSONwire ()
 (

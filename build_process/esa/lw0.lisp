@@ -1,0 +1,5 @@
+(defun lw0 ()
+  (uiop:run-program "~/quicklisp/local-projects/rm.bash") 
+  (ql:quickload :arrowgrams/esa-transpiler)
+  (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/package.lisp"))
+  (load (asdf:system-relative-pathname :arrowgrams "build_process/esa/path.lisp")))

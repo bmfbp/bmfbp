@@ -23,10 +23,13 @@
     (error (c)
       (format *error-output* "2 FATAL error2 in main ~a~%" c))))
 
-(defun manual-load-and-run-from-file (json-graph-filename)
+
+(defun load-and-run-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
     (arrowgrams-load-and-run graph-string)
 ))
+
+(defparameter cl-user::*dispatcher* nil)
 
 (defun arrowgrams-load-and-run (json-graph-string)
   (let ((graph-alist (json-to-alist json-graph-string)))
@@ -40,8 +43,9 @@
 	  (setf cl-user::*dispatcher* esa-disp)
           esa-disp)))))
   
-(defun load-and-run-from-file (json-graph-filename)
+;; isa means Isolated Software Assets (new name for ESA)
+(defun isa-load-and-run-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
     (let ((b (make-instance 'builder)))
-      (setf (json b) graph-string)
+      (setf (json-string b) graph-string)
       (build b))))

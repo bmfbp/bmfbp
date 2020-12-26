@@ -431,7 +431,7 @@ this.data = function () { return attribute_data; },
 this.set_data = function (val) { this.attribute_data = val; }
 }
 
-function builder () {
+function isaBuilder () {
 this.attribute_tableOfKinds = null,
 this.tableOfKinds = function () { return attribute_tableOfKinds; },
 this.set_tableOfKinds = function (val) { this.attribute_tableOfKinds = val; },
@@ -461,8 +461,8 @@ self.fatalErrorInBuild ();
 }) ();
 } /* end let */
 };
-// external function fatalErrorInBuild ((self builder))
-// external function get_app_from_JSON_as_map ((self builder))
+// external function fatalErrorInBuild ((self isaBuilder))
+// external function get_app_from_JSON_as_map ((self isaBuilder))
 function make_leaf_kind (self, json_part) {
         { /*let*/
 let kindString = self.getPartKind (json-part);
@@ -492,7 +492,7 @@ for (const child in json_part.getPartsMap ()) {
 let partKind_name = child.getKindName ();
 { /*let*/
 let part_kind = self.lookupKind (partKind_name);
-newKind.addPart (child.partName (), part_kind, partKind_name);
+newKind.add_part (child.getPartName (), part_kind, partKind_name);
 } /* end let */
 } /* end let */
 };
@@ -502,13 +502,13 @@ for (const wJSON in json_part.getWireMap ()) {
 { let w = new Wire;
 w.index () = wJSON.getIndex ();
 (function () {
-for (const sourceJSON in wJSON.getSources ()) {
-w.add_source (sourceJSON.getPart (), sourceJSON.getPin ());
+for (const sourceJSON in wJSON.getSourceMap ()) {
+w.add_source (sourceJSON.getPartName (), sourceJSON.getPinName ());
 };
 }) ();
 (function () {
-for (const destinationJSON in wJSON.getDestination ()) {
-w.add_source (destinationJSON.getPart (), destinationJSON.getPin ());
+for (const destinationJSON in wJSON.getDestinationMap ()) {
+w.add_source (destinationJSON.getPartName (), destinationJSON.getPinName ());
 };
 }) ();
 newKind.add_wire (w);}
@@ -519,10 +519,10 @@ self.installInTable (kindString, newKind);}
 
 } /* end let */
 };
-// external function make_type_name ((self builder), (? name))
-// external function getPartKind ((self builder), (? partJSON))
-// external function getFilename ((self builder), (? partJSON))
-// external function schematicCommonClass ((self builder))
+// external function make_type_name ((self isaBuilder), (? name))
+// external function getPartKind ((self isaBuilder), (? partJSON))
+// external function getFilename ((self isaBuilder), (? partJSON))
+// external function schematicCommonClass ((self isaBuilder))
 
 function kindsByName () {
 this.attribute_table = null,
@@ -550,12 +550,16 @@ this.attribute_ignore_this_field = null,
 this.ignore_this_field = function () { return attribute_ignore_this_field; },
 this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
 }
+// external function getPartName ((self JSONpartNameAndKind))
+// external function getKindName ((self JSONpartNameAndKind))
 
-function JSONPartNameAndPin () {
+function JSONpartNameAndPin () {
 this.attribute_ignore_this_field = null,
 this.ignore_this_field = function () { return attribute_ignore_this_field; },
 this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
 }
+// external function getPartName ((self JSONpartNameAndPin))
+// external function getPinName ((self JSONpartNameAndPin))
 
 function JSONwire () {
 this.attribute_ignore_this_field = null,

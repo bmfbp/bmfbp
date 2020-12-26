@@ -72,10 +72,10 @@ class event
 end class
 
 %%%%
-% classes for builder
+% classes for isaBuilder
 %%%%
 
-class builder
+class isaBuilder
   tableOfKinds
   alist
   json-string
@@ -500,7 +500,7 @@ end script
 
 %%%%%%%%%
 
-when building builder
+when building isaBuilder
   script build >> kind  % returns kind of top schematic
   method fatalErrorInBuild
   method get-app-from-JSON-as-map >> map JSONpart
@@ -525,18 +525,23 @@ when building JSONpart
   method getDestinationMap >> map JSONpartNameAndPin
 end when
 
+when building JSONpartNameAndKind
+  method getPartName >> name
+  method getKindName >> name
+end when 
+
 when building JSONpartNameAndPin
   method getPartName >> name
   method getPinName >> name
 end when 
 
 when building kind
-  %%% builder
+  %%% isaBuilder
   script make-input-pins (partJSON)
   script make-output-pins (partJSON)
 end when
 
-script builder build
+script isaBuilder build
     self.initialize
     let arr = self.get-app-from-JSON-as-map in
       map json-part = arr in
@@ -553,7 +558,7 @@ script builder build
     end let  
 end script
 
-script builder make-leaf-kind (json-part)
+script isaBuilder make-leaf-kind (json-part)
   let kindString = self.getPartKind (json-part) in
     let filename = self.getFilename (json-part) in
       create newKind = kind in
@@ -568,7 +573,7 @@ script builder make-leaf-kind (json-part)
   end let
 end script
 
-script builder make-schematic-kind (json-part)
+script isaBuilder make-schematic-kind (json-part)
     let schematicName = json-part.getName in
       create newKind = kind in
         set newKind.kind-name = schematicName
@@ -578,7 +583,7 @@ script builder make-schematic-kind (json-part)
         map child = json-part.getPartsMap in
           let partKind_name = child.getKindName in
             let part_kind = self.lookupKind (partKind_name) in
-              newKind.addPart (child.partName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
+              newKind.add-part (child.getPartName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
             end let
           end let
         end map

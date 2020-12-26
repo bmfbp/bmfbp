@@ -219,6 +219,14 @@
 (defmethod declare-finished ((self dispatcher))
   #+nil(format *standard-output* "~&~%Dispatcher Finished~%~%"))
 
+(defmethod create-top-event ((self dispatcher) pin-name val)
+  (let ((e (make-instance 'event))
+        (pp (make-instance 'partpin)))
+    (setf (part-name pp) "self")
+    (setf (pin-name pp) pin-name)
+    (setf (partpin e) pp)
+    (setf (data e) val)
+    e))
 
 (defun string=-downcase (a b)
   (string= (string-downcase a) (string-downcase b)))
@@ -234,33 +242,33 @@
 
 
 ;;;;;;;;;;;;;;;
-;; builder
+;; isabuilder
 ;;;;;;;;;;;;;;;
 
-(defmethod initialize ((self builder)) 
+(defmethod initialize ((self isabuilder)) 
   (setf (table self) (make-hash-table :test 'equal)))
 
-(defmethod get-app-from-JSON-as-map ((self builder))
+(defmethod get-app-from-JSON-as-map ((self isabuilder))
   (setf (alist self) (json-to-alist (json-string self)))
   (let ((map (make-map 'string (alist self))))
     map))
 
-(defmethod installInTable ((self builder) kind-name kind-structure)
+(defmethod installInTable ((self isabuilder) kind-name kind-structure)
   (setf (gethash (table self) kind-name) kind-structure))
 
-(defmethod make-type-name ((self builder) str)
+(defmethod make-type-name ((self isabuilder) str)
   ;; do any magic required by base language to create a type name from the string str
   ;; in Lisp, we can just use the string str - no more magic
   str)
 
-(defmethod lookupKind ((self builder) name)
+(defmethod lookupKind ((self isabuilder) name)
   ;; hash table lookup with key name 
   (gethash (table self) name))
 
-(defmethod fatalErrorInBuild ((self builder))
+(defmethod fatalErrorInBuild ((self isabuilder))
   (error "fatal error in build"))
 
-(defmethod schematicCommonClass ((self builder))
+(defmethod schematicCommonClass ((self isabuilder))
   "%schematic")
 
 (defmethod isLeaf ((self JSONpart))
