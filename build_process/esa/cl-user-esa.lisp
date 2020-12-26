@@ -122,17 +122,17 @@
 #| external method ((self kind)) find-wire-for-source |#
 #| external method ((self kind)) find-wire-for-self-source |#
 (defmethod make-input-pins ((self kind) json-part)
-        (block %map (dolist (inpin-name (stack-dsl::%ordered-list (getInPins json-part)))
+        (block %map (dolist (inpin-name (stack-dsl::%ordered-list (inPins json-part)))
 
-(unless (eq (type-of inpin-name) (stack-dsl::%element-type (getInPins json-part)))
-  (error (format nil "ESA: [~a] must be of type [~a]" inpin-name (stack-dsl::%element-type (getInPins json-part)))))
+(unless (eq (type-of inpin-name) (stack-dsl::%element-type (inPins json-part)))
+  (error (format nil "ESA: [~a] must be of type [~a]" inpin-name (stack-dsl::%element-type (inPins json-part)))))
 
 (add-input-pin self inpin-name))))
 (defmethod make-output-pins ((self kind) json-part)
-        (block %map (dolist (outpin-name (stack-dsl::%ordered-list (getOutPins json-part)))
+        (block %map (dolist (outpin-name (stack-dsl::%ordered-list (outPins json-part)))
 
-(unless (eq (type-of outpin-name) (stack-dsl::%element-type (getOutPins json-part)))
-  (error (format nil "ESA: [~a] must be of type [~a]" outpin-name (stack-dsl::%element-type (getOutPins json-part)))))
+(unless (eq (type-of outpin-name) (stack-dsl::%element-type (outPins json-part)))
+  (error (format nil "ESA: [~a] must be of type [~a]" outpin-name (stack-dsl::%element-type (outPins json-part)))))
 
 (add-output-pin self outpin-name))))
 
@@ -366,8 +366,8 @@
 #| external method ((self isaBuilder)) fatalErrorInBuild |#
 #| external method ((self isaBuilder)) get-app-from-JSON-as-map |#
 (defmethod make-leaf-kind ((self isaBuilder) json-part)
-        (let ((kindString (getKind json-part))) 
-(let ((filename (getFilename json-part))) 
+        (let ((kindString (kind json-part))) 
+(let ((filename (filename json-part))) 
 (let ((newKind (make-instance 'kind)))
 (setf (kind-name newKind) (make-type-name self kindString))
 (setf (self-class newKind) (make-type-name self kindString))
@@ -375,39 +375,39 @@
 (make-output-pins newKind json-part)
 (installInTable self kindString newKind)))))
 (defmethod make-schematic-kind ((self isaBuilder) json-part)
-        (let ((schematicName (getName json-part))) 
+        (let ((schematicName (name json-part))) 
 (let ((newKind (make-instance 'kind)))
 (setf (kind-name newKind) schematicName)
 (setf (self-class newKind) (schematicCommonClass self))
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
-(block %map (dolist (child (stack-dsl::%ordered-list (getPartsMap json-part)))
+(block %map (dolist (child (stack-dsl::%ordered-list (partsMap json-part)))
 
-(unless (eq (type-of child) (stack-dsl::%element-type (getPartsMap json-part)))
-  (error (format nil "ESA: [~a] must be of type [~a]" child (stack-dsl::%element-type (getPartsMap json-part)))))
+(unless (eq (type-of child) (stack-dsl::%element-type (partsMap json-part)))
+  (error (format nil "ESA: [~a] must be of type [~a]" child (stack-dsl::%element-type (partsMap json-part)))))
 
-(let ((partKind_name (getKindName child))) 
+(let ((partKind_name (kindName child))) 
 (let ((part_kind (lookupKind self partKind_name))) 
-(add-part newKind (getPartName child) part_kind partKind_name)))))
-(block %map (dolist (wJSON (stack-dsl::%ordered-list (getWireMap json-part)))
+(add-part newKind (partName child) part_kind partKind_name)))))
+(block %map (dolist (wJSON (stack-dsl::%ordered-list (wireMap json-part)))
 
-(unless (eq (type-of wJSON) (stack-dsl::%element-type (getWireMap json-part)))
-  (error (format nil "ESA: [~a] must be of type [~a]" wJSON (stack-dsl::%element-type (getWireMap json-part)))))
+(unless (eq (type-of wJSON) (stack-dsl::%element-type (wireMap json-part)))
+  (error (format nil "ESA: [~a] must be of type [~a]" wJSON (stack-dsl::%element-type (wireMap json-part)))))
 
 (let ((w (make-instance 'Wire)))
-(setf (index w) (getIndex wJSON))
-(block %map (dolist (sourceJSON (stack-dsl::%ordered-list (getSourceMap wJSON)))
+(setf (index w) (index wJSON))
+(block %map (dolist (sourceJSON (stack-dsl::%ordered-list (sourceMap wJSON)))
 
-(unless (eq (type-of sourceJSON) (stack-dsl::%element-type (getSourceMap wJSON)))
-  (error (format nil "ESA: [~a] must be of type [~a]" sourceJSON (stack-dsl::%element-type (getSourceMap wJSON)))))
+(unless (eq (type-of sourceJSON) (stack-dsl::%element-type (sourceMap wJSON)))
+  (error (format nil "ESA: [~a] must be of type [~a]" sourceJSON (stack-dsl::%element-type (sourceMap wJSON)))))
 
-(add-source w (getPartName sourceJSON) (getPinName sourceJSON))))
-(block %map (dolist (destinationJSON (stack-dsl::%ordered-list (getDestinationMap wJSON)))
+(add-source w (partName sourceJSON) (pinName sourceJSON))))
+(block %map (dolist (destinationJSON (stack-dsl::%ordered-list (destinationMap wJSON)))
 
-(unless (eq (type-of destinationJSON) (stack-dsl::%element-type (getDestinationMap wJSON)))
-  (error (format nil "ESA: [~a] must be of type [~a]" destinationJSON (stack-dsl::%element-type (getDestinationMap wJSON)))))
+(unless (eq (type-of destinationJSON) (stack-dsl::%element-type (destinationMap wJSON)))
+  (error (format nil "ESA: [~a] must be of type [~a]" destinationJSON (stack-dsl::%element-type (destinationMap wJSON)))))
 
-(add-source w (getPartName destinationJSON) (getPinName destinationJSON))))
+(add-source w (partName destinationJSON) (pinName destinationJSON))))
 (add-wire newKind w))))
 (installInTable self kindString newKind))))
 #| external method ((self isaBuilder)) make-type-name |#
@@ -420,15 +420,14 @@
 (defclass JSONpart ()
 (
 (foreign :accessor foreign :initform nil)))
-#| external method ((self JSONpart)) getKind |#
-#| external method ((self JSONpart)) getFilename |#
-#| external method ((self JSONpart)) getInPins |#
-#| external method ((self JSONpart)) getOutPins |#
+#| external method ((self JSONpart)) name |#
+#| external method ((self JSONpart)) kind |#
+#| external method ((self JSONpart)) filename |#
+#| external method ((self JSONpart)) inPins |#
+#| external method ((self JSONpart)) outPins |#
 #| external method ((self JSONpart)) schematicName |#
-#| external method ((self JSONpart)) getPartsMap |#
-#| external method ((self JSONpart)) getWireMap |#
-#| external method ((self JSONpart)) getSourceMap |#
-#| external method ((self JSONpart)) getDestinationMap |#
+#| external method ((self JSONpart)) partsMap |#
+#| external method ((self JSONpart)) wireMap |#
 #| external method ((self JSONpart)) isLeaf |#
 #| external method ((self JSONpart)) isSchematic |#
 #| external method ((self JSONpart)) getWire |#
@@ -436,21 +435,21 @@
 (defclass JSONpartNameAndKind ()
 (
 (foreign :accessor foreign :initform nil)))
-#| external method ((self JSONpartNameAndKind)) getPartName |#
-#| external method ((self JSONpartNameAndKind)) getKindName |#
+#| external method ((self JSONpartNameAndKind)) partName |#
+#| external method ((self JSONpartNameAndKind)) kindName |#
 
 (defclass JSONpartNameAndPin ()
 (
 (foreign :accessor foreign :initform nil)))
-#| external method ((self JSONpartNameAndPin)) getPartName |#
-#| external method ((self JSONpartNameAndPin)) getPinName |#
+#| external method ((self JSONpartNameAndPin)) partName |#
+#| external method ((self JSONpartNameAndPin)) pinName |#
 
 (defclass JSONwire ()
 (
 (foreign :accessor foreign :initform nil)))
-#| external method ((self JSONwire)) getIndex |#
-#| external method ((self JSONwire)) getSourceMap |#
-#| external method ((self JSONwire)) getWireMap |#
+#| external method ((self JSONwire)) index |#
+#| external method ((self JSONwire)) sourceMap |#
+#| external method ((self JSONwire)) destinationMap |#
 
 (defclass JSONindex ()
 (

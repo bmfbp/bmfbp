@@ -510,28 +510,27 @@ when building isaBuilder
 end when
 
 when building JSONpart
-  method getKind >> name
-  method getFilename >> filename
-  method getInPins >> map Pin
-  method getOutPins >> map Pin
+  method name >> name
+  method kind >> name
+  method filename >> filename
+  method inPins >> map JSONpartNameAndPin
+  method outPins >> map JSONpartNameAndPin
   method schematicName >> name
-  method getPartsMap >> map JSONpartNameAndKind
-  method getWireMap >> map JSONwire
-  method getSourceMap >> map JSONpartNameAndPin
-  method getDestinationMap >> map JSONpartNameAndPin
+  method partsMap >> map JSONpartNameAndKind
+  method wireMap >> map JSONwire
   method isLeaf >> boolean
   method isSchematic >> boolean
   method getWire >> JSONwire
 end when
 
 when building JSONpartNameAndKind
-  method getPartName >> name
-  method getKindName >> name
+  method partName >> name
+  method kindName >> name
 end when 
 
 when building JSONpartNameAndPin
-  method getPartName >> name
-  method getPinName >> name
+  method partName >> name
+  method pinName >> name
 end when 
 
 when building kind
@@ -540,9 +539,9 @@ when building kind
 end when
 
 when building JSONwire
-  method getIndex >> Index
-  method getSourceMap >> map JSONpartNameAndPin 
-  method getWireMap >> map JSONpartNameAndPin
+  method index >> Index
+  method sourceMap >> map JSONpartNameAndPin 
+  method destinationMap >> map JSONpartNameAndPin
 end when
 
 script isaBuilder isabuild
@@ -563,8 +562,8 @@ script isaBuilder isabuild
 end script
 
 script isaBuilder make-leaf-kind (json-part)
-  let kindString = json-part.getKind in
-    let filename = json-part.getFilename in
+  let kindString = json-part.kind in
+    let filename = json-part.filename in
       create newKind = kind in
         set newKind.kind-name = self.make-type-name (kindString)
         set newKind.self-class = self.make-type-name (kindString)
@@ -578,27 +577,27 @@ script isaBuilder make-leaf-kind (json-part)
 end script
 
 script isaBuilder make-schematic-kind (json-part)
-    let schematicName = json-part.getName in
+    let schematicName = json-part.name in
       create newKind = kind in
         set newKind.kind-name = schematicName
         set newKind.self-class = self.schematicCommonClass
         @newKind.make-input-pins (json-part)
         @newKind.make-output-pins (json-part)
-        map child = json-part.getPartsMap in
-          let partKind_name = child.getKindName in
+        map child = json-part.partsMap in
+          let partKind_name = child.kindName in
             let part_kind = self.lookupKind (partKind_name) in
-              newKind.add-part (child.getPartName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
+              newKind.add-part (child.partName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
             end let
           end let
         end map
-        map wJSON = json-part.getWireMap in
+        map wJSON = json-part.wireMap in
           create w = Wire in
-            set w.index = wJSON.getIndex
-            map sourceJSON = wJSON.getSourceMap in
-              w.add-source (sourceJSON.getPartName sourceJSON.getPinName)
+            set w.index = wJSON.index
+            map sourceJSON = wJSON.sourceMap in
+              w.add-source (sourceJSON.partName sourceJSON.pinName)
             end map
-            map destinationJSON = wJSON.getDestinationMap in
-              w.add-source (destinationJSON.getPartName destinationJSON.getPinName)
+            map destinationJSON = wJSON.destinationMap in
+              w.add-source (destinationJSON.partName destinationJSON.pinName)
             end map
             newKind.add-wire (w)
           end create
@@ -610,13 +609,13 @@ end script
 
 
 script kind make-input-pins (json-part)
-  map inpin-name = json-part.getInPins in
+  map inpin-name = json-part.inPins in
     self.add-input-pin (inpin-name)
   end map
 end script
 
 script kind make-output-pins (json-part)
-  map outpin-name = json-part.getOutPins in
+  map outpin-name = json-part.outPins in
     self.add-output-pin (outpin-name)
   end map
 end script

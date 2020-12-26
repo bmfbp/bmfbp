@@ -172,14 +172,14 @@ return inst;}
 // external function find_wire_for_self_source ((self kind), (? name))
 function make_input_pins (self, json_part) {
         (function () {
-for (const inpin_name in json_part.getInPins ()) {
+for (const inpin_name in json_part.inPins ()) {
 self.add_input_pin (inpin_name);
 };
 }) ();
 };
 function make_output_pins (self, json_part) {
         (function () {
-for (const outpin_name in json_part.getOutPins ()) {
+for (const outpin_name in json_part.outPins ()) {
 self.add_output_pin (outpin_name);
 };
 }) ();
@@ -465,9 +465,9 @@ self.fatalErrorInBuild ();
 // external function get_app_from_JSON_as_map ((self isaBuilder))
 function make_leaf_kind (self, json_part) {
         { /*let*/
-let kindString = json_part.getKind ();
+let kindString = json_part.kind ();
 { /*let*/
-let filename = json_part.getFilename ();
+let filename = json_part.filename ();
 { let newKind = new kind;
 newKind.kind_name () = self.make_type_name (kindString);
 newKind.self_class () = self.make_type_name (kindString);
@@ -480,35 +480,35 @@ self.installInTable (kindString, newKind);}
 };
 function make_schematic_kind (self, json_part) {
         { /*let*/
-let schematicName = json_part.getName ();
+let schematicName = json_part.name ();
 { let newKind = new kind;
 newKind.kind_name () = schematicName;
 newKind.self_class () = self.schematicCommonClass ();
 newKind.make_input_pins (json_part);
 newKind.make_output_pins (json_part);
 (function () {
-for (const child in json_part.getPartsMap ()) {
+for (const child in json_part.partsMap ()) {
 { /*let*/
-let partKind_name = child.getKindName ();
+let partKind_name = child.kindName ();
 { /*let*/
 let part_kind = self.lookupKind (partKind_name);
-newKind.add_part (child.getPartName (), part_kind, partKind_name);
+newKind.add_part (child.partName (), part_kind, partKind_name);
 } /* end let */
 } /* end let */
 };
 }) ();
 (function () {
-for (const wJSON in json_part.getWireMap ()) {
+for (const wJSON in json_part.wireMap ()) {
 { let w = new Wire;
-w.index () = wJSON.getIndex ();
+w.index () = wJSON.index ();
 (function () {
-for (const sourceJSON in wJSON.getSourceMap ()) {
-w.add_source (sourceJSON.getPartName (), sourceJSON.getPinName ());
+for (const sourceJSON in wJSON.sourceMap ()) {
+w.add_source (sourceJSON.partName (), sourceJSON.pinName ());
 };
 }) ();
 (function () {
-for (const destinationJSON in wJSON.getDestinationMap ()) {
-w.add_source (destinationJSON.getPartName (), destinationJSON.getPinName ());
+for (const destinationJSON in wJSON.destinationMap ()) {
+w.add_source (destinationJSON.partName (), destinationJSON.pinName ());
 };
 }) ();
 newKind.add_wire (w);}
@@ -533,15 +533,14 @@ this.attribute_foreign = null,
 this.foreign = function () { return attribute_foreign; },
 this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
-// external function getKind ((self JSONpart))
-// external function getFilename ((self JSONpart))
-// external function getInPins ((self JSONpart))
-// external function getOutPins ((self JSONpart))
+// external function name ((self JSONpart))
+// external function kind ((self JSONpart))
+// external function filename ((self JSONpart))
+// external function inPins ((self JSONpart))
+// external function outPins ((self JSONpart))
 // external function schematicName ((self JSONpart))
-// external function getPartsMap ((self JSONpart))
-// external function getWireMap ((self JSONpart))
-// external function getSourceMap ((self JSONpart))
-// external function getDestinationMap ((self JSONpart))
+// external function partsMap ((self JSONpart))
+// external function wireMap ((self JSONpart))
 // external function isLeaf ((self JSONpart))
 // external function isSchematic ((self JSONpart))
 // external function getWire ((self JSONpart))
@@ -551,25 +550,25 @@ this.attribute_foreign = null,
 this.foreign = function () { return attribute_foreign; },
 this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
-// external function getPartName ((self JSONpartNameAndKind))
-// external function getKindName ((self JSONpartNameAndKind))
+// external function partName ((self JSONpartNameAndKind))
+// external function kindName ((self JSONpartNameAndKind))
 
 function JSONpartNameAndPin () {
 this.attribute_foreign = null,
 this.foreign = function () { return attribute_foreign; },
 this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
-// external function getPartName ((self JSONpartNameAndPin))
-// external function getPinName ((self JSONpartNameAndPin))
+// external function partName ((self JSONpartNameAndPin))
+// external function pinName ((self JSONpartNameAndPin))
 
 function JSONwire () {
 this.attribute_foreign = null,
 this.foreign = function () { return attribute_foreign; },
 this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
-// external function getIndex ((self JSONwire))
-// external function getSourceMap ((self JSONwire))
-// external function getWireMap ((self JSONwire))
+// external function index ((self JSONwire))
+// external function sourceMap ((self JSONwire))
+// external function destinationMap ((self JSONwire))
 
 function JSONindex () {
 this.attribute_foreign = null,
