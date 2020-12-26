@@ -111,7 +111,11 @@
   (let ((vn (asLisp (varName self)))
 	(e  (asLisp (expression self)))
 	(code (asLisp (implementation self))))
-    (format nil "(block %map (dolist (~a (stack-dsl::%ordered-list ~a)) ~{~%~a~}))" vn e code)))
+    (format nil "(block %map (dolist (~a (stack-dsl::%ordered-list ~a))
+~%(unless (eq (type-of ~a) (stack-dsl::%element-type ~a))
+  (error (format nil \"ESA: [~~a] must be of type [~~a]\" ~a (stack-dsl::%element-type ~a))))
+~{~%~a~}))" 
+vn e vn e vn e code)))
 
 (defmethod asLisp ((self createStatement))
   (let ((vn (asLisp (varName self)))

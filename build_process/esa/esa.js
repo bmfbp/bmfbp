@@ -531,9 +531,9 @@ this.set_table = function (val) { this.attribute_table = val; }
 }
 
 function JSONpart () {
-this.attribute_ignore_this_field = null,
-this.ignore_this_field = function () { return attribute_ignore_this_field; },
-this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
 // external function getKind ((self JSONpart))
 // external function getFilename ((self JSONpart))
@@ -544,27 +544,29 @@ this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field =
 // external function getWireMap ((self JSONpart))
 // external function getSourceMap ((self JSONpart))
 // external function getDestinationMap ((self JSONpart))
+// external function isLeaf ((self JSONpart))
+// external function isSchematic ((self JSONpart))
 
 function JSONpartNameAndKind () {
-this.attribute_ignore_this_field = null,
-this.ignore_this_field = function () { return attribute_ignore_this_field; },
-this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
 // external function getPartName ((self JSONpartNameAndKind))
 // external function getKindName ((self JSONpartNameAndKind))
 
 function JSONpartNameAndPin () {
-this.attribute_ignore_this_field = null,
-this.ignore_this_field = function () { return attribute_ignore_this_field; },
-this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
 // external function getPartName ((self JSONpartNameAndPin))
 // external function getPinName ((self JSONpartNameAndPin))
 
 function JSONwire () {
-this.attribute_ignore_this_field = null,
-this.ignore_this_field = function () { return attribute_ignore_this_field; },
-this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
 
 function Constants () {

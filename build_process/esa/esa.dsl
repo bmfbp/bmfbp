@@ -86,20 +86,19 @@ class kindsByName
 end class
 
 class JSONpart
-  % just methods
-  ignore_this_field
+  handle  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
 end class
 
 class JSONpartNameAndKind  % e.g. {"partName":"xyz","kindName":"HELLO"}
-  ignore_this_field
+  handle
 end class
 
 class JSONpartNameAndPin  % e.g. {"part":"xyz","pin":"S"}
-  ignore_this_field
+  handle
 end class
 
 class JSONwire %% index, sources, destinations
-  ignore_this_field
+  handle
 end class
 
 class Constants
@@ -523,6 +522,8 @@ when building JSONpart
   method getWireMap >> map JSONwire
   method getSourceMap >> map JSONpartNameAndPin
   method getDestinationMap >> map JSONpartNameAndPin
+  method isLeaf >> boolean
+  method isSchematic >> boolean
 end when
 
 when building JSONpartNameAndKind

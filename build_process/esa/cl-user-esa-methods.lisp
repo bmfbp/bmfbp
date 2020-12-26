@@ -249,7 +249,7 @@
 
 (defmethod get-app-from-JSON-as-map ((self isabuilder))
   (setf (alist self) (arrowgrams/build::json-to-alist (json-string self)))
-  (let ((map (make-map 'string (alist self))))
+  (let ((map (make-map-from-list 'JSONpart (alist self))))
     map))
 
 (defmethod installInTable ((self isabuilder) kind-name kind-structure)
@@ -273,34 +273,34 @@
 (defmethod isLeaf ((self JSONpart))
   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
   ;; This choice is Lisp-specific,  we might choose a different kind of representation in JS, say.  The choice is not visible at the esa.scl level - we only talk about JSONparts and maps of JSONparts, then query them using external methods
-  (string= "leaf" (cdr (assoc :itemKind self))))
+  (string= "leaf" (cdr (assoc :itemKind (handle self)))))
 
 (defmethod isSchematic ((self JSONpart))
-  (string= "graph" (cdr (assoc :itemKind self))))
+  (string= "graph" (cdr (assoc :itemKind (handle self)))))
 
 (defmethod getPartKind ((self JSONpart))
-  (cdr (assoc :kind self)))
+  (cdr (assoc :kind (handle self))))
 
 (defmethod getFilename ((self JSONpart))
-  (cdr (assoc :filename self)))
+  (cdr (assoc :filename (handle self))))
 
 (defmethod getName ((self JSONpart))
-  (cdr (assoc :name self)))
+  (cdr (assoc :name (handle self))))
 
 (defmethod getInPins ((self JSONpart))
-  (make-map 'string (cdr (assoc :inPins self))))
+  (make-map-from-list 'string (cdr (assoc :inPins (handle self)))))
 
 (defmethod getOutPins ((self JSONpart))
-  (make-map 'string (cdr (assoc :outPins self))))
+  (make-map-from-list 'string (cdr (assoc :outPins (handle self)))))
 
 ;; schematic (graph) accessors
 (defmethod getPartsMap ((self JSONpart))
-  (let ((json-graph (cdr (assoc :graphs self))))
-    (make-map 'JSONpartNameAndKind (cdr (assoc :parts json-graph)))))
+  (let ((json-graph (cdr (assoc :graphs (handle self)))))
+    (make-map-from-list 'JSONpartNameAndKind (cdr (assoc :parts json-graph)))))
 
 (defmethod getWireMap ((self JSONpart))
-  (let ((json-graph (cdr (assoc :graphs self))))
-    (make-map 'JSONpartNameAndPin (cdr (assoc :parts json-graph)))))
+  (let ((json-graph (cdr (assoc :graphs (handle self)))))
+    (make-map-from-list 'JSONpartNameAndPin (cdr (assoc :parts json-graph)))))
 
 
 (defmethod getPartName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
@@ -316,10 +316,10 @@
   (cdr (assoc :wireIndex self)))
 
 (defmethod getSourceMap ((self JSONwire))
-  (make-map 'JSONpartAndPin (cdr (assoc :sources self))))
+  (make-map-from-list 'JSONpartAndPin (cdr (assoc :sources self))))
 
 (defmethod getDestinationMap ((self JSONwire))
-  (make-map 'JSONpartAndPin (cdr (assoc :receivers self))))
+  (make-map-from-list 'JSONpartAndPin (cdr (assoc :receivers self))))
 
 (defmethod getPartName ((self JSONpartNameAndPin))
   (cdr (assoc :part self)))
@@ -329,11 +329,13 @@
 
 ;; helpers
 
-(defun make-map (ty lis)
+(defun make-map-from-list (ty lis)
   (let ((map (make-instance 'stack-dsl::%map :%element-type ty)))
-    (setf (stack-dsl:%ordered-list map) lis)
+    (setf (stack-dsl:%ordered-list map) (mapcar #'(lambda (item) (let ((typed-item (make-instance ty)))
+                                                                (setf (handle typed-item) item)
+                                                                typed-item))
+                                                lis))
     map))
-
 
 ;;;;;;;;;;
 ;; example JSON
@@ -381,3 +383,4 @@
     }
 ]
 |#
+
