@@ -442,7 +442,7 @@ this.attribute_json_string = null,
 this.json_string = function () { return attribute_json_string; },
 this.set_json_string = function (val) { this.attribute_json_string = val; }
 }
-function build (self) {
+function isabuild (self) {
         self.initialize ();
         { /*let*/
 let arr = self.get_app_from_JSON_as_map ();

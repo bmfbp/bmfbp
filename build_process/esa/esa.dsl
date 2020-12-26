@@ -501,7 +501,7 @@ end script
 %%%%%%%%%
 
 when building isaBuilder
-  script build >> kind  % returns kind of top schematic
+  script isabuild >> kind  % returns kind of top schematic
   method fatalErrorInBuild
   method get-app-from-JSON-as-map >> map JSONpart
   % method load-file (Filename)
@@ -536,12 +536,11 @@ when building JSONpartNameAndPin
 end when 
 
 when building kind
-  %%% isaBuilder
   script make-input-pins (partJSON)
   script make-output-pins (partJSON)
 end when
 
-script isaBuilder build
+script isaBuilder isabuild
     self.initialize
     let arr = self.get-app-from-JSON-as-map in
       map json-part = arr in

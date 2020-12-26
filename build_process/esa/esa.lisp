@@ -294,7 +294,7 @@
 (tableOfKinds :accessor tableOfKinds :initform nil)
 (alist :accessor alist :initform nil)
 (json-string :accessor json-string :initform nil)))
-(defmethod build ((self isaBuilder) )
+(defmethod isabuild ((self isaBuilder) )
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
 (block %map (dolist (json-part arr) 

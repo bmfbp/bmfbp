@@ -46,6 +46,6 @@
 ;; isa means Isolated Software Assets (new name for ESA)
 (defun isa-load-and-run-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
-    (let ((b (make-instance 'builder)))
+    (let ((b (make-instance 'isaBuilder)))
       (setf (json-string b) graph-string)
       (build b))))
