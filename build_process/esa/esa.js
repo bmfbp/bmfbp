@@ -448,10 +448,10 @@ function isabuild (self) {
 let arr = self.get_app_from_JSON_as_map ();
 (function () {
 for (const json_part in arr) {
-if (part.isLeaf ()) {
+if (json_part.isLeaf ()) {
 self.make_leaf_kind (json_part);
 } else {
-if (part.isSchematic ()) {
+if (json_part.isSchematic ()) {
 self.make_schematic_kind (json_part);
 } else {
 self.fatalErrorInBuild ();

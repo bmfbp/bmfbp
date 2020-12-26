@@ -544,10 +544,10 @@ script isaBuilder isabuild
     self.initialize
     let arr = self.get-app-from-JSON-as-map in
       map json-part = arr in
-	if part.isLeaf then
+	if json-part.isLeaf then
 	  @self.make-leaf-kind (json-part)
 	else
-	  if part.isSchematic then
+	  if json-part.isSchematic then
 	    @self.make-schematic-kind (json-part)
 	  else
 	    self.fatalErrorInBuild

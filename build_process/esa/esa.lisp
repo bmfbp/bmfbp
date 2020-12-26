@@ -298,12 +298,12 @@
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
 (block %map (dolist (json-part (stack-dsl::%ordered-list arr)) 
-(if (esa-expr-true (isLeaf part))
+(if (esa-expr-true (isLeaf json-part))
 (progn
 (make-leaf-kind self json-part)
 )
 (progn
-(if (esa-expr-true (isSchematic part))
+(if (esa-expr-true (isSchematic json-part))
 (progn
 (make-schematic-kind self json-part)
 )
