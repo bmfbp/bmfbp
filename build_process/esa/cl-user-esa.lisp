@@ -366,8 +366,8 @@
 #| external method ((self isaBuilder)) fatalErrorInBuild |#
 #| external method ((self isaBuilder)) get-app-from-JSON-as-map |#
 (defmethod make-leaf-kind ((self isaBuilder) json-part)
-        (let ((kindString (getPartKind self json-part))) 
-(let ((filename (getFilename self json-part))) 
+        (let ((kindString (getKind json-part))) 
+(let ((filename (getFilename json-part))) 
 (let ((newKind (make-instance 'kind)))
 (setf (kind-name newKind) (make-type-name self kindString))
 (setf (self-class newKind) (make-type-name self kindString))
@@ -411,8 +411,6 @@
 (add-wire newKind w))))
 (installInTable self kindString newKind))))
 #| external method ((self isaBuilder)) make-type-name |#
-#| external method ((self isaBuilder)) getPartKind |#
-#| external method ((self isaBuilder)) getFilename |#
 #| external method ((self isaBuilder)) schematicCommonClass |#
 
 (defclass kindsByName ()
@@ -449,7 +447,3 @@
 (defclass JSONwire ()
 (
 (handle :accessor handle :initform nil)))
-
-(defclass Constants ()
-(
-(ignore_this_field :accessor ignore_this_field :initform nil)))

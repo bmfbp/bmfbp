@@ -465,9 +465,9 @@ self.fatalErrorInBuild ();
 // external function get_app_from_JSON_as_map ((self isaBuilder))
 function make_leaf_kind (self, json_part) {
         { /*let*/
-let kindString = self.getPartKind (json-part);
+let kindString = json_part.getKind ();
 { /*let*/
-let filename = self.getFilename (json-part);
+let filename = json_part.getFilename ();
 { let newKind = new kind;
 newKind.kind_name () = self.make_type_name (kindString);
 newKind.self_class () = self.make_type_name (kindString);
@@ -520,8 +520,6 @@ self.installInTable (kindString, newKind);}
 } /* end let */
 };
 // external function make_type_name ((self isaBuilder), (? name))
-// external function getPartKind ((self isaBuilder), (? partJSON))
-// external function getFilename ((self isaBuilder), (? partJSON))
 // external function schematicCommonClass ((self isaBuilder))
 
 function kindsByName () {
@@ -567,10 +565,4 @@ function JSONwire () {
 this.attribute_handle = null,
 this.handle = function () { return attribute_handle; },
 this.set_handle = function (val) { this.attribute_handle = val; }
-}
-
-function Constants () {
-this.attribute_ignore_this_field = null,
-this.ignore_this_field = function () { return attribute_ignore_this_field; },
-this.set_ignore_this_field = function (val) { this.attribute_ignore_this_field = val; }
 }

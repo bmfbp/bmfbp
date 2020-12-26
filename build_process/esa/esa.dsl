@@ -101,11 +101,6 @@ class JSONwire %% index, sources, destinations
   handle
 end class
 
-class Constants
-  % just methods
-  ignore_this_field
-end class
-
 %=== building kinds ===
 
 when building kind
@@ -504,11 +499,9 @@ when building isaBuilder
   method fatalErrorInBuild
   method get-app-from-JSON-as-map >> map JSONpart
   % method load-file (Filename)
-  script make-leaf-kind (JSONforeign)
-  script make-schematic-kind (JSONforeign)
+  script make-leaf-kind (JSONpart)
+  script make-schematic-kind (JSONpart)
   method make-type-name (name) >> kindName
-  method getPartKind (partJSON) >> name
-  method getFilename (partJSON) >> name
   method schematicCommonClass >> name
 end when
 
@@ -559,8 +552,8 @@ script isaBuilder isabuild
 end script
 
 script isaBuilder make-leaf-kind (json-part)
-  let kindString = self.getPartKind (json-part) in
-    let filename = self.getFilename (json-part) in
+  let kindString = json-part.getKind in
+    let filename = json-part.getFilename in
       create newKind = kind in
         set newKind.kind-name = self.make-type-name (kindString)
         set newKind.self-class = self.make-type-name (kindString)

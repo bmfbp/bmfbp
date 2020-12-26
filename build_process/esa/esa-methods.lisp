@@ -279,7 +279,7 @@
 (defmethod isSchematic ((self JSONpart))
   (string= "graph" (cdr (assoc :itemKind self))))
 
-(defmethod getPartKind ((self JSONpart))
+(defmethod getKind ((self JSONpart))
   (cdr (assoc :kind self)))
 
 (defmethod getFilename ((self JSONpart))
