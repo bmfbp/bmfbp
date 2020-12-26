@@ -273,10 +273,10 @@
 (defmethod isLeaf ((self JSONpart))
   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
   ;; This choice is Lisp-specific,  we might choose a different kind of representation in JS, say.  The choice is not visible at the esa.scl level - we only talk about JSONparts and maps of JSONparts, then query them using external methods
-  (string= "leaf" (cdr (assoc :itemKind (handle self)))))
+  (if (string= "leaf" (cdr (assoc :itemKind (handle self)))) :true :false))
 
 (defmethod isSchematic ((self JSONpart))
-  (string= "graph" (cdr (assoc :itemKind (handle self)))))
+  (if (string= "graph" (cdr (assoc :itemKind (handle self)))) :true :false))
 
 (defmethod getPartKind ((self JSONpart))
   (cdr (assoc :kind (handle self))))
