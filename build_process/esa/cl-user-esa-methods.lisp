@@ -273,10 +273,10 @@
 (defmethod isLeaf ((self JSONpart))
   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
   ;; This choice is Lisp-specific,  we might choose a different kind of representation in JS, say.  The choice is not visible at the esa.scl level - we only talk about JSONparts and maps of JSONparts, then query them using external methods
-  (if (string= "leaf" (cdr (assoc :itemKind (handle self)))) :true :false))
+  (if (string= "leaf" (cdr (assoc :item-kind (handle self)))) :true :false))
 
 (defmethod isSchematic ((self JSONpart))
-  (if (string= "graph" (cdr (assoc :itemKind (handle self)))) :true :false))
+  (if (string= "graph" (cdr (assoc :item-Kind (handle self)))) :true :false))
 
 (defmethod getPartKind ((self JSONpart))
   (cdr (assoc :kind (handle self))))
@@ -288,10 +288,10 @@
   (cdr (assoc :name (handle self))))
 
 (defmethod getInPins ((self JSONpart))
-  (make-map-from-list 'string (cdr (assoc :inPins (handle self)))))
+  (make-map-from-list 'string (cdr (assoc :in-Pins (handle self)))))
 
 (defmethod getOutPins ((self JSONpart))
-  (make-map-from-list 'string (cdr (assoc :outPins (handle self)))))
+  (make-map-from-list 'string (cdr (assoc :out-Pins (handle self)))))
 
 ;; schematic (graph) accessors
 (defmethod getPartsMap ((self JSONpart))
@@ -305,15 +305,15 @@
 
 (defmethod getPartName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
   ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
-  (cdr (assoc :partName self)))
+  (cdr (assoc :part-Name self)))
 
 (defmethod getKindName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
   ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
-  (cdr (assoc :kindName self)))
+  (cdr (assoc :kind-Name self)))
 
 
 (defmethod getIndex ((self JSONwire))
-  (cdr (assoc :wireIndex self)))
+  (cdr (assoc :wire-Index self)))
 
 (defmethod getSourceMap ((self JSONwire))
   (make-map-from-list 'JSONpartAndPin (cdr (assoc :sources self))))
