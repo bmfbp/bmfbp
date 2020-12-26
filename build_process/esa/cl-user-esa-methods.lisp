@@ -288,10 +288,10 @@
   (cdr (assoc :name (handle self))))
 
 (defmethod getInPins ((self JSONpart))
-  (make-map-from-list 'string (cdr (assoc :in-Pins (handle self)))))
+  (make-string-map-from-list (cdr (assoc :in-Pins (handle self)))))
 
 (defmethod getOutPins ((self JSONpart))
-  (make-map-from-list 'string (cdr (assoc :out-Pins (handle self)))))
+  (make-string-map-from-list (cdr (assoc :out-Pins (handle self)))))
 
 ;; schematic (graph) accessors
 (defmethod getPartsMap ((self JSONpart))
@@ -331,10 +331,22 @@
 
 (defun make-map-from-list (ty lis)
   (let ((map (make-instance 'stack-dsl::%map :%element-type ty)))
-    (setf (stack-dsl:%ordered-list map) (mapcar #'(lambda (item) (let ((typed-item (make-instance ty)))
-                                                                (setf (handle typed-item) item)
-                                                                typed-item))
-                                                lis))
+    (setf (stack-dsl:%ordered-list map)
+          (mapcar #'(lambda (item)
+                      (let ((typed-item (make-instance ty)))
+                        (setf (handle typed-item) item)
+                        typed-item))
+                  lis))
+    map))
+
+(defun make-string-map-from-list (lis)
+  (let ((map (make-instance 'stack-dsl::%map :%element-type 'stack-dsl:%string)))
+    (setf (stack-dsl:%ordered-list map)
+          (mapcar #'(lambda (item)
+                      (let ((typed-item (make-instance 'stack-dsl:%string)))
+                        (setf (stack-dsl:%value typed-item) item)
+                        typed-item))
+                  lis))
     map))
 
 ;;;;;;;;;;
