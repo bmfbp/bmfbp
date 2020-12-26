@@ -330,7 +330,11 @@
 ;; helpers
 
 (defun make-map-from-json-list (ty lis)
- (stack-dsl:make-typed-string ty lis))
+  (stack-dsl:make-map-from-list 
+   ty
+   (mapcar #'(lambda (item)
+	       (stack-dsl:make-typed-value ty item))
+	   lis)))
 
 ;;;;;;;;;;
 ;; example JSON
