@@ -8,10 +8,9 @@
 * lispworks build
   load ../esa/lw0 
   (lw0)
-  load ../esa/lw0 
-  (transpile)
-  load ../cl-run/lw2
-  (lw2) 
+  load ../esa/lw1
+  (lw1)
+
 
 * build
   to build cl-user-esa.lisp & esa.js

@@ -245,7 +245,7 @@
 ;;;;;;;;;;;;;;;
 
 (defmethod initialize ((self isabuilder)) 
-  (setf (table self) (make-hash-table :test 'equal)))
+  (setf (tableOfKinds self) (make-hash-table :test 'equal)))
 
 (defmethod get-app-from-JSON-as-map ((self isabuilder))
   (setf (alist self) (arrowgrams/build::json-to-alist (json-string self)))
@@ -253,7 +253,7 @@
     map))
 
 (defmethod installInTable ((self isabuilder) kind-name kind-structure)
-  (setf (gethash (table self) kind-name) kind-structure))
+  (setf (gethash (tableOfKinds self) kind-name) kind-structure))
 
 (defmethod make-type-name ((self isabuilder) str)
   ;; do any magic required by base language to create a type name from the string str
@@ -262,7 +262,7 @@
 
 (defmethod lookupKind ((self isabuilder) name)
   ;; hash table lookup with key name 
-  (gethash (table self) name))
+  (gethash (tableOfKinds self) name))
 
 (defmethod fatalErrorInBuild ((self isabuilder))
   (error "fatal error in build"))
