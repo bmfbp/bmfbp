@@ -1,7 +1,7 @@
 ;; written in esa.dsl
 (defun lw4 ()
   (arrowgrams/build::arrowgrams-to-json "ahelloworld")
-  (arrowgrams/build::isa-load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld")))
+  (arrowgrams/build::isa-load-app-from-file  (arrowgrams/build::json-graph-path "ahelloworld")))
 
 
 ;; written in lisp
