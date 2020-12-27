@@ -1,5 +1,7 @@
 (in-package :cl-user)
 
+(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+
 
 ;; for bootstrap - make names case insensitive - downcase everything
 
@@ -30,7 +32,7 @@
 
 (defmethod install-part ((self kind) name kind node-class)
   (let ((p (make-instance 'part-definition)))
-    (setf (part-name p) (string-downcase name))
+    (setf (part-name p) (stack-dsl:tolower name))
     (setf (part-kind p) kind)
     (push p (parts self))))
 
@@ -221,7 +223,7 @@
 
 
 (defun string=-downcase (a b)
-  (string= (string-downcase a) (string-downcase b)))
+  (string= (string-downcase (stack-dsl:%as-string a)) (string-downcase (stack-dsl:%as-string b))))
 
 (defmethod get-destination ((self event))
   (let ((d (make-instance 'destination)))
@@ -253,7 +255,7 @@
     map))
 
 (defmethod installInTable ((self isabuilder) kind-name kind-structure)
-  (setf (gethash (tableOfKinds self) kind-name) kind-structure))
+  (setf (gethash (stack-dsl:%as-string kind-name) (tableOfKinds self)) kind-structure))
 
 (defmethod make-type-name ((self isabuilder) str)
   ;; do any magic required by base language to create a type name from the string str
@@ -262,7 +264,7 @@
 
 (defmethod lookupKind ((self isabuilder) name)
   ;; hash table lookup with key name 
-  (gethash (tableOfKinds self) name))
+  (gethash (stack-dsl:%as-string name) (tableOfKinds self)))
 
 (defmethod fatalErrorInBuild ((self isabuilder))
   (error "fatal error in build"))
@@ -332,8 +334,10 @@
 (defun make-map-from-json-list (ty lis)
   (stack-dsl:make-map-from-list 
    ty
-   (mapcar #'(lambda (item)
-	       (stack-dsl:make-typed-value ty item))
+   (mapcar #'(lambda (json-item)
+               (let ((item (make-instance ty)))
+                 (setf (foreign item) json-item)
+                 item))
 	   lis)))
 
 ;;;;;;;;;;
