@@ -1,4 +1,4 @@
-(in-package :arrowgrams/build)
+(in-package :arrowgrams/build)(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 (defclass part-definition (stack-dsl:%typed-value)
 (
