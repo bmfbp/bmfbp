@@ -243,33 +243,33 @@
     e))
 
 ;;;;;;;;;;;;;;;
-;; isabuilder
+;; isaApp
 ;;;;;;;;;;;;;;;
 
-(defmethod initialize ((self isabuilder)) 
+(defmethod initialize ((self isaApp)) 
   (setf (tableOfKinds self) (make-hash-table :test 'equal)))
 
-(defmethod get-app-from-JSON-as-map ((self isabuilder))
+(defmethod get-app-from-JSON-as-map ((self isaApp))
   (setf (alist self) (arrowgrams/build::json-to-alist (json-string self)))
   (let ((map (make-map-from-json-list 'JSONpart (alist self))))
     map))
 
-(defmethod installInTable ((self isabuilder) kind-name kind-structure)
+(defmethod installInTable ((self isaApp) kind-name kind-structure)
   (setf (gethash (stack-dsl:%as-string kind-name) (tableOfKinds self)) kind-structure))
 
-(defmethod make-type-name ((self isabuilder) str)
+(defmethod make-type-name ((self isaApp) str)
   ;; do any magic required by base language to create a type name from the string str
   ;; in Lisp, we can just use the string str - no more magic
   str)
 
-(defmethod lookupKind ((self isabuilder) name)
+(defmethod lookupKind ((self isaApp) name)
   ;; hash table lookup with key name 
   (gethash (stack-dsl:%as-string name) (tableOfKinds self)))
 
-(defmethod fatalErrorInBuild ((self isabuilder))
+(defmethod fatalErrorInBuild ((self isaApp))
   (error "fatal error in build"))
 
-(defmethod schematicCommonClass ((self isabuilder))
+(defmethod schematicCommonClass ((self isaApp))
   "%schematic")
 
 (defmethod isLeaf ((self JSONpart))

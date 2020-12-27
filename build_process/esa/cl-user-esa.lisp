@@ -354,7 +354,7 @@
 (tableOfKinds :accessor tableOfKinds :initform nil)
 (alist :accessor alist :initform nil)
 (json-string :accessor json-string :initform nil)))
-(defmethod isabuild ((self isaApp) )
+(defmethod isa-load ((self isaApp) )
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
 (block %map (dolist (json-part (stack-dsl::%ordered-list arr))
