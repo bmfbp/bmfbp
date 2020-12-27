@@ -24,10 +24,16 @@
       (format *error-output* "2 FATAL error2 in main ~a~%" c))))
 
 
-(defun load-and-run-from-file (json-graph-filename)
+(defun load-and-run-app-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
-    (let ((app (isa-load-app-from-file graph-string)))
-)
+    ;; load app into memory
+    (let ((app (isa-load-app graph-string)))
+      ;; get top node of app
+      (let ((top (cl-user::top-node app)))
+	top)
+      ;; run dispatcher on top node
+      ;; inject start into top node
+      )
 ))
 
 (defparameter cl-user::*dispatcher* nil)
@@ -50,6 +56,14 @@
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
     (let ((b (make-instance 'cl-user::isaApp)))
       (setf (cl-user::json-string b) graph-string)
+      ;; load app recursively
       (cl-user::isa-load b)
       b)))
+
+(defun isa-load-app (graph-string)
+  (let ((b (make-instance 'cl-user::isaApp)))
+    (setf (cl-user::json-string b) graph-string)
+    ;; load app recursively
+    (cl-user::isa-load b)
+    b))
 

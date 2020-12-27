@@ -438,6 +438,9 @@ this.set_tableOfKinds = function (val) { this.attribute_tableOfKinds = val; },
 this.attribute_alist = null,
 this.alist = function () { return attribute_alist; },
 this.set_alist = function (val) { this.attribute_alist = val; },
+this.attribute_top_node = null,
+this.top_node = function () { return attribute_top_node; },
+this.set_top_node = function (val) { this.attribute_top_node = val; },
 this.attribute_json_string = null,
 this.json_string = function () { return attribute_json_string; },
 this.set_json_string = function (val) { this.attribute_json_string = val; }
@@ -452,7 +455,10 @@ if (json_part.isLeaf ()) {
 self.make_leaf_kind (json_part);
 } else {
 if (json_part.isSchematic ()) {
-self.make_schematic_kind (json_part);
+{ /*let*/
+let k = self.make_schematic_kind (json-part);
+self.top_node () = k;
+} /* end let */
 } else {
 self.fatalErrorInBuild ();
 }
@@ -473,7 +479,8 @@ newKind.kind_name () = self.make_type_name (kindString);
 newKind.self_class () = self.make_type_name (kindString);
 newKind.make_input_pins (json_part);
 newKind.make_output_pins (json_part);
-self.installInTable (newKind.kind_name (), newKind);}
+self.installInTable (newKind.kind_name (), newKind);
+return newKind;}
 
 } /* end let */
 } /* end let */
@@ -515,7 +522,8 @@ newKind.add_wire (w);}
 
 };
 }) ();
-self.installInTable (newKind.kind_name (), newKind);}
+self.installInTable (newKind.kind_name (), newKind);
+return newKind;}
 
 } /* end let */
 };

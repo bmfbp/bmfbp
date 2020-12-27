@@ -2,8 +2,5 @@
   (uiop:run-program "~/quicklisp/local-projects/rm.bash")
   (ql:quickload :arrowgrams/build)
   (ql:quickload :arrowgrams/runner))
+;; load of undefined functions in arrowgrams/bild::
 
-(defun lw ()
-  (lw0)
-  (lw1)
-  (lw3))
