@@ -570,7 +570,7 @@ script isaBuilder make-leaf-kind (json-part)
         % self.load-file (filename)  % skip this until very basics are working
         @newKind.make-input-pins (json-part)
         @newKind.make-output-pins (json-part)
-        self.installInTable (kindString newKind)
+        self.installInTable (newKind.kind-name newKind)
       end create
     end let
   end let
@@ -602,7 +602,7 @@ script isaBuilder make-schematic-kind (json-part)
             newKind.add-wire (w)
           end create
         end map
-        self.installInTable (kindString newKind)
+        self.installInTable (newKind.kind-name newKind)
       end create
     end let
 end script

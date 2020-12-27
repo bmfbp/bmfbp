@@ -473,7 +473,7 @@ newKind.kind_name () = self.make_type_name (kindString);
 newKind.self_class () = self.make_type_name (kindString);
 newKind.make_input_pins (json_part);
 newKind.make_output_pins (json_part);
-self.installInTable (kindString, newKind);}
+self.installInTable (newKind.kind_name (), newKind);}
 
 } /* end let */
 } /* end let */
@@ -515,7 +515,7 @@ newKind.add_wire (w);}
 
 };
 }) ();
-self.installInTable (kindString, newKind);}
+self.installInTable (newKind.kind_name (), newKind);}
 
 } /* end let */
 };

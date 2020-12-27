@@ -386,7 +386,7 @@
 (setf (self-class newKind) (make-type-name self kindString))
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
-(installInTable self kindString newKind)))))
+(installInTable self (kind-name newKind) newKind)))))
 (defmethod make-schematic-kind ((self isaBuilder) json-part)
         (let ((schematicName (name json-part))) 
 (let ((newKind (make-instance 'kind)))
@@ -426,7 +426,7 @@
 
 (add-source w (partName destinationJSON) (pinName destinationJSON))))
 (add-wire newKind w))))
-(installInTable self kindString newKind))))
+(installInTable self (kind-name newKind) newKind))))
 #| external method ((self isaBuilder)) make-type-name |#
 #| external method ((self isaBuilder)) schematicCommonClass |#
 
