@@ -353,6 +353,7 @@
 (
 (tableOfKinds :accessor tableOfKinds :initform nil)
 (alist :accessor alist :initform nil)
+(top-node :accessor top-node :initform nil)
 (json-string :accessor json-string :initform nil)))
 (defmethod isa-load ((self isaApp) )
         (initialize self)
@@ -370,7 +371,8 @@
 (progn
 (if (esa-expr-true (isSchematic json-part))
 (progn
-(make-schematic-kind self json-part)
+(let ((k (make-schematic-kind self json-part))) 
+(setf (top-node self) k))
 )
 (progn
 (fatalErrorInBuild self)
@@ -386,7 +388,8 @@
 (setf (self-class newKind) (make-type-name self kindString))
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
-(installInTable self (kind-name newKind) newKind)))))
+(installInTable self (kind-name newKind) newKind)
+(return-from make-leaf-kind newKind)))))
 (defmethod make-schematic-kind ((self isaApp) json-part)
         (let ((schematicName (name json-part))) 
 (let ((newKind (make-instance 'kind)))
@@ -426,7 +429,8 @@
 
 (add-source w (partName destinationJSON) (pinName destinationJSON))))
 (add-wire newKind w))))
-(installInTable self (kind-name newKind) newKind))))
+(installInTable self (kind-name newKind) newKind)
+(return-from make-schematic-kind newKind))))
 #| external method ((self isaApp)) make-type-name |#
 #| external method ((self isaApp)) schematicCommonClass |#
 

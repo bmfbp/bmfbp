@@ -78,6 +78,7 @@ end class
 class isaApp
   tableOfKinds
   alist
+  top-node
   json-string
 end class
 
@@ -503,8 +504,8 @@ when building isaApp
   method fatalErrorInBuild
   method get-app-from-JSON-as-map >> map JSONpart
   % method load-file (Filename)
-  script make-leaf-kind (JSONpart)
-  script make-schematic-kind (JSONpart)
+  script make-leaf-kind (JSONpart) >> kind
+  script make-schematic-kind (JSONpart) >> kind
   method make-type-name (name) >> kindName
   method schematicCommonClass >> name
 end when
@@ -544,7 +545,7 @@ when building JSONwire
   method destinationMap >> map JSONpartNameAndPin
 end when
 
-script isaApp isa-load
+script isaApp isa-load >> kind
     self.initialize
     let arr = self.get-app-from-JSON-as-map in
       map json-part = arr in
@@ -552,16 +553,18 @@ script isaApp isa-load
 	  @self.make-leaf-kind (json-part)
 	else
 	  if json-part.isSchematic then
-	    @self.make-schematic-kind (json-part)
+	    let k = @self.make-schematic-kind (json-part) in
+              set self.top-node = k
+            end let
 	  else
 	    self.fatalErrorInBuild
 	  end if
 	end if
       end map
-    end let  
+    end let 
 end script
 
-script isaApp make-leaf-kind (json-part)
+script isaApp make-leaf-kind (json-part) >> newKind
   let kindString = json-part.kind in
     let filename = json-part.filename in
       create newKind = kind in
@@ -571,6 +574,7 @@ script isaApp make-leaf-kind (json-part)
         @newKind.make-input-pins (json-part)
         @newKind.make-output-pins (json-part)
         self.installInTable (newKind.kind-name newKind)
+        >> newKind
       end create
     end let
   end let
@@ -603,6 +607,7 @@ script isaApp make-schematic-kind (json-part)
           end create
         end map
         self.installInTable (newKind.kind-name newKind)
+        >> newKind
       end create
     end let
 end script
