@@ -72,10 +72,10 @@ class event
 end class
 
 %%%%
-% classes for isaBuilder
+% classes for isaApp
 %%%%
 
-class isaBuilder
+class isaApp
   tableOfKinds
   alist
   json-string
@@ -498,7 +498,7 @@ end script
 
 %%%%%%%%%
 
-when building isaBuilder
+when building isaApp
   script isabuild >> kind  % returns kind of top schematic
   method fatalErrorInBuild
   method get-app-from-JSON-as-map >> map JSONpart
@@ -544,7 +544,7 @@ when building JSONwire
   method destinationMap >> map JSONpartNameAndPin
 end when
 
-script isaBuilder isabuild
+script isaApp isabuild
     self.initialize
     let arr = self.get-app-from-JSON-as-map in
       map json-part = arr in
@@ -561,7 +561,7 @@ script isaBuilder isabuild
     end let  
 end script
 
-script isaBuilder make-leaf-kind (json-part)
+script isaApp make-leaf-kind (json-part)
   let kindString = json-part.kind in
     let filename = json-part.filename in
       create newKind = kind in
@@ -576,7 +576,7 @@ script isaBuilder make-leaf-kind (json-part)
   end let
 end script
 
-script isaBuilder make-schematic-kind (json-part)
+script isaApp make-schematic-kind (json-part)
     let schematicName = json-part.name in
       create newKind = kind in
         set newKind.kind-name = schematicName

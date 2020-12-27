@@ -349,12 +349,12 @@
 (partpin :accessor partpin :initform nil)
 (data :accessor data :initform nil)))
 
-(defclass isaBuilder (stack-dsl:%typed-value)
+(defclass isaApp (stack-dsl:%typed-value)
 (
 (tableOfKinds :accessor tableOfKinds :initform nil)
 (alist :accessor alist :initform nil)
 (json-string :accessor json-string :initform nil)))
-(defmethod isabuild ((self isaBuilder) )
+(defmethod isabuild ((self isaApp) )
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
 (block %map (dolist (json-part (stack-dsl::%ordered-list arr))
@@ -376,9 +376,9 @@
 (fatalErrorInBuild self)
 ))
 ))))))
-#| external method ((self isaBuilder)) fatalErrorInBuild |#
-#| external method ((self isaBuilder)) get-app-from-JSON-as-map |#
-(defmethod make-leaf-kind ((self isaBuilder) json-part)
+#| external method ((self isaApp)) fatalErrorInBuild |#
+#| external method ((self isaApp)) get-app-from-JSON-as-map |#
+(defmethod make-leaf-kind ((self isaApp) json-part)
         (let ((kindString (kind json-part))) 
 (let ((filename (filename json-part))) 
 (let ((newKind (make-instance 'kind)))
@@ -387,7 +387,7 @@
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
 (installInTable self (kind-name newKind) newKind)))))
-(defmethod make-schematic-kind ((self isaBuilder) json-part)
+(defmethod make-schematic-kind ((self isaApp) json-part)
         (let ((schematicName (name json-part))) 
 (let ((newKind (make-instance 'kind)))
 (setf (kind-name newKind) schematicName)
@@ -427,8 +427,8 @@
 (add-source w (partName destinationJSON) (pinName destinationJSON))))
 (add-wire newKind w))))
 (installInTable self (kind-name newKind) newKind))))
-#| external method ((self isaBuilder)) make-type-name |#
-#| external method ((self isaBuilder)) schematicCommonClass |#
+#| external method ((self isaApp)) make-type-name |#
+#| external method ((self isaApp)) schematicCommonClass |#
 
 (defclass kindsByName (stack-dsl:%typed-value)
 (

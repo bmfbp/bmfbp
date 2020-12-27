@@ -49,3 +49,4 @@
     (let ((b (make-instance 'cl-user::isaBuilder)))
       (setf (cl-user::json-string b) graph-string)
       (cl-user::isabuild b))))
+

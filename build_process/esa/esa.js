@@ -431,7 +431,7 @@ this.data = function () { return attribute_data; },
 this.set_data = function (val) { this.attribute_data = val; }
 }
 
-function isaBuilder () {
+function isaApp () {
 this.attribute_tableOfKinds = null,
 this.tableOfKinds = function () { return attribute_tableOfKinds; },
 this.set_tableOfKinds = function (val) { this.attribute_tableOfKinds = val; },
@@ -461,8 +461,8 @@ self.fatalErrorInBuild ();
 }) ();
 } /* end let */
 };
-// external function fatalErrorInBuild ((self isaBuilder))
-// external function get_app_from_JSON_as_map ((self isaBuilder))
+// external function fatalErrorInBuild ((self isaApp))
+// external function get_app_from_JSON_as_map ((self isaApp))
 function make_leaf_kind (self, json_part) {
         { /*let*/
 let kindString = json_part.kind ();
@@ -519,8 +519,8 @@ self.installInTable (newKind.kind_name (), newKind);}
 
 } /* end let */
 };
-// external function make_type_name ((self isaBuilder), (? name))
-// external function schematicCommonClass ((self isaBuilder))
+// external function make_type_name ((self isaApp), (? name))
+// external function schematicCommonClass ((self isaApp))
 
 function kindsByName () {
 this.attribute_table = null,
