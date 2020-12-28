@@ -5,6 +5,7 @@ type boolean
 type node-class
 type value
 
+situation reading
 situation building
 situation building-aux
 situation loading
@@ -499,7 +500,7 @@ end script
 
 %%%%%%%%%
 
-when building isaApp
+when reading isaApp
   script isa-load >> kind  % returns kind of top schematic
   method fatalErrorInBuild
   method get-app-from-JSON-as-map >> map JSONpart
@@ -510,7 +511,7 @@ when building isaApp
   method schematicCommonClass >> name
 end when
 
-when building JSONpart
+when reading JSONpart
   method name >> name
   method kind >> name
   method filename >> filename
@@ -524,22 +525,22 @@ when building JSONpart
   method getWire >> JSONwire
 end when
 
-when building JSONpartNameAndKind
+when reading JSONpartNameAndKind
   method partName >> name
   method kindName >> name
 end when 
 
-when building JSONpartNameAndPin
+when reading JSONpartNameAndPin
   method partName >> name
   method pinName >> name
 end when 
 
-when building kind
+when reading kind
   script make-input-pins (partJSON)
   script make-output-pins (partJSON)
 end when
 
-when building JSONwire
+when reading JSONwire
   method index >> Index
   method sourceMap >> map JSONpartNameAndPin 
   method destinationMap >> map JSONpartNameAndPin

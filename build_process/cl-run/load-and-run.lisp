@@ -62,10 +62,10 @@
       (cl-user::isa-load b)
       b)))
 
-(defun isa-load-app (graph-string dsptcher)
+(defun isa-load-app (graph-string)
   (let ((b (make-instance 'cl-user::isaApp)))
     (setf (cl-user::json-string b) graph-string)
     ;; load app recursively
-    (cl-user::isa-load b dsptcher)
+    (cl-user::isa-load b)
     b))
 

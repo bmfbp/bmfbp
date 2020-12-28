@@ -115,10 +115,10 @@ self.ensure_valid_destination (dest);
 }) ();
         self.install_wire (w);
 };
+// external function install_class ((self kind), (? node_class))
 // external function install_wire ((self kind), (? wire))
 // external function install_part ((self kind), (? name), (? kind), (? node_class))
 // external function parts ((self kind))
-// external function install_class ((self kind), (? node_class))
 // external function ensure_part_not_declared ((self kind), (? name))
 // external function ensure_valid_input_pin ((self kind), (? name))
 // external function ensure_valid_output_pin ((self kind), (? name))

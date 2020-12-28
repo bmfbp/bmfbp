@@ -75,10 +75,10 @@
 
 (ensure-valid-destination self dest)))
         (install-wire self w))
+#| external method ((self kind)) install-class |#
 #| external method ((self kind)) install-wire |#
 #| external method ((self kind)) install-part |#
 #| external method ((self kind)) parts |#
-#| external method ((self kind)) install-class |#
 #| external method ((self kind)) ensure-part-not-declared |#
 #| external method ((self kind)) ensure-valid-input-pin |#
 #| external method ((self kind)) ensure-valid-output-pin |#
