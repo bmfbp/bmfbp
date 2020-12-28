@@ -107,6 +107,16 @@ class JSONindex
   foreign
 end class
 
+
+%%%%%%
+% crossing the boundary from base language to this SCL
+%%%%%%
+
+class ForeignKindName
+  foreign
+end class
+
+
 %=== building kinds ===
 
 when building kind
@@ -507,7 +517,7 @@ when reading isaApp
   % method load-file (Filename)
   script make-leaf-kind (JSONpart) >> kind
   script make-schematic-kind (JSONpart) >> kind
-  method make-type-name (name) >> kindName
+  method make-type-name (name) >> ForeignKindName
   method schematicCommonClass >> name
 end when
 
@@ -569,7 +579,7 @@ script isaApp make-leaf-kind (json-part) >> newKind
   let kindString = json-part.kind in
     let filename = json-part.filename in
       create newKind = kind in
-        set newKind.kind-name = self.make-type-name (kindString)
+        set newKind.kind-name = kindString
         set newKind.self-class = self.make-type-name (kindString)
         % self.load-file (filename)  % skip this until very basics are working
         @newKind.make-input-pins (json-part)

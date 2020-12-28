@@ -23,6 +23,9 @@
     (error (c)
       (format *error-output* "2 FATAL error2 in main ~a~%" c))))
 
+#|
+To read a JSON template into memory, we need methods to suck the JSON in, then call “building kind” methods to make the Template (in memory).  After that, we call the “loading kind” method “loader” to instantiate Nodes from the Kinds.  Loading causes calls to the “loading dispatcher” methods to let the Dispatcher memo-rize all of the Nodes.  The Dispatcher needs to make a list of every Node, so that it can check readiness.  Nodes are “runtime” Parts.  We need to create exactly one Dispatcher before calling “kind loader”).  The sequence is something like: (1) read JSON and call “building kind” methods (2) create a Dispatcher (3) call “kind loader” on the top Node (4) tell the Dispatcher to initialize all Nodes (5) tell the Dispatcher to run.
+|#
 
 (defun load-and-run-app-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
@@ -30,10 +33,18 @@
     (let ((d (make-instance 'cl-user::dispatcher)))
       (let ((app (isa-read-app graph-string)))
 	;; get top node of app
-	(let ((top (cl-user::top-node app)))
-	  top)
-	;; run dispatcher on top node
-	;; inject start into top node
+	(let ((top-kind (cl-user::top-node app)))
+	  ;; create Dispatcher
+	  (let ((disptcher (make-instance 'cl-user::dispatcher)))
+	    ;; run "kind loader" on top node
+	    (let ((top-node (cl-user::loader top-kind "TOP" nil disptcher)))
+	      (format *standard-output* "laraff returns ~a~%" top-node)
+	      top-node
+	      ;; inject start into top node
+	      )
+	    )
+	  top
+	  )
 	)
       )
 ))

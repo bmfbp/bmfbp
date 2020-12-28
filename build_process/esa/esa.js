@@ -475,7 +475,7 @@ let kindString = json_part.kind ();
 { /*let*/
 let filename = json_part.filename ();
 { let newKind = new kind;
-newKind.kind_name () = self.make_type_name (kindString);
+newKind.kind_name () = kindString;
 newKind.self_class () = self.make_type_name (kindString);
 newKind.make_input_pins (json_part);
 newKind.make_output_pins (json_part);
@@ -579,6 +579,12 @@ this.set_foreign = function (val) { this.attribute_foreign = val; }
 // external function destinationMap ((self JSONwire))
 
 function JSONindex () {
+this.attribute_foreign = null,
+this.foreign = function () { return attribute_foreign; },
+this.set_foreign = function (val) { this.attribute_foreign = val; }
+}
+
+function ForeignKindName () {
 this.attribute_foreign = null,
 this.foreign = function () { return attribute_foreign; },
 this.set_foreign = function (val) { this.attribute_foreign = val; }

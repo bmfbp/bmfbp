@@ -3,6 +3,11 @@
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 
+(defclass schematic (node) () )
+
+(defmethod initially ((self schematic))
+  )
+
 ;; for bootstrap - make names case insensitive - downcase everything
 
 (defun esa-if-failed-to-return-true-false (msg)
@@ -260,7 +265,7 @@
 (defmethod make-type-name ((self isaApp) str)
   ;; do any magic required by base language to create a type name from the string str
   ;; in Lisp, we can just use the string str - no more magic
-  str)
+  (intern (string-upcase (stack-dsl:%as-string str)) "COMMON-LISP-USER"))
 
 (defmethod lookupKind ((self isaApp) name)
   ;; hash table lookup with key name 
@@ -270,7 +275,7 @@
   (error "fatal error in build"))
 
 (defmethod schematicCommonClass ((self isaApp))
-  "%schematic")
+  (intern "SCHEMATIC" "COMMON-LISP-USER"))
 
 (defmethod isLeaf ((self JSONpart))
   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
@@ -297,7 +302,7 @@
 
 ;; schematic (graph) accessors
 (defmethod partsMap ((self JSONpart))
-  (let ((json-graph (cdr (assoc :graphs (foreign self)))))
+  (let ((json-graph (cdr (assoc :graph (foreign self)))))
     (make-map-from-json-list 'JSONpartNameAndKind (cdr (assoc :parts json-graph)))))
 
 (defmethod wireMap ((self JSONpart))
@@ -307,27 +312,27 @@
 
 (defmethod partName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
   ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
-  (stack-dsl:make-typed-string (cdr (assoc :part-Name self))))
+  (stack-dsl:make-typed-string (cdr (assoc :part-Name (foreign self)))))
 
 (defmethod kindName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
   ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
-  (stack-dsl:make-typed-string (cdr (assoc :kind-Name self))))
+  (stack-dsl:make-typed-string (cdr (assoc :kind-Name (foreign self)))))
 
 
 (defmethod index ((self JSONwire))
-  (stack-dsl:make-typed-value 'JSONindex (cdr (assoc :wire-Index self))))
+  (stack-dsl:make-typed-value 'JSONindex (cdr (assoc :wire-Index (foreign self)))))
 
 (defmethod sourceMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartAndPin (cdr (assoc :sources self))))
+  (make-map-from-json-list 'JSONpartAndPin (cdr (assoc :sources (foreign self)))))
 
 (defmethod destinationMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartAndPin (cdr (assoc :receivers self))))
+  (make-map-from-json-list 'JSONpartAndPin (cdr (assoc :receivers (foreign self)))))
 
 (defmethod partName ((self JSONpartNameAndPin))
-  (stack-dsl:make-typed-string (cdr (assoc :part self))))
+  (stack-dsl:make-typed-string (cdr (assoc :part (foreign self)))))
 
 (defmethod pinName ((self JSONpartNameAndPin))
-  (stack-dsl:make-typed-string (cdr (assoc :part self))))
+  (stack-dsl:make-typed-string (cdr (assoc :part (foreign self)))))
 
 ;; helpers
 

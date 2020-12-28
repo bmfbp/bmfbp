@@ -384,7 +384,7 @@
         (let ((kindString (kind json-part))) 
 (let ((filename (filename json-part))) 
 (let ((newKind (make-instance 'kind)))
-(setf (kind-name newKind) (make-type-name self kindString))
+(setf (kind-name newKind) kindString)
 (setf (self-class newKind) (make-type-name self kindString))
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
@@ -473,5 +473,9 @@
 #| external method ((self JSONwire)) destinationMap |#
 
 (defclass JSONindex (stack-dsl:%typed-value)
+(
+(foreign :accessor foreign :initform nil)))
+
+(defclass ForeignKindName (stack-dsl:%typed-value)
 (
 (foreign :accessor foreign :initform nil)))
