@@ -27,12 +27,14 @@
 (defun load-and-run-app-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
     ;; load app into memory
-    (let ((app (isa-load-app graph-string)))
-      ;; get top node of app
-      (let ((top (cl-user::top-node app)))
-	top)
-      ;; run dispatcher on top node
-      ;; inject start into top node
+    (let ((d (make-instance 'cl-user::dispatcher)))
+      (let ((app (isa-load-app graph-string)))
+	;; get top node of app
+	(let ((top (cl-user::top-node app)))
+	  top)
+	;; run dispatcher on top node
+	;; inject start into top node
+	)
       )
 ))
 
@@ -60,10 +62,10 @@
       (cl-user::isa-load b)
       b)))
 
-(defun isa-load-app (graph-string)
+(defun isa-load-app (graph-string dsptcher)
   (let ((b (make-instance 'cl-user::isaApp)))
     (setf (cl-user::json-string b) graph-string)
     ;; load app recursively
-    (cl-user::isa-load b)
+    (cl-user::isa-load b dsptcher)
     b))
 

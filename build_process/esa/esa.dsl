@@ -116,6 +116,7 @@ when building kind
   % method install-initially-function(function)
   script add-part(name kind node-class)
   script add-wire(wire)
+  method install-class(node-class)
   method install-wire(wire)
   method install-part(name kind node-class)
   method parts >> map part-definition
@@ -123,7 +124,6 @@ when building kind
 end when
 
 when building-aux kind
-  method install-class(node-class)
   method ensure-part-not-declared(name)
   method ensure-valid-input-pin(name)
   method ensure-valid-output-pin(name)
