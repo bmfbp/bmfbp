@@ -28,7 +28,7 @@
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
     ;; load app into memory
     (let ((d (make-instance 'cl-user::dispatcher)))
-      (let ((app (isa-load-app graph-string)))
+      (let ((app (isa-read-app graph-string)))
 	;; get top node of app
 	(let ((top (cl-user::top-node app)))
 	  top)
@@ -40,7 +40,7 @@
 
 (defparameter cl-user::*dispatcher* nil)
 
-#+nil(defun arrowgrams-load-and-run (json-graph-string)
+#+keep-as-example(defun arrowgrams-load-and-run (json-graph-string)
   (let ((graph-alist (json-to-alist json-graph-string)))
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in ../esa/esa.lisp
       (let ((esa-disp (make-instance 'cl-user::dispatcher)))  ;; dispatcher defined in ../esa/esa.lisp
@@ -51,18 +51,11 @@
 	  (cl-user::dispatcher-run esa-disp)
 	  (setf cl-user::*dispatcher* esa-disp)
           esa-disp)))))
+
 (defun arrowgrams-load-and-run (json-graph-string) (assert nil))
   
 ;; isa means Isolated Software Assets (new name for ESA)
-(defun isa-load-app-from-file (json-graph-filename)
-  (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
-    (let ((b (make-instance 'cl-user::isaApp)))
-      (setf (cl-user::json-string b) graph-string)
-      ;; load app recursively
-      (cl-user::isa-read-json b)
-      b)))
-
-(defun isa-load-app (graph-string)
+(defun isa-read-app (graph-string)
   (let ((b (make-instance 'cl-user::isaApp)))
     (setf (cl-user::json-string b) graph-string)
     ;; read app from JSON into memory and build Templates
