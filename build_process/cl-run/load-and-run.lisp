@@ -59,13 +59,13 @@
     (let ((b (make-instance 'cl-user::isaApp)))
       (setf (cl-user::json-string b) graph-string)
       ;; load app recursively
-      (cl-user::isa-load b)
+      (cl-user::isa-read-json b)
       b)))
 
 (defun isa-load-app (graph-string)
   (let ((b (make-instance 'cl-user::isaApp)))
     (setf (cl-user::json-string b) graph-string)
-    ;; load app recursively
-    (cl-user::isa-load b)
+    ;; read app from JSON into memory and build Templates
+    (cl-user::isa-read-json b)
     b))
 

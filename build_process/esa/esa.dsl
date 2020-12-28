@@ -501,7 +501,7 @@ end script
 %%%%%%%%%
 
 when reading isaApp
-  script isa-load >> kind  % returns kind of top schematic
+  script isa-read-json >> kind  % returns kind of top schematic
   method fatalErrorInBuild
   method get-app-from-JSON-as-map >> map JSONpart
   % method load-file (Filename)
@@ -546,7 +546,7 @@ when reading JSONwire
   method destinationMap >> map JSONpartNameAndPin
 end when
 
-script isaApp isa-load >> kind
+script isaApp isa-read-json >> kind
     self.initialize
     let arr = self.get-app-from-JSON-as-map in
       map json-part = arr in

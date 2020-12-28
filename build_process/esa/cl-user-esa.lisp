@@ -355,7 +355,7 @@
 (alist :accessor alist :initform nil)
 (top-node :accessor top-node :initform nil)
 (json-string :accessor json-string :initform nil)))
-(defmethod isa-load ((self isaApp) )
+(defmethod isa-read-json ((self isaApp) )
         (initialize self)
         (let ((arr (get-app-from-JSON-as-map self))) 
 (block %map (dolist (json-part (stack-dsl::%ordered-list arr))
