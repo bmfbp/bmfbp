@@ -21,10 +21,10 @@
 
 
 (defmethod install-input-pin ((self kind) name)
-  (push (stack-dsl:tolower name) (input-pins self)))
+  (stack-dsl:%append (input-pins self) (stack-dsl:tolower name)))
 
 (defmethod install-output-pin ((self kind) name)
-  (push (stack-dsl:tolower name) (output-pins self)))
+  (stack-dsl:%append (output-pins self) (stack-dsl:tolower name)))
 
 (defmethod install-initially-function ((self kind) fn)
   (assert nil)) ;; should be explicitly defined in each class
@@ -33,13 +33,13 @@
   (assert nil)) ;; should be explicitly defined in each class
 
 (defmethod install-wire ((self kind) (w wire))
-  (push w (wires self)))
+  (stack-dsl:%append (wires self) w))
 
 (defmethod install-part ((self kind) name kind node-class)
   (let ((p (make-instance 'part-definition)))
     (setf (part-name p) (stack-dsl:tolower name))
     (setf (part-kind p) kind)
-    (push p (parts self))))
+    (stack-dsl:%append (parts self) p)))
 
 (defmethod kind-find-part ((self kind) name)
   (dolist (p (parts self))
@@ -101,15 +101,15 @@
 
 (defmethod install-source ((self wire) part-name pin-name)
   (let ((s (make-instance 'source)))
-    (setf (part-name s) (string-downcase part-name))
-    (setf (pin-name s) (string-downcase pin-name))
-    (push s (sources self))))
+    (setf (part-name s) (stack-dsl:tolower part-name))
+    (setf (pin-name s) (stack-dsl:tolower pin-name))
+    (stack-dsl:%append (sources self) s)))
           
 (defmethod install-destination ((self wire) part-name pin-name)
   (let ((d (make-instance 'destination)))
-    (setf (part-name d) (string-downcase part-name))
-    (setf (pin-name d) (string-downcase pin-name))
-    (push d (destinations self))))
+    (setf (part-name d) (stack-dsl:tolower part-name))
+    (setf (pin-name d) (stack-dsl:tolower pin-name))
+    (stack-dsl:%append (destinations self) d)))
 
 
 ;; nodes
@@ -177,7 +177,7 @@
   (let ((pinstance (make-instance 'named-part-instance)))
     (setf (instance-name pinstance) name)
     (setf (instance-node pinstance) child)
-    (push pinstance (children self))))
+    (stack-dsl:%append (children self) pinstance)))
 
 (defmethod enqueue-input ((self node) (e event))
   (setf (input-queue self) (append (input-queue self) (list e))))
@@ -306,8 +306,8 @@
     (make-map-from-json-list 'JSONpartNameAndKind (cdr (assoc :parts json-graph)))))
 
 (defmethod wireMap ((self JSONpart))
-  (let ((json-graph (cdr (assoc :graphs (foreign self)))))
-    (make-map-from-json-list 'JSONpartNameAndPin (cdr (assoc :parts json-graph)))))
+  (let ((json-graph (cdr (assoc :graph (foreign self)))))
+    (make-map-from-json-list 'JSONwire (cdr (assoc :wiring json-graph)))))
 
 
 (defmethod partName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
@@ -323,16 +323,20 @@
   (stack-dsl:make-typed-value 'JSONindex (cdr (assoc :wire-Index (foreign self)))))
 
 (defmethod sourceMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartAndPin (cdr (assoc :sources (foreign self)))))
+  (make-map-from-json-list 'JSONpartNameAndPin 
+			   (map-to-JSONpartNameAndPin
+			    (cdr (assoc :sources (foreign self))))))
 
 (defmethod destinationMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartAndPin (cdr (assoc :receivers (foreign self)))))
+  (make-map-from-json-list 'JSONpartNameAndPin 
+			   (map-to-JSONpartNameAndPin
+			    (cdr (assoc :receivers (foreign self))))))
 
 (defmethod partName ((self JSONpartNameAndPin))
   (stack-dsl:make-typed-string (cdr (assoc :part (foreign self)))))
 
 (defmethod pinName ((self JSONpartNameAndPin))
-  (stack-dsl:make-typed-string (cdr (assoc :part (foreign self)))))
+  (stack-dsl:make-typed-string (cdr (assoc :pin (foreign self)))))
 
 ;; helpers
 
@@ -344,6 +348,12 @@
                  (setf (foreign item) json-item)
                  item))
 	   lis)))
+
+(defun map-to-JSONpartNameAndPin (lis)
+  (mapcar #'(lambda (pair)
+	      (let ((pnap (make-instance 'JSONpartNameAndPin)))
+		(setf (foreign pnap) pair)))
+	  lis))
 
 ;;;;;;;;;;
 ;; example JSON

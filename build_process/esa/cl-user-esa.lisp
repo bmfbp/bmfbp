@@ -427,7 +427,7 @@
                (subtypep (type-of destinationJSON) (stack-dsl::%element-type (destinationMap wJSON))))
   (error (format nil "ESA: [~a] must be of type [~a]" destinationJSON (stack-dsl::%element-type (destinationMap wJSON)))))
 
-(add-source w (partName destinationJSON) (pinName destinationJSON))))
+(add-destination w (partName destinationJSON) (pinName destinationJSON))))
 (add-wire newKind w))))
 (installInTable self (kind-name newKind) newKind)
 (return-from make-schematic-kind newKind))))
@@ -451,7 +451,6 @@
 #| external method ((self JSONpart)) wireMap |#
 #| external method ((self JSONpart)) isLeaf |#
 #| external method ((self JSONpart)) isSchematic |#
-#| external method ((self JSONpart)) getWire |#
 
 (defclass JSONpartNameAndKind (stack-dsl:%typed-value)
 (
@@ -471,10 +470,6 @@
 #| external method ((self JSONwire)) index |#
 #| external method ((self JSONwire)) sourceMap |#
 #| external method ((self JSONwire)) destinationMap |#
-
-(defclass JSONindex (stack-dsl:%typed-value)
-(
-(foreign :accessor foreign :initform nil)))
 
 (defclass ForeignKindName (stack-dsl:%typed-value)
 (

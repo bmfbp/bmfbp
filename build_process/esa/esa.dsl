@@ -103,11 +103,6 @@ class JSONwire %% index, sources, destinations
   foreign
 end class
 
-class JSONindex
-  foreign
-end class
-
-
 %%%%%%
 % crossing the boundary from base language to this SCL
 %%%%%%
@@ -164,7 +159,7 @@ script kind add-part(nm k nclass)
 end script
 
 script kind add-wire(w)
-  % self is a container ==> sources and all dests must be contained as children, or, refer to "self"
+  % self is a schematic ==> sources and all dests must be contained as children, or, refer to "self"
   map s = w.sources in
     @self.ensure-valid-source(s)
   end map
@@ -532,7 +527,6 @@ when reading JSONpart
   method wireMap >> map JSONwire
   method isLeaf >> boolean
   method isSchematic >> boolean
-  method getWire >> JSONwire
 end when
 
 when reading JSONpartNameAndKind
@@ -612,7 +606,7 @@ script isaApp make-schematic-kind (json-part)
               w.add-source (sourceJSON.partName sourceJSON.pinName)
             end map
             map destinationJSON = wJSON.destinationMap in
-              w.add-source (destinationJSON.partName destinationJSON.pinName)
+              w.add-destination (destinationJSON.partName destinationJSON.pinName)
             end map
             newKind.add-wire (w)
           end create

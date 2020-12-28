@@ -515,7 +515,7 @@ w.add_source (sourceJSON.partName (), sourceJSON.pinName ());
 }) ();
 (function () {
 for (const destinationJSON in wJSON.destinationMap ()) {
-w.add_source (destinationJSON.partName (), destinationJSON.pinName ());
+w.add_destination (destinationJSON.partName (), destinationJSON.pinName ());
 };
 }) ();
 newKind.add_wire (w);}
@@ -551,7 +551,6 @@ this.set_foreign = function (val) { this.attribute_foreign = val; }
 // external function wireMap ((self JSONpart))
 // external function isLeaf ((self JSONpart))
 // external function isSchematic ((self JSONpart))
-// external function getWire ((self JSONpart))
 
 function JSONpartNameAndKind () {
 this.attribute_foreign = null,
@@ -577,12 +576,6 @@ this.set_foreign = function (val) { this.attribute_foreign = val; }
 // external function index ((self JSONwire))
 // external function sourceMap ((self JSONwire))
 // external function destinationMap ((self JSONwire))
-
-function JSONindex () {
-this.attribute_foreign = null,
-this.foreign = function () { return attribute_foreign; },
-this.set_foreign = function (val) { this.attribute_foreign = val; }
-}
 
 function ForeignKindName () {
 this.attribute_foreign = null,
