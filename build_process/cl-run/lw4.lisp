@@ -53,6 +53,8 @@
 (defun lw4 ()
   (arrowgrams/build::arrowgrams-to-json \"ahelloworld\")
   (arrowgrams/build::load-and-run-app-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
+
+(lw4)
 "
 )
 

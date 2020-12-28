@@ -43,7 +43,7 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
 	      ;; inject start into top node
 	      )
 	    )
-	  top
+	  top-kind
 	  )
 	)
       )
