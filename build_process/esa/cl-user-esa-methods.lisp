@@ -288,71 +288,71 @@
 
 ;; JSON-array
 
-(defmethod as-map ((self JSON-array))
+(defmethod as-map ((self CONS #|JSON-array|#))
   ;; maps are just Lisp lists in this version
   self)
 
-;; JSON-object
+;; CONS #|JSON-object|#
 
-(defmethod isLeaf ((self JSON-object))
+(defmethod isLeaf ((self CONS #|JSON-object|#))
   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
   ;; This choice is Lisp-specific,  we might choose a different kind of 
   ;;  representation in JS, say.  The choice is not visible at 
   ;;  the esa.scl (formerly esa.dsl) level - we only talk about 
-  ;;  JSON-objects and maps of JSON-objects, then query them using external methods
+  ;;  CONS #|JSON-object|#s and maps of CONS #|JSON-object|#s, then query them using external methods
   (if (string= "leaf" (cdr (assoc :item-kind self))) :true :false))
 
-(defmethod isSchematic ((self JSON-object))
+(defmethod isSchematic ((self CONS #|JSON-object|#))
   (if (string= "graph" (cdr (assoc :item-Kind (foreign self)))) :true :false))
 
-(defmethod name ((self JSON-object))
+(defmethod name ((self CONS #|JSON-object|#))
   (cdr (assoc :name self)))
 
-(defmethod itemKind ((self JSON-object))
+(defmethod itemKind ((self CONS #|JSON-object|#))
   (cdr (assoc :itemKind self)))
 
 
-(defmethod kind ((self JSON-object))
+(defmethod kind ((self CONS #|JSON-object|#))
   (cdr (assoc :kind self)))
-(defmethod filename ((self JSON-object))
+(defmethod filename ((self CONS #|JSON-object|#))
   (cdr (assoc :filename self)))
-(defmethod inPins ((self JSON-object))
+(defmethod inPins ((self CONS #|JSON-object|#))
   (cdr (assoc :inPins self)))
-(defmethod outPins ((self JSON-object))
+(defmethod outPins ((self CONS #|JSON-object|#))
   (cdr (assoc :outPins self)))
 
 
 ;; level 1
-(defmethod schematic ((self JSON-object))
+(defmethod schematic ((self CONS #|JSON-object|#))
   (cdr (assoc :graph self)))
-;(defmethod name ((self JSON-object))
+;(defmethod name ((self CONS #|JSON-object|#))
 ;  (cdr (assoc :name self)))
 
 ;; level 2
-(defmethod inputs ((self JSON-object))
+(defmethod inputs ((self CONS #|JSON-object|#))
   (cdr (assoc :inputs self)))
-(defmethod outputs ((self JSON-object))
+(defmethod outputs ((self CONS #|JSON-object|#))
   (cdr (assoc :outputs self)))
-(defmethod parts ((self JSON-object))
+(defmethod parts ((self CONS #|JSON-object|#))
   (cdr (assoc :parts self)))
-(defmethod wiring ((self JSON-object))
+(defmethod wiring ((self CONS #|JSON-object|#))
   (cdr (assoc :wiring self)))
 ;; level 3a
-(defmethod partName ((self JSON-object))
+(defmethod partName ((self CONS #|JSON-object|#))
   (cdr (assoc :partName self)))
-(defmethod kindName ((self JSON-object))
+(defmethod kindName ((self CONS #|JSON-object|#))
   (cdr (assoc :kindName self)))
 ;; level 3b
-(defmethod wireIndex ((self JSON-object))
+(defmethod wireIndex ((self CONS #|JSON-object|#))
   (cdr (assoc :wireIndex self)))
-(defmethod sources ((self JSON-object))
+(defmethod sources ((self CONS #|JSON-object|#))
   (cdr (assoc :source self)))
-(defmethod receivers ((self JSON-object))
+(defmethod receivers ((self CONS #|JSON-object|#))
   (cdr (assoc :receivers self)))
 ;; level 4
-(defmethod part ((self JSON-object))
+(defmethod part ((self CONS #|JSON-object|#))
   (cdr (assoc :part self)))
-(defmethod pin ((self JSON-object))
+(defmethod pin ((self CONS #|JSON-object|#))
   (cdr (assoc :pin self)))
 
 
