@@ -11,10 +11,8 @@
 	   do (push line lis))
 	(let ((str (apply 'concatenate 'string (reverse lis))))
 	  ; str is a json graph string
-(format *standard-output* "100~%")	  
-	  (arrowgrams-load-and-run str) 
-(format *standard-output* "101~%")	  
-))
+	  (old-arrowgrams-load-and-run str) 
+          ))
     (end-of-file (c)
       (format *error-output* "0 FATAL 'end of file error; in main ~a~%" c))
     (simple-error (c)
