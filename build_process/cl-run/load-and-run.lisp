@@ -1,5 +1,7 @@
 (in-package :arrowgrams/build)
 
+(defparameter cl-user::*dispatcher* nil)
+
 (defun main(argv)
   (declare (ignore argv))
 (format *standard-output* "99~%")	  
@@ -28,34 +30,14 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
 (defun load-and-run-app-from-file (json-graph-filename)
   (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
     ;; load app into memory
-    (let ((d (make-instance 'cl-user::dispatcher)))
-      (let ((app (isa-read-app graph-string)))
-	;; get top node of app
-	(let ((top-kind (cl-user::top-node app)))
-	  ;; create Dispatcher
-	  (let ((disptcher (make-instance 'cl-user::dispatcher)))
-	    ;; run "kind loader" on top node
-	    (let ((top-node (cl-user::loader top-kind "TOP" nil disptcher)))
-	      (format *standard-output* "laraff returns ~a~%" top-node)
-	      top-node
-	      ;; inject start into top node
-	      )
-	    )
-	  top-kind
-	  )
-	)
+    (let ((d (make-instance 'cl-user::dispatcher))
+          (app (make-instance 'App)))
+      ;; get top node of app
+      ;; create Dispatcher
+      ;; run "kind loader" on top node
+      ;; inject start into top node
       )
 ))
-
-(defparameter cl-user::*dispatcher* nil)
-
-;; isa means Isolated Software Assets (new name for ESA)
-(defun isa-read-app (graph-string)
-  (let ((b (make-instance 'cl-user::isaApp)))
-    (setf (cl-user::json-string b) graph-string)
-    ;; read app from JSON into memory and build Templates
-    (cl-user::isa-read-json b)
-    b))
 
 
 ;;;;;;;; old

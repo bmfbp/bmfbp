@@ -544,7 +544,7 @@ function read_json (self) {
 let top_schematic = self.nothing ();
 self.initialize ();
 { /*let*/
-let JSON_arr = self.get_app_from_JSON ();
+let JSON_arr = self.JSON ();
 { /*let*/
 let arr = JSON_arr.as_map ();
 (function () {
@@ -572,9 +572,10 @@ return top_schematic;
 };
 // external function initialize ((self App))
 // external function fatalErrorInBuild ((self App))
-// external function get_app_from_JSON ((self App))
+// external function JSON ((self App))
 // external function nothing ((self App))
 // external function lookupKind ((self App), (? name))
+// external function installInTable ((self App), (? name), (? kind))
 
 function JSON_object () {
 this.attribute_foreign = null,
@@ -590,7 +591,6 @@ this.set_foreign = function (val) { this.attribute_foreign = val; }
 // external function inPins ((self JSON_object))
 // external function outPins ((self JSON_object))
 // external function schematic ((self JSON_object))
-// external function schematic_kind ((self JSON_object))
 // external function inputs ((self JSON_object))
 // external function outputs ((self JSON_object))
 // external function parts ((self JSON_object))

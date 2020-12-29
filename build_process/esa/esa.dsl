@@ -486,9 +486,10 @@ when reading App
   script read-json >> kind  % returns kind of top schematic
   method initialize
   method fatalErrorInBuild
-  method get-app-from-JSON >> JSON-array
+  method JSON >> JSON-array
   method nothing >> kind
   method lookupKind (name) >> kind
+  method installInTable (name kind)
 end when
 
 when reading kind
@@ -526,7 +527,7 @@ when reading JSON-object
   % level 1 "schematic"
 
   method schematic >> JSON-object
-  method schematic-kind >> name
+  %method name >> name
 
   % level 2
   method inputs >> JSON-array
@@ -561,7 +562,7 @@ end when
 script App read-json >> kind
     let top-schematic = self.nothing in
     self.initialize
-    let JSON-arr = self.get-app-from-JSON in
+    let JSON-arr = self.JSON in
       let arr = JSON-arr.as-map in
 	map json-object-part = arr in
           create newKind = kind in

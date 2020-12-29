@@ -250,101 +250,111 @@
     e))
 
 ;;;;;;;;;;;;;;;
-;; isaApp
+;; App
 ;;;;;;;;;;;;;;;
 
-(defmethod initialize ((self isaApp)) 
+(defmethod initialize ((self App)) 
+  (setf (alist self) (arrowgrams/build::json-to-alist (json-string self)))
   (setf (tableOfKinds self) (make-hash-table :test 'equal)))
 
-(defmethod get-app-from-JSON-as-map ((self isaApp))
-  (setf (alist self) (arrowgrams/build::json-to-alist (json-string self)))
+(defmethod fatalErrorInBuild ((self App))
+  (error "fatal error in build"))
+
+(defmethod JSON ((self App))
   (alist self))
 
-(defmethod installInTable ((self isaApp) kind-name kind-structure)
-  (setf (gethash (stack-dsl:%as-string kind-name) (tableOfKinds self)) kind-structure))
+(defmethod nothing ((self App))
+  :undefined)
 
-(defmethod make-type-name ((self isaApp) str)
-  ;; do any magic required by base language to create a type name from the string str
-  ;; in Lisp, we can just use the string str - no more magic
-  (intern (string-upcase (stack-dsl:%as-string str)) "COMMON-LISP-USER"))
-
-(defmethod lookupKind ((self isaApp) name)
+(defmethod lookupKind ((self App) name)
   ;; hash table lookup with key name 
   (gethash (stack-dsl:%as-string name) (tableOfKinds self)))
 
-(defmethod fatalErrorInBuild ((self isaApp))
-  (error "fatal error in build"))
+(defmethod installInTable ((self App) kind-name kind-object)
+  (setf (gethash (stack-dsl:%as-string kind-name) (tableOfKinds self)) kind-object))
 
-(defmethod schematicCommonClass ((self isaApp))
+
+;;; kind methods during reading JSON phase
+
+(defmethod schematicCommonClass ((self kind))
   (intern "SCHEMATIC" "COMMON-LISP-USER"))
 
-(defmethod isLeaf ((self CONS))
+(defmethod make-type-name ((self App) str)
+  ;; do any magic required by base language to create a type 
+  ;;  name from the string str
+  ;; in Lisp, we can just use the string str and intern it in the main package
+  (intern (string-upcase (stack-dsl:%as-string str)) "COMMON-LISP-USER"))
+
+
+;; JSON-array
+
+(defmethod as-map ((self JSON-array))
+  ;; maps are just Lisp lists in this version
+  self)
+
+;; JSON-object
+
+(defmethod isLeaf ((self JSON-object))
   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
-  ;; This choice is Lisp-specific,  we might choose a different kind of representation in JS, say.  The choice is not visible at the esa.scl level - we only talk about JSONparts and maps of JSONparts, then query them using external methods
+  ;; This choice is Lisp-specific,  we might choose a different kind of 
+  ;;  representation in JS, say.  The choice is not visible at 
+  ;;  the esa.scl (formerly esa.dsl) level - we only talk about 
+  ;;  JSON-objects and maps of JSON-objects, then query them using external methods
   (if (string= "leaf" (cdr (assoc :item-kind self))) :true :false))
 
-(defmethod isSchematic ((self CONS))
+(defmethod isSchematic ((self JSON-object))
   (if (string= "graph" (cdr (assoc :item-Kind (foreign self)))) :true :false))
 
-(defmethod kind ((self JSONpart))
-  (stack-dsl:make-typed-string (cdr (assoc :kind (foreign self)))))
+(defmethod name ((self JSON-object))
+  (cdr (assoc :name self)))
 
-(defmethod filename ((self JSONpart))
-  (stack-dsl:make-typed-string (cdr (assoc :filename (foreign self)))))
-
-(defmethod name ((self JSONpart))
-  (stack-dsl:make-typed-string (cdr (assoc :name (foreign self)))))
-
-(defmethod inPins ((self JSONpart))
-  (stack-dsl:make-map-from-list 'stack-dsl:%string (mapcar #'stack-dsl:make-typed-string (cdr (assoc :in-Pins (foreign self))))))
-
-(defmethod outPins ((self JSONpart))
-  (stack-dsl:make-map-from-list 'stack-dsl:%string (mapcar #'stack-dsl:make-typed-string (cdr (assoc :out-Pins (foreign self))))))
-
-;; schematic (graph) accessors
-(defmethod partsMap ((self JSONpart))
-  (let ((json-graph (cdr (assoc :graph (foreign self)))))
-    (make-map-from-json-list 'JSONpartNameAndKind (cdr (assoc :parts json-graph)))))
-
-(defmethod wireMap ((self JSONpart))
-  (let ((json-graph (cdr (assoc :graph (foreign self)))))
-    (make-map-from-json-list 'JSONwire (cdr (assoc :wiring json-graph)))))
+(defmethod itemKind ((self JSON-object))
+  (cdr (assoc :itemKind self)))
 
 
-(defmethod partName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
-  ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
-  (stack-dsl:make-typed-string (cdr (assoc :part-Name (foreign self)))))
+(defmethod kind ((self JSON-object))
+  (cdr (assoc :kind self)))
+(defmethod filename ((self JSON-object))
+  (cdr (assoc :filename self)))
+(defmethod inPins ((self JSON-object))
+  (cdr (assoc :inPins self)))
+(defmethod outPins ((self JSON-object))
+  (cdr (assoc :outPins self)))
 
-(defmethod kindName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
-  ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
-  (stack-dsl:make-typed-string (cdr (assoc :kind-Name (foreign self)))))
 
+;; level 1
+(defmethod schematic ((self JSON-object))
+  (cdr (assoc :graph self)))
+;(defmethod name ((self JSON-object))
+;  (cdr (assoc :name self)))
 
-(defmethod index ((self JSONwire))
-  (stack-dsl:make-typed-value 'JSONindex (cdr (assoc :wire-Index (foreign self)))))
+;; level 2
+(defmethod inputs ((self JSON-object))
+  (cdr (assoc :inputs self)))
+(defmethod outputs ((self JSON-object))
+  (cdr (assoc :outputs self)))
+(defmethod parts ((self JSON-object))
+  (cdr (assoc :parts self)))
+(defmethod wiring ((self JSON-object))
+  (cdr (assoc :wiring self)))
+;; level 3a
+(defmethod partName ((self JSON-object))
+  (cdr (assoc :partName self)))
+(defmethod kindName ((self JSON-object))
+  (cdr (assoc :kindName self)))
+;; level 3b
+(defmethod wireIndex ((self JSON-object))
+  (cdr (assoc :wireIndex self)))
+(defmethod sources ((self JSON-object))
+  (cdr (assoc :source self)))
+(defmethod receivers ((self JSON-object))
+  (cdr (assoc :receivers self)))
+;; level 4
+(defmethod part ((self JSON-object))
+  (cdr (assoc :part self)))
+(defmethod pin ((self JSON-object))
+  (cdr (assoc :pin self)))
 
-(defmethod sourceMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartNameAndPin (cdr (assoc :sources (foreign self)))))
-
-(defmethod destinationMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartNameAndPin (cdr (assoc :receivers (foreign self)))))
-
-(defmethod partName ((self JSONpartNameAndPin))
-  (stack-dsl:make-typed-string (cdr (assoc :part (foreign self)))))
-
-(defmethod pinName ((self JSONpartNameAndPin))
-  (stack-dsl:make-typed-string (cdr (assoc :pin (foreign self)))))
-
-;; helpers
-
-(defun make-map-from-json-list (ty lis)
-  (stack-dsl:make-map-from-list 
-   ty
-   (mapcar #'(lambda (json-item)
-               (let ((item (make-instance ty)))
-                 (setf (foreign item) json-item)
-                 item))
-	   lis)))
 
 ;;;;;;;;;;
 ;; example JSON

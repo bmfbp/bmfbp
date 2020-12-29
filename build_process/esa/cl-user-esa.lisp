@@ -345,7 +345,7 @@
 (defmethod read-json ((self App) )
         (let ((top-schematic (nothing self))) 
 (initialize self)
-(let ((JSON-arr (get-app-from-JSON self))) 
+(let ((JSON-arr (JSON self))) 
 (let ((arr (as-map JSON-arr))) 
 (block %map (dolist (json-object-part arr) 
 (let ((newKind (make-instance 'kind)))
@@ -368,9 +368,10 @@
 (return-from read-json top-schematic)))
 #| external method ((self App)) initialize |#
 #| external method ((self App)) fatalErrorInBuild |#
-#| external method ((self App)) get-app-from-JSON |#
+#| external method ((self App)) JSON |#
 #| external method ((self App)) nothing |#
 #| external method ((self App)) lookupKind |#
+#| external method ((self App)) installInTable |#
 
 (defclass JSON-object ()
 (
@@ -384,7 +385,6 @@
 #| external method ((self JSON-object)) inPins |#
 #| external method ((self JSON-object)) outPins |#
 #| external method ((self JSON-object)) schematic |#
-#| external method ((self JSON-object)) schematic-kind |#
 #| external method ((self JSON-object)) inputs |#
 #| external method ((self JSON-object)) outputs |#
 #| external method ((self JSON-object)) parts |#
