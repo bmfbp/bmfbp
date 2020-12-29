@@ -19,7 +19,32 @@
         (t (error (format nil "~&esa expression returned /~s/, but expected :true or :false" x)))))
   
 
+(defmethod initialize-instance :after ((self kind) &key &allow-other-keys)
+  (setf (input-pins self) (stack-dsl:%make-empty-map "string-type"))
+  (setf (output-pins self) (stack-dsl:%make-empty-map "string-type"))
+  (setf (parts self) (stack-dsl:%make-empty-map "part-definition"))
+  (setf (wires self) (stack-dsl:%make-empty-map "wire")))
+  
+(defmethod initialize-instance :after ((self wire) &key &allow-other-keys)
+  (setf (sources self) (stack-dsl:%make-empty-map "part-pin"))
+  (setf (destinations self) (stack-dsl:%make-empty-map "part-pin")))
+  
+(defmethod initialize-instance :after ((self node) &key &allow-other-keys)
+  (setf (children self) (stack-dsl:%make-empty-map "named-part-instance")))
+  
+(defmethod initialize-instance :after ((self dispatcher) &key &allow-other-keys)
+  (setf (all-parts self) (stack-dsl:%make-empty-map "node")))
+  
 
+
+
+#+nil(defmacro map-append (self field val)
+  (let ((v (gensym)))
+    `(let ((,v ,val))
+       (when (null (,field ,self))
+         (setf (,field ,self) (stack-dsl:%make-empty-map (stack-dsl:%type ,v))))
+       (stack-dsl:%append (,field ,self) ,v))))
+  
 (defmethod install-input-pin ((self kind) name)
   (stack-dsl:%append (input-pins self) (stack-dsl:tolower name)))
 
@@ -42,38 +67,38 @@
     (stack-dsl:%append (parts self) p)))
 
 (defmethod kind-find-part ((self kind) name)
-  (dolist (p (parts self))
+  (stack-dsl:domap (p (parts self))
     (when (string=-downcase name (part-name p))
       (return-from kind-find-part p)))
   (assert nil)) ;; no part with given name - can't happen
 
 (defmethod ensure-part-not-declared ((self kind) name)
-  (dolist (part (parts self))
+  (stack-dsl:domap (part (parts self))
     (when (string=-downcase name (part-name part))
       (error (format nil "part ~a already declared in ~s ~s" name (kind-name self) self))))
    T)
 
 (defmethod ensure-valid-input-pin ((self kind) name)
-  (dolist (pin-name (input-pins self))
+  (stack-dsl:domap (pin-name (stack-dsl:%list (input-pins self)))
     (when (string=-downcase pin-name name)
       (return-from ensure-valid-input-pin T)))
   (error (format nil "pin ~a is not an input pin of ~s ~s" name (kind-name self) self)))
 
 (defmethod ensure-valid-output-pin ((self kind) name)
-  (dolist (pin-name (output-pins self))
+  (stack-dsl:domap (pin-name (stack-dsl:%list (output-pins self)))
     (when (string=-downcase pin-name name)
       (return-from ensure-valid-output-pin T)))
   (error (format nil "pin /~a/ is not an output pin of ~s ~s" name (kind-name self) self)))
 
 (defmethod ensure-input-pin-not-declared ((self kind) name)
   (when (slot-boundp self 'input-pins)
-    (dolist (pin-name (input-pins self))
+    (stack-dsl:domap (pin-name (input-pins self))
       (when (string=-downcase pin-name name)
 	(error (format nil "pin /~a/ is already declared as an input pin of ~s ~s" name (kind-name self) self)))))
   T)
 
 (defmethod ensure-output-pin-not-declared ((self kind) name)
-  (dolist (pin-name (output-pins self))
+  (stack-dsl:domap (pin-name (output-pins self))
     (when (string=-downcase pin-name name)
       (error (format nil "pin /~a/ is already declared as an output pin of ~s ~s" name (kind-name self) self))))
   T)
@@ -187,9 +212,9 @@
 
 (defmethod find-wire-for-self-source ((self kind) pinname)
   ;(format *standard-output* "~&find-wire-for-self-source A ~s wires.len=~s~%" (kind-name self) (length (wires self)))
-  (dolist (w (wires self))
+  (stack-dsl:domap (w (wires self))
     ;(format *standard-output* "~&find-wire-for-self-source B ~s sources=~s~%" w (sources w))
-    (dolist (s (sources w))
+    (stack-dsl:domap (s (sources w))
       ;(format *standard-output* "~&find-wire-for-self-source C ~s ~s~%" pinname (pin-name s))
       (when (string=-downcase pinname  (pin-name s))
         (return-from find-wire-for-self-source w))))
@@ -197,8 +222,8 @@
 
 (defmethod find-wire-for-source ((self kind) part-name pin-name)
   ;(format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-field self) self)
-  (dolist (w (wires self))
-    (dolist (s (sources w))
+  (stack-dsl:domap (w (wires self))
+    (stack-dsl:domap (s (sources w))
       (when (and (or (string= "self" (part-name s))
                      (string=-downcase part-name (part-name s)))
                  (string=-downcase pin-name  (pin-name s)))
@@ -207,7 +232,7 @@
 
 (defmethod node-find-child ((self node) name)
   ;(format *standard-output* "~&node-find-child of ~s wants ~s~%" (name-in-container self) name)
-  (dolist (p (children self))
+  (stack-dsl:domap (p (children self))
     (when (string=-downcase name (instance-name p))
       (return-from node-find-child p)))
   (assert nil)) ;; no part with given name - can't happen
@@ -323,14 +348,10 @@
   (stack-dsl:make-typed-value 'JSONindex (cdr (assoc :wire-Index (foreign self)))))
 
 (defmethod sourceMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartNameAndPin 
-			   (map-to-JSONpartNameAndPin
-			    (cdr (assoc :sources (foreign self))))))
+  (make-map-from-json-list 'JSONpartNameAndPin (cdr (assoc :sources (foreign self)))))
 
 (defmethod destinationMap ((self JSONwire))
-  (make-map-from-json-list 'JSONpartNameAndPin 
-			   (map-to-JSONpartNameAndPin
-			    (cdr (assoc :receivers (foreign self))))))
+  (make-map-from-json-list 'JSONpartNameAndPin (cdr (assoc :receivers (foreign self)))))
 
 (defmethod partName ((self JSONpartNameAndPin))
   (stack-dsl:make-typed-string (cdr (assoc :part (foreign self)))))
@@ -348,12 +369,6 @@
                  (setf (foreign item) json-item)
                  item))
 	   lis)))
-
-(defun map-to-JSONpartNameAndPin (lis)
-  (mapcar #'(lambda (pair)
-	      (let ((pnap (make-instance 'JSONpartNameAndPin)))
-		(setf (foreign pnap) pair)))
-	  lis))
 
 ;;;;;;;;;;
 ;; example JSON

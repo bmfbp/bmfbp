@@ -45,11 +45,11 @@ end class
 
 class kind
   kind-name
-  input-pins
+  map input-pins
+  map output-pins
   self-class  % of type node-class % subsumes initially code, react code and instance vars (using OO), otherwise OO is overkill
-  output-pins
-  parts
-  wires
+  map parts
+  map wires
 end class
 
 class node
@@ -58,8 +58,8 @@ class node
   kind-field
   container
   name-in-container  %% lookup this part instance by name as a child of my container
-  children
-  busy-flag
+  map children
+  busy?
 end class
 
 class dispatcher
@@ -81,10 +81,6 @@ class isaApp
   alist
   top-node
   json-string
-end class
-
-class kindsByName
-  table
 end class
 
 class JSONpart
@@ -592,20 +588,20 @@ script isaApp make-schematic-kind (json-part)
         set newKind.self-class = self.schematicCommonClass
         @newKind.make-input-pins (json-part)
         @newKind.make-output-pins (json-part)
-        map child = json-part.partsMap in
-          let partKind_name = child.kindName in
+        map json-child = json-part.partsMap in
+          let partKind_name = json-child.kindName in
             let part_kind = self.lookupKind (partKind_name) in
-              newKind.add-part (child.partName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
+              newKind.add-part (json-child.partName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
             end let
           end let
         end map
-        map wJSON = json-part.wireMap in
+        map json-wire = json-part.wireMap in
           create w = Wire in
-            set w.index = wJSON.index
-            map sourceJSON = wJSON.sourceMap in
+            set w.index = json-wire.index
+            map sourceJSON = json-wire.sourceMap in
               w.add-source (sourceJSON.partName sourceJSON.pinName)
             end map
-            map destinationJSON = wJSON.destinationMap in
+            map destinationJSON = json-wire.destinationMap in
               w.add-destination (destinationJSON.partName destinationJSON.pinName)
             end map
             newKind.add-wire (w)

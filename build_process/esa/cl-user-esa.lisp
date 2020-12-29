@@ -44,8 +44,8 @@
 (
 (kind-name :accessor kind-name :initform nil)
 (input-pins :accessor input-pins :initform nil)
-(self-class :accessor self-class :initform nil)
 (output-pins :accessor output-pins :initform nil)
+(self-class :accessor self-class :initform nil)
 (parts :accessor parts :initform nil)
 (wires :accessor wires :initform nil)))
 #| external method ((self kind)) install-input-pin |#
@@ -149,7 +149,7 @@
 (container :accessor container :initform nil)
 (name-in-container :accessor name-in-container :initform nil)
 (children :accessor children :initform nil)
-(busy-flag :accessor busy-flag :initform nil)))
+(busy? :accessor busy? :initform nil)))
 #| external method ((self node)) clear-input-queue |#
 #| external method ((self node)) clear-output-queue |#
 #| external method ((self node)) install-node |#
@@ -397,35 +397,35 @@
 (setf (self-class newKind) (schematicCommonClass self))
 (make-input-pins newKind json-part)
 (make-output-pins newKind json-part)
-(block %map (dolist (child (stack-dsl::%ordered-list (partsMap json-part)))
+(block %map (dolist (json-child (stack-dsl::%ordered-list (partsMap json-part)))
 
-(unless (and (subtypep (type-of child) 'stack-dsl:%typed-value)
-               (subtypep (type-of child) (stack-dsl::%element-type (partsMap json-part))))
-  (error (format nil "ESA: [~a] must be of type [~a]" child (stack-dsl::%element-type (partsMap json-part)))))
+(unless (and (subtypep (type-of json-child) 'stack-dsl:%typed-value)
+               (subtypep (type-of json-child) (stack-dsl::%element-type (partsMap json-part))))
+  (error (format nil "ESA: [~a] must be of type [~a]" json-child (stack-dsl::%element-type (partsMap json-part)))))
 
-(let ((partKind_name (kindName child))) 
+(let ((partKind_name (kindName json-child))) 
 (let ((part_kind (lookupKind self partKind_name))) 
-(add-part newKind (partName child) part_kind partKind_name)))))
-(block %map (dolist (wJSON (stack-dsl::%ordered-list (wireMap json-part)))
+(add-part newKind (partName json-child) part_kind partKind_name)))))
+(block %map (dolist (json-wire (stack-dsl::%ordered-list (wireMap json-part)))
 
-(unless (and (subtypep (type-of wJSON) 'stack-dsl:%typed-value)
-               (subtypep (type-of wJSON) (stack-dsl::%element-type (wireMap json-part))))
-  (error (format nil "ESA: [~a] must be of type [~a]" wJSON (stack-dsl::%element-type (wireMap json-part)))))
+(unless (and (subtypep (type-of json-wire) 'stack-dsl:%typed-value)
+               (subtypep (type-of json-wire) (stack-dsl::%element-type (wireMap json-part))))
+  (error (format nil "ESA: [~a] must be of type [~a]" json-wire (stack-dsl::%element-type (wireMap json-part)))))
 
 (let ((w (make-instance 'Wire)))
-(setf (index w) (index wJSON))
-(block %map (dolist (sourceJSON (stack-dsl::%ordered-list (sourceMap wJSON)))
+(setf (index w) (index json-wire))
+(block %map (dolist (sourceJSON (stack-dsl::%ordered-list (sourceMap json-wire)))
 
 (unless (and (subtypep (type-of sourceJSON) 'stack-dsl:%typed-value)
-               (subtypep (type-of sourceJSON) (stack-dsl::%element-type (sourceMap wJSON))))
-  (error (format nil "ESA: [~a] must be of type [~a]" sourceJSON (stack-dsl::%element-type (sourceMap wJSON)))))
+               (subtypep (type-of sourceJSON) (stack-dsl::%element-type (sourceMap json-wire))))
+  (error (format nil "ESA: [~a] must be of type [~a]" sourceJSON (stack-dsl::%element-type (sourceMap json-wire)))))
 
 (add-source w (partName sourceJSON) (pinName sourceJSON))))
-(block %map (dolist (destinationJSON (stack-dsl::%ordered-list (destinationMap wJSON)))
+(block %map (dolist (destinationJSON (stack-dsl::%ordered-list (destinationMap json-wire)))
 
 (unless (and (subtypep (type-of destinationJSON) 'stack-dsl:%typed-value)
-               (subtypep (type-of destinationJSON) (stack-dsl::%element-type (destinationMap wJSON))))
-  (error (format nil "ESA: [~a] must be of type [~a]" destinationJSON (stack-dsl::%element-type (destinationMap wJSON)))))
+               (subtypep (type-of destinationJSON) (stack-dsl::%element-type (destinationMap json-wire))))
+  (error (format nil "ESA: [~a] must be of type [~a]" destinationJSON (stack-dsl::%element-type (destinationMap json-wire)))))
 
 (add-destination w (partName destinationJSON) (pinName destinationJSON))))
 (add-wire newKind w))))
@@ -433,10 +433,6 @@
 (return-from make-schematic-kind newKind))))
 #| external method ((self isaApp)) make-type-name |#
 #| external method ((self isaApp)) schematicCommonClass |#
-
-(defclass kindsByName (stack-dsl:%typed-value)
-(
-(table :accessor table :initform nil)))
 
 (defclass JSONpart (stack-dsl:%typed-value)
 (

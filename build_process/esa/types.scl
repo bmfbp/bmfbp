@@ -1,0 +1,92 @@
+class part-definition
+  part-name : :string
+  part-kind : :string
+end class
+
+class named-part-instance
+  instance-name : :string
+  instance-node : node
+end class
+
+class part-pin
+  part-name: :string
+  pin-name: :string
+end class
+
+class source
+  part-name: :string % a name or "self"
+  pin-name: :string
+end class
+
+class destination
+  part-name: :string
+  pin-name: :string
+end class
+
+class wire
+  index: :num
+  sources: [source]
+  destinations: [destination]
+end class
+
+class kind
+  kind-name: :string
+  input-pins: [:string]
+  output-pins: [:string]
+  self-class  % of type node-class % subsumes initially code, react code and instance vars (using OO), otherwise OO is overkill
+  parts: [:string]
+  wires: [wire]
+end class
+
+class node
+  input-queue: :foreign-list
+  output-queue: :foreign-list
+  kind-field: kind
+  container: node
+  name-in-container: :string %% lookup this part instance by name as a child of my container
+  children: [node]
+end class
+
+class dispatcher
+  all-parts: [node]
+  top-node: node
+end class
+
+class event
+  partpin: part-pin
+  data: :any
+end class
+
+
+
+class isaApp
+  tableOfKinds: :foreign
+  alist: :foreign
+  top-node: node
+  json-string: :foreign
+end class
+
+class JSONpart
+  foreign: :foreign  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
+end class
+
+class JSONpartNameAndKind  % e.g. {"partName":"xyz","kindName":"HELLO"}
+  foreign: :foreign
+end class
+
+class JSONpartNameAndPin  % e.g. {"part":"xyz","pin":"S"}
+  foreign: :foreign
+end class
+
+class JSONwire %% index, sources, destinations
+  foreign: :foreign
+end class
+
+%%%%%%
+% crossing the boundary from base language to this SCL
+%%%%%%
+
+class ForeignKindName
+  foreign
+end class
+

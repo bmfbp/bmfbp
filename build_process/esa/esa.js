@@ -72,19 +72,19 @@ function kind () {
 this.attribute_kind_name = null,
 this.kind_name = function () { return attribute_kind_name; },
 this.set_kind_name = function (val) { this.attribute_kind_name = val; },
-this.attribute_input_pins = null,
+this.attribute_input_pins = [],
 this.input_pins = function () { return attribute_input_pins; },
 this.set_input_pins = function (val) { this.attribute_input_pins = val; },
+this.attribute_output_pins = [],
+this.output_pins = function () { return attribute_output_pins; },
+this.set_output_pins = function (val) { this.attribute_output_pins = val; },
 this.attribute_self_class = null,
 this.self_class = function () { return attribute_self_class; },
 this.set_self_class = function (val) { this.attribute_self_class = val; },
-this.attribute_output_pins = null,
-this.output_pins = function () { return attribute_output_pins; },
-this.set_output_pins = function (val) { this.attribute_output_pins = val; },
-this.attribute_parts = null,
+this.attribute_parts = [],
 this.parts = function () { return attribute_parts; },
 this.set_parts = function (val) { this.attribute_parts = val; },
-this.attribute_wires = null,
+this.attribute_wires = [],
 this.wires = function () { return attribute_wires; },
 this.set_wires = function (val) { this.attribute_wires = val; }
 }
@@ -201,12 +201,12 @@ this.set_container = function (val) { this.attribute_container = val; },
 this.attribute_name_in_container = null,
 this.name_in_container = function () { return attribute_name_in_container; },
 this.set_name_in_container = function (val) { this.attribute_name_in_container = val; },
-this.attribute_children = null,
+this.attribute_children = [],
 this.children = function () { return attribute_children; },
 this.set_children = function (val) { this.attribute_children = val; },
-this.attribute_busy_flag = null,
-this.busy_flag = function () { return attribute_busy_flag; },
-this.set_busy_flag = function (val) { this.attribute_busy_flag = val; }
+this.attribute_busyQ = null,
+this.busyQ = function () { return attribute_busyQ; },
+this.set_busyQ = function (val) { this.attribute_busyQ = val; }
 }
 // external function clear_input_queue ((self node))
 // external function clear_output_queue ((self node))
@@ -494,27 +494,27 @@ newKind.self_class () = self.schematicCommonClass ();
 newKind.make_input_pins (json_part);
 newKind.make_output_pins (json_part);
 (function () {
-for (const child in json_part.partsMap ()) {
+for (const json_child in json_part.partsMap ()) {
 { /*let*/
-let partKind_name = child.kindName ();
+let partKind_name = json_child.kindName ();
 { /*let*/
 let part_kind = self.lookupKind (partKind_name);
-newKind.add_part (child.partName (), part_kind, partKind_name);
+newKind.add_part (json_child.partName (), part_kind, partKind_name);
 } /* end let */
 } /* end let */
 };
 }) ();
 (function () {
-for (const wJSON in json_part.wireMap ()) {
+for (const json_wire in json_part.wireMap ()) {
 { let w = new Wire;
-w.index () = wJSON.index ();
+w.index () = json_wire.index ();
 (function () {
-for (const sourceJSON in wJSON.sourceMap ()) {
+for (const sourceJSON in json_wire.sourceMap ()) {
 w.add_source (sourceJSON.partName (), sourceJSON.pinName ());
 };
 }) ();
 (function () {
-for (const destinationJSON in wJSON.destinationMap ()) {
+for (const destinationJSON in json_wire.destinationMap ()) {
 w.add_destination (destinationJSON.partName (), destinationJSON.pinName ());
 };
 }) ();
@@ -529,12 +529,6 @@ return newKind;}
 };
 // external function make_type_name ((self isaApp), (? name))
 // external function schematicCommonClass ((self isaApp))
-
-function kindsByName () {
-this.attribute_table = null,
-this.table = function () { return attribute_table; },
-this.set_table = function (val) { this.attribute_table = val; }
-}
 
 function JSONpart () {
 this.attribute_foreign = null,
