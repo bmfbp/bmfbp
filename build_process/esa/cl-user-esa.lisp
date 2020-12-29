@@ -1,4 +1,4 @@
-(in-package :cl-user)
+(in-package :cl-user)(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 (defclass part-definition ()
 (

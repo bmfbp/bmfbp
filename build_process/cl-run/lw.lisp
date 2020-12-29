@@ -54,12 +54,20 @@
   (arrowgrams/build::arrowgrams-to-json \"ahelloworld\")
   (arrowgrams/build::load-and-run-app-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
 
+(defun lw4-old ()
+  (arrowgrams/build::arrowgrams-to-json \"ahelloworld\")
+  (arrowgrams/build::old-load-and-run-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
+
 "
 )
 
+;; expect lots of undefined arrowgrams/build::*
+;; running (lw4-old) should print "/cl-a-parts/cl/aHELLOparts/cl/aWORLD"
 
 ;(defmacro loop (&body body) `(cl:loop ,@body))
 ;(defmacro exit-when (test) `(cl:when ,test (cl:return)))
+
+
 
 (defun lw ()
   (with-input-from-string (strm *script*)
