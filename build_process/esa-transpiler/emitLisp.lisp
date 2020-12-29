@@ -80,8 +80,8 @@
 				     (asLisp (name f))))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
-		     (format nil "~&~%(defclass ~a (stack-dsl:%typed-value)~%(~{~&~a~^~}))~%" name fields)
-		     (format nil "~&~%(defclass ~a (stack-dsl:%typed-value) ())~%" name))))
+		     (format nil "~&~%(defclass ~a ()~%(~{~&~a~^~}))~%" name fields)
+		     (format nil "~&~%(defclass ~a () ())~%" name))))
 	(let ((methods (mapcar #'asLisp (stack-dsl:%list (methodsTable self)))))
 	  (let ((methodsString (format nil "~{~&~a~}" methods)))
 	    (concatenate 'string def methodsString)))))))
@@ -111,12 +111,7 @@
   (let ((vn (asLisp (varName self)))
 	(e  (asLisp (expression self)))
 	(code (asLisp (implementation self))))
-    (format nil "(block %map (dolist (~a (stack-dsl::%ordered-list ~a))
-~%(unless (and (subtypep (type-of ~a) 'stack-dsl:%typed-value)
-               (subtypep (type-of ~a) (stack-dsl::%element-type ~a)))
-  (error (format nil \"ESA: [~~a] must be of type [~~a]\" ~a (stack-dsl::%element-type ~a))))
-~{~%~a~}))" 
-vn e vn vn e vn e code)))
+    (format nil "(block %map (dolist (~a ~a) ~{~%~a~}))" vn e code)))
 
 (defmethod asLisp ((self createStatement))
   (let ((vn (asLisp (varName self)))

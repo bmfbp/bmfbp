@@ -68,13 +68,13 @@
 OUTPUT-ESAPROGRAM 1
 ,* pass 2
 ,*** check stacks ***
-OUTPUT-EXPRESSION 111
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 136
+OUTPUT-NAME 141
+OUTPUT-EXPRESSION 114
 ,* pass 3
 ,*** check stacks ***
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 87
+OUTPUT-NAME 89
 ,* pass 0
 ,*** check stacks ***
 ,* pass 1
@@ -82,13 +82,13 @@ OUTPUT-NAME 87
 OUTPUT-ESAPROGRAM 1
 ,* pass 2
 ,*** check stacks ***
-OUTPUT-EXPRESSION 111
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 136
+OUTPUT-NAME 141
+OUTPUT-EXPRESSION 114
 ,* pass 3
 ,*** check stacks ***
 OUTPUT-ESAPROGRAM 1
-OUTPUT-NAME 87
+OUTPUT-NAME 89
 #+end_example
 #+begin_example
 * pass 0

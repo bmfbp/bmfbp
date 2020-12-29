@@ -51,7 +51,22 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
 
 (defparameter cl-user::*dispatcher* nil)
 
-#+keep-as-example(defun arrowgrams-load-and-run (json-graph-string)
+;; isa means Isolated Software Assets (new name for ESA)
+(defun isa-read-app (graph-string)
+  (let ((b (make-instance 'cl-user::isaApp)))
+    (setf (cl-user::json-string b) graph-string)
+    ;; read app from JSON into memory and build Templates
+    (cl-user::isa-read-json b)
+    b))
+
+
+;;;;;;;; old
+(defun old-load-and-run-from-file (json-graph-filename)
+  (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
+    (old-arrowgrams-load-and-run graph-string)
+))
+
+(defun old-arrowgrams-load-and-run (json-graph-string)
   (let ((graph-alist (json-to-alist json-graph-string)))
     (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in ../esa/esa.lisp
       (let ((esa-disp (make-instance 'cl-user::dispatcher)))  ;; dispatcher defined in ../esa/esa.lisp
@@ -61,15 +76,7 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
 	  (cl-user::distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
 	  (cl-user::dispatcher-run esa-disp)
 	  (setf cl-user::*dispatcher* esa-disp)
+	  (cl-user::dispatcher-inject cl-user::*dispatcher* "start" t)
           esa-disp)))))
-
-(defun arrowgrams-load-and-run (json-graph-string) (assert nil))
   
-;; isa means Isolated Software Assets (new name for ESA)
-(defun isa-read-app (graph-string)
-  (let ((b (make-instance 'cl-user::isaApp)))
-    (setf (cl-user::json-string b) graph-string)
-    ;; read app from JSON into memory and build Templates
-    (cl-user::isa-read-json b)
-    b))
 

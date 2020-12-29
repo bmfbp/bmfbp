@@ -204,9 +204,9 @@ this.set_name_in_container = function (val) { this.attribute_name_in_container =
 this.attribute_children = [],
 this.children = function () { return attribute_children; },
 this.set_children = function (val) { this.attribute_children = val; },
-this.attribute_busyQ = null,
-this.busyQ = function () { return attribute_busyQ; },
-this.set_busyQ = function (val) { this.attribute_busyQ = val; }
+this.attribute_busy_flag = null,
+this.busy_flag = function () { return attribute_busy_flag; },
+this.set_busy_flag = function (val) { this.attribute_busy_flag = val; }
 }
 // external function clear_input_queue ((self node))
 // external function clear_output_queue ((self node))

@@ -19,6 +19,14 @@ run graph...
     (arrowgrams/build::isa-load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
 #+end_src
 
+run graph old way...
+print : "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD" in RESULTS
+
+#+name: runner
+#+begin_src lisp :results output
+  (arrowgrams/build::old-load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
+#+end_src
+
 * lispworks
   if needed {
     load ../esa/lw0 
@@ -32,5 +40,5 @@ run graph...
 
 * results
 #+RESULTS: runner
-: NIL
+: parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD
 

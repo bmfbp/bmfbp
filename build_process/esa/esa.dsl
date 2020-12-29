@@ -59,7 +59,7 @@ class node
   container
   name-in-container  %% lookup this part instance by name as a child of my container
   map children
-  busy?
+  busy-flag
 end class
 
 class dispatcher
