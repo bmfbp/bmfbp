@@ -1,4 +1,5 @@
-(in-package :arrowgrams/build)
+;(in-package :arrowgrams/build)
+(in-package :cl-user)
 
 (defparameter cl-user::*dispatcher* nil)
 
@@ -28,14 +29,17 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
 |#
 
 (defun load-and-run-app-from-file (json-graph-filename)
-  (let ((graph-string (alexandria:read-file-into-string json-graph-filename)))
+  (let ((text (alexandria:read-file-into-string json-graph-filename)))
     ;; load app into memory
     (let ((d (make-instance 'cl-user::dispatcher))
-          (app (make-instance 'App)))
-      ;; get top node of app
-      ;; create Dispatcher
-      ;; run "kind loader" on top node
-      ;; inject start into top node
+          (app (make-instance 'cl-user::App)))
+      (setf (cl-user::json-string app) text)
+      (let ((k (cl-user::read-json app)))
+        ;; get top node of app
+        ;; create Dispatcher
+        ;; run "kind loader" on top node
+        ;; inject start into top node
+        )
       )
 ))
 
@@ -47,10 +51,10 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
 ))
 
 (defun old-arrowgrams-load-and-run (json-graph-string)
-  (let ((graph-alist (json-to-alist json-graph-string)))
-    (let ((top-kind (make-kind-from-graph graph-alist)))  ;; kind defined in ../esa/esa.lisp
+  (let ((graph-alist (arrowgrams/build::json-to-alist json-graph-string)))
+    (let ((top-kind (arrowgrams/build::make-kind-from-graph graph-alist)))  ;; kind defined in ../esa/esa.lisp
       (let ((esa-disp (make-instance 'cl-user::dispatcher)))  ;; dispatcher defined in ../esa/esa.lisp
-	(let ((top-node (instantiate-kind-recursively top-kind esa-disp)))
+	(let ((top-node (arrowgrams/build::instantiate-kind-recursively top-kind esa-disp)))
           (cl-user::set-top-node esa-disp top-node)
 	  (cl-user::initialize-all esa-disp)  ;; initialize-all is in ../esa/esa.lisp
 	  (cl-user::distribute-all-outputs esa-disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
