@@ -170,19 +170,113 @@ return inst;}
 };
 // external function find_wire_for_source ((self kind), (? name), (? name))
 // external function find_wire_for_self_source ((self kind), (? name))
-function make_input_pins (self, json_part) {
-        (function () {
-for (const inpin_name in json_part.inPins ()) {
-self.add_input_pin (inpin_name);
+// external function schematicCommonClass ((self kind))
+// external function make_type_name ((self kind), (? name))
+function read_leaf (self, json_object_part) {
+        { /*let*/
+let kindName = json_object_part.kind ();
+{ /*let*/
+let filename = json_object_part.filename ();
+self.self_class () = self.make_type_name (kindName);
+self.make_leaf_input_pins (json_object_part);
+self.make_leaf_output_pins (json_object_part);
+} /* end let */
+} /* end let */
+};
+function read_schematic (self, app, json_object_part) {
+        { /*let*/
+let schematicName = json_object_part.name ();
+newKind.self_class () = self.schematicCommonClass ();
+{ /*let*/
+let schematic = json_object_part.schematic ();
+newKind.make_schematic_input_pins (schematic);
+newKind.make_schematic_output_pins (schematic);
+{ /*let*/
+let parts = schematic.parts ().as_map ();
+(function () {
+for (const json_child in parts) {
+{ /*let*/
+let child_kind_name = json_child.kindName ();
+{ /*let*/
+let child_name = json_child.partName ();
+{ /*let*/
+let child_kind = app.lookupKind (child-kind-name);
+self.add_part (child_name, child_kind);
+} /* end let */
+} /* end let */
+} /* end let */
 };
 }) ();
-};
-function make_output_pins (self, json_part) {
-        (function () {
-for (const outpin_name in json_part.outPins ()) {
-self.add_output_pin (outpin_name);
+} /* end let */
+{ /*let*/
+let json_parts = schematic.wires ().as_map ();
+{ let newWire = new wire;
+(function () {
+for (const wire in wires) {
+self.index () = wire.wireIndex ();
+{ /*let*/
+let sources = wire.sources ().as_map ();
+(function () {
+for (const json_source in sources) {
+{ let json_src = new source;
+src.part_name () = json_src.part ();
+src.pin_name () = json_src.pin ();
+newWire.add_source (src);}
+
 };
 }) ();
+} /* end let */
+{ /*let*/
+let receivers = wire.receivers ().as_map ();
+(function () {
+for (const json_receiver in receivers) {
+{ let dest = new destination;
+dest.part_name () = json_receiver.part ();
+dest.pin_name () = json_receiver.pin ();
+newWire.add_destination (dest);}
+
+};
+}) ();
+} /* end let */
+self.addWire (newWire);
+};
+}) ();}
+
+} /* end let */
+} /* end let */
+} /* end let */
+};
+function make_input_pins (self, json_pin_array) {
+        { /*let*/
+let pin_map = json_pin_array.as_map ();
+(function () {
+for (const pin_name in pin-map) {
+self.add_input_pin (pin_name);
+};
+}) ();
+} /* end let */
+};
+function make_output_pins (self, json_pin_array) {
+        { /*let*/
+let pin_map = json_pin_array.as_map ();
+(function () {
+for (const pin_name in pin-map) {
+self.add_output_pin (pin_name);
+};
+}) ();
+} /* end let */
+};
+function make_leaf_input_pins (self, json_object_part) {
+        self.make_input_pins (json_object_part.inPins ());
+};
+function make_leaf_output_pins (self, json_object_part) {
+        self.make_output_pins (json_object_part.outPins ());
+};
+function make_schematic_input_pins (self, json_object_schematic) {
+        self.make_input_pins (json_object_schematic.inputs ());
+};
+function make_schematic_output_pins (self, json_object_schematic) {
+        self.make_output_pins (json_object_schematic.outputs ());
 };
 
 function node () {
@@ -431,7 +525,7 @@ this.data = function () { return attribute_data; },
 this.set_data = function (val) { this.attribute_data = val; }
 }
 
-function isaApp () {
+function App () {
 this.attribute_tableOfKinds = null,
 this.tableOfKinds = function () { return attribute_tableOfKinds; },
 this.set_tableOfKinds = function (val) { this.attribute_tableOfKinds = val; },
@@ -445,134 +539,73 @@ this.attribute_json_string = null,
 this.json_string = function () { return attribute_json_string; },
 this.set_json_string = function (val) { this.attribute_json_string = val; }
 }
-function isa_read_json (self) {
-        self.initialize ();
+function read_json (self) {
         { /*let*/
-let arr = self.get_app_from_JSON_as_map ();
-(function () {
-for (const json_part in arr) {
-if (json_part.isLeaf ()) {
-self.make_leaf_kind (json_part);
-} else {
-if (json_part.isSchematic ()) {
+let top_schematic = self.nothing ();
+self.initialize ();
 { /*let*/
-let k = self.make_schematic_kind (json-part);
-self.top_node () = k;
-} /* end let */
+let JSON_arr = self.get_app_from_JSON ();
+{ /*let*/
+let arr = JSON_arr.as_map ();
+(function () {
+for (const json_object_part in arr) {
+{ let newKind = new kind;
+newKind.kind_name () = json_part_object.name ();
+if (json_object_part.isLeaf ()) {
+newKind.read_leaf (json_object_part);
+} else {
+if (json_object_part.isSchematic ()) {
+newKind.read_schematic (self, json_object_part);
+top_schematic = newKind;
 } else {
 self.fatalErrorInBuild ();
 }
 }
-};
-}) ();
-} /* end let */
-};
-// external function fatalErrorInBuild ((self isaApp))
-// external function get_app_from_JSON_as_map ((self isaApp))
-function make_leaf_kind (self, json_part) {
-        { /*let*/
-let kindString = json_part.kind ();
-{ /*let*/
-let filename = json_part.filename ();
-{ let newKind = new kind;
-newKind.kind_name () = kindString;
-newKind.self_class () = self.make_type_name (kindString);
-newKind.make_input_pins (json_part);
-newKind.make_output_pins (json_part);
-self.installInTable (newKind.kind_name (), newKind);
-return newKind;}
-
-} /* end let */
-} /* end let */
-};
-function make_schematic_kind (self, json_part) {
-        { /*let*/
-let schematicName = json_part.name ();
-{ let newKind = new kind;
-newKind.kind_name () = schematicName;
-newKind.self_class () = self.schematicCommonClass ();
-newKind.make_input_pins (json_part);
-newKind.make_output_pins (json_part);
-(function () {
-for (const json_child in json_part.partsMap ()) {
-{ /*let*/
-let partKind_name = json_child.kindName ();
-{ /*let*/
-let part_kind = self.lookupKind (partKind_name);
-newKind.add_part (json_child.partName (), part_kind, partKind_name);
-} /* end let */
-} /* end let */
-};
-}) ();
-(function () {
-for (const json_wire in json_part.wireMap ()) {
-{ let w = new Wire;
-w.index () = json_wire.index ();
-(function () {
-for (const sourceJSON in json_wire.sourceMap ()) {
-w.add_source (sourceJSON.partName (), sourceJSON.pinName ());
-};
-}) ();
-(function () {
-for (const destinationJSON in json_wire.destinationMap ()) {
-w.add_destination (destinationJSON.partName (), destinationJSON.pinName ());
-};
-}) ();
-newKind.add_wire (w);}
+self.installInTable (newKind.kind_name (), newKind);}
 
 };
 }) ();
-self.installInTable (newKind.kind_name (), newKind);
-return newKind;}
-
+} /* end let */
+} /* end let */
+return top_schematic;
 } /* end let */
 };
-// external function make_type_name ((self isaApp), (? name))
-// external function schematicCommonClass ((self isaApp))
+// external function initialize ((self App))
+// external function fatalErrorInBuild ((self App))
+// external function get_app_from_JSON ((self App))
+// external function nothing ((self App))
+// external function lookupKind ((self App), (? name))
 
-function JSONpart () {
+function JSON_object () {
 this.attribute_foreign = null,
 this.foreign = function () { return attribute_foreign; },
 this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
-// external function name ((self JSONpart))
-// external function kind ((self JSONpart))
-// external function filename ((self JSONpart))
-// external function inPins ((self JSONpart))
-// external function outPins ((self JSONpart))
-// external function schematicName ((self JSONpart))
-// external function partsMap ((self JSONpart))
-// external function wireMap ((self JSONpart))
-// external function isLeaf ((self JSONpart))
-// external function isSchematic ((self JSONpart))
+// external function isLeaf ((self JSON_object))
+// external function isSchematic ((self JSON_object))
+// external function name ((self JSON_object))
+// external function itemKind ((self JSON_object))
+// external function kind ((self JSON_object))
+// external function filename ((self JSON_object))
+// external function inPins ((self JSON_object))
+// external function outPins ((self JSON_object))
+// external function schematic ((self JSON_object))
+// external function schematic_kind ((self JSON_object))
+// external function inputs ((self JSON_object))
+// external function outputs ((self JSON_object))
+// external function parts ((self JSON_object))
+// external function wiring ((self JSON_object))
+// external function partName ((self JSON_object))
+// external function kindName ((self JSON_object))
+// external function wireIndex ((self JSON_object))
+// external function sources ((self JSON_object))
+// external function receivers ((self JSON_object))
+// external function part ((self JSON_object))
+// external function pin ((self JSON_object))
 
-function JSONpartNameAndKind () {
+function JSON_array () {
 this.attribute_foreign = null,
 this.foreign = function () { return attribute_foreign; },
 this.set_foreign = function (val) { this.attribute_foreign = val; }
 }
-// external function partName ((self JSONpartNameAndKind))
-// external function kindName ((self JSONpartNameAndKind))
-
-function JSONpartNameAndPin () {
-this.attribute_foreign = null,
-this.foreign = function () { return attribute_foreign; },
-this.set_foreign = function (val) { this.attribute_foreign = val; }
-}
-// external function partName ((self JSONpartNameAndPin))
-// external function pinName ((self JSONpartNameAndPin))
-
-function JSONwire () {
-this.attribute_foreign = null,
-this.foreign = function () { return attribute_foreign; },
-this.set_foreign = function (val) { this.attribute_foreign = val; }
-}
-// external function index ((self JSONwire))
-// external function sourceMap ((self JSONwire))
-// external function destinationMap ((self JSONwire))
-
-function ForeignKindName () {
-this.attribute_foreign = null,
-this.foreign = function () { return attribute_foreign; },
-this.set_foreign = function (val) { this.attribute_foreign = val; }
-}
+// external function as_map ((self JSON_array))

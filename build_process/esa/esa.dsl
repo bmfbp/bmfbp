@@ -1,4 +1,3 @@
-
 type name
 type function
 type boolean
@@ -73,10 +72,10 @@ class event
 end class
 
 %%%%
-% classes for isaApp
+% classes for reading App from JSON
 %%%%
 
-class isaApp
+class App
   tableOfKinds
   alist
   top-node
@@ -483,7 +482,7 @@ end script
 
 
 %%%%%%%%%
-when reading app
+when reading App
   script read-json >> kind  % returns kind of top schematic
   method initialize
   method fatalErrorInBuild
@@ -495,6 +494,14 @@ end when
 when reading kind
   method schematicCommonClass >> foreign
   method make-type-name (name) >> foreign
+  script read-leaf (JSON-object)
+  script read-schematic (App JSON-object)
+  script make-input-pins (JSON-array)
+  script make-output-pins (JSON-array)
+  script make-leaf-input-pins (JSON-object)
+  script make-leaf-output-pins (JSON-object)
+  script make-schematic-input-pins (JSON-object)
+  script make-schematic-output-pins (JSON-object)
 end when
 
 when reading JSON-array
@@ -551,7 +558,7 @@ when reading JSON-object
 
 end when
 
-script app read-json >> kind
+script App read-json >> kind
     let top-schematic = self.nothing in
     self.initialize
     let JSON-arr = self.get-app-from-JSON in
@@ -590,53 +597,53 @@ script kind read-leaf (json-object-part)
 end script
 
 script kind read-schematic (app json-object-part)
-    let schematicName = json-object-part.name in
-        set newKind.self-class = self.schematicCommonClass
-        let schematic = json-object-part.schematic in
-          @newKind.make-schematic-input-pins (schematic)
-          @newKind.make-schematic-output-pins (schematic)
+  let schematicName = json-object-part.name in
+      set newKind.self-class = self.schematicCommonClass
+      let schematic = json-object-part.schematic in
+	@newKind.make-schematic-input-pins (schematic)
+	@newKind.make-schematic-output-pins (schematic)
 
-          let parts = schematic.parts.as-map in
-	    map json-child = parts in
-	      let child-kind-name = json-child.kindName in
-		let child-name = json-child.partName in 
-		  let child-kind = app.lookupKind (child-kind-name) in
-		    self.add-part (child-name child-kind)
-		  end let
+	let parts = schematic.parts.as-map in
+	  map json-child = parts in
+	    let child-kind-name = json-child.kindName in
+	      let child-name = json-child.partName in 
+		let child-kind = app.lookupKind (child-kind-name) in
+		  self.add-part (child-name child-kind)
 		end let
 	      end let
-	     end map
-           end let
+	    end let
+	   end map
+	 end let
 
-          let json-parts = schematic.wires.as-map in
-            create newWire = wire in
-	      map wire = wires in
+	let json-parts = schematic.wires.as-map in
+	  create newWire = wire in
+	    map wire = wires in
 
-		set self.index = wire.wireIndex
-		let sources = wire.sources.as-map in
-		  map json-source = sources in
-		    create json-src = source in
-		      set src.part-name = json-src.part
-		      set src.pin-name = json-src.pin
-		      newWire.add-source (src)
-		    end create
-		  end map
-		end let
+	      set self.index = wire.wireIndex
+	      let sources = wire.sources.as-map in
+		map json-source = sources in
+		  create json-src = source in
+		    set src.part-name = json-src.part
+		    set src.pin-name = json-src.pin
+		    newWire.add-source (src)
+		  end create
+		end map
+	      end let
 
-		let receivers = wire.receivers.as-map in
-                  map json-receiver = receivers in
-                    create dest = destination in
-                      set dest.part-name = json-receiver.part
-                      set dest.pin-name = json-receiver.pin
-                      newWire.add-destination (dest)
-                    end create
-                  end map
-		end let
+	      let receivers = wire.receivers.as-map in
+		map json-receiver = receivers in
+		  create dest = destination in
+		    set dest.part-name = json-receiver.part
+		    set dest.pin-name = json-receiver.pin
+		    newWire.add-destination (dest)
+		  end create
+		end map
+	      end let
 
-                self.addWire (newWire)
-              end map
-            end create
-          end let
+	      self.addWire (newWire)
+	    end map
+	  end create
+	end let
       end let
     end let
 end script
