@@ -5,7 +5,7 @@ type boolean
 type node-class
 type value
 
-situation reading
+situation reading-from-JSON
 situation building
 situation building-aux
 situation loading
@@ -83,30 +83,13 @@ class isaApp
   json-string
 end class
 
-class JSONpart
+class JSON-object
   foreign  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
 end class
 
-class JSONpartNameAndKind  % e.g. {"partName":"xyz","kindName":"HELLO"}
-  foreign
+class JSON-array
+  foreign  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
 end class
-
-class JSONpartNameAndPin  % e.g. {"part":"xyz","pin":"S"}
-  foreign
-end class
-
-class JSONwire %% index, sources, destinations
-  foreign
-end class
-
-%%%%%%
-% crossing the boundary from base language to this SCL
-%%%%%%
-
-class ForeignKindName
-  foreign
-end class
-
 
 %=== building kinds ===
 
@@ -500,128 +483,193 @@ end script
 
 
 %%%%%%%%%
-
-when reading isaApp
-  script isa-read-json >> kind  % returns kind of top schematic
+when reading app
+  script read-json >> kind  % returns kind of top schematic
+  method initialize
   method fatalErrorInBuild
-  method get-app-from-JSON-as-map >> map JSONpart
-  % method load-file (Filename)
-  script make-leaf-kind (JSONpart) >> kind
-  script make-schematic-kind (JSONpart) >> kind
-  method make-type-name (name) >> ForeignKindName
-  method schematicCommonClass >> name
+  method get-app-from-JSON >> JSON-array
+  method nothing >> kind
+  method lookupKind (name) >> kind
 end when
-
-when reading JSONpart
-  method name >> name
-  method kind >> name
-  method filename >> filename
-  method inPins >> map JSONpartNameAndPin
-  method outPins >> map JSONpartNameAndPin
-  method schematicName >> name
-  method partsMap >> map JSONpartNameAndKind
-  method wireMap >> map JSONwire
-  method isLeaf >> boolean
-  method isSchematic >> boolean
-end when
-
-when reading JSONpartNameAndKind
-  method partName >> name
-  method kindName >> name
-end when 
-
-when reading JSONpartNameAndPin
-  method partName >> name
-  method pinName >> name
-end when 
 
 when reading kind
-  script make-input-pins (partJSON)
-  script make-output-pins (partJSON)
+  method schematicCommonClass >> foreign
+  method make-type-name (name) >> foreign
 end when
 
-when reading JSONwire
-  method index >> Index
-  method sourceMap >> map JSONpartNameAndPin 
-  method destinationMap >> map JSONpartNameAndPin
+when reading JSON-array
+  method as-map >> map JSON-object
 end when
 
-script isaApp isa-read-json >> kind
+when reading JSON-object
+  method isLeaf >> boolean
+  method isSchematic >> boolean
+  method name >> name
+
+  % level 0
+  method itemKind >> name      % "leaf" or "schematic"
+
+  % level 1 "leaf"
+  method kind >> name          % name of Kind
+  method filename >> filename  % filename template with "$" to represent (any) root directory 
+  method inPins >> JSON-array  % array of names
+  method outPins >> JSON-array % array of names
+
+
+  % level 1 "schematic"
+
+  method schematic >> JSON-object
+  method schematic-kind >> name
+
+  % level 2
+  method inputs >> JSON-array
+  method outputs >> JSON-array
+  method parts >> JSON-array
+  method wiring >> JSON-array
+
+  % level 3a
+  method partName >> name
+  method kindName >> name
+
+  % level 3b
+  method wireIndex >> foreign
+  method sources >> JSON-array
+  method receivers >> JSON-array
+
+  % level 4
+  method part >> name
+  method pin >> name
+
+  % itemKind == "schematic"
+  % valid: itemKind, name, schematic
+  %   level 2: name, inputs, outputs, parts, wiring
+  %     level 3a part: partName, kindName
+  %     level 3b wiring: wireIndex, sources, receivers
+  %       level 4 (source & receiver): part, pin
+
+  % (the above could be better - every part shuld have kind, inPins and outPins, but I backed into the above structure by trial and error)
+
+end when
+
+script app read-json >> kind
+    let top-schematic = self.nothing in
     self.initialize
-    let arr = self.get-app-from-JSON-as-map in
-      map json-part = arr in
-	if json-part.isLeaf then
-	  @self.make-leaf-kind (json-part)
-	else
-	  if json-part.isSchematic then
-	    let k = @self.make-schematic-kind (json-part) in
-              set self.top-node = k
-            end let
-	  else
-	    self.fatalErrorInBuild
-	  end if
-	end if
-      end map
-    end let 
+    let JSON-arr = self.get-app-from-JSON in
+      let arr = JSON-arr.as-map in
+	map json-object-part = arr in
+          create newKind = kind in
+	    set newKind.kind-name = json-part-object.name
+	    if json-object-part.isLeaf then
+	      @newKind.read-leaf (json-object-part)
+	    else
+	      if json-object-part.isSchematic then
+		@newKind.read-schematic (self json-object-part)
+		set top-schematic = newKind
+	      else
+		self.fatalErrorInBuild
+	      end if
+	    end if
+	    self.installInTable (newKind.kind-name newKind)
+          end create
+	end map
+      end let 
+    end let
+    >> top-schematic
+    end let
 end script
 
-script isaApp make-leaf-kind (json-part) >> newKind
-  let kindString = json-part.kind in
-    let filename = json-part.filename in
-      create newKind = kind in
-        set newKind.kind-name = kindString
-        set newKind.self-class = self.make-type-name (kindString)
-        % self.load-file (filename)  % skip this until very basics are working
-        @newKind.make-input-pins (json-part)
-        @newKind.make-output-pins (json-part)
-        self.installInTable (newKind.kind-name newKind)
-        >> newKind
-      end create
+script kind read-leaf (json-object-part)
+  let kindName = json-object-part.kind in
+    let filename = json-object-part.filename in
+      set self.self-class = self.make-type-name (kindName)
+      % self.load-file (filename)  % skip this until very basics are working
+      @self.make-leaf-input-pins (json-object-part)
+      @self.make-leaf-output-pins (json-object-part)
     end let
   end let
 end script
 
-script isaApp make-schematic-kind (json-part)
-    let schematicName = json-part.name in
-      create newKind = kind in
-        set newKind.kind-name = schematicName
+script kind read-schematic (app json-object-part)
+    let schematicName = json-object-part.name in
         set newKind.self-class = self.schematicCommonClass
-        @newKind.make-input-pins (json-part)
-        @newKind.make-output-pins (json-part)
-        map json-child = json-part.partsMap in
-          let partKind_name = json-child.kindName in
-            let part_kind = self.lookupKind (partKind_name) in
-              newKind.add-part (json-child.partName part_kind partKind_name)  % why is the name here, when it's already in part_kind?
-            end let
+        let schematic = json-object-part.schematic in
+          @newKind.make-schematic-input-pins (schematic)
+          @newKind.make-schematic-output-pins (schematic)
+
+          let parts = schematic.parts.as-map in
+	    map json-child = parts in
+	      let child-kind-name = json-child.kindName in
+		let child-name = json-child.partName in 
+		  let child-kind = app.lookupKind (child-kind-name) in
+		    self.add-part (child-name child-kind)
+		  end let
+		end let
+	      end let
+	     end map
+           end let
+
+          let json-parts = schematic.wires.as-map in
+            create newWire = wire in
+	      map wire = wires in
+
+		set self.index = wire.wireIndex
+		let sources = wire.sources.as-map in
+		  map json-source = sources in
+		    create json-src = source in
+		      set src.part-name = json-src.part
+		      set src.pin-name = json-src.pin
+		      newWire.add-source (src)
+		    end create
+		  end map
+		end let
+
+		let receivers = wire.receivers.as-map in
+                  map json-receiver = receivers in
+                    create dest = destination in
+                      set dest.part-name = json-receiver.part
+                      set dest.pin-name = json-receiver.pin
+                      newWire.add-destination (dest)
+                    end create
+                  end map
+		end let
+
+                self.addWire (newWire)
+              end map
+            end create
           end let
-        end map
-        map json-wire = json-part.wireMap in
-          create w = Wire in
-            set w.index = json-wire.index
-            map sourceJSON = json-wire.sourceMap in
-              w.add-source (sourceJSON.partName sourceJSON.pinName)
-            end map
-            map destinationJSON = json-wire.destinationMap in
-              w.add-destination (destinationJSON.partName destinationJSON.pinName)
-            end map
-            newKind.add-wire (w)
-          end create
-        end map
-        self.installInTable (newKind.kind-name newKind)
-        >> newKind
-      end create
+      end let
     end let
 end script
 
 
-script kind make-input-pins (json-part)
-  map inpin-name = json-part.inPins in
-    self.add-input-pin (inpin-name)
-  end map
+script kind make-input-pins (json-pin-array)
+  let pin-map = json-pin-array.as-map in
+    map pin-name = pin-map in
+      self.add-input-pin (pin-name)
+    end map
+  end let
 end script
 
-script kind make-output-pins (json-part)
-  map outpin-name = json-part.outPins in
-    self.add-output-pin (outpin-name)
-  end map
+script kind make-output-pins (json-pin-array)
+  let pin-map = json-pin-array.as-map in
+    map pin-name = pin-map in
+      self.add-output-pin (pin-name)
+    end map
+  end let
+end script
+
+script kind make-leaf-input-pins (json-object-part)
+  @self.make-input-pins (json-object-part.inPins)
+end script
+
+script kind make-schematic-input-pins (json-object-schematic)
+  @self.make-input-pins (json-object-schematic.inputs)
+end script
+
+script kind make-leaf-output-pins (json-object-part)
+  @self.make-output-pins (json-object-part.outPins)
+end script
+
+script kind make-schematic-output-pins (json-object-schematic)
+  @self.make-output-pins (json-object-schematic.outputs)
 end script

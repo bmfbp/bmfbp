@@ -258,8 +258,7 @@
 
 (defmethod get-app-from-JSON-as-map ((self isaApp))
   (setf (alist self) (arrowgrams/build::json-to-alist (json-string self)))
-  (let ((map (make-map-from-json-list 'JSONpart (alist self))))
-    map))
+  (alist self))
 
 (defmethod installInTable ((self isaApp) kind-name kind-structure)
   (setf (gethash (stack-dsl:%as-string kind-name) (tableOfKinds self)) kind-structure))
@@ -279,12 +278,12 @@
 (defmethod schematicCommonClass ((self isaApp))
   (intern "SCHEMATIC" "COMMON-LISP-USER"))
 
-(defmethod isLeaf ((self JSONpart))
+(defmethod isLeaf ((self CONS))
   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
   ;; This choice is Lisp-specific,  we might choose a different kind of representation in JS, say.  The choice is not visible at the esa.scl level - we only talk about JSONparts and maps of JSONparts, then query them using external methods
-  (if (string= "leaf" (cdr (assoc :item-kind (foreign self)))) :true :false))
+  (if (string= "leaf" (cdr (assoc :item-kind self))) :true :false))
 
-(defmethod isSchematic ((self JSONpart))
+(defmethod isSchematic ((self CONS))
   (if (string= "graph" (cdr (assoc :item-Kind (foreign self)))) :true :false))
 
 (defmethod kind ((self JSONpart))
