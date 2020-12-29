@@ -52,11 +52,11 @@
 
 (defun lw4 ()
   (arrowgrams/build::arrowgrams-to-json \"ahelloworld\")
-  (arrowgrams/build::load-and-run-app-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
+  (cl-user::load-and-run-app-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
 
 (defun lw4-old ()
   (arrowgrams/build::arrowgrams-to-json \"ahelloworld\")
-  (arrowgrams/build::old-load-and-run-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
+  (cl-user::old-load-and-run-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
 
 "
 )
