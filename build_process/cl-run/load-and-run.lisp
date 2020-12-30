@@ -31,14 +31,22 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
 (defun load-and-run-app-from-file (json-graph-filename)
   (let ((text (alexandria:read-file-into-string json-graph-filename)))
     ;; load app into memory
-    (let ((d (make-instance 'dispatcher))
+    (let ((disp (make-instance 'dispatcher))
           (app (make-instance 'App)))
       (setf (json-string app) text)
-      (let ((k (read-json app)))
+      (let ((top-kind (read-json app)))
+        ;; create Dispatcher (disp)
         ;; get top node of app
-        ;; create Dispatcher
+        top-kind
         ;; run "kind loader" on top node
+        (loader top-kind "TOP" nil disp)
+        ;; run initialize-all on dispatcher
+        (initialize-all disp)  ;; initialize-all is in ../esa/esa.lisp
+        ;; distribute all outputs
+        (distribute-all-outputs disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
         ;; inject start into top node
+        (setf *dispatcher* disp)
+        (dispatcher-inject *dispatcher* "start" t)
         )
       )
 ))
