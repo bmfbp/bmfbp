@@ -7,18 +7,38 @@
     (ql:quickload :arrowgrams/runner))
 #+end_src
 
-build graph...
+build schematic...
 #+name: runner
 #+begin_src lisp :results output
-  (arrowgrams/build::arrowgrams-to-json "ahelloworld")
+    (arrowgrams/build::arrowgrams-to-json "ahelloworld"))
 #+end_src
 
 run graph...
 #+name: runner
 #+begin_src lisp :results output
-  (arrowgrams/build::load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
+    (cl-user::load-and-run-app-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
 #+end_src
 
+run graph old way...
+print : "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD" in RESULTS
 
+#+name: runner
+#+begin_src lisp :results output
+  (cl-user::old-load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
+#+end_src
+
+* lispworks
+  if needed {
+    load ../esa/lw0 
+    (lw0)
+    load ../esa/lw0 
+    (transpile)
+  }
+  load ../cl-run/lw2
+  (lw2) 
+    (cl-user::dispatcher-inject *dispatcher* "start" t))
+
+* results
 #+RESULTS: runner
+: NIL
 

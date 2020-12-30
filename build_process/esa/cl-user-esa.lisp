@@ -1,4 +1,4 @@
-(in-package :cl-user)
+(in-package :cl-user)(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
 (defclass part-definition ()
 (
@@ -44,8 +44,8 @@
 (
 (kind-name :accessor kind-name :initform nil)
 (input-pins :accessor input-pins :initform nil)
-(self-class :accessor self-class :initform nil)
 (output-pins :accessor output-pins :initform nil)
+(self-class :accessor self-class :initform nil)
 (parts :accessor parts :initform nil)
 (wires :accessor wires :initform nil)))
 #| external method ((self kind)) install-input-pin |#
@@ -65,10 +65,10 @@
         (block %map (dolist (dest (destinations w)) 
 (ensure-valid-destination self dest)))
         (install-wire self w))
+#| external method ((self kind)) install-class |#
 #| external method ((self kind)) install-wire |#
 #| external method ((self kind)) install-part |#
 #| external method ((self kind)) parts |#
-#| external method ((self kind)) install-class |#
 #| external method ((self kind)) ensure-part-not-declared |#
 #| external method ((self kind)) ensure-valid-input-pin |#
 #| external method ((self kind)) ensure-valid-output-pin |#
@@ -109,12 +109,55 @@
 (return-from loader inst))))
 #| external method ((self kind)) find-wire-for-source |#
 #| external method ((self kind)) find-wire-for-self-source |#
-(defmethod make-input-pins ((self kind) partJSON)
-        (block %map (dolist (inpin-name (getInPins partJSON)) 
-(add-input-pin self inpin-name))))
-(defmethod make-output-pins ((self kind) partJSON)
-        (block %map (dolist (outpin-name (getOutPins partJSON)) 
-(add-output-pin self outpin-name))))
+#| external method ((self kind)) schematicCommonClass |#
+#| external method ((self kind)) make-type-name |#
+(defmethod read-leaf ((self kind) json-object-part)
+        (let ((kindName (kind json-object-part))) 
+(let ((filename (filename json-object-part))) 
+(setf (self-class self) (make-type-name self kindName))
+(load-file self filename)
+(make-leaf-input-pins self json-object-part)
+(make-leaf-output-pins self json-object-part))))
+(defmethod read-schematic ((self kind) app json-object-part)
+        (let ((schematicName (name json-object-part))) 
+(setf (self-class self) (schematicCommonClass self))
+(let ((schematic (schematic json-object-part))) 
+(make-schematic-input-pins self schematic)
+(make-schematic-output-pins self schematic)
+(let ((parts (as-map (parts schematic)))) 
+(block %map (dolist (json-child parts) 
+(let ((child-kind-name (kindName json-child))) 
+(let ((child-name (partName json-child))) 
+(let ((child-kind (lookupKind app child-kind-name))) 
+(add-part self child-name child-kind (self-class child-kind))))))))
+(let ((wires (as-map (wiring schematic)))) 
+(block %map (dolist (json-wire wires) 
+(let ((newWire (make-instance 'wire)))
+(setf (index newWire) (wireIndex json-wire))
+(let ((sources (as-map (sources json-wire)))) 
+(block %map (dolist (json-source sources) 
+(add-source newWire (part json-source) (pin json-source)))))
+(let ((receivers (as-map (receivers json-wire)))) 
+(block %map (dolist (json-receiver receivers) 
+(add-destination newWire (part json-receiver) (pin json-receiver)))))
+(add-wire self newWire))))))))
+(defmethod make-input-pins ((self kind) json-pin-array)
+        (let ((pin-map (as-map json-pin-array))) 
+(block %map (dolist (pin-name pin-map) 
+(add-input-pin self pin-name)))))
+(defmethod make-output-pins ((self kind) json-pin-array)
+        (let ((pin-map (as-map json-pin-array))) 
+(block %map (dolist (pin-name pin-map) 
+(add-output-pin self pin-name)))))
+(defmethod make-leaf-input-pins ((self kind) json-object-part)
+        (make-input-pins self (inPins json-object-part)))
+(defmethod make-leaf-output-pins ((self kind) json-object-part)
+        (make-output-pins self (outPins json-object-part)))
+(defmethod make-schematic-input-pins ((self kind) json-object-schematic)
+        (make-input-pins self (inputs json-object-schematic)))
+(defmethod make-schematic-output-pins ((self kind) json-object-schematic)
+        (make-output-pins self (outputs json-object-schematic)))
+#| external method ((self kind)) load-file |#
 
 (defclass node ()
 (
@@ -289,84 +332,72 @@
 (partpin :accessor partpin :initform nil)
 (data :accessor data :initform nil)))
 
-(defclass builder ()
+(defclass App ()
 (
-(ignore :accessor ignore :initform nil)))
-#| external method ((self builder)) make-hash-table-of-kinds-from-JSON |#
-(defmethod make-kind ((self builder) )
-        make-hash-table-of-kinds-from-JSON
-        set-code-stack-empty
-        (let ((arr get-schematic-as-JSON)) 
-(block %map (dolist (partJSON arr) 
-(if (esa-expr-true (isLeaf part))
+(tableOfKinds :accessor tableOfKinds :initform nil)
+(alist :accessor alist :initform nil)
+(top-node :accessor top-node :initform nil)
+(json-string :accessor json-string :initform nil)))
+(defmethod read-json ((self App) )
+        (let ((top-schematic (nothing self))) 
+(initialize self)
+(let ((JSON-arr (JSON self))) 
+(let ((arr (as-map JSON-arr))) 
+(block %map (dolist (json-object-part arr) 
+(let ((newKind (make-instance 'kind)))
+(setf (kind-name newKind) (name json-object-part))
+(if (esa-expr-true (isLeaf json-object-part))
 (progn
-(make-leaf-kind self partJSON)
+(read-leaf newKind json-object-part)
 )
 (progn
-(if (esa-expr-true (isSchematic part))
+(if (esa-expr-true (isSchematic json-object-part))
 (progn
-(make-schematic-kind self partJSON)
+(read-schematic newKind self json-object-part)
+(setf top-schematic newKind)
 )
 (progn
-fatalErrorInMakeKind
+(fatalErrorInBuild self)
 ))
-))))))
-#| external method ((self builder)) load-file |#
-(defmethod make-leaf-kind ((self builder) partJSON)
-        (let ((kindString (getKind partJSON))) 
-(let ((filename (getFilename partJSON))) 
-(let ((newKind (make-instance 'kind)))
-(setf (kind-name newKind) (make-type-name self kindString))
-(setf (self-class newKind) (make-type-name self kindString))
-(load-file self filename)
-(make-input-pins newKind partJSON)
-(make-output-pins newKind partJSON)
-(installInTable self kindString newKind)
-(return-from make-leaf-kind newKind)))))
-(defmethod make-schematic-kind ((self builder) partJSON)
-        (let ((schematicJSON (getSchematic partJSON))) 
-(let ((schematicName (getSchematicName partJSON))) 
-(let ((newKind (make-instance 'kind)))
-(setf (kind-name newKind) (schematicName partJSON))
-(setf (self-class newKind) symbolSchematic)
-(make-input-pins newKind partJSON)
-(make-output-pins newKind partJSON)
-(setKeyValue table kindString newKind)
-(block %map (dolist (child (getPartsList partJSON)) 
-(let ((partKind_name (kindName child))) 
-(let ((part_kind (lookupKind table partKind_name))) 
-(addPart newKind (partName child) part_kind partKind_name)))))
-(block %map (dolist (wJSON (getWireArray partJSON)) 
-(let ((w (make-instance 'Wire)))
-(setf (index w) (getIndex wJSON))
-(block %map (dolist (sourceJSON (getSources wJSON)) 
-(add-source w (getPart sourceJSON) (getPin sourceJSON))))
-(block %map (dolist (destinationJSON (getDestination wJSON)) 
-(add-source w (getPart destinationJSON) (getPin destinationJSON))))
-(add-wire newKind w))))
-(installInTable self kindString newKind)
-(return-from make-schematic-kind newKind)))))
-#| external method ((self builder)) make-type-name |#
+))
+(installInTable self (kind-name newKind) newKind))))))
+(return-from read-json top-schematic)))
+#| external method ((self App)) initialize |#
+#| external method ((self App)) fatalErrorInBuild |#
+#| external method ((self App)) JSON |#
+#| external method ((self App)) nothing |#
+#| external method ((self App)) lookupKind |#
+#| external method ((self App)) installInTable |#
 
-(defclass kindsByName ()
+(defclass JSON-object ()
 (
-(table :accessor table :initform nil)))
+(handle :accessor handle :initform nil)))
+#| external method ((self JSON-object)) isLeaf |#
+#| external method ((self JSON-object)) isSchematic |#
+#| external method ((self JSON-object)) name |#
+#| external method ((self JSON-object)) itemKind |#
+#| external method ((self JSON-object)) kind |#
+#| external method ((self JSON-object)) filename |#
+#| external method ((self JSON-object)) inPins |#
+#| external method ((self JSON-object)) outPins |#
+#| external method ((self JSON-object)) schematic |#
+#| external method ((self JSON-object)) inputs |#
+#| external method ((self JSON-object)) outputs |#
+#| external method ((self JSON-object)) parts |#
+#| external method ((self JSON-object)) wiring |#
+#| external method ((self JSON-object)) partName |#
+#| external method ((self JSON-object)) kindName |#
+#| external method ((self JSON-object)) wireIndex |#
+#| external method ((self JSON-object)) sources |#
+#| external method ((self JSON-object)) receivers |#
+#| external method ((self JSON-object)) part |#
+#| external method ((self JSON-object)) pin |#
 
-(defclass JSONforeign ()
+(defclass JSON-array ()
 (
-(ignore :accessor ignore :initform nil)))
-#| external method ((self JSONforeign)) getKind |#
-#| external method ((self JSONforeign)) getFilename |#
-#| external method ((self JSONforeign)) getInPins |#
-#| external method ((self JSONforeign)) getOutPins |#
-#| external method ((self JSONforeign)) schematicName |#
-#| external method ((self JSONforeign)) getPartsList |#
+(handle :accessor handle :initform nil)))
+#| external method ((self JSON-array)) as-map |#
 
-(defclass Constants ()
+(defclass foreign ()
 (
-(ignore :accessor ignore :initform nil)))
-
-(defclass Symbol ()
-(
-(ignore :accessor ignore :initform nil)))
-#| external method ((self Symbol)) symbolSchematic |#
+(handle :accessor handle :initform nil)))

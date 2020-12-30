@@ -77,7 +77,7 @@
     (let ((fields (mapcar #'(lambda (f) 
 			      (format nil "(~a :accessor ~a :initform nil)" 
 				      (asLisp (name f)) 
-				      (asLisp (name f))))
+				     (asLisp (name f))))
 			  (stack-dsl:%list (fieldMap self)))))
       (let ((def (if fields
 		     (format nil "~&~%(defclass ~a ()~%(~{~&~a~^~}))~%" name fields)

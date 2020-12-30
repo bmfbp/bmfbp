@@ -14,10 +14,10 @@
 
 
 (defmethod install-input-pin ((self kind) name)
-  (push (string-downcase name) (input-pins self)))
+  (push (stack-dsl:tolower name) (input-pins self)))
 
 (defmethod install-output-pin ((self kind) name)
-  (push (string-downcase name) (output-pins self)))
+  (push (stack-dsl:tolower name) (output-pins self)))
 
 (defmethod install-initially-function ((self kind) fn)
   (assert nil)) ;; should be explicitly defined in each class
@@ -184,9 +184,9 @@
     ;(format *standard-output* "~&find-wire-for-self-source B ~s sources=~s~%" w (sources w))
     (dolist (s (sources w))
       ;(format *standard-output* "~&find-wire-for-self-source C ~s ~s~%" pinname (pin-name s))
-      (when (string=-downcase pinname  (pin-name s)))
-      (return-from find-wire-for-self-source w)))
-  (assert nil)) ;; source not found - can't happen
+      (when (string=-downcase pinname  (pin-name s))
+        (return-from find-wire-for-self-source w))))
+  (error (format nil "source pin ~a not found"  pinname)))
 
 (defmethod find-wire-for-source ((self kind) part-name pin-name)
   ;(format *standard-output* "~&find-wire-for-source ~s ~s in ~s ~s ~%" part-name pin-name (kind-field self) self)
@@ -230,3 +230,153 @@
 
 (defmethod react ((self node) (e event))
   (run-composite-reaction self e))
+
+(defmethod create-top-event ((self dispatcher) pinName val)
+  (let ((e  (make-instance 'cl-user::event))
+        (pp (make-instance 'cl-user::part-pin)))
+    (setf (part-name pp) "self")
+    (setf (pin-name pp) pinName)
+    (setf (partpin e) pp)
+    (setf (data e) val)
+    e))
+
+;; ;;;;;;;;;;;;;;;
+;; ;; isabuilder
+;; ;;;;;;;;;;;;;;;
+
+;; (defmethod initialize ((self isabuilder)) 
+;;   (setf (tableOfKinds self) (make-hash-table :test 'equal)))
+
+;; (defmethod get-app-from-JSON-as-map ((self isabuilder))
+;;   (setf (alist self) (arrowgrams/build::json-to-alist (json-string self)))
+;;   (let ((map (stack-dsl:make-map-from-list 'JSONpart (alist self))))
+;;     map))
+
+;; (defmethod installInTable ((self isabuilder) kind-name kind-structure)
+;;   (setf (gethash (tableOfKinds self) kind-name) kind-structure))
+
+;; (defmethod make-type-name ((self isabuilder) str)
+;;   ;; do any magic required by base language to create a type name from the string str
+;;   ;; in Lisp, we can just use the string str - no more magic
+;;   str)
+
+;; (defmethod lookupKind ((self isabuilder) name)
+;;   ;; hash table lookup with key name 
+;;   (gethash (tableOfKinds self) name))
+
+;; (defmethod fatalErrorInBuild ((self isabuilder))
+;;   (error "fatal error in build"))
+
+;; (defmethod schematicCommonClass ((self isabuilder))
+;;   "%schematic")
+
+;; (defmethod isLeaf ((self JSONpart))
+;;   ;; internally, we keep JSONparts as ALISTs in a list (aka map)
+;;   ;; This choice is Lisp-specific,  we might choose a different kind of representation in JS, say.  The choice is not visible at the esa.scl level - we only talk about JSONparts and maps of JSONparts, then query them using external methods
+;;   (if (string= "leaf" (cdr (assoc :item-kind (foreign self)))) :true :false))
+
+;; (defmethod isSchematic ((self JSONpart))
+;;   (if (string= "graph" (cdr (assoc :item-Kind (foreign self)))) :true :false))
+
+;; (defmethod getKind ((self JSONpart))
+;;   (stack-dsl:make-typed-string (cdr (assoc :kind (foreign self)))))
+;; (defmethod kind ((self JSONpart)) (getKind self))
+
+;; (defmethod getFilename ((self JSONpart))
+;;   (stack-dsl:make-typed-string (cdr (assoc :filename (foreign self)))))
+
+;; (defmethod getName ((self JSONpart))
+;;   (stack-dsl:make-typed-string (cdr (assoc :name (foreign self)))))
+
+;; (defmethod getInPins ((self JSONpart))
+;;   (stack-dsl:make-map-from-list 'stack-dsl:%string (mapcar #'stack-dsl:make-typed-string (cdr (assoc :in-Pins (foreign self))))))
+;; (defmethod inPins ((self JSONpart)) (getInPins self))
+
+;; (defmethod getOutPins ((self JSONpart))
+;;   (stack-dsl:make-map-from-list 'stack-dsl:%string (mapcar #'stack-dsl:make-typed-string (cdr (assoc :out-Pins (foreign self))))))
+;; (defmethod outPins ((self JSONpart)) (getOutPins self))
+
+;; ;; schematic (graph) accessors
+;; (defmethod partsMap ((self JSONpart))
+;;   (let ((json-graph (cdr (assoc :graphs (foreign self)))))
+;;     (stack-dsl:make-map-from-list 'JSONpartNameAndKind (cdr (assoc :parts json-graph)))))
+
+;; (defmethod wireMap ((self JSONpart))
+;;   (let ((json-graph (cdr (assoc :graphs (foreign self)))))
+;;     (stack-dsl:make-map-from-list 'JSONpartNameAndPin (cdr (assoc :parts json-graph)))))
+
+
+;; (defmethod partName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
+;;   ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
+;;   (stack-dsl:make-typed-string (cdr (assoc :part-Name self))))
+
+;; (defmethod kindName ((self JSONpartNameAndKind)) ;; e.g. {"partName":"xyz","kindName":"HELLO"}
+;;   ;; in Lisp, this is stored as a ALIST, e.g. ((:partName . "xyz") (:kindName . "HELLO"))
+;;   (stack-dsl:make-typed-string (cdr (assoc :kind-Name self))))
+
+
+;; (defmethod index ((self JSONwire))
+;;   (stack-dsl:make-typed-value 'JSONindex (cdr (assoc :wire-Index self))))
+
+;; (defmethod sourceMap ((self JSONwire))
+;;   (stack-dsl:make-map-from-list 'JSONpartAndPin (cdr (assoc :sources self))))
+
+;; (defmethod destinationMap ((self JSONwire))
+;;   (stack-dsl:make-map-from-list 'JSONpartAndPin (cdr (assoc :receivers self))))
+
+;; (defmethod partName ((self JSONpartNameAndPin))
+;;   (stack-dsl:make-typed-string (cdr (assoc :part self))))
+
+;; (defmethod pinName ((self JSONpartNameAndPin))
+;;   (stack-dsl:make-typed-string (cdr (assoc :part self))))
+
+;; ;; helpers
+
+
+;; ;;;;;;;;;;
+;; ;; example JSON
+;; ;;;;;;;;;;
+;; #|
+;; [
+;;     {
+;; 	"itemKind":"leaf",
+;; 	"name":"string-join",
+;; 	"inPins":["a","b"],
+;; 	"outPins":["c","error"],
+;; 	"kind":"string-join",
+;; 	"filename":"$\/parts\/cl\/.\/string-join.lisp"
+;;     },
+;;     {"itemKind":"leaf","name":"world","inPins":["start"],"outPins":["s","error"],"kind":"world","filename":"$\/parts\/cl\/.\/world.lisp"},
+;;     {"itemKind":"leaf","name":"hello","inPins":["start"],"outPins":["s","error"],"kind":"hello","filename":"$\/parts\/cl\/.\/hello.lisp"},
+
+;;     {
+;; 	"itemKind":"graph",
+;; 	"name":"helloworld",
+;; 	"graph":{"name":"HELLOWORLD",
+;; 		 "inputs":["START"],
+;; 		 "outputs":["RESULT"],
+;; 		 "parts":
+;; 		 [
+;; 		     {"partName":"STRING-JOIN","kindName":"STRING-JOIN"},
+;; 		     {"partName":"WORLD","kindName":"WORLD"},
+;; 		     {"partName":"HELLO","kindName":"HELLO"}
+;; 		 ],
+;; 		 "wiring":
+;; 		 [
+;; 		     {
+;; 			 "wireIndex":0,
+;; 			 "sources":[{"part":"HELLO","pin":"S"}],
+;; 			 "receivers":
+;; 			 [
+;; 			     {"part":"STRING-JOIN","pin":"A"}
+;; 			 ]
+;; 		     },
+;; 		     {"wireIndex":1,"sources":[{"part":"WORLD","pin":"S"}],"receivers":[{"part":"STRING-JOIN","pin":"B"}]},
+;; 		     {"wireIndex":2,"sources":[{"part":"STRING-JOIN","pin":"C"}],"receivers":[{"part":"SELF","pin":"RESULT"}]},
+;; 		     {"wireIndex":3,"sources":[{"part":"SELF","pin":"START"}],"receivers":[{"part":"WORLD","pin":"START"},{"part":"HELLO","pin":"START"}]}
+;; 		 ]
+;; 		}
+;;     }
+;; ]
+;; |#
+

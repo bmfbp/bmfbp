@@ -5,6 +5,13 @@
 ** esa.dsl is transpiled into esa.lisp (which is used by ../cl_build)
 * transpiler details
 ** see ../esa-transpiler/README.org for details.
+* lispworks build
+  load ../esa/lw0 
+  (lw0)
+  load ../esa/lw1
+  (lw1)
+
+
 * build
   to build cl-user-esa.lisp & esa.js
   1) create the transpiler (../esa-transpiler/README.org)
@@ -26,7 +33,7 @@
     (let ((result 
            (arrowgrams/esa-transpiler::transpile-esa-to-string 
              (arrowgrams/esa:path "esa.dsl")
-            :tracing-accept t)))
+            :tracing-accept nil)))
 	  (with-open-file (f (arrowgrams/esa:path "esa.lisp") :direction :output :if-exists :supersede :if-does-not-exist :create)
 	    (write-string "(in-package :arrowgrams/build)" f)
 	    (write-string "
@@ -54,30 +61,62 @@
 
 #+RESULTS: esa
 #+begin_example
-To load "arrowgrams/esa-transpiler":
-  Load 1 ASDF system:
-    arrowgrams/esa-transpiler
-; Loading "arrowgrams/esa-transpiler"
-[package loops]...................................
-[package alexandria.1.0.0]........................
-[package json]....................................
-[package json-rpc]................................
-[package scanner].................................
-[package parsing-assembler].......................
-[package stack-dsl]...............................
-[package cl-ppcre]................................
-..................................................
-[package cl-event-passing]........................
-[package cl-event-passing-user]...................
-[package cl-event-passing-part]...................
-[package cl-event-passing-event]..................
-[package cl-event-passing-source].................
-[package cl-event-passing-receiver]...............
-[package cl-event-passing-schematic]..............
-[package cl-event-passing-dispatch]...............
-[package cl-event-passing-user-util]..............
-[package cl-event-passing-user-wire]..............
-[package cl-event-passing-pin]....................
-[package arrowgrams/esa-transpiler]...............
-............................
+,* pass 0
+,*** check stacks ***
+,* pass 1
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+,* pass 2
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 141
+OUTPUT-EXPRESSION 114
+,* pass 3
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 89
+,* pass 0
+,*** check stacks ***
+,* pass 1
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+,* pass 2
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 141
+OUTPUT-EXPRESSION 114
+,* pass 3
+,*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 89
+#+end_example
+#+begin_example
+* pass 0
+*** check stacks ***
+* pass 1
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+* pass 2
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 126
+OUTPUT-EXPRESSION 112
+* pass 3
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 74
+* pass 0
+*** check stacks ***
+* pass 1
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+* pass 2
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 126
+OUTPUT-EXPRESSION 112
+* pass 3
+*** check stacks ***
+OUTPUT-ESAPROGRAM 1
+OUTPUT-NAME 74
 #+end_example

@@ -239,6 +239,48 @@
 
 
 
+#+nil (defsystem :arrowgrams/build
+  :depends-on (:cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler :arrowgrams/esa-transpiler)
+  :around-compile (lambda (next)
+                    (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+                    (funcall next))
+  :components 
+  ((:module "arrowgrams-builder"
+     :pathname "./build_process/cl-build/"
+     :components ((:file "package")
+		  (:file "classes" :depends-on ("package"))
+		  (:file "util" :depends-on ("package"))
+		  (:file "path" :depends-on ("package"))
+		  (:file "../esa/esa" :depends-on ("package" "classes" "util"))
+		  (:file "json" :depends-on ("package"))
+		  (:file "probe" :depends-on ("package" "classes" "util"))
+		  (:file "probe2" :depends-on ("package" "classes" "util"))
+		  (:file "probe3" :depends-on ("package" "classes" "util"))
+		  (:file "file-writer" :depends-on ("package"))
+		  (:file "graph-class" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  ;(:file "../esa/esa-methods" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
+		  (:file "part-namer" :depends-on ("package" "classes" "util"))
+		  (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
+		  (:file "get-code" :depends-on ("package" "classes" "util"))
+		  (:file "schematic-or-leaf" :depends-on ("package" "classes" "util"))
+		  (:file "build-collector" :depends-on ("package" "classes" "util"))
+		  ;(:file "children-before-graph" :depends-on ("package" "classes" "util" "../esa/esa" "../esa/esa-methods"))
+		  (:file "children-before-graph" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "my-command-line" :depends-on ("package"))
+		  (:file "build" :depends-on ("package" "classes" "json" "path"
+							"probe" "probe2" "probe3"
+							"my-command-line"
+							"file-writer"
+							"part-namer" "json-array-splitter"
+							"schematic-or-leaf" "build-collector"
+							"children-before-graph"
+							"get-manifest-file" "get-code"
+							;"../esa/esa" "../esa/esa-methods"
+							"../esa/esa"
+							"util"
+							))
+		  ))))
 (defsystem :arrowgrams/build
   :depends-on (:cl-ppcre :cl-json :loops :cl-holm-prolog :arrowgrams/v4compiler :arrowgrams/esa-transpiler)
   :around-compile (lambda (next)
@@ -252,14 +294,13 @@
 		  (:file "util" :depends-on ("package"))
 		  (:file "path" :depends-on ("package"))
 		  (:file "../esa/cl-user-esa" :depends-on ("package" "classes" "util"))
-		  (:file "../esa/esa" :depends-on ("package" "classes" "util"))
 		  (:file "json" :depends-on ("package"))
 		  (:file "probe" :depends-on ("package" "classes" "util"))
 		  (:file "probe2" :depends-on ("package" "classes" "util"))
 		  (:file "probe3" :depends-on ("package" "classes" "util"))
 		  (:file "file-writer" :depends-on ("package"))
-		  (:file "graph-class" :depends-on ("package" "classes" "util" "../esa/cl-user-esa" "../esa/esa"))
-		  (:file "../esa/cl-user-esa-methods" :depends-on ("package" "classes" "util" "../esa/cl-user-esa" "../esa/esa"))
+		  (:file "graph-class" :depends-on ("package" "classes" "util" "../esa/esa"))
+		  (:file "../esa/cl-user-esa-methods" :depends-on ("package" "classes" "util" "../esa/cl-user-esa"))
 		  (:file "json-array-splitter" :depends-on ("package" "classes" "util"))
 		  (:file "part-namer" :depends-on ("package" "classes" "util"))
 		  (:file "get-manifest-file" :depends-on ("package" "classes" "util"))
@@ -276,7 +317,7 @@
 							"schematic-or-leaf" "build-collector"
 							"children-before-graph"
 							"get-manifest-file" "get-code"
-							"../esa/cl-user-esa" "../esa/esa" "../esa/cl-user-esa-methods"
+							"../esa/cl-user-esa" "../esa/cl-user-esa-methods"
 							"util"
 							))
 		  ))))

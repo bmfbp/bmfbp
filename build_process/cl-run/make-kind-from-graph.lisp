@@ -153,3 +153,13 @@
 (defun get-out-pins (a)  (cdr (assoc :out-pins a)))
 (defun get-kind (a) (cdr (assoc :kind a)))
 
+
+;; methods during transition from load-run-from-file in lisp to same in esa.dsl
+
+(defmethod stack-dsl:tolower ((s string))
+  (string-downcase s))
+
+(defmethod stack-dsl:%as-string ((s string))
+  s)
+
+  

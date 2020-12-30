@@ -72,19 +72,19 @@ function kind () {
 this.attribute_kind_name = null,
 this.kind_name = function () { return attribute_kind_name; },
 this.set_kind_name = function (val) { this.attribute_kind_name = val; },
-this.attribute_input_pins = null,
+this.attribute_input_pins = [],
 this.input_pins = function () { return attribute_input_pins; },
 this.set_input_pins = function (val) { this.attribute_input_pins = val; },
+this.attribute_output_pins = [],
+this.output_pins = function () { return attribute_output_pins; },
+this.set_output_pins = function (val) { this.attribute_output_pins = val; },
 this.attribute_self_class = null,
 this.self_class = function () { return attribute_self_class; },
 this.set_self_class = function (val) { this.attribute_self_class = val; },
-this.attribute_output_pins = null,
-this.output_pins = function () { return attribute_output_pins; },
-this.set_output_pins = function (val) { this.attribute_output_pins = val; },
-this.attribute_parts = null,
+this.attribute_parts = [],
 this.parts = function () { return attribute_parts; },
 this.set_parts = function (val) { this.attribute_parts = val; },
-this.attribute_wires = null,
+this.attribute_wires = [],
 this.wires = function () { return attribute_wires; },
 this.set_wires = function (val) { this.attribute_wires = val; }
 }
@@ -115,10 +115,10 @@ self.ensure_valid_destination (dest);
 }) ();
         self.install_wire (w);
 };
+// external function install_class ((self kind), (? node_class))
 // external function install_wire ((self kind), (? wire))
 // external function install_part ((self kind), (? name), (? kind), (? node_class))
 // external function parts ((self kind))
-// external function install_class ((self kind), (? node_class))
 // external function ensure_part_not_declared ((self kind), (? name))
 // external function ensure_valid_input_pin ((self kind), (? name))
 // external function ensure_valid_output_pin ((self kind), (? name))
@@ -170,20 +170,108 @@ return inst;}
 };
 // external function find_wire_for_source ((self kind), (? name), (? name))
 // external function find_wire_for_self_source ((self kind), (? name))
-function make_input_pins (self, partJSON) {
-        (function () {
-for (const inpin_name in partJSON.getInPins ()) {
-self.add_input_pin (inpin_name);
+// external function schematicCommonClass ((self kind))
+// external function make_type_name ((self kind), (? name))
+function read_leaf (self, json_object_part) {
+        { /*let*/
+let kindName = json_object_part.kind ();
+{ /*let*/
+let filename = json_object_part.filename ();
+self.self_class () = self.make_type_name (kindName);
+self.load_file (filename);
+self.make_leaf_input_pins (json_object_part);
+self.make_leaf_output_pins (json_object_part);
+} /* end let */
+} /* end let */
+};
+function read_schematic (self, app, json_object_part) {
+        { /*let*/
+let schematicName = json_object_part.name ();
+self.self_class () = self.schematicCommonClass ();
+{ /*let*/
+let schematic = json_object_part.schematic ();
+self.make_schematic_input_pins (schematic);
+self.make_schematic_output_pins (schematic);
+{ /*let*/
+let parts = schematic.parts ().as_map ();
+(function () {
+for (const json_child in parts) {
+{ /*let*/
+let child_kind_name = json_child.kindName ();
+{ /*let*/
+let child_name = json_child.partName ();
+{ /*let*/
+let child_kind = app.lookupKind (child-kind-name);
+self.add_part (child_name, child_kind, child_kind.self_class ());
+} /* end let */
+} /* end let */
+} /* end let */
 };
 }) ();
-};
-function make_output_pins (self, partJSON) {
-        (function () {
-for (const outpin_name in partJSON.getOutPins ()) {
-self.add_output_pin (outpin_name);
+} /* end let */
+{ /*let*/
+let wires = schematic.wiring ().as_map ();
+(function () {
+for (const json_wire in wires) {
+{ let newWire = new wire;
+newWire.index () = json_wire.wireIndex ();
+{ /*let*/
+let sources = json_wire.sources ().as_map ();
+(function () {
+for (const json_source in sources) {
+newWire.add_source (json_source.part (), json_source.pin ());
 };
 }) ();
+} /* end let */
+{ /*let*/
+let receivers = json_wire.receivers ().as_map ();
+(function () {
+for (const json_receiver in receivers) {
+newWire.add_destination (json_receiver.part (), json_receiver.pin ());
 };
+}) ();
+} /* end let */
+self.add_wire (newWire);}
+
+};
+}) ();
+} /* end let */
+} /* end let */
+} /* end let */
+};
+function make_input_pins (self, json_pin_array) {
+        { /*let*/
+let pin_map = json_pin_array.as_map ();
+(function () {
+for (const pin_name in pin-map) {
+self.add_input_pin (pin_name);
+};
+}) ();
+} /* end let */
+};
+function make_output_pins (self, json_pin_array) {
+        { /*let*/
+let pin_map = json_pin_array.as_map ();
+(function () {
+for (const pin_name in pin-map) {
+self.add_output_pin (pin_name);
+};
+}) ();
+} /* end let */
+};
+function make_leaf_input_pins (self, json_object_part) {
+        self.make_input_pins (json_object_part.inPins ());
+};
+function make_leaf_output_pins (self, json_object_part) {
+        self.make_output_pins (json_object_part.outPins ());
+};
+function make_schematic_input_pins (self, json_object_schematic) {
+        self.make_input_pins (json_object_schematic.inputs ());
+};
+function make_schematic_output_pins (self, json_object_schematic) {
+        self.make_output_pins (json_object_schematic.outputs ());
+};
+// external function load_file ((self kind), (? name))
 
 function node () {
 this.attribute_input_queue = null,
@@ -201,7 +289,7 @@ this.set_container = function (val) { this.attribute_container = val; },
 this.attribute_name_in_container = null,
 this.name_in_container = function () { return attribute_name_in_container; },
 this.set_name_in_container = function (val) { this.attribute_name_in_container = val; },
-this.attribute_children = null,
+this.attribute_children = [],
 this.children = function () { return attribute_children; },
 this.set_children = function (val) { this.attribute_children = val; },
 this.attribute_busy_flag = null,
@@ -431,125 +519,93 @@ this.data = function () { return attribute_data; },
 this.set_data = function (val) { this.attribute_data = val; }
 }
 
-function builder () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
+function App () {
+this.attribute_tableOfKinds = null,
+this.tableOfKinds = function () { return attribute_tableOfKinds; },
+this.set_tableOfKinds = function (val) { this.attribute_tableOfKinds = val; },
+this.attribute_alist = null,
+this.alist = function () { return attribute_alist; },
+this.set_alist = function (val) { this.attribute_alist = val; },
+this.attribute_top_node = null,
+this.top_node = function () { return attribute_top_node; },
+this.set_top_node = function (val) { this.attribute_top_node = val; },
+this.attribute_json_string = null,
+this.json_string = function () { return attribute_json_string; },
+this.set_json_string = function (val) { this.attribute_json_string = val; }
 }
-// external function make_hash_table_of_kinds_from_JSON ((self builder))
-function make_kind (self) {
-        make_hash_table_of_kinds_from_JSON;
-        set_code_stack_empty;
+function read_json (self) {
         { /*let*/
-let arr = get-schematic-as-JSON;
-(function () {
-for (const partJSON in arr) {
-if (part.isLeaf ()) {
-self.make_leaf_kind (partJSON);
-} else {
-if (part.isSchematic ()) {
-self.make_schematic_kind (partJSON);
-} else {
-fatalErrorInMakeKind;
-}
-}
-};
-}) ();
-} /* end let */
-};
-// external function load_file ((self builder), (? Filename))
-function make_leaf_kind (self, partJSON) {
-        { /*let*/
-let kindString = partJSON.getKind ();
+let top_schematic = self.nothing ();
+self.initialize ();
 { /*let*/
-let filename = partJSON.getFilename ();
+let JSON_arr = self.JSON ();
+{ /*let*/
+let arr = JSON_arr.as_map ();
+(function () {
+for (const json_object_part in arr) {
 { let newKind = new kind;
-newKind.kind_name () = self.make_type_name (kindString);
-newKind.self_class () = self.make_type_name (kindString);
-self.load_file (filename);
-newKind.make_input_pins (partJSON);
-newKind.make_output_pins (partJSON);
-self.installInTable (kindString, newKind);
-return newKind;}
-
-} /* end let */
-} /* end let */
-};
-function make_schematic_kind (self, partJSON) {
-        { /*let*/
-let schematicJSON = partJSON.getSchematic ();
-{ /*let*/
-let schematicName = partJSON.getSchematicName ();
-{ let newKind = new kind;
-newKind.kind_name () = partJSON.schematicName ();
-newKind.self_class () = symbolSchematic;
-newKind.make_input_pins (partJSON);
-newKind.make_output_pins (partJSON);
-table.setKeyValue (kindString, newKind);
-(function () {
-for (const child in partJSON.getPartsList ()) {
-{ /*let*/
-let partKind_name = child.kindName ();
-{ /*let*/
-let part_kind = table.lookupKind (partKind_name);
-newKind.addPart (child.partName (), part_kind, partKind_name);
-} /* end let */
-} /* end let */
-};
-}) ();
-(function () {
-for (const wJSON in partJSON.getWireArray ()) {
-{ let w = new Wire;
-w.index () = wJSON.getIndex ();
-(function () {
-for (const sourceJSON in wJSON.getSources ()) {
-w.add_source (sourceJSON.getPart (), sourceJSON.getPin ());
-};
-}) ();
-(function () {
-for (const destinationJSON in wJSON.getDestination ()) {
-w.add_source (destinationJSON.getPart (), destinationJSON.getPin ());
-};
-}) ();
-newKind.add_wire (w);}
+newKind.kind_name () = json_object_part.name ();
+if (json_object_part.isLeaf ()) {
+newKind.read_leaf (json_object_part);
+} else {
+if (json_object_part.isSchematic ()) {
+newKind.read_schematic (self, json_object_part);
+top_schematic = newKind;
+} else {
+self.fatalErrorInBuild ();
+}
+}
+self.installInTable (newKind.kind_name (), newKind);}
 
 };
 }) ();
-self.installInTable (kindString, newKind);
-return newKind;}
-
 } /* end let */
+} /* end let */
+return top_schematic;
 } /* end let */
 };
-// external function make_type_name ((self builder), (? name))
+// external function initialize ((self App))
+// external function fatalErrorInBuild ((self App))
+// external function JSON ((self App))
+// external function nothing ((self App))
+// external function lookupKind ((self App), (? name))
+// external function installInTable ((self App), (? name), (? kind))
 
-function kindsByName () {
-this.attribute_table = null,
-this.table = function () { return attribute_table; },
-this.set_table = function (val) { this.attribute_table = val; }
+function JSON_object () {
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
+// external function isLeaf ((self JSON_object))
+// external function isSchematic ((self JSON_object))
+// external function name ((self JSON_object))
+// external function itemKind ((self JSON_object))
+// external function kind ((self JSON_object))
+// external function filename ((self JSON_object))
+// external function inPins ((self JSON_object))
+// external function outPins ((self JSON_object))
+// external function schematic ((self JSON_object))
+// external function inputs ((self JSON_object))
+// external function outputs ((self JSON_object))
+// external function parts ((self JSON_object))
+// external function wiring ((self JSON_object))
+// external function partName ((self JSON_object))
+// external function kindName ((self JSON_object))
+// external function wireIndex ((self JSON_object))
+// external function sources ((self JSON_object))
+// external function receivers ((self JSON_object))
+// external function part ((self JSON_object))
+// external function pin ((self JSON_object))
 
-function JSONforeign () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
+function JSON_array () {
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
-// external function getKind ((self JSONforeign))
-// external function getFilename ((self JSONforeign))
-// external function getInPins ((self JSONforeign))
-// external function getOutPins ((self JSONforeign))
-// external function schematicName ((self JSONforeign))
-// external function getPartsList ((self JSONforeign))
+// external function as_map ((self JSON_array))
 
-function Constants () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
+function foreign () {
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
-
-function Symbol () {
-this.attribute_ignore = null,
-this.ignore = function () { return attribute_ignore; },
-this.set_ignore = function (val) { this.attribute_ignore = val; }
-}
-// external function symbolSchematic ((self Symbol))
