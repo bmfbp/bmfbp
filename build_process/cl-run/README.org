@@ -15,8 +15,8 @@ build schematic...
 
 run graph...
 #+name: runner
-#+begin_src lisp
-    (arrowgrams/build::isa-load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
+#+begin_src lisp :results output
+    (cl-user::load-and-run-app-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
 #+end_src
 
 run graph old way...
@@ -24,7 +24,7 @@ print : "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD" in RESULTS
 
 #+name: runner
 #+begin_src lisp :results output
-  (arrowgrams/build::old-load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
+  (cl-user::old-load-and-run-from-file  (arrowgrams/build::json-graph-path "ahelloworld"))
 #+end_src
 
 * lispworks
@@ -40,5 +40,5 @@ print : "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD" in RESULTS
 
 * results
 #+RESULTS: runner
-: parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD
+: NIL
 

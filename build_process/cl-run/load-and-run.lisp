@@ -1,4 +1,3 @@
-;(in-package :arrowgrams/build)
 (in-package :cl-user)
 
 (defparameter *dispatcher* nil)
