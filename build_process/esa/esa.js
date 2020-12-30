@@ -178,6 +178,7 @@ let kindName = json_object_part.kind ();
 { /*let*/
 let filename = json_object_part.filename ();
 self.self_class () = self.make_type_name (kindName);
+self.load_file (filename);
 self.make_leaf_input_pins (json_object_part);
 self.make_leaf_output_pins (json_object_part);
 } /* end let */
@@ -210,12 +211,12 @@ self.add_part (child_name, child_kind, child_kind.self_class ());
 } /* end let */
 { /*let*/
 let wires = schematic.wiring ().as_map ();
-{ let newWire = new wire;
 (function () {
-for (const wire in wires) {
-newWire.index () = wire.wireIndex ();
+for (const json_wire in wires) {
+{ let newWire = new wire;
+newWire.index () = json_wire.wireIndex ();
 { /*let*/
-let sources = wire.sources ().as_map ();
+let sources = json_wire.sources ().as_map ();
 (function () {
 for (const json_source in sources) {
 newWire.add_source (json_source.part (), json_source.pin ());
@@ -223,17 +224,17 @@ newWire.add_source (json_source.part (), json_source.pin ());
 }) ();
 } /* end let */
 { /*let*/
-let receivers = wire.receivers ().as_map ();
+let receivers = json_wire.receivers ().as_map ();
 (function () {
 for (const json_receiver in receivers) {
 newWire.add_destination (json_receiver.part (), json_receiver.pin ());
 };
 }) ();
 } /* end let */
-self.add_wire (newWire);
-};
-}) ();}
+self.add_wire (newWire);}
 
+};
+}) ();
 } /* end let */
 } /* end let */
 } /* end let */
@@ -270,6 +271,7 @@ function make_schematic_input_pins (self, json_object_schematic) {
 function make_schematic_output_pins (self, json_object_schematic) {
         self.make_output_pins (json_object_schematic.outputs ());
 };
+// external function load_file ((self kind), (? name))
 
 function node () {
 this.attribute_input_queue = null,

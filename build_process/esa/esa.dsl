@@ -507,6 +507,7 @@ when reading kind
   script make-leaf-output-pins (JSON-object)
   script make-schematic-input-pins (JSON-object)
   script make-schematic-output-pins (JSON-object)
+  method load-file (name)
 end when
 
 when reading JSON-array
@@ -594,7 +595,7 @@ script kind read-leaf (json-object-part)
   let kindName = json-object-part.kind in
     let filename = json-object-part.filename in
       set self.self-class = self.make-type-name (kindName)
-      % self.load-file (filename)  % skip this until very basics are working
+      self.load-file (filename)
       @self.make-leaf-input-pins (json-object-part)
       @self.make-leaf-output-pins (json-object-part)
     end let
@@ -621,24 +622,24 @@ script kind read-schematic (app json-object-part)
 	 end let
 
 	let wires = schematic.wiring.as-map in
-	  create newWire = wire in
-	    map wire = wires in
-              set newWire.index = wire.wireIndex
-	      let sources = wire.sources.as-map in
+	  map json-wire = wires in
+	    create newWire = wire in
+              set newWire.index = json-wire.wireIndex
+	      let sources = json-wire.sources.as-map in
 		map json-source = sources in
                   newWire.add-source (json-source.part json-source.pin)
 		end map
 	      end let
 
-	      let receivers = wire.receivers.as-map in
+	      let receivers = json-wire.receivers.as-map in
 		map json-receiver = receivers in
                   newWire.add-destination (json-receiver.part json-receiver.pin)
 		end map
 	      end let
 
 	      self.add-wire (newWire)
-	    end map
-	  end create
+	    end create
+	  end map
 	end let
       end let
     end let

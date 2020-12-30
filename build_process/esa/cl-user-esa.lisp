@@ -115,6 +115,7 @@
         (let ((kindName (kind json-object-part))) 
 (let ((filename (filename json-object-part))) 
 (setf (self-class self) (make-type-name self kindName))
+(load-file self filename)
 (make-leaf-input-pins self json-object-part)
 (make-leaf-output-pins self json-object-part))))
 (defmethod read-schematic ((self kind) app json-object-part)
@@ -130,13 +131,13 @@
 (let ((child-kind (lookupKind app child-kind-name))) 
 (add-part self child-name child-kind (self-class child-kind))))))))
 (let ((wires (as-map (wiring schematic)))) 
+(block %map (dolist (json-wire wires) 
 (let ((newWire (make-instance 'wire)))
-(block %map (dolist (wire wires) 
-(setf (index newWire) (wireIndex wire))
-(let ((sources (as-map (sources wire)))) 
+(setf (index newWire) (wireIndex json-wire))
+(let ((sources (as-map (sources json-wire)))) 
 (block %map (dolist (json-source sources) 
 (add-source newWire (part json-source) (pin json-source)))))
-(let ((receivers (as-map (receivers wire)))) 
+(let ((receivers (as-map (receivers json-wire)))) 
 (block %map (dolist (json-receiver receivers) 
 (add-destination newWire (part json-receiver) (pin json-receiver)))))
 (add-wire self newWire))))))))
@@ -156,6 +157,7 @@
         (make-input-pins self (inputs json-object-schematic)))
 (defmethod make-schematic-output-pins ((self kind) json-object-schematic)
         (make-output-pins self (outputs json-object-schematic)))
+#| external method ((self kind)) load-file |#
 
 (defclass node ()
 (

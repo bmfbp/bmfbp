@@ -80,6 +80,10 @@
       (error (format nil "pin /~a/ is already declared as an output pin of ~s ~s" name (kind-name self) self))))
   T)
 
+(defmethod load-file ((self kind) fname)
+  (let ((filename (arrowgrams/build::fixup-root-reference fname)))
+    (cl:load filename)))
+
 (defmethod refers-to-self? ((self source))
   (if (string=-downcase "self" (part-name self))
       :true
@@ -277,7 +281,7 @@
 ;;; kind methods during reading JSON phase
 
 (defmethod schematicCommonClass ((self kind))
-  (intern "SCHEMATIC" "COMMON-LISP-USER"))
+  'schematic)
 
 (defmethod make-type-name ((self kind) str)
   ;; do any magic required by base language to create a type 

@@ -38,15 +38,17 @@ To read a JSON template into memory, we need methods to suck the JSON in, then c
         ;; create Dispatcher (disp)
         ;; get top node of app
         top-kind
-        ;; run "kind loader" on top node
-        (loader top-kind "TOP" nil disp)
-        ;; run initialize-all on dispatcher
-        (initialize-all disp)  ;; initialize-all is in ../esa/esa.lisp
-        ;; distribute all outputs
-        (distribute-all-outputs disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
-        ;; inject start into top node
-        (setf *dispatcher* disp)
-        (dispatcher-inject *dispatcher* "start" t)
+        ;; run "kind loader" on top kind - this create Nodes from Kind templates
+        (let ((top-node (loader top-kind "TOP" nil disp)))
+          (setf (top-node disp) top-node)
+          ;; run initialize-all on dispatcher
+          (initialize-all disp)  ;; initialize-all is in ../esa/esa.lisp
+          ;; distribute all outputs
+          (distribute-all-outputs disp)  ;; distribute-all-outputs is in ../esa/esa.lisp
+          ;; inject start into top node
+          (setf *dispatcher* disp)
+          (dispatcher-inject *dispatcher* "start" t)
+          )
         )
       )
 ))
