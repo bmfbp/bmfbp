@@ -613,7 +613,7 @@ script kind read-schematic (app json-object-part)
 	    let child-kind-name = json-child.kindName in
 	      let child-name = json-child.partName in 
 		let child-kind = app.lookupKind (child-kind-name) in
-		  self.add-part (child-name self child-kind)
+		  self.add-part (child-name child-kind child-kind.self-class)
 		end let
 	      end let
 	    end let

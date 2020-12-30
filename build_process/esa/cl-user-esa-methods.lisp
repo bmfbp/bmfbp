@@ -268,10 +268,10 @@
 
 (defmethod lookupKind ((self App) name)
   ;; hash table lookup with key name 
-  (gethash (stack-dsl:%as-string name) (tableOfKinds self)))
+  (gethash (string-downcase (stack-dsl:%as-string name)) (tableOfKinds self)))
 
 (defmethod installInTable ((self App) kind-name kind-object)
-  (setf (gethash (stack-dsl:%as-string kind-name) (tableOfKinds self)) kind-object))
+  (setf (gethash (string-downcase (stack-dsl:%as-string kind-name)) (tableOfKinds self)) kind-object))
 
 
 ;;; kind methods during reading JSON phase

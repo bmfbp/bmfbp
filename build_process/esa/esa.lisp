@@ -128,7 +128,7 @@
 (let ((child-kind-name (kindName json-child))) 
 (let ((child-name (partName json-child))) 
 (let ((child-kind (lookupKind app child-kind-name))) 
-(add-part self child-name self child-kind)))))))
+(add-part self child-name child-kind (self-class child-kind))))))))
 (let ((wires (as-map (wiring schematic)))) 
 (let ((newWire (make-instance 'wire)))
 (block %map (dolist (wire wires) 

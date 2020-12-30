@@ -201,7 +201,7 @@ let child_kind_name = json_child.kindName ();
 let child_name = json_child.partName ();
 { /*let*/
 let child_kind = app.lookupKind (child-kind-name);
-self.add_part (child_name, self, child_kind);
+self.add_part (child_name, child_kind, child_kind.self_class ());
 } /* end let */
 } /* end let */
 } /* end let */
