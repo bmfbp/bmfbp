@@ -83,11 +83,15 @@ class App
 end class
 
 class JSON-object
-  foreign  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
+  handle  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
 end class
 
 class JSON-array
-  foreign  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
+  handle  % opaque handle - set and handled by underlying language (e.g. cl-user-esa-methods.lisp)
+end class
+
+class foreign
+  handle
 end class
 
 %=== building kinds ===
@@ -566,7 +570,7 @@ script App read-json >> kind
       let arr = JSON-arr.as-map in
 	map json-object-part = arr in
           create newKind = kind in
-	    set newKind.kind-name = json-part-object.name
+	    set newKind.kind-name = json-object-part.name
 	    if json-object-part.isLeaf then
 	      @newKind.read-leaf (json-object-part)
 	    else
@@ -599,49 +603,40 @@ end script
 
 script kind read-schematic (app json-object-part)
   let schematicName = json-object-part.name in
-      set newKind.self-class = self.schematicCommonClass
+      set self.self-class = self.schematicCommonClass
       let schematic = json-object-part.schematic in
-	@newKind.make-schematic-input-pins (schematic)
-	@newKind.make-schematic-output-pins (schematic)
+	@self.make-schematic-input-pins (schematic)
+	@self.make-schematic-output-pins (schematic)
 
 	let parts = schematic.parts.as-map in
 	  map json-child = parts in
 	    let child-kind-name = json-child.kindName in
 	      let child-name = json-child.partName in 
 		let child-kind = app.lookupKind (child-kind-name) in
-		  self.add-part (child-name child-kind)
+		  self.add-part (child-name self child-kind)
 		end let
 	      end let
 	    end let
 	   end map
 	 end let
 
-	let json-parts = schematic.wires.as-map in
+	let wires = schematic.wiring.as-map in
 	  create newWire = wire in
 	    map wire = wires in
-
-	      set self.index = wire.wireIndex
+              set newWire.index = wire.wireIndex
 	      let sources = wire.sources.as-map in
 		map json-source = sources in
-		  create json-src = source in
-		    set src.part-name = json-src.part
-		    set src.pin-name = json-src.pin
-		    newWire.add-source (src)
-		  end create
+                  newWire.add-source (json-source.part json-source.pin)
 		end map
 	      end let
 
 	      let receivers = wire.receivers.as-map in
 		map json-receiver = receivers in
-		  create dest = destination in
-		    set dest.part-name = json-receiver.part
-		    set dest.pin-name = json-receiver.pin
-		    newWire.add-destination (dest)
-		  end create
+                  newWire.add-destination (json-receiver.part json-receiver.pin)
 		end map
 	      end let
 
-	      self.addWire (newWire)
+	      self.add-wire (newWire)
 	    end map
 	  end create
 	end let

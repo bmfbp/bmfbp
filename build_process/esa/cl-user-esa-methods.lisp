@@ -279,7 +279,7 @@
 (defmethod schematicCommonClass ((self kind))
   (intern "SCHEMATIC" "COMMON-LISP-USER"))
 
-(defmethod make-type-name ((self App) str)
+(defmethod make-type-name ((self kind) str)
   ;; do any magic required by base language to create a type 
   ;;  name from the string str
   ;; in Lisp, we can just use the string str and intern it in the main package
@@ -303,7 +303,7 @@
   (if (string= "leaf" (cdr (assoc :item-kind self))) :true :false))
 
 (defmethod isSchematic ((self CONS #|JSON-object|#))
-  (if (string= "graph" (cdr (assoc :item-Kind (foreign self)))) :true :false))
+  (if (string= "graph" (cdr (assoc :item-Kind self))) :true :false))
 
 (defmethod name ((self CONS #|JSON-object|#))
   (cdr (assoc :name self)))
@@ -317,9 +317,9 @@
 (defmethod filename ((self CONS #|JSON-object|#))
   (cdr (assoc :filename self)))
 (defmethod inPins ((self CONS #|JSON-object|#))
-  (cdr (assoc :inPins self)))
+  (cdr (assoc :in-Pins self)))
 (defmethod outPins ((self CONS #|JSON-object|#))
-  (cdr (assoc :outPins self)))
+  (cdr (assoc :out-Pins self)))
 
 
 ;; level 1
@@ -339,14 +339,14 @@
   (cdr (assoc :wiring self)))
 ;; level 3a
 (defmethod partName ((self CONS #|JSON-object|#))
-  (cdr (assoc :partName self)))
+  (cdr (assoc :part-Name self)))
 (defmethod kindName ((self CONS #|JSON-object|#))
-  (cdr (assoc :kindName self)))
+  (cdr (assoc :kind-Name self)))
 ;; level 3b
 (defmethod wireIndex ((self CONS #|JSON-object|#))
-  (cdr (assoc :wireIndex self)))
+  (cdr (assoc :wire-Index self)))
 (defmethod sources ((self CONS #|JSON-object|#))
-  (cdr (assoc :source self)))
+  (cdr (assoc :sources self)))
 (defmethod receivers ((self CONS #|JSON-object|#))
   (cdr (assoc :receivers self)))
 ;; level 4

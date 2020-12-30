@@ -186,11 +186,11 @@ self.make_leaf_output_pins (json_object_part);
 function read_schematic (self, app, json_object_part) {
         { /*let*/
 let schematicName = json_object_part.name ();
-newKind.self_class () = self.schematicCommonClass ();
+self.self_class () = self.schematicCommonClass ();
 { /*let*/
 let schematic = json_object_part.schematic ();
-newKind.make_schematic_input_pins (schematic);
-newKind.make_schematic_output_pins (schematic);
+self.make_schematic_input_pins (schematic);
+self.make_schematic_output_pins (schematic);
 { /*let*/
 let parts = schematic.parts ().as_map ();
 (function () {
@@ -201,7 +201,7 @@ let child_kind_name = json_child.kindName ();
 let child_name = json_child.partName ();
 { /*let*/
 let child_kind = app.lookupKind (child-kind-name);
-self.add_part (child_name, child_kind);
+self.add_part (child_name, self, child_kind);
 } /* end let */
 } /* end let */
 } /* end let */
@@ -209,20 +209,16 @@ self.add_part (child_name, child_kind);
 }) ();
 } /* end let */
 { /*let*/
-let json_parts = schematic.wires ().as_map ();
+let wires = schematic.wiring ().as_map ();
 { let newWire = new wire;
 (function () {
 for (const wire in wires) {
-self.index () = wire.wireIndex ();
+newWire.index () = wire.wireIndex ();
 { /*let*/
 let sources = wire.sources ().as_map ();
 (function () {
 for (const json_source in sources) {
-{ let json_src = new source;
-src.part_name () = json_src.part ();
-src.pin_name () = json_src.pin ();
-newWire.add_source (src);}
-
+newWire.add_source (json_source.part (), json_source.pin ());
 };
 }) ();
 } /* end let */
@@ -230,15 +226,11 @@ newWire.add_source (src);}
 let receivers = wire.receivers ().as_map ();
 (function () {
 for (const json_receiver in receivers) {
-{ let dest = new destination;
-dest.part_name () = json_receiver.part ();
-dest.pin_name () = json_receiver.pin ();
-newWire.add_destination (dest);}
-
+newWire.add_destination (json_receiver.part (), json_receiver.pin ());
 };
 }) ();
 } /* end let */
-self.addWire (newWire);
+self.add_wire (newWire);
 };
 }) ();}
 
@@ -550,7 +542,7 @@ let arr = JSON_arr.as_map ();
 (function () {
 for (const json_object_part in arr) {
 { let newKind = new kind;
-newKind.kind_name () = json_part_object.name ();
+newKind.kind_name () = json_object_part.name ();
 if (json_object_part.isLeaf ()) {
 newKind.read_leaf (json_object_part);
 } else {
@@ -578,9 +570,9 @@ return top_schematic;
 // external function installInTable ((self App), (? name), (? kind))
 
 function JSON_object () {
-this.attribute_foreign = null,
-this.foreign = function () { return attribute_foreign; },
-this.set_foreign = function (val) { this.attribute_foreign = val; }
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
 // external function isLeaf ((self JSON_object))
 // external function isSchematic ((self JSON_object))
@@ -604,8 +596,14 @@ this.set_foreign = function (val) { this.attribute_foreign = val; }
 // external function pin ((self JSON_object))
 
 function JSON_array () {
-this.attribute_foreign = null,
-this.foreign = function () { return attribute_foreign; },
-this.set_foreign = function (val) { this.attribute_foreign = val; }
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
 }
 // external function as_map ((self JSON_array))
+
+function foreign () {
+this.attribute_handle = null,
+this.handle = function () { return attribute_handle; },
+this.set_handle = function (val) { this.attribute_handle = val; }
+}

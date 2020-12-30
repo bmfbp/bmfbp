@@ -119,33 +119,27 @@
 (make-leaf-output-pins self json-object-part))))
 (defmethod read-schematic ((self kind) app json-object-part)
         (let ((schematicName (name json-object-part))) 
-(setf (self-class newKind) (schematicCommonClass self))
+(setf (self-class self) (schematicCommonClass self))
 (let ((schematic (schematic json-object-part))) 
-(make-schematic-input-pins newKind schematic)
-(make-schematic-output-pins newKind schematic)
+(make-schematic-input-pins self schematic)
+(make-schematic-output-pins self schematic)
 (let ((parts (as-map (parts schematic)))) 
 (block %map (dolist (json-child parts) 
 (let ((child-kind-name (kindName json-child))) 
 (let ((child-name (partName json-child))) 
 (let ((child-kind (lookupKind app child-kind-name))) 
-(add-part self child-name child-kind)))))))
-(let ((json-parts (as-map (wires schematic)))) 
+(add-part self child-name self child-kind)))))))
+(let ((wires (as-map (wiring schematic)))) 
 (let ((newWire (make-instance 'wire)))
 (block %map (dolist (wire wires) 
-(setf (index self) (wireIndex wire))
+(setf (index newWire) (wireIndex wire))
 (let ((sources (as-map (sources wire)))) 
 (block %map (dolist (json-source sources) 
-(let ((json-src (make-instance 'source)))
-(setf (part-name src) (part json-src))
-(setf (pin-name src) (pin json-src))
-(add-source newWire src)))))
+(add-source newWire (part json-source) (pin json-source)))))
 (let ((receivers (as-map (receivers wire)))) 
 (block %map (dolist (json-receiver receivers) 
-(let ((dest (make-instance 'destination)))
-(setf (part-name dest) (part json-receiver))
-(setf (pin-name dest) (pin json-receiver))
-(add-destination newWire dest)))))
-(addWire self newWire))))))))
+(add-destination newWire (part json-receiver) (pin json-receiver)))))
+(add-wire self newWire))))))))
 (defmethod make-input-pins ((self kind) json-pin-array)
         (let ((pin-map (as-map json-pin-array))) 
 (block %map (dolist (pin-name pin-map) 
@@ -349,7 +343,7 @@
 (let ((arr (as-map JSON-arr))) 
 (block %map (dolist (json-object-part arr) 
 (let ((newKind (make-instance 'kind)))
-(setf (kind-name newKind) (name json-part-object))
+(setf (kind-name newKind) (name json-object-part))
 (if (esa-expr-true (isLeaf json-object-part))
 (progn
 (read-leaf newKind json-object-part)
@@ -375,7 +369,7 @@
 
 (defclass JSON-object ()
 (
-(foreign :accessor foreign :initform nil)))
+(handle :accessor handle :initform nil)))
 #| external method ((self JSON-object)) isLeaf |#
 #| external method ((self JSON-object)) isSchematic |#
 #| external method ((self JSON-object)) name |#
@@ -399,5 +393,9 @@
 
 (defclass JSON-array ()
 (
-(foreign :accessor foreign :initform nil)))
+(handle :accessor handle :initform nil)))
 #| external method ((self JSON-array)) as-map |#
+
+(defclass foreign ()
+(
+(handle :accessor handle :initform nil)))
