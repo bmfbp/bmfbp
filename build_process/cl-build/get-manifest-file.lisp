@@ -16,6 +16,7 @@
 	     (let ((manifest-as-json-string (alexandria:read-file-into-string filename)))
 	       (@send self :out manifest-as-json-string))
 	     (let ((msg (format nil "manifest file ~s not found" filename)))
+	       (format *error-output* "arrowgrams error: ~a~%" msg)
 	       (@send self :error msg)
 	       (error msg)))))))) ;; lisp error only during bootstrap
 
