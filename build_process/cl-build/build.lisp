@@ -991,7 +991,12 @@
       (let ((in-file (diagram-path fname))
 	    (json-file (json-graph-path fname))
 	    (alist-file (alist-graph-path fname)))
+(format *standard-output* "dbatoj ~a ~a ~a~%" in-file json-file alist-file)	
 	(build in-file json-file alist-file)))))
+
+(defun db-f-arrowgrams-to-json (in-file json-file alist-file)
+  (format *standard-output* "dbatoj ~a ~a ~a~%" in-file json-file alist-file)	
+	(build in-file json-file alist-file))
 
 (defun arrowgrams-to-json (&optional (opt-filename "helloworld"))
   (handler-case
