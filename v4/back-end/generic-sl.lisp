@@ -51,7 +51,7 @@
   :string
 
 = <metadata>
-  [ ?symbol :symbol symbol-must-be-nil error-no-metadata | ?string :string ]
+  [ ?symbol :symbol symbol-must-be-nil | ?string :string ]
 
 = <kind>
   :string
