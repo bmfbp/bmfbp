@@ -1,7 +1,11 @@
+;; fails in LW if using stock ESRAP
+;; install ~/attic/my-esrap
+
 (defparameter *script*
 "
 (defun lw0 ()
   (uiop:run-program \"~/quicklisp/local-projects/rm.bash\") 
+  (ql:quickload :sl)
   (ql:quickload :arrowgrams/esa-transpiler)
   (load (asdf:system-relative-pathname :arrowgrams \"build_process/esa/package.lisp\"))
   (load (asdf:system-relative-pathname :arrowgrams \"build_process/esa/path.lisp\")))
