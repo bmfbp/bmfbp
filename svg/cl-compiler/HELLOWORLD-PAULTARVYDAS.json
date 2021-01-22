@@ -1,0 +1,18 @@
+{
+  "name" : "HELLOWORLD-PAULTARVYDAS",
+  "inputs" : ["START"],
+  "outputs" : ["RESULT"],
+  "parts" :
+  [
+    { "partName" : "STRING-JOIN", "kindName" : "STRING-JOIN"},
+    { "partName" : "TARVYDAS", "kindName" : "TARVYDAS"},
+    { "partName" : "PAUL", "kindName" : "PAUL"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "PAUL", "pin" : "S"}], "receivers" : [{"part" : "STRING-JOIN", "pin" : "A"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "TARVYDAS", "pin" : "S"}], "receivers" : [{"part" : "STRING-JOIN", "pin" : "B"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "STRING-JOIN", "pin" : "C"}], "receivers" : [{"part" : "SELF", "pin" : "RESULT"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "SELF", "pin" : "START"}], "receivers" : [{"part" : "TARVYDAS", "pin" : "START"},{"part" : "PAUL", "pin" : "START"}]}
+    ]
+  }

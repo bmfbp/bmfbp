@@ -12,3 +12,6 @@
 (defun alist-graph-path (fname)
   (format nil "~agraph/~a.graph.lisp" (dir) fname))
 
+(defun part-path (fname)
+  (format nil "~acl/~a" (dir) fname))
+

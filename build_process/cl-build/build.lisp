@@ -108,6 +108,10 @@
         (@inject build-net pin T )))) ;:tag "build-net done")))))
   T)
     
+(defun db-f-arrowgrams-to-json (in-file json-file alist-file)
+  (format *standard-output* "dbatoj ~a ~a ~a~%" in-file json-file alist-file)	
+	(build in-file json-file alist-file))
+
 (defun db-arrowgrams-to-json (&optional (opt-filename "helloworld"))
   (let ((args (my-command-line)))
     (let ((fname (if (> (length args) 1)
@@ -117,11 +121,7 @@
 	    (json-file (json-graph-path fname))
 	    (alist-file (alist-graph-path fname)))
 (format *standard-output* "dbatoj ~a ~a ~a~%" in-file json-file alist-file)	
-	(build in-file json-file alist-file)))))
-
-(defun db-f-arrowgrams-to-json (in-file json-file alist-file)
-  (format *standard-output* "dbatoj ~a ~a ~a~%" in-file json-file alist-file)	
-	(build in-file json-file alist-file))
+	(db-f-arrowgrams-to-json in-file json-file alist-file)))))
 
 (defun arrowgrams-to-json (&optional (opt-filename "helloworld"))
   (handler-case
@@ -132,7 +132,7 @@
 	  (let ((in-file (diagram-path fname))
 		(json-file (json-graph-path fname))
 		(alist-file (alist-graph-path fname)))
-	    (build in-file json-file alist-file))))
+	    (db-f-arrowgrams-to-json in-file json-file alist-file))))
     (end-of-file (c)
       (format *error-output* "FATAL 'end of file error; in main ~a~%" c))
     (simple-error (c)
