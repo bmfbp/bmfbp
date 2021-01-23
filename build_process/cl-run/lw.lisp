@@ -53,6 +53,7 @@
 
 (defun lw4a ()
   (arrowgrams/build::db-f-arrowgrams-to-json
+           (arrowgrams/build::manifest-path \"helloworld-chelloworld\")
            (arrowgrams/build::diagram-path \"helloworld-chelloworld\")
            (arrowgrams/build::json-graph-path \"helloworld-chelloworld\")
            (arrowgrams/build::alist-graph-path \"helloworld-chelloworld\")))

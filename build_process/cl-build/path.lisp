@@ -15,3 +15,5 @@
 (defun part-path (fname)
   (format nil "~acl/~a" (dir) fname))
 
+(defun manifest-path (fname)
+  (format nil "~a/~a.manifest.json" (dir) fname))

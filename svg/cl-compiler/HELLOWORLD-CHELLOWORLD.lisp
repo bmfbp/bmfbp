@@ -4,9 +4,9 @@
    (START)
    (RESULT)
   
+  (:code CHELLO (START) (S))
   (:code ASTRING-JOIN (B A) (C))
   (:code CWORLD (START) (S))
-  (:code CHELLO (START) (S))
   "
     CHELLO.S -> ASTRING-JOIN.A
     CWORLD.S -> ASTRING-JOIN.B
