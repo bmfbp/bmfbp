@@ -1,1 +1,18 @@
-[{"itemKind":"leaf","name":"astring-join","inPins":["a","b"],"outPins":["c","error"],"kind":"astring-join","filename":"$\/parts\/cl\/astring-join.lisp"},{"itemKind":"leaf","name":"cworld","inPins":["start"],"outPins":["s","error"],"kind":"cworld","filename":"$\/parts\/cl\/cworld.lisp"},{"itemKind":"leaf","name":"chello","inPins":["start"],"outPins":["s","error"],"kind":"chello","filename":"$\/parts\/cl\/chello.lisp"},{"itemKind":"graph","name":"helloworld-chelloworld","graph":{"name":"HELLOWORLD-CHELLOWORLD","inputs":["START"],"outputs":["RESULT"],"parts":[{"partName":"CHELLO","kindName":"CHELLO"},{"partName":"ASTRING-JOIN","kindName":"ASTRING-JOIN"},{"partName":"CWORLD","kindName":"CWORLD"}],"wiring":[{"wireIndex":0,"sources":[{"part":"CHELLO","pin":"S"}],"receivers":[{"part":"ASTRING-JOIN","pin":"A"}]},{"wireIndex":1,"sources":[{"part":"CWORLD","pin":"S"}],"receivers":[{"part":"ASTRING-JOIN","pin":"B"}]},{"wireIndex":2,"sources":[{"part":"ASTRING-JOIN","pin":"C"}],"receivers":[{"part":"SELF","pin":"RESULT"}]},{"wireIndex":3,"sources":[{"part":"SELF","pin":"START"}],"receivers":[{"part":"CWORLD","pin":"START"},{"part":"CHELLO","pin":"START"}]}]}}]
+{
+  "name" : "HELLOWORLD-CHELLOWORLD",
+  "inputs" : ["START"],
+  "outputs" : ["RESULT"],
+  "parts" :
+  [
+    { "partName" : "CWORLD", "kindName" : "CWORLD"},
+    { "partName" : "DHELLO", "kindName" : "DHELLO"},
+    { "partName" : "ASTRING-JOIN", "kindName" : "ASTRING-JOIN"}
+  ],
+  "wiring" :
+    [
+      {"wire-index" : 0, "sources" : [{"part" : "DHELLO", "pin" : "S"}], "receivers" : [{"part" : "ASTRING-JOIN", "pin" : "A"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "CWORLD", "pin" : "S"}], "receivers" : [{"part" : "ASTRING-JOIN", "pin" : "B"}]},
+      {"wire-index" : 2, "sources" : [{"part" : "ASTRING-JOIN", "pin" : "C"}], "receivers" : [{"part" : "SELF", "pin" : "RESULT"}]},
+      {"wire-index" : 3, "sources" : [{"part" : "SELF", "pin" : "START"}], "receivers" : [{"part" : "CWORLD", "pin" : "START"},{"part" : "DHELLO", "pin" : "START"}]}
+    ]
+  }

@@ -2,6 +2,28 @@
 
 (defparameter *compiler-net* (arrowgrams/compiler:get-compiler-net))
 
+(defun compile-only (filename output-filename)
+  (let ((c2j-net (@defnetwork c2j
+           (:code file-writer (:filename :write) (:error))
+           (:part *compiler-net* compiler (:svg-filename) (:lisp  :metadata :json :error))
+           (:schem c2j (:svg-filename :output-filename) (:error)
+            (compiler file-writer)
+            "
+            self.svg-filename -> compiler.svg-filename
+            self.output-filename -> file-writer.filename
+            compiler.json -> file-writer.write
+            compiler.error, file-writer.error -> self.error
+            "
+            ))))
+    (@with-dispatch
+      (@enable-logging)
+      (let ((pin (e/part::get-input-pin c2j-net :output-filename)))
+        (@inject c2j-net pin output-filename))
+      (let ((pin (e/part::get-input-pin c2j-net :svg-filename)))
+        (@inject c2j-net pin filename))
+      ))
+  T)
+
 (defun build (filename output-filename alist-filename)
   (let ((build-net (@defnetwork build-json
 
@@ -153,3 +175,6 @@
 (defmethod send-event ((self node) pin data)
   (send self (new-event self pin data)))
 
+(defun compile-to-json (in-file json-file)
+  (format *standard-output* "ctoj ~a ~a%" in-file json-file)	
+	(compile-only in-file json-file))

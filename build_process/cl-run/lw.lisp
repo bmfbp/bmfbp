@@ -52,11 +52,9 @@
   (lw3)
 
 (defun lw4a ()
-  (arrowgrams/build::db-f-arrowgrams-to-json
-           (arrowgrams/build::manifest-path \"helloworld-chelloworld\")
+  (arrowgrams/build::compile-to-json
            (arrowgrams/build::diagram-path \"helloworld-chelloworld\")
-           (arrowgrams/build::json-graph-path \"helloworld-chelloworld\")
-           (arrowgrams/build::alist-graph-path \"helloworld-chelloworld\")))
+           (arrowgrams/build::json-graph-path \"helloworld-chelloworld\")))
 
 (defun lw4b ()
   (cl-user::load-and-run-app-from-file  (arrowgrams/build::json-graph-path \"helloworld-chelloworld\")))
