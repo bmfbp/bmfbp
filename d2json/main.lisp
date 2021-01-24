@@ -22,7 +22,4 @@
 (defun main (x)
   (declare (ignore x))
   (let ((args (arrowgrams/build::my-command-line)))
-    (format *standard-output* "args: ~a~%" args)
-    (d2json-raw
-     "~/quicklisp/local-projects/arrowgrams/work/diagrams/helloworld-helloworld-bootstrap.svg"
-     "~/quicklisp/local-projects/arrowgrams/work/json/helloworld-helloworld-bootstrap.15.json")))
+    (d2json (second args) (third args))))
