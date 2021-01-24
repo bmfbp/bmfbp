@@ -6,7 +6,7 @@
 
 (defun d2json-raw (infile outfile)
   (unless (probe-file infile)
-    (error (format nil "d2json infile not found ~a~%" infile)))
+    (error (format nil "d2json: infile not found ~a~%" infile)))
   (arrowgrams/build::compile-to-json infile outfile))
 
 (defun d2json (infile outfile)
@@ -19,8 +19,10 @@
     (error (c)
       (format *error-output* "FATAL error in d2json ~a~%" c))))
 
-(defun main ()
-  (let ((args (my-command-line)))
-    (d2json
-     (arrowgrams/build::diagram-path \"helloworld-chelloworld\")
-     (arrowgrams/build::json-graph-path \"helloworld-chelloworld\"))))
+(defun main (x)
+  (declare (ignore x))
+  (let ((args (arrowgrams/build::my-command-line)))
+    (declare (ignore args))
+    (d2json-raw
+     "~/quicklisp/local-projects/arrowgrams/work/diagrams/helloworld-helloworld-bootstrap.svg"
+     "~/quicklisp/local-projects/arrowgrams/work/json/helloworld-helloworld-bootstrap.15.json")))

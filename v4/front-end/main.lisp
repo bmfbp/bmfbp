@@ -159,7 +159,7 @@ So, for metadata, emit:
 #+nil(format *standard-output* "~&front-end-main gets ~s~%" svg-filename)
   (setf *metadata-already-seen* nil)
   (let ((command-svg-to-lisp "~/bin/hs_vsh_drawio_to_fb"))
-    (let ((cmd (format nil "~a <'~a'" command-svg-to-lisp svg-filename)))
+    (let ((cmd (format nil "~a <~a" command-svg-to-lisp svg-filename)))
       (let ((temp1-str (uiop:run-program cmd :output :string)))
 	;; this is silly, but mimics the on-disk behaviour of the V2 compiler (which used temp files)
 	;; rewrite in the future
