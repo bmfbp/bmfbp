@@ -4,15 +4,15 @@
   "outputs" : ["RESULT"],
   "parts" :
   [
-    { "partName" : "CWORLD", "kindName" : "CWORLD"},
-    { "partName" : "DHELLO", "kindName" : "DHELLO"},
-    { "partName" : "ASTRING-JOIN", "kindName" : "ASTRING-JOIN"}
+    { "partName" : "ASTRING-JOIN", "kindName" : "ASTRING-JOIN"},
+    { "partName" : "AWORLD", "kindName" : "AWORLD"},
+    { "partName" : "AHELLO", "kindName" : "AHELLO"}
   ],
   "wiring" :
     [
-      {"wire-index" : 0, "sources" : [{"part" : "DHELLO", "pin" : "S"}], "receivers" : [{"part" : "ASTRING-JOIN", "pin" : "A"}]},
-      {"wire-index" : 1, "sources" : [{"part" : "CWORLD", "pin" : "S"}], "receivers" : [{"part" : "ASTRING-JOIN", "pin" : "B"}]},
+      {"wire-index" : 0, "sources" : [{"part" : "AHELLO", "pin" : "S"}], "receivers" : [{"part" : "ASTRING-JOIN", "pin" : "A"}]},
+      {"wire-index" : 1, "sources" : [{"part" : "AWORLD", "pin" : "S"}], "receivers" : [{"part" : "ASTRING-JOIN", "pin" : "B"}]},
       {"wire-index" : 2, "sources" : [{"part" : "ASTRING-JOIN", "pin" : "C"}], "receivers" : [{"part" : "SELF", "pin" : "RESULT"}]},
-      {"wire-index" : 3, "sources" : [{"part" : "SELF", "pin" : "START"}], "receivers" : [{"part" : "CWORLD", "pin" : "START"},{"part" : "DHELLO", "pin" : "START"}]}
+      {"wire-index" : 3, "sources" : [{"part" : "SELF", "pin" : "START"}], "receivers" : [{"part" : "AWORLD", "pin" : "START"},{"part" : "AHELLO", "pin" : "START"}]}
     ]
   }

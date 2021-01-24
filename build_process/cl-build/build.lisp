@@ -176,5 +176,4 @@
   (send self (new-event self pin data)))
 
 (defun compile-to-json (in-file json-file)
-  (format *standard-output* "ctoj ~a ~a%" in-file json-file)	
 	(compile-only in-file json-file))

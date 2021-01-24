@@ -1,0 +1,25 @@
+* build
+#+name: d2json
+#+begin_src lisp :results output
+  (progn
+    (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+    (ql:quickload :sl)
+    (ql:quickload :arrowgrams/build)
+    (load "main"))
+#+end_src
+
+#+name: d2json
+#+begin_src lisp :results output
+(d2json
+ (arrowgrams/build::diagram-path "helloworld-chelloworld")
+ (arrowgrams/build::json-graph-path "helloworld-chelloworld"))
+#+end_src
+
+#+name: d2json
+#+begin_src lisp :results output
+(d2json-raw
+ "/Users/tarvydas/temp/helloworld.svg"
+ "/Users/tarvydas/temp/helloworld.json")
+#+end_src
+
+#+RESULTS: d2json
