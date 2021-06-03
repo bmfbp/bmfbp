@@ -13,7 +13,7 @@
 	     (setf (part-name pp) (name-in-container self))
 	     (setf (pin-name pp) "c")
              (setf (partpin out-e) pp)
-	     (setf (data out-e)    (concatenate 'string "parts/cl-a-" (string-a self) (string-b self)))
+	     (setf (data out-e)    (concatenate 'string " >> " (string-a self) " -- " (string-b self)))
 	     (send self out-e))))
     
     (ecase (state self)

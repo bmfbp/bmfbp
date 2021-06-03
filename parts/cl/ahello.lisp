@@ -10,5 +10,5 @@
     (setf (part-name pp) (name-in-container self))
     (setf (pin-name pp) "s")
     (setf (partpin e) pp)
-    (setf (data    e) "parts/cl/aHELLO")
+    (setf (data    e) "parts/cl/aP@ul")
     (send self e)))

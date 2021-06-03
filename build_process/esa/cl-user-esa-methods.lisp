@@ -272,7 +272,12 @@
 
 (defmethod lookupKind ((self App) name)
   ;; hash table lookup with key name 
-  (gethash (string-downcase (stack-dsl:%as-string name)) (tableOfKinds self)))
+  (multiple-value-bind (kind success)
+      (gethash (string-downcase (stack-dsl:%as-string name)) (tableOfKinds self))
+    (if kind
+        kind
+      (error (format nil "no part named ~a - probably due to missing manifest" (string-downcase (stack-dsl:%as-string name))))))) 
+    
 
 (defmethod installInTable ((self App) kind-name kind-object)
   (setf (gethash (string-downcase (stack-dsl:%as-string kind-name)) (tableOfKinds self)) kind-object))
