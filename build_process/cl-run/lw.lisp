@@ -2,6 +2,7 @@
 "
 (defun lw0 ()
   (uiop:run-program \"~/quicklisp/local-projects/rm.bash\") 
+  (ql:quickload :sl)
   (ql:quickload :arrowgrams/esa-transpiler)
   (load (asdf:system-relative-pathname :arrowgrams \"build_process/esa/package.lisp\"))
   (load (asdf:system-relative-pathname :arrowgrams \"build_process/esa/path.lisp\")))
@@ -50,13 +51,21 @@
 
   (lw3)
 
+(defun lw4a ()
+  (arrowgrams/build::compile-to-json
+           (arrowgrams/build::diagram-path \"helloworld-chelloworld\")
+           (arrowgrams/build::json-graph-path \"helloworld-chelloworld\")))
+
+(defun lw4b ()
+  (cl-user::load-and-run-app-from-file  (arrowgrams/build::json-graph-path \"helloworld-chelloworld\")))
+
 (defun lw4 ()
-  (arrowgrams/build::arrowgrams-to-json \"ahelloworld\")
-  (cl-user::load-and-run-app-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
+  (lw4a)
+  (lw4b))
 
 (defun lw4-old ()
-  (arrowgrams/build::arrowgrams-to-json \"ahelloworld\")
-  (cl-user::old-load-and-run-from-file  (arrowgrams/build::json-graph-path \"ahelloworld\")))
+  (arrowgrams/build::arrowgrams-to-json \"chelloworld\")
+  (cl-user::old-load-and-run-from-file  (arrowgrams/build::json-graph-path \"chelloworld\")))
 
 "
 )
@@ -78,3 +87,8 @@
        (eval def)
        (setf def (read strm nil nil))))))
   
+#|
+  (load (arrowgrams/build::part-path \"ahello\"))
+  (load (arrowgrams/build::part-path \"aworld\"))
+  (load (arrowgrams/build::part-path \"astring-join\"))
+|#

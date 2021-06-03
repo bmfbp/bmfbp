@@ -560,7 +560,7 @@ when reading JSON-object
   %     level 3b wiring: wireIndex, sources, receivers
   %       level 4 (source & receiver): part, pin
 
-  % (the above could be better - every part shuld have kind, inPins and outPins, but I backed into the above structure by trial and error)
+  % (the above could be better - every part should have kind, inPins and outPins, but I backed into the above structure by trial and error)
 
 end when
 
