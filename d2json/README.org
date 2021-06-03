@@ -31,7 +31,4 @@ works:
   "/Users/tarvydas/temp/helloworld-helloworld-bootstrap.11.json")
 
 
-~/temp/blogs-20210124/diagrams/helloworld-helloworld-bootstrap.svg
-/Users/tarvydas/temp/blogs-20120124/diagrams/helloworld-helloworld-bootstrap.svg
-
 #+RESULTS: d2json
