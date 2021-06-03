@@ -328,8 +328,9 @@
 
 (defmethod schematic/set-meta-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
-    (let ((top (stack-top (schematic-stack self))))
-      (setf (metadata top) (strip-quotes str)))))
+    (when (stringp str) ;  string might be "NIL" here - let it continue (not (string= (string-upcase str) "NIL")))
+      (let ((top (stack-top (schematic-stack self))))
+        (setf (metadata top) (strip-quotes str))))))
 
 (defmethod schematic/set-kind-from-string ((self parser))
   (let ((str (get-accepted-token-text self)))
