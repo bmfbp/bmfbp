@@ -12,6 +12,7 @@
   (call-next-method))
 
 (defmethod e/part:react ((self file-writer) (e e/event:event))
+;(format *standard-output* "file-writer gets ~a ~a~%" (e/event::event-pin e) (e/event::data e))
   (ecase (e/event::sym e)
 
     (:filename

@@ -1,8 +1,21 @@
+* status
+** in LW run (lw) then (lw4)
+   creates ~/quicklisp/local-projects/bmfbp/parts/graph/ahelloworld.graph.json
+   then loads and runs it in CL under LW
+   uses local version of esrap
+** sbcl
+   M-x slime
+   ^c^c on build progn below...
+   error in esrap src/interface using LW esrap
+   delete LW esrap, allow quicklisp to load stock version
+   then, it build ahelloworld and loads and runs it
+
 * build helloworld and run it
 #+name: runner
 #+begin_src lisp :results output
   (progn
     (uiop:run-program "~/quicklisp/local-projects/rm.bash")
+    (ql:quickload :sl)
     (ql:quickload :arrowgrams/build)
     (ql:quickload :arrowgrams/runner))
 #+end_src
@@ -40,5 +53,5 @@ print : "parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD" in RESULTS
 
 * results
 #+RESULTS: runner
-: NIL
+: parts/cl-a-parts/cl/aHELLOparts/cl/aWORLD
 

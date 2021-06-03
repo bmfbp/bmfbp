@@ -1,5 +1,5 @@
 (defsystem :arrowgrams
-  :depends-on (:cl-peg :loops)
+  :depends-on (:cl-peg :loops :sl)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -333,7 +333,7 @@
 ;;;;;;;;;; compiler v4
 ;;;;;;;;;;
 
-(defsystem "arrowgrams/cl-event-passing-no-esrap"
+#+no-esrap(defsystem "arrowgrams/cl-event-passing-no-esrap"
   :depends-on (:loops)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3)
@@ -365,7 +365,9 @@
                                                                 "schematic" "event" "source" "receiver" "wire" "dispatch"))))))
 
 (defsystem :arrowgrams/v4compiler/top
-  :depends-on (:arrowgrams/cl-event-passing-no-esrap :cl-holm-prolog :cl-ppcre :cl-json :alexandria)
+  :depends-on
+  #+no-esrap(:arrowgrams/cl-event-passing-no-esrap :cl-holm-prolog :cl-ppcre :cl-json :alexandria)
+  #-no-esrap(:cl-event-passing :cl-holm-prolog :cl-ppcre :cl-json :alexandria)
   :around-compile (lambda (next)
                     (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
                     (funcall next))
@@ -527,7 +529,9 @@
 
 (defsystem :arrowgrams/esa-transpiler
     ;; to build the esa-transpiler .lisp files, see bmfbp/build_process/esa-transpiler/make.lisp
-  :depends-on (:stack-dsl/use :parsing-assembler/use :arrowgrams/cl-event-passing-no-esrap :alexandria)
+  :depends-on
+  #+no-esrap(:stack-dsl/use :parsing-assembler/use :arrowgrams/cl-event-passing-no-esrap :alexandria)
+  #-no-esrap(:stack-dsl/use :parsing-assembler/use :cl-event-passing :alexandria)
   :serial t
     :around-compile (lambda (next)
                       (proclaim '(optimize (debug 3)
