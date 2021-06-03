@@ -23,9 +23,15 @@
 (defun read-manifest-file (filename)
   (alexandria:read-file-into-string filename))
 
-(defun make-manifest-filename (alist)
+#+nil(defun make-manifest-filename (alist)
 #|  {    "dir": "build_process/", "file": "lispparts/iterator.json","kindName": "iterator", "ref": "master", "repo": "https://github.com/bmfbp/bmfbp.git" } |#
   (let ((afname (cdr (assoc :file alist))))
     (let ((name1 (format nil "~a.manifest.json" (pathname-name afname))))
       (let ((name2 (merge-pathnames name1 arrowgrams/build::*manifest-dir*)))
        (namestring name2)))))
+
+;; new version depends on path.lisp/(manifest-path ...)
+(defun make-manifest-filename (alist)
+#|  {    "dir": "build_process/", "file": "lispparts/iterator.json","kindName": "iterator", "ref": "master", "repo": "https://github.com/bmfbp/bmfbp.git" } |#
+  (let ((afname (cdr (assoc :file alist))))
+    (arrowgrams/build::manifest-path (pathname-name afname))))
