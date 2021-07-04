@@ -30,7 +30,8 @@
 ** Pass 2 
    Bolts methods (and scripts) to the appropriate classes.
 ** Pass 3
-   Handles Script declarations (actual code) and finalizes the esaprogram structures.
+(defmacro rid (path ns id)
+Handles Script declarations (actual code) and finalizes the esaprogram structures.
 ** dsl0.pasm is pass 0.
 ** dsl1.pasm is pass 1
 ** dsl2.pasm is pass 2
