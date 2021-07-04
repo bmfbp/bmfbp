@@ -52,18 +52,20 @@ EnumTypeDef = id "=" quotedValue OrEnum*
 <label for="semantics">semantics:</label>
 <textarea id="semantics" rows="10" cols="70" placeholder="semantics" style="background-color:oldlace;">
   Top [@defs] = 
-{{ scopeAdd('typememos', []); }}
+{{ scopeAdd('typememos', new Set()); }}
 [[
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))(in-package "CL-USER")
 ${defs}
-${existenceChecks()}  
+${existenceChecks()}
+${boilerplate()}
+${makestacks()}
 ]]
 
   TopDef [def] = [[${def}\n]]
 
 ClassWithFieldsDef [id eq lb @fields rb] =
 [[
-${memoType(id)}  
+${memotype(id)}
 (defclass ${id} (stack-dsl::%compound-type) () (:default-initargs :%type \"${id}\"))
 (defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)
   (setf (stack-dsl::%type-list self) '(${fields})))
@@ -71,7 +73,7 @@ ${memoType(id)}
 ]]
 
 BagDef [id eq colonBag] = [[
-${memoType(id)}  
+${memotype(id)}
 (defclass ${id} (stack-dsl::%bag) () (:default-initargs :%type "${id}"))
 (defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)  ;; type for items in bag
   (setf (stack-dsl::%element-type self) ${id}))
@@ -82,7 +84,7 @@ ${memoType(id)}
   
 StringDef [id eq colonString] = 
 [[
-${memoType(id)}  
+${memotype(id)}
 (defclass ${id} (stack-dsl::%string) () (:default-initargs :%type \"${id}\"))
 (defclass ${id}-stack (stack-dsl::%typed-stack) ())
 (defmethod initialize-instance :after ((self ~a-stack) &key &allow-other-keys)
@@ -91,7 +93,7 @@ ${memoType(id)}
 
 MapDef [id eq colonMap tyid] = 
 [[
-${memoType(id)}  
+${memotype(id)}
 (defclass ${id} (stack-dsl::%map) () (:default-initargs :%type "${id}"))
 (defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)  ;; type for items in map
   (setf (stack-dsl::%element-type self) ${id}))
@@ -102,7 +104,7 @@ ${memoType(id)}
 
 OrTypeDef [id eqbar tyname @ortypes] =
 [[
-${memoType(id)}  
+${memotype(id)}
 (defclass ${id} (stack-dsl::%compound-type) () (:default-initargs :%type \"${id}\"))
 (defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)
   (setf (stack-dsl::%type-list self) '(${tyname}${ortypes})))
@@ -111,7 +113,7 @@ ${memoType(id)}
 
 EnumTypeDef [id eq val @orenums] =
 [[
-${memoType(id)}  
+${memotype(id)}
 (defclass ${id} (stack-dsl::%enum) () (:default-initargs :%type \"${id}\"))
 (defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)
   (setf (stack-dsl::%value-list self) '(${val}${orenums})))
@@ -124,8 +126,8 @@ ${memoType(id)}
   OrEnum [bar val] = [[ ${val}]]
 
   id [ident] = [[${ident}]]
-  typename [ident] = [[${ident}]]
-  fieldname [ident] = [[${ident}]]
+  typename [ident] = [[${memotype(ident)}${ident}]]
+  fieldname [ident] = [[${memotype(ident)}${ident}]]
   quotedValue [q1 @cs q2] = [[ ${cs}]]
 
   ident [f @r sep] = [[ ${f}${r}]]
