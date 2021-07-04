@@ -20,22 +20,21 @@ function boilerplate () {
   (setf (stack-dsl::%element-type self) "%bag"))`;
 }
 
-function makestacks() {
-    return "*** makestacks ***";
-}
-
-// function old-makestacks() {
-//     let namelist = scopeGet('typememos');
-//     let a = [];
-//     namelist.forEach(n => a.push (
-// `
-// (input-${a} :accessor input-${a} :initform (make-instance '${a})
-// (output-${a} :accessor output-${a} :initform (make-instance '${a})
-// `
-//     ));
-//     return `
-// (defclass environment ()
-// ((%water-mark :accessor %water-mark :initform nil)
-// ${a.join('')}))`;
+// function makestacks() {
+//     return "*** makestacks ***";
 // }
+
+function makestacks() {
+    let namelist = scopeGet('typememos');
+    let a = [];
+
+    namelist.forEach(n => { a.push (`(input-${n} :accessor input-${n} :initform (make-instance '${n}))
+(output-${n} :accessor output-${n} :initform (make-instance '${n}))
+`); });
+
+    return `
+(defclass environment ()
+((%water-mark :accessor %water-mark :initform nil)
+${a.join('')}))`;
+}
     
