@@ -1,0 +1,7 @@
+- rewrite of ../esa-transpiler using transpiler workbench
+- esa-transpiler is used by ../esa to build a part of the diagram-to-code compiler
+- see ../esa-transpiler/make.lisp for build
+- see ../esa-transpiler/README.org for info
+- see ../esa-transpiler/exprtypes.drawio for diagram
+- see ../esa-transpiler/exprtypes.dsl for type spec
+- see ~/quicklisp/local-projects/stack-dsl for (old) stack transpiler

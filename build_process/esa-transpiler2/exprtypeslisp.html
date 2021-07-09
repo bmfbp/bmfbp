@@ -12,24 +12,26 @@ textarea {
 
 <br>
 <label for="grammar">grammar:</label>
-<textarea id="grammar" name="a" rows="10" cols="70" placeholder="grammar" style="background-color:oldlace;">
+<br>
+<textarea id="grammar" name="a" rows="10" cols="90" placeholder="grammar" style="background-color:oldlace;">
 ExprTypes { 
   /* SCN (Solution Centric Notation - mini-DSL) for Type Language */
   Top = TopDef+
   TopDef = ClassWithFieldsDef | BagDef | StringDef | MapDef | OrTypeDef | EnumTypeDef
 
 ClassWithFieldsDef = id "=" "{" fieldname+ "}"
-BagDef = id "=" ":bag"
+BagDef = id "=" ":bag" id
 StringDef = id "=" ":string"
 MapDef = id "=" ":map" id
-OrTypeDef = id "=|" typename OrType*
+OrTypeDef = id "=|" ortypename OrType*
 EnumTypeDef = id "=" quotedValue OrEnum*
 
-  OrType = "|" typename
+  OrType = "|" ortypename
   OrEnum = "|" quotedValue
 
     id = ident
     typename = ident
+    ortypename = ident
     fieldname = ident
     quotedValue = "'" (~"'" any)* "'"
 
@@ -49,8 +51,10 @@ EnumTypeDef = id "=" quotedValue OrEnum*
 }
 </textarea>
 
+<br>
 <label for="semantics">semantics:</label>
-<textarea id="semantics" rows="10" cols="70" placeholder="semantics" style="background-color:oldlace;">
+<br>
+<textarea id="semantics" rows="10" cols="90" placeholder="semantics" style="background-color:oldlace;">
   Top [@defs] = 
 {{ scopeAdd('typememos', new Set()); }}
 [[
@@ -59,6 +63,9 @@ ${defs}
 ${existenceChecks()}
 ${boilerplate()}
 ${makestacks()}
+${memostacks()}  
+${liststacks()}  
+${memoCheck()}
 ]]
 
   TopDef [def] = [[${def}\n]]
@@ -66,22 +73,14 @@ ${makestacks()}
 ClassWithFieldsDef [id eq lb @fields rb] =
 [[
 ${memotype(id)}
-(defclass ${id} (stack-dsl::%compound-type) () (:default-initargs :%type \"${id}\"))
-(defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)
-  (setf (stack-dsl::%type-list self) '(${fields})))
-(defclass ${id}-stack (stack-dsl::%typed-stack) () (:default-initargs :%element-type \"${id}\"))
+(defclass ${id} (stack-dsl::%compound-type)
+(${fields})
+(:default-initargs :%type \"${id}\"))
+(defclass ${id}-stack (stack-dsl::%typed-stack) () ())
+(defmethod initialize-instance :after ((self ${id}-stack) &key &allow-other-keys)
+  (setf (stack-dsl::%type-list self) "${id}"))
 ]]
 
-BagDef [id eq colonBag] = [[
-${memotype(id)}
-(defclass ${id} (stack-dsl::%bag) () (:default-initargs :%type "${id}"))
-(defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)  ;; type for items in bag
-  (setf (stack-dsl::%element-type self) ${id}))
-(defclass ${id}-stack(stack-dsl::%typed-stack) ())
-(defmethod initialize-instance :after ((self ${id}-stack) &key &allow-other-keys)
-    (setf (stack-dsl::%element-type self) "${id}"))
-]]
-  
 StringDef [id eq colonString] = 
 [[
 ${memotype(id)}
@@ -96,7 +95,18 @@ MapDef [id eq colonMap tyid] =
 ${memotype(id)}
 (defclass ${id} (stack-dsl::%map) () (:default-initargs :%type "${id}"))
 (defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)  ;; type for items in map
-  (setf (stack-dsl::%element-type self) ${id}))
+  (setf (stack-dsl::%element-type self) "${tyid}"))
+(defclass ${id}-stack(stack-dsl::%typed-stack) ())
+(defmethod initialize-instance :after ((self ${id}-stack) &key &allow-other-keys)
+    (setf (stack-dsl::%element-type self) "${id}"))
+]]
+
+BagDef [id eq colonMap tyid] = 
+[[
+${memotype(id)}
+(defclass ${id} (stack-dsl::%bag) () (:default-initargs :%type "${id}"))
+(defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)  ;; type for items in map
+  (setf (stack-dsl::%element-type self) "${tyid}"))
 (defclass ${id}-stack(stack-dsl::%typed-stack) ())
 (defmethod initialize-instance :after ((self ${id}-stack) &key &allow-other-keys)
     (setf (stack-dsl::%element-type self) "${id}"))
@@ -116,18 +126,26 @@ EnumTypeDef [id eq val @orenums] =
 ${memotype(id)}
 (defclass ${id} (stack-dsl::%enum) () (:default-initargs :%type \"${id}\"))
 (defmethod initialize-instance :after ((self ${id}) &key &allow-other-keys)
-  (setf (stack-dsl::%value-list self) '(${val}${orenums})))
+  (setf (stack-dsl::%value-list self) '("${val}" ${orenums})))
 (defclass ${id}-stack (stack-dsl::%typed-stack) ())
 (defmethod initialize-instance :after ((self ${id}-stack) &key &allow-other-keys)
   (setf (stack-dsl::%element-type self) \"${id}\"))
 ]]
 
   OrType [bar name] = [[ ${name}]]
-  OrEnum [bar val] = [[ ${val}]]
+  OrEnum [bar val] = [[ "${val}"]]
 
   id [ident] = [[${ident}]]
   typename [ident] = [[${memotype(ident)}${ident}]]
-  fieldname [ident] = [[${memotype(ident)}${ident}]]
+  ortypename [ident] = [[${memotype(ident)} "${ident}"]]
+
+  fieldname [ident] =
+[[${memotype(ident)}
+(%field-type-${ident} :accessor %field-type-${ident} :initform "${ident}")
+(${ident} :accessor ${ident})
+]]
+
+
   quotedValue [q1 @cs q2] = [[ ${cs}]]
 
   ident [f @r sep] = [[ ${f}${r}]]
@@ -147,8 +165,9 @@ ${memotype(id)}
 </textarea>
 
 <br>
-<label for="source">source</label>
-<textarea id="source" name="source" rows="10" cols="70" placeholder="notation test" style="background-color:oldlace;">
+<label for="source">source:</label>
+<br>
+<textarea id="source" name="source" rows="10" cols="90" placeholder="notation test" style="background-color:oldlace;">
 esaprogram = { typeDecls situations classes whenDeclarations  }
 
 typeDecls = :map typeDecl
@@ -261,9 +280,14 @@ indirectionKind = 'indirect' | 'direct'
 methodName =| name
 filler =| name
 </textarea>
+<textarea id="source" name="source" rows="10" cols="90" placeholder="notation test" style="background-color:oldlace;">
+typeDecls = :map typeDecl
+</textarea>
 
-<label for="transpiled">transpiled</label>
-<textarea id="transpiled" name="transpiled" rows="10" cols="70" placeholder="transpiled"  readonly style="background-color:whitesmoke;">
+<br>
+<label for="transpiled">transpiled:</label>
+<br>
+<textarea id="transpiled" name="transpiled" rows="10" cols="90" placeholder="transpiled"  readonly style="background-color:whitesmoke;">
 </textarea>
 <br>
 <br>

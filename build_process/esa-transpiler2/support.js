@@ -38,3 +38,55 @@ function makestacks() {
 ${a.join('')}))`;
 }
     
+function liststacks() {
+    let namelist = scopeGet('typememos');
+    let a = [];
+
+    namelist.forEach(n => { a.push (`input-${n}
+output-${n}
+`); });
+
+    return `
+(defparameter *stacks* '(
+${a.join('')}
+))`;
+}
+
+function memostacks() {
+    let namelist = scopeGet('typememos');
+    let a = [];
+
+    namelist.forEach(n => { a.push (
+`(stack-dsl::%stack (input-${n} self))
+(stack-dsl::%stack (output-${n} self))
+`); });
+
+    return `
+(defmethod %memoStacks ((self environment))
+(setf (%water-mark self)
+(list
+${a.join('')}
+)))
+`;
+}
+
+
+function memoCheck () {
+    let namelist = scopeGet('typememos');
+    let a = [];
+    let counter = 0;
+
+    namelist.forEach(n => { a.push (`
+(let ((in-eq (eq (nth ${counter} wm) (stack-dsl::%stack (input-${n} self))))
+      (out-eq (eq (nth ${counter+1} wm) (stack-dsl::%stack (output-${n} self)))))
+  (and in-eq out-eq))`);
+      counter += 2;			    
+			  });
+
+return `
+(defmethod %memoCheck ((self environment))
+ (let ((wm (%water-mark self)))
+  (let ((r (and
+	   ${a.join('')})))
+   (unless r (error "stack depth incorrect")))))`;
+}
